@@ -34,22 +34,22 @@ import com.hrznstudio.galacticraft.recipe.CompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.screen.ElectricCompressorScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -60,10 +60,10 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
     private static final int MAX_PROGRESS = 200; // In ticks, 100/20 = 10 seconds
 
-    private final Inventory craftingInv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
+    private final Container craftingInv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
         @Override
-        public boolean canPlayerUse(PlayerEntity player) {
-            return getWrappedInventory().canPlayerUse(player);
+        public boolean stillValid(Player player) {
+            return getWrappedInventory().stillValid(player);
         }
     };
 
@@ -112,7 +112,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
         if (!optional.isPresent()) return Status.INVALID_RECIPE;
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         if (!this.getInventory().insertStack(SECOND_OUTPUT_SLOT,
-                this.getInventory().insertStack(OUTPUT_SLOT, optional.get().getOutput().copy(), Simulation.SIMULATE),
+                this.getInventory().insertStack(OUTPUT_SLOT, optional.get().getResultItem().copy(), Simulation.SIMULATE),
                 Simulation.SIMULATE).isEmpty()) return Status.OUTPUT_FULL;
         return Status.COMPRESSING;
     }
@@ -121,11 +121,11 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
             if (this.progress++ >= this.getMaxProgress()) {
-                this.craftItem(this.getRecipe(this.craftingInv).orElseThrow(AssertionError::new).getOutput().copy());
+                this.craftItem(this.getRecipe(this.craftingInv).orElseThrow(AssertionError::new).getResultItem().copy());
                 this.progress = 0;
             }
             if (this.progress % 40 == 0 && this.progress > this.getMaxProgress() / 2) {
-                this.world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+                this.level.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
             }
         } else {
             if (this.getProgress() > 0) {
@@ -174,9 +174,9 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
         this.getInventory().insertStack(SECOND_OUTPUT_SLOT, this.getInventory().insertStack(OUTPUT_SLOT, craftingResult, Simulation.ACTION), Simulation.ACTION);
     }
 
-    private Optional<CompressingRecipe> getRecipe(Inventory input) {
-        if (this.world == null) return Optional.empty();
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, input, this.world);
+    private Optional<CompressingRecipe> getRecipe(Container input) {
+        if (this.level == null) return Optional.empty();
+        return this.level.getRecipeManager().getRecipeFor(GalacticraftRecipes.COMPRESSING_TYPE, input, this.level);
     }
 
     @Override
@@ -196,7 +196,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new ElectricCompressorScreenHandler(syncId, player, this);
         return null;
     }
@@ -209,33 +209,33 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
         /**
          * Compressor is compressing items.
          */
-        COMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
+        COMPRESSING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.active"), ChatFormatting.GREEN, StatusType.WORKING),
 
         /**
          * Compressor has no valid recipe.
          */
-        INVALID_RECIPE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
+        INVALID_RECIPE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_items"), ChatFormatting.GOLD, StatusType.MISSING_ITEMS),
 
         /**
          * Compressor has no valid recipe.
          */
-        OUTPUT_FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.output_full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        OUTPUT_FULL(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.output_full"), ChatFormatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Compressor has no items to process.
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
+        NOT_ENOUGH_ENERGY(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), ChatFormatting.RED, StatusType.MISSING_ENERGY);
 
-        private final Text text;
+        private final Component text;
         private final StatusType type;
 
-        Status(TranslatableText text, Formatting color, StatusType type) {
+        Status(TranslatableComponent text, ChatFormatting color, StatusType type) {
             this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         @Override
-        public @NotNull Text getName() {
+        public @NotNull Component getName() {
             return text;
         }
 

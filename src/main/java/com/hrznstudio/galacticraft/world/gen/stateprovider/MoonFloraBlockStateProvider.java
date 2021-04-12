@@ -25,14 +25,13 @@ package com.hrznstudio.galacticraft.world.gen.stateprovider;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.stateprovider.BlockStateProvider;
-import net.minecraft.world.gen.stateprovider.BlockStateProviderType;
-
 import java.util.Random;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -41,20 +40,20 @@ public class MoonFloraBlockStateProvider extends BlockStateProvider {
     public static final Codec<MoonFloraBlockStateProvider> CODEC = Codec.unit(() -> MoonFloraBlockStateProvider.INSTANCE);
     public static final MoonFloraBlockStateProvider INSTANCE = new MoonFloraBlockStateProvider();
 
-    public static final BlockState[] mix1 = new BlockState[]{GalacticraftBlocks.MOON_BERRY_BUSH.getDefaultState()};
-    public static final BlockState[] mix2 = new BlockState[]{GalacticraftBlocks.MOON_BERRY_BUSH.getDefaultState()};
+    public static final BlockState[] mix1 = new BlockState[]{GalacticraftBlocks.MOON_BERRY_BUSH.defaultBlockState()};
+    public static final BlockState[] mix2 = new BlockState[]{GalacticraftBlocks.MOON_BERRY_BUSH.defaultBlockState()};
 
     @Override
-    protected BlockStateProviderType<MoonFloraBlockStateProvider> getType() {
+    protected BlockStateProviderType<MoonFloraBlockStateProvider> type() {
         return GalacticraftFeatures.MOON_FLOWER_PROVIDER;
     }
 
-    public BlockState getBlockState(Random random, BlockPos pos) {
-        double d = Biome.FOLIAGE_NOISE.sample((double) pos.getX() / 200.0D, (double) pos.getZ() / 200.0D, false);
+    public BlockState getState(Random random, BlockPos pos) {
+        double d = Biome.BIOME_INFO_NOISE.getValue((double) pos.getX() / 200.0D, (double) pos.getZ() / 200.0D, false);
         if (d < -0.8D) {
             return Util.getRandom(mix1, random);
         } else {
-            return random.nextInt(3) > 0 ? Util.getRandom(mix2, random) : GalacticraftBlocks.MOON_BERRY_BUSH.getDefaultState();
+            return random.nextInt(3) > 0 ? Util.getRandom(mix2, random) : GalacticraftBlocks.MOON_BERRY_BUSH.defaultBlockState();
         }
     }
 

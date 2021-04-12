@@ -22,26 +22,26 @@
 
 package com.hrznstudio.galacticraft.recipe;
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class FabricationRecipe implements Recipe<Inventory> {
+public class FabricationRecipe implements Recipe<Container> {
     final String group;
-    private final Identifier id;
+    private final ResourceLocation id;
     private final Ingredient input;
     private final ItemStack output;
 
-    public FabricationRecipe(Identifier id, String group, Ingredient input, ItemStack output) {
+    public FabricationRecipe(ResourceLocation id, String group, Ingredient input, ItemStack output) {
         this.id = id;
         this.group = group;
         this.input = input;
@@ -49,25 +49,25 @@ public class FabricationRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public ItemStack craft(Inventory inventory) {
+    public ItemStack assemble(Container inventory) {
         return this.output.copy();
     }
 
     @Override
-    public boolean fits(int var1, int var2) {
+    public boolean canCraftInDimensions(int var1, int var2) {
         return true;
     }
 
     @Override
-    public DefaultedList<Ingredient> getPreviewInputs() {
-        DefaultedList<Ingredient> list = DefaultedList.of();
+    public NonNullList<Ingredient> getIngredients() {
+        NonNullList<Ingredient> list = NonNullList.create();
         list.add(this.input);
         return list;
     }
 
     @Override
-    public boolean matches(Inventory inventory, World world) {
-        return this.input.test(inventory.getStack(0));
+    public boolean matches(Container inventory, Level world) {
+        return this.input.test(inventory.getItem(0));
     }
 
     @Override
@@ -76,7 +76,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return id;
     }
 
@@ -90,7 +90,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public ItemStack getOutput() {
+    public ItemStack getResultItem() {
         return output;
     }
 

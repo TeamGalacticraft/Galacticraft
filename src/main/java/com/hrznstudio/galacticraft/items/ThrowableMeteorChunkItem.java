@@ -22,14 +22,14 @@
 
 package com.hrznstudio.galacticraft.items;
 
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class ThrowableMeteorChunkItem extends Item {
 
-    public ThrowableMeteorChunkItem(Settings settings) {
+    public ThrowableMeteorChunkItem(Properties settings) {
         super(settings);
     }
 }

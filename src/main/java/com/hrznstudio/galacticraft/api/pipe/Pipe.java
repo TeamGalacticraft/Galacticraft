@@ -25,10 +25,10 @@ package com.hrznstudio.galacticraft.api.pipe;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.Constants;
-import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,7 +77,7 @@ public interface Pipe {
     BlockPos getPos();
 
     class FluidData {
-        public static final FluidData EMPTY = new FluidData(BlockPos.ORIGIN, new ArrayDeque<>(), FluidVolumeUtil.EMPTY, null);
+        public static final FluidData EMPTY = new FluidData(BlockPos.ZERO, new ArrayDeque<>(), FluidVolumeUtil.EMPTY, null);
         private final BlockPos source;
         private final Deque<BlockPos> path;
         private final FluidVolume fluid;
@@ -111,13 +111,13 @@ public interface Pipe {
             long[] longs = compoundTag.getLongArray("path");
             Deque<BlockPos> queue = new ArrayDeque<>(longs.length);
             for (long l : longs) {
-                queue.add(BlockPos.fromLong(l));
+                queue.add(BlockPos.of(l));
             }
             Direction dir = null;
             if (compoundTag.getBoolean("hasDir")) {
                 dir = Constants.Misc.DIRECTIONS[compoundTag.getInt("dir")];
             }
-            return new FluidData(BlockPos.fromLong(compoundTag.getLong("source")), queue, FluidVolume.fromTag(compoundTag), dir);
+            return new FluidData(BlockPos.of(compoundTag.getLong("source")), queue, FluidVolume.fromTag(compoundTag), dir);
         }
 
         public CompoundTag toTag(CompoundTag compoundTag) {

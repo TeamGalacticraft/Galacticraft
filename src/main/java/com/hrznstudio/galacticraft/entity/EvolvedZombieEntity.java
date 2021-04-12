@@ -22,15 +22,15 @@
 
 package com.hrznstudio.galacticraft.entity;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EvolvedZombieEntity extends ZombieEntity {
-    public EvolvedZombieEntity(EntityType<? extends EvolvedZombieEntity> entityType, World world) {
+public class EvolvedZombieEntity extends Zombie {
+    public EvolvedZombieEntity(EntityType<? extends EvolvedZombieEntity> entityType, Level world) {
         super(entityType, world);
     }
 }

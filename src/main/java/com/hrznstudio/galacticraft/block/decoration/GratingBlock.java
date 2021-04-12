@@ -24,79 +24,79 @@ package com.hrznstudio.galacticraft.block.decoration;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.FluidLoggableBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GratingBlock extends Block implements FluidLoggableBlock {
 
-    protected static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.of("grating_state", GratingState.class);
+    protected static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.create("grating_state", GratingState.class);
 
-    public GratingBlock(Settings settings) {
+    public GratingBlock(Properties settings) {
         super(settings);
-        this.setDefaultState(this.getStateManager().getDefaultState().with(FLUID, Constants.Misc.EMPTY)
-                .with(FlowableFluid.LEVEL, 8).with(GRATING_STATE, GratingState.UPPER));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FLUID, Constants.Misc.EMPTY)
+                .setValue(FlowingFluid.LEVEL, 8).setValue(GRATING_STATE, GratingState.UPPER));
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
-        BlockState blockState = this.getDefaultState().with(GRATING_STATE, GratingState.LOWER)
-                .with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
-                .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
-        BlockPos blockPos = context.getBlockPos();
-        Direction direction = context.getPlayerFacing();
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        BlockState blockState = this.defaultBlockState().setValue(GRATING_STATE, GratingState.LOWER)
+                .setValue(FLUID, Registry.FLUID.getKey(fluidState.getType()))
+                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1));
+        BlockPos blockPos = context.getClickedPos();
+        Direction direction = context.getHorizontalDirection();
 
-        return direction != Direction.DOWN && (direction == Direction.UP || context.getBlockPos().getY() - (double) blockPos.getY() <= 0.5D) ? blockState : blockState.with(GRATING_STATE, GratingState.UPPER);
+        return direction != Direction.DOWN && (direction == Direction.UP || context.getClickedPos().getY() - (double) blockPos.getY() <= 0.5D) ? blockState : blockState.setValue(GRATING_STATE, GratingState.UPPER);
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
-        return blockState.get(GRATING_STATE) == GratingState.UPPER ?
-                Block.createCuboidShape(0.0D, 14.0D, 0.0D, 16.0D, 16.0D, 16.0D) :
-                Block.createCuboidShape(0.0D, 6.0D, 0.0D, 16.0D, 8.0D, 16.0D);
+    public VoxelShape getShape(BlockState blockState, BlockGetter blockView, BlockPos blockPos, CollisionContext context) {
+        return blockState.getValue(GRATING_STATE) == GratingState.UPPER ?
+                Block.box(0.0D, 14.0D, 0.0D, 16.0D, 16.0D, 16.0D) :
+                Block.box(0.0D, 6.0D, 0.0D, 16.0D, 8.0D, 16.0D);
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState blockState, Direction direction, BlockState neighborBlockState, WorldAccess world, BlockPos blockPos, BlockPos neighborBlockPos) {
-        if (!blockState.get(FLUID).equals(Constants.Misc.EMPTY)) {
-            world.getFluidTickScheduler().schedule(blockPos, Registry.FLUID.get(blockState.get(FLUID)), Registry.FLUID.get(blockState.get(FLUID)).getTickRate(world));
+    public BlockState updateShape(BlockState blockState, Direction direction, BlockState neighborBlockState, LevelAccessor world, BlockPos blockPos, BlockPos neighborBlockPos) {
+        if (!blockState.getValue(FLUID).equals(Constants.Misc.EMPTY)) {
+            world.getLiquidTicks().scheduleTick(blockPos, Registry.FLUID.get(blockState.getValue(FLUID)), Registry.FLUID.get(blockState.getValue(FLUID)).getTickDelay(world));
         }
 
-        return super.getStateForNeighborUpdate(blockState, direction, neighborBlockState, world, blockPos, neighborBlockPos);
+        return super.updateShape(blockState, direction, neighborBlockState, world, blockPos, neighborBlockPos);
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(FLUID).add(GRATING_STATE).add(FlowableFluid.LEVEL);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(FLUID).add(GRATING_STATE).add(FlowingFluid.LEVEL);
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        FluidState state1 = Registry.FLUID.get(state.get(FLUID)).getDefaultState();
-        if (state1.getEntries().containsKey(FlowableFluid.LEVEL)) {
-            state1 = state1.with(FlowableFluid.LEVEL, state.get(FlowableFluid.LEVEL));
+        FluidState state1 = Registry.FLUID.get(state.getValue(FLUID)).defaultFluidState();
+        if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
+            state1 = state1.setValue(FlowingFluid.LEVEL, state.getValue(FlowingFluid.LEVEL));
         }
         return state1;
     }
 
-    public enum GratingState implements StringIdentifiable {
+    public enum GratingState implements StringRepresentable {
         UPPER("upper"),
         LOWER("lower");
 
@@ -107,7 +107,7 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return this.name;
         }
     }

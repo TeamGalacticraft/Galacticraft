@@ -23,11 +23,11 @@
 package com.hrznstudio.galacticraft.recipe;
 
 import com.hrznstudio.galacticraft.Constants;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -50,7 +50,7 @@ public class GalacticraftRecipes {
     }
 
     private static <T extends Recipe<?>> RecipeType<T> registerType(String id) {
-        return Registry.register(Registry.RECIPE_TYPE, new Identifier(Constants.MOD_ID, id), new RecipeType<T>() {
+        return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(Constants.MOD_ID, id), new RecipeType<T>() {
             public String toString() {
                 return id;
             }
@@ -58,6 +58,6 @@ public class GalacticraftRecipes {
     }
 
     private static <S extends RecipeSerializer<T>, T extends Recipe<?>> S registerSerializer(String id, S serializer) {
-        return Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constants.MOD_ID, id), serializer);
+        return Registry.register(Registry.RECIPE_SERIALIZER, new ResourceLocation(Constants.MOD_ID, id), serializer);
     }
 }

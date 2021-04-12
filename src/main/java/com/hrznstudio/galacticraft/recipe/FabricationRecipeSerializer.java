@@ -23,13 +23,14 @@
 package com.hrznstudio.galacticraft.recipe;
 
 import com.google.gson.JsonObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.util.registry.Registry;
+import com.hrznstudio.galacticraft.recipe.FabricationRecipeSerializer.RecipeFactory;
+import net.minecraft.core.Registry;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -42,37 +43,37 @@ public class FabricationRecipeSerializer<T extends FabricationRecipe> implements
     }
 
     @Override
-    public void write(PacketByteBuf packetByteBuf, T recipe) {
-        packetByteBuf.writeString(recipe.group);
-        recipe.getInput().write(packetByteBuf);
-        packetByteBuf.writeItemStack(recipe.getOutput());
+    public void write(FriendlyByteBuf packetByteBuf, T recipe) {
+        packetByteBuf.writeUtf(recipe.group);
+        recipe.getInput().toNetwork(packetByteBuf);
+        packetByteBuf.writeItem(recipe.getResultItem());
     }
 
     @Override
-    public T read(Identifier id, PacketByteBuf packet) {
-        String group = packet.readString(32767);
-        Ingredient ingredient = Ingredient.fromPacket(packet);
-        ItemStack stack = packet.readItemStack();
+    public T fromNetwork(ResourceLocation id, FriendlyByteBuf packet) {
+        String group = packet.readUtf(32767);
+        Ingredient ingredient = Ingredient.fromNetwork(packet);
+        ItemStack stack = packet.readItem();
         return this.recipeFactory.create(id, group, ingredient, stack);
     }
 
     @Override
-    public T read(Identifier id, JsonObject json) {
-        String group = JsonHelper.getString(json, "group", "");
+    public T fromJson(ResourceLocation id, JsonObject json) {
+        String group = GsonHelper.getAsString(json, "group", "");
         Ingredient inputIngredient;
-        if (JsonHelper.hasArray(json, "ingredient")) {
-            inputIngredient = Ingredient.fromJson(JsonHelper.getArray(json, "ingredient"));
+        if (GsonHelper.isArrayNode(json, "ingredient")) {
+            inputIngredient = Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "ingredient"));
         } else {
-            inputIngredient = Ingredient.fromJson(JsonHelper.getObject(json, "ingredient"));
+            inputIngredient = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "ingredient"));
         }
 
-        String result = JsonHelper.getString(json, "result");
-        int count = JsonHelper.getInt(json, "count");
-        ItemStack outputItem = new ItemStack(Registry.ITEM.get(new Identifier(result)), count);
+        String result = GsonHelper.getAsString(json, "result");
+        int count = GsonHelper.getAsInt(json, "count");
+        ItemStack outputItem = new ItemStack(Registry.ITEM.get(new ResourceLocation(result)), count);
         return this.recipeFactory.create(id, group, inputIngredient, outputItem);
     }
 
     interface RecipeFactory<T extends FabricationRecipe> {
-        T create(Identifier id, String var2, Ingredient input, ItemStack output);
+        T create(ResourceLocation id, String var2, Ingredient input, ItemStack output);
     }
 }

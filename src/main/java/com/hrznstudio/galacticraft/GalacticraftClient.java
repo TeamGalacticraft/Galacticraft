@@ -50,17 +50,16 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelLoader;
-import net.minecraft.client.render.model.UnbakedModel;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.world.inventory.InventoryMenu;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -84,20 +83,20 @@ public class GalacticraftClient implements ClientModInitializer {
         capeLoader.register(jsonCapes);
         capeLoader.load();
 
-        ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) -> {
+        ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register((spriteAtlasTexture, registry) -> {
             for (int i = 0; i < 8; i++) {
-                registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_" + i));
-                registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + i));
+                registry.register(new ResourceLocation(Constants.MOD_ID, "block/energy_storage_module_" + i));
+                registry.register(new ResourceLocation(Constants.MOD_ID, "block/oxygen_storage_module_" + i));
             }
 
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_HEAD));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_CHEST));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_PANTS));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_BOOTS));
+            registry.register(new ResourceLocation(Constants.MOD_ID, Constants.SlotSprites.THERMAL_HEAD));
+            registry.register(new ResourceLocation(Constants.MOD_ID, Constants.SlotSprites.THERMAL_CHEST));
+            registry.register(new ResourceLocation(Constants.MOD_ID, Constants.SlotSprites.THERMAL_PANTS));
+            registry.register(new ResourceLocation(Constants.MOD_ID, Constants.SlotSprites.THERMAL_BOOTS));
 
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_MASK));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_GEAR));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_TANK));
+            registry.register(new ResourceLocation(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_MASK));
+            registry.register(new ResourceLocation(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_GEAR));
+            registry.register(new ResourceLocation(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_TANK));
 
             registry.register(Constants.Fluids.getIdentifier(Constants.Fluids.CRUDE_OIL_STILL));
             registry.register(Constants.Fluids.getIdentifier(Constants.Fluids.CRUDE_OIL_FLOWING));
@@ -137,18 +136,18 @@ public class GalacticraftClient implements ClientModInitializer {
         GalacticraftC2SPacketReceivers.register();
         GCGeneratedMachineModels.registerDefaults();
 
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.TIN_LADDER, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLASS_FLUID_PIPE, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.WALKWAY, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.MOON_BERRY_BUSH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_TORCH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_WALL_TORCH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_TORCH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_WALL_TORCH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_LANTERN, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_LANTERN, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.TIN_LADDER, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLASS_FLUID_PIPE, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.WALKWAY, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.MOON_BERRY_BUSH, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_TORCH, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_WALL_TORCH, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_TORCH, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_WALL_TORCH, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_LANTERN, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_LANTERN, RenderType.cutout());
 
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new GCResourceReloadListener());
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new GCResourceReloadListener());
 
         ParticleFactoryRegistry.getInstance().register(GalacticraftParticles.DRIPPING_FUEL_PARTICLE, (effect1, world1, x1, y1, z1, velX1, velY1, velZ1) -> new DrippingFuelParticle(world1, x1, y1, z1, velX1, velY1, velZ1));
         ParticleFactoryRegistry.getInstance().register(GalacticraftParticles.DRIPPING_CRUDE_OIL_PARTICLE, (effect, world, x, y, z, velX, velY, velZ) -> new DrippingCrudeOilParticle(world, x, y, z, velX, velY, velZ));
@@ -157,28 +156,28 @@ public class GalacticraftClient implements ClientModInitializer {
             if (resourceId.equals(GCGeneratedMachineModels.MACHINE_MARKER)) {
                 return new UnbakedModel() {
                     @Override
-                    public Collection<Identifier> getModelDependencies() {
+                    public Collection<ResourceLocation> getDependencies() {
                         return Collections.emptyList();
                     }
 
                     @Override
-                    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-                        ImmutableList.Builder<SpriteIdentifier> builder = ImmutableList.builder();
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_side")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_power_input")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_power_output")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_oxygen_input")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_oxygen_output")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_fluid_input")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_fluid_output")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_item_input")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_item_output")));
+                    public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+                        ImmutableList.Builder<Material> builder = ImmutableList.builder();
+                        builder.add(new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Constants.MOD_ID, "block/machine")));
+                        builder.add(new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Constants.MOD_ID, "block/machine_side")));
+                        builder.add(new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Constants.MOD_ID, "block/machine_power_input")));
+                        builder.add(new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Constants.MOD_ID, "block/machine_power_output")));
+                        builder.add(new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Constants.MOD_ID, "block/machine_oxygen_input")));
+                        builder.add(new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Constants.MOD_ID, "block/machine_oxygen_output")));
+                        builder.add(new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Constants.MOD_ID, "block/machine_fluid_input")));
+                        builder.add(new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Constants.MOD_ID, "block/machine_fluid_output")));
+                        builder.add(new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Constants.MOD_ID, "block/machine_item_input")));
+                        builder.add(new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Constants.MOD_ID, "block/machine_item_output")));
                         return builder.build();
                     }
 
                     @Override
-                    public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+                    public BakedModel bake(ModelBakery loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer, ResourceLocation modelId) {
                         Galacticraft.logger.info("Generating model for: {}", modelId);
                         return GCGeneratedMachineModels.INSTANCE;
                     }
@@ -187,7 +186,7 @@ public class GalacticraftClient implements ClientModInitializer {
             return null;
         });
 
-        SkyPropertiesAccessor.getBY_IDENTIFIER().put(new Identifier(Constants.MOD_ID, "moon"), new MoonSkyProperties());
+        SkyPropertiesAccessor.getBY_IDENTIFIER().put(new ResourceLocation(Constants.MOD_ID, "moon"), new MoonSkyProperties());
 
         Galacticraft.logger.info("[Galacticraft] Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

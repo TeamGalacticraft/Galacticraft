@@ -22,14 +22,14 @@
 
 package com.hrznstudio.galacticraft.api.block;
 
-import net.minecraft.fluid.FlowableFluid;
+import net.minecraft.world.level.material.FlowingFluid;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class FluidBlock extends net.minecraft.block.FluidBlock {
+public class FluidBlock extends net.minecraft.world.level.block.LiquidBlock {
 
-    public FluidBlock(FlowableFluid baseFluid, Settings settings) {
+    public FluidBlock(FlowingFluid baseFluid, Properties settings) {
         super(baseFluid, settings);
     }
 }

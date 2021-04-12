@@ -23,32 +23,32 @@
 package com.hrznstudio.galacticraft.block.environment;
 
 import com.hrznstudio.galacticraft.api.block.FluidBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FlowingFluid;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CrudeOilBlock extends FluidBlock {
-    public CrudeOilBlock(FlowableFluid fluid, Settings settings) {
+    public CrudeOilBlock(FlowingFluid fluid, Properties settings) {
         super(fluid, settings);
     }
 
-    public void onEntityCollision(BlockState blockState, World world, BlockPos blockPos, Entity entity) {
-        if (entity instanceof LivingEntity && this.getFluidState(blockState).getFluid().isStill(this.getFluidState(blockState))) {
-            if (entity instanceof PlayerEntity) {
-                if (((PlayerEntity) entity).isCreative()) {
+    public void entityInside(BlockState blockState, Level world, BlockPos blockPos, Entity entity) {
+        if (entity instanceof LivingEntity && this.getFluidState(blockState).getType().isSource(this.getFluidState(blockState))) {
+            if (entity instanceof Player) {
+                if (((Player) entity).isCreative()) {
                     return;
                 }
             }
-            ((LivingEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 6 * 20));
+            ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 6 * 20));
         }
     }
 

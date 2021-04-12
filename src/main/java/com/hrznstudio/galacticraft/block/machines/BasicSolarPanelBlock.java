@@ -26,29 +26,29 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MultiBlockBase;
 import com.hrznstudio.galacticraft.block.entity.BasicSolarPanelBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BasicSolarPanelBlock extends ConfigurableMachineBlock implements MultiBlockBase {
-    public BasicSolarPanelBlock(Settings settings) {
+    public BasicSolarPanelBlock(Properties settings) {
         super(settings, BasicSolarPanelBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel")
+                new TranslatableComponent("tooltip.galacticraft-rewoven.basic_solar_panel")
                         .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 
     @NotNull
     protected static List<BlockPos> genPartList(BlockPos pos) {
         List<BlockPos> parts = new LinkedList<>();
-        BlockPos rod = pos.up();
-        BlockPos mid = rod.up();
+        BlockPos rod = pos.above();
+        BlockPos mid = rod.above();
         BlockPos front = mid.north();
         BlockPos back = mid.south();
 

@@ -26,64 +26,64 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.api.wire.Wire;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class WireBlock extends BlockWithEntity {
-    public WireBlock(Settings settings) {
+public class WireBlock extends BaseEntityBlock {
+    public WireBlock(Properties settings) {
         super(settings);
     }
 
     @Override
     @Deprecated
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient() && Galacticraft.configManager.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!world.isClientSide() && Galacticraft.configManager.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof Wire) {
                 Galacticraft.logger.info(((Wire) entity).getNetwork());
             }
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.use(state, world, pos, player, hand, hit);
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborUpdate(state, world, pos, block, fromPos, notify);
-        if (!world.isClient()) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        super.neighborChanged(state, world, pos, block, fromPos, notify);
+        if (!world.isClientSide()) {
             ((Wire) world.getBlockEntity(pos)).getNetwork().updateConnections(pos, fromPos);
         }
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBreak(world, pos, state, player);
-        if (!world.isClient()) {
+    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+        super.playerWillDestroy(world, pos, state, player);
+        if (!world.isClientSide()) {
             ((Wire) world.getBlockEntity(pos)).getNetwork().removeWire(pos);
         }
     }
 
     @Override
-    public PistonBehavior getPistonBehavior(BlockState state) {
-        return PistonBehavior.BLOCK;
+    public PushReaction getPistonPushReaction(BlockState state) {
+        return PushReaction.BLOCK;
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView view) {
+    public BlockEntity newBlockEntity(BlockGetter view) {
         return new WireBlockEntity();
     }
 }

@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.api.block.util;
 
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.NotNull;
 
 public enum BlockFace {

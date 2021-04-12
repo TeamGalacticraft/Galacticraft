@@ -36,10 +36,9 @@ import me.shedaniel.rei.api.*;
 import me.shedaniel.rei.api.plugins.REIPluginV0;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.item.Item;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Recipe;
 import java.util.List;
 
 /**
@@ -47,8 +46,8 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public class GalacticraftREIPlugin implements REIPluginV0 {
-    public static final Identifier CIRCUIT_FABRICATION = new Identifier(Constants.MOD_ID, "plugins/circuit_fabricator");
-    public static final Identifier COMPRESSING = new Identifier(Constants.MOD_ID, "plugins/compressing");
+    public static final ResourceLocation CIRCUIT_FABRICATION = new ResourceLocation(Constants.MOD_ID, "plugins/circuit_fabricator");
+    public static final ResourceLocation COMPRESSING = new ResourceLocation(Constants.MOD_ID, "plugins/compressing");
 
     public void registerPluginCategories(RecipeHelper recipeHelper) {
         recipeHelper.registerCategory(new DefaultFabricationCategory());
@@ -62,13 +61,13 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
     }
 
     @Override
-    public Identifier getPluginIdentifier() {
-        return new Identifier(Constants.MOD_ID, Constants.MOD_ID);
+    public ResourceLocation getPluginIdentifier() {
+        return new ResourceLocation(Constants.MOD_ID, Constants.MOD_ID);
     }
 
     @Override
     public void registerRecipeDisplays(RecipeHelper recipeHelper) {
-        for (Recipe<?> value : recipeHelper.getRecipeManager().values()) {
+        for (Recipe<?> value : recipeHelper.getRecipeManager().getRecipes()) {
             if (value instanceof FabricationRecipe) {
                 recipeHelper.registerDisplay(new DefaultFabricationDisplay((FabricationRecipe) value));
             } else if (value instanceof ShapelessCompressingRecipe) {

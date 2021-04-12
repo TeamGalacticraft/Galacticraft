@@ -32,7 +32,7 @@ import com.hrznstudio.galacticraft.attribute.oxygen.EmptyOxygenTank;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class OxygenTankUtils {
     private OxygenTankUtils() {}

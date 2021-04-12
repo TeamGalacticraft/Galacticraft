@@ -24,20 +24,20 @@ package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.CompressorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
-import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.Property;
-import net.minecraft.screen.slot.FurnaceOutputSlot;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.FurnaceResultSlot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CompressorScreenHandler extends MachineScreenHandler<CompressorBlockEntity> {
-    public final Property progress = new Property() {
+    public final DataSlot progress = new DataSlot() {
         @Override
         public int get() {
             return CompressorScreenHandler.this.machine.progress;
@@ -48,7 +48,7 @@ public class CompressorScreenHandler extends MachineScreenHandler<CompressorBloc
             CompressorScreenHandler.this.machine.progress = value;
         }
     };
-    public final Property fuelTime = new Property() {
+    public final DataSlot fuelTime = new DataSlot() {
         @Override
         public int get() {
             return CompressorScreenHandler.this.machine.fuelTime;
@@ -60,10 +60,10 @@ public class CompressorScreenHandler extends MachineScreenHandler<CompressorBloc
         }
     };
 
-    public CompressorScreenHandler(int syncId, PlayerEntity player, CompressorBlockEntity machine) {
+    public CompressorScreenHandler(int syncId, Player player, CompressorBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.COMPRESSOR_HANDLER);
-        this.addProperty(progress);
-        this.addProperty(fuelTime);
+        this.addDataSlot(progress);
+        this.addDataSlot(fuelTime);
 
         // 3x3 compressor input grid
         int slot = 0;
@@ -74,15 +74,15 @@ public class CompressorScreenHandler extends MachineScreenHandler<CompressorBloc
         }
 
         // Fuel slot
-        this.addSlot(new ItemSpecificSlot(this.machine.getWrappedInventory(), CompressorBlockEntity.FUEL_INPUT_SLOT, 3 * 18 + 1, 75, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().toArray(new Item[0])));
+        this.addSlot(new ItemSpecificSlot(this.machine.getWrappedInventory(), CompressorBlockEntity.FUEL_INPUT_SLOT, 3 * 18 + 1, 75, AbstractFurnaceBlockEntity.getFuel().keySet().toArray(new Item[0])));
 
         // Output slot
-        this.addSlot(new FurnaceOutputSlot(player, this.machine.getWrappedInventory(), CompressorBlockEntity.OUTPUT_SLOT, 138, 38));
+        this.addSlot(new FurnaceResultSlot(player, this.machine.getWrappedInventory(), CompressorBlockEntity.OUTPUT_SLOT, 138, 38));
 
         this.addPlayerInventorySlots(0, 110);
     }
 
-    public CompressorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (CompressorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public CompressorScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (CompressorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

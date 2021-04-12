@@ -37,23 +37,23 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.OxygenCompressorScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.util.OxygenTankUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity implements TickableBlockEntity {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int CHARGE_SLOT = 0;
 
@@ -151,7 +151,7 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new OxygenCompressorScreenHandler(syncId, player, this);
         return null;
     }
@@ -160,22 +160,22 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
     private enum Status implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), Formatting.RED, StatusType.MISSING_FLUIDS),
-        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft-rewoven.machinestatus.missing_tank"), Formatting.RED, StatusType.MISSING_ITEMS),
-        CONTAINER_FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-        COMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.compressing"), Formatting.GREEN, StatusType.WORKING);
+        NOT_ENOUGH_ENERGY(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), ChatFormatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_OXYGEN(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), ChatFormatting.RED, StatusType.MISSING_FLUIDS),
+        NOT_ENOUGH_ITEMS(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.missing_tank"), ChatFormatting.RED, StatusType.MISSING_ITEMS),
+        CONTAINER_FULL(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.full"), ChatFormatting.GOLD, StatusType.OUTPUT_FULL),
+        COMPRESSING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.compressing"), ChatFormatting.GREEN, StatusType.WORKING);
 
-        private final Text text;
+        private final Component text;
         private final StatusType type;
 
-        Status(TranslatableText text, Formatting color, StatusType type) {
+        Status(TranslatableComponent text, ChatFormatting color, StatusType type) {
             this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         @Override
-        public @NotNull Text getName() {
+        public @NotNull Component getName() {
             return text;
         }
 

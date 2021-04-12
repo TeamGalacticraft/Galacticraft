@@ -25,23 +25,28 @@ package com.hrznstudio.galacticraft.world.gen.feature;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.gen.stateprovider.MoonFloraBlockStateProvider;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.decorator.ChanceDecoratorConfig;
-import net.minecraft.world.gen.decorator.Decorator;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.gen.placer.SimpleBlockPlacer;
-import net.minecraft.world.gen.stateprovider.BlockStateProviderType;
-import net.minecraft.world.gen.stateprovider.PillarBlockStateProvider;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.blockplacers.SimpleBlockPlacer;
+import net.minecraft.world.level.levelgen.feature.configurations.BlockPileConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
+import net.minecraft.world.level.levelgen.feature.stateproviders.RotatedBlockProvider;
+import net.minecraft.world.level.levelgen.placement.ChanceDecoratorConfiguration;
+import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftFeatures {
-    public static final RandomPatchFeatureConfig MOON_FLOWER_CONFIG = new RandomPatchFeatureConfig.Builder(new MoonFloraBlockStateProvider(), new SimpleBlockPlacer()).tries(64).build();
-    public static final BlockPileFeatureConfig CHEESE_LOG_PILE_CONFIG = new BlockPileFeatureConfig(new PillarBlockStateProvider(GalacticraftBlocks.MOON_CHEESE_LOG));
-    public static final BlockStateProviderType<MoonFloraBlockStateProvider> MOON_FLOWER_PROVIDER = Registry.register(Registry.BLOCK_STATE_PROVIDER_TYPE, new Identifier(Constants.MOD_ID, "moon_flower_provider"), new BlockStateProviderType<>(MoonFloraBlockStateProvider.CODEC));
-    public static final ConfiguredFeature<?, ?> OIL_LAKE = Feature.LAKE.configure(new SingleStateFeatureConfig(GalacticraftBlocks.CRUDE_OIL.getDefaultState())).decorate(Decorator.WATER_LAKE.configure(new ChanceDecoratorConfig(70)));
+    public static final RandomPatchConfiguration MOON_FLOWER_CONFIG = new RandomPatchConfiguration.GrassConfigurationBuilder(new MoonFloraBlockStateProvider(), new SimpleBlockPlacer()).tries(64).build();
+    public static final BlockPileConfiguration CHEESE_LOG_PILE_CONFIG = new BlockPileConfiguration(new RotatedBlockProvider(GalacticraftBlocks.MOON_CHEESE_LOG));
+    public static final BlockStateProviderType<MoonFloraBlockStateProvider> MOON_FLOWER_PROVIDER = Registry.register(Registry.BLOCKSTATE_PROVIDER_TYPES, new ResourceLocation(Constants.MOD_ID, "moon_flower_provider"), new BlockStateProviderType<>(MoonFloraBlockStateProvider.CODEC));
+    public static final ConfiguredFeature<?, ?> OIL_LAKE = Feature.LAKE.configured(new BlockStateConfiguration(GalacticraftBlocks.CRUDE_OIL.defaultBlockState())).decorated(FeatureDecorator.WATER_LAKE.configured(new ChanceDecoratorConfiguration(70)));
 
     public static void register() {
     }

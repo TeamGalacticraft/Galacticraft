@@ -22,12 +22,12 @@
 
 package com.hrznstudio.galacticraft.entity;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.VindicatorEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Vindicator;
+import net.minecraft.world.level.Level;
 
-public class EvolvedVindicatorEntity extends VindicatorEntity {
-    public EvolvedVindicatorEntity(EntityType<? extends EvolvedVindicatorEntity> entityType, World world) {
+public class EvolvedVindicatorEntity extends Vindicator {
+    public EvolvedVindicatorEntity(EntityType<? extends EvolvedVindicatorEntity> entityType, Level world) {
         super(entityType, world);
     }
 }

@@ -25,17 +25,16 @@ package com.hrznstudio.galacticraft.block.environment;
 import com.hrznstudio.galacticraft.Constants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.WallTorchBlock;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.WallTorchBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import java.util.List;
 import java.util.Random;
 
@@ -44,22 +43,22 @@ import java.util.Random;
  */
 public class GlowstoneWallTorchBlock extends WallTorchBlock {
 
-    public GlowstoneWallTorchBlock(Settings settings) {
+    public GlowstoneWallTorchBlock(Properties settings) {
         super(settings, null);
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void randomDisplayTick(BlockState blockState, World world, BlockPos blockPos, Random random) {
+    public void animateTick(BlockState blockState, Level world, BlockPos blockPos, Random random) {
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
+    public void appendHoverText(ItemStack stack, BlockGetter blockView, List<Component> list, TooltipFlag tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableText("tooltip.galacticraft-rewoven.glowstone_torch").setStyle(Constants.Styles.GRAY_STYLE));
+            list.add(new TranslatableComponent("tooltip.galacticraft-rewoven.glowstone_torch").setStyle(Constants.Styles.GRAY_STYLE));
         } else {
-            list.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Styles.GRAY_STYLE));
+            list.add(new TranslatableComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Styles.GRAY_STYLE));
         }
     }
 }

@@ -23,15 +23,15 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import net.minecraft.client.render.SkyProperties;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.DimensionSpecialEffects;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(SkyProperties.class)
+@Mixin(DimensionSpecialEffects.class)
 public interface SkyPropertiesAccessor {
     @Accessor
-    static Object2ObjectMap<Identifier, SkyProperties> getBY_IDENTIFIER() {
+    static Object2ObjectMap<ResourceLocation, DimensionSpecialEffects> getBY_IDENTIFIER() {
         throw new UnsupportedOperationException("Untransformed accessor");
     }
 }

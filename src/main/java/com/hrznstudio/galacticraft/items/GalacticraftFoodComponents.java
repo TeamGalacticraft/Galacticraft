@@ -22,24 +22,24 @@
 
 package com.hrznstudio.galacticraft.items;
 
-import net.minecraft.item.FoodComponent;
+import net.minecraft.world.food.FoodProperties;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftFoodComponents {
-    public static final FoodComponent MOON_BERRIES = new FoodComponent.Builder().hunger(1).saturationModifier(0.0F).build();
-    public static final FoodComponent CHEESE_CURD = new FoodComponent.Builder().hunger(1).saturationModifier(0.1F).build();
-    public static final FoodComponent CHEESE_SLICE = new FoodComponent.Builder().hunger(2).saturationModifier(0.1F).build();
-    public static final FoodComponent BURGER_BUN = new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build();
-    public static final FoodComponent GROUND_BEEF = new FoodComponent.Builder().hunger(3).saturationModifier(0.6F).meat().build();
-    public static final FoodComponent BEEF_PATTY = new FoodComponent.Builder().hunger(4).saturationModifier(0.8F).meat().build();
-    public static final FoodComponent CHEESEBURGER = new FoodComponent.Builder().hunger(14).saturationModifier(4.0F).build();
+    public static final FoodProperties MOON_BERRIES = new FoodProperties.Builder().nutrition(1).saturationMod(0.0F).build();
+    public static final FoodProperties CHEESE_CURD = new FoodProperties.Builder().nutrition(1).saturationMod(0.1F).build();
+    public static final FoodProperties CHEESE_SLICE = new FoodProperties.Builder().nutrition(2).saturationMod(0.1F).build();
+    public static final FoodProperties BURGER_BUN = new FoodProperties.Builder().nutrition(2).saturationMod(0.3F).build();
+    public static final FoodProperties GROUND_BEEF = new FoodProperties.Builder().nutrition(3).saturationMod(0.6F).meat().build();
+    public static final FoodProperties BEEF_PATTY = new FoodProperties.Builder().nutrition(4).saturationMod(0.8F).meat().build();
+    public static final FoodProperties CHEESEBURGER = new FoodProperties.Builder().nutrition(14).saturationMod(4.0F).build();
 
-    public static final FoodComponent DEHYDRATED_APPLE = new FoodComponent.Builder().hunger(8).saturationModifier(0.3F).build();
-    public static final FoodComponent DEHYDRATED_CARROT = new FoodComponent.Builder().hunger(8).saturationModifier(0.6F).build();
-    public static final FoodComponent DEHYDRATED_MELON = new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build();
-    public static final FoodComponent DEHYDRATED_POTATO = new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build();
-    public static final FoodComponent CANNED_BEEF = new FoodComponent.Builder().hunger(8).saturationModifier(0.6F).build();
+    public static final FoodProperties DEHYDRATED_APPLE = new FoodProperties.Builder().nutrition(8).saturationMod(0.3F).build();
+    public static final FoodProperties DEHYDRATED_CARROT = new FoodProperties.Builder().nutrition(8).saturationMod(0.6F).build();
+    public static final FoodProperties DEHYDRATED_MELON = new FoodProperties.Builder().nutrition(4).saturationMod(0.3F).build();
+    public static final FoodProperties DEHYDRATED_POTATO = new FoodProperties.Builder().nutrition(2).saturationMod(0.3F).build();
+    public static final FoodProperties CANNED_BEEF = new FoodProperties.Builder().nutrition(8).saturationMod(0.6F).build();
 
 }

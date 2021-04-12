@@ -24,24 +24,24 @@ package com.hrznstudio.galacticraft.block.environment;
 
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.entity.damage.GalacticraftDamageSource;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ShearsItem;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ShearsItem;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CavernousVineBlockPoisonous extends CavernousVineBlock {
 
-    public CavernousVineBlockPoisonous(Settings settings) {
+    public CavernousVineBlockPoisonous(Properties settings) {
         super(settings);
     }
 
@@ -49,17 +49,17 @@ public class CavernousVineBlockPoisonous extends CavernousVineBlock {
     public void onCollided(LivingEntity entity) {
         // Override the one from CavernousVineBlock and only bring them up. Apply damage and rotate player.
         dragEntityUp(entity);
-        entity.damage(GalacticraftDamageSource.VINE_POISON, 5.0f);
-        entity.yaw += 0.4F; // Spin the player
+        entity.hurt(GalacticraftDamageSource.VINE_POISON, 5.0f);
+        entity.yRot += 0.4F; // Spin the player
     }
 
     @Override
-    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
-        if (player.getStackInHand(hand).getItem() instanceof ShearsItem) {
-            world.setBlockState(blockPos, GalacticraftBlocks.CAVERNOUS_VINE.getDefaultState().with(VINES, blockState.get(VINES)));
-            world.playSound(blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 1f, 1f, true);
-            return ActionResult.SUCCESS;
+    public InteractionResult use(BlockState blockState, Level world, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+        if (player.getItemInHand(hand).getItem() instanceof ShearsItem) {
+            world.setBlockAndUpdate(blockPos, GalacticraftBlocks.CAVERNOUS_VINE.defaultBlockState().setValue(VINES, blockState.getValue(VINES)));
+            world.playLocalSound(blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.GRASS_BREAK, SoundSource.BLOCKS, 1f, 1f, true);
+            return InteractionResult.SUCCESS;
         }
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 }

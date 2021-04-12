@@ -25,20 +25,20 @@ package com.hrznstudio.galacticraft.mixin.client;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlayerInventoryGCScreen;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Items;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -50,32 +50,32 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(InventoryScreen.class)
 @Environment(EnvType.CLIENT)
-public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen<PlayerScreenHandler> {
-    private static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS));
+public abstract class PlayerInventoryScreenMixin extends EffectRenderingInventoryScreen<InventoryMenu> {
+    private static final ResourceLocation TABS_TEXTURE = new ResourceLocation(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS));
 
-    public PlayerInventoryScreenMixin(PlayerScreenHandler screenHandler, PlayerInventory playerInventory, Text textComponent) {
+    public PlayerInventoryScreenMixin(InventoryMenu screenHandler, Inventory playerInventory, Component textComponent) {
         super(screenHandler, playerInventory, textComponent);
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
-        if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), x + 30, x + 59)
-                && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), y - 26, y)) {
-            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "open_gc_inv"), new PacketByteBuf(Unpooled.buffer(0)));
+        if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), leftPos + 30, leftPos + 59)
+                && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), topPos - 26, topPos)) {
+            ClientPlayNetworking.send(new ResourceLocation(Constants.MOD_ID, "open_gc_inv"), new FriendlyByteBuf(Unpooled.buffer(0)));
         }
     }
 
     @Inject(method = "drawBackground", at = @At("TAIL"))
-    public void drawBackground(MatrixStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
-        this.client.getTextureManager().bindTexture(TABS_TEXTURE);
-        this.drawTexture(matrices, this.x, this.y - 28, 0, 0, 57, 32);
+    public void drawBackground(PoseStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
+        this.minecraft.getTextureManager().bind(TABS_TEXTURE);
+        this.blit(matrices, this.leftPos, this.topPos - 28, 0, 0, 57, 32);
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
-        DiffuseLighting.enable();
-        this.itemRenderer.renderInGuiWithOverrides(Items.CRAFTING_TABLE.getDefaultStack(), this.x + 6, this.y - 20);
-        this.itemRenderer.renderInGuiWithOverrides(GalacticraftItems.OXYGEN_MASK.getDefaultStack(), this.x + 35, this.y - 20);
-        DiffuseLighting.disable();
+    public void render(PoseStack matrices, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
+        Lighting.turnBackOn();
+        this.itemRenderer.renderAndDecorateItem(Items.CRAFTING_TABLE.getDefaultInstance(), this.leftPos + 6, this.topPos - 20);
+        this.itemRenderer.renderAndDecorateItem(GalacticraftItems.OXYGEN_MASK.getDefaultInstance(), this.leftPos + 35, this.topPos - 20);
+        Lighting.turnOff();
     }
 }

@@ -25,31 +25,30 @@ package com.hrznstudio.galacticraft.world.gen.feature;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.mojang.serialization.Codec;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.SpawnSettings;
-import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.gen.ChunkRandom;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.chunk.StructureConfig;
-import net.minecraft.world.gen.feature.JigsawFeature;
-import net.minecraft.world.gen.feature.StructureFeature;
-import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
-
 import java.util.List;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
+import net.minecraft.world.level.levelgen.feature.JigsawFeature;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonPillagerBaseFeature extends JigsawFeature {
-    private static final List<SpawnSettings.SpawnEntry> MONSTER_SPAWNS = ImmutableList.<SpawnSettings.SpawnEntry>builder().add(new SpawnSettings.SpawnEntry(GalacticraftEntityTypes.EVOLVED_PILLAGER, 1, 1, 2)).build();
+    private static final List<MobSpawnSettings.SpawnerData> MONSTER_SPAWNS = ImmutableList.<MobSpawnSettings.SpawnerData>builder().add(new MobSpawnSettings.SpawnerData(GalacticraftEntityTypes.EVOLVED_PILLAGER, 1, 1, 2)).build();
 
-    public MoonPillagerBaseFeature(Codec<StructurePoolFeatureConfig> codec) {
+    public MoonPillagerBaseFeature(Codec<JigsawConfiguration> codec) {
         super(codec, 0, true, true);
     }
 
     @Override
-    protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long l, ChunkRandom chunkRandom, int i, int j, Biome biome, ChunkPos chunkPos, StructurePoolFeatureConfig structurePoolFeatureConfig) {
+    protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long l, WorldgenRandom chunkRandom, int i, int j, Biome biome, ChunkPos chunkPos, JigsawConfiguration structurePoolFeatureConfig) {
         int k = i >> 4;
         int m = j >> 4;
         chunkRandom.setSeed((long)(k ^ m << 4) ^ l);
@@ -61,12 +60,12 @@ public class MoonPillagerBaseFeature extends JigsawFeature {
         }
     }
 
-    private boolean ensureNoVillage(ChunkGenerator chunkGenerator, long l, ChunkRandom chunkRandom, int i, int j) {
-        StructureConfig structureConfig = chunkGenerator.getStructuresConfig().getForType(StructureFeature.VILLAGE);
+    private boolean ensureNoVillage(ChunkGenerator chunkGenerator, long l, WorldgenRandom chunkRandom, int i, int j) {
+        StructureFeatureConfiguration structureConfig = chunkGenerator.getSettings().getConfig(StructureFeature.VILLAGE);
         if (structureConfig != null) {
             for (int k = i - 10; k <= i + 10; ++k) {
                 for (int m = j - 10; m <= j + 10; ++m) {
-                    ChunkPos chunkPos = StructureFeature.VILLAGE.getStartChunk(structureConfig, l, chunkRandom, k, m);
+                    ChunkPos chunkPos = StructureFeature.VILLAGE.getPotentialFeatureChunk(structureConfig, l, chunkRandom, k, m);
                     if (k == chunkPos.x && m == chunkPos.z) {
                         return true;
                     }
@@ -78,7 +77,7 @@ public class MoonPillagerBaseFeature extends JigsawFeature {
     }
 
     @Override
-    public List<SpawnSettings.SpawnEntry> getMonsterSpawns() {
+    public List<MobSpawnSettings.SpawnerData> getSpecialEnemies() {
         return MONSTER_SPAWNS;
     }
 }

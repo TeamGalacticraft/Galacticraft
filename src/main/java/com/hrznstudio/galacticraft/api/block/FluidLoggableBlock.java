@@ -23,44 +23,43 @@
 package com.hrznstudio.galacticraft.api.block;
 
 import com.hrznstudio.galacticraft.Constants;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FluidDrainable;
-import net.minecraft.block.FluidFillable;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.property.Property;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldAccess;
-
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.BucketPickup;
+import net.minecraft.world.level.block.LiquidBlockContainer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
+public interface FluidLoggableBlock extends BucketPickup, LiquidBlockContainer {
 
     String DOT_REP = "_gcr_dot_";
     String DASH_REP = "_gcr_dash__"; // yes this is bad.... but who's gonna name a mod/fluid something like that
     String COLON_REP = "_gcr_colon_";
 
-    Property<Identifier> FLUID = new Property<Identifier>("fluid", Identifier.class) {
-        private final List<Identifier> VALUES = new LinkedList<>();
+    Property<ResourceLocation> FLUID = new Property<ResourceLocation>("fluid", ResourceLocation.class) {
+        private final List<ResourceLocation> VALUES = new LinkedList<>();
 
         @Override
-        public Collection<Identifier> getValues() {
+        public Collection<ResourceLocation> getPossibleValues() {
             if (VALUES.isEmpty()) {
                 for (Fluid f : Registry.FLUID) {
-                    if (f instanceof FlowableFluid) {
-                        VALUES.add(Registry.FLUID.getId(f));
+                    if (f instanceof FlowingFluid) {
+                        VALUES.add(Registry.FLUID.getKey(f));
                     }
                 }
                 VALUES.add(Constants.Misc.EMPTY);
@@ -69,12 +68,12 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
         }
 
         @Override
-        public Optional<Identifier> parse(String name) {
-            return Optional.of(new Identifier(name.replace(DOT_REP, ".").replace(DASH_REP, "-").replace(COLON_REP, ":")));
+        public Optional<ResourceLocation> getValue(String name) {
+            return Optional.of(new ResourceLocation(name.replace(DOT_REP, ".").replace(DASH_REP, "-").replace(COLON_REP, ":")));
         }
 
         @Override
-        public String name(Identifier value) {
+        public String name(ResourceLocation value) {
             if (value.toString().contains(DOT_REP) || value.toString().contains(DASH_REP) || value.toString().contains(COLON_REP))
                 throw new RuntimeException("Bad fluid!" + value);
             return value.toString().replace(".", DOT_REP).replace("-", DASH_REP).replace(":", COLON_REP);
@@ -82,17 +81,17 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
     };
 
     @Override
-    default boolean canFillWithFluid(BlockView view, BlockPos pos, BlockState state, Fluid fluid) {
-        return state.get(FLUID).equals(Constants.Misc.EMPTY);
+    default boolean canPlaceLiquid(BlockGetter view, BlockPos pos, BlockState state, Fluid fluid) {
+        return state.getValue(FLUID).equals(Constants.Misc.EMPTY);
     }
 
     @Override
-    default boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) {
-        if (state.get(FLUID).equals(Constants.Misc.EMPTY)) {
-            if (!world.isClient()) {
-                world.setBlockState(pos, state.with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
-                        .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1)), 3);
-                world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
+    default boolean placeLiquid(LevelAccessor world, BlockPos pos, BlockState state, FluidState fluidState) {
+        if (state.getValue(FLUID).equals(Constants.Misc.EMPTY)) {
+            if (!world.isClientSide()) {
+                world.setBlock(pos, state.setValue(FLUID, Registry.FLUID.getKey(fluidState.getType()))
+                        .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)), 3);
+                world.getLiquidTicks().scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
             }
             return true;
         } else {
@@ -101,15 +100,15 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
     }
 
     @Override
-    default Fluid tryDrainFluid(WorldAccess world, BlockPos pos, BlockState state) {
-        if (!state.get(FLUID).equals(Constants.Misc.EMPTY)) {
-            world.setBlockState(pos, state.with(FLUID, Constants.Misc.EMPTY), 3);
-            if (Registry.FLUID.get(state.get(FLUID)).getDefaultState().isStill()) {
-                return Registry.FLUID.get(state.get(FLUID));
+    default Fluid takeLiquid(LevelAccessor world, BlockPos pos, BlockState state) {
+        if (!state.getValue(FLUID).equals(Constants.Misc.EMPTY)) {
+            world.setBlock(pos, state.setValue(FLUID, Constants.Misc.EMPTY), 3);
+            if (Registry.FLUID.get(state.getValue(FLUID)).defaultFluidState().isSource()) {
+                return Registry.FLUID.get(state.getValue(FLUID));
             }
         }
         return Fluids.EMPTY;
     }
 
-    BlockState getPlacementState(ItemPlacementContext context);
+    BlockState getPlacementState(BlockPlaceContext context);
 }

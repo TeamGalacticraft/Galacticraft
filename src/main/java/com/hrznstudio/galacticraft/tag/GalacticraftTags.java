@@ -25,23 +25,23 @@ package com.hrznstudio.galacticraft.tag;
 import com.hrznstudio.galacticraft.Constants;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.fabricmc.fabric.mixin.tag.extension.AccessorFluidTags;
-import net.minecraft.block.Block;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.Tag;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftTags {
     private static final String COMMON_NAMESPACE = "c";
-    public static final Tag.Identified<Fluid> OIL = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "oil"), AccessorFluidTags.getRequiredTags()::getGroup);
-    public static final Tag.Identified<Fluid> FUEL = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "fuel"), AccessorFluidTags.getRequiredTags()::getGroup);
-    public static final Tag.Identified<Fluid> OXYGEN = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "oxygen"), AccessorFluidTags.getRequiredTags()::getGroup);
+    public static final Tag.Named<Fluid> OIL = TagRegistry.create(new ResourceLocation(COMMON_NAMESPACE, "oil"), AccessorFluidTags.getRequiredTags()::getAllTags);
+    public static final Tag.Named<Fluid> FUEL = TagRegistry.create(new ResourceLocation(COMMON_NAMESPACE, "fuel"), AccessorFluidTags.getRequiredTags()::getAllTags);
+    public static final Tag.Named<Fluid> OXYGEN = TagRegistry.create(new ResourceLocation(COMMON_NAMESPACE, "oxygen"), AccessorFluidTags.getRequiredTags()::getAllTags);
 
-    public static final Tag.Identified<Block> INFINIBURN_MOON = TagRegistry.create(new Identifier(Constants.MOD_ID, "infiniburn_moon"), BlockTags::getTagGroup);
-    public static final Tag.Identified<Block> MOON_STONE = TagRegistry.create(new Identifier(Constants.MOD_ID, "moon_stone"), BlockTags::getTagGroup);
+    public static final Tag.Named<Block> INFINIBURN_MOON = TagRegistry.create(new ResourceLocation(Constants.MOD_ID, "infiniburn_moon"), BlockTags::getAllTags);
+    public static final Tag.Named<Block> MOON_STONE = TagRegistry.create(new ResourceLocation(Constants.MOD_ID, "moon_stone"), BlockTags::getAllTags);
 
     public static void register() {
     }

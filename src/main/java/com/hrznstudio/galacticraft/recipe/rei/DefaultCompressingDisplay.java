@@ -25,7 +25,7 @@ package com.hrznstudio.galacticraft.recipe.rei;
 import me.shedaniel.rei.api.RecipeDisplay;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @Environment(EnvType.CLIENT)
 public interface DefaultCompressingDisplay extends RecipeDisplay {
-    default @NotNull Identifier getRecipeCategory() {
+    default @NotNull ResourceLocation getRecipeCategory() {
         return GalacticraftREIPlugin.COMPRESSING;
     }
 

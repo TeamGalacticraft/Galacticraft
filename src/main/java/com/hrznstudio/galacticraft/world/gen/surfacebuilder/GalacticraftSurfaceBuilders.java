@@ -23,17 +23,17 @@
 package com.hrznstudio.galacticraft.world.gen.surfacebuilder;
 
 import com.hrznstudio.galacticraft.Constants;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
-import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilder;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilderBaseConfiguration;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftSurfaceBuilders {
-    public static final SurfaceBuilder<MultiBlockSurfaceConfig> MULTI_BLOCK_SURFACE_BUILDER = Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constants.MOD_ID, "multi_block"), new MultiBlockSurfaceBuilder(MultiBlockSurfaceConfig.CODEC));
-    public static final SurfaceBuilder<TernarySurfaceConfig> MOON = Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constants.MOD_ID, "moon"), new MoonSurfaceBuilder<>(TernarySurfaceConfig.CODEC));
+    public static final SurfaceBuilder<MultiBlockSurfaceConfig> MULTI_BLOCK_SURFACE_BUILDER = Registry.register(Registry.SURFACE_BUILDER, new ResourceLocation(Constants.MOD_ID, "multi_block"), new MultiBlockSurfaceBuilder(MultiBlockSurfaceConfig.CODEC));
+    public static final SurfaceBuilder<SurfaceBuilderBaseConfiguration> MOON = Registry.register(Registry.SURFACE_BUILDER, new ResourceLocation(Constants.MOD_ID, "moon"), new MoonSurfaceBuilder<>(SurfaceBuilderBaseConfiguration.CODEC));
 
     public static void register() {
     }

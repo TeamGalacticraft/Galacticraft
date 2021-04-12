@@ -25,16 +25,16 @@ package com.hrznstudio.galacticraft.screen;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.screen.slot.OxygenTankSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleDistributorBlockEntity> {
 
-    public BubbleDistributorScreenHandler(int syncId, PlayerEntity player, BubbleDistributorBlockEntity machine) {
+    public BubbleDistributorScreenHandler(int syncId, Player player, BubbleDistributorBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.BUBBLE_DISTRIBUTOR_HANDLER);
 
         this.addSlot(new ChargeSlot(machine.getWrappedInventory(), BubbleDistributorBlockEntity.BATTERY_SLOT, 8, 62));
@@ -43,7 +43,7 @@ public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleD
         this.addPlayerInventorySlots(0, 84);
     }
 
-    public BubbleDistributorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (BubbleDistributorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public BubbleDistributorScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (BubbleDistributorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

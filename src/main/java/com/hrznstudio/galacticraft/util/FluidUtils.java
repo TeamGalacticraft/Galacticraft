@@ -37,12 +37,12 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.attributes.misc.Ref;
 import alexiil.mc.lib.attributes.misc.Reference;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tag.Tag;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 
 public class FluidUtils {
     private FluidUtils() {}
@@ -127,15 +127,15 @@ public class FluidUtils {
         return FluidAttributes.FIXED_INV_VIEW.get(stack) != EmptyFixedFluidInv.INSTANCE;
     }
 
-    public static FluidInsertable getInsertable(World world, BlockPos pos, Direction direction) {
+    public static FluidInsertable getInsertable(Level world, BlockPos pos, Direction direction) {
         return FluidAttributes.INSERTABLE.getFirst(world, pos, SearchOptions.inDirection(direction));
     }
 
-    public static FluidExtractable getExtractable(World world, BlockPos pos, Direction direction) {
+    public static FluidExtractable getExtractable(Level world, BlockPos pos, Direction direction) {
         return FluidAttributes.EXTRACTABLE.getFirst(world, pos, SearchOptions.inDirection(direction));
     }
 
-    public static boolean isExtractableOrInsertable(World world, BlockPos pos, Direction direction) {
+    public static boolean isExtractableOrInsertable(Level world, BlockPos pos, Direction direction) {
         return FluidAttributes.EXTRACTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null
                 || FluidAttributes.INSERTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null;
     }

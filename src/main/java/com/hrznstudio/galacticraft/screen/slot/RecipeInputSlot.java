@@ -22,30 +22,30 @@
 
 package com.hrznstudio.galacticraft.screen.slot;
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RecipeInputSlot<I extends Inventory, T extends Recipe<I>> extends Slot {
+public class RecipeInputSlot<I extends Container, T extends Recipe<I>> extends Slot {
 
     private final RecipeType<T> type;
-    private final World world;
+    private final Level world;
 
-    public RecipeInputSlot(I inventory, int slotId, int x, int y, World world, RecipeType<T> type) {
+    public RecipeInputSlot(I inventory, int slotId, int x, int y, Level world, RecipeType<T> type) {
         super(inventory, slotId, x, y);
         this.type = type;
         this.world = world;
     }
 
     @Override
-    public boolean canInsert(ItemStack stack) {
-        return world.getRecipeManager().getFirstMatch(this.type, (I)new SimpleInventory(stack), world).isPresent();
+    public boolean mayPlace(ItemStack stack) {
+        return world.getRecipeManager().getRecipeFor(this.type, (I)new SimpleContainer(stack), world).isPresent();
     }
 }

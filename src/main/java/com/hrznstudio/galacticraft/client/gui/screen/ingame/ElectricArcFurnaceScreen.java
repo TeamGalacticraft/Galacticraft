@@ -27,15 +27,15 @@ import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.screen.ElectricArcFurnaceScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
 public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFurnaceScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ELECTRIC_ARC_FURNACE_SCREEN));
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ELECTRIC_ARC_FURNACE_SCREEN));
 
     private static final int ARROW_X = 78;
     private static final int ARROW_Y = 24;
@@ -46,28 +46,28 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
     private static final int ARROW_WIDTH = 22;
     private static final int ARROW_HEIGHT = 15;
 
-    public ElectricArcFurnaceScreen(ElectricArcFurnaceScreenHandler screenHandler, PlayerInventory playerInventory, Text title) {
-        super(screenHandler, playerInventory, screenHandler.machine.getWorld(), screenHandler.machine.getPos(), title);
+    public ElectricArcFurnaceScreen(ElectricArcFurnaceScreenHandler screenHandler, Inventory playerInventory, Component title) {
+        super(screenHandler, playerInventory, screenHandler.machine.getLevel(), screenHandler.machine.getBlockPos(), title);
         addWidget(new CapacitorWidget(screenHandler.machine.getCapacitor(), 8, 29, 48, this::getEnergyTooltipLines, screenHandler.machine::getStatus));
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        if (handler.machine.cookLength != 0 && handler.machine.cookTime != 0) {
-            double scale = ((double)handler.machine.cookTime) / ((double)handler.machine.cookLength);
+        this.minecraft.getTextureManager().bind(BACKGROUND);
+        this.blit(matrices, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        if (menu.machine.cookLength != 0 && menu.machine.cookTime != 0) {
+            double scale = ((double)menu.machine.cookTime) / ((double)menu.machine.cookLength);
 
-            this.drawTexture(matrices, this.x + ARROW_X, this.y + ARROW_Y, LIT_ARROW_X, LIT_ARROW_Y, (int) (((double)ARROW_WIDTH) * scale), ARROW_HEIGHT);
+            this.blit(matrices, this.leftPos + ARROW_X, this.topPos + ARROW_Y, LIT_ARROW_X, LIT_ARROW_Y, (int) (((double)ARROW_WIDTH) * scale), ARROW_HEIGHT);
         }
 
-        DrawableUtils.drawCenteredString(matrices, textRenderer, new TranslatableText("block.galacticraft-rewoven.electric_arc_furnace"), this.width / 2, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(matrices, font, new TranslatableComponent("block.galacticraft-rewoven.electric_arc_furnace"), this.width / 2, this.topPos + 5, ChatFormatting.DARK_GRAY.getColor());
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+        this.renderTooltip(matrices, mouseX, mouseY);
     }
 }

@@ -25,32 +25,31 @@ package com.hrznstudio.galacticraft.block.environment;
 import com.hrznstudio.galacticraft.Constants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.LanternBlock;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.world.BlockView;
-
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Lantern;
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class GlowstoneLanternBlock extends LanternBlock {
+public class GlowstoneLanternBlock extends Lantern {
 
-    public GlowstoneLanternBlock(Settings settings) {
+    public GlowstoneLanternBlock(Properties settings) {
         super(settings);
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
+    public void appendHoverText(ItemStack stack, BlockGetter blockView, List<Component> list, TooltipFlag tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableText("tooltip.galacticraft-rewoven.glowstone_lantern").setStyle(Constants.Styles.GRAY_STYLE));
+            list.add(new TranslatableComponent("tooltip.galacticraft-rewoven.glowstone_lantern").setStyle(Constants.Styles.GRAY_STYLE));
         } else {
-            list.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Styles.GRAY_STYLE));
+            list.add(new TranslatableComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Styles.GRAY_STYLE));
         }
     }
 }

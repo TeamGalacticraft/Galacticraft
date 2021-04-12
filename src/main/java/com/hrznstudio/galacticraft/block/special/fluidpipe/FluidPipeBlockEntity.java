@@ -37,21 +37,21 @@ import com.hrznstudio.galacticraft.api.pipe.PipeConnectionType;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
 import com.hrznstudio.galacticraft.attribute.fluid.PipeFixedFluidInv;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Tickable;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 
-public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe, AttributeProviderBlockEntity {
+public class FluidPipeBlockEntity extends BlockEntity implements TickableBlockEntity, Pipe, AttributeProviderBlockEntity {
     private PipeNetwork network = null;
     private @NotNull Pipe.FluidData fluidData = Pipe.FluidData.EMPTY;
     private byte timeUntilPush = 0;
@@ -71,20 +71,20 @@ public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe,
 
     @Override
     public @NotNull PipeNetwork getNetwork() {
-        if (!world.isClient()) {
+        if (!level.isClientSide()) {
             if (this.network == null) {
                 for (Direction direction : Constants.Misc.DIRECTIONS) {
-                    BlockEntity entity = world.getBlockEntity(pos.offset(direction));
+                    BlockEntity entity = level.getBlockEntity(worldPosition.relative(direction));
                     if (entity instanceof Pipe) {
                         if (((Pipe) entity).getNetworkNullable() != null) {
-                            ((Pipe) entity).getNetworkNullable().addPipe(pos, this);
+                            ((Pipe) entity).getNetworkNullable().addPipe(worldPosition, this);
                             break;
                         }
                     }
                 }
                 if (this.network == null) {
-                    this.network = PipeNetwork.create((ServerWorld)world);
-                    this.network.addPipe(pos, this);
+                    this.network = PipeNetwork.create((ServerLevel)level);
+                    this.network.addPipe(worldPosition, this);
                 }
             }
         }
@@ -130,33 +130,33 @@ public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe,
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag) {
         this.fluidData.toTag(tag);
-        return super.toTag(tag);
+        return super.save(tag);
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void load(BlockState state, CompoundTag tag) {
+        super.load(state, tag);
         this.fluidData = Pipe.FluidData.fromTag(tag);
     }
 
     @Override
     public void tick() {
-        if (world.isClient) return;
+        if (level.isClientSide) return;
         if (fluidData != Pipe.FluidData.EMPTY) {
             if (++timeUntilPush >= 5) {
                 this.timeUntilPush = 0;
                 if (!this.fluidData.getPath().isEmpty()) {
                     BlockPos pos = this.fluidData.getPath().getLast();
-                    if (pos.equals(this.pos)) {
+                    if (pos.equals(this.worldPosition)) {
                         this.fluidData.getPath().pollLast();
                         pos = this.fluidData.getPath().getLast();
                     }
-                    if (pos.getManhattanDistance(this.pos) > 1) {
+                    if (pos.distManhattan(this.worldPosition) > 1) {
                         throw new RuntimeException();
                     }
-                    BlockEntity entity = world.getBlockEntity(pos);
+                    BlockEntity entity = level.getBlockEntity(pos);
                     if (entity instanceof Pipe) {
                         if (((Pipe) entity).getFluidData().getFluid().isEmpty()) {
                             this.fluidData.getPath().pollLast();
@@ -168,16 +168,16 @@ public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe,
                         }
                     } else {
                         if (this.fluidData.getPath().size() != 1) {
-                            Pipe.FluidData dat = network.insertFluid(this.pos, null, this.fluidData.getFluid(), Simulation.ACTION);
+                            Pipe.FluidData dat = network.insertFluid(this.worldPosition, null, this.fluidData.getFluid(), Simulation.ACTION);
                             if (dat != null) {
                                 this.fluidData = dat;
                             }
                             return;
                         }
-                        FluidInsertable insertable = FluidAttributes.INSERTABLE.get(world, pos, SearchOptions.inDirection(this.fluidData.getEndDir()));
+                        FluidInsertable insertable = FluidAttributes.INSERTABLE.get(level, pos, SearchOptions.inDirection(this.fluidData.getEndDir()));
                         FluidVolume volume = insertable.attemptInsertion(fluidData.getFluid(), Simulation.ACTION);
                         if (!volume.isEmpty()) {
-                            Pipe.FluidData dat = network.insertFluid(this.pos, null, volume, Simulation.ACTION);
+                            Pipe.FluidData dat = network.insertFluid(this.worldPosition, null, volume, Simulation.ACTION);
                             if (dat != null) {
                                 this.fluidData = dat;
                             } else {
@@ -189,7 +189,7 @@ public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe,
                         }
                     }
                 } else {
-                    Pipe.FluidData dat = network.insertFluid(this.pos, null, this.fluidData.getFluid(), Simulation.ACTION);
+                    Pipe.FluidData dat = network.insertFluid(this.worldPosition, null, this.fluidData.getFluid(), Simulation.ACTION);
                     if (dat != null) {
                         this.fluidData = dat;
                     }

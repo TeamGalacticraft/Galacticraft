@@ -37,9 +37,9 @@ import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
 import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,20 +62,20 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     @Override
     public @NotNull WireNetwork getNetwork() {
         if (this.network == null) {
-            if (!this.world.isClient()) {
+            if (!this.level.isClientSide()) {
                 for (Direction direction : Constants.Misc.DIRECTIONS) {
-                    BlockEntity entity = world.getBlockEntity(pos.offset(direction));
+                    BlockEntity entity = level.getBlockEntity(worldPosition.relative(direction));
                     if (entity instanceof Wire) {
                         //noinspection ConstantConditions
                         if (((Wire) entity).getNetworkNullable() != null) {
-                            ((Wire) entity).getNetworkNullable().addWire(pos, this);
+                            ((Wire) entity).getNetworkNullable().addWire(worldPosition, this);
                             break;
                         }
                     }
                 }
                 if (this.network == null) {
-                    this.setNetwork(WireNetwork.create((ServerWorld) world));
-                    this.network.addWire(pos, this);
+                    this.setNetwork(WireNetwork.create((ServerLevel) level));
+                    this.network.addWire(worldPosition, this);
                 }
             }
         }
@@ -91,8 +91,8 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     public @NotNull WireConnectionType getConnection(Direction direction, @Nullable BlockEntity entity) {
         if (entity == null || !this.canConnect(direction.getOpposite())) return WireConnectionType.NONE;
         if (entity instanceof Wire && ((Wire) entity).canConnect(direction)) return WireConnectionType.WIRE;
-        EnergyInsertable insertable = EnergyUtils.getEnergyInsertable(world, entity.getPos(), direction);
-        EnergyExtractable extractable = EnergyUtils.getEnergyExtractable(world, entity.getPos(), direction);
+        EnergyInsertable insertable = EnergyUtils.getEnergyInsertable(level, entity.getBlockPos(), direction);
+        EnergyExtractable extractable = EnergyUtils.getEnergyExtractable(level, entity.getBlockPos(), direction);
         if (insertable != RejectingEnergyInsertable.NULL && extractable != EmptyEnergyExtractable.NULL) {
             return WireConnectionType.ENERGY_IO;
         } else if (insertable != RejectingEnergyInsertable.NULL) {
@@ -113,7 +113,7 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
         attributeList.offer(new SimpleCapacitor(DefaultEnergyType.INSTANCE, getMaxTransferRate()) {
             @Override
             public int insert(int amount, Simulation simulation) {
-                return WireBlockEntity.this.getNetwork().insert(WireBlockEntity.this.getPos(), null, amount, simulation);
+                return WireBlockEntity.this.getNetwork().insert(WireBlockEntity.this.getBlockPos(), null, amount, simulation);
             }
 
             @Override

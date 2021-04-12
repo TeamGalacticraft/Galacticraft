@@ -24,23 +24,23 @@ package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.CoalGeneratorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CoalGeneratorScreenHandler extends MachineScreenHandler<CoalGeneratorBlockEntity> {
 
-    public CoalGeneratorScreenHandler(int syncId, PlayerEntity player, CoalGeneratorBlockEntity machine) {
+    public CoalGeneratorScreenHandler(int syncId, Player player, CoalGeneratorBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.COAL_GENERATOR_HANDLER);
         this.addSlot(new FilteredSlot(machine, CoalGeneratorBlockEntity.FUEL_SLOT, 8, 74));
         this.addSlot(new FilteredSlot(machine, CoalGeneratorBlockEntity.CHARGE_SLOT, 8, 8));
         this.addPlayerInventorySlots(0, 94);
     }
 
-    public CoalGeneratorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (CoalGeneratorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public CoalGeneratorScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (CoalGeneratorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

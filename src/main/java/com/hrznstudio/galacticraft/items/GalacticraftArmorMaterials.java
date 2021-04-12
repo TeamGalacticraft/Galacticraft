@@ -24,30 +24,29 @@ package com.hrznstudio.galacticraft.items;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Lazy;
-
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public enum GalacticraftArmorMaterials implements ArmorMaterial {
-    SENSOR_GLASSES("sensor_glasses", 0, new int[]{0, 0, 0, 0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0f, () -> {
-        return Ingredient.ofItems(GalacticraftItems.METEORIC_IRON_INGOT);
+    SENSOR_GLASSES("sensor_glasses", 0, new int[]{0, 0, 0, 0}, 0, SoundEvents.ARMOR_EQUIP_IRON, 0.0f, () -> {
+        return Ingredient.of(GalacticraftItems.METEORIC_IRON_INGOT);
     }, 0.0f), // TODO: add actual functionality
-    HEAVY_DUTY("heavy_duty", 30, new int[]{3, 6, 8, 3}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0f, () -> {
-        return Ingredient.ofItems(GalacticraftItems.COMPRESSED_STEEL);
+    HEAVY_DUTY("heavy_duty", 30, new int[]{3, 6, 8, 3}, 9, SoundEvents.ARMOR_EQUIP_IRON, 1.0f, () -> {
+        return Ingredient.of(GalacticraftItems.COMPRESSED_STEEL);
     }, 1.0f),
-    DESH("desh", 42, new int[]{4, 7, 9, 4}, 12, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 3.0f, () -> {
-        return Ingredient.ofItems(GalacticraftItems.DESH_INGOT);
+    DESH("desh", 42, new int[]{4, 7, 9, 4}, 12, SoundEvents.ARMOR_EQUIP_IRON, 3.0f, () -> {
+        return Ingredient.of(GalacticraftItems.DESH_INGOT);
     }, 2.0f),
-    TITANIUM("titanium", 26, new int[]{5, 7, 10, 5}, 20, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0f, () -> {
-        return Ingredient.ofItems(GalacticraftItems.COMPRESSED_TITANIUM);
+    TITANIUM("titanium", 26, new int[]{5, 7, 10, 5}, 20, SoundEvents.ARMOR_EQUIP_IRON, 1.0f, () -> {
+        return Ingredient.of(GalacticraftItems.COMPRESSED_TITANIUM);
     }, 0.0f);
 
     private static final int[] baseDurability = {462, 672, 630, 546};
@@ -57,7 +56,7 @@ public enum GalacticraftArmorMaterials implements ArmorMaterial {
     private final int enchantability;
     private final SoundEvent equipSound;
     private final float toughness;
-    private final Lazy<Ingredient> repairIngredient;
+    private final LazyLoadedValue<Ingredient> repairIngredient;
     private final float knockbackResistance;
 
     GalacticraftArmorMaterials(String name, int durabilityMultiplier, int[] armorValueArr, int enchantability, SoundEvent soundEvent, float toughness, Supplier<Ingredient> repairIngredient, float knockbackResistance) {
@@ -67,19 +66,19 @@ public enum GalacticraftArmorMaterials implements ArmorMaterial {
         this.enchantability = enchantability;
         this.equipSound = soundEvent;
         this.toughness = toughness;
-        this.repairIngredient = new Lazy<>(repairIngredient);
+        this.repairIngredient = new LazyLoadedValue<>(repairIngredient);
         this.knockbackResistance = knockbackResistance;
     }
 
-    public int getDurability(EquipmentSlot equipmentSlot_1) {
-        return baseDurability[equipmentSlot_1.getEntitySlotId()] * this.durabilityMultiplier;
+    public int getDurabilityForSlot(EquipmentSlot equipmentSlot_1) {
+        return baseDurability[equipmentSlot_1.getIndex()] * this.durabilityMultiplier;
     }
 
-    public int getProtectionAmount(EquipmentSlot equipmentSlot_1) {
-        return this.protectionValues[equipmentSlot_1.getEntitySlotId()];
+    public int getDefenseForSlot(EquipmentSlot equipmentSlot_1) {
+        return this.protectionValues[equipmentSlot_1.getIndex()];
     }
 
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return this.enchantability;
     }
 

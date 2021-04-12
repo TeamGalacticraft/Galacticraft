@@ -25,16 +25,16 @@ package com.hrznstudio.galacticraft.screen;
 import com.hrznstudio.galacticraft.block.entity.CircuitFabricatorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
 import com.hrznstudio.galacticraft.screen.slot.OutputSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.Property;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.DataSlot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CircuitFabricatorScreenHandler extends MachineScreenHandler<CircuitFabricatorBlockEntity> {
-    public final Property progress = new Property() {
+    public final DataSlot progress = new DataSlot() {
         @Override
         public int get() {
             return CircuitFabricatorScreenHandler.this.machine.progress;
@@ -46,9 +46,9 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
         }
     };
 
-    public CircuitFabricatorScreenHandler(int syncId, PlayerEntity player, CircuitFabricatorBlockEntity machine) {
+    public CircuitFabricatorScreenHandler(int syncId, Player player, CircuitFabricatorBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.CIRCUIT_FABRICATOR_HANDLER);
-        this.addProperty(this.progress);
+        this.addDataSlot(this.progress);
 
         this.addSlot(new FilteredSlot(machine, CircuitFabricatorBlockEntity.CHARGE_SLOT, 8, 70));
         this.addSlot(new FilteredSlot(machine, CircuitFabricatorBlockEntity.INPUT_SLOT_DIAMOND, 31, 15));
@@ -61,7 +61,7 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
         this.addPlayerInventorySlots(0, 94);
     }
 
-    public CircuitFabricatorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (CircuitFabricatorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public CircuitFabricatorScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (CircuitFabricatorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

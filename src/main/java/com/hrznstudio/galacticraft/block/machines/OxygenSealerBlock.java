@@ -25,24 +25,24 @@ package com.hrznstudio.galacticraft.block.machines;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.block.entity.OxygenSealerBlockEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenSealerBlock extends ConfigurableMachineBlock {
-    public OxygenSealerBlock(Settings settings) {
+    public OxygenSealerBlock(Properties settings) {
         super(settings, OxygenSealerBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft-rewoven.oxygen_sealer")
+                new TranslatableComponent("tooltip.galacticraft-rewoven.oxygen_sealer")
                         .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborUpdate(state, world, pos, block, fromPos, notify);
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        super.neighborChanged(state, world, pos, block, fromPos, notify);
     }
 }

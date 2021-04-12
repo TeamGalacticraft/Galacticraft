@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.accessor;
 
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.ApiStatus;
 
 public interface ChunkSectionOxygenAccessor {
@@ -39,7 +39,7 @@ public interface ChunkSectionOxygenAccessor {
     @ApiStatus.Internal
     void setTotalOxygen(short amount);
 
-    void writeOxygen(PacketByteBuf buf);
+    void writeOxygen(FriendlyByteBuf buf);
 
-    void readOxygen(PacketByteBuf packetByteBuf);
+    void readOxygen(FriendlyByteBuf packetByteBuf);
 }

@@ -27,14 +27,14 @@ import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.screen.AdvancedSolarPanelScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -47,42 +47,42 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolarPanelScreenHandler> {
 
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.SOLAR_PANEL_SCREEN));
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.SOLAR_PANEL_SCREEN));
 
-    public AdvancedSolarPanelScreen(AdvancedSolarPanelScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
+    public AdvancedSolarPanelScreen(AdvancedSolarPanelScreenHandler handler, Inventory inv, Component title) {
+        super(handler, inv, inv.player.level, handler.machine.getBlockPos(), title);
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.minecraft.getTextureManager().bind(BACKGROUND);
 
-        int leftPos = this.x;
-        int topPos = this.y;
+        int leftPos = this.leftPos;
+        int topPos = this.topPos;
 
-        this.drawTexture(matrices, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.blit(matrices, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("block.galacticraft-rewoven.advanced_solar_panel"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+        DrawableUtils.drawCenteredString(matrices, this.font, new TranslatableComponent("block.galacticraft-rewoven.advanced_solar_panel"), (this.width / 2), this.topPos + 5, ChatFormatting.DARK_GRAY.getColor());
+        this.renderTooltip(matrices, mouseX, mouseY);
     }
 
     @Override
     @NotNull
-    protected Collection<? extends Text> getEnergyTooltipLines() {
-        List<Text> lines = new LinkedList<>();
-        if (this.handler.machine.getStatus().getType().isActive()) {
-            long time = world.getTimeOfDay() % 24000;
+    protected Collection<? extends Component> getEnergyTooltipLines() {
+        List<Component> lines = new LinkedList<>();
+        if (this.menu.machine.getStatus().getType().isActive()) {
+            long time = world.getDayTime() % 24000;
             if (time > 6000) {
                 time = 6000 - (time - 6000);
             }
 
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) this.handler.machine.getEnergyConsumption()).setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
+            lines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.gj_per_t", (int) this.menu.machine.getEnergyConsumption()).setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
         }
         return lines;
     }

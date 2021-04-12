@@ -24,16 +24,16 @@ package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEntity> {
 
-    public RefineryScreenHandler(int syncId, PlayerEntity player, RefineryBlockEntity machine) {
+    public RefineryScreenHandler(int syncId, Player player, RefineryBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.REFINERY_HANDLER);
 
         // Energy slot
@@ -44,7 +44,7 @@ public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEnt
         this.addPlayerInventorySlots(0, 86);
     }
 
-    public RefineryScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (RefineryBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public RefineryScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (RefineryBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

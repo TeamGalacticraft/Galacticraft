@@ -27,46 +27,46 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeFinder;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class ShapelessCompressingRecipe implements CompressingRecipe {
-    private final Identifier id;
+    private final ResourceLocation id;
 
     private final ItemStack output;
-    private final DefaultedList<Ingredient> input;
+    private final NonNullList<Ingredient> input;
 
-    public ShapelessCompressingRecipe(Identifier id, ItemStack output, DefaultedList<Ingredient> input) {
+    public ShapelessCompressingRecipe(ResourceLocation id, ItemStack output, NonNullList<Ingredient> input) {
         this.id = id;
         this.output = output;
         this.input = input;
     }
 
     static ItemStack getStack(JsonObject json) {
-        String itemId = JsonHelper.getString(json, "item");
-        Item ingredientItem = Registry.ITEM.getOrEmpty(new Identifier(itemId)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + itemId + "'"));
+        String itemId = GsonHelper.getAsString(json, "item");
+        Item ingredientItem = Registry.ITEM.getOptional(new ResourceLocation(itemId)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + itemId + "'"));
         if (json.has("data")) {
             throw new JsonParseException("Disallowed data tag found");
         } else {
-            int count = JsonHelper.getInt(json, "count", 1);
+            int count = GsonHelper.getAsInt(json, "count", 1);
             return new ItemStack(ingredientItem, count);
         }
     }
 
     @Override
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return this.id;
     }
 
@@ -76,42 +76,42 @@ public class ShapelessCompressingRecipe implements CompressingRecipe {
     }
 
     @Override
-    public ItemStack getOutput() {
+    public ItemStack getResultItem() {
         return this.output;
     }
 
     @Override
-    public DefaultedList<Ingredient> getPreviewInputs() {
+    public NonNullList<Ingredient> getIngredients() {
         return this.input;
     }
 
     @Override
-    public boolean matches(Inventory inv, World world) {
-        RecipeFinder finder = new RecipeFinder();
+    public boolean matches(Container inv, Level world) {
+        StackedContents finder = new StackedContents();
         int int_1 = 0;
 
-        for (int i = 0; i < inv.size(); ++i) {
-            ItemStack stack = inv.getStack(i);
+        for (int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty()) {
                 ++int_1;
-                finder.addItem(stack);
+                finder.accountStack(stack);
             }
         }
 
-        return int_1 == this.input.size() && finder.findRecipe(this, null);
+        return int_1 == this.input.size() && finder.canCraft(this, null);
     }
 
     @Override
-    public ItemStack craft(Inventory inv) {
+    public ItemStack assemble(Container inv) {
         return this.output.copy();
     }
 
     @Environment(EnvType.CLIENT)
-    public boolean fits(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return width * height >= this.input.size();
     }
 
-    public DefaultedList<Ingredient> getInput() {
+    public NonNullList<Ingredient> getInput() {
         return this.input;
     }
 }

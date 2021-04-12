@@ -23,9 +23,9 @@
 package com.hrznstudio.galacticraft.screen.property;
 
 import com.hrznstudio.galacticraft.energy.api.Capacitor;
-import net.minecraft.screen.Property;
+import net.minecraft.world.inventory.DataSlot;
 
-public class CapacitorProperty extends Property {
+public class CapacitorProperty extends DataSlot {
     private final Capacitor capacitor;
 
     public CapacitorProperty(Capacitor capacitor) {

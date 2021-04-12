@@ -26,13 +26,6 @@ import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
 import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.profiler.Profiler;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.MutableWorldProperties;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.WorldChunk;
-import net.minecraft.world.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -42,22 +35,29 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Supplier;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.storage.WritableLevelData;
 
-@Mixin(World.class)
+@Mixin(Level.class)
 public abstract class WorldMixin implements WorldOxygenAccessor {
     @Shadow
     public static boolean isOutOfBuildLimitVertically(BlockPos pos) {
         throw new UnsupportedOperationException("Shadowed method was not transformed!");
     }
 
-    @Shadow public abstract WorldChunk getWorldChunk(BlockPos pos);
+    @Shadow public abstract LevelChunk getWorldChunk(BlockPos pos);
 
-    @Shadow @Final private RegistryKey<World> registryKey;
+    @Shadow @Final private ResourceKey<Level> registryKey;
 
     private @Unique boolean breathable = true;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void init(MutableWorldProperties properties, RegistryKey<World> registryRef, DimensionType dimensionType, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed, CallbackInfo ci) {
+    private void init(WritableLevelData properties, ResourceKey<Level> registryRef, DimensionType dimensionType, Supplier<ProfilerFiller> profiler, boolean isClient, boolean debugWorld, long seed, CallbackInfo ci) {
         CelestialBodyType.getByDimType(this.registryKey).ifPresent(celestialBodyType -> this.breathable = celestialBodyType.getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN));
     }
 

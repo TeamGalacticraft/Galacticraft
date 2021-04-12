@@ -22,13 +22,12 @@
 
 package com.hrznstudio.galacticraft.screen.slot;
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
-
 import java.util.Arrays;
 import java.util.List;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -37,13 +36,13 @@ public class ItemSpecificSlot extends Slot {
 
     private final List<Item> items;
 
-    public ItemSpecificSlot(Inventory inventory, int slotId, int x, int y, Item... items) {
+    public ItemSpecificSlot(Container inventory, int slotId, int x, int y, Item... items) {
         super(inventory, slotId, x, y);
         this.items = Arrays.asList(items);
     }
 
     @Override
-    public boolean canInsert(ItemStack stack) {
+    public boolean mayPlace(ItemStack stack) {
         return items.contains(stack.getItem());
     }
 }

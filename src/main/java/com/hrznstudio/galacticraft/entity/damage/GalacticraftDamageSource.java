@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.entity.damage;
 
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.world.damagesource.DamageSource;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

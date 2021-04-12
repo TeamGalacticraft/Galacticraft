@@ -22,8 +22,8 @@
 
 package com.hrznstudio.galacticraft.api.wire;
 
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

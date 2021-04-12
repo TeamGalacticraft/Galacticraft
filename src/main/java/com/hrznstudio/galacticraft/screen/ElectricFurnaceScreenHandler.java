@@ -25,13 +25,13 @@ package com.hrznstudio.galacticraft.screen;
 import com.hrznstudio.galacticraft.block.entity.ElectricFurnaceBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
 import com.hrznstudio.galacticraft.screen.slot.OutputSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.Property;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.DataSlot;
 
 public class ElectricFurnaceScreenHandler extends MachineScreenHandler<ElectricFurnaceBlockEntity> {
-    public ElectricFurnaceScreenHandler(int syncId, PlayerEntity player, ElectricFurnaceBlockEntity machine) {
+    public ElectricFurnaceScreenHandler(int syncId, Player player, ElectricFurnaceBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.ELECTRIC_FURNACE_HANDLER);
 
         this.addSlot(new FilteredSlot(machine, ElectricFurnaceBlockEntity.CHARGE_SLOT, 8, 7)); //charge
@@ -39,7 +39,7 @@ public class ElectricFurnaceScreenHandler extends MachineScreenHandler<ElectricF
         this.addSlot(new OutputSlot(machine.getWrappedInventory(), ElectricFurnaceBlockEntity.OUTPUT_SLOT, 109, 25)); //out
         this.addPlayerInventorySlots(0, 84);
 
-        this.addProperty(new Property() {
+        this.addDataSlot(new DataSlot() {
             @Override
             public int get() {
                 return machine.cookTime;
@@ -51,7 +51,7 @@ public class ElectricFurnaceScreenHandler extends MachineScreenHandler<ElectricF
             }
         });
 
-        this.addProperty(new Property() {
+        this.addDataSlot(new DataSlot() {
             @Override
             public int get() {
                 return machine.cookLength;
@@ -64,7 +64,7 @@ public class ElectricFurnaceScreenHandler extends MachineScreenHandler<ElectricF
         });
     }
 
-    public ElectricFurnaceScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (ElectricFurnaceBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public ElectricFurnaceScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (ElectricFurnaceBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

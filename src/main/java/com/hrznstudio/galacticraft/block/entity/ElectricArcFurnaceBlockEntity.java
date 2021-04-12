@@ -33,33 +33,33 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEnti
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.ElectricArcFurnaceScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.SmeltingRecipe;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     public int cookTime = 0;
     public int cookLength = 0;
-    private final Inventory subInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
+    private final Container subInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
         @Override
-        public boolean canPlayerUse(PlayerEntity player) {
-            return getWrappedInventory().canPlayerUse(player);
+        public boolean stillValid(Player player) {
+            return getWrappedInventory().stillValid(player);
         }
     };
 
@@ -104,7 +104,7 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
     @Override
     public ItemFilter getFilterForSlot(int slot) {
         if (slot == CHARGE_SLOT) return EnergyUtils::isEnergyExtractable;
-        if (slot == INPUT_SLOT) return (stack) -> world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, new SimpleInventory(stack), world).isPresent();
+        if (slot == INPUT_SLOT) return (stack) -> level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), level).isPresent();
         return (slot == OUTPUT_SLOT_1 || slot == OUTPUT_SLOT_2) ? ConstantItemFilter.ANYTHING : ConstantItemFilter.NOTHING;
     }
 
@@ -120,11 +120,11 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
 
     @Override
     public @NotNull MachineStatus updateStatus() {
-        Optional<SmeltingRecipe> recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, subInv, this.world);
+        Optional<SmeltingRecipe> recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, subInv, this.level);
         if (!recipe.isPresent()) return Status.NOT_ENOUGH_ITEMS;
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         if (!this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1, 
-                recipe.get().getOutput().copy(), Simulation.SIMULATE), Simulation.SIMULATE).isEmpty()) return Status.OUTPUT_FULL;
+                recipe.get().getResultItem().copy(), Simulation.SIMULATE), Simulation.SIMULATE).isEmpty()) return Status.OUTPUT_FULL;
         return Status.ACTIVE;
     }
 
@@ -132,18 +132,18 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
             if (this.cookLength == 0) {
-                SmeltingRecipe recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, subInv, this.world).orElseThrow(AssertionError::new);
-                this.cookLength = (int) (recipe.getCookTime() * 0.8F);
+                SmeltingRecipe recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, subInv, this.level).orElseThrow(AssertionError::new);
+                this.cookLength = (int) (recipe.getCookingTime() * 0.8F);
                 this.cookTime = 0;
             }
             if (this.cookTime++ >= this.cookLength) {
-                SmeltingRecipe recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, subInv, this.world).orElseThrow(AssertionError::new);
+                SmeltingRecipe recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, subInv, this.level).orElseThrow(AssertionError::new);
                 if (this.getInventory().extractStack(INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
                 this.cookTime = 0;
                 this.cookLength = 0;
-                if (this.world.getRecipeManager().getFirstMatch(RecipeType.BLASTING, subInv, this.world).isPresent()) this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1, recipe.getOutput().copy(), Simulation.ACTION), Simulation.ACTION);
+                if (this.level.getRecipeManager().getRecipeFor(RecipeType.BLASTING, subInv, this.level).isPresent()) this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1, recipe.getResultItem().copy(), Simulation.ACTION), Simulation.ACTION);
                 this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1,
-                        recipe.getOutput().copy(), Simulation.ACTION), Simulation.ACTION);
+                        recipe.getResultItem().copy(), Simulation.ACTION), Simulation.ACTION);
 
             }
         } else {
@@ -153,7 +153,7 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new ElectricArcFurnaceScreenHandler(syncId, player, this);
         return null;
     }
@@ -162,33 +162,33 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
         /**
          * The electric arc furnace is cooking/smelting items
          */
-        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
+        ACTIVE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.active"), ChatFormatting.GREEN, StatusType.WORKING),
 
         /**
          * The output slot is full.
          */
-        OUTPUT_FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        OUTPUT_FULL(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.full"), ChatFormatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * There are no valid items to smelt/cook.
          */
-        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GRAY, StatusType.MISSING_ITEMS),
+        NOT_ENOUGH_ITEMS(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_items"), ChatFormatting.GRAY, StatusType.MISSING_ITEMS),
 
         /**
          * The electric arc furnace has no more energy
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
+        NOT_ENOUGH_ENERGY(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), ChatFormatting.RED, StatusType.MISSING_ENERGY);
 
-        private final Text name;
+        private final Component name;
         private final StatusType type;
 
-        Status(MutableText name, Formatting color, StatusType type) {
+        Status(MutableComponent name, ChatFormatting color, StatusType type) {
             this.type = type;
             this.name = name.setStyle(Style.EMPTY.withColor(color));
         }
 
         @Override
-        public @NotNull Text getName() {
+        public @NotNull Component getName() {
             return name;
         }
 

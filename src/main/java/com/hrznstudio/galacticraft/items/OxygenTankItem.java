@@ -36,19 +36,18 @@ import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTankImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
-
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import java.util.List;
 
 /**
@@ -57,15 +56,15 @@ import java.util.List;
 public class OxygenTankItem extends Item implements AttributeProviderItem {
     private int ticks = 0;
 
-    public OxygenTankItem(Settings settings) {
+    public OxygenTankItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> list) {
-        if (this.isIn(group)) {
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> list) {
+        if (this.allowdedIn(group)) {
             final ItemStack[] stack = new ItemStack[]{new ItemStack(this)};
-            stack[0].setDamage(stack[0].getMaxDamage());
+            stack[0].setDamageValue(stack[0].getMaxDamage());
             list.add(stack[0]);
             stack[0] = stack[0].copy();
 
@@ -94,29 +93,29 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
+    public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
         if (this.getMaxDamage() > 0){
             OxygenTank tank = GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", tank.getAmount() + "/" + tank.getCapacity()));
+            lines.add(new TranslatableComponent("tooltip.galacticraft-rewoven.oxygen_remaining", tank.getAmount() + "/" + tank.getCapacity()));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", new TranslatableText("tooltip.galacticraft-rewoven.infinite").setStyle(Constants.Styles.getRainbow(++ticks))));
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.creative_only").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
+            lines.add(new TranslatableComponent("tooltip.galacticraft-rewoven.oxygen_remaining", new TranslatableComponent("tooltip.galacticraft-rewoven.infinite").setStyle(Constants.Styles.getRainbow(++ticks))));
+            lines.add(new TranslatableComponent("tooltip.galacticraft-rewoven.creative_only").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
         }
         if (ticks >= 500) ticks -= 500;
-        super.appendTooltip(stack, world, lines, context);
+        super.appendHoverText(stack, world, lines, context);
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) { //should sync with server
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) { //should sync with server
         FixedItemInv inv = ((GearInventoryProvider)player).getGearInv();
         if (inv.getInvStack(6).isEmpty()) {
-            inv.setInvStack(6, player.getStackInHand(hand).copy(), Simulation.ACTION);
-            return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
+            inv.setInvStack(6, player.getItemInHand(hand).copy(), Simulation.ACTION);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);
         } else if (inv.getInvStack(7).isEmpty()) {
-            inv.setInvStack(7, player.getStackInHand(hand).copy(), Simulation.ACTION);
-            return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
+            inv.setInvStack(7, player.getItemInHand(hand).copy(), Simulation.ACTION);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);
         }
-        return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
+        return new InteractionResultHolder<>(InteractionResult.PASS, player.getItemInHand(hand));
     }
 
     @Override
@@ -126,11 +125,11 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
             OxygenTankImpl tank = new OxygenTankImpl(ref.getMaxDamage());
             tank.fromTag(ref.getOrCreateTag());
             tank.toTag(ref.getOrCreateTag());
-            ref.setDamage(ref.getMaxDamage() - tank.getAmount());
+            ref.setDamageValue(ref.getMaxDamage() - tank.getAmount());
             reference.set(ref);
             itemAttributeList.offer(tank.listen(view -> {
                         ItemStack stack = reference.get().copy();
-                        stack.setDamage(stack.getMaxDamage() - view.getAmount());
+                        stack.setDamageValue(stack.getMaxDamage() - view.getAmount());
                         tank.toTag(stack.getOrCreateTag());
                         reference.set(stack);
                     }

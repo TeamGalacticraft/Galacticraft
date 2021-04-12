@@ -29,7 +29,7 @@ import com.hrznstudio.galacticraft.api.block.WireBlock;
  */
 public class SealableAluminumWireBlock extends WireBlock {
 
-    public SealableAluminumWireBlock(Settings settings) {
+    public SealableAluminumWireBlock(Properties settings) {
         super(settings);
     }
 

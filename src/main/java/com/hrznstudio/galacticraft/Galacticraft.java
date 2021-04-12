@@ -53,11 +53,11 @@ import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceB
 import com.hrznstudio.galacticraft.world.poi.GalacticraftPointOfInterestType;
 import com.mojang.serialization.Lifecycle;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.util.registry.SimpleRegistry;
-import net.minecraft.village.VillagerProfession;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.npc.VillagerProfession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -66,7 +66,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class Galacticraft implements ModInitializer {
 
-    public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_villager_profession")), Lifecycle.stable());
+    public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new MappedRegistry<>(ResourceKey.createRegistryKey(new ResourceLocation(Constants.MOD_ID, "moon_villager_profession")), Lifecycle.stable());
 
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
 

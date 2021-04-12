@@ -25,28 +25,28 @@ package com.hrznstudio.galacticraft.items;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenMaskItem extends Item {
-    public OxygenMaskItem(Settings settings) {
+    public OxygenMaskItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         FixedItemInv inv = ((GearInventoryProvider)player).getGearInv();
         if (inv.getInvStack(4).isEmpty()) {
-            inv.setInvStack(4, player.getStackInHand(hand), Simulation.ACTION);
-            return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
+            inv.setInvStack(4, player.getItemInHand(hand), Simulation.ACTION);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world, player, hand);
     }

@@ -25,9 +25,9 @@ package com.hrznstudio.galacticraft.mixin.client;
 import com.hrznstudio.galacticraft.client.gui.widget.SpaceRaceButtonWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.GameMenuScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -36,10 +36,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-@Mixin(GameMenuScreen.class)
+@Mixin(PauseScreen.class)
 @Environment(EnvType.CLIENT)
 public abstract class PauseMenuScreenMixin extends Screen {
-    protected PauseMenuScreenMixin(Text text) {
+    protected PauseMenuScreenMixin(Component text) {
         super(text);
     }
 
@@ -52,6 +52,6 @@ public abstract class PauseMenuScreenMixin extends Screen {
         int x = screenWidth - buttonWidth;
         int y = screenHeight - buttonHeight;
 
-        addButton(new SpaceRaceButtonWidget(this.client, x, y, buttonWidth, buttonHeight, screenWidth, screenHeight));
+        addButton(new SpaceRaceButtonWidget(this.minecraft, x, y, buttonWidth, buttonHeight, screenWidth, screenHeight));
     }
 }

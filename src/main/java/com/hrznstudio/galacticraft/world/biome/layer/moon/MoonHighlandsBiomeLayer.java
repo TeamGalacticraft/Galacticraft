@@ -23,14 +23,14 @@
 package com.hrznstudio.galacticraft.world.biome.layer.moon;
 
 import com.hrznstudio.galacticraft.world.biome.layer.MoonBiomeLayers;
-import net.minecraft.world.biome.layer.type.InitLayer;
-import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
+import net.minecraft.world.level.newbiome.context.Context;
+import net.minecraft.world.level.newbiome.layer.traits.AreaTransformer0;
 
-public enum MoonHighlandsBiomeLayer implements InitLayer {
+public enum MoonHighlandsBiomeLayer implements AreaTransformer0 {
     INSTANCE;
 
-    public int sample(LayerRandomnessSource context, int x, int y) {
-        int i = context.nextInt(10);
+    public int applyPixel(Context context, int x, int y) {
+        int i = context.nextRandom(10);
         if (i <= 9) {
             return MoonBiomeLayers.MOON_HIGHLANDS_PLAINS_ID;
         } else {

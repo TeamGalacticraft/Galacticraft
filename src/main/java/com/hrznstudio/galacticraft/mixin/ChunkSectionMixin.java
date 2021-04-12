@@ -23,8 +23,8 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import com.hrznstudio.galacticraft.accessor.ChunkSectionOxygenAccessor;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.world.chunk.ChunkSection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.chunk.LevelChunkSection;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ChunkSection.class)
+@Mixin(LevelChunkSection.class)
 public abstract class ChunkSectionMixin implements ChunkSectionOxygenAccessor {
     private @Unique boolean[] oxygen;
     private @Unique short oxygenated = 0;
@@ -67,7 +67,7 @@ public abstract class ChunkSectionMixin implements ChunkSectionOxygenAccessor {
     }
 
     @Inject(method = "toPacket", at = @At("RETURN"))
-    private void toPacket(PacketByteBuf packetByteBuf, CallbackInfo ci) {
+    private void toPacket(FriendlyByteBuf packetByteBuf, CallbackInfo ci) {
         packetByteBuf.writeShort(this.oxygenated);
         if (this.oxygenated > 0) {
             this.writeOxygen(packetByteBuf);
@@ -90,7 +90,7 @@ public abstract class ChunkSectionMixin implements ChunkSectionOxygenAccessor {
     }
 
     @Override
-    public void writeOxygen(PacketByteBuf buf) {
+    public void writeOxygen(FriendlyByteBuf buf) {
         boolean[] arr = this.getArray();
         for (int p = 0; p < (16 * 16 * 16) / 8; p++) {
             byte b = -128;
@@ -107,7 +107,7 @@ public abstract class ChunkSectionMixin implements ChunkSectionOxygenAccessor {
     }
 
     @Override
-    public void readOxygen(PacketByteBuf packetByteBuf) {
+    public void readOxygen(FriendlyByteBuf packetByteBuf) {
         boolean[] oxygen = this.getArray();
         for (int i = 0; i < (16 * 16 * 16) / 8; i++) {
             short b = (short) (packetByteBuf.readByte() + 128);

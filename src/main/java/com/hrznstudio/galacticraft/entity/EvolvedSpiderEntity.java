@@ -22,12 +22,12 @@
 
 package com.hrznstudio.galacticraft.entity;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.SpiderEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.level.Level;
 
-public class EvolvedSpiderEntity extends SpiderEntity {
-    public EvolvedSpiderEntity(EntityType<? extends SpiderEntity> entityType, World world) {
+public class EvolvedSpiderEntity extends Spider {
+    public EvolvedSpiderEntity(EntityType<? extends Spider> entityType, Level world) {
         super(entityType, world);
     }
 }

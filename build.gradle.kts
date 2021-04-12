@@ -120,7 +120,7 @@ fun getFabricApiModule(moduleName: String, fabricApiVersion: String): String {
 dependencies {
     // Minecraft, Mappings, Loader
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings("net.fabricmc:yarn:$minecraftVersion+build.$yarnBuild:v2")
+    mappings(minecraft.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
 
     // Fabric Api Modules

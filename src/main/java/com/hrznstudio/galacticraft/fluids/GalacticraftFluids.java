@@ -23,21 +23,21 @@
 package com.hrznstudio.galacticraft.fluids;
 
 import com.hrznstudio.galacticraft.Constants;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftFluids {
 
-    public static final FlowableFluid CRUDE_OIL = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluids.CRUDE_OIL_STILL), new CrudeOilFluid.Still());
-    public static final FlowableFluid FLOWING_CRUDE_OIL = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluids.CRUDE_OIL_FLOWING), new CrudeOilFluid.Flowing());
-    public static final FlowableFluid FUEL = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluids.FUEL_STILL), new FuelFluid.Still());
-    public static final FlowableFluid FLOWING_FUEL = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluids.FUEL_FLOWING), new FuelFluid.Flowing());
-    public static final Fluid LIQUID_OXYGEN = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluids.LIQUID_OXYGEN), new OxygenFluid());
+    public static final FlowingFluid CRUDE_OIL = Registry.register(Registry.FLUID, new ResourceLocation(Constants.MOD_ID, Constants.Fluids.CRUDE_OIL_STILL), new CrudeOilFluid.Still());
+    public static final FlowingFluid FLOWING_CRUDE_OIL = Registry.register(Registry.FLUID, new ResourceLocation(Constants.MOD_ID, Constants.Fluids.CRUDE_OIL_FLOWING), new CrudeOilFluid.Flowing());
+    public static final FlowingFluid FUEL = Registry.register(Registry.FLUID, new ResourceLocation(Constants.MOD_ID, Constants.Fluids.FUEL_STILL), new FuelFluid.Still());
+    public static final FlowingFluid FLOWING_FUEL = Registry.register(Registry.FLUID, new ResourceLocation(Constants.MOD_ID, Constants.Fluids.FUEL_FLOWING), new FuelFluid.Flowing());
+    public static final Fluid LIQUID_OXYGEN = Registry.register(Registry.FLUID, new ResourceLocation(Constants.MOD_ID, Constants.Fluids.LIQUID_OXYGEN), new OxygenFluid());
 
     public static void register() {
 

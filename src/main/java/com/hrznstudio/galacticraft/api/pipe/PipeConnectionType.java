@@ -22,9 +22,9 @@
 
 package com.hrznstudio.galacticraft.api.pipe;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public enum PipeConnectionType implements StringIdentifiable {
+public enum PipeConnectionType implements StringRepresentable {
     NONE,
     PIPE,
     FLUID_INPUT,
@@ -32,7 +32,7 @@ public enum PipeConnectionType implements StringIdentifiable {
     FLUID_IO;
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return name().toLowerCase();
     }
 }

@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.accessor;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 public interface WorldOxygenAccessor {
     default boolean isBreathable(int x, int y, int z) {

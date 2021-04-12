@@ -28,17 +28,17 @@ import com.hrznstudio.galacticraft.client.render.entity.feature.EvolvedSpiderEye
 import com.hrznstudio.galacticraft.entity.EvolvedSpiderEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
-public class EvolvedSpiderEntityRenderer extends MobEntityRenderer<EvolvedSpiderEntity, EvolvedSpiderModel<EvolvedSpiderEntity>> {
-    public static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, "textures/entity/evolved/spider.png");
+public class EvolvedSpiderEntityRenderer extends MobRenderer<EvolvedSpiderEntity, EvolvedSpiderModel<EvolvedSpiderEntity>> {
+    public static final ResourceLocation TEXTURE = new ResourceLocation(Constants.MOD_ID, "textures/entity/evolved/spider.png");
 
     public EvolvedSpiderEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher, new EvolvedSpiderModel<>(0.0F), 1.0F);
-        this.addFeature(new EvolvedSpiderEyesFeatureRenderer<>(this));
+        this.addLayer(new EvolvedSpiderEyesFeatureRenderer<>(this));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class EvolvedSpiderEntityRenderer extends MobEntityRenderer<EvolvedSpider
     }
 
     @Override
-    public Identifier getTexture(EvolvedSpiderEntity spiderEntity) {
+    public ResourceLocation getTexture(EvolvedSpiderEntity spiderEntity) {
         return TEXTURE;
     }
 }

@@ -25,19 +25,19 @@ package com.hrznstudio.galacticraft.api.pipe;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.api.pipe.impl.PipeNetworkImpl;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 
 /**
  * The basic 'Wire Network' spec
  */
 public interface PipeNetwork {
-    static PipeNetwork create(ServerWorld world) {
+    static PipeNetwork create(ServerLevel world) {
         return new PipeNetworkImpl(world);
     }
 

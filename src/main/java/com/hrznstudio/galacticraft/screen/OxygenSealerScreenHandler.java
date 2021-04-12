@@ -24,23 +24,23 @@ package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.OxygenSealerBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenSealerScreenHandler extends MachineScreenHandler<OxygenSealerBlockEntity> {
 
-    public OxygenSealerScreenHandler(int syncId, PlayerEntity player, OxygenSealerBlockEntity machine) {
+    public OxygenSealerScreenHandler(int syncId, Player player, OxygenSealerBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.OXYGEN_SEALER_HANDLER);
         this.addSlot(new ChargeSlot(machine.getWrappedInventory(), 0, 8, 62));
 
         this.addPlayerInventorySlots(0, 84);
     }
 
-    public OxygenSealerScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (OxygenSealerBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public OxygenSealerScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (OxygenSealerBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

@@ -25,18 +25,18 @@ package com.hrznstudio.galacticraft.mixin.client;
 import com.hrznstudio.galacticraft.accessor.ChunkSectionOxygenAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.world.chunk.ChunkSection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.chunk.LevelChunkSection;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ChunkSection.class)
+@Mixin(LevelChunkSection.class)
 @Environment(EnvType.CLIENT)
 public abstract class ClientChunkSectionMixin implements ChunkSectionOxygenAccessor {
     @Inject(method = "fromPacket", at = @At("RETURN"))
-    private void fromPacket(PacketByteBuf packetByteBuf, CallbackInfo ci) {
+    private void fromPacket(FriendlyByteBuf packetByteBuf, CallbackInfo ci) {
         this.setTotalOxygen(packetByteBuf.readShort());
         if (this.getTotalOxygen() == 0) return;
         boolean[] oxygen = this.getArray();

@@ -26,15 +26,14 @@ import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.ColorUtils;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-
 import java.util.function.Predicate;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -226,8 +225,8 @@ public interface Constants {
         String OXYGEN_GAS = "oxygen_gas";
         String LIQUID_OXYGEN = "liquid_oxygen";
 
-        static Identifier getIdentifier(String s) {
-            return new Identifier(Constants.MOD_ID, "block/" + s);
+        static ResourceLocation getIdentifier(String s) {
+            return new ResourceLocation(Constants.MOD_ID, "block/" + s);
         }
     }
 
@@ -606,8 +605,8 @@ public interface Constants {
     }
 
     interface Misc {
-        Text EMPTY_TEXT = new LiteralText("");
-        Identifier EMPTY = new Identifier("empty");
+        Component EMPTY_TEXT = new TextComponent("");
+        ResourceLocation EMPTY = new ResourceLocation("empty");
         Predicate<?> ALWAYS_FALSE = o -> false;
         Predicate<?> ALWAYS_TRUE = o -> true;
         FluidFilter LOX_ONLY = key -> GalacticraftTags.OXYGEN.contains(key.getRawFluid());
@@ -626,15 +625,15 @@ public interface Constants {
     }
 
     interface Styles {
-        Style TOOLTIP_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
-        Style GOLD_STYLE = Style.EMPTY.withColor(Formatting.GOLD);
-        Style GREEN_STYLE = Style.EMPTY.withColor(Formatting.GREEN);
-        Style RED_STYLE = Style.EMPTY.withColor(Formatting.RED);
-        Style BLUE_STYLE = Style.EMPTY.withColor(Formatting.BLUE);
-        Style AQUA_STYLE = Style.EMPTY.withColor(Formatting.AQUA);
-        Style GRAY_STYLE = Style.EMPTY.withColor(Formatting.GRAY);
-        Style DARK_RED_STYLE = Style.EMPTY.withColor(Formatting.DARK_RED);
-        Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(Formatting.LIGHT_PURPLE);
+        Style TOOLTIP_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_GRAY);
+        Style GOLD_STYLE = Style.EMPTY.withColor(ChatFormatting.GOLD);
+        Style GREEN_STYLE = Style.EMPTY.withColor(ChatFormatting.GREEN);
+        Style RED_STYLE = Style.EMPTY.withColor(ChatFormatting.RED);
+        Style BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.BLUE);
+        Style AQUA_STYLE = Style.EMPTY.withColor(ChatFormatting.AQUA);
+        Style GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY);
+        Style DARK_RED_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_RED);
+        Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(ChatFormatting.LIGHT_PURPLE);
 
         static Style getStorageLevelColor(double scale) {
             return Style.EMPTY.withColor(TextColor.fromRgb(((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8)));

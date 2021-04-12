@@ -31,15 +31,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
-
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.Level;
 import java.util.Map;
 import java.util.Set;
 
@@ -50,11 +49,11 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
     final String group;
     private final int width;
     private final int height;
-    private final DefaultedList<Ingredient> ingredients;
+    private final NonNullList<Ingredient> ingredients;
     private final ItemStack output;
-    private final Identifier id;
+    private final ResourceLocation id;
 
-    public ShapedCompressingRecipe(Identifier id, String group, int width, int height, DefaultedList<Ingredient> ingredients, ItemStack output) {
+    public ShapedCompressingRecipe(ResourceLocation id, String group, int width, int height, NonNullList<Ingredient> ingredients, ItemStack output) {
         this.id = id;
         this.group = group;
         this.width = width;
@@ -63,8 +62,8 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
         this.output = output;
     }
 
-    static DefaultedList<Ingredient> getIngredients(String[] strings_1, Map<String, Ingredient> map_1, int int_1, int int_2) {
-        DefaultedList<Ingredient> defaultedList_1 = DefaultedList.ofSize(int_1 * int_2, Ingredient.EMPTY);
+    static NonNullList<Ingredient> getIngredients(String[] strings_1, Map<String, Ingredient> map_1, int int_1, int int_2) {
+        NonNullList<Ingredient> defaultedList_1 = NonNullList.withSize(int_1 * int_2, Ingredient.EMPTY);
         Set<String> set_1 = Sets.newHashSet(map_1.keySet());
         set_1.remove(" ");
 
@@ -152,7 +151,7 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
             throw new JsonSyntaxException("Invalid pattern: empty pattern not allowed");
         } else {
             for (int int_1 = 0; int_1 < strings_1.length; ++int_1) {
-                String string_1 = JsonHelper.asString(jsonArray_1.get(int_1), "pattern[" + int_1 + "]");
+                String string_1 = GsonHelper.convertToString(jsonArray_1.get(int_1), "pattern[" + int_1 + "]");
                 if (string_1.length() > 3) {
                     throw new JsonSyntaxException("Invalid pattern: too many columns, 3 is maximum");
                 }
@@ -187,11 +186,11 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
         return map_1;
     }
 
-    public DefaultedList<Ingredient> getIngredients() {
+    public NonNullList<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return this.id;
     }
 
@@ -204,21 +203,21 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
         return this.group;
     }
 
-    public ItemStack getOutput() {
+    public ItemStack getResultItem() {
         return this.output;
     }
 
-    public DefaultedList<Ingredient> getPreviewInputs() {
+    public NonNullList<Ingredient> getIngredients() {
         return this.ingredients;
     }
 
     @Environment(EnvType.CLIENT)
-    public boolean fits(int int_1, int int_2) {
+    public boolean canCraftInDimensions(int int_1, int int_2) {
         return int_1 >= this.width && int_2 >= this.height;
     }
 
     @Override
-    public boolean matches(Inventory inv, World world) {
+    public boolean matches(Container inv, Level world) {
         int invWidth = 3;
         int invHeight = 3;
 
@@ -237,7 +236,7 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
         return false;
     }
 
-    private boolean matchesSmall(Inventory inv, int int_1, int int_2, boolean boolean_1) {
+    private boolean matchesSmall(Container inv, int int_1, int int_2, boolean boolean_1) {
         int invWidth = 3;
         int invHeight = 3;
 
@@ -254,7 +253,7 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
                     }
                 }
 
-                if (!ingredient_1.test(inv.getStack(int_3 + int_4 * invWidth))) {
+                if (!ingredient_1.test(inv.getItem(int_3 + int_4 * invWidth))) {
                     return false;
                 }
             }
@@ -264,8 +263,8 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
     }
 
     @Override
-    public ItemStack craft(Inventory inv) {
-        return this.getOutput().copy();
+    public ItemStack assemble(Container inv) {
+        return this.getResultItem().copy();
     }
 
     int getWidth() {

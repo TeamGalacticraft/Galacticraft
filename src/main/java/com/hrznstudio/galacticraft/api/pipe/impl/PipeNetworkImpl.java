@@ -37,26 +37,26 @@ import com.hrznstudio.galacticraft.api.pipe.PipeConnectionType;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import com.hrznstudio.galacticraft.util.FluidUtils;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 @SuppressWarnings("UnstableApiUsage")
 public class PipeNetworkImpl implements PipeNetwork {
     private final MutableValueGraph<BlockPos, PipeConnectionType> graph;
-    private final ServerWorld world;
+    private final ServerLevel world;
 
-    public PipeNetworkImpl(ServerWorld world) {
+    public PipeNetworkImpl(ServerLevel world) {
         this(ValueGraphBuilder.directed().allowsSelfLoops(false).build(), world);
     }
 
-    private PipeNetworkImpl(MutableValueGraph<BlockPos, PipeConnectionType> graph, ServerWorld world) {
+    private PipeNetworkImpl(MutableValueGraph<BlockPos, PipeConnectionType> graph, ServerLevel world) {
         this.graph = graph;
         this.world = world;
     }
@@ -70,7 +70,7 @@ public class PipeNetworkImpl implements PipeNetwork {
         }
         pipe.setNetwork(this);
         for (Direction direction : Constants.Misc.DIRECTIONS) {
-            BlockPos conn = pos.offset(direction);
+            BlockPos conn = pos.relative(direction);
             BlockEntity entity = world.getBlockEntity(conn);
             PipeConnectionType type = pipe.getConnection(direction, entity);
             if (type == PipeConnectionType.PIPE) {
@@ -94,7 +94,7 @@ public class PipeNetworkImpl implements PipeNetwork {
         if (contains(pos)) {
             Deque<BlockPos> pipes = new LinkedList<>();
             for (Direction direction : Constants.Misc.DIRECTIONS) {
-                BlockPos conn = pos.offset(direction);
+                BlockPos conn = pos.relative(direction);
                 PipeConnectionType type = getConnection(pos, conn);
                 if (type != PipeConnectionType.NONE) {
                     if (type == PipeConnectionType.PIPE) {
@@ -147,7 +147,7 @@ public class PipeNetworkImpl implements PipeNetwork {
 
         this.removeEdge(adjacentToUpdated, updatedPos, true);
         BlockPos vector = adjacentToUpdated.subtract(updatedPos);
-        Direction direction = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
+        Direction direction = Direction.fromNormal(vector.getX(), vector.getY(), vector.getZ());
         FluidInsertable insertable = FluidUtils.getInsertable(world, updatedPos, direction);
         FluidExtractable extractable = FluidUtils.getExtractable(world, updatedPos, direction);
             if (insertable != RejectingFluidInsertable.NULL && extractable != EmptyFluidExtractable.NULL) {
@@ -182,13 +182,13 @@ public class PipeNetworkImpl implements PipeNetwork {
                 BlockEntity entity = world.getBlockEntity(successor);
                 if (!(entity instanceof Pipe)) {
                     BlockPos vector = pos.subtract(successor);
-                    Direction dir = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
+                    Direction dir = Direction.fromNormal(vector.getX(), vector.getY(), vector.getZ());
                     FluidInsertable insertable = FluidUtils.getInsertable(world, successor, dir);
                     FluidVolume data = insertable.attemptInsertion(volume, simulation);
 
                     if (!(data.getAmount_F().equals(volume.getAmount_F()))) {
                         steps.push(successor);
-                        Direction direction = Direction.fromVector(pos.getX() - successor.getX(), pos.getY() - successor.getY(), pos.getZ() - successor.getZ()).getOpposite();
+                        Direction direction = Direction.fromNormal(pos.getX() - successor.getX(), pos.getY() - successor.getY(), pos.getZ() - successor.getZ()).getOpposite();
                         return new FluidPipeBlockEntity.FluidData(pos, steps, data, direction);
                     }
 
@@ -209,7 +209,7 @@ public class PipeNetworkImpl implements PipeNetwork {
     public @NotNull Map<Direction, @NotNull PipeConnectionType> getAdjacent(BlockPos from) {
         Map<Direction, PipeConnectionType> map = new EnumMap<>(Direction.class);
         for (Direction direction : Constants.Misc.DIRECTIONS) {
-            map.put(direction, getConnection(from, from.offset(direction)));
+            map.put(direction, getConnection(from, from.relative(direction)));
         }
 
         return map;

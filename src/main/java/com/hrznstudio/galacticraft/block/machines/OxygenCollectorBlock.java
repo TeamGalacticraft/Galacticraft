@@ -25,27 +25,26 @@ package com.hrznstudio.galacticraft.block.machines;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenCollectorBlock extends ConfigurableMachineBlock {
-    public OxygenCollectorBlock(Settings settings) {
+    public OxygenCollectorBlock(Properties settings) {
         super(settings, OxygenCollectorBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft-rewoven.oxygen_collector")
+                new TranslatableComponent("tooltip.galacticraft-rewoven.oxygen_collector")
                         .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 
     @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity instanceof OxygenCollectorBlockEntity && ((OxygenCollectorBlockEntity) blockEntity).collectionAmount > 0) {
@@ -72,7 +71,7 @@ public class OxygenCollectorBlock extends ConfigurableMachineBlock {
                     }
 
                     world.addParticle(
-                            new DustParticleEffect(0.8f, 0.8f, 1.0f, 1.0F),
+                            new DustParticleOptions(0.8f, 0.8f, 1.0f, 1.0F),
                             x2, y2, z2,
                             mX, mY, mZ);
                 }

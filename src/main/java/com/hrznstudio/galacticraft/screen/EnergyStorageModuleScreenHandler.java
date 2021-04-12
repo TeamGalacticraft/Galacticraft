@@ -24,22 +24,22 @@ package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.EnergyStorageModuleBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class EnergyStorageModuleScreenHandler extends MachineScreenHandler<EnergyStorageModuleBlockEntity> {
-    public EnergyStorageModuleScreenHandler(int syncId, PlayerEntity player, EnergyStorageModuleBlockEntity machine) {
+    public EnergyStorageModuleScreenHandler(int syncId, Player player, EnergyStorageModuleBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.ENERGY_STORAGE_MODULE_HANDLER);
         this.addSlot(new FilteredSlot(machine, 0, 18 * 6 - 6, 18 + 6));
         this.addSlot(new FilteredSlot(machine, 1, 18 * 6 - 6, 18 * 2 + 12));
         this.addPlayerInventorySlots(0, 84);
     }
 
-    public EnergyStorageModuleScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (EnergyStorageModuleBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public EnergyStorageModuleScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (EnergyStorageModuleBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

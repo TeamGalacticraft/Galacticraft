@@ -23,9 +23,9 @@
 package com.hrznstudio.galacticraft.screen.property;
 
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import net.minecraft.screen.Property;
+import net.minecraft.world.inventory.DataSlot;
 
-public class StatusProperty extends Property {
+public class StatusProperty extends DataSlot {
     private final ConfigurableMachineBlockEntity blockEntity;
 
     public StatusProperty(ConfigurableMachineBlockEntity blockEntity) {

@@ -28,48 +28,48 @@ import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.OxygenTankWidget;
 import com.hrznstudio.galacticraft.screen.OxygenDecompressorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
 public class OxygenDecompressorScreen extends MachineHandledScreen<OxygenDecompressorScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_COMPRESSOR_SCREEN));
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_COMPRESSOR_SCREEN));
 
-    public OxygenDecompressorScreen(OxygenDecompressorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
-        this.backgroundWidth = 176;
-        this.backgroundHeight = 166;
+    public OxygenDecompressorScreen(OxygenDecompressorScreenHandler handler, Inventory inv, Component title) {
+        super(handler, inv, inv.player.level, handler.machine.getBlockPos(), title);
+        this.imageWidth = 176;
+        this.imageHeight = 166;
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
         this.addWidget(new OxygenTankWidget(handler.machine.getFluidTank().getTank(0), 30, 8, 48));
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.minecraft.getTextureManager().bind(BACKGROUND);
+        this.blit(matrices, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
-        if (handler.machine.getStatus().getType().isActive()) {
+        if (menu.machine.getStatus().getType().isActive()) {
             int height = (int) (System.currentTimeMillis() % 2250);
             if (height == 0) height = 1; //prevent dividing by zero
             height /= 125;
-            this.drawTexture(matrices, this.x + 82, this.y + 46, 176, 0, 11, height);
+            this.blit(matrices, this.leftPos + 82, this.topPos + 46, 176, 0, 11, height);
         }
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_decompressor"), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+        DrawableUtils.drawCenteredString(matrices, this.font, new TranslatableComponent("block.galacticraft-rewoven.oxygen_decompressor"), (this.width / 2) + 20, this.topPos + 5, ChatFormatting.DARK_GRAY.getColor());
+        this.renderTooltip(matrices, mouseX, mouseY);
     }
 }

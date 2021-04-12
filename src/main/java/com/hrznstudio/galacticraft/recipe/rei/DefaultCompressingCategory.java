@@ -24,6 +24,8 @@ package com.hrznstudio.galacticraft.recipe.rei;
 
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.vertex.PoseStack;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.EntryStack;
@@ -33,16 +35,13 @@ import me.shedaniel.rei.api.widgets.Widgets;
 import me.shedaniel.rei.gui.widget.Widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,9 +50,9 @@ import java.util.stream.Collectors;
  */
 @Environment(EnvType.CLIENT)
 public class DefaultCompressingCategory implements RecipeCategory<DefaultCompressingDisplay> {
-    private static final Identifier DISPLAY_TEXTURE = new Identifier("galacticraft-rewoven", "textures/gui/rei_display.png");
+    private static final ResourceLocation DISPLAY_TEXTURE = new ResourceLocation("galacticraft-rewoven", "textures/gui/rei_display.png");
 
-    public Identifier getIdentifier() {
+    public ResourceLocation getIdentifier() {
         return GalacticraftREIPlugin.COMPRESSING;
     }
 
@@ -64,7 +63,7 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
 
     @Environment(EnvType.CLIENT)
     public String getCategoryName() {
-        return I18n.translate("category.rei.compressing");
+        return I18n.get("category.rei.compressing");
     }
 
     public List<Widget> setupDisplay(DefaultCompressingDisplay recipeDisplay, Rectangle bounds) {
@@ -74,20 +73,20 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
             BaseWidget() {
             }
 
-            public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
                 //super.render(matrices, mouseX, mouseY, delta);
-                DiffuseLighting.disable();
-                MinecraftClient.getInstance().getTextureManager().bindTexture(DefaultCompressingCategory.DISPLAY_TEXTURE);
-                this.drawTexture(matrices, startPoint.x, startPoint.y, 0, 83, 137, 157);
+                Lighting.turnOff();
+                Minecraft.getInstance().getTextureManager().bind(DefaultCompressingCategory.DISPLAY_TEXTURE);
+                this.blit(matrices, startPoint.x, startPoint.y, 0, 83, 137, 157);
 
-                int height = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D / 1.0D);
-                this.drawTexture(matrices, startPoint.x + 2, startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
-                int width = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D / 1.0D);
-                this.drawTexture(matrices, startPoint.x + 24, startPoint.y + 18, 82, 91, width, 17);
+                int height = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D / 1.0D);
+                this.blit(matrices, startPoint.x + 2, startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
+                int width = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D / 1.0D);
+                this.blit(matrices, startPoint.x + 24, startPoint.y + 18, 82, 91, width, 17);
             }
 
             @Override
-            public List<? extends Element> children() {
+            public List<? extends GuiEventListener> children() {
                 return Collections.emptyList();
             }
         }
@@ -113,7 +112,7 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
         widgets.addAll(slots);
         widgets.add(Widgets.createSlot(new Point(startPoint.x + 120, startPoint.y + (18) + 3)).entries(new ArrayList<>(Objects.requireNonNull(recipeDisplay).getOutputEntries())));
 
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4)).entries(AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().stream().map(EntryStack::create).collect(Collectors.toList())));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4)).entries(AbstractFurnaceBlockEntity.getFuel().keySet().stream().map(EntryStack::create).collect(Collectors.toList())));
         return widgets;
     }
 

@@ -27,14 +27,14 @@ import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.screen.CoalGeneratorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -42,29 +42,29 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorScreenHandler> {
 
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
 
-    public CoalGeneratorScreen(CoalGeneratorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
-        this.backgroundHeight = 176;
+    public CoalGeneratorScreen(CoalGeneratorScreenHandler handler, Inventory inv, Component title) {
+        super(handler, inv, inv.player.level, handler.machine.getBlockPos(), title);
+        this.imageHeight = 176;
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 28, 42, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.minecraft.getTextureManager().bind(BACKGROUND);
 
-        int leftPos = this.x;
-        int topPos = this.y;
+        int leftPos = this.leftPos;
+        int topPos = this.topPos;
 
-        this.drawTexture(matrices, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.blit(matrices, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, this.textRenderer, I18n.translate("block.galacticraft-rewoven.coal_generator"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+        DrawableUtils.drawCenteredString(matrices, this.font, I18n.get("block.galacticraft-rewoven.coal_generator"), (this.width / 2), this.topPos + 5, ChatFormatting.DARK_GRAY.getColor());
+        this.renderTooltip(matrices, mouseX, mouseY);
     }
 }

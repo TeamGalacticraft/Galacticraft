@@ -26,14 +26,14 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.screen.ElectricCompressorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -45,38 +45,38 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
-    private final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ELECTRIC_COMPRESSOR_SCREEN));
+    private final ResourceLocation BACKGROUND = new ResourceLocation(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ELECTRIC_COMPRESSOR_SCREEN));
 
-    public ElectricCompressorScreen(ElectricCompressorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
-        this.backgroundHeight = 199;
+    public ElectricCompressorScreen(ElectricCompressorScreenHandler handler, Inventory inv, Component title) {
+        super(handler, inv, inv.player.level, handler.machine.getBlockPos(), title);
+        this.imageHeight = 199;
     }
 
     private String getContainerDisplayName() {
-        return I18n.translate("block.galacticraft-rewoven.electric_compressor");
+        return I18n.get("block.galacticraft-rewoven.electric_compressor");
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.minecraft.getTextureManager().bind(BACKGROUND);
 
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.blit(matrices, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
         this.drawCraftProgressBar(matrices);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+        DrawableUtils.drawCenteredString(matrices, font, getContainerDisplayName(), (this.width / 2), this.topPos + 6, ChatFormatting.DARK_GRAY.getColor());
+        this.renderTooltip(matrices, mouseX, mouseY);
     }
 
-    protected void drawCraftProgressBar(MatrixStack matrices) {
-        float progressScale = (((float)this.handler.machine.getProgress()) / ((float)this.handler.machine.getMaxProgress()));
+    protected void drawCraftProgressBar(PoseStack matrices) {
+        float progressScale = (((float)this.menu.machine.getProgress()) / ((float)this.menu.machine.getMaxProgress()));
 
-        this.client.getTextureManager().bindTexture(BACKGROUND);
-        this.drawTexture(matrices, this.x + 77, this.y + 29, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
+        this.minecraft.getTextureManager().bind(BACKGROUND);
+        this.blit(matrices, this.leftPos + 77, this.topPos + 29, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 }

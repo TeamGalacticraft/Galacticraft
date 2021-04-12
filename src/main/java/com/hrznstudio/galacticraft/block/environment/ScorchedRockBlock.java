@@ -22,26 +22,25 @@
 
 package com.hrznstudio.galacticraft.block.environment;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class ScorchedRockBlock extends Block {
 
-    public ScorchedRockBlock(Settings settings) {
+    public ScorchedRockBlock(Properties settings) {
         super(settings);
         settings.strength(0.9F, 2.5F);
     }
 
     @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
         double x = (double) pos.getX() + random.nextDouble() * 0.10000000149011612D;
         double y = (double) pos.getY() + random.nextDouble();
         double z = (double) pos.getZ() + random.nextDouble();

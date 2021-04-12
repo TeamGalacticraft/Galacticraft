@@ -22,29 +22,28 @@
 
 package com.hrznstudio.galacticraft.items;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolMaterial;
-import net.minecraft.item.ToolMaterials;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.util.Lazy;
-
 import java.util.function.Supplier;
+import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.crafting.Ingredient;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public enum GalacticraftToolMaterials implements ToolMaterial {
+public enum GalacticraftToolMaterials implements Tier {
 
-    STEEL(ToolMaterials.IRON.getMiningLevel(), 768, ToolMaterials.IRON.getMiningSpeedMultiplier(), ToolMaterials.IRON.getAttackDamage(), ToolMaterials.IRON.getEnchantability(), () -> {
-        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.COMPRESSED_STEEL));
+    STEEL(Tiers.IRON.getLevel(), 768, Tiers.IRON.getSpeed(), Tiers.IRON.getAttackDamageBonus(), Tiers.IRON.getEnchantmentValue(), () -> {
+        return Ingredient.of(new ItemStack(GalacticraftItems.COMPRESSED_STEEL));
     }),
 
     DESH(3, 1024, 5.0F, 2.5F, 10, () -> {
-        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.DESH_INGOT));
+        return Ingredient.of(new ItemStack(GalacticraftItems.DESH_INGOT));
     }),
 
     TITANIUM(4, 760, 14.0F, 4.0F, 16, () -> {
-        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.TITANIUM_INGOT));
+        return Ingredient.of(new ItemStack(GalacticraftItems.TITANIUM_INGOT));
     });
 
 
@@ -53,7 +52,7 @@ public enum GalacticraftToolMaterials implements ToolMaterial {
     private final float blockBreakSpeed;
     private final float attackDamage;
     private final int enchantability;
-    private final Lazy<Ingredient> repairIngredient;
+    private final LazyLoadedValue<Ingredient> repairIngredient;
 
     GalacticraftToolMaterials(int miningLevel, int durability, float breakSpeed, float attackDamage, int enchantability, Supplier<Ingredient> repairIngredient) {
         this.miningLevel = miningLevel;
@@ -61,31 +60,31 @@ public enum GalacticraftToolMaterials implements ToolMaterial {
         this.blockBreakSpeed = breakSpeed;
         this.attackDamage = attackDamage;
         this.enchantability = enchantability;
-        this.repairIngredient = new Lazy<>(repairIngredient);
+        this.repairIngredient = new LazyLoadedValue<>(repairIngredient);
     }
 
     @Override
-    public int getDurability() {
+    public int getUses() {
         return durability;
     }
 
     @Override
-    public float getMiningSpeedMultiplier() {
+    public float getSpeed() {
         return blockBreakSpeed;
     }
 
     @Override
-    public float getAttackDamage() {
+    public float getAttackDamageBonus() {
         return attackDamage;
     }
 
     @Override
-    public int getMiningLevel() {
+    public int getLevel() {
         return miningLevel;
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return enchantability;
     }
 

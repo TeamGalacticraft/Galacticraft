@@ -23,8 +23,8 @@
 package com.hrznstudio.galacticraft.world.biome.source;
 
 import com.hrznstudio.galacticraft.Constants;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -32,6 +32,6 @@ import net.minecraft.util.registry.Registry;
 public class GalacticraftBiomeSources {
 
     public static void register() {
-        Registry.register(Registry.BIOME_SOURCE, new Identifier(Constants.MOD_ID, "moon"), MoonBiomeSource.CODEC);
+        Registry.register(Registry.BIOME_SOURCE, new ResourceLocation(Constants.MOD_ID, "moon"), MoonBiomeSource.CODEC);
     }
 }

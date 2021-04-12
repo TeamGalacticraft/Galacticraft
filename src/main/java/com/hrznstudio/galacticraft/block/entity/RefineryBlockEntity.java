@@ -37,23 +37,23 @@ import com.hrznstudio.galacticraft.screen.RefineryScreenHandler;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.util.FluidUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implements TickableBlockEntity {
     private static final ItemFilter[] SLOT_FILTERS;
     private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(8);
     public static final int OIL_TANK = 0;
@@ -160,7 +160,7 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new RefineryScreenHandler(syncId, player, this);
         return null;
     }
@@ -172,33 +172,33 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
         /**
          * Refinery is active and is refining oil into fuel.
          */
-        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.refining"), Formatting.GREEN, StatusType.WORKING),
+        ACTIVE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.refining"), ChatFormatting.GREEN, StatusType.WORKING),
 
         /**
          * Refinery has oil but the fuel tank is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.idle"), ChatFormatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * The refinery is out of oil.
          */
-        NOT_ENOUGH_FLUID(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_fluid"), Formatting.BLACK, StatusType.MISSING_FLUIDS),
+        NOT_ENOUGH_FLUID(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_fluid"), ChatFormatting.BLACK, StatusType.MISSING_FLUIDS),
 
         /**
          * The refinery is out of energy.
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
+        NOT_ENOUGH_ENERGY(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), ChatFormatting.RED, StatusType.MISSING_ENERGY);
 
-        private final Text text;
+        private final Component text;
         private final StatusType type;
 
-        Status(TranslatableText text, Formatting color, StatusType type) {
+        Status(TranslatableComponent text, ChatFormatting color, StatusType type) {
             this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         @Override
-        public @NotNull Text getName() {
+        public @NotNull Component getName() {
             return text;
         }
 

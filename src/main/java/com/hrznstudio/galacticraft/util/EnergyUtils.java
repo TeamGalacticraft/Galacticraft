@@ -33,11 +33,11 @@ import com.hrznstudio.galacticraft.energy.api.CapacitorView;
 import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
 import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
 import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.MutableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 public class EnergyUtils {
@@ -108,23 +108,23 @@ public class EnergyUtils {
         return getCapacitor(new Ref<>(stack));
     }
 
-    public static EnergyExtractable getEnergyExtractable(World world, BlockPos pos, Direction direction) {
+    public static EnergyExtractable getEnergyExtractable(Level world, BlockPos pos, Direction direction) {
         return GalacticraftEnergy.EXTRACTABLE.getFirst(world, pos, SearchOptions.inDirection(direction));
     }
 
-    public static EnergyInsertable getEnergyInsertable(World world, BlockPos pos, Direction direction) {
+    public static EnergyInsertable getEnergyInsertable(Level world, BlockPos pos, Direction direction) {
         return GalacticraftEnergy.INSERTABLE.getFirst(world, pos, SearchOptions.inDirection(direction));
     }
 
-    public static CapacitorView getCapacitorView(World world, BlockPos pos, Direction direction) {
+    public static CapacitorView getCapacitorView(Level world, BlockPos pos, Direction direction) {
         return GalacticraftEnergy.CAPACITOR_VIEW.getFirst(world, pos, SearchOptions.inDirection(direction));
     }
 
-    public static Capacitor getCapacitor(World world, BlockPos pos, Direction direction) {
+    public static Capacitor getCapacitor(Level world, BlockPos pos, Direction direction) {
         return GalacticraftEnergy.CAPACITOR.getFirst(world, pos, SearchOptions.inDirection(direction));
     }
 
-    public static boolean canAccessEnergy(World world, BlockPos pos, Direction direction) {
+    public static boolean canAccessEnergy(Level world, BlockPos pos, Direction direction) {
         EnergyInsertable insertable = GalacticraftEnergy.INSERTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction));
         EnergyExtractable extractable = GalacticraftEnergy.EXTRACTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction));
         return insertable != null || extractable != null;
@@ -181,11 +181,11 @@ public class EnergyUtils {
         return GalacticraftEnergy.CAPACITOR.getFirst(stackReference);
     }
 
-    public static Capacitor getEnergyHandler(World world, BlockPos pos, @Nullable Direction direction) {
+    public static Capacitor getEnergyHandler(Level world, BlockPos pos, @Nullable Direction direction) {
         return GalacticraftEnergy.CAPACITOR.getFirst(world, pos, SearchOptions.inDirection(direction));
     }
 
-    public static MutableText getDisplay(int value) {
+    public static MutableComponent getDisplay(int value) {
         return DefaultEnergyType.INSTANCE.display(value);
     }
 

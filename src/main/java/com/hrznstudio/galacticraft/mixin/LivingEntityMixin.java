@@ -29,14 +29,14 @@ import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
 import com.hrznstudio.galacticraft.api.entity.attribute.GalacticraftEntityAttributes;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
 import com.hrznstudio.galacticraft.util.OxygenTankUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.tag.Tag;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -51,18 +51,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LivingEntityMixin extends Entity {
     @Shadow protected abstract int getNextAirOnLand(int air);
 
-    public LivingEntityMixin(EntityType<?> type, World world) {
+    public LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
 
     @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isSubmergedIn(Lnet/minecraft/tag/Tag;)Z", ordinal = 0))
     private boolean checkOxygenAtmosphere_gcr(LivingEntity entity, Tag<Fluid> tag) {
-        return entity.isSubmergedIn(tag) || !((WorldOxygenAccessor) this.world).isBreathable(entity.getBlockPos().offset(Direction.UP, (int)Math.floor(entity.getEyeHeight(entity.getPose(), entity.getDimensions(entity.getPose())))));
+        return entity.isEyeInFluid(tag) || !((WorldOxygenAccessor) this.level).isBreathable(entity.blockPosition().relative(Direction.UP, (int)Math.floor(entity.getEyeHeight(entity.getPose(), entity.getDimensions(entity.getPose())))));
     }
 
     @Inject(method = "getNextAirUnderwater", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;getRespiration(Lnet/minecraft/entity/LivingEntity;)I"), cancellable = true)
     private void overrideOxygen_gcr(int air, CallbackInfoReturnable<Integer> ci) {
-        EntityAttributeInstance attribute = ((LivingEntity)(Object)this).getAttributeInstance(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE);
+        AttributeInstance attribute = ((LivingEntity)(Object)this).getAttribute(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE);
         if (attribute != null && attribute.getValue() >= 0.99D) {
             ci.setReturnValue(this.getNextAirOnLand(air));
         }

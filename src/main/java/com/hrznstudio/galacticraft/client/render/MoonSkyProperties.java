@@ -24,30 +24,30 @@ package com.hrznstudio.galacticraft.client.render;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.SkyProperties;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.renderer.DimensionSpecialEffects;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
-public class MoonSkyProperties extends SkyProperties {
+public class MoonSkyProperties extends DimensionSpecialEffects {
     public MoonSkyProperties() {
         super(Float.NaN, false, SkyType.NORMAL, true, true);
     }
 
     @Override
-    public Vec3d adjustFogColor(Vec3d color, float sunHeight) {
-        return Vec3d.ZERO;
+    public Vec3 getBrightnessDependentFogColor(Vec3 color, float sunHeight) {
+        return Vec3.ZERO;
     }
 
     @Override
-    public boolean useThickFog(int camX, int camY) {
+    public boolean isFoggyAt(int camX, int camY) {
         return false;
     }
 
     @Override
-    public float[] getFogColorOverride(float skyAngle, float tickDelta) {
+    public float[] getSunriseColor(float skyAngle, float tickDelta) {
         return new float[]{0.0F, 0.0F, 0.0F, 0.0F};
     }
 }

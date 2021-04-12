@@ -22,10 +22,9 @@
 
 package com.hrznstudio.galacticraft.api.entry;
 
-import net.minecraft.util.math.Position;
-
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.core.Position;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

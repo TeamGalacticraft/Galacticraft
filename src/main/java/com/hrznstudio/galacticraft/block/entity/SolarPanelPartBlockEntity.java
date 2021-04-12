@@ -24,25 +24,25 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import com.hrznstudio.galacticraft.api.block.MultiBlockBase;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class SolarPanelPartBlockEntity extends BlockEntity {
-    public BlockPos basePos = BlockPos.ORIGIN;
+    public BlockPos basePos = BlockPos.ZERO;
 
     public SolarPanelPartBlockEntity() {
         super(GalacticraftBlockEntities.SOLAR_PANEL_PART_TYPE);
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
-        if (this.basePos != BlockPos.ORIGIN) {
+    public CompoundTag save(CompoundTag tag) {
+        super.save(tag);
+        if (this.basePos != BlockPos.ZERO) {
             tag.putInt("baseX", this.basePos.getX());
             tag.putInt("baseY", this.basePos.getY());
             tag.putInt("baseZ", this.basePos.getZ());
@@ -51,17 +51,17 @@ public class SolarPanelPartBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void load(BlockState state, CompoundTag tag) {
+        super.load(state, tag);
         if (tag.contains("baseX")) {
             this.basePos = new BlockPos(tag.getInt("baseX"), tag.getInt("baseY"), tag.getInt("baseZ"));
         }
     }
 
     public void setBasePos(BlockPos basePos) {
-        if (this.world.getBlockState(basePos).getBlock() instanceof MultiBlockBase) {
+        if (this.level.getBlockState(basePos).getBlock() instanceof MultiBlockBase) {
             this.basePos = basePos;
-            this.markDirty();
+            this.setChanged();
         }
     }
 }

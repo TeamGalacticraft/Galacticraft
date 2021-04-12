@@ -28,53 +28,53 @@ import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.OxygenTankWidget;
 import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
 public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_COLLECTOR_SCREEN));
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_COLLECTOR_SCREEN));
 
-    public OxygenCollectorScreen(OxygenCollectorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
-        this.backgroundHeight = 181;
+    public OxygenCollectorScreen(OxygenCollectorScreenHandler handler, Inventory inv, Component title) {
+        super(handler, inv, inv.player.level, handler.machine.getBlockPos(), title);
+        this.imageHeight = 181;
 
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 13, 13, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
         this.addWidget(new OxygenTankWidget(handler.machine.getFluidTank().getTank(0), 36, 13, 48));
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.minecraft.getTextureManager().bind(BACKGROUND);
 
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.blit(matrices, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft-rewoven.oxygen_collector"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        String statusText = I18n.translate("ui.galacticraft-rewoven.machine.status");
+        DrawableUtils.drawCenteredString(matrices, font, I18n.get("block.galacticraft-rewoven.oxygen_collector"), (this.width / 2), this.topPos + 5, ChatFormatting.DARK_GRAY.getColor());
+        String statusText = I18n.get("ui.galacticraft-rewoven.machine.status");
 
-        int statusX = this.x + 38;
-        int statusY = this.y + 64;
+        int statusX = this.leftPos + 38;
+        int statusY = this.topPos + 64;
 
-        this.textRenderer.draw(matrices, statusText, statusX, statusY, Formatting.DARK_GRAY.getColorValue());
+        this.font.draw(matrices, statusText, statusX, statusY, ChatFormatting.DARK_GRAY.getColor());
 
-        this.textRenderer.draw(matrices, handler.machine.getStatus().getName(), statusX + this.textRenderer.getWidth(statusText), statusY, 0);
+        this.font.draw(matrices, menu.machine.getStatus().getName(), statusX + this.font.width(statusText), statusY, 0);
 
-        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("ui.galacticraft-rewoven.machine.collecting", this.handler.machine.collectionAmount).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+        DrawableUtils.drawCenteredString(matrices, this.font, new TranslatableComponent("ui.galacticraft-rewoven.machine.collecting", this.menu.machine.collectionAmount).getString(), (this.width / 2) + 10, statusY + 12, ChatFormatting.DARK_GRAY.getColor());
+        this.renderTooltip(matrices, mouseX, mouseY);
     }
 }

@@ -44,21 +44,21 @@ import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.util.FluidUtils;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Tickable;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,7 +67,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity implements TickableBlockEntity {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int BATTERY_SLOT = 0;
     public static final int OXYGEN_TANK_SLOT = 1;
@@ -139,34 +139,34 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
 
     @Override
     public void tickWork() {
-        this.players = world.getPlayers().size();
+        this.players = level.players().size();
         this.prevSize = this.size;
 
         if (this.size > this.targetSize) {
             this.setSize(Math.max(size - 0.1F, targetSize));
         }
-        if (size > 0.0D && bubbleVisible && bubbleId == -1 && (world instanceof ServerWorld)) {
-            BubbleEntity entity = new BubbleEntity(GalacticraftEntityTypes.BUBBLE, world);
-            entity.setPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
-            entity.prevX = this.getPos().getX();
-            entity.prevY = this.getPos().getY();
-            entity.prevZ = this.getPos().getZ();
-            world.spawnEntity(entity);
-            bubbleId = entity.getEntityId();
-            for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
-                player.networkHandler.sendPacket(entity.createSpawnPacket());
+        if (size > 0.0D && bubbleVisible && bubbleId == -1 && (level instanceof ServerLevel)) {
+            BubbleEntity entity = new BubbleEntity(GalacticraftEntityTypes.BUBBLE, level);
+            entity.setPosRaw(this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
+            entity.xo = this.getBlockPos().getX();
+            entity.yo = this.getBlockPos().getY();
+            entity.zo = this.getBlockPos().getZ();
+            level.addFreshEntity(entity);
+            bubbleId = entity.getId();
+            for (ServerPlayer player : ((ServerLevel) level).players()) {
+                player.connection.send(entity.getAddEntityPacket());
             }
         }
         if (this.getStatus().getType().isActive()) {
             this.getFluidTank().extractFluid(0, null, FluidVolumeUtil.EMPTY, FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), Simulation.ACTION);
-            if (!world.isClient()) {
+            if (!level.isClientSide()) {
                 if (size < targetSize) {
                     setSize(size + 0.05D);
                 }
             }
         } else {
             if (this.bubbleId != -1 && size <= 0) {
-                world.getEntityById(bubbleId).remove();
+                level.getEntity(bubbleId).remove();
                 this.bubbleId = -1;
             }
 
@@ -178,9 +178,9 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
                 this.setSize(0);
             }
         }
-        if (prevSize != size || players != world.getPlayers().size()) {
-            for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
-                ServerPlayNetworking.send(player, new Identifier(Constants.MOD_ID, "bubble_size"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(this.pos).writeDouble(this.size)));
+        if (prevSize != size || players != level.players().size()) {
+            for (ServerPlayer player : ((ServerLevel) level).players()) {
+                ServerPlayNetworking.send(player, new ResourceLocation(Constants.MOD_ID, "bubble_size"), new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(this.worldPosition).writeDouble(this.size)));
             }
         }
     }
@@ -194,16 +194,16 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public CompoundTag save(CompoundTag tag) {
+        super.save(tag);
         tag.putByte("MaxSize", targetSize);
         tag.putDouble("Size", size);
         return tag;
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void load(BlockState state, CompoundTag tag) {
+        super.load(state, tag);
         this.size = tag.getDouble("Size");
         if (size < 0) size = 0;
         this.targetSize = tag.getByte("MaxSize");
@@ -245,7 +245,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new BubbleDistributorScreenHandler(syncId, player, this);
         return null;
     }
@@ -254,14 +254,14 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
     private enum Status implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        DISTRIBUTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.distributing"), Formatting.GREEN, StatusType.WORKING),
-        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), Formatting.AQUA, StatusType.MISSING_FLUIDS);
+        NOT_ENOUGH_ENERGY(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), ChatFormatting.RED, StatusType.MISSING_ENERGY),
+        DISTRIBUTING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.distributing"), ChatFormatting.GREEN, StatusType.WORKING),
+        NOT_ENOUGH_OXYGEN(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), ChatFormatting.AQUA, StatusType.MISSING_FLUIDS);
 
-        private final Text text;
+        private final Component text;
         private final StatusType type;
 
-        Status(MutableText text, Formatting color, StatusType type) {
+        Status(MutableComponent text, ChatFormatting color, StatusType type) {
             this.text = text.setStyle(Style.EMPTY.withColor(color));
             this.type = type;
         }
@@ -272,7 +272,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
         }
 
         @Override
-        public @NotNull Text getName() {
+        public @NotNull Component getName() {
             return text;
         }
 

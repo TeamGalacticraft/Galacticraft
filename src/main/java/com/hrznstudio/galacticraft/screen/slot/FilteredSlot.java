@@ -24,8 +24,8 @@ package com.hrznstudio.galacticraft.screen.slot;
 
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 public class FilteredSlot extends Slot {
     private final ItemFilter filter;
@@ -36,7 +36,7 @@ public class FilteredSlot extends Slot {
     }
 
     @Override
-    public boolean canInsert(ItemStack stack) {
+    public boolean mayPlace(ItemStack stack) {
         return this.filter.matches(stack);
     }
 }

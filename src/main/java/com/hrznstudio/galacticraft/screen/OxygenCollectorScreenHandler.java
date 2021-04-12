@@ -24,18 +24,18 @@ package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.Property;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.DataSlot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCollectorBlockEntity> {
-    public OxygenCollectorScreenHandler(int syncId, PlayerEntity player, OxygenCollectorBlockEntity blockEntity) {
+    public OxygenCollectorScreenHandler(int syncId, Player player, OxygenCollectorBlockEntity blockEntity) {
         super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_COLLECTOR_HANDLER);
-        this.addProperty(new Property() {
+        this.addDataSlot(new DataSlot() {
             @Override
             public int get() {
                 return machine.collectionAmount;
@@ -50,7 +50,7 @@ public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCol
         this.addPlayerInventorySlots(0, 99);
     }
 
-    public OxygenCollectorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (OxygenCollectorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public OxygenCollectorScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (OxygenCollectorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

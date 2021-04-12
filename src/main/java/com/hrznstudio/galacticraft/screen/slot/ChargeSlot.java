@@ -23,25 +23,25 @@
 package com.hrznstudio.galacticraft.screen.slot;
 
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class ChargeSlot extends Slot {
-    public ChargeSlot(Inventory inventory, int slotId, int x, int y) {
+    public ChargeSlot(Container inventory, int slotId, int x, int y) {
         super(inventory, slotId, x, y);
     }
 
     @Override
-    public int getMaxItemCount() {
+    public int getMaxStackSize() {
         return 1;
     }
 
     @Override
-    public boolean canInsert(ItemStack stack) {
+    public boolean mayPlace(ItemStack stack) {
         return EnergyUtils.isEnergyExtractable(stack);
     }
 }

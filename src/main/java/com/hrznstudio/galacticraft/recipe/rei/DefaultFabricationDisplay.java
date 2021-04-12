@@ -28,9 +28,8 @@ import me.shedaniel.rei.api.EntryStack;
 import me.shedaniel.rei.api.RecipeDisplay;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,15 +44,15 @@ public class DefaultFabricationDisplay implements RecipeDisplay {
 
     public DefaultFabricationDisplay(FabricationRecipe recipe) {
         this.input = Lists.newArrayList();
-        recipe.getPreviewInputs().forEach((ingredient) -> {
+        recipe.getIngredients().forEach((ingredient) -> {
             List<EntryStack> stacks = new ArrayList<>();
-            for (ItemStack stack : ingredient.getMatchingStacksClient()) {
+            for (ItemStack stack : ingredient.getItems()) {
                 stacks.add(EntryStack.create(stack));
             }
             this.input.add(stacks);
         });
 
-        this.output = Collections.singletonList(EntryStack.create(recipe.getOutput()));
+        this.output = Collections.singletonList(EntryStack.create(recipe.getResultItem()));
     }
 
     @Override
@@ -71,7 +70,7 @@ public class DefaultFabricationDisplay implements RecipeDisplay {
     }
 
     @Override
-    public Identifier getRecipeCategory() {
+    public ResourceLocation getRecipeCategory() {
         return GalacticraftREIPlugin.CIRCUIT_FABRICATION;
     }
 }

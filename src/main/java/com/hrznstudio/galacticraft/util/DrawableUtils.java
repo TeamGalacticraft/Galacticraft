@@ -22,22 +22,22 @@
 
 package com.hrznstudio.galacticraft.util;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.Component;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
 public class DrawableUtils {
-    public static void drawCenteredString(MatrixStack matrices, TextRenderer textRenderer, String text, int x, int y, int color) {
-        textRenderer.draw(matrices, text, (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
+    public static void drawCenteredString(PoseStack matrices, Font textRenderer, String text, int x, int y, int color) {
+        textRenderer.draw(matrices, text, (float) (x - textRenderer.width(text) / 2), (float) y, color);
     }
 
-    public static void drawCenteredString(MatrixStack matrices, TextRenderer textRenderer, Text text, int x, int y, int color) {
-        textRenderer.draw(matrices, text.asOrderedText(), (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
+    public static void drawCenteredString(PoseStack matrices, Font textRenderer, Component text, int x, int y, int color) {
+        textRenderer.draw(matrices, text.getVisualOrderText(), (float) (x - textRenderer.width(text) / 2), (float) y, color);
     }
 }

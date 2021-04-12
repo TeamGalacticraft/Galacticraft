@@ -26,11 +26,11 @@ import com.google.common.collect.ImmutableSet;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.poi.PointOfInterestType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
 
 public class GalacticraftPointOfInterestType {
-    public static final PointOfInterestType LUNAR_CARTOGRAPHER = PointOfInterestHelper.register(new Identifier(Constants.MOD_ID, "lunar_cartographer"), 1, 1, ImmutableSet.copyOf(GalacticraftBlocks.LUNAR_CARTOGRAPHY_TABLE.getStateManager().getStates()));
+    public static final PoiType LUNAR_CARTOGRAPHER = PointOfInterestHelper.register(new ResourceLocation(Constants.MOD_ID, "lunar_cartographer"), 1, 1, ImmutableSet.copyOf(GalacticraftBlocks.LUNAR_CARTOGRAPHY_TABLE.getStateDefinition().getPossibleStates()));
 
     public static void register() {
     }

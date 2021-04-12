@@ -28,50 +28,49 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEnti
 import com.hrznstudio.galacticraft.block.entity.CoalGeneratorBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import java.util.Random;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CoalGeneratorBlock extends ConfigurableMachineBlock {
-    public CoalGeneratorBlock(Settings settings) {
+    public CoalGeneratorBlock(Properties settings) {
         super(settings,
                 (view) -> new CoalGeneratorBlockEntity(),
                 (itemStack, blockView, tooltipContext) ->
-                        new TranslatableText("tooltip.galacticraft-rewoven.coal_generator")
+                        new TranslatableComponent("tooltip.galacticraft-rewoven.coal_generator")
                                 .setStyle(Constants.Styles.TOOLTIP_STYLE)
         );
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random rand) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random rand) {
         BlockEntity entity = world.getBlockEntity(pos);
         if (entity instanceof ConfigurableMachineBlockEntity && ((ConfigurableMachineBlockEntity) entity).getStatus().getType().isActive()) {
             double x = (double) pos.getX() + 0.5D;
             double y = pos.getY();
             double z = (double) pos.getZ() + 0.5D;
             if (rand.nextDouble() < 0.1D) {
-                world.playSound(x, y, z, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+                world.playLocalSound(x, y, z, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
             }
 
-            Direction direction = state.get(Properties.HORIZONTAL_FACING);
+            Direction direction = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
             Direction.Axis axis = direction.getAxis();
             double d = rand.nextDouble() * 0.6D - 0.3D;
-            double xo = axis == Direction.Axis.X ? (double) direction.getOffsetX() * 0.52D : d;
+            double xo = axis == Direction.Axis.X ? (double) direction.getStepX() * 0.52D : d;
             double yo = rand.nextDouble() * 6.0D / 16.0D;
-            double zo = axis == Direction.Axis.Z ? (double) direction.getOffsetZ() * 0.52D : d;
+            double zo = axis == Direction.Axis.Z ? (double) direction.getStepZ() * 0.52D : d;
             world.addParticle(ParticleTypes.SMOKE, x + xo, y + yo, z + zo, 0.0D, 0.0D, 0.0D);
             world.addParticle(ParticleTypes.FLAME, x + xo, y + yo, z + zo, 0.0D, 0.0D, 0.0D);
         }

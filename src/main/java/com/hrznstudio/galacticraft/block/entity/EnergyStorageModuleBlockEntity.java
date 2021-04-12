@@ -30,19 +30,19 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEnti
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.EnergyStorageModuleScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEntity implements TickableBlockEntity {
     public static final int CHARGE_BATTERY_SLOT = 0;
     public static final int DRAIN_BATTERY_SLOT = 1;
 
@@ -119,7 +119,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new EnergyStorageModuleScreenHandler(syncId, player, this);
         return null;
     }

@@ -25,35 +25,35 @@ package com.hrznstudio.galacticraft.client.render.entity;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.client.model.entity.MoonVillagerEntityModel;
 import com.hrznstudio.galacticraft.entity.MoonVillagerEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.render.entity.feature.HeadFeatureRenderer;
-import net.minecraft.client.render.entity.feature.VillagerClothingFeatureRenderer;
-import net.minecraft.client.render.entity.feature.VillagerHeldItemFeatureRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.resource.ReloadableResourceManager;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.layers.CrossedArmsItemLayer;
+import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
+import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
 
 @Environment(EnvType.CLIENT)
-public class MoonVillagerEntityRenderer extends MobEntityRenderer<MoonVillagerEntity, MoonVillagerEntityModel> {
-    private static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, "textures/entity/moon_villager/moon_villager.png");
+public class MoonVillagerEntityRenderer extends MobRenderer<MoonVillagerEntity, MoonVillagerEntityModel> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Constants.MOD_ID, "textures/entity/moon_villager/moon_villager.png");
 
     public MoonVillagerEntityRenderer(EntityRenderDispatcher dispatcher, ReloadableResourceManager reloadableResourceManager) {
         super(dispatcher, new MoonVillagerEntityModel(0.0F), 0.5F);
-        this.addFeature(new HeadFeatureRenderer<>(this));
-        this.addFeature(new VillagerClothingFeatureRenderer<>(this, reloadableResourceManager, "villager"));
-        this.addFeature(new VillagerHeldItemFeatureRenderer<>(this));
+        this.addLayer(new CustomHeadLayer<>(this));
+        this.addLayer(new VillagerProfessionLayer<>(this, reloadableResourceManager, "villager"));
+        this.addLayer(new CrossedArmsItemLayer<>(this));
     }
 
     @Override
-    public Identifier getTexture(MoonVillagerEntity villagerEntity) {
+    public ResourceLocation getTexture(MoonVillagerEntity villagerEntity) {
         return TEXTURE;
     }
 
     @Override
-    protected void scale(MoonVillagerEntity villagerEntity, MatrixStack matrixStack, float f) {
+    protected void scale(MoonVillagerEntity villagerEntity, PoseStack matrixStack, float f) {
         float g = 0.9375F;
         if (villagerEntity.isBaby()) {
             g = (float)((double)g * 0.5D);

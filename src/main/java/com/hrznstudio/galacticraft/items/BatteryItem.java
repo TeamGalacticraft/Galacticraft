@@ -33,16 +33,16 @@ import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -53,8 +53,8 @@ import java.util.List;
 public class BatteryItem extends Item implements AttributeProviderItem {
     public static final int MAX_ENERGY = 15000;
 
-    public BatteryItem(Settings settings) {
-        super(settings.maxCount(1).maxDamageIfAbsent(MAX_ENERGY));
+    public BatteryItem(Properties settings) {
+        super(settings.stacksTo(1).defaultDurability(MAX_ENERGY));
     }
 
     public int getMaxCapacity() {
@@ -63,35 +63,35 @@ public class BatteryItem extends Item implements AttributeProviderItem {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
+    public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
         CapacitorView view = EnergyUtils.getCapacitorView(stack);
-        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", EnergyUtils.getDisplay(view.getEnergy())).setStyle(Constants.Styles.getStorageLevelColor(1.0 - ((double)view.getEnergy()) / ((double)view.getMaxCapacity()))));
-        super.appendTooltip(stack, world, lines, context);
+        lines.add(new TranslatableComponent("tooltip.galacticraft-rewoven.energy_remaining", EnergyUtils.getDisplay(view.getEnergy())).setStyle(Constants.Styles.getStorageLevelColor(1.0 - ((double)view.getEnergy()) / ((double)view.getMaxCapacity()))));
+        super.appendHoverText(stack, world, lines, context);
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-        if (this.isIn(group)) {
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {
+        if (this.allowdedIn(group)) {
             ItemStack charged = new ItemStack(this);
             EnergyUtils.setEnergy(charged, getMaxCapacity());
             stacks.add(charged);
 
             ItemStack depleted = new ItemStack(this);
             EnergyUtils.setEnergy(depleted, 0);
-            depleted.setDamage(depleted.getMaxDamage() - 1);
+            depleted.setDamageValue(depleted.getMaxDamage() - 1);
             stacks.add(depleted);
         }
     }
 
     @Override
-    public void onCraft(@NotNull ItemStack battery, World world, PlayerEntity player) {
+    public void onCraftedBy(@NotNull ItemStack battery, Level world, Player player) {
         CompoundTag batteryTag = battery.getOrCreateTag();
-        battery.setDamage(getMaxCapacity());
+        battery.setDamageValue(getMaxCapacity());
         battery.setTag(batteryTag);
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return -1;
     }
 
@@ -101,7 +101,7 @@ public class BatteryItem extends Item implements AttributeProviderItem {
     }
 
     @Override
-    public boolean canRepair(ItemStack stack, ItemStack repairMaterial) {
+    public boolean isValidRepairItem(ItemStack stack, ItemStack repairMaterial) {
         return false;
     }
 
@@ -111,11 +111,11 @@ public class BatteryItem extends Item implements AttributeProviderItem {
         SimpleCapacitor capacitor = new SimpleCapacitor(DefaultEnergyType.INSTANCE, this.getMaxCapacity());
         capacitor.fromTag(ref.getOrCreateTag());
         capacitor.toTag(ref.getOrCreateTag());
-        ref.setDamage(capacitor.getMaxCapacity() - capacitor.getEnergy());
+        ref.setDamageValue(capacitor.getMaxCapacity() - capacitor.getEnergy());
         reference.set(ref);
         capacitor.addListener(capacitorView -> {
             ItemStack stack = reference.get().copy();
-            stack.setDamage(capacitorView.getMaxCapacity() - capacitorView.getEnergy());
+            stack.setDamageValue(capacitorView.getMaxCapacity() - capacitorView.getEnergy());
             capacitor.toTag(stack.getOrCreateTag());
             reference.set(stack);
         }, () -> {});

@@ -25,17 +25,16 @@ package com.hrznstudio.galacticraft.world.gen.surfacebuilder;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilderBaseConfiguration;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MultiBlockSurfaceConfig extends TernarySurfaceConfig {
+public class MultiBlockSurfaceConfig extends SurfaceBuilderBaseConfiguration {
     public static final Codec<MultiBlockSurfaceConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(BlockStateWithChance.CODEC.listOf().fieldOf("top_materials").forGetter((surfaceConfig) -> Lists.newArrayList(surfaceConfig.topMaterials)), BlockStateWithChance.CODEC.listOf().fieldOf("under_materials").forGetter((surfaceConfig) -> Lists.newArrayList(surfaceConfig.underMaterials)), BlockStateWithChance.CODEC.listOf().fieldOf("underwater_materials").forGetter((surfaceConfig) -> Lists.newArrayList(surfaceConfig.underwaterMaterials))).apply(instance, MultiBlockSurfaceConfig::new));
 
     private final BlockStateWithChance[] topMaterials;

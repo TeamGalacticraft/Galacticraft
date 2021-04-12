@@ -27,24 +27,23 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEnti
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.energy.api.CapacitorView;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-
+import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class CapacitorWidget extends AbstractWidget {
     private final CapacitorView view;
     private final int x;
     private final int y;
     private final int height;
-    private final Supplier<Collection<? extends Text>> tooltipSupplier;
+    private final Supplier<Collection<? extends Component>> tooltipSupplier;
     private final Supplier<MachineStatus> statusSupplier;
 
-    public CapacitorWidget(CapacitorView view, int x, int y, int height, Supplier<Collection<? extends Text>> tooltipSupplier, Supplier<MachineStatus> statusSupplier) {
+    public CapacitorWidget(CapacitorView view, int x, int y, int height, Supplier<Collection<? extends Component>> tooltipSupplier, Supplier<MachineStatus> statusSupplier) {
         this.view = view;
         this.x = x;
         this.y = y;
@@ -54,22 +53,22 @@ public class CapacitorWidget extends AbstractWidget {
     }
 
     @Override
-    public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
+    public void drawMouseoverTooltip(PoseStack matrices, int mouseX, int mouseY) {
         if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT)) {
-            List<Text> lines = new LinkedList<>();
+            List<Component> lines = new LinkedList<>();
             MachineStatus status = statusSupplier.get();
-            if (status != MachineStatus.NULL) lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status").setStyle(Constants.Styles.GRAY_STYLE).append(status.getName()));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy").setStyle(Constants.Styles.GOLD_STYLE).append(EnergyUtils.getDisplay(this.getView().getEnergy()).setStyle(Constants.Styles.BLUE_STYLE)));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy").setStyle(Constants.Styles.RED_STYLE).append(EnergyUtils.getDisplay(this.getView().getMaxCapacity()).setStyle(Constants.Styles.BLUE_STYLE)));
+            if (status != MachineStatus.NULL) lines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.status").setStyle(Constants.Styles.GRAY_STYLE).append(status.getName()));
+            lines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.current_energy").setStyle(Constants.Styles.GOLD_STYLE).append(EnergyUtils.getDisplay(this.getView().getEnergy()).setStyle(Constants.Styles.BLUE_STYLE)));
+            lines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.max_energy").setStyle(Constants.Styles.RED_STYLE).append(EnergyUtils.getDisplay(this.getView().getMaxCapacity()).setStyle(Constants.Styles.BLUE_STYLE)));
             lines.addAll(tooltipSupplier.get());
 
-            this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
+            this.client.screen.renderComponentTooltip(matrices, lines, mouseX, mouseY);
         }
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.client.getTextureManager().bindTexture(MachineHandledScreen.OVERLAY);
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+        this.client.getTextureManager().bind(MachineHandledScreen.OVERLAY);
         double scale = ((double) this.getView().getEnergy()) / ((double) this.getView().getMaxCapacity());
 
         int height = this.height;
@@ -80,14 +79,14 @@ public class CapacitorWidget extends AbstractWidget {
         }
     }
 
-    private void render(MatrixStack matrices, int height, double scale) {
-        this.drawTexture(matrices, this.x, this.y, Constants.TextureCoordinates.ENERGY_DARK_X, Constants.TextureCoordinates.ENERGY_DARK_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, height);
-        this.drawTexture(matrices, this.x, (int) ((this.y - (height * scale)) + height), Constants.TextureCoordinates.ENERGY_LIGHT_X, Constants.TextureCoordinates.ENERGY_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (height * scale));
+    private void render(PoseStack matrices, int height, double scale) {
+        this.blit(matrices, this.x, this.y, Constants.TextureCoordinates.ENERGY_DARK_X, Constants.TextureCoordinates.ENERGY_DARK_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, height);
+        this.blit(matrices, this.x, (int) ((this.y - (height * scale)) + height), Constants.TextureCoordinates.ENERGY_LIGHT_X, Constants.TextureCoordinates.ENERGY_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (height * scale));
     }
 
     @Override
-    public void drawTexture(MatrixStack matrices, int x, int y, int u, int v, int width, int height) {
-        drawTexture(matrices, x, y, u, v, width, height, 128, 128);
+    public void blit(PoseStack matrices, int x, int y, int u, int v, int width, int height) {
+        blit(matrices, x, y, u, v, width, height, 128, 128);
     }
 
     public CapacitorView getView() {

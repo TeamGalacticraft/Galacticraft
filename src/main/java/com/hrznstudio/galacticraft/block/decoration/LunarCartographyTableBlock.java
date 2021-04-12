@@ -22,10 +22,10 @@
 
 package com.hrznstudio.galacticraft.block.decoration;
 
-import net.minecraft.block.CartographyTableBlock;
+import net.minecraft.world.level.block.CartographyTableBlock;
 
 public class LunarCartographyTableBlock extends CartographyTableBlock {
-    public LunarCartographyTableBlock(Settings settings) {
+    public LunarCartographyTableBlock(Properties settings) {
         super(settings);
     }
 }

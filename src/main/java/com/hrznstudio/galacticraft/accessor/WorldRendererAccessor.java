@@ -24,7 +24,7 @@ package com.hrznstudio.galacticraft.accessor;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 @Environment(EnvType.CLIENT)
 public interface WorldRendererAccessor {

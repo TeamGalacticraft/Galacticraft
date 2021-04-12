@@ -24,10 +24,10 @@ package com.hrznstudio.galacticraft.world.gen.surfacebuilder;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

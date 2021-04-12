@@ -22,18 +22,18 @@
 
 package com.hrznstudio.galacticraft.misc;
 
-import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import net.minecraft.core.NonNullList;
 
-public class ForwardingDefaultList<T> extends DefaultedList<T> {
+public class ForwardingDefaultList<T> extends NonNullList<T> {
     private int[] indexes;
     private final T initialElement;
-    private final DefaultedList<T> delegate;
+    private final NonNullList<T> delegate;
 
-    public ForwardingDefaultList(DefaultedList<T> delegate, @Nullable T initialElement, int[] indexes) {
+    public ForwardingDefaultList(NonNullList<T> delegate, @Nullable T initialElement, int[] indexes) {
         super(delegate, initialElement);
         this.indexes = indexes;
         this.initialElement = initialElement;

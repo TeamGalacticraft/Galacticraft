@@ -23,13 +23,13 @@
 package com.hrznstudio.galacticraft.world.gen.carver;
 
 import com.hrznstudio.galacticraft.Constants;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.ProbabilityConfig;
-import net.minecraft.world.gen.carver.Carver;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.carver.WorldCarver;
+import net.minecraft.world.level.levelgen.feature.configurations.ProbabilityFeatureConfiguration;
 
 public class GalacticraftCarvers {
-    public static final Carver<ProbabilityConfig> LUNAR_CAVE = Registry.register(Registry.CARVER, new Identifier(Constants.MOD_ID, "lunar_cave"), new LunarCaveCarver(ProbabilityConfig.CODEC, 128));
+    public static final WorldCarver<ProbabilityFeatureConfiguration> LUNAR_CAVE = Registry.register(Registry.CARVER, new ResourceLocation(Constants.MOD_ID, "lunar_cave"), new LunarCaveCarver(ProbabilityFeatureConfiguration.CODEC, 128));
 
     public static void register() {
 

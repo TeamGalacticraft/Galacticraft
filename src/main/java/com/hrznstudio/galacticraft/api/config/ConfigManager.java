@@ -25,7 +25,7 @@ package com.hrznstudio.galacticraft.api.config;
 import com.hrznstudio.galacticraft.Galacticraft;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screens.Screen;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

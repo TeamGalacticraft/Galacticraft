@@ -23,10 +23,6 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
-import net.minecraft.network.Packet;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
-import net.minecraft.server.world.ChunkHolder;
-import net.minecraft.world.chunk.WorldChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,15 +30,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.world.level.chunk.LevelChunk;
 
 @Mixin(ChunkHolder.class)
 public abstract class ChunkHolderMixin {
     @Shadow protected abstract void sendPacketToPlayersWatching(Packet<?> packet, boolean onlyOnWatchDistanceEdge);
 
     @Inject(method = "flushUpdates", at = @At("HEAD"))
-    private void flushGC(WorldChunk chunk, CallbackInfo ci) {
-        List<CustomPayloadS2CPacket> packets = ((ChunkOxygenAccessor) chunk).syncToClient();
-        for (CustomPayloadS2CPacket packet : packets) {
+    private void flushGC(LevelChunk chunk, CallbackInfo ci) {
+        List<ClientboundCustomPayloadPacket> packets = ((ChunkOxygenAccessor) chunk).syncToClient();
+        for (ClientboundCustomPayloadPacket packet : packets) {
             this.sendPacketToPlayersWatching(packet, false);
         }
     }

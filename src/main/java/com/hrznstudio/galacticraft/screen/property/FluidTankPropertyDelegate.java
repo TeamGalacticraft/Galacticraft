@@ -26,13 +26,12 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.util.registry.Registry;
-
 import java.math.RoundingMode;
+import net.minecraft.core.Registry;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.level.material.Fluid;
 
-public class FluidTankPropertyDelegate implements PropertyDelegate {
+public class FluidTankPropertyDelegate implements ContainerData {
     private final FixedFluidInv inv;
     private final Fluid[] fluids;
 
@@ -44,7 +43,7 @@ public class FluidTankPropertyDelegate implements PropertyDelegate {
     @Override
     public int get(int index) {
         if (index % 2 == 0) {
-            return Registry.FLUID.getRawId(inv.getInvFluid(index / 2).getRawFluid());
+            return Registry.FLUID.getId(inv.getInvFluid(index / 2).getRawFluid());
         } else {
             return (int) (inv.getInvFluid(((index + 1) / 2) - 1).getAmount_F().asInt(1000, RoundingMode.HALF_DOWN));
         }
@@ -53,14 +52,14 @@ public class FluidTankPropertyDelegate implements PropertyDelegate {
     @Override
     public void set(int index, int value) {
         if (index % 2 == 0) {
-            fluids[index / 2] = Registry.FLUID.get(value);
+            fluids[index / 2] = Registry.FLUID.byId(value);
         } else {
             inv.setInvFluid(((index + 1) / 2) - 1, FluidKeys.get(fluids[((index + 1) / 2) - 1]).withAmount(FluidAmount.of(value, 1000)), Simulation.ACTION);
         }
     }
 
     @Override
-    public int size() {
+    public int getCount() {
         return fluids.length * 2;
     }
 }

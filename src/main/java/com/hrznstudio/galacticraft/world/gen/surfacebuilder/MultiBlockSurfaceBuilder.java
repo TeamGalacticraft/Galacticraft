@@ -23,14 +23,13 @@
 package com.hrznstudio.galacticraft.world.gen.surfacebuilder;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
-
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilder;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -41,14 +40,14 @@ public class MultiBlockSurfaceBuilder extends SurfaceBuilder<MultiBlockSurfaceCo
     }
 
     @Override
-    public void generate(Random random, Chunk chunk, Biome biome, int i, int j, int k, double d, BlockState blockState, BlockState blockState2, int l, long m, MultiBlockSurfaceConfig multiBlockSurfaceConfig) {
+    public void generate(Random random, ChunkAccess chunk, Biome biome, int i, int j, int k, double d, BlockState blockState, BlockState blockState2, int l, long m, MultiBlockSurfaceConfig multiBlockSurfaceConfig) {
         this.generate(random, chunk, biome, i, j, k, d, blockState, blockState2, multiBlockSurfaceConfig, l);
     }
 
-    protected void generate(Random random, Chunk chunk, Biome biome, int x, int z, int height, double noise, BlockState defaultBlock, BlockState fluidBlock, MultiBlockSurfaceConfig multiBlockSurfaceConfig, int seaLevel) {
+    protected void generate(Random random, ChunkAccess chunk, Biome biome, int x, int z, int height, double noise, BlockState defaultBlock, BlockState fluidBlock, MultiBlockSurfaceConfig multiBlockSurfaceConfig, int seaLevel) {
         BlockState blockState = multiBlockSurfaceConfig.getTopMaterial();
         BlockState blockState2 = multiBlockSurfaceConfig.getUnderMaterial();
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         int i = -1;
         int j = (int) (noise / 3.0D + 3.0D + random.nextDouble() * 0.25D);
         int k = x & 15;
@@ -62,7 +61,7 @@ public class MultiBlockSurfaceBuilder extends SurfaceBuilder<MultiBlockSurfaceCo
             } else if (blockState3.getBlock() == defaultBlock.getBlock()) {
                 if (i == -1) {
                     if (j <= 0) {
-                        blockState = Blocks.AIR.getDefaultState();
+                        blockState = Blocks.AIR.defaultBlockState();
                         blockState2 = multiBlockSurfaceConfig.getUnderMaterial();
                     } else if (m >= seaLevel - 4 && m <= seaLevel + 1) {
                         blockState = multiBlockSurfaceConfig.getTopMaterial();
@@ -71,7 +70,7 @@ public class MultiBlockSurfaceBuilder extends SurfaceBuilder<MultiBlockSurfaceCo
 
                     if (m < seaLevel && (blockState == null || blockState.isAir())) {
                         if (biome.getTemperature(mutable.set(x, m, z)) < 0.15F) {
-                            blockState = Blocks.ICE.getDefaultState();
+                            blockState = Blocks.ICE.defaultBlockState();
                         } else {
                             blockState = fluidBlock;
                         }
@@ -83,7 +82,7 @@ public class MultiBlockSurfaceBuilder extends SurfaceBuilder<MultiBlockSurfaceCo
                     if (m >= seaLevel - 1) {
                         chunk.setBlockState(mutable, blockState, false);
                     } else if (m < seaLevel - 7 - j) {
-                        blockState = Blocks.AIR.getDefaultState();
+                        blockState = Blocks.AIR.defaultBlockState();
                         blockState2 = multiBlockSurfaceConfig.getTopMaterial();
                         chunk.setBlockState(mutable, multiBlockSurfaceConfig.getUnderwaterMaterial(), false);
                     } else {
@@ -94,7 +93,7 @@ public class MultiBlockSurfaceBuilder extends SurfaceBuilder<MultiBlockSurfaceCo
                     chunk.setBlockState(mutable, blockState2, false);
                     if (i == 0 && blockState2.getBlock() == Blocks.SAND && j > 1) {
                         i = random.nextInt(4) + Math.max(0, m - 63);
-                        blockState2 = blockState2.getBlock() == Blocks.RED_SAND ? Blocks.RED_SANDSTONE.getDefaultState() : Blocks.SANDSTONE.getDefaultState();
+                        blockState2 = blockState2.getBlock() == Blocks.RED_SAND ? Blocks.RED_SANDSTONE.defaultBlockState() : Blocks.SANDSTONE.defaultBlockState();
                     }
                 }
             }

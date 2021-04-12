@@ -25,13 +25,14 @@ package com.hrznstudio.galacticraft.recipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.util.collection.DefaultedList;
+import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipeSerializer.RecipeFactory;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -43,8 +44,8 @@ public class ShapelessCompressingRecipeSerializer<T extends ShapelessCompressing
         this.factory = factory;
     }
 
-    private static DefaultedList<Ingredient> getIngredients(JsonArray jsonArray_1) {
-        DefaultedList<Ingredient> defaultedList_1 = DefaultedList.of();
+    private static NonNullList<Ingredient> getIngredients(JsonArray jsonArray_1) {
+        NonNullList<Ingredient> defaultedList_1 = NonNullList.create();
 
         for (int int_1 = 0; int_1 < jsonArray_1.size(); ++int_1) {
             Ingredient ingredient_1 = Ingredient.fromJson(jsonArray_1.get(int_1));
@@ -57,46 +58,46 @@ public class ShapelessCompressingRecipeSerializer<T extends ShapelessCompressing
     }
 
     @Override
-    public void write(PacketByteBuf packet, ShapelessCompressingRecipe recipe) {
+    public void write(FriendlyByteBuf packet, ShapelessCompressingRecipe recipe) {
 //            packet.writeString(recipe.group);
         packet.writeVarInt(recipe.getInput().size());
 
         for (Ingredient ingredient : recipe.getInput()) {
-            ingredient.write(packet);
+            ingredient.toNetwork(packet);
         }
 
-        packet.writeItemStack(recipe.getOutput());
+        packet.writeItem(recipe.getResultItem());
     }
 
     @Override
-    public T read(Identifier id, PacketByteBuf packet) {
+    public T fromNetwork(ResourceLocation id, FriendlyByteBuf packet) {
 //            String group = packet.readString(32767);
         int ingredientCount = packet.readVarInt();
-        DefaultedList<Ingredient> ingredients = DefaultedList.ofSize(ingredientCount, Ingredient.EMPTY);
+        NonNullList<Ingredient> ingredients = NonNullList.withSize(ingredientCount, Ingredient.EMPTY);
 
         for (int index = 0; index < ingredients.size(); ++index) {
-            ingredients.set(index, Ingredient.fromPacket(packet));
+            ingredients.set(index, Ingredient.fromNetwork(packet));
         }
 
-        ItemStack result = packet.readItemStack();
+        ItemStack result = packet.readItem();
         return factory.create(id, /*group, */result, ingredients);
     }
 
     @Override
-    public T read(Identifier id, JsonObject json) {
+    public T fromJson(ResourceLocation id, JsonObject json) {
 //            String group = JsonHelper.getString(json, "group", "");
-        DefaultedList<Ingredient> ingredients = getIngredients(JsonHelper.getArray(json, "ingredients"));
+        NonNullList<Ingredient> ingredients = getIngredients(GsonHelper.getAsJsonArray(json, "ingredients"));
         if (ingredients.isEmpty()) {
             throw new JsonParseException("No ingredients for compressing recipe");
         } else if (ingredients.size() > 9) {
             throw new JsonParseException("Too many ingredients for compressing recipe");
         } else {
-            ItemStack result = ShapelessCompressingRecipe.getStack(JsonHelper.getObject(json, "result"));
+            ItemStack result = ShapelessCompressingRecipe.getStack(GsonHelper.getAsJsonObject(json, "result"));
             return factory.create(id, /*group, */result, ingredients);
         }
     }
 
     interface RecipeFactory<T extends ShapelessCompressingRecipe> {
-        T create(Identifier id, ItemStack output, DefaultedList<Ingredient> ingredients);
+        T create(ResourceLocation id, ItemStack output, NonNullList<Ingredient> ingredients);
     }
 }

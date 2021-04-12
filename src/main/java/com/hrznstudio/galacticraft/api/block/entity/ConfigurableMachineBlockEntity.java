@@ -59,26 +59,26 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.Tickable;
-import net.minecraft.util.math.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -88,7 +88,7 @@ import java.util.*;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Tickable, ExtendedScreenHandlerFactory {
+public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, TickableBlockEntity, ExtendedScreenHandlerFactory {
     private final SecurityInfo security = new SecurityInfo();
     private final SideConfiguration sideConfiguration = new SideConfiguration(this, this.validSideOptions(), 1, this.getInventorySize(), this.getFluidTankSize());
 
@@ -110,7 +110,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     private final InventoryFixedWrapper wrappedInventory = new InventoryFixedWrapper(this.getInventory()) {
         @Override
-        public boolean canPlayerUse(PlayerEntity player) {
+        public boolean stillValid(Player player) {
             return ConfigurableMachineBlockEntity.this.getSecurity().hasAccess(player);
         }
     };
@@ -264,7 +264,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable EnergyExtractable getEnergyExtractable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.getValue(BlockStateProperties.HORIZONTAL_FACING), direction));
             if (cso.getOption().isEnergy()) {
                 if (cso.getOption().isOutput()) {
                     return this.getCapacitor().getExtractable();
@@ -277,7 +277,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable EnergyInsertable getEnergyInsertable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.getValue(BlockStateProperties.HORIZONTAL_FACING), direction));
             if (cso.getOption().isEnergy()) {
                 if (cso.getOption().isInput()) {
                     return this.getCapacitor().getInsertable();
@@ -290,7 +290,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable Capacitor getCapacitor(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.getValue(BlockStateProperties.HORIZONTAL_FACING), direction));
             if (cso.getOption().isEnergy()) {
                 return this.getCapacitor();
             }
@@ -301,7 +301,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable FixedItemInv getInventory(@NotNull BlockState state, @Nullable Direction direction) { //DIRECTION IS POINTING AWAY FROM MACHINE TO THE SEARCHER
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.getValue(BlockStateProperties.HORIZONTAL_FACING), direction));
             if (cso.getOption().isItem()) {
                 if (cso.isWildcard()) {
                     IntArrayList list = new IntArrayList();
@@ -331,7 +331,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable FixedFluidInv getFluidTank(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.getValue(BlockStateProperties.HORIZONTAL_FACING), direction));
             if (cso.getOption().isFluid()) {
                 if (cso.isWildcard()) {
                     IntArrayList list = new IntArrayList();
@@ -360,7 +360,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable FluidInsertable getFluidInsertable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.getValue(BlockStateProperties.HORIZONTAL_FACING), direction));
             if (cso.getOption().isFluid()) {
                 if (cso.getOption().isInput()) {
                     if (cso.isWildcard()) {
@@ -384,7 +384,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable FluidExtractable getFluidExtractable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.getValue(BlockStateProperties.HORIZONTAL_FACING), direction));
             if (cso.getOption().isFluid()) {
                 if (cso.getOption().isOutput()) {
                     if (cso.isWildcard()) {
@@ -417,7 +417,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return sideConfiguration;
     }
 
-    public final boolean canUse(PlayerEntity player) {
+    public final boolean canUse(Player player) {
         return this.getSecurity().hasAccess(player);
     }
 
@@ -433,9 +433,9 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     public boolean disabled() {
         switch (this.redstone) {
             case OFF:
-                return this.getWorld().isReceivingRedstonePower(pos);
+                return this.getLevel().hasNeighborSignal(worldPosition);
             case ON:
-                return !this.getWorld().isReceivingRedstonePower(pos);
+                return !this.getLevel().hasNeighborSignal(worldPosition);
             default:
                 return false;
         }
@@ -443,8 +443,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     @Override
     public final void tick() {
-        assert this.world != null;
-        if (!this.world.isClient) {
+        assert this.level != null;
+        if (!this.level.isClientSide) {
             this.updateComponents();
             if (disabled()) {
                 idleEnergyDecrement(true);
@@ -488,9 +488,9 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     @NotNull
-    public <C extends Inventory, T extends Recipe<C>> Optional<T> getRecipe(RecipeType<T> type, C inventory) {
-        if (this.world == null) return Optional.empty();
-        return this.world.getRecipeManager().getFirstMatch(type, inventory, this.world);
+    public <C extends Container, T extends Recipe<C>> Optional<T> getRecipe(RecipeType<T> type, C inventory) {
+        if (this.level == null) return Optional.empty();
+        return this.level.getRecipeManager().getRecipeFor(type, inventory, this.level);
     }
 
     public boolean canInsert(int slot, Recipe<?> recipe) {
@@ -498,13 +498,13 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public boolean canInsert(int slot, Recipe<?> recipe, int multiplier) {
-        ItemStack stack = recipe.getOutput().copy();
+        ItemStack stack = recipe.getResultItem().copy();
         stack.setCount(stack.getCount() * multiplier);
         return this.canInsert(slot, stack);
     }
 
     public boolean canInsert(int[] slots, Recipe<?> recipe, int multiplier) {
-        ItemStack stack = recipe.getOutput().copy();
+        ItemStack stack = recipe.getResultItem().copy();
         stack.setCount(stack.getCount() * multiplier);
         return this.canInsert(slots, stack);
     }
@@ -519,8 +519,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public CompoundTag save(CompoundTag tag) {
+        super.save(tag);
         if (this.getEnergyCapacity() > 0) this.getCapacitor().toTag(tag);
         if (this.getInventorySize() > 0) this.getInventory().toTag(tag);
         if (this.getFluidTankSize() > 0) this.getFluidTank().toTag(tag);
@@ -532,8 +532,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void load(BlockState state, CompoundTag tag) {
+        super.load(state, tag);
         if (this.getEnergyCapacity() > 0) this.getCapacitor().fromTag(tag);
         if (this.getInventorySize() > 0) this.getInventory().fromTag(tag);
         if (this.getFluidTankSize() > 0) this.getFluidTank().fromTag(tag);
@@ -541,7 +541,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         this.getSideConfiguration().fromTag(tag);
         this.setRedstone(RedstoneState.fromTag(tag));
         this.noDrop = tag.getBoolean("NoDrop");
-        if (loaded && !world.isClient) this.sync();
+        if (loaded && !level.isClientSide) this.sync();
         if (!loaded) loaded = true;
     }
 
@@ -549,7 +549,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     @Environment(EnvType.CLIENT)
     public void fromClientTag(CompoundTag tag) {
         this.sideConfiguration.fromTag(tag);
-        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(pos);
+        ((WorldRendererAccessor) Minecraft.getInstance().levelRenderer).addChunkToRebuild(worldPosition);
     }
 
     @Override
@@ -575,8 +575,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             for (BlockFace face : Constants.Misc.BLOCK_FACES) {
                 ConfiguredSideOption option = this.getSideConfiguration().get(face);
                 if (option.getOption() == SideOption.POWER_OUTPUT) {
-                    Direction dir = face.toDirection(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
-                    EnergyInsertable insertable = GalacticraftEnergy.INSERTABLE.getFirst(world, pos.offset(dir), SearchOptions.inDirection(dir.getOpposite()));
+                    Direction dir = face.toDirection(this.level.getBlockState(worldPosition).getValue(BlockStateProperties.HORIZONTAL_FACING));
+                    EnergyInsertable insertable = GalacticraftEnergy.INSERTABLE.getFirst(level, worldPosition.relative(dir), SearchOptions.inDirection(dir.getOpposite()));
                     if (insertable != RejectingEnergyInsertable.NULL) {
                         this.getCapacitor().insert(insertable.tryInsert(DefaultEnergyType.INSTANCE, this.getCapacitor().extract(2048), Simulation.ACTION));
                     }
@@ -590,7 +590,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             for (BlockFace face : Constants.Misc.BLOCK_FACES) {
                 ConfiguredSideOption option = this.getSideConfiguration().get(face);
                 if (option.getOption().isFluid() && option.getOption().isOutput()) {
-                    Direction dir = face.toDirection(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
+                    Direction dir = face.toDirection(this.level.getBlockState(worldPosition).getValue(BlockStateProperties.HORIZONTAL_FACING));
                     FluidInsertable insertable = FluidAttributes.INSERTABLE.getFromNeighbour(this, dir);
                     this.getFluidTank().insertFluid(tank, insertable.attemptInsertion(this.getFluidTank().extractFluid(tank, ConstantFluidFilter.ANYTHING, null, FluidAmount.ONE, Simulation.ACTION), Simulation.ACTION), Simulation.ACTION);
                 }
@@ -599,7 +599,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public void idleEnergyDecrement(boolean off) {
-        if (this.world.random.nextInt(off ? 40 : 20) == 1) {
+        if (this.level.random.nextInt(off ? 40 : 20) == 1) {
             if (this.getBaseEnergyConsumption() > 0) {
                 this.getCapacitor().extract(this.getBaseEnergyConsumption() / 20);
             }
@@ -643,28 +643,28 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return Collections.emptyList();
     }
 
-    public Inventory getWrappedInventory() {
+    public Container getWrappedInventory() {
         return this.wrappedInventory;
     }
 
     @Override
     public void sync() {
         BlockEntityClientSerializable.super.sync();
-        BlockState state = this.world.getBlockState(this.pos);
-        this.world.setBlockState(this.pos, state.with(ConfigurableMachineBlock.ARBITRARY_BOOLEAN_PROPERTY, !state.get(ConfigurableMachineBlock.ARBITRARY_BOOLEAN_PROPERTY)), 11);
+        BlockState state = this.level.getBlockState(this.worldPosition);
+        this.level.setBlock(this.worldPosition, state.setValue(ConfigurableMachineBlock.ARBITRARY_BOOLEAN_PROPERTY, !state.getValue(ConfigurableMachineBlock.ARBITRARY_BOOLEAN_PROPERTY)), 11);
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {
-        packetByteBuf.writeBlockPos(this.getPos());
+    public void writeScreenOpeningData(ServerPlayer serverPlayerEntity, FriendlyByteBuf packetByteBuf) {
+        packetByteBuf.writeBlockPos(this.getBlockPos());
     }
 
     @Override
-    public Text getDisplayName() {
-        return LiteralText.EMPTY;
+    public Component getDisplayName() {
+        return TextComponent.EMPTY;
     }
 
-    public enum RedstoneState implements StringIdentifiable {
+    public enum RedstoneState implements StringRepresentable {
         /**
          * Ignores redstone entirely.
          */
@@ -685,12 +685,12 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return this.name().toLowerCase(Locale.ROOT);
         }
 
         public void toTag(CompoundTag tag) {
-            tag.putString("Redstone", this.asString());
+            tag.putString("Redstone", this.getSerializedName());
         }
 
         public static RedstoneState fromTag(CompoundTag tag) {
@@ -701,7 +701,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     public interface MachineStatus {
         MachineStatus NULL = new MachineStatus() {
             @Override
-            public @NotNull Text getName() {
+            public @NotNull Component getName() {
                 return Constants.Misc.EMPTY_TEXT;
             }
 
@@ -716,7 +716,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             }
         };
 
-        @NotNull Text getName();
+        @NotNull Component getName();
 
         @NotNull StatusType getType();
 
@@ -779,7 +779,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     public static class SecurityInfo {
         private UUID owner;
         private String username;
-        private Identifier team;
+        private ResourceLocation team;
         private Publicity publicity;
 
         protected SecurityInfo() {
@@ -789,8 +789,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             this.username = "";
         }
 
-        public boolean isOwner(PlayerEntity player) {
-            return isOwner(player.getUuid());
+        public boolean isOwner(Player player) {
+            return isOwner(player.getUUID());
         }
 
         public boolean isOwner(UUID uuid) {
@@ -798,13 +798,13 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             return this.owner.equals(uuid);
         }
 
-        public boolean hasAccess(PlayerEntity player) {
+        public boolean hasAccess(Player player) {
             switch (publicity) {
                 case PUBLIC:
                     return true;
                 case SPACE_RACE:
-                    return (((MinecraftServerTeamsGetter) player.getServer()).getSpaceRaceTeams().getTeam(player.getUuid()) != null)
-                            && ((MinecraftServerTeamsGetter) player.getServer()).getSpaceRaceTeams().getTeam(player.getUuid()).players.containsKey(owner);
+                    return (((MinecraftServerTeamsGetter) player.getServer()).getSpaceRaceTeams().getTeam(player.getUUID()) != null)
+                            && ((MinecraftServerTeamsGetter) player.getServer()).getSpaceRaceTeams().getTeam(player.getUUID()).players.containsKey(owner);
                 case PRIVATE:
                     return isOwner(player);
             }
@@ -835,14 +835,14 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             return this.owner;
         }
 
-        public void setOwner(PlayerEntity owner) {
+        public void setOwner(Player owner) {
             if (!this.hasOwner()) {
-                this.owner = owner.getUuid();
+                this.owner = owner.getUUID();
             }
-            this.username = owner.getEntityName();
+            this.username = owner.getScoreboardName();
         }
 
-        public Identifier getTeam() {
+        public ResourceLocation getTeam() {
             return team;
         }
 
@@ -853,10 +853,10 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         public CompoundTag toTag(CompoundTag tag) {
             CompoundTag compoundTag = new CompoundTag();
             if (this.hasOwner()) {
-                compoundTag.putUuid("owner", this.owner);
+                compoundTag.putUUID("owner", this.owner);
             }
             compoundTag.putString("username", this.username);
-            compoundTag.putString("publicity", this.publicity.asString());
+            compoundTag.putString("publicity", this.publicity.getSerializedName());
             if (this.hasTeam()) {
                 compoundTag.putString("team", team.toString());
             }
@@ -869,13 +869,13 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
             if (compoundTag.contains("owner")) {
                 if (!this.hasOwner()) {
-                    this.owner = compoundTag.getUuid("owner");
+                    this.owner = compoundTag.getUUID("owner");
                 }
             }
 
             if (compoundTag.contains("team")) {
                 if (!this.hasTeam()) {
-                    this.team = new Identifier(compoundTag.getString("team"));
+                    this.team = new ResourceLocation(compoundTag.getString("team"));
                 }
             }
 
@@ -884,13 +884,13 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         }
 
 
-        public enum Publicity implements StringIdentifiable {
+        public enum Publicity implements StringRepresentable {
             PUBLIC,
             SPACE_RACE,
             PRIVATE;
 
             @Override
-            public String asString() {
+            public String getSerializedName() {
                 return this.toString();
             }
         }
@@ -924,32 +924,32 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
         public void setFrontOption(SideOption option) {
             front.setOption(option, this.getMax(option));
-            if (!machine.world.isClient()) machine.sync();
+            if (!machine.level.isClientSide()) machine.sync();
         }
 
         public void setBackOption(SideOption option) {
             back.setOption(option, this.getMax(option));
-            if (!machine.world.isClient()) machine.sync();
+            if (!machine.level.isClientSide()) machine.sync();
         }
 
         public void setLeftOption(SideOption option) {
             left.setOption(option, this.getMax(option));
-            if (!machine.world.isClient()) machine.sync();
+            if (!machine.level.isClientSide()) machine.sync();
         }
 
         public void setRightOption(SideOption option) {
             right.setOption(option, this.getMax(option));
-            if (!machine.world.isClient()) machine.sync();
+            if (!machine.level.isClientSide()) machine.sync();
         }
 
         public void setTopOption(SideOption option) {
             top.setOption(option, this.getMax(option));
-            if (!machine.world.isClient()) machine.sync();
+            if (!machine.level.isClientSide()) machine.sync();
         }
 
         public void setBottomOption(SideOption option) {
             bottom.setOption(option, this.getMax(option));
-            if (!machine.world.isClient()) machine.sync();
+            if (!machine.level.isClientSide()) machine.sync();
         }
 
         public int getFrontValue() {

@@ -27,12 +27,12 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.capes.CapeListener;
 import com.hrznstudio.galacticraft.api.capes.models.CapePlayer;
 import com.hrznstudio.galacticraft.api.capes.models.CapesModel;
-import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -94,8 +94,8 @@ public class JsonCapes implements CapeListener {
             return this.key.equals(cape.key);
         }
 
-        public Identifier getTexture() {
-            return new Identifier(Constants.MOD_ID, "textures/cape/cape_" + this.key + ".png");
+        public ResourceLocation getTexture() {
+            return new ResourceLocation(Constants.MOD_ID, "textures/cape/cape_" + this.key + ".png");
         }
     }
 }

@@ -25,32 +25,37 @@ package com.hrznstudio.galacticraft.world.dimension;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.gen.chunk.MoonChunkGenerator;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.gen.chunk.*;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.NoiseSamplingSettings;
+import net.minecraft.world.level.levelgen.NoiseSettings;
+import net.minecraft.world.level.levelgen.NoiseSlideSettings;
+import net.minecraft.world.level.levelgen.StructureSettings;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftDimensions {
-    public static final RegistryKey<World> MOON = RegistryKey.of(Registry.DIMENSION, new Identifier(Constants.MOD_ID, "moon"));
+    public static final ResourceKey<Level> MOON = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(Constants.MOD_ID, "moon"));
 
     public static void register() {
-        BuiltinRegistries.add(BuiltinRegistries.CHUNK_GENERATOR_SETTINGS, new Identifier(Constants.MOD_ID, "moon"), new ChunkGeneratorSettings(
-                new StructuresConfig(false),
-                new GenerationShapeConfig(
-                        256, new NoiseSamplingConfig(0.9999999814507745D, 0.9999999814507745D, 80.0D, 160.0D),
-                        new SlideConfig(-10, 3, 0), new SlideConfig(-30, 0, 0),
+        BuiltinRegistries.register(BuiltinRegistries.NOISE_GENERATOR_SETTINGS, new ResourceLocation(Constants.MOD_ID, "moon"), new NoiseGeneratorSettings(
+                new StructureSettings(false),
+                new NoiseSettings(
+                        256, new NoiseSamplingSettings(0.9999999814507745D, 0.9999999814507745D, 80.0D, 160.0D),
+                        new NoiseSlideSettings(-10, 3, 0), new NoiseSlideSettings(-30, 0, 0),
                         1, 2, 1.0D, -0.46875D, true,
                         true, false, false),
-                GalacticraftBlocks.MOON_ROCKS[0].getDefaultState(), Blocks.AIR.getDefaultState(), -10, 0, 63, false)
+                GalacticraftBlocks.MOON_ROCKS[0].defaultBlockState(), Blocks.AIR.defaultBlockState(), -10, 0, 63, false)
         );
 
-        Registry.register(Registry.CHUNK_GENERATOR, new Identifier(Constants.MOD_ID, "moon"), MoonChunkGenerator.CODEC);
+        Registry.register(Registry.CHUNK_GENERATOR, new ResourceLocation(Constants.MOD_ID, "moon"), MoonChunkGenerator.CODEC);
 //        FabricDimensions.registerDefaultPlacer(MOON, GalacticraftDimensions::placeEntity);
     }
 }

@@ -27,8 +27,7 @@ import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipe;
 import me.shedaniel.rei.api.EntryStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.item.ItemStack;
-
+import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,14 +42,14 @@ public class DefaultShapelessCompressingDisplay implements DefaultCompressingDis
 
     public DefaultShapelessCompressingDisplay(ShapelessCompressingRecipe recipe) {
         this.input = Lists.newArrayList();
-        recipe.getPreviewInputs().forEach((ingredient) -> {
+        recipe.getIngredients().forEach((ingredient) -> {
             List<EntryStack> stacks = new ArrayList<>();
-            for (ItemStack stack : ingredient.getMatchingStacksClient()) {
+            for (ItemStack stack : ingredient.getItems()) {
                 stacks.add(EntryStack.create(stack));
             }
             this.input.add(stacks);
         });
-        this.output = Collections.singletonList(EntryStack.create(recipe.getOutput()));
+        this.output = Collections.singletonList(EntryStack.create(recipe.getResultItem()));
     }
 
 //    @Override

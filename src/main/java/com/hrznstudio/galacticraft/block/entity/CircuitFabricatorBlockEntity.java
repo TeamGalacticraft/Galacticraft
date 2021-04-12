@@ -36,19 +36,19 @@ import com.hrznstudio.galacticraft.recipe.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.screen.CircuitFabricatorScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,10 +70,10 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     public static final int OUTPUT_SLOT = 6;
 
     private static final ItemFilter[] SLOT_FILTERS;
-    private final Inventory recipeSlotInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
+    private final Container recipeSlotInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
         @Override
-        public boolean canPlayerUse(PlayerEntity player) {
-            return getWrappedInventory().canPlayerUse(player);
+        public boolean stillValid(Player player) {
+            return getWrappedInventory().stillValid(player);
         }
     };
 
@@ -116,7 +116,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
 
     @Override
     public ItemFilter getFilterForSlot(int slot) {
-        if (slot == INPUT_SLOT) return stack -> this.getRecipe(new SimpleInventory(stack)).isPresent();
+        if (slot == INPUT_SLOT) return stack -> this.getRecipe(new SimpleContainer(stack)).isPresent();
         if (slot == OUTPUT_SLOT) return ConstantItemFilter.ANYTHING;
 
         return SLOT_FILTERS[slot];
@@ -137,7 +137,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
             }
         }
         Optional<FabricationRecipe> recipe = this.getRecipe(recipeSlotInv);
-        if (recipe.isPresent() && !this.canInsert(OUTPUT_SLOT, recipe.get().getOutput())) return Status.FULL;
+        if (recipe.isPresent() && !this.canInsert(OUTPUT_SLOT, recipe.get().getResultItem())) return Status.FULL;
         return Status.PROCESSING;
     }
 
@@ -155,13 +155,13 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
             if (this.getInventory().extractStack(INPUT_SLOT_REDSTONE, this.getFilterForSlot(INPUT_SLOT_REDSTONE), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
             if (this.getInventory().extractStack(INPUT_SLOT, this.getFilterForSlot(INPUT_SLOT), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
             this.progress = 0;
-            this.getInventory().insertStack(OUTPUT_SLOT, this.getRecipe(recipeSlotInv).orElseThrow(RuntimeException::new).getOutput().copy(), Simulation.ACTION);
+            this.getInventory().insertStack(OUTPUT_SLOT, this.getRecipe(recipeSlotInv).orElseThrow(RuntimeException::new).getResultItem().copy(), Simulation.ACTION);
         }
     }
 
-    private Optional<FabricationRecipe> getRecipe(Inventory input) {
-        if (this.world == null) return Optional.empty();
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.FABRICATION_TYPE, input, this.world);
+    private Optional<FabricationRecipe> getRecipe(Container input) {
+        if (this.level == null) return Optional.empty();
+        return this.level.getRecipeManager().getRecipeFor(GalacticraftRecipes.FABRICATION_TYPE, input, this.level);
     }
 
     public int getProgress() {
@@ -173,15 +173,15 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public CompoundTag save(CompoundTag tag) {
+        super.save(tag);
         tag.putInt("Progress", this.progress);
         return tag;
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void load(BlockState state, CompoundTag tag) {
+        super.load(state, tag);
         progress = tag.getInt("Progress");
     }
 
@@ -202,7 +202,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new CircuitFabricatorScreenHandler(syncId, player, this);
         return null;
     }
@@ -214,33 +214,33 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
         /**
          * Fabricator is active and is processing.
          */
-        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.processing"), Formatting.GREEN, StatusType.WORKING),
+        PROCESSING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.processing"), ChatFormatting.GREEN, StatusType.WORKING),
 
         /**
          * Fabricator output slot is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.full"), ChatFormatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Fabricator does not have the required resources to function.
          */
-        NOT_ENOUGH_RESOURCES(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
+        NOT_ENOUGH_RESOURCES(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_items"), ChatFormatting.GOLD, StatusType.MISSING_ITEMS),
 
         /**
          * The fabricator has no energy.
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.GRAY, StatusType.MISSING_ENERGY);
+        NOT_ENOUGH_ENERGY(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), ChatFormatting.GRAY, StatusType.MISSING_ENERGY);
 
-        private final Text text;
+        private final Component text;
         private final StatusType type;
 
-        Status(TranslatableText text, Formatting color, StatusType type) {
+        Status(TranslatableComponent text, ChatFormatting color, StatusType type) {
             this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         @Override
-        public @NotNull Text getName() {
+        public @NotNull Component getName() {
             return text;
         }
 

@@ -22,20 +22,20 @@
 
 package com.hrznstudio.galacticraft.screen.slot;
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OutputSlot extends Slot {
-    public OutputSlot(Inventory inventory, int slotId, int x, int y) {
+    public OutputSlot(Container inventory, int slotId, int x, int y) {
         super(inventory, slotId, x, y);
     }
 
     @Override
-    public boolean canInsert(ItemStack stack) {
+    public boolean mayPlace(ItemStack stack) {
         return false;
     }
 }

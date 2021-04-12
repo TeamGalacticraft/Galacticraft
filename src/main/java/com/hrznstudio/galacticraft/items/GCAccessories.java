@@ -23,13 +23,13 @@
 package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.api.item.AccessoryItem;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GCAccessories extends Item implements AccessoryItem {
-    public GCAccessories(Settings settings) {
+    public GCAccessories(Properties settings) {
         super(settings);
     }
 }

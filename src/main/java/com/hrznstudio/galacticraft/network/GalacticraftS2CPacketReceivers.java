@@ -29,14 +29,14 @@ import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,53 +45,53 @@ import org.jetbrains.annotations.Nullable;
  */
 public class GalacticraftS2CPacketReceivers {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "redstone"), (server, player, handler, buf, responseSender) -> {
-            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constants.MOD_ID, "redstone"), (server, player, handler, buf, responseSender) -> {
+            FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
             server.execute(() -> {
-                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getServerWorld(), player, false);
+                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getLevel(), player, false);
                 if (blockEntity != null) {
-                    blockEntity.setRedstone(buffer.readEnumConstant(ConfigurableMachineBlockEntity.RedstoneState.class));
+                    blockEntity.setRedstone(buffer.readEnum(ConfigurableMachineBlockEntity.RedstoneState.class));
                 }
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "security"), (server, player, handler, buf, responseSender) -> {
-            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constants.MOD_ID, "security"), (server, player, handler, buf, responseSender) -> {
+            FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
             server.execute(() -> {
-                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getServerWorld(), player, true);
+                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getLevel(), player, true);
                 if (blockEntity != null) {
-                    ConfigurableMachineBlockEntity.SecurityInfo.Publicity publicity = buffer.readEnumConstant(ConfigurableMachineBlockEntity.SecurityInfo.Publicity.class);
+                    ConfigurableMachineBlockEntity.SecurityInfo.Publicity publicity = buffer.readEnum(ConfigurableMachineBlockEntity.SecurityInfo.Publicity.class);
                     blockEntity.getSecurity().setPublicity(publicity);
                 }
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "side_config"), (server, player, handler, buf, responseSender) -> {
-            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constants.MOD_ID, "side_config"), (server, player, handler, buf, responseSender) -> {
+            FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
             server.execute(() -> {
-                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getServerWorld(), player, false);
+                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getLevel(), player, false);
                 if (blockEntity != null) {
                     if (buffer.readBoolean()) {
-                        blockEntity.getSideConfiguration().set(buffer.readEnumConstant(BlockFace.class), buffer.readEnumConstant(SideOption.class));
+                        blockEntity.getSideConfiguration().set(buffer.readEnum(BlockFace.class), buffer.readEnum(SideOption.class));
                     } else {
                         if (buffer.readBoolean()) {
-                            blockEntity.getSideConfiguration().increment(buffer.readEnumConstant(BlockFace.class));
+                            blockEntity.getSideConfiguration().increment(buffer.readEnum(BlockFace.class));
                         } else {
-                            blockEntity.getSideConfiguration().decrement(buffer.readEnumConstant(BlockFace.class));
+                            blockEntity.getSideConfiguration().decrement(buffer.readEnum(BlockFace.class));
                         }
                     }
                 }
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, inv, pl) -> new PlayerInventoryGCScreenHandler(inv, pl), Constants.Misc.EMPTY_TEXT))));
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constants.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openMenu(new SimpleMenuProvider((syncId, inv, pl) -> new PlayerInventoryGCScreenHandler(inv, pl), Constants.Misc.EMPTY_TEXT))));
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "bubble_max"), (server, player, handler, buf, responseSender) -> {
-            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constants.MOD_ID, "bubble_max"), (server, player, handler, buf, responseSender) -> {
+            FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
 
             server.execute(() -> {
                 byte max = buffer.readByte();
-                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getServerWorld(), player, false);
+                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getLevel(), player, false);
                 if (blockEntity instanceof BubbleDistributorBlockEntity) {
                     if (max > 0) {
                         ((BubbleDistributorBlockEntity) blockEntity).setTargetSize(max);
@@ -100,12 +100,12 @@ public class GalacticraftS2CPacketReceivers {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "bubble_visible"), (server, player, handler, buf, responseSender) -> {
-            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constants.MOD_ID, "bubble_visible"), (server, player, handler, buf, responseSender) -> {
+            FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
 
             server.execute(() -> {
                 boolean visible = buffer.readBoolean();
-                ConfigurableMachineBlockEntity entity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getServerWorld(), player, false);
+                ConfigurableMachineBlockEntity entity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getLevel(), player, false);
 
                 if (entity instanceof BubbleDistributorBlockEntity) {
                     ((BubbleDistributorBlockEntity) entity).bubbleVisible = visible;
@@ -114,11 +114,11 @@ public class GalacticraftS2CPacketReceivers {
         });
     }
 
-    private static @Nullable ConfigurableMachineBlockEntity doBasicChecksAndGrabEntity(@NotNull BlockPos pos, ServerWorld world, ServerPlayerEntity player, boolean strictAccess) {
-        if (world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+    private static @Nullable ConfigurableMachineBlockEntity doBasicChecksAndGrabEntity(@NotNull BlockPos pos, ServerLevel world, ServerPlayer player, boolean strictAccess) {
+        if (world.hasChunk(pos.getX() >> 4, pos.getZ() >> 4)) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof ConfigurableMachineBlockEntity) {
-                if (player.getPos().distanceTo(Vec3d.ofCenter(entity.getPos())) < 6.5D) {
+                if (player.position().distanceTo(Vec3.atCenterOf(entity.getBlockPos())) < 6.5D) {
                     if (strictAccess) {
                         if (((ConfigurableMachineBlockEntity) entity).getSecurity().isOwner(player)) {
                             return (ConfigurableMachineBlockEntity) entity;

@@ -27,29 +27,28 @@ import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FluidBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.Item;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.state.StateManager;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import java.util.Random;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CrudeOilFluid extends FlowableFluid {
+public class CrudeOilFluid extends FlowingFluid {
 
     @Override
     public Fluid getFlowing() {
@@ -57,33 +56,33 @@ public class CrudeOilFluid extends FlowableFluid {
     }
 
     @Override
-    public Fluid getStill() {
+    public Fluid getSource() {
         return GalacticraftFluids.CRUDE_OIL;
     }
 
     @Override
-    protected boolean isInfinite() {
+    protected boolean canConvertToSource() {
         return false;
     }
 
     @Override
-    public Item getBucketItem() {
+    public Item getBucket() {
         return GalacticraftItems.CRUDE_OIL_BUCKET;
     }
 
     @Environment(EnvType.CLIENT)
-    public ParticleEffect getParticle() {
+    public ParticleOptions getDripParticle() {
         return GalacticraftParticles.DRIPPING_CRUDE_OIL_PARTICLE;
     }
 
     @Override
-    public boolean canBeReplacedWith(FluidState fluidState, BlockView blockView, BlockPos blockPos, Fluid fluid, Direction direction) {
-        return direction == Direction.DOWN && !fluid.matchesType(GalacticraftFluids.CRUDE_OIL);
+    public boolean canBeReplacedWith(FluidState fluidState, BlockGetter blockView, BlockPos blockPos, Fluid fluid, Direction direction) {
+        return direction == Direction.DOWN && !fluid.isSame(GalacticraftFluids.CRUDE_OIL);
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void randomDisplayTick(World world, BlockPos blockPos, FluidState fluidState, Random random) {
+    public void animateTick(Level world, BlockPos blockPos, FluidState fluidState, Random random) {
         if (random.nextInt(10) == 0) {
             world.addParticle(GalacticraftParticles.DRIPPING_CRUDE_OIL_PARTICLE,
                     (double) blockPos.getX() + 0.5D - random.nextGaussian() + random.nextGaussian(),
@@ -95,53 +94,53 @@ public class CrudeOilFluid extends FlowableFluid {
 
 
     @Override
-    public int getTickRate(WorldView WorldView) {
+    public int getTickDelay(LevelReader WorldView) {
         return 7;
     }
 
     @Override
-    public boolean matchesType(Fluid fluid) {
-        return fluid == getStill() || fluid == getFlowing();
+    public boolean isSame(Fluid fluid) {
+        return fluid == getSource() || fluid == getFlowing();
     }
 
     @Override
-    public void beforeBreakingBlock(WorldAccess iWorld, BlockPos blockPos, BlockState blockState) {
-        BlockEntity blockEntity = blockState.getBlock().hasBlockEntity() ? iWorld.getBlockEntity(blockPos) : null;
-        Block.dropStacks(blockState, iWorld, blockPos, blockEntity);
+    public void beforeDestroyingBlock(LevelAccessor iWorld, BlockPos blockPos, BlockState blockState) {
+        BlockEntity blockEntity = blockState.getBlock().isEntityBlock() ? iWorld.getBlockEntity(blockPos) : null;
+        Block.dropResources(blockState, iWorld, blockPos, blockEntity);
     }
 
     @Override
-    protected int getFlowSpeed(WorldView world) {
+    protected int getSlopeFindDistance(LevelReader world) {
         return 4;
     }
 
     @Override
-    public int getLevelDecreasePerBlock(WorldView WorldView) {
+    public int getDropOff(LevelReader WorldView) {
         return 1;
     }
 
     @Override
-    public boolean hasRandomTicks() {
+    public boolean isRandomlyTicking() {
         return true;
     }
 
     @Override
-    public float getBlastResistance() {
+    public float getExplosionResistance() {
         return 100.f;
     }
 
     @Override
-    public BlockState toBlockState(FluidState fluidState) {
-        return GalacticraftBlocks.CRUDE_OIL.getDefaultState().with(FluidBlock.LEVEL, method_15741(fluidState));
+    public BlockState createLegacyBlock(FluidState fluidState) {
+        return GalacticraftBlocks.CRUDE_OIL.defaultBlockState().setValue(LiquidBlock.LEVEL, getLegacyLevel(fluidState));
     }
 
     @Override
-    public boolean isStill(FluidState fluidState) {
+    public boolean isSource(FluidState fluidState) {
         return false;
     }
 
     @Override
-    public int getLevel(FluidState fluidState) {
+    public int getAmount(FluidState fluidState) {
         return 0;
     }
 
@@ -151,18 +150,18 @@ public class CrudeOilFluid extends FlowableFluid {
         }
 
         @Override
-        protected void appendProperties(StateManager.Builder<Fluid, FluidState> stateBuilder) {
-            super.appendProperties(stateBuilder);
+        protected void createFluidStateDefinition(StateDefinition.Builder<Fluid, FluidState> stateBuilder) {
+            super.createFluidStateDefinition(stateBuilder);
             stateBuilder.add(LEVEL);
         }
 
         @Override
-        public int getLevel(FluidState fluidState) {
-            return fluidState.get(LEVEL);
+        public int getAmount(FluidState fluidState) {
+            return fluidState.getValue(LEVEL);
         }
 
         @Override
-        public boolean isStill(FluidState fluidState) {
+        public boolean isSource(FluidState fluidState) {
             return false;
         }
     }
@@ -173,12 +172,12 @@ public class CrudeOilFluid extends FlowableFluid {
         }
 
         @Override
-        public int getLevel(FluidState fluidState) {
+        public int getAmount(FluidState fluidState) {
             return 8;
         }
 
         @Override
-        public boolean isStill(FluidState fluidState) {
+        public boolean isSource(FluidState fluidState) {
             return true;
         }
     }

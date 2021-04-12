@@ -23,10 +23,10 @@
 package com.hrznstudio.galacticraft.world.biome;
 
 import com.hrznstudio.galacticraft.Constants;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -34,12 +34,12 @@ import net.minecraft.world.biome.Biome;
 public class GalacticraftBiomes {
 
     public static class Moon {
-        public static final RegistryKey<Biome> HIGHLANDS_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.HIGHLANDS_PLAINS));
-        public static final RegistryKey<Biome> HIGHLANDS_ROCKS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.HIGHLANDS_ROCKS));
-        public static final RegistryKey<Biome> HIGHLANDS_VALLEY = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.HIGHLANDS_VALLEY));
-        public static final RegistryKey<Biome> MARE_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.MARE_PLAINS));
-        public static final RegistryKey<Biome> MARE_ROCKS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.MARE_ROCKS));
-        public static final RegistryKey<Biome> MARE_EDGE = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.MARE_EDGE));
+        public static final ResourceKey<Biome> HIGHLANDS_PLAINS = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Constants.MOD_ID, Constants.Biomes.Moon.HIGHLANDS_PLAINS));
+        public static final ResourceKey<Biome> HIGHLANDS_ROCKS = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Constants.MOD_ID, Constants.Biomes.Moon.HIGHLANDS_ROCKS));
+        public static final ResourceKey<Biome> HIGHLANDS_VALLEY = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Constants.MOD_ID, Constants.Biomes.Moon.HIGHLANDS_VALLEY));
+        public static final ResourceKey<Biome> MARE_PLAINS = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Constants.MOD_ID, Constants.Biomes.Moon.MARE_PLAINS));
+        public static final ResourceKey<Biome> MARE_ROCKS = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Constants.MOD_ID, Constants.Biomes.Moon.MARE_ROCKS));
+        public static final ResourceKey<Biome> MARE_EDGE = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Constants.MOD_ID, Constants.Biomes.Moon.MARE_EDGE));
 
         private static void init() {
         }

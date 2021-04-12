@@ -25,16 +25,16 @@ package com.hrznstudio.galacticraft.mixin;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.hrznstudio.galacticraft.world.gen.spawner.EvolvedPillagerSpawner;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.WorldGenerationProgressListener;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.Spawner;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.level.ServerWorldProperties;
-import net.minecraft.world.level.storage.LevelStorage;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.progress.ChunkProgressListener;
+import net.minecraft.world.level.CustomSpawner;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.storage.LevelStorageSource;
+import net.minecraft.world.level.storage.ServerLevelData;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -49,14 +49,14 @@ import java.util.concurrent.Executor;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-@Mixin(ServerWorld.class)
+@Mixin(ServerLevel.class)
 public abstract class ServerWorldMixin {
-    @Shadow @Final @Mutable private List<Spawner> spawners;
+    @Shadow @Final @Mutable private List<CustomSpawner> spawners;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void setSpawnersGC(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> registryKey, DimensionType dimensionType, WorldGenerationProgressListener worldGenerationProgressListener, ChunkGenerator chunkGenerator, boolean debugWorld, long l, List<Spawner> list, boolean bl, CallbackInfo ci) {
+    private void setSpawnersGC(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> registryKey, DimensionType dimensionType, ChunkProgressListener worldGenerationProgressListener, ChunkGenerator chunkGenerator, boolean debugWorld, long l, List<CustomSpawner> list, boolean bl, CallbackInfo ci) {
         if (registryKey.equals(GalacticraftDimensions.MOON)) {
-            this.spawners = ImmutableList.<Spawner>builder().add(new EvolvedPillagerSpawner()).build();
+            this.spawners = ImmutableList.<CustomSpawner>builder().add(new EvolvedPillagerSpawner()).build();
         }
     }
 }

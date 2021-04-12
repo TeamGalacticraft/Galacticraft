@@ -26,14 +26,14 @@ import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.impl.EmptyFixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
-import net.minecraft.entity.Entity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.TeleportTarget;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.portal.PortalInfo;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -44,7 +44,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public abstract class EntityMixin implements GearInventoryProvider {
     @Shadow
-    public abstract Vec3d getVelocity();
+    public abstract Vec3 getVelocity();
 
     @Shadow
     public float yaw;
@@ -53,13 +53,13 @@ public abstract class EntityMixin implements GearInventoryProvider {
     public float pitch;
 
     @Shadow
-    public World world;
+    public Level world;
 
     @Inject(method = "getTeleportTarget", at = @At("HEAD"), cancellable = true)
-    private void getTeleportTargetGC(ServerWorld destination, CallbackInfoReturnable<TeleportTarget> cir) {
-        if (destination.getRegistryKey().equals(GalacticraftDimensions.MOON) || this.world.getRegistryKey().equals(GalacticraftDimensions.MOON)) { //TODO lander/parachute stuff
-            BlockPos pos = destination.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, destination.getSpawnPos());
-            cir.setReturnValue(new TeleportTarget(new Vec3d((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getVelocity(), this.yaw, this.pitch));
+    private void getTeleportTargetGC(ServerLevel destination, CallbackInfoReturnable<PortalInfo> cir) {
+        if (destination.dimension().equals(GalacticraftDimensions.MOON) || this.world.dimension().equals(GalacticraftDimensions.MOON)) { //TODO lander/parachute stuff
+            BlockPos pos = destination.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, destination.getSharedSpawnPos());
+            cir.setReturnValue(new PortalInfo(new Vec3((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getVelocity(), this.yaw, this.pitch));
         }
     }
 

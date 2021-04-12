@@ -35,35 +35,40 @@ import com.hrznstudio.galacticraft.misc.TriFunction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.context.LootContext;
-import net.minecraft.loot.context.LootContextParameters;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -74,150 +79,150 @@ import java.util.function.Supplier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class ConfigurableMachineBlock extends BlockWithEntity implements AttributeProvider {
-    public static final BooleanProperty ARBITRARY_BOOLEAN_PROPERTY = BooleanProperty.of("update");
+public class ConfigurableMachineBlock extends BaseEntityBlock implements AttributeProvider {
+    public static final BooleanProperty ARBITRARY_BOOLEAN_PROPERTY = BooleanProperty.create("update");
 
-    private final Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc;
-    private final TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo;
+    private final Function<BlockGetter, ? extends ConfigurableMachineBlockEntity> blockEntityFunc;
+    private final TriFunction<ItemStack, BlockGetter, Boolean, Component> machineInfo;
 
-    protected ConfigurableMachineBlock(Settings settings) {
+    protected ConfigurableMachineBlock(Properties settings) {
         this(settings, (view) -> null, Constants.Misc.EMPTY_TEXT);
     }
 
-    public ConfigurableMachineBlock(Settings settings, Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc, TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo) {
+    public ConfigurableMachineBlock(Properties settings, Function<BlockGetter, ? extends ConfigurableMachineBlockEntity> blockEntityFunc, TriFunction<ItemStack, BlockGetter, Boolean, Component> machineInfo) {
         super(settings);
         this.blockEntityFunc = blockEntityFunc;
         this.machineInfo = machineInfo;
     }
 
-    public ConfigurableMachineBlock(Settings settings, Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc, Text machineInfo) {
+    public ConfigurableMachineBlock(Properties settings, Function<BlockGetter, ? extends ConfigurableMachineBlockEntity> blockEntityFunc, Component machineInfo) {
         this(settings, blockEntityFunc, (itemStack, blockView, tooltipContext) -> machineInfo);
     }
 
-    public ConfigurableMachineBlock(Settings settings, Supplier<? extends ConfigurableMachineBlockEntity> blockEntitySupplier, TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo) {
+    public ConfigurableMachineBlock(Properties settings, Supplier<? extends ConfigurableMachineBlockEntity> blockEntitySupplier, TriFunction<ItemStack, BlockGetter, Boolean, Component> machineInfo) {
         this(settings, (view) -> blockEntitySupplier.get(), machineInfo);
     }
 
-    public ConfigurableMachineBlock(Settings settings, Supplier<? extends ConfigurableMachineBlockEntity> blockEntitySupplier, Text machineInfo) {
+    public ConfigurableMachineBlock(Properties settings, Supplier<? extends ConfigurableMachineBlockEntity> blockEntitySupplier, Component machineInfo) {
         this(settings, blockEntitySupplier, (itemStack, blockView, tooltipContext) -> machineInfo);
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(Properties.HORIZONTAL_FACING, ARBITRARY_BOOLEAN_PROPERTY);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(BlockStateProperties.HORIZONTAL_FACING, ARBITRARY_BOOLEAN_PROPERTY);
     }
 
     @Override
-    public ConfigurableMachineBlockEntity createBlockEntity(BlockView view) {
+    public ConfigurableMachineBlockEntity newBlockEntity(BlockGetter view) {
         return blockEntityFunc.apply(view);
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, context.getPlayerFacing().getOpposite()).with(ARBITRARY_BOOLEAN_PROPERTY, false);
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection().getOpposite()).setValue(ARBITRARY_BOOLEAN_PROPERTY, false);
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        super.onPlaced(world, pos, state, placer, itemStack);
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        super.setPlacedBy(world, pos, state, placer, itemStack);
         if (this instanceof MultiBlockBase) {
             ((MultiBlockBase) this).onMultiblockPlaced(world, pos, state);
         }
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public final void appendTooltip(ItemStack stack, BlockView view, List<Text> lines, TooltipContext context) {
-        Text text = machineInfo(stack, view, context.isAdvanced());
+    public final void appendHoverText(ItemStack stack, BlockGetter view, List<Component> lines, TooltipFlag context) {
+        Component text = machineInfo(stack, view, context.isAdvanced());
         if (text != null) {
             if (Screen.hasShiftDown()) {
-                char[] line = text instanceof TranslatableText ? I18n.translate(((TranslatableText) text).getKey()).toCharArray() : text.getString().toCharArray();
+                char[] line = text instanceof TranslatableComponent ? I18n.get(((TranslatableComponent) text).getKey()).toCharArray() : text.getString().toCharArray();
                 int len = 0;
                 final int maxLength = 175;
                 StringBuilder builder = new StringBuilder();
                 for (char c : line) {
-                    len += MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(c));
+                    len += Minecraft.getInstance().font.width(String.valueOf(c));
                     if (c == ' ' && len >= maxLength) {
                         len = 0;
-                        lines.add(new LiteralText(builder.toString()).setStyle(text.getStyle()));
+                        lines.add(new TextComponent(builder.toString()).setStyle(text.getStyle()));
                         builder = new StringBuilder();
                         continue;
                     }
                     builder.append(c);
                 }
-                lines.add(new LiteralText(builder.toString()).setStyle(text.getStyle()));
+                lines.add(new TextComponent(builder.toString()).setStyle(text.getStyle()));
             } else {
-                lines.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Styles.TOOLTIP_STYLE));
+                lines.add(new TranslatableComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Styles.TOOLTIP_STYLE));
             }
         }
 
         if (stack != null && stack.getTag() != null && stack.getTag().contains(Constants.Nbt.BLOCK_ENTITY_TAG)) {
             CompoundTag tag = stack.getTag().getCompound(Constants.Nbt.BLOCK_ENTITY_TAG);
             lines.add(Constants.Misc.EMPTY_TEXT);
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", tag.getInt("Energy")).setStyle(Constants.Styles.AQUA_STYLE));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.owner", tag.getString("OwnerUsername")).setStyle(Constants.Styles.BLUE_STYLE));
+            lines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.current_energy", tag.getInt("Energy")).setStyle(Constants.Styles.AQUA_STYLE));
+            lines.add(new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.owner", tag.getString("OwnerUsername")).setStyle(Constants.Styles.BLUE_STYLE));
             if (tag.getBoolean("Public")) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Constants.Styles.GRAY_STYLE)
-                        .append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.public_2")
+                lines.add(new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Constants.Styles.GRAY_STYLE)
+                        .append(new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.public_2")
                         .setStyle(Constants.Styles.GREEN_STYLE)));
 
             } else if (tag.getBoolean("Party")) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Constants.Styles.GRAY_STYLE)
-                        .append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.space_race_2")
+                lines.add(new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Constants.Styles.GRAY_STYLE)
+                        .append(new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.space_race_2")
                         .setStyle(Constants.Styles.TOOLTIP_STYLE)));
 
             } else {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Constants.Styles.GRAY_STYLE)
-                        .append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.private_2")
+                lines.add(new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Constants.Styles.GRAY_STYLE)
+                        .append(new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.private_2")
                         .setStyle(Constants.Styles.DARK_RED_STYLE)));
 
             }
 
             if (tag.getString("Redstone").equals("DISABLED")) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Constants.Styles.RED_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore_2").setStyle(Constants.Styles.GRAY_STYLE)));
+                lines.add(new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Constants.Styles.RED_STYLE).append(new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore_2").setStyle(Constants.Styles.GRAY_STYLE)));
             } else if (tag.getString("Redstone").equals("OFF")) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Constants.Styles.RED_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off_2").setStyle(Constants.Styles.DARK_RED_STYLE)));
+                lines.add(new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Constants.Styles.RED_STYLE).append(new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off_2").setStyle(Constants.Styles.DARK_RED_STYLE)));
             } else {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Constants.Styles.RED_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on_2").setStyle(Constants.Styles.DARK_RED_STYLE)));
+                lines.add(new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Constants.Styles.RED_STYLE).append(new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on_2").setStyle(Constants.Styles.DARK_RED_STYLE)));
             }
 
         }
     }
 
     @Override
-    public PistonBehavior getPistonBehavior(BlockState state) {
-        return PistonBehavior.BLOCK;
+    public PushReaction getPistonPushReaction(BlockState state) {
+        return PushReaction.BLOCK;
     }
 
     @Override
-    public final ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
-            NamedScreenHandlerFactory factory = state.createScreenHandlerFactory(world, pos);
+    public final InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!world.isClientSide) {
+            MenuProvider factory = state.getMenuProvider(world, pos);
 
             if (factory != null) {
-                player.openHandledScreen(factory);
+                player.openMenu(factory);
             }
         }
 
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBreak(world, pos, state, player);
+    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+        super.playerWillDestroy(world, pos, state, player);
         BlockEntity entity = world.getBlockEntity(pos);
         if (entity instanceof ConfigurableMachineBlockEntity) {
             FullFixedItemInv inv = ((ConfigurableMachineBlockEntity) entity).getInventory();
             for (int i = 0; i < inv.getSlotCount(); i++) {
                 ItemStack stack = inv.getInvStack(i);
                 if (!stack.isEmpty()) {
-                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack));
+                    world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack));
                     inv.forceSetInvStack(i, ItemStack.EMPTY);
                 }
             }
@@ -225,20 +230,20 @@ public class ConfigurableMachineBlock extends BlockWithEntity implements Attribu
 
         if (this instanceof MultiBlockBase) {
             for (BlockPos otherPart : ((MultiBlockBase) this).getOtherParts(state, pos)) {
-                world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
+                world.setBlock(otherPart, Blocks.AIR.defaultBlockState(), 3);
             }
         }
     }
 
     @Override
-    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        BlockEntity entity = builder.get(LootContextParameters.BLOCK_ENTITY);
-        if (entity.toTag(new CompoundTag()).getBoolean("NoDrop")) return Collections.emptyList();
-        return super.getDroppedStacks(state, builder);
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        BlockEntity entity = builder.getParameter(LootContextParams.BLOCK_ENTITY);
+        if (entity.save(new CompoundTag()).getBoolean("NoDrop")) return Collections.emptyList();
+        return super.getDrops(state, builder);
     }
 
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         if (this instanceof MultiBlockBase) {
             for (BlockPos otherPart : (((MultiBlockBase) this).getOtherParts(state, pos))) {
                 if (!world.getBlockState(otherPart).getMaterial().isReplaceable()) {
@@ -246,28 +251,28 @@ public class ConfigurableMachineBlock extends BlockWithEntity implements Attribu
                 }
             }
         }
-        return super.canPlaceAt(state, world, pos);
+        return super.canSurvive(state, world, pos);
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public ItemStack getPickStack(BlockView view, BlockPos pos, BlockState state) {
-        ItemStack stack = super.getPickStack(view, pos, state);
+    public ItemStack getCloneItemStack(BlockGetter view, BlockPos pos, BlockState state) {
+        ItemStack stack = super.getCloneItemStack(view, pos, state);
         CompoundTag tag = (stack.getTag() != null ? stack.getTag() : new CompoundTag());
         if (view.getBlockEntity(pos) != null) {
-            tag.put(Constants.Nbt.BLOCK_ENTITY_TAG, view.getBlockEntity(pos).toTag(new CompoundTag()));
+            tag.put(Constants.Nbt.BLOCK_ENTITY_TAG, view.getBlockEntity(pos).save(new CompoundTag()));
         }
 
         stack.setTag(tag);
         return stack;
     }
 
-    public Text machineInfo(ItemStack stack, BlockView view, boolean context) {
+    public Component machineInfo(ItemStack stack, BlockGetter view, boolean context) {
         return machineInfo.apply(stack, view, context);
     }
 
     @Override
-    public void addAllAttributes(World world, BlockPos pos, BlockState blockState, AttributeList<?> attributeList) {
+    public void addAllAttributes(Level world, BlockPos pos, BlockState blockState, AttributeList<?> attributeList) {
         Direction direction = attributeList.getSearchDirection() == null ? null : attributeList.getSearchDirection();
         ConfigurableMachineBlockEntity machine = (ConfigurableMachineBlockEntity) world.getBlockEntity(pos);
         assert machine != null;

@@ -28,41 +28,41 @@ import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.OxygenTankWidget;
 import com.hrznstudio.galacticraft.screen.BubbleDistributorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistributorScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.BUBBLE_DISTRIBUTOR_SCREEN));
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.BUBBLE_DISTRIBUTOR_SCREEN));
 
-    private final TextFieldWidget textField;
+    private final EditBox textField;
 
-    public BubbleDistributorScreen(BubbleDistributorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
-        this.textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, this.x + 132, this.y + 59, 26, 20, new LiteralText(String.valueOf(handler.machine.getSize())));
-        textField.setChangedListener((s -> {
+    public BubbleDistributorScreen(BubbleDistributorScreenHandler handler, Inventory inv, Component title) {
+        super(handler, inv, inv.player.level, handler.machine.getBlockPos(), title);
+        this.textField = new EditBox(Minecraft.getInstance().font, this.leftPos + 132, this.topPos + 59, 26, 20, new TextComponent(String.valueOf(handler.machine.getSize())));
+        textField.setResponder((s -> {
             try {
                 if (Byte.parseByte(s) < 1) {
-                    textField.setText(String.valueOf(handler.machine.getTargetSize()));
+                    textField.setValue(String.valueOf(handler.machine.getTargetSize()));
                 }
             } catch (NumberFormatException ignore) {
-                textField.setText(String.valueOf(handler.machine.getTargetSize()));
+                textField.setValue(String.valueOf(handler.machine.getTargetSize()));
             }
         }));
 
-        textField.setTextPredicate((s -> {
+        textField.setFilter((s -> {
             try {
                 return Byte.parseByte(s) >= 1;
             } catch (NumberFormatException ignore) {
@@ -75,57 +75,57 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.minecraft.getTextureManager().bind(BACKGROUND);
 
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.blit(matrices, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
-        this.client.getTextureManager().bindTexture(OVERLAY);
+        this.minecraft.getTextureManager().bind(OVERLAY);
 
-        if (!handler.machine.bubbleVisible) {
-            if (!check(mouseX, mouseY, this.x + 156, this.y + 16, 13, 13)) {
-                this.drawTexture(matrices, this.x + 156, this.y + 16, Constants.TextureCoordinates.BUTTON_RED_X, Constants.TextureCoordinates.BUTTON_RED_Y, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT);
+        if (!menu.machine.bubbleVisible) {
+            if (!check(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, 13, 13)) {
+                this.blit(matrices, this.leftPos + 156, this.topPos + 16, Constants.TextureCoordinates.BUTTON_RED_X, Constants.TextureCoordinates.BUTTON_RED_Y, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT);
             } else {
-                this.drawTexture(matrices, this.x + 156, this.y + 16, Constants.TextureCoordinates.BUTTON_RED_HOVER_X, Constants.TextureCoordinates.BUTTON_RED_HOVER_Y, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT);
+                this.blit(matrices, this.leftPos + 156, this.topPos + 16, Constants.TextureCoordinates.BUTTON_RED_HOVER_X, Constants.TextureCoordinates.BUTTON_RED_HOVER_Y, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT);
             }
-            this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.not_visible"), this.x + 60 , this.y + 18, Formatting.RED.getColorValue());
+            this.font.draw(matrices, new TranslatableComponent("ui.galacticraft-rewoven.bubble_distributor.not_visible"), this.leftPos + 60 , this.topPos + 18, ChatFormatting.RED.getColor());
         } else {
-            if (!check(mouseX, mouseY, this.x + 156, this.y + 16, 13, 13)) {
-                this.drawTexture(matrices, this.x + 156, this.y + 16, Constants.TextureCoordinates.BUTTON_GREEN_X, Constants.TextureCoordinates.BUTTON_GREEN_Y, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT);
+            if (!check(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, 13, 13)) {
+                this.blit(matrices, this.leftPos + 156, this.topPos + 16, Constants.TextureCoordinates.BUTTON_GREEN_X, Constants.TextureCoordinates.BUTTON_GREEN_Y, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT);
             } else {
-                this.drawTexture(matrices, this.x + 156, this.y + 16, Constants.TextureCoordinates.BUTTON_GREEN_HOVER_X, Constants.TextureCoordinates.BUTTON_GREEN_HOVER_Y, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT);
+                this.blit(matrices, this.leftPos + 156, this.topPos + 16, Constants.TextureCoordinates.BUTTON_GREEN_HOVER_X, Constants.TextureCoordinates.BUTTON_GREEN_HOVER_Y, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT);
             }
-            this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.visible"), this.x + 60, this.y + 18, Formatting.GREEN.getColorValue());
+            this.font.draw(matrices, new TranslatableComponent("ui.galacticraft-rewoven.bubble_distributor.visible"), this.leftPos + 60, this.topPos + 18, ChatFormatting.GREEN.getColor());
         }
-        if (check(mouseX, mouseY, this.x + 158, this.y + 59, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT)) {
-            this.drawTexture(matrices, this.x + 158, this.y + 59, Constants.TextureCoordinates.ARROW_UP_HOVER_X, Constants.TextureCoordinates.ARROW_UP_HOVER_Y, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT);
+        if (check(mouseX, mouseY, this.leftPos + 158, this.topPos + 59, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT)) {
+            this.blit(matrices, this.leftPos + 158, this.topPos + 59, Constants.TextureCoordinates.ARROW_UP_HOVER_X, Constants.TextureCoordinates.ARROW_UP_HOVER_Y, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT);
         }
-        if (check(mouseX, mouseY, this.x + 158, this.y + 69, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT)) {
-            this.drawTexture(matrices, this.x + 158, this.y + 69, Constants.TextureCoordinates.ARROW_DOWN_HOVER_X, Constants.TextureCoordinates.ARROW_DOWN_HOVER_Y, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT);
+        if (check(mouseX, mouseY, this.leftPos + 158, this.topPos + 69, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT)) {
+            this.blit(matrices, this.leftPos + 158, this.topPos + 69, Constants.TextureCoordinates.ARROW_DOWN_HOVER_X, Constants.TextureCoordinates.ARROW_DOWN_HOVER_Y, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT);
         }
 
-        this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.size"), this.x + 70, this.y + 64, Formatting.DARK_GRAY.getColorValue());
+        this.font.draw(matrices, new TranslatableComponent("ui.galacticraft-rewoven.bubble_distributor.size"), this.leftPos + 70, this.topPos + 64, ChatFormatting.DARK_GRAY.getColor());
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        textField.setText(String.valueOf(handler.machine.getTargetSize()));
-        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_bubble_distributor").asString(), (this.width / 2) + 28, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        textField.setValue(String.valueOf(menu.machine.getTargetSize()));
+        DrawableUtils.drawCenteredString(matrices, this.font, new TranslatableComponent("block.galacticraft-rewoven.oxygen_bubble_distributor").getContents(), (this.width / 2) + 28, this.topPos + 5, ChatFormatting.DARK_GRAY.getColor());
 
-        this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.status").append(handler.machine.getStatus().getName()), this.x + 60, this.y + 30, Formatting.DARK_GRAY.getColorValue());
+        this.font.draw(matrices, new TranslatableComponent("ui.galacticraft-rewoven.machine.status").append(menu.machine.getStatus().getName()), this.leftPos + 60, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor());
 
         this.textField.render(matrices, mouseX, mouseY, delta);
 
 
-        this.textField.x = this.x + 132;
-        this.textField.y = this.y + 59;
+        this.textField.x = this.leftPos + 132;
+        this.textField.y = this.topPos + 59;
 
-        if (handler.machine.getStatus().getType().isActive()) {
-            this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.current_size", String.valueOf((int) Math.floor(handler.machine.getSize()))).setStyle(Constants.Styles.TOOLTIP_STYLE), this.x + 60, this.y + 42, Formatting.DARK_GRAY.getColorValue());
+        if (menu.machine.getStatus().getType().isActive()) {
+            this.font.draw(matrices, new TranslatableComponent("ui.galacticraft-rewoven.bubble_distributor.current_size", String.valueOf((int) Math.floor(menu.machine.getSize()))).setStyle(Constants.Styles.TOOLTIP_STYLE), this.leftPos + 60, this.topPos + 42, ChatFormatting.DARK_GRAY.getColor());
         }
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+        this.renderTooltip(matrices, mouseX, mouseY);
     }
 
     @Override
@@ -146,26 +146,26 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
 
     private boolean checkClick(double mouseX, double mouseY, int button) {
         if (button == 0) {
-            if (check(mouseX, mouseY, this.x + 156, this.y + 16, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT)) {
-                handler.machine.bubbleVisible = !handler.machine.bubbleVisible;
-                ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_visible"), new PacketByteBuf(Unpooled.buffer().writeBoolean(handler.machine.bubbleVisible)).writeBlockPos(this.handler.machine.getPos()));
+            if (check(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT)) {
+                menu.machine.bubbleVisible = !menu.machine.bubbleVisible;
+                ClientPlayNetworking.send(new ResourceLocation(Constants.MOD_ID, "bubble_visible"), new FriendlyByteBuf(Unpooled.buffer().writeBoolean(menu.machine.bubbleVisible)).writeBlockPos(this.menu.machine.getBlockPos()));
                 return true;
             }
 
-            if (check(mouseX, mouseY, this.x + 158, this.y + 59, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT)) {
-                if (handler.machine.getTargetSize() != Byte.MAX_VALUE) {
-                    handler.machine.setTargetSize((byte) (handler.machine.getTargetSize() + 1));
-                    textField.setText(handler.machine.getTargetSize() + "");
-                    ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_max"), new PacketByteBuf(Unpooled.buffer().writeByte(handler.machine.getTargetSize())).writeBlockPos(this.handler.machine.getPos()));
+            if (check(mouseX, mouseY, this.leftPos + 158, this.topPos + 59, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT)) {
+                if (menu.machine.getTargetSize() != Byte.MAX_VALUE) {
+                    menu.machine.setTargetSize((byte) (menu.machine.getTargetSize() + 1));
+                    textField.setValue(menu.machine.getTargetSize() + "");
+                    ClientPlayNetworking.send(new ResourceLocation(Constants.MOD_ID, "bubble_max"), new FriendlyByteBuf(Unpooled.buffer().writeByte(menu.machine.getTargetSize())).writeBlockPos(this.menu.machine.getBlockPos()));
                     return true;
                 }
             }
 
-            if (check(mouseX, mouseY, this.x + 158, this.y + 69, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT)) {
-                if (handler.machine.getTargetSize() > 1) {
-                    handler.machine.setTargetSize((byte) (handler.machine.getTargetSize() - 1));
-                    textField.setText(handler.machine.getTargetSize() + "");
-                    ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_max"), new PacketByteBuf(Unpooled.buffer().writeByte(handler.machine.getTargetSize())).writeBlockPos(this.handler.machine.getPos()));
+            if (check(mouseX, mouseY, this.leftPos + 158, this.topPos + 69, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT)) {
+                if (menu.machine.getTargetSize() > 1) {
+                    menu.machine.setTargetSize((byte) (menu.machine.getTargetSize() - 1));
+                    textField.setValue(menu.machine.getTargetSize() + "");
+                    ClientPlayNetworking.send(new ResourceLocation(Constants.MOD_ID, "bubble_max"), new FriendlyByteBuf(Unpooled.buffer().writeByte(menu.machine.getTargetSize())).writeBlockPos(this.menu.machine.getBlockPos()));
                     return true;
                 }
             }

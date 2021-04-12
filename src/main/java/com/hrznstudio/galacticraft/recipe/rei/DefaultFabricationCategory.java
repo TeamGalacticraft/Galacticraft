@@ -24,6 +24,8 @@ package com.hrznstudio.galacticraft.recipe.rei;
 
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.vertex.PoseStack;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.EntryStack;
@@ -32,16 +34,13 @@ import me.shedaniel.rei.api.widgets.Widgets;
 import me.shedaniel.rei.gui.widget.Widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,21 +50,21 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public class DefaultFabricationCategory implements RecipeCategory<DefaultFabricationDisplay> {
-    private static final Identifier DISPLAY_TEXTURE = new Identifier("galacticraft-rewoven", "textures/gui/rei_display.png");
+    private static final ResourceLocation DISPLAY_TEXTURE = new ResourceLocation("galacticraft-rewoven", "textures/gui/rei_display.png");
 
-    public Identifier getIdentifier() {
+    public ResourceLocation getIdentifier() {
         return GalacticraftREIPlugin.CIRCUIT_FABRICATION;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public EntryStack getLogo() {
-        return EntryStack.create(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getDefaultStack());
+        return EntryStack.create(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getDefaultInstance());
     }
 
     @Environment(EnvType.CLIENT)
     public String getCategoryName() {
-        return I18n.translate("category.rei.circuit_fabricator");
+        return I18n.get("category.rei.circuit_fabricator");
     }
 
     @Override
@@ -76,20 +75,20 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
             private BaseWidget() {
             }
 
-            public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
                 //super.render(matrices, mouseX, mouseY, delta);
-                DiffuseLighting.disable();
-                MinecraftClient.getInstance().getTextureManager().bindTexture(DefaultFabricationCategory.DISPLAY_TEXTURE);
-                this.drawTexture(matrices, startPoint.x, startPoint.y, 0, 0, 162, 82);
+                Lighting.turnOff();
+                Minecraft.getInstance().getTextureManager().bind(DefaultFabricationCategory.DISPLAY_TEXTURE);
+                this.blit(matrices, startPoint.x, startPoint.y, 0, 0, 162, 82);
 
-                int height = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
-                this.drawTexture(matrices, startPoint.x + 2, startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
-                int width = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D);
-                this.drawTexture(matrices, startPoint.x + 24, startPoint.y + 18, 82, 91, width, 17);
+                int height = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
+                this.blit(matrices, startPoint.x + 2, startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
+                int width = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D);
+                this.blit(matrices, startPoint.x + 24, startPoint.y + 18, 82, 91, width, 17);
             }
 
             @Override
-            public List<? extends Element> children() {
+            public List<? extends GuiEventListener> children() {
                 return Collections.emptyList();
             }
         }

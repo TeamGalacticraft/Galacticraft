@@ -24,22 +24,21 @@ package com.hrznstudio.galacticraft.client.model.entity;
 
 import com.google.common.collect.Iterables;
 import com.hrznstudio.galacticraft.entity.MoonVillagerEntity;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.VillagerResemblingModel;
-
 import java.util.Collections;
+import net.minecraft.client.model.VillagerModel;
+import net.minecraft.client.model.geom.ModelPart;
 
-public class MoonVillagerEntityModel extends VillagerResemblingModel<MoonVillagerEntity> {
+public class MoonVillagerEntityModel extends VillagerModel<MoonVillagerEntity> {
     private final ModelPart brain;
 
     public MoonVillagerEntityModel(float scale, int textureWidth, int textureHeight) {
         super(scale, textureWidth, textureHeight);
-        this.field_17141.visible = false; // set invisible
-        this.field_17141 = new ModelPart(this);
+        this.hat.visible = false; // set invisible
+        this.hat = new ModelPart(this);
 
-        this.brain = new ModelPart(this).setTextureSize(textureWidth, textureHeight);
-        this.brain.setPivot(0.0F, 0.0F, 0.0F);
-        this.brain.setTextureOffset(0, 38).addCuboid(-5.0F, -16.0F, -5.0F, 10.0F, 8.0F, 10.0F, scale, false);
+        this.brain = new ModelPart(this).setTexSize(textureWidth, textureHeight);
+        this.brain.setPos(0.0F, 0.0F, 0.0F);
+        this.brain.texOffs(0, 38).addBox(-5.0F, -16.0F, -5.0F, 10.0F, 8.0F, 10.0F, scale, false);
         //                                                           .addCuboid    -4.0F,    -10.0F,     -4.0F,       8.0F,        10.0F,      8.0F, scale)
     }
 
@@ -49,26 +48,26 @@ public class MoonVillagerEntityModel extends VillagerResemblingModel<MoonVillage
 
     @Override
     public void setAngles(MoonVillagerEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-        super.setAngles(entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
+        super.setupAnim(entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
         this.brain.visible = head.visible;
-        this.brain.yaw = this.head.yaw;
-        this.brain.pitch = this.head.pitch;
-        this.brain.pivotX = this.head.pivotX;
-        this.brain.pivotY = this.head.pivotY;
-        this.brain.pivotZ = this.head.pivotZ;
-        this.brain.roll = this.head.roll;
+        this.brain.yRot = this.head.yRot;
+        this.brain.xRot = this.head.xRot;
+        this.brain.x = this.head.x;
+        this.brain.y = this.head.y;
+        this.brain.z = this.head.z;
+        this.brain.zRot = this.head.zRot;
 //        this.brain.mirror = this.head.mirror;
     }
 
     @Override
-    public Iterable<ModelPart> getParts() {
-        return Iterables.concat(Collections.singletonList(brain), super.getParts());
+    public Iterable<ModelPart> parts() {
+        return Iterables.concat(Collections.singletonList(brain), super.parts());
     }
 
     @Override
-    public void setHatVisible(boolean visible) {
+    public void hatVisible(boolean visible) {
         this.head.visible = visible;
-        this.field_17141.visible = false;
-        this.field_17142.visible = false;
+        this.hat.visible = false;
+        this.hatRim.visible = false;
     }
 }

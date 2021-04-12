@@ -25,22 +25,22 @@ package com.hrznstudio.galacticraft.screen;
 import com.hrznstudio.galacticraft.block.entity.OxygenDecompressorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
 import com.hrznstudio.galacticraft.screen.slot.OxygenTankSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenDecompressorScreenHandler extends MachineScreenHandler<OxygenDecompressorBlockEntity> {
-    public OxygenDecompressorScreenHandler(int syncId, PlayerEntity player, OxygenDecompressorBlockEntity machine) {
+    public OxygenDecompressorScreenHandler(int syncId, Player player, OxygenDecompressorBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.OXYGEN_DECOMPRESSOR_HANDLER);
         this.addSlot(new FilteredSlot(machine, 0, 8, 62));
         this.addSlot(new OxygenTankSlot(machine.getWrappedInventory(), 1, 80, 27));
         this.addPlayerInventorySlots(0, 84);
     }
 
-    public OxygenDecompressorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (OxygenDecompressorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public OxygenDecompressorScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (OxygenDecompressorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

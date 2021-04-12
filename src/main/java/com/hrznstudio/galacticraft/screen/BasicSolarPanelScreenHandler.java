@@ -24,22 +24,22 @@ package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.BasicSolarPanelBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BasicSolarPanelScreenHandler extends MachineScreenHandler<BasicSolarPanelBlockEntity> {
-    public BasicSolarPanelScreenHandler(int syncId, PlayerEntity player, BasicSolarPanelBlockEntity machine) {
+    public BasicSolarPanelScreenHandler(int syncId, Player player, BasicSolarPanelBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.BASIC_SOLAR_PANEL_HANDLER);
 
         this.addSlot(new FilteredSlot(machine, BasicSolarPanelBlockEntity.CHARGE_SLOT, 8, 62));
         this.addPlayerInventorySlots(0, 84);
     }
 
-    public BasicSolarPanelScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (BasicSolarPanelBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public BasicSolarPanelScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (BasicSolarPanelBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

@@ -23,20 +23,20 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.OxygenStorageModuleBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenStorageModuleScreenHandler extends MachineScreenHandler<OxygenStorageModuleBlockEntity> {
-    public OxygenStorageModuleScreenHandler(int syncId, PlayerEntity player, OxygenStorageModuleBlockEntity blockEntity) {
+    public OxygenStorageModuleScreenHandler(int syncId, Player player, OxygenStorageModuleBlockEntity blockEntity) {
         super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_STORAGE_MODULE_HANDLER);
         this.addPlayerInventorySlots(0, 84);
     }
 
-    public OxygenStorageModuleScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (OxygenStorageModuleBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public OxygenStorageModuleScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (OxygenStorageModuleBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

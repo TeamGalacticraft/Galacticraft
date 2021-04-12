@@ -25,11 +25,11 @@ package com.hrznstudio.galacticraft.misc.banner;
 import com.hrznstudio.galacticraft.Constants;
 import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPattern;
 import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPatterns;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 
 public class GalacticraftBannerPatterns {
-    public static final LoomPattern ROCKET = Registry.register(LoomPatterns.REGISTRY, new Identifier(Constants.MOD_ID, "rocket"), new LoomPattern(false));
+    public static final LoomPattern ROCKET = Registry.register(LoomPatterns.REGISTRY, new ResourceLocation(Constants.MOD_ID, "rocket"), new LoomPattern(false));
 
     public static void register() {
     }

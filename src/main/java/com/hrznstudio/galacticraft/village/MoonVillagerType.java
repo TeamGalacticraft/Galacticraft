@@ -25,12 +25,12 @@ package com.hrznstudio.galacticraft.village;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerTypeHelper;
-import net.minecraft.util.Identifier;
-import net.minecraft.village.VillagerType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.npc.VillagerType;
 
 public class MoonVillagerType {
-    public static final VillagerType MOON_HIGHLANDS = VillagerTypeHelper.register(new Identifier(Constants.MOD_ID, "moon_highlands"));
-    public static final VillagerType MOON_HIGHLANDS_ROCKS = VillagerTypeHelper.register(new Identifier(Constants.MOD_ID, "moon_highlands_rocks"));
+    public static final VillagerType MOON_HIGHLANDS = VillagerTypeHelper.register(new ResourceLocation(Constants.MOD_ID, "moon_highlands"));
+    public static final VillagerType MOON_HIGHLANDS_ROCKS = VillagerTypeHelper.register(new ResourceLocation(Constants.MOD_ID, "moon_highlands_rocks"));
 
     public static void register() {
         VillagerTypeHelper.addVillagerTypeToBiome(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS, MOON_HIGHLANDS);

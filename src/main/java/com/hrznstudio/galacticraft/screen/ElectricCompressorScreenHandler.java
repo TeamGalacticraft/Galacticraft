@@ -24,20 +24,20 @@ package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.ElectricCompressorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.Property;
-import net.minecraft.screen.slot.FurnaceOutputSlot;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.FurnaceResultSlot;
+import net.minecraft.world.inventory.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class ElectricCompressorScreenHandler extends MachineScreenHandler<ElectricCompressorBlockEntity> {
-    public ElectricCompressorScreenHandler(int syncId, PlayerEntity player, ElectricCompressorBlockEntity blockEntity) {
+    public ElectricCompressorScreenHandler(int syncId, Player player, ElectricCompressorBlockEntity blockEntity) {
         super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.ELECTRIC_COMPRESSOR_HANDLER);
-        this.addProperty(new Property() {
+        this.addDataSlot(new DataSlot() {
             @Override
             public int get() {
                 return machine.progress;
@@ -58,14 +58,14 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
             }
         }
 
-        this.addSlot(new FurnaceOutputSlot(this.player, machine.getWrappedInventory(), ElectricCompressorBlockEntity.OUTPUT_SLOT, 138, 29));
-        this.addSlot(new FurnaceOutputSlot(player, machine.getWrappedInventory(), ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, 138, 47));
+        this.addSlot(new FurnaceResultSlot(this.player, machine.getWrappedInventory(), ElectricCompressorBlockEntity.OUTPUT_SLOT, 138, 29));
+        this.addSlot(new FurnaceResultSlot(player, machine.getWrappedInventory(), ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, 138, 47));
         this.addSlot(new FilteredSlot(machine, ElectricCompressorBlockEntity.CHARGE_SLOT, 3 * 18 + 1, 75));
 
         this.addPlayerInventorySlots(0, 117);
     }
 
-    public ElectricCompressorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (ElectricCompressorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public ElectricCompressorScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (ElectricCompressorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

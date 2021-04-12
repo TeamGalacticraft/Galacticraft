@@ -27,7 +27,7 @@ package com.hrznstudio.galacticraft.items;
  */
 public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
 
-    public HotThrowableMeteorChunkItem(Settings settings) {
+    public HotThrowableMeteorChunkItem(Properties settings) {
         super(settings);
     }
 }

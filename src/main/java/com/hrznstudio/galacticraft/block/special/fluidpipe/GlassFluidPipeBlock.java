@@ -30,27 +30,27 @@ import com.hrznstudio.galacticraft.util.ConnectingBlockUtils;
 import com.hrznstudio.galacticraft.util.FluidUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -58,66 +58,66 @@ import org.jetbrains.annotations.Nullable;
  */
 public class GlassFluidPipeBlock extends FluidPipe {
 
-    private static final VoxelShape NORTH = createCuboidShape(8 - 2, 8 - 2, 0, 8 + 2, 8 + 2, 8 + 2);
-    private static final VoxelShape EAST = createCuboidShape(8 - 2, 8 - 2, 8 - 2, 16, 8 + 2, 8 + 2);
-    private static final VoxelShape SOUTH = createCuboidShape(8 - 2, 8 - 2, 8 - 2, 8 + 2, 8 + 2, 16);
-    private static final VoxelShape WEST = createCuboidShape(0, 8 - 2, 8 - 2, 8 + 2, 8 + 2, 8 + 2);
-    private static final VoxelShape UP = createCuboidShape(8 - 2, 8 - 2, 8 - 2, 8 + 2, 16, 8 + 2);
-    private static final VoxelShape DOWN = createCuboidShape(8 - 2, 0, 8 - 2, 8 + 2, 8 + 2, 8 + 2);
-    private static final VoxelShape NONE = createCuboidShape(8 - 2, 8 - 2, 8 - 2, 8 + 2, 8 + 2, 8 + 2);
+    private static final VoxelShape NORTH = box(8 - 2, 8 - 2, 0, 8 + 2, 8 + 2, 8 + 2);
+    private static final VoxelShape EAST = box(8 - 2, 8 - 2, 8 - 2, 16, 8 + 2, 8 + 2);
+    private static final VoxelShape SOUTH = box(8 - 2, 8 - 2, 8 - 2, 8 + 2, 8 + 2, 16);
+    private static final VoxelShape WEST = box(0, 8 - 2, 8 - 2, 8 + 2, 8 + 2, 8 + 2);
+    private static final VoxelShape UP = box(8 - 2, 8 - 2, 8 - 2, 8 + 2, 16, 8 + 2);
+    private static final VoxelShape DOWN = box(8 - 2, 0, 8 - 2, 8 + 2, 8 + 2, 8 + 2);
+    private static final VoxelShape NONE = box(8 - 2, 8 - 2, 8 - 2, 8 + 2, 8 + 2, 8 + 2);
 
-    private static final BooleanProperty PULL = BooleanProperty.of("pull"); //todo pull state (what would that mean for conf. sides that are different?)
-    private static final EnumProperty<DyeColor> COLOR = EnumProperty.of("color", DyeColor.class);
+    private static final BooleanProperty PULL = BooleanProperty.create("pull"); //todo pull state (what would that mean for conf. sides that are different?)
+    private static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
 
-    public GlassFluidPipeBlock(Settings settings) {
+    public GlassFluidPipeBlock(Properties settings) {
         super(settings);
-        this.setDefaultState(this.getStateManager().getDefaultState().with(PULL, false).with(COLOR, DyeColor.WHITE).with(ConnectingBlockUtils.ATTACHED_NORTH, false).with(ConnectingBlockUtils.ATTACHED_EAST, false).with(ConnectingBlockUtils.ATTACHED_SOUTH, false).with(ConnectingBlockUtils.ATTACHED_WEST, false).with(ConnectingBlockUtils.ATTACHED_UP, false).with(ConnectingBlockUtils.ATTACHED_DOWN, false));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(PULL, false).setValue(COLOR, DyeColor.WHITE).setValue(ConnectingBlockUtils.ATTACHED_NORTH, false).setValue(ConnectingBlockUtils.ATTACHED_EAST, false).setValue(ConnectingBlockUtils.ATTACHED_SOUTH, false).setValue(ConnectingBlockUtils.ATTACHED_WEST, false).setValue(ConnectingBlockUtils.ATTACHED_UP, false).setValue(ConnectingBlockUtils.ATTACHED_DOWN, false));
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        BlockState state = this.getDefaultState();
-        BlockPos pos = context.getBlockPos().toImmutable();
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState state = this.defaultBlockState();
+        BlockPos pos = context.getClickedPos().immutable();
         for (Direction direction : Constants.Misc.DIRECTIONS) {
-            Block block = context.getWorld().getBlockState(pos.offset(direction)).getBlock();
-            if (block instanceof FluidPipe || FluidUtils.isExtractableOrInsertable(context.getWorld(), pos.offset(direction), direction)) state = state.with(propFromDirection(direction), true);
+            Block block = context.getLevel().getBlockState(pos.relative(direction)).getBlock();
+            if (block instanceof FluidPipe || FluidUtils.isExtractableOrInsertable(context.getLevel(), pos.relative(direction), direction)) state = state.setValue(propFromDirection(direction), true);
         }
         return state;
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!player.getStackInHand(hand).isEmpty()) {
-            if (player.getStackInHand(hand).getItem() instanceof DyeItem) {
-                ItemStack stack = player.getStackInHand(hand).copy();
-                DyeColor color = ((DyeItem) stack.getItem()).getColor();
-                if (color != state.get(COLOR)) {
-                    stack.decrement(1);
-                    player.setStackInHand(hand, stack);
-                    world.setBlockState(pos, state.with(COLOR, color));
-                    return ActionResult.SUCCESS;
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!player.getItemInHand(hand).isEmpty()) {
+            if (player.getItemInHand(hand).getItem() instanceof DyeItem) {
+                ItemStack stack = player.getItemInHand(hand).copy();
+                DyeColor color = ((DyeItem) stack.getItem()).getDyeColor();
+                if (color != state.getValue(COLOR)) {
+                    stack.shrink(1);
+                    player.setItemInHand(hand, stack);
+                    world.setBlockAndUpdate(pos, state.setValue(COLOR, color));
+                    return InteractionResult.SUCCESS;
                 } else {
-                    return ActionResult.FAIL;
+                    return InteractionResult.FAIL;
                 }
             }
-            if (player.getStackInHand(hand).getItem() instanceof StandardWrenchItem) {
-                ItemStack stack = player.getStackInHand(hand).copy();
-                stack.damage(1, world.random, player instanceof ServerPlayerEntity ? ((ServerPlayerEntity) player) : null);
-                player.setStackInHand(hand, stack);
-                world.setBlockState(pos, state.with(PULL, !state.get(PULL)));
-                return ActionResult.SUCCESS;
+            if (player.getItemInHand(hand).getItem() instanceof StandardWrenchItem) {
+                ItemStack stack = player.getItemInHand(hand).copy();
+                stack.hurt(1, world.random, player instanceof ServerPlayer ? ((ServerPlayer) player) : null);
+                player.setItemInHand(hand, stack);
+                world.setBlockAndUpdate(pos, state.setValue(PULL, !state.getValue(PULL)));
+                return InteractionResult.SUCCESS;
             }
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.use(state, world, pos, player, hand, hit);
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos updatedPos, boolean notify) {
-        super.neighborUpdate(state, world, pos, block, updatedPos, notify);
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos updatedPos, boolean notify) {
+        super.neighborChanged(state, world, pos, block, updatedPos, notify);
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
+    public VoxelShape getShape(BlockState blockState, BlockGetter blockView, BlockPos blockPos, CollisionContext context) {
         return ConnectingBlockUtils.getVoxelShape(blockState, NORTH, SOUTH, EAST, WEST, UP, DOWN, NONE);
     }
 
@@ -126,23 +126,23 @@ public class GlassFluidPipeBlock extends FluidPipe {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState other, WorldAccess world, BlockPos thisWire, BlockPos otherConnectable) {
-        return state.with(getPropForDirection(direction), (
+    public BlockState updateShape(BlockState state, Direction direction, BlockState other, LevelAccessor world, BlockPos thisWire, BlockPos otherConnectable) {
+        return state.setValue(getPropForDirection(direction), (
                 !other.isAir()
-                        && ((other.getBlock() instanceof FluidPipe && other.get(COLOR) == state.get(COLOR))
-                        || FluidUtils.isExtractableOrInsertable(world.getBlockEntity(thisWire).getWorld(), otherConnectable, direction.getOpposite())
+                        && ((other.getBlock() instanceof FluidPipe && other.getValue(COLOR) == state.getValue(COLOR))
+                        || FluidUtils.isExtractableOrInsertable(world.getBlockEntity(thisWire).getLevel(), otherConnectable, direction.getOpposite())
                 )
         ));
     }
 
     @Override
-    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
         return true;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public float getAmbientOcclusionLightLevel(BlockState state, BlockView view, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, BlockGetter view, BlockPos pos) {
         return 1.0F;
     }
 
@@ -151,13 +151,13 @@ public class GlassFluidPipeBlock extends FluidPipe {
     }
 
     @Override
-    public @Nullable FluidPipeBlockEntity createBlockEntity(BlockView world) {
+    public @Nullable FluidPipeBlockEntity newBlockEntity(BlockGetter world) {
         return new FluidPipeBlockEntity(GalacticraftBlockEntities.GLASS_FLUID_PIPE_TYPE);
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(PULL, COLOR, ConnectingBlockUtils.ATTACHED_NORTH, ConnectingBlockUtils.ATTACHED_EAST, ConnectingBlockUtils.ATTACHED_SOUTH, ConnectingBlockUtils.ATTACHED_WEST, ConnectingBlockUtils.ATTACHED_UP, ConnectingBlockUtils.ATTACHED_DOWN);
     }
 }

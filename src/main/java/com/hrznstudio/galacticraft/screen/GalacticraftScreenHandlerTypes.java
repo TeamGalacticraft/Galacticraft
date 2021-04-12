@@ -24,128 +24,128 @@ package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.Constants;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.MenuType;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftScreenHandlerTypes {
 
-    public static final Identifier BASIC_SOLAR_PANEL_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.BASIC_SOLAR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<BasicSolarPanelScreenHandler> BASIC_SOLAR_PANEL_HANDLER =
+    public static final ResourceLocation BASIC_SOLAR_PANEL_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.BASIC_SOLAR_SCREEN_HANDLER);
+    public static final MenuType<BasicSolarPanelScreenHandler> BASIC_SOLAR_PANEL_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     BASIC_SOLAR_PANEL_HANDLER_ID,
                     BasicSolarPanelScreenHandler::new
             );
 
-    public static final Identifier ADVANCED_SOLAR_PANEL_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.ADVANCED_SOLAR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<AdvancedSolarPanelScreenHandler> ADVANCED_SOLAR_PANEL_HANDLER =
+    public static final ResourceLocation ADVANCED_SOLAR_PANEL_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.ADVANCED_SOLAR_SCREEN_HANDLER);
+    public static final MenuType<AdvancedSolarPanelScreenHandler> ADVANCED_SOLAR_PANEL_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     ADVANCED_SOLAR_PANEL_HANDLER_ID,
                     AdvancedSolarPanelScreenHandler::new
             );
 
-    public static final Identifier CIRCUIT_FABRICATOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.CIRCUIT_FABRICATOR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<CircuitFabricatorScreenHandler> CIRCUIT_FABRICATOR_HANDLER =
+    public static final ResourceLocation CIRCUIT_FABRICATOR_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.CIRCUIT_FABRICATOR_SCREEN_HANDLER);
+    public static final MenuType<CircuitFabricatorScreenHandler> CIRCUIT_FABRICATOR_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     CIRCUIT_FABRICATOR_HANDLER_ID,
                     CircuitFabricatorScreenHandler::new
             );
 
-    public static final Identifier COAL_GENERATOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.COAL_GENERATOR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<CoalGeneratorScreenHandler> COAL_GENERATOR_HANDLER =
+    public static final ResourceLocation COAL_GENERATOR_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.COAL_GENERATOR_SCREEN_HANDLER);
+    public static final MenuType<CoalGeneratorScreenHandler> COAL_GENERATOR_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     COAL_GENERATOR_HANDLER_ID,
                     CoalGeneratorScreenHandler::new
             );
 
-    public static final Identifier COMPRESSOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.COMPRESSOR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<CompressorScreenHandler> COMPRESSOR_HANDLER =
+    public static final ResourceLocation COMPRESSOR_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.COMPRESSOR_SCREEN_HANDLER);
+    public static final MenuType<CompressorScreenHandler> COMPRESSOR_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     COMPRESSOR_HANDLER_ID,
                     CompressorScreenHandler::new
             );
 
-    public static final Identifier ELECTRIC_COMPRESSOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.ELECTRIC_COMPRESSOR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<ElectricCompressorScreenHandler> ELECTRIC_COMPRESSOR_HANDLER =
+    public static final ResourceLocation ELECTRIC_COMPRESSOR_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.ELECTRIC_COMPRESSOR_SCREEN_HANDLER);
+    public static final MenuType<ElectricCompressorScreenHandler> ELECTRIC_COMPRESSOR_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     ELECTRIC_COMPRESSOR_HANDLER_ID,
                     ElectricCompressorScreenHandler::new
             );
 
-    public static final Identifier ENERGY_STORAGE_MODULE_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.ENERGY_STORAGE_MODULE_SCREEN_HANDLER);
-    public static final ScreenHandlerType<EnergyStorageModuleScreenHandler> ENERGY_STORAGE_MODULE_HANDLER =
+    public static final ResourceLocation ENERGY_STORAGE_MODULE_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.ENERGY_STORAGE_MODULE_SCREEN_HANDLER);
+    public static final MenuType<EnergyStorageModuleScreenHandler> ENERGY_STORAGE_MODULE_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     ENERGY_STORAGE_MODULE_HANDLER_ID,
                     EnergyStorageModuleScreenHandler::new
             );
 
-    public static final Identifier OXYGEN_COLLECTOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_COLLECTOR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<OxygenCollectorScreenHandler> OXYGEN_COLLECTOR_HANDLER =
+    public static final ResourceLocation OXYGEN_COLLECTOR_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_COLLECTOR_SCREEN_HANDLER);
+    public static final MenuType<OxygenCollectorScreenHandler> OXYGEN_COLLECTOR_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     OXYGEN_COLLECTOR_HANDLER_ID,
                     OxygenCollectorScreenHandler::new
             );
 
-    public static final Identifier OXYGEN_COMPRESSOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_COMPRESSOR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<OxygenCompressorScreenHandler> OXYGEN_COMPRESSOR_HANDLER =
+    public static final ResourceLocation OXYGEN_COMPRESSOR_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_COMPRESSOR_SCREEN_HANDLER);
+    public static final MenuType<OxygenCompressorScreenHandler> OXYGEN_COMPRESSOR_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     OXYGEN_COMPRESSOR_HANDLER_ID,
                     OxygenCompressorScreenHandler::new
             );
 
-    public static final Identifier OXYGEN_SEALER_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_SEALER_SCREEN_HANDLER);
-    public static final ScreenHandlerType<OxygenSealerScreenHandler> OXYGEN_SEALER_HANDLER =
+    public static final ResourceLocation OXYGEN_SEALER_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_SEALER_SCREEN_HANDLER);
+    public static final MenuType<OxygenSealerScreenHandler> OXYGEN_SEALER_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     OXYGEN_SEALER_HANDLER_ID,
                     OxygenSealerScreenHandler::new
             );
 
-    public static final Identifier OXYGEN_DECOMPRESSOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_DECOMPRESSOR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<OxygenDecompressorScreenHandler> OXYGEN_DECOMPRESSOR_HANDLER =
+    public static final ResourceLocation OXYGEN_DECOMPRESSOR_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_DECOMPRESSOR_SCREEN_HANDLER);
+    public static final MenuType<OxygenDecompressorScreenHandler> OXYGEN_DECOMPRESSOR_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     OXYGEN_DECOMPRESSOR_HANDLER_ID,
                     OxygenDecompressorScreenHandler::new
             );
 
-    public static final Identifier PLAYER_INVENTORY_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.PLAYER_INVENTORY_SCREEN_HANDLER);
-    public static final ScreenHandlerType<PlayerInventoryGCScreenHandler> PLAYER_INV_GC_HANDLER =
+    public static final ResourceLocation PLAYER_INVENTORY_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.PLAYER_INVENTORY_SCREEN_HANDLER);
+    public static final MenuType<PlayerInventoryGCScreenHandler> PLAYER_INV_GC_HANDLER =
             ScreenHandlerRegistry.registerSimple(
                     PLAYER_INVENTORY_HANDLER_ID,
                     (syncId, inv) -> new PlayerInventoryGCScreenHandler(inv, inv.player)
             );
 
-    public static final Identifier REFINERY_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.REFINERY_SCREEN_HANDLER);
-    public static final ScreenHandlerType<RefineryScreenHandler> REFINERY_HANDLER =
+    public static final ResourceLocation REFINERY_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.REFINERY_SCREEN_HANDLER);
+    public static final MenuType<RefineryScreenHandler> REFINERY_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     REFINERY_HANDLER_ID,
                     RefineryScreenHandler::new
             );
 
-    public static final Identifier ELECTRIC_FURNACE_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.ELECTRIC_FURNACE_SCREEN_HANDLER);
-    public static final ScreenHandlerType<ElectricFurnaceScreenHandler> ELECTRIC_FURNACE_HANDLER =
+    public static final ResourceLocation ELECTRIC_FURNACE_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.ELECTRIC_FURNACE_SCREEN_HANDLER);
+    public static final MenuType<ElectricFurnaceScreenHandler> ELECTRIC_FURNACE_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     ELECTRIC_FURNACE_HANDLER_ID,
                     ElectricFurnaceScreenHandler::new
             );
 
-    public static final Identifier ELECTRIC_ARC_FURNACE_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.ELECTRIC_ARC_FURNACE_SCREEN_HANDLER);
-    public static final ScreenHandlerType<ElectricArcFurnaceScreenHandler> ELECTRIC_ARC_FURNACE_HANDLER =
+    public static final ResourceLocation ELECTRIC_ARC_FURNACE_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.ELECTRIC_ARC_FURNACE_SCREEN_HANDLER);
+    public static final MenuType<ElectricArcFurnaceScreenHandler> ELECTRIC_ARC_FURNACE_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     ELECTRIC_ARC_FURNACE_HANDLER_ID,
                     ElectricArcFurnaceScreenHandler::new
             );
 
-    public static final Identifier BUBBLE_DISTRIBUTOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.BUBBLE_DISTRIBUTOR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<BubbleDistributorScreenHandler> BUBBLE_DISTRIBUTOR_HANDLER =
+    public static final ResourceLocation BUBBLE_DISTRIBUTOR_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.BUBBLE_DISTRIBUTOR_SCREEN_HANDLER);
+    public static final MenuType<BubbleDistributorScreenHandler> BUBBLE_DISTRIBUTOR_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     BUBBLE_DISTRIBUTOR_HANDLER_ID,
                     BubbleDistributorScreenHandler::new
             );
 
-    public static final Identifier OXYGEN_STORAGE_MODULE_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_STORAGE_MODULE_SCREEN_HANDLER);
-    public static final ScreenHandlerType<OxygenStorageModuleScreenHandler> OXYGEN_STORAGE_MODULE_HANDLER =
+    public static final ResourceLocation OXYGEN_STORAGE_MODULE_HANDLER_ID = new ResourceLocation(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_STORAGE_MODULE_SCREEN_HANDLER);
+    public static final MenuType<OxygenStorageModuleScreenHandler> OXYGEN_STORAGE_MODULE_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     OXYGEN_STORAGE_MODULE_HANDLER_ID,
                     OxygenStorageModuleScreenHandler::new

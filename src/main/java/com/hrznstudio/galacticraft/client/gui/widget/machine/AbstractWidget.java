@@ -22,16 +22,16 @@
 
 package com.hrznstudio.galacticraft.client.gui.widget.machine;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 
-public abstract class AbstractWidget extends DrawableHelper implements Drawable, Element {
-    protected final MinecraftClient client = MinecraftClient.getInstance();
+public abstract class AbstractWidget extends GuiComponent implements Widget, GuiEventListener {
+    protected final Minecraft client = Minecraft.getInstance();
 
-    public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
+    public void drawMouseoverTooltip(PoseStack matrices, int mouseX, int mouseY) {
     }
 
     protected static boolean check(double mouseX, double mouseY, int x, int y, int width, int height) {

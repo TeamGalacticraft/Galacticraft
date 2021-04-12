@@ -25,31 +25,31 @@ package com.hrznstudio.galacticraft.entity;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.entity.attribute.GalacticraftEntityAttributes;
 import com.hrznstudio.galacticraft.village.MoonVillagerType;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.village.VillagerData;
-import net.minecraft.village.VillagerType;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerData;
+import net.minecraft.world.entity.npc.VillagerType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MoonVillagerEntity extends VillagerEntity {
-    public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, World world) {
+public class MoonVillagerEntity extends Villager {
+    public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, Level world) {
         this(entityType, world, MoonVillagerType.MOON_HIGHLANDS);
     }
 
-    public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, World world, VillagerType type) {
+    public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, Level world, VillagerType type) {
         super(entityType, world, type);
         createLivingAttributes();
         setHealth(20.0F);
@@ -57,14 +57,14 @@ public class MoonVillagerEntity extends VillagerEntity {
 
     @Override
     public void setVillagerData(VillagerData villagerData) {
-        if (villagerData != null && Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY.getId(villagerData.getProfession()) != null) {
+        if (villagerData != null && Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY.getKey(villagerData.getProfession()) != null) {
             super.setVillagerData(villagerData);
         }
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
+    protected void defineSynchedData() {
+        super.defineSynchedData();
     }
 
     @Override
@@ -73,13 +73,13 @@ public class MoonVillagerEntity extends VillagerEntity {
     }
 
     @Override
-    protected SoundEvent getDrinkSound(ItemStack stack) {
-        return super.getDrinkSound(stack);
+    protected SoundEvent getDrinkingSound(ItemStack stack) {
+        return super.getDrinkingSound(stack);
     }
 
     @Override
-    protected SoundEvent getFallSound(int distance) {
-        return super.getFallSound(distance);
+    protected SoundEvent getFallDamageSound(int distance) {
+        return super.getFallDamageSound(distance);
     }
 
     @Override
@@ -88,18 +88,18 @@ public class MoonVillagerEntity extends VillagerEntity {
     }
 
     @Override
-    protected SoundEvent getTradingSound(boolean sold) {
-        return super.getTradingSound(sold);
+    protected SoundEvent getTradeUpdatedSound(boolean sold) {
+        return super.getTradeUpdatedSound(sold);
     }
 
     @Override
-    public SoundEvent getEatSound(ItemStack stack) {
-        return super.getEatSound(stack);
+    public SoundEvent getEatingSound(ItemStack stack) {
+        return super.getEatingSound(stack);
     }
 
     @Override
-    public SoundEvent getYesSound() {
-        return super.getYesSound();
+    public SoundEvent getNotifyTradeSound() {
+        return super.getNotifyTradeSound();
     }
 
     @Nullable
@@ -109,23 +109,23 @@ public class MoonVillagerEntity extends VillagerEntity {
     }
 
     @Override
-    public MoonVillagerEntity createChild(ServerWorld serverWorld, PassiveEntity passiveEntity) {
+    public MoonVillagerEntity getBreedOffspring(ServerLevel serverWorld, AgableMob passiveEntity) {
         double d = this.random.nextDouble();
         VillagerType villagerType3;
         if (d < 0.5D) {
-            villagerType3 = VillagerType.forBiome(serverWorld.method_31081(this.getBlockPos()));
+            villagerType3 = VillagerType.byBiome(serverWorld.getBiomeName(this.blockPosition()));
         } else if (d < 0.75D) {
             villagerType3 = this.getVillagerData().getType();
         } else {
-            villagerType3 = ((VillagerEntity) passiveEntity).getVillagerData().getType();
+            villagerType3 = ((Villager) passiveEntity).getVillagerData().getType();
         }
 
         MoonVillagerEntity moonVillager = new MoonVillagerEntity(GalacticraftEntityTypes.MOON_VILLAGER, serverWorld, villagerType3);
-        moonVillager.initialize(serverWorld, serverWorld.getLocalDifficulty(moonVillager.getBlockPos()), SpawnReason.BREEDING, null, null);
+        moonVillager.finalizeSpawn(serverWorld, serverWorld.getCurrentDifficultyAt(moonVillager.blockPosition()), MobSpawnType.BREEDING, null, null);
         return moonVillager;
     }
 
-    public static DefaultAttributeContainer.Builder createMoonVillagerAttributes() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5D).add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48.0D).add(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D);
+    public static AttributeSupplier.Builder createMoonVillagerAttributes() {
+        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.5D).add(Attributes.FOLLOW_RANGE, 48.0D).add(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D);
     }
 }

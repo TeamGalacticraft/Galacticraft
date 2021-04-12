@@ -23,16 +23,16 @@
 package com.hrznstudio.galacticraft.client.render.entity;
 
 import com.hrznstudio.galacticraft.client.render.entity.feature.SpaceGearFeatureRenderer;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.ZombieEntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.ZombieRenderer;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EvolvedZombieRenderer extends ZombieEntityRenderer {
+public class EvolvedZombieRenderer extends ZombieRenderer {
     public EvolvedZombieRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher);
-        this.addFeature(new SpaceGearFeatureRenderer<>(this, 0.0F, (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
+        this.addLayer(new SpaceGearFeatureRenderer<>(this, 0.0F, (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
             stack.translate(0.0D, -0.4D, 0.0D);
         }, (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
         }));

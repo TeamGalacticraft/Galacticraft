@@ -22,14 +22,14 @@
 
 package com.hrznstudio.galacticraft.items;
 
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class SchematicItem extends Item implements com.hrznstudio.galacticraft.api.item.SchematicItem {
 
-    public SchematicItem(Settings settings) {
+    public SchematicItem(Properties settings) {
         super(settings);
     }
 }

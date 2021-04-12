@@ -25,14 +25,14 @@ package com.hrznstudio.galacticraft.world.dimension;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyDisplayInfo;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftCelestialBodyTypes {
-    public static final CelestialBodyType THE_MOON = new CelestialBodyType.Builder(new Identifier("galacticraft-rewoven", "the_moon"))
+    public static final CelestialBodyType THE_MOON = new CelestialBodyType.Builder(new ResourceLocation("galacticraft-rewoven", "the_moon"))
             .translationKey("ui.galacticraft-rewoven.bodies.the_moon")
             .world(GalacticraftDimensions.MOON)
             .parent(CelestialBodyType.EARTH)
@@ -40,7 +40,7 @@ public class GalacticraftCelestialBodyTypes {
             .gravity(0.16f)
             .display(
                     new CelestialBodyDisplayInfo.Builder()
-                            .texture(new Identifier("galacticraft-rewoven", "planet_icons"))
+                            .texture(new ResourceLocation("galacticraft-rewoven", "planet_icons"))
                             .distance(5)
                             .time(46656000d) // 27 mc days in ticks
                             .build()

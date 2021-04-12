@@ -38,28 +38,28 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CropBlock;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Tickable;
-import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity implements TickableBlockEntity {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int CHARGE_SLOT = 0;
 
@@ -105,25 +105,25 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     }
 
     private int collectOxygen() {
-        Optional<CelestialBodyType> celestialBodyType = CelestialBodyType.getByDimType(world.getRegistryKey());
+        Optional<CelestialBodyType> celestialBodyType = CelestialBodyType.getByDimType(level.dimension());
 
         if (celestialBodyType.isPresent()) {
             if (!celestialBodyType.get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
-                int minX = this.pos.getX() - 5;
-                int minY = this.pos.getY() - 5;
-                int minZ = this.pos.getZ() - 5;
-                int maxX = this.pos.getX() + 5;
-                int maxY = this.pos.getY() + 5;
-                int maxZ = this.pos.getZ() + 5;
+                int minX = this.worldPosition.getX() - 5;
+                int minY = this.worldPosition.getY() - 5;
+                int minZ = this.worldPosition.getZ() - 5;
+                int maxX = this.worldPosition.getX() + 5;
+                int maxY = this.worldPosition.getY() + 5;
+                int maxZ = this.worldPosition.getZ() + 5;
 
                 float leafBlocks = 0;
 
-                for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
-                    BlockState blockState = world.getBlockState(pos);
+                for (BlockPos pos : BlockPos.betweenClosed(minX, minY, minZ, maxX, maxY, maxZ)) {
+                    BlockState blockState = level.getBlockState(pos);
                     if (blockState.isAir()) {
                         continue;
                     }
-                    if (blockState.getBlock() instanceof LeavesBlock && !blockState.get(LeavesBlock.PERSISTENT)) {
+                    if (blockState.getBlock() instanceof LeavesBlock && !blockState.getValue(LeavesBlock.PERSISTENT)) {
                         leafBlocks++;
                     } else if (blockState.getBlock() instanceof CropBlock) {
                         leafBlocks += 0.75F;
@@ -140,25 +140,25 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     }
 
     private boolean canCollectOxygen() {
-        Optional<CelestialBodyType> celestialBodyType = CelestialBodyType.getByDimType(world.getRegistryKey());
+        Optional<CelestialBodyType> celestialBodyType = CelestialBodyType.getByDimType(level.dimension());
 
         if (celestialBodyType.isPresent()) {
             if (!celestialBodyType.get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
-                int minX = this.pos.getX() - 5;
-                int minY = this.pos.getY() - 5;
-                int minZ = this.pos.getZ() - 5;
-                int maxX = this.pos.getX() + 5;
-                int maxY = this.pos.getY() + 5;
-                int maxZ = this.pos.getZ() + 5;
+                int minX = this.worldPosition.getX() - 5;
+                int minY = this.worldPosition.getY() - 5;
+                int minZ = this.worldPosition.getZ() - 5;
+                int maxX = this.worldPosition.getX() + 5;
+                int maxY = this.worldPosition.getY() + 5;
+                int maxZ = this.worldPosition.getZ() + 5;
 
                 float leafBlocks = 0;
 
-                for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
-                    BlockState blockState = world.getBlockState(pos);
+                for (BlockPos pos : BlockPos.betweenClosed(minX, minY, minZ, maxX, maxY, maxZ)) {
+                    BlockState blockState = level.getBlockState(pos);
                     if (blockState.isAir()) {
                         continue;
                     }
-                    if (blockState.getBlock() instanceof LeavesBlock && !blockState.get(LeavesBlock.PERSISTENT)) {
+                    if (blockState.getBlock() instanceof LeavesBlock && !blockState.getValue(LeavesBlock.PERSISTENT)) {
                         if (++leafBlocks >= 2) break;
                     } else if (blockState.getBlock() instanceof CropBlock) {
                         if ((leafBlocks += 0.75) >= 2) break;
@@ -221,7 +221,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new OxygenCollectorScreenHandler(syncId, player, this);
         return null;
     }
@@ -230,21 +230,21 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
     private enum Status implements MachineStatus {
-        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN, StatusType.WORKING),
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        NOT_ENOUGH_LEAVES(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_leaves"), Formatting.RED, StatusType.MISSING_RESOURCE),
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL);
+        COLLECTING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.collecting"), ChatFormatting.GREEN, StatusType.WORKING),
+        NOT_ENOUGH_ENERGY(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), ChatFormatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_LEAVES(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_leaves"), ChatFormatting.RED, StatusType.MISSING_RESOURCE),
+        FULL(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.full"), ChatFormatting.GOLD, StatusType.OUTPUT_FULL);
 
-        private final Text text;
+        private final Component text;
         private final StatusType type;
 
-        Status(TranslatableText text, Formatting color, StatusType type) {
+        Status(TranslatableComponent text, ChatFormatting color, StatusType type) {
             this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         @Override
-        public @NotNull Text getName() {
+        public @NotNull Component getName() {
             return text;
         }
 

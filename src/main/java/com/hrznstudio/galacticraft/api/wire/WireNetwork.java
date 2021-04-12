@@ -24,19 +24,19 @@ package com.hrznstudio.galacticraft.api.wire;
 
 import alexiil.mc.lib.attributes.Simulation;
 import com.hrznstudio.galacticraft.api.wire.impl.WireNetworkImpl;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 
 /**
  * The basic 'Wire Network' spec
  */
 public interface WireNetwork {
-    static WireNetwork create(ServerWorld world) {
+    static WireNetwork create(ServerLevel world) {
         return new WireNetworkImpl(world);
     }
 

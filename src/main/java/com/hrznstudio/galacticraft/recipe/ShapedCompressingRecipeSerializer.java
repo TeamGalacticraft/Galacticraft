@@ -23,16 +23,16 @@
 package com.hrznstudio.galacticraft.recipe;
 
 import com.google.gson.JsonObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.ShapedRecipe;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.util.collection.DefaultedList;
-
+import com.hrznstudio.galacticraft.recipe.ShapedCompressingRecipeSerializer.RecipeFactory;
 import java.util.Map;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -45,46 +45,46 @@ public class ShapedCompressingRecipeSerializer<T extends ShapedCompressingRecipe
     }
 
     @Override
-    public T read(Identifier id, JsonObject json) {
-        String string_1 = JsonHelper.getString(json, "group", "");
-        Map<String, Ingredient> ingredients = ShapedCompressingRecipe.getComponents(JsonHelper.getObject(json, "key"));
-        String[] pattern = ShapedCompressingRecipe.combinePattern(ShapedCompressingRecipe.getPattern(JsonHelper.getArray(json, "pattern")));
+    public T fromJson(ResourceLocation id, JsonObject json) {
+        String string_1 = GsonHelper.getAsString(json, "group", "");
+        Map<String, Ingredient> ingredients = ShapedCompressingRecipe.getComponents(GsonHelper.getAsJsonObject(json, "key"));
+        String[] pattern = ShapedCompressingRecipe.combinePattern(ShapedCompressingRecipe.getPattern(GsonHelper.getAsJsonArray(json, "pattern")));
         int int_1 = pattern[0].length();
         int int_2 = pattern.length;
-        DefaultedList<Ingredient> list = ShapedCompressingRecipe.getIngredients(pattern, ingredients, int_1, int_2);
-        ItemStack stack = ShapedRecipe.getItemStack(JsonHelper.getObject(json, "result"));
+        NonNullList<Ingredient> list = ShapedCompressingRecipe.getIngredients(pattern, ingredients, int_1, int_2);
+        ItemStack stack = ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(json, "result"));
         return factory.create(id, string_1, int_1, int_2, list, stack);
     }
 
     @Override
-    public T read(Identifier identifier_1, PacketByteBuf packet) {
+    public T fromNetwork(ResourceLocation identifier_1, FriendlyByteBuf packet) {
         int int_1 = packet.readVarInt();
         int int_2 = packet.readVarInt();
-        String group = packet.readString(32767);
-        DefaultedList<Ingredient> defaultedList_1 = DefaultedList.ofSize(int_1 * int_2, Ingredient.EMPTY);
+        String group = packet.readUtf(32767);
+        NonNullList<Ingredient> defaultedList_1 = NonNullList.withSize(int_1 * int_2, Ingredient.EMPTY);
 
         for (int int_3 = 0; int_3 < defaultedList_1.size(); ++int_3) {
-            defaultedList_1.set(int_3, Ingredient.fromPacket(packet));
+            defaultedList_1.set(int_3, Ingredient.fromNetwork(packet));
         }
 
-        ItemStack stack = packet.readItemStack();
+        ItemStack stack = packet.readItem();
         return factory.create(identifier_1, group, int_1, int_2, defaultedList_1, stack);
     }
 
     @Override
-    public void write(PacketByteBuf packet, T recipe) {
+    public void write(FriendlyByteBuf packet, T recipe) {
         packet.writeVarInt(recipe.getWidth());
         packet.writeVarInt(recipe.getHeight());
-        packet.writeString(recipe.group);
+        packet.writeUtf(recipe.group);
 
         for (Ingredient ingredient : recipe.getIngredients()) {
-            ingredient.write(packet);
+            ingredient.toNetwork(packet);
         }
 
-        packet.writeItemStack(recipe.getOutput());
+        packet.writeItem(recipe.getResultItem());
     }
 
     interface RecipeFactory<T extends ShapedCompressingRecipe> {
-        T create(Identifier id, String group, int int_1, int int_2, DefaultedList<Ingredient> input, ItemStack output);
+        T create(ResourceLocation id, String group, int int_1, int int_2, NonNullList<Ingredient> input, ItemStack output);
     }
 }

@@ -33,27 +33,27 @@ import com.hrznstudio.galacticraft.screen.CoalGeneratorScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Tickable;
-import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity implements TickableBlockEntity {
     private static final Object2IntMap<Item> FUEL_MAP = Util.make(new Object2IntArrayMap<>(3), (map) -> {
         map.put(Items.COAL_BLOCK, 320 * 10);
         map.put(Items.COAL, 320);
@@ -158,7 +158,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new CoalGeneratorScreenHandler(syncId, player, this);
         return null;
     }
@@ -170,32 +170,32 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
         /**
          * The generator is active and is generating energy.
          */
-        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
+        ACTIVE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.active"), ChatFormatting.GREEN, StatusType.WORKING),
 
         /**
          * The generator is warming up.
          */
-        WARMING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.warming"), Formatting.GOLD, StatusType.PARTIALLY_WORKING),
+        WARMING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.warming"), ChatFormatting.GOLD, StatusType.PARTIALLY_WORKING),
 
         /**
          * The generator is cooling down.
          */
-        COOLING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.cooling"), Formatting.AQUA, StatusType.PARTIALLY_WORKING),
+        COOLING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.cooling"), ChatFormatting.AQUA, StatusType.PARTIALLY_WORKING),
 
         /**
          * The generator is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.full"), ChatFormatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * The generator is out of fuel.
          */
-        NOT_ENOUGH_FUEL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS);
+        NOT_ENOUGH_FUEL(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_items"), ChatFormatting.GOLD, StatusType.MISSING_ITEMS);
 
-        private final Text text;
+        private final Component text;
         private final StatusType type;
 
-        Status(TranslatableText text, Formatting color, StatusType type) {
+        Status(TranslatableComponent text, ChatFormatting color, StatusType type) {
             this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
@@ -206,7 +206,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
         }
 
         @Override
-        public @NotNull Text getName() {
+        public @NotNull Component getName() {
             return text;
         }
 

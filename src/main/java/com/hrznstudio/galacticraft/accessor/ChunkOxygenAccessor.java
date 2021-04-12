@@ -22,17 +22,16 @@
 
 package com.hrznstudio.galacticraft.accessor;
 
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
-
 import java.util.List;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
 
 public interface ChunkOxygenAccessor {
     boolean isBreathable(int x, int y, int z);
 
     void setBreathable(int x, int y, int z, boolean value);
 
-    List<CustomPayloadS2CPacket> syncToClient();
+    List<ClientboundCustomPayloadPacket> syncToClient();
 
-    void readOxygenUpdate(byte b, PacketByteBuf packetByteBuf);
+    void readOxygenUpdate(byte b, FriendlyByteBuf packetByteBuf);
 }

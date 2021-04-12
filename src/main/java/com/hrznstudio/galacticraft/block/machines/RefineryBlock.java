@@ -26,28 +26,27 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RefineryBlock extends ConfigurableMachineBlock {
-    public RefineryBlock(Settings settings) {
+    public RefineryBlock(Properties settings) {
         super(settings, RefineryBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft-rewoven.refinery")
+                new TranslatableComponent("tooltip.galacticraft-rewoven.refinery")
                         .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 
     @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        super.randomDisplayTick(state, world, pos, random);
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
+        super.animateTick(state, world, pos, random);
         BlockEntity entity = world.getBlockEntity(pos);
         if (entity instanceof ConfigurableMachineBlockEntity && ((ConfigurableMachineBlockEntity) entity).getStatus().getType().isActive()) {
             world.addParticle(ParticleTypes.SMOKE, pos.getX() + random.nextDouble(), pos.getY() + 1, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);

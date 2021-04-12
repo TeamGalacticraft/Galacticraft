@@ -24,34 +24,34 @@ package com.hrznstudio.galacticraft.particle.fluid;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.particle.ParticleTextureSheet;
-import net.minecraft.client.particle.SpriteBillboardParticle;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.world.level.block.Blocks;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
-public class DrippingCrudeOilParticle extends SpriteBillboardParticle {
+public class DrippingCrudeOilParticle extends TextureSheetParticle {
 
-    public DrippingCrudeOilParticle(ClientWorld world, double x, double y, double z, double velX, double velY, double velZ) {
+    public DrippingCrudeOilParticle(ClientLevel world, double x, double y, double z, double velX, double velY, double velZ) {
         super(world, x, y, z, velX, velY, velZ);
-        setSprite(MinecraftClient.getInstance().getItemRenderer().getModels().getSprite(Blocks.ACACIA_LOG.asItem()));
-        this.scale *= 0.25f;
-        this.velocityX = 0.0f;
-        this.velocityY = -0.6f;
-        this.velocityZ = 0.0f;
-        this.colorRed = 42f / 255f;
-        this.colorGreen = 42f / 255f;
-        this.colorBlue = 42f / 255f;
-        this.colorAlpha = 229f / 255f;
-        this.maxAge = (int) (64.0D / (Math.random() * 0.8D + 0.2D));
+        setSprite(Minecraft.getInstance().getItemRenderer().getItemModelShaper().getParticleIcon(Blocks.ACACIA_LOG.asItem()));
+        this.quadSize *= 0.25f;
+        this.xd = 0.0f;
+        this.yd = -0.6f;
+        this.zd = 0.0f;
+        this.rCol = 42f / 255f;
+        this.gCol = 42f / 255f;
+        this.bCol = 42f / 255f;
+        this.alpha = 229f / 255f;
+        this.lifetime = (int) (64.0D / (Math.random() * 0.8D + 0.2D));
     }
 
     @Override
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 }

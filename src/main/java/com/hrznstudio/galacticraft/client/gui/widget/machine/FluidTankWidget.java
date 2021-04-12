@@ -27,20 +27,25 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.fluid.Fluid;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.text.*;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.math.RoundingMode;
@@ -93,76 +98,76 @@ public class FluidTankWidget extends AbstractWidget {
     private final SingleFluidTankView tankView;
     private final int x;
     private final int y;
-    private final World world;
+    private final Level world;
     private final BlockPos pos;
     private final int[] data;
     private final int scale;
 
-    public FluidTankWidget(SingleFluidTankView tankView, int x, int y, World world, BlockPos pos) {
+    public FluidTankWidget(SingleFluidTankView tankView, int x, int y, Level world, BlockPos pos) {
         this(tankView, x, y, world, pos, 1);
     }
 
-    public FluidTankWidget(SingleFluidTankView tankView, int x, int y, World world, BlockPos pos, int scale) {
+    public FluidTankWidget(SingleFluidTankView tankView, int x, int y, Level world, BlockPos pos, int scale) {
         this.tankView = tankView;
         this.x = x;
         this.y = y;
-        this.world = world == null ? this.client.world : world;
+        this.world = world == null ? this.client.level : world;
         this.pos = pos == null ? new BlockPos(0, 1, 0) : pos;
         this.scale = scale;
         this.data = this.getPositionData(this.getTankView().getMaxAmount_F());
     }
 
     @Override
-    public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
+    public void drawMouseoverTooltip(PoseStack matrices, int mouseX, int mouseY) {
         if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinates.FLUID_TANK_WIDTH, this.data[2])) {
             FluidVolume volume = this.getTankView().get();
             if (volume.isEmpty()) {
-                this.client.currentScreen.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.fluid_widget.empty").setStyle(Constants.Styles.GRAY_STYLE), mouseX, mouseY);
+                this.client.screen.renderTooltip(matrices, new TranslatableComponent("ui.galacticraft-rewoven.fluid_widget.empty").setStyle(Constants.Styles.GRAY_STYLE), mouseX, mouseY);
                 return;
             }
-            MutableText amount;
+            MutableComponent amount;
             if (Screen.hasShiftDown()) {
-                amount = new LiteralText(volume.getAmount_F().toString() + "B");
+                amount = new TextComponent(volume.getAmount_F().toString() + "B");
             } else {
-                amount = new LiteralText((volume.getAmount_F().asInt(1000, RoundingMode.HALF_DOWN)) + "mB");
+                amount = new TextComponent((volume.getAmount_F().asInt(1000, RoundingMode.HALF_DOWN)) + "mB");
             }
 
-            List<Text> lines = new ArrayList<>(2);
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.fluid").setStyle(Constants.Styles.GRAY_STYLE).append(new LiteralText(getName(volume.getRawFluid())).setStyle(Constants.Styles.BLUE_STYLE)));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.amount").setStyle(Constants.Styles.GRAY_STYLE).append(amount.setStyle(Style.EMPTY.withColor(Formatting.WHITE))));
+            List<Component> lines = new ArrayList<>(2);
+            lines.add(new TranslatableComponent("ui.galacticraft-rewoven.fluid_widget.fluid").setStyle(Constants.Styles.GRAY_STYLE).append(new TextComponent(getName(volume.getRawFluid())).setStyle(Constants.Styles.BLUE_STYLE)));
+            lines.add(new TranslatableComponent("ui.galacticraft-rewoven.fluid_widget.amount").setStyle(Constants.Styles.GRAY_STYLE).append(amount.setStyle(Style.EMPTY.withColor(ChatFormatting.WHITE))));
 
-            this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
+            this.client.screen.renderComponentTooltip(matrices, lines, mouseX, mouseY);
         }
     }
 
     private String getName(Fluid fluid) {
-        Identifier id = Registry.FLUID.getId(fluid);
-        if (I18n.hasTranslation("block." + id.getNamespace() + "." + id.getPath())) {
-            return WordUtils.capitalizeFully(I18n.translate("block." + id.getNamespace() + "." + id.getPath()));
+        ResourceLocation id = Registry.FLUID.getKey(fluid);
+        if (I18n.exists("block." + id.getNamespace() + "." + id.getPath())) {
+            return WordUtils.capitalizeFully(I18n.get("block." + id.getNamespace() + "." + id.getPath()));
         }
         return WordUtils.capitalizeFully(id.getPath().replace("flowing", "").replace("still", "").replace("_", " ").trim());
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.client.getTextureManager().bindTexture(MachineHandledScreen.OVERLAY);
-        this.drawTexture(matrices, this.x, this.y, this.data[0], this.data[1] + Constants.TextureCoordinates.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinates.FLUID_TANK_WIDTH, this.data[2]);
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+        this.client.getTextureManager().bind(MachineHandledScreen.OVERLAY);
+        this.blit(matrices, this.x, this.y, this.data[0], this.data[1] + Constants.TextureCoordinates.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinates.FLUID_TANK_WIDTH, this.data[2]);
 
         FluidVolume content = getTankView().get();
         if (content.isEmpty()) return;
-        matrices.push();
+        matrices.pushPose();
         double scale = content.getAmount_F().div(this.getTankView().getMaxAmount_F()).asInexactDouble();
-        Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getRawFluid()).getFluidSprites(world, pos, content.getRawFluid().getDefaultState())[0];
-        this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-        drawSprite(matrices, this.x + 1, ((this.y + 1) - (int)(this.data[2] * scale)) + this.data[2], 0, Constants.TextureCoordinates.FLUID_TANK_WIDTH - 2, (int)(this.data[2] * scale) - 2, sprite);
-        matrices.pop();
-        this.client.getTextureManager().bindTexture(MachineHandledScreen.OVERLAY);
-        this.drawTexture(matrices, this.x, this.y, this.data[0], this.data[1], Constants.TextureCoordinates.FLUID_TANK_WIDTH, this.data[2]);
+        TextureAtlasSprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getRawFluid()).getFluidSprites(world, pos, content.getRawFluid().defaultFluidState())[0];
+        this.client.getTextureManager().bind(sprite.atlas().location());
+        blit(matrices, this.x + 1, ((this.y + 1) - (int)(this.data[2] * scale)) + this.data[2], 0, Constants.TextureCoordinates.FLUID_TANK_WIDTH - 2, (int)(this.data[2] * scale) - 2, sprite);
+        matrices.popPose();
+        this.client.getTextureManager().bind(MachineHandledScreen.OVERLAY);
+        this.blit(matrices, this.x, this.y, this.data[0], this.data[1], Constants.TextureCoordinates.FLUID_TANK_WIDTH, this.data[2]);
     }
 
     @Override
-    public void drawTexture(MatrixStack matrices, int x, int y, int u, int v, int width, int height) {
-        drawTexture(matrices, x, y, u, v, width, height, 128, 128);
+    public void blit(PoseStack matrices, int x, int y, int u, int v, int width, int height) {
+        blit(matrices, x, y, u, v, width, height, 128, 128);
     }
 
     protected int[] getPositionData(FluidAmount capacity) {

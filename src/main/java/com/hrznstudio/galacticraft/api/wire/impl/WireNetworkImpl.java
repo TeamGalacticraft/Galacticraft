@@ -36,25 +36,25 @@ import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
 import com.hrznstudio.galacticraft.energy.impl.EmptyEnergyExtractable;
 import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 @SuppressWarnings("UnstableApiUsage")
 public class WireNetworkImpl implements WireNetwork {
     private final MutableValueGraph<BlockPos, WireConnectionType> graph;
-    private final ServerWorld world;
+    private final ServerLevel world;
 
-    public WireNetworkImpl(ServerWorld world) {
+    public WireNetworkImpl(ServerLevel world) {
         this(ValueGraphBuilder.directed().allowsSelfLoops(false).build(), world);
     }
 
-    private WireNetworkImpl(MutableValueGraph<BlockPos, WireConnectionType> graph, ServerWorld world) {
+    private WireNetworkImpl(MutableValueGraph<BlockPos, WireConnectionType> graph, ServerLevel world) {
         this.graph = graph;
         this.world = world;
     }
@@ -68,7 +68,7 @@ public class WireNetworkImpl implements WireNetwork {
         }
         wire.setNetwork(this);
         for (Direction direction : Constants.Misc.DIRECTIONS) {
-            BlockPos conn = pos.offset(direction);
+            BlockPos conn = pos.relative(direction);
             BlockEntity entity = world.getBlockEntity(conn);
             WireConnectionType type = wire.getConnection(direction, entity);
             if (type == WireConnectionType.WIRE) {
@@ -92,7 +92,7 @@ public class WireNetworkImpl implements WireNetwork {
         if (contains(pos)) {
             Deque<BlockPos> wires = new LinkedList<>();
             for (Direction direction : Constants.Misc.DIRECTIONS) {
-                BlockPos conn = pos.offset(direction);
+                BlockPos conn = pos.relative(direction);
                 WireConnectionType type = getConnection(pos, conn);
                 if (type != WireConnectionType.NONE) {
                     if (type == WireConnectionType.WIRE) {
@@ -145,7 +145,7 @@ public class WireNetworkImpl implements WireNetwork {
 
         this.removeEdge(adjacentToUpdated, updatedPos, true);
         BlockPos vector = adjacentToUpdated.subtract(updatedPos);
-        Direction direction = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
+        Direction direction = Direction.fromNormal(vector.getX(), vector.getY(), vector.getZ());
         EnergyInsertable insertable = EnergyUtils.getEnergyInsertable(world, updatedPos, direction);
         EnergyExtractable extractable = EnergyUtils.getEnergyExtractable(world, updatedPos, direction);
         if (insertable != RejectingEnergyInsertable.NULL && extractable != EmptyEnergyExtractable.NULL) {
@@ -179,7 +179,7 @@ public class WireNetworkImpl implements WireNetwork {
                 if (visitedNodes.add(successor)) {
                     if (!(world.getBlockEntity(successor) instanceof Wire)) {
                         BlockPos vector = currentNode.subtract(successor);
-                        Direction opposite = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
+                        Direction opposite = Direction.fromNormal(vector.getX(), vector.getY(), vector.getZ());
                         EnergyInsertable handler = EnergyUtils.getEnergyInsertable(world, successor, opposite);
                         amount = handler.tryInsert(DefaultEnergyType.INSTANCE, amount, simulate);
                         if (amount == 0) {
@@ -198,7 +198,7 @@ public class WireNetworkImpl implements WireNetwork {
     public @NotNull Map<Direction, @NotNull WireConnectionType> getAdjacent(BlockPos from) {
         Map<Direction, WireConnectionType> map = new EnumMap<>(Direction.class);
         for (Direction direction : Constants.Misc.DIRECTIONS) {
-            map.put(direction, getConnection(from, from.offset(direction)));
+            map.put(direction, getConnection(from, from.relative(direction)));
         }
 
         return map;

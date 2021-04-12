@@ -27,20 +27,19 @@ import com.hrznstudio.galacticraft.api.block.WireBlock;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldAccess;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.ArrayList;
 
 /**
@@ -50,64 +49,64 @@ public class AluminumWireBlock extends WireBlock {
 
     // If we start at 8,8,8 and subtract/add to/from 8, we do operations starting from the centre.
     private static final int OFFSET = 2;
-    private static final VoxelShape NORTH = createCuboidShape(8 - OFFSET, 8 - OFFSET, 0, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape EAST = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 16, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape SOUTH = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 16);
-    private static final VoxelShape WEST = createCuboidShape(0, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape UP = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 16, 8 + OFFSET);
-    private static final VoxelShape DOWN = createCuboidShape(8 - OFFSET, 0, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape NONE = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);    // 6x6x6 box in the center.
-    private static final BooleanProperty ATTACHED_NORTH = BooleanProperty.of("attached_north");
-    private static final BooleanProperty ATTACHED_EAST = BooleanProperty.of("attached_east");
-    private static final BooleanProperty ATTACHED_SOUTH = BooleanProperty.of("attached_south");
-    private static final BooleanProperty ATTACHED_WEST = BooleanProperty.of("attached_west");
-    private static final BooleanProperty ATTACHED_UP = BooleanProperty.of("attached_up");
-    private static final BooleanProperty ATTACHED_DOWN = BooleanProperty.of("attached_down");
+    private static final VoxelShape NORTH = box(8 - OFFSET, 8 - OFFSET, 0, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape EAST = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 16, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape SOUTH = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 16);
+    private static final VoxelShape WEST = box(0, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape UP = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 16, 8 + OFFSET);
+    private static final VoxelShape DOWN = box(8 - OFFSET, 0, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape NONE = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);    // 6x6x6 box in the center.
+    private static final BooleanProperty ATTACHED_NORTH = BooleanProperty.create("attached_north");
+    private static final BooleanProperty ATTACHED_EAST = BooleanProperty.create("attached_east");
+    private static final BooleanProperty ATTACHED_SOUTH = BooleanProperty.create("attached_south");
+    private static final BooleanProperty ATTACHED_WEST = BooleanProperty.create("attached_west");
+    private static final BooleanProperty ATTACHED_UP = BooleanProperty.create("attached_up");
+    private static final BooleanProperty ATTACHED_DOWN = BooleanProperty.create("attached_down");
 
-    public AluminumWireBlock(Settings settings) {
+    public AluminumWireBlock(Properties settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState()
-                .with(ATTACHED_NORTH, false).with(ATTACHED_EAST, false)
-                .with(ATTACHED_SOUTH, false).with(ATTACHED_WEST, false)
-                .with(ATTACHED_UP, false).with(ATTACHED_DOWN, false));
+        registerDefaultState(this.getStateDefinition().any()
+                .setValue(ATTACHED_NORTH, false).setValue(ATTACHED_EAST, false)
+                .setValue(ATTACHED_SOUTH, false).setValue(ATTACHED_WEST, false)
+                .setValue(ATTACHED_UP, false).setValue(ATTACHED_DOWN, false));
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
+    public VoxelShape getShape(BlockState blockState, BlockGetter blockView, BlockPos blockPos, CollisionContext context) {
         ArrayList<VoxelShape> shapes = new ArrayList<>();
 
-        if (blockState.get(ATTACHED_NORTH)) {
+        if (blockState.getValue(ATTACHED_NORTH)) {
             shapes.add(NORTH);
         }
-        if (blockState.get(ATTACHED_SOUTH)) {
+        if (blockState.getValue(ATTACHED_SOUTH)) {
             shapes.add(SOUTH);
         }
-        if (blockState.get(ATTACHED_EAST)) {
+        if (blockState.getValue(ATTACHED_EAST)) {
             shapes.add(EAST);
         }
-        if (blockState.get(ATTACHED_WEST)) {
+        if (blockState.getValue(ATTACHED_WEST)) {
             shapes.add(WEST);
         }
-        if (blockState.get(ATTACHED_UP)) {
+        if (blockState.getValue(ATTACHED_UP)) {
             shapes.add(UP);
         }
-        if (blockState.get(ATTACHED_DOWN)) {
+        if (blockState.getValue(ATTACHED_DOWN)) {
             shapes.add(DOWN);
         }
         if (shapes.isEmpty()) {
             return NONE;
         } else {
-            return VoxelShapes.union(NONE, shapes.toArray(new VoxelShape[0]));
+            return Shapes.or(NONE, shapes.toArray(new VoxelShape[0]));
         }
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        BlockState state = this.getDefaultState();
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState state = this.defaultBlockState();
         for (Direction direction : Constants.Misc.DIRECTIONS) {
-            BlockState block = context.getWorld().getBlockState(context.getBlockPos().offset(direction));
-            state = state.with(getPropForDirection(direction), !block.isAir() && (block.getBlock() instanceof WireBlock
-                    || EnergyUtils.canAccessEnergy(context.getWorld(), context.getBlockPos().offset(direction), direction)));
+            BlockState block = context.getLevel().getBlockState(context.getClickedPos().relative(direction));
+            state = state.setValue(getPropForDirection(direction), !block.isAir() && (block.getBlock() instanceof WireBlock
+                    || EnergyUtils.canAccessEnergy(context.getLevel(), context.getClickedPos().relative(direction), direction)));
 
         }
 
@@ -134,26 +133,26 @@ public class AluminumWireBlock extends WireBlock {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction dir, BlockState neighbor, WorldAccess world, BlockPos thisWire, BlockPos otherConnectable) {
-        return state.with(getPropForDirection(dir), !(neighbor).isAir() && (neighbor.getBlock() instanceof WireBlock
-                || EnergyUtils.canAccessEnergy(world.getBlockEntity(thisWire).getWorld(), otherConnectable, dir.getOpposite())
+    public BlockState updateShape(BlockState state, Direction dir, BlockState neighbor, LevelAccessor world, BlockPos thisWire, BlockPos otherConnectable) {
+        return state.setValue(getPropForDirection(dir), !(neighbor).isAir() && (neighbor.getBlock() instanceof WireBlock
+                || EnergyUtils.canAccessEnergy(world.getBlockEntity(thisWire).getLevel(), otherConnectable, dir.getOpposite())
         ));
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(ATTACHED_NORTH, ATTACHED_EAST, ATTACHED_SOUTH, ATTACHED_WEST, ATTACHED_UP, ATTACHED_DOWN);
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public float getAmbientOcclusionLightLevel(BlockState state, BlockView view, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, BlockGetter view, BlockPos pos) {
         return 1.0F;
     }
 }

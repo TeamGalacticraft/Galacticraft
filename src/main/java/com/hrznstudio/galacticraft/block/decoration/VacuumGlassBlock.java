@@ -29,7 +29,7 @@ import com.hrznstudio.galacticraft.api.block.AbstractHorizontalDirectionalBlock;
  */
 public class VacuumGlassBlock extends AbstractHorizontalDirectionalBlock {
 
-    public VacuumGlassBlock(Settings settings) {
+    public VacuumGlassBlock(Properties settings) {
         super(settings);
     }
 }

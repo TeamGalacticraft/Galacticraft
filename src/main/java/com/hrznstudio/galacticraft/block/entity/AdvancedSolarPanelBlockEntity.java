@@ -32,24 +32,24 @@ import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.AdvancedSolarPanelScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntity implements TickableBlockEntity {
     public static final int CHARGE_SLOT = 0;
     
     public AdvancedSolarPanelBlockEntity() {
@@ -94,14 +94,14 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
             return Status.FULL;
         }
 
-        if (!this.world.isDay()) {
+        if (!this.level.isDay()) {
             return Status.NIGHT;
         }
 
         byte panels = 0;
         for (int z = -1; z < 2; z++) {
             for (int y = -1; y < 2; y++) {
-                if (this.world.isSkyVisible(pos.add(z, 2, y))) {
+                if (this.level.canSeeSky(worldPosition.offset(z, 2, y))) {
                     panels++;
                 }
             }
@@ -123,18 +123,18 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
     @Override
     public int getEnergyGenerated() {
         if (this.getStatus().getType().isActive()) {
-            double time = world.getTimeOfDay() % 24000;
+            double time = level.getDayTime() % 24000;
             double multiplier = 0;
             if (time > 6000) time = 6000D - (time - 6000D);
             for (int z = -1; z < 2; z++) {
                 for (int y = -1; y < 2; y++) {
-                    if (this.world.isSkyVisible(pos.add(z, 2, y))) {
+                    if (this.level.canSeeSky(worldPosition.offset(z, 2, y))) {
                         multiplier++;
                     }
                 }
             }
             multiplier /= 9;
-            if (world.isRaining() || world.isThundering()) multiplier *= 0.5D;
+            if (level.isRaining() || level.isThundering()) multiplier *= 0.5D;
 
             return (int) Math.min(this.getBaseEnergyGenerated(), (this.getBaseEnergyGenerated() * ((time) / 6000D) * multiplier) * 4);
         } else {
@@ -154,7 +154,7 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new AdvancedSolarPanelScreenHandler(syncId, player, this);
         return null;
     }
@@ -166,38 +166,38 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
         /**
          * Solar panel is active and is generating energy.
          */
-        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN, StatusType.WORKING),
+        COLLECTING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.collecting"), ChatFormatting.GREEN, StatusType.WORKING),
 
         /**
          * Solar Panel can generate energy, but the buffer is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.full"), ChatFormatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Solar Panel is generating energy, but less efficiently as it is blocked or raining.
          */
-        PARTIALLY_BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.partially_blocked"), Formatting.DARK_AQUA, StatusType.PARTIALLY_WORKING),
+        PARTIALLY_BLOCKED(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.partially_blocked"), ChatFormatting.DARK_AQUA, StatusType.PARTIALLY_WORKING),
 
         /**
          * Solar Panel is generating very little energy as it is night.
          */
-        NIGHT(new TranslatableText("ui.galacticraft-rewoven.machinestatus.night"), Formatting.BLUE, StatusType.PARTIALLY_WORKING),
+        NIGHT(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.night"), ChatFormatting.BLUE, StatusType.PARTIALLY_WORKING),
 
         /**
          * The sun is not visible.
          */
-        BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.blocked"), Formatting.DARK_GRAY, StatusType.MISSING_RESOURCE);
+        BLOCKED(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.blocked"), ChatFormatting.DARK_GRAY, StatusType.MISSING_RESOURCE);
 
-        private final Text text;
+        private final Component text;
         private final MachineStatus.StatusType type;
 
-        Status(TranslatableText text, Formatting color, StatusType type) {
+        Status(TranslatableComponent text, ChatFormatting color, StatusType type) {
             this.text = text.setStyle(Style.EMPTY.withColor(color));
             this.type = type;
         }
 
         @Override
-        public @NotNull Text getName() {
+        public @NotNull Component getName() {
             return text;
         }
 

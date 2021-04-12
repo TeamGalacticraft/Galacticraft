@@ -26,16 +26,16 @@ import com.hrznstudio.galacticraft.block.entity.ElectricArcFurnaceBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.screen.slot.OutputSlot;
 import com.hrznstudio.galacticraft.screen.slot.RecipeInputSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.screen.Property;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.item.crafting.RecipeType;
 
 public class ElectricArcFurnaceScreenHandler extends MachineScreenHandler<ElectricArcFurnaceBlockEntity> {
-    public ElectricArcFurnaceScreenHandler(int syncId, PlayerEntity player, ElectricArcFurnaceBlockEntity machine) {
+    public ElectricArcFurnaceScreenHandler(int syncId, Player player, ElectricArcFurnaceBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.ELECTRIC_ARC_FURNACE_HANDLER);
-        this.addProperty(new Property() {
+        this.addDataSlot(new DataSlot() {
             @Override
             public int get() {
                 return machine.cookTime;
@@ -46,7 +46,7 @@ public class ElectricArcFurnaceScreenHandler extends MachineScreenHandler<Electr
                 machine.cookTime = value;
             }
         });
-        this.addProperty(new Property() {
+        this.addDataSlot(new DataSlot() {
             @Override
             public int get() {
                 return machine.cookLength;
@@ -58,13 +58,13 @@ public class ElectricArcFurnaceScreenHandler extends MachineScreenHandler<Electr
             }
         });
         this.addSlot(new ChargeSlot(machine.getWrappedInventory(), ElectricArcFurnaceBlockEntity.CHARGE_SLOT, 8, 7));
-        this.addSlot(new RecipeInputSlot<>(machine.getWrappedInventory(), ElectricArcFurnaceBlockEntity.INPUT_SLOT, 56, 25, machine.getWorld(), RecipeType.SMELTING));
+        this.addSlot(new RecipeInputSlot<>(machine.getWrappedInventory(), ElectricArcFurnaceBlockEntity.INPUT_SLOT, 56, 25, machine.getLevel(), RecipeType.SMELTING));
         this.addSlot(new OutputSlot(machine.getWrappedInventory(), ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1, 109, 25));
         this.addSlot(new OutputSlot(machine.getWrappedInventory(), ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_2, 127, 25));
         this.addPlayerInventorySlots(0, 84);
     }
 
-    public ElectricArcFurnaceScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (ElectricArcFurnaceBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public ElectricArcFurnaceScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (ElectricArcFurnaceBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

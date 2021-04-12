@@ -36,28 +36,28 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEnti
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.OxygenSealerScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Tickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity implements TickableBlockEntity {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int BATTERY_SLOT = 0;
     private final Set<BlockPos> set = new HashSet<>();
@@ -84,8 +84,8 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
     }
 
     @Override
-    public void setLocation(World world, BlockPos pos) {
-        super.setLocation(world, pos);
+    public void setLevelAndPosition(Level world, BlockPos pos) {
+        super.setLevelAndPosition(world, pos);
         sealCheckTime = SEAL_CHECK_TIME;
     }
 
@@ -121,7 +121,7 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
     public void updateComponents() {
         super.updateComponents();
         this.attemptChargeFromStack(BATTERY_SLOT);
-        if (!world.isClient && this.getStatus().getType().isActive()) this.getFluidTank().extractFluid(0, Constants.Misc.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
+        if (!level.isClientSide && this.getStatus().getType().isActive()) this.getFluidTank().extractFluid(0, Constants.Misc.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
     }
 
     @Override
@@ -139,23 +139,23 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
         if (this.getStatus().getType().isActive()) {
             if (sealCheckTime == 0) {
                 sealCheckTime = SEAL_CHECK_TIME;
-                BlockPos pos = this.getPos();
+                BlockPos pos = this.getBlockPos();
                 Queue<BlockPos> queue = new LinkedList<>();
-                if (set.isEmpty() && ((WorldOxygenAccessor) world).isBreathable(pos.up())) {
+                if (set.isEmpty() && ((WorldOxygenAccessor) level).isBreathable(pos.above())) {
                     setStatus(Status.ALREADY_SEALED);
                     return;
                 }
                 set.clear();
                 {
-                    BlockPos pos1 = pos.offset(Direction.UP);
-                    BlockState state = world.getBlockState(pos1);
-                    if (state.isAir() || !Block.isFaceFullSquare(state.getCollisionShape(world, pos1), Direction.DOWN)) {
+                    BlockPos pos1 = pos.relative(Direction.UP);
+                    BlockState state = level.getBlockState(pos1);
+                    if (state.isAir() || !Block.isFaceFull(state.getCollisionShape(level, pos1), Direction.DOWN)) {
                         queue.add(pos1);
                         set.add(pos1);
                     }
                 }
                 for (BlockPos pos1 : set) {
-                    ((WorldOxygenAccessor) world).setBreathable(pos1, true);
+                    ((WorldOxygenAccessor) level).setBreathable(pos1, true);
                 }
                 setStatus(Status.SEALED);
             }
@@ -167,7 +167,7 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
         super.idleEnergyDecrement(off);
         if (!set.isEmpty()) {
             for (BlockPos pos1 : set) {
-                ((WorldOxygenAccessor) world).setBreathable(pos1, false);
+                ((WorldOxygenAccessor) level).setBreathable(pos1, false);
             }
             set.clear();
         }
@@ -179,10 +179,10 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
     }
 
     @Override
-    public void markRemoved() {
-        super.markRemoved();
+    public void setRemoved() {
+        super.setRemoved();
         for (BlockPos pos : set) {
-            ((WorldOxygenAccessor) world).setBreathable(pos, false);
+            ((WorldOxygenAccessor) level).setBreathable(pos, false);
         }
     }
 
@@ -208,7 +208,7 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new OxygenSealerScreenHandler(syncId, player, this);
         return null;
     }
@@ -217,22 +217,22 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
     private enum Status implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), Formatting.RED, StatusType.MISSING_FLUIDS),
-        AREA_TOO_LARGE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.area_too_large"), Formatting.GOLD, StatusType.OTHER),
-        ALREADY_SEALED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.already_sealed"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-        SEALED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.sealed"), Formatting.GREEN, StatusType.WORKING);
+        NOT_ENOUGH_ENERGY(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), ChatFormatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_OXYGEN(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), ChatFormatting.RED, StatusType.MISSING_FLUIDS),
+        AREA_TOO_LARGE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.area_too_large"), ChatFormatting.GOLD, StatusType.OTHER),
+        ALREADY_SEALED(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.already_sealed"), ChatFormatting.GOLD, StatusType.OUTPUT_FULL),
+        SEALED(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.sealed"), ChatFormatting.GREEN, StatusType.WORKING);
 
-        private final Text text;
+        private final Component text;
         private final StatusType type;
 
-        Status(TranslatableText text, Formatting color, StatusType type) {
+        Status(TranslatableComponent text, ChatFormatting color, StatusType type) {
             this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         @Override
-        public @NotNull Text getName() {
+        public @NotNull Component getName() {
             return text;
         }
 

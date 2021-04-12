@@ -22,23 +22,23 @@
 
 package com.hrznstudio.galacticraft.util;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.function.BooleanBiFunction;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ConnectingBlockUtils {
     private ConnectingBlockUtils() {
     }
 
-    public static final BooleanProperty ATTACHED_NORTH = BooleanProperty.of("attached_north");
-    public static final BooleanProperty ATTACHED_EAST = BooleanProperty.of("attached_east");
-    public static final BooleanProperty ATTACHED_SOUTH = BooleanProperty.of("attached_south");
-    public static final BooleanProperty ATTACHED_WEST = BooleanProperty.of("attached_west");
-    public static final BooleanProperty ATTACHED_UP = BooleanProperty.of("attached_up");
-    public static final BooleanProperty ATTACHED_DOWN = BooleanProperty.of("attached_down");
+    public static final BooleanProperty ATTACHED_NORTH = BooleanProperty.create("attached_north");
+    public static final BooleanProperty ATTACHED_EAST = BooleanProperty.create("attached_east");
+    public static final BooleanProperty ATTACHED_SOUTH = BooleanProperty.create("attached_south");
+    public static final BooleanProperty ATTACHED_WEST = BooleanProperty.create("attached_west");
+    public static final BooleanProperty ATTACHED_UP = BooleanProperty.create("attached_up");
+    public static final BooleanProperty ATTACHED_DOWN = BooleanProperty.create("attached_down");
 
     public static BooleanProperty getBooleanProperty(Direction dir) {
         switch (dir) {
@@ -62,23 +62,23 @@ public class ConnectingBlockUtils {
     public static VoxelShape getVoxelShape(BlockState blockState, VoxelShape north, VoxelShape south, VoxelShape east, VoxelShape west, VoxelShape up, VoxelShape down, VoxelShape none) {
         VoxelShape shape = none;
 
-        if (blockState.get(ATTACHED_NORTH)) {
-            shape = VoxelShapes.combineAndSimplify(shape, north, BooleanBiFunction.OR);
+        if (blockState.getValue(ATTACHED_NORTH)) {
+            shape = Shapes.join(shape, north, BooleanOp.OR);
         }
-        if (blockState.get(ATTACHED_SOUTH)) {
-            shape = VoxelShapes.combineAndSimplify(shape, south, BooleanBiFunction.OR);
+        if (blockState.getValue(ATTACHED_SOUTH)) {
+            shape = Shapes.join(shape, south, BooleanOp.OR);
         }
-        if (blockState.get(ATTACHED_EAST)) {
-            shape = VoxelShapes.combineAndSimplify(shape, east, BooleanBiFunction.OR);
+        if (blockState.getValue(ATTACHED_EAST)) {
+            shape = Shapes.join(shape, east, BooleanOp.OR);
         }
-        if (blockState.get(ATTACHED_WEST)) {
-            shape = VoxelShapes.combineAndSimplify(shape, west, BooleanBiFunction.OR);
+        if (blockState.getValue(ATTACHED_WEST)) {
+            shape = Shapes.join(shape, west, BooleanOp.OR);
         }
-        if (blockState.get(ATTACHED_UP)) {
-            shape = VoxelShapes.combineAndSimplify(shape, up, BooleanBiFunction.OR);
+        if (blockState.getValue(ATTACHED_UP)) {
+            shape = Shapes.join(shape, up, BooleanOp.OR);
         }
-        if (blockState.get(ATTACHED_DOWN)) {
-            shape = VoxelShapes.combineAndSimplify(shape, down, BooleanBiFunction.OR);
+        if (blockState.getValue(ATTACHED_DOWN)) {
+            shape = Shapes.join(shape, down, BooleanOp.OR);
         }
         return shape;
     }

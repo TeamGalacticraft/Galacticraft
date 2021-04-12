@@ -31,20 +31,20 @@ import com.hrznstudio.galacticraft.village.GalacticraftTradeOffers.SellMapFactor
 import com.hrznstudio.galacticraft.world.poi.GalacticraftPointOfInterestType;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerProfessionBuilder;
-import net.minecraft.item.Items;
-import net.minecraft.item.map.MapIcon;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.village.VillagerProfession;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
 
 public class GalacticraftVillagerProfessions {
-    public static final VillagerProfession LUNAR_CARTOGRAPHER = VillagerProfessionBuilder.create().id(new Identifier(Constants.MOD_ID, "lunar_cartographer")).workstation(GalacticraftPointOfInterestType.LUNAR_CARTOGRAPHER).workSound(SoundEvents.ENTITY_VILLAGER_WORK_CARTOGRAPHER).build();
+    public static final VillagerProfession LUNAR_CARTOGRAPHER = VillagerProfessionBuilder.create().id(new ResourceLocation(Constants.MOD_ID, "lunar_cartographer")).workstation(GalacticraftPointOfInterestType.LUNAR_CARTOGRAPHER).workSound(SoundEvents.VILLAGER_WORK_CARTOGRAPHER).build();
 
     public static void register() {
-        Registry.register(Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY, new Identifier("none"), VillagerProfession.NONE);
-        Registry.register(Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY, new Identifier("nitwit"), VillagerProfession.NITWIT);
-        Registry.register(Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY, new Identifier(Constants.MOD_ID, "lunar_cartographer"), LUNAR_CARTOGRAPHER);
+        Registry.register(Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY, new ResourceLocation("none"), VillagerProfession.NONE);
+        Registry.register(Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY, new ResourceLocation("nitwit"), VillagerProfession.NITWIT);
+        Registry.register(Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY, new ResourceLocation(Constants.MOD_ID, "lunar_cartographer"), LUNAR_CARTOGRAPHER);
 
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 1, factories -> {
             factories.add(new BuyForOneEmeraldFactory(Items.PAPER, 24, 16, 2));
@@ -52,7 +52,7 @@ public class GalacticraftVillagerProfessions {
         });
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 2, factories -> {
             factories.add(new BuyForOneEmeraldFactory(Items.GLASS_PANE, 11, 16, 10));
-            factories.add(new SellMapFactory(13, GalacticraftStructures.MOON_RUINS, MapIcon.Type.RED_X, 12, 5));
+            factories.add(new SellMapFactory(13, GalacticraftStructures.MOON_RUINS, MapDecoration.Type.RED_X, 12, 5));
         });
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 3, factories -> {
             factories.add(new BuyForOneEmeraldFactory(Items.COMPASS, 1, 12, 20));
@@ -78,6 +78,6 @@ public class GalacticraftVillagerProfessions {
             factories.add(new SellItemFactory(Items.LIGHT_GRAY_BANNER, 3, 1, 15));
         });
 
-        TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 5, factories -> factories.add(new SellItemFactory(Items.GLOBE_BANNER_PATTERN, 8, 1, 30)));
+        TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 5, factories -> factories.add(new SellItemFactory(Items.GLOBE_BANNER_PATTER, 8, 1, 30)));
     }
 }

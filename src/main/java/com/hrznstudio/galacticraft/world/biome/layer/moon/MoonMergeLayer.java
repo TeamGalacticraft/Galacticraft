@@ -22,20 +22,20 @@
 
 package com.hrznstudio.galacticraft.world.biome.layer.moon;
 
-import net.minecraft.world.biome.layer.type.MergingLayer;
-import net.minecraft.world.biome.layer.util.IdentityCoordinateTransformer;
-import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
-import net.minecraft.world.biome.layer.util.LayerSampler;
+import net.minecraft.world.level.newbiome.area.Area;
+import net.minecraft.world.level.newbiome.context.Context;
+import net.minecraft.world.level.newbiome.layer.traits.AreaTransformer2;
+import net.minecraft.world.level.newbiome.layer.traits.DimensionOffset0Transformer;
 
-public enum MoonMergeLayer implements MergingLayer, IdentityCoordinateTransformer {
+public enum MoonMergeLayer implements AreaTransformer2, DimensionOffset0Transformer {
     INSTANCE;
 
     @Override
-    public int sample(LayerRandomnessSource context, LayerSampler sampler1, LayerSampler sampler2, int x, int z) {
-        int id1 = sampler1.sample(this.transformX(x), this.transformZ(z));
-        int id2 = sampler2.sample(this.transformX(x), this.transformZ(z));
+    public int applyPixel(Context context, Area sampler1, Area sampler2, int x, int z) {
+        int id1 = sampler1.get(this.getParentX(x), this.getParentY(z));
+        int id2 = sampler2.get(this.getParentX(x), this.getParentY(z));
 
-        return context.nextInt(10) <= 3 ? id2 : id1;
+        return context.nextRandom(10) <= 3 ? id2 : id1;
 
     }
 }

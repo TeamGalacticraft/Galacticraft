@@ -24,12 +24,12 @@ package com.hrznstudio.galacticraft.mixin;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(PlayerEntity.class)
+@Mixin(Player.class)
 public abstract class PlayerEntityMixin implements GearInventoryProvider {
     private @Unique final FullFixedItemInv gearInv = new FullFixedItemInv(12);
 

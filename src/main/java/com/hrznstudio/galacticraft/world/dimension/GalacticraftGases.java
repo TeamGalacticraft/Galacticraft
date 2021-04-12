@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.world.dimension;
 
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -32,14 +32,14 @@ public class GalacticraftGases {
 
     public static final AtmosphericGas NITROGEN_OXIDE =
             new AtmosphericGas(
-                    new Identifier("galacticraft-rewoven", "nitrogen_oxide"),
+                    new ResourceLocation("galacticraft-rewoven", "nitrogen_oxide"),
                     "ui.galacticraft-rewoven.nitrogen_oxide",
                     "NO"
             );
 
     public static final AtmosphericGas HYDROGEN_DEUTERIUM_OXYGEN =
             new AtmosphericGas(
-                    new Identifier("galacticraft-rewoven", "hydrogen_deuterium_oxygen"),
+                    new ResourceLocation("galacticraft-rewoven", "hydrogen_deuterium_oxygen"),
                     "ui.galacticraft-rewoven.hydrogen_deuterium_oxygen",
                     "HDO"
 
