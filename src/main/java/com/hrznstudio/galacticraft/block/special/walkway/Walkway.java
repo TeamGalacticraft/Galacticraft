@@ -59,7 +59,6 @@ public class Walkway extends Block implements FluidLoggableBlock {
     public static final BooleanProperty DOWN = Properties.DOWN;
     public static final DirectionProperty FACING = Properties.FACING;
     private static final VoxelShape[] shape = new VoxelShape[64];
-    private final Object2IntMap<BlockState> SHAPE_INDEX_CACHE = new Object2IntOpenHashMap<>();
 
     public Walkway(Settings settings) {
         super(settings);
@@ -135,15 +134,11 @@ public class Walkway extends Block implements FluidLoggableBlock {
     }
 
     private VoxelShape getShape(BlockState state) {
-        int index = getShapeIndex(state);
+        int index = getFacingMask(state.get(FACING));
         if (shape[index] != null) {
             return shape[index];
         }
         return shape[index] = createShape(state.get(FACING));
-    }
-
-    private int getShapeIndex(BlockState state) {
-        return this.SHAPE_INDEX_CACHE.computeIntIfAbsent(state, (blockState) -> getFacingMask(state.get(FACING)));
     }
 
     private BooleanProperty getPropForDir(Direction direction) {
