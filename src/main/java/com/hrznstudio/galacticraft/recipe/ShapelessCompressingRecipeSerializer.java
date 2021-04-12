@@ -58,7 +58,7 @@ public class ShapelessCompressingRecipeSerializer<T extends ShapelessCompressing
     }
 
     @Override
-    public void write(FriendlyByteBuf packet, ShapelessCompressingRecipe recipe) {
+    public void toNetwork(FriendlyByteBuf packet, ShapelessCompressingRecipe recipe) {
 //            packet.writeString(recipe.group);
         packet.writeVarInt(recipe.getInput().size());
 

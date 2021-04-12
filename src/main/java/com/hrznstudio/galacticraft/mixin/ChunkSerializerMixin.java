@@ -26,7 +26,6 @@ import com.hrznstudio.galacticraft.accessor.ChunkSectionOxygenAccessor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.chunk.*;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.BiomeSource;
@@ -50,7 +49,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ChunkSerializer.class)
 public abstract class ChunkSerializerMixin {
-    @Inject(method = "serialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/PalettedContainer;write(Lnet/minecraft/nbt/CompoundTag;Ljava/lang/String;Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "write", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/PalettedContainer;write(Lnet/minecraft/nbt/CompoundTag;Ljava/lang/String;Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void serializeGCR(ServerLevel world, ChunkAccess chunk, CallbackInfoReturnable<CompoundTag> cir, ChunkPos chunkPos, CompoundTag compoundTag, CompoundTag compoundTag2, LevelChunkSection[] chunkSections, ListTag listTag, LevelLightEngine lightingProvider, boolean bl, int i, int j, LevelChunkSection chunkSection, DataLayer chunkNibbleArray, DataLayer chunkNibbleArray2, CompoundTag compoundTag3) {
         CompoundTag tag = new CompoundTag();
         tag.putShort("TotalOxygen", ((ChunkSectionOxygenAccessor) chunkSection).getTotalOxygen());
@@ -74,7 +73,7 @@ public abstract class ChunkSerializerMixin {
         compoundTag3.put("gcr_data", tag);
     }
 
-    @Inject(method = "deserialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/ChunkSection;calculateCounts()V"), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "read", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/LevelChunkSection;recalcBlockCounts()V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void deserializeGCR(ServerLevel world, StructureManager structureManager, PoiManager poiStorage, ChunkPos pos, CompoundTag tag, CallbackInfoReturnable<ProtoChunk> cir, ChunkGenerator chunkGenerator, BiomeSource biomeSource, CompoundTag compoundTag, ChunkBiomeContainer biomeArray, UpgradeData upgradeData, ProtoTickList chunkTickScheduler, ProtoTickList chunkTickScheduler2, boolean bl, ListTag listTag, int i, LevelChunkSection[] chunkSections, boolean bl2, ChunkSource chunkManager, LevelLightEngine lightingProvider, int j, CompoundTag compoundTag2, int k, LevelChunkSection chunkSection) {
         CompoundTag compound = compoundTag2.getCompound("gcr_data");
         ((ChunkSectionOxygenAccessor) chunkSection).setTotalOxygen(compound.getShort("TotalOxygen"));

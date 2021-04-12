@@ -43,7 +43,7 @@ public class FabricationRecipeSerializer<T extends FabricationRecipe> implements
     }
 
     @Override
-    public void write(FriendlyByteBuf packetByteBuf, T recipe) {
+    public void toNetwork(FriendlyByteBuf packetByteBuf, T recipe) {
         packetByteBuf.writeUtf(recipe.group);
         recipe.getInput().toNetwork(packetByteBuf);
         packetByteBuf.writeItem(recipe.getResultItem());

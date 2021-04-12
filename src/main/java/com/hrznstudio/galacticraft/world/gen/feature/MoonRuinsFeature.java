@@ -49,7 +49,8 @@ public class MoonRuinsFeature extends StructureFeature<NoneFeatureConfiguration>
          super(structureFeature, i, j, blockBox, k, l);
       }
 
-      public void init(RegistryAccess dynamicRegistryManager, ChunkGenerator chunkGenerator, StructureManager structureManager, int i, int j, Biome biome, NoneFeatureConfiguration config) {
+      @Override
+      public void generatePieces(RegistryAccess dynamicRegistryManager, ChunkGenerator chunkGenerator, StructureManager structureManager, int i, int j, Biome biome, NoneFeatureConfiguration config) {
          int k = i * 16;
          int l = j * 16;
          BlockPos blockPos = new BlockPos(k, 90, l);

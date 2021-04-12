@@ -44,22 +44,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public abstract class EntityMixin implements GearInventoryProvider {
     @Shadow
-    public abstract Vec3 getVelocity();
+    public abstract Vec3 getDeltaMovement();
 
     @Shadow
-    public float yaw;
+    public float yRot;
 
     @Shadow
-    public float pitch;
+    public float xRot;
 
     @Shadow
-    public Level world;
+    public Level level;
 
-    @Inject(method = "getTeleportTarget", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "findDimensionEntryPoint", at = @At("HEAD"), cancellable = true)
     private void getTeleportTargetGC(ServerLevel destination, CallbackInfoReturnable<PortalInfo> cir) {
-        if (destination.dimension().equals(GalacticraftDimensions.MOON) || this.world.dimension().equals(GalacticraftDimensions.MOON)) { //TODO lander/parachute stuff
+        if (destination.dimension().equals(GalacticraftDimensions.MOON) || this.level.dimension().equals(GalacticraftDimensions.MOON)) { //TODO lander/parachute stuff
             BlockPos pos = destination.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, destination.getSharedSpawnPos());
-            cir.setReturnValue(new PortalInfo(new Vec3((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getVelocity(), this.yaw, this.pitch));
+            cir.setReturnValue(new PortalInfo(new Vec3((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getDeltaMovement(), this.yRot, this.xRot));
         }
     }
 
@@ -68,12 +68,12 @@ public abstract class EntityMixin implements GearInventoryProvider {
         return EmptyFixedItemInv.INSTANCE;
     }
 
-    @Inject(method = "toTag", at = @At("HEAD"))
+    @Inject(method = "saveWithoutId", at = @At("HEAD"))
     private void writeGear_gc(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir) {
         this.writeGearToNbt(tag);
     }
 
-    @Inject(method = "fromTag", at = @At("HEAD"))
+    @Inject(method = "load", at = @At("HEAD"))
     private void readGear_gc(CompoundTag tag, CallbackInfo ci) {
         this.readGearFromNbt(tag);
     }

@@ -31,11 +31,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.structure.*;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
-import net.minecraft.util.math.*;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.BlockGetter;
@@ -193,7 +191,7 @@ public class MoonRuinsGenerator {
          this.placeSettings.clearProcessors().addProcessor(new BlockRotProcessor(this.integrity)).addProcessor(BlockIgnoreProcessor.STRUCTURE_AND_AIR);
          int i = serverWorldAccess.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.templatePosition.getX(), this.templatePosition.getZ());
          this.templatePosition = new BlockPos(this.templatePosition.getX(), i, this.templatePosition.getZ());
-         BlockPos blockPos2 = StructureTemplate.transform(new BlockPos(this.template.getSize().getX() - 1, 0, this.template.getSize().getZ() - 1), Mirror.NONE, this.rotation, BlockPos.ZERO).offset(this.templatePosition);
+         BlockPos blockPos2 = StructureTemplate.transform(new BlockPos(super.template.getSize().getX() - 1, 0, super.template.getSize().getZ() - 1), Mirror.NONE, this.rotation, BlockPos.ZERO).offset(this.templatePosition);
          this.templatePosition = new BlockPos(this.templatePosition.getX(), this.method_14829(this.templatePosition, serverWorldAccess, blockPos2), this.templatePosition.getZ());
          return super.postProcess(serverWorldAccess, structureAccessor, chunkGenerator, random, boundingBox, chunkPos, blockPos);
       }

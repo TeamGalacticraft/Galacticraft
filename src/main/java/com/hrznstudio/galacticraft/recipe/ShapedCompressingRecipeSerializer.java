@@ -72,7 +72,7 @@ public class ShapedCompressingRecipeSerializer<T extends ShapedCompressingRecipe
     }
 
     @Override
-    public void write(FriendlyByteBuf packet, T recipe) {
+    public void toNetwork(FriendlyByteBuf packet, T recipe) {
         packet.writeVarInt(recipe.getWidth());
         packet.writeVarInt(recipe.getHeight());
         packet.writeUtf(recipe.group);

@@ -46,31 +46,31 @@ import net.minecraft.world.level.storage.WritableLevelData;
 @Mixin(Level.class)
 public abstract class WorldMixin implements WorldOxygenAccessor {
     @Shadow
-    public static boolean isOutOfBuildLimitVertically(BlockPos pos) {
+    public static boolean isOutsideBuildHeight(BlockPos pos) {
         throw new UnsupportedOperationException("Shadowed method was not transformed!");
     }
 
-    @Shadow public abstract LevelChunk getWorldChunk(BlockPos pos);
+    @Shadow public abstract LevelChunk getChunkAt(BlockPos pos);
 
-    @Shadow @Final private ResourceKey<Level> registryKey;
+    @Shadow @Final private ResourceKey<Level> dimension;
 
     private @Unique boolean breathable = true;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(WritableLevelData properties, ResourceKey<Level> registryRef, DimensionType dimensionType, Supplier<ProfilerFiller> profiler, boolean isClient, boolean debugWorld, long seed, CallbackInfo ci) {
-        CelestialBodyType.getByDimType(this.registryKey).ifPresent(celestialBodyType -> this.breathable = celestialBodyType.getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN));
+        CelestialBodyType.getByDimType(this.dimension).ifPresent(celestialBodyType -> this.breathable = celestialBodyType.getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN));
     }
 
     @Override
     public boolean isBreathable(BlockPos pos) {
         if (breathable) return true;
-        if (isOutOfBuildLimitVertically(pos)) return false;
-        return ((ChunkOxygenAccessor) this.getWorldChunk(pos)).isBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
+        if (isOutsideBuildHeight(pos)) return false;
+        return ((ChunkOxygenAccessor) this.getChunkAt(pos)).isBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
     }
 
     @Override
     public void setBreathable(BlockPos pos, boolean value) {
-        if (isOutOfBuildLimitVertically(pos) || breathable) return;
-        ((ChunkOxygenAccessor) this.getWorldChunk(pos)).setBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15, value);
+        if (isOutsideBuildHeight(pos) || breathable) return;
+        ((ChunkOxygenAccessor) this.getChunkAt(pos)).setBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15, value);
     }
 }

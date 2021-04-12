@@ -34,7 +34,6 @@ import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
 import com.hrznstudio.galacticraft.misc.TriFunction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;

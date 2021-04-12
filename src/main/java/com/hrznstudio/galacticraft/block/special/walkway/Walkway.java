@@ -253,7 +253,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
+    public BlockState getPlacementState(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
         return this.defaultBlockState()
                 .setValue(FACING, context.getNearestLookingDirection().getOpposite())

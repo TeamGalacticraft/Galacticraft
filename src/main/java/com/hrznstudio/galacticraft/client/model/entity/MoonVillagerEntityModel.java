@@ -47,7 +47,7 @@ public class MoonVillagerEntityModel extends VillagerModel<MoonVillagerEntity> {
     }
 
     @Override
-    public void setAngles(MoonVillagerEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+    public void setupAnim(MoonVillagerEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
         super.setupAnim(entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
         this.brain.visible = head.visible;
         this.brain.yRot = this.head.yRot;

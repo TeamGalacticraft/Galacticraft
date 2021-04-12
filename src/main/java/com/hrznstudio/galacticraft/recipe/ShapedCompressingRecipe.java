@@ -186,10 +186,6 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
         return map_1;
     }
 
-    public NonNullList<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
     public ResourceLocation getId() {
         return this.id;
     }

@@ -22,6 +22,10 @@ accessible  method  net/minecraft/world/item/RecordItem             <init>      
 # Methods
 accessible  method  net/minecraft/world/entity/ai/village/poi/PoiType             registerBlockStates  (Lnet/minecraft/world/entity/ai/village/poi/PoiType;)Lnet/minecraft/world/entity/ai/village/poi/PoiType;
 accessible  method  net/minecraft/world/entity/LivingEntity             getEyeHeight  (Lnet/minecraft/world/entity/Pose;Lnet/minecraft/world/entity/EntityDimensions;)F
+accessible  method  net/minecraft/world/level/material/Material$Builder destroyOnPush ()Lnet/minecraft/world/level/material/Material$Builder;
+accessible  method  net/minecraft/world/level/material/Material$Builder notSolidBlocking ()Lnet/minecraft/world/level/material/Material$Builder;
+accessible  method  net/minecraft/world/level/material/Material$Builder flammable ()Lnet/minecraft/world/level/material/Material$Builder;
+accessible  method  net/minecraft/world/level/storage/loot/BuiltInLootTables register (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/resources/ResourceLocation;
 
 # Fields
 accessible  field   net/minecraft/data/worldgen/biome/Biomes             TO_NAME   Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;

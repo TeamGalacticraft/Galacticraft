@@ -42,12 +42,12 @@ public class EvolvedSpiderEntityRenderer extends MobRenderer<EvolvedSpiderEntity
     }
 
     @Override
-    protected float getLyingAngle(EvolvedSpiderEntity spiderEntity) {
+    protected float getFlipDegrees(EvolvedSpiderEntity spiderEntity) {
         return 180.0F;
     }
 
     @Override
-    public ResourceLocation getTexture(EvolvedSpiderEntity spiderEntity) {
+    public ResourceLocation getTextureLocation(EvolvedSpiderEntity spiderEntity) {
         return TEXTURE;
     }
 }

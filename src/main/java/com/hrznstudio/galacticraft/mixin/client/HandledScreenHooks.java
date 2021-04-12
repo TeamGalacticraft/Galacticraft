@@ -34,12 +34,12 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(AbstractContainerScreen.class)
 @Environment(EnvType.CLIENT)
 public interface HandledScreenHooks {
-    @Accessor("x")
+    @Accessor("leftPos")
     int gcr_getX();
 
-    @Accessor("y")
+    @Accessor("topPos")
     int gcr_getY();
 
-    @Accessor("backgroundWidth")
-    int gcr_getBackgroundWidth();
+    @Accessor("imageWidth")
+    int gcr_getImageWidth();
 }

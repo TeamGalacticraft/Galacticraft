@@ -51,12 +51,12 @@ import java.util.concurrent.Executor;
  */
 @Mixin(ServerLevel.class)
 public abstract class ServerWorldMixin {
-    @Shadow @Final @Mutable private List<CustomSpawner> spawners;
+    @Shadow @Final @Mutable private List<CustomSpawner> customSpawners;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void setSpawnersGC(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> registryKey, DimensionType dimensionType, ChunkProgressListener worldGenerationProgressListener, ChunkGenerator chunkGenerator, boolean debugWorld, long l, List<CustomSpawner> list, boolean bl, CallbackInfo ci) {
         if (registryKey.equals(GalacticraftDimensions.MOON)) {
-            this.spawners = ImmutableList.<CustomSpawner>builder().add(new EvolvedPillagerSpawner()).build();
+            this.customSpawners = ImmutableList.<CustomSpawner>builder().add(new EvolvedPillagerSpawner()).build();
         }
     }
 }

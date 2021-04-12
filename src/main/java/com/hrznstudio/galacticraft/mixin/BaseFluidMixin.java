@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
  */
 @Mixin(FlowingFluid.class)
 public abstract class BaseFluidMixin {
-    @Redirect(method = "onScheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
+    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
     private boolean onScheduledTickGC(Level world, BlockPos pos, BlockState state, int flags) {
         if (state.getBlock() instanceof BucketPickup && state.getBlock() instanceof LiquidBlockContainer) {
             if (state.isAir()) {

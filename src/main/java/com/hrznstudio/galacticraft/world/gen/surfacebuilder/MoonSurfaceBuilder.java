@@ -42,7 +42,8 @@ public class MoonSurfaceBuilder<C extends SurfaceBuilderBaseConfiguration> exten
         super(codec);
     }
 
-    public void generate(Random random, ChunkAccess chunk, Biome biome, int x, int z, int height, double noise, BlockState defaultBlock, BlockState fluidBlock, int seaLevel, long seed, SurfaceBuilderBaseConfiguration ternarySurfaceConfig) {
+    @Override
+    public void apply(Random random, ChunkAccess chunk, Biome biome, int x, int z, int height, double noise, BlockState defaultBlock, BlockState fluidBlock, int seaLevel, long seed, SurfaceBuilderBaseConfiguration ternarySurfaceConfig) {
         BlockState blockState = ternarySurfaceConfig.getTopMaterial();
         BlockState blockState2 = ternarySurfaceConfig.getUnderMaterial();
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();

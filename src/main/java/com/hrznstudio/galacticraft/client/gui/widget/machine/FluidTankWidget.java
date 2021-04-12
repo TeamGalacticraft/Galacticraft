@@ -43,7 +43,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.text.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import org.apache.commons.lang3.text.WordUtils;

@@ -42,7 +42,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(DimensionType.class)
 public abstract class DimensionTypeMixin {
-    @Inject(method = "createDefaultDimensionOptions", at = @At(value = "RETURN", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "defaultDimensions", at = @At(value = "RETURN", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void addGCDimOptions(Registry<DimensionType> registry, Registry<Biome> registry2, Registry<NoiseGeneratorSettings> registry3, long l, CallbackInfoReturnable<MappedRegistry<LevelStem>> cir, MappedRegistry<LevelStem> simpleRegistry) {
         simpleRegistry.register(ResourceKey.create(Registry.LEVEL_STEM_REGISTRY, new ResourceLocation(Constants.MOD_ID, "moon")), new LevelStem(() -> registry.get(new ResourceLocation(Constants.MOD_ID, "moon")), new MoonChunkGenerator(new MoonBiomeSource(l, 4, registry2), l)), Lifecycle.stable());
     }

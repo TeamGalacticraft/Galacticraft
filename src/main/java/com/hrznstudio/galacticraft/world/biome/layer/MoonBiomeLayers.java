@@ -28,7 +28,6 @@ import com.hrznstudio.galacticraft.world.biome.layer.moon.MoonMareBiomeLayer;
 import com.hrznstudio.galacticraft.world.biome.layer.moon.MoonMergeLayer;
 import com.hrznstudio.galacticraft.world.biome.layer.moon.ValleyCrossSamplingLayer;
 import net.minecraft.core.Registry;
-import net.minecraft.world.biome.layer.util.*;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.newbiome.area.Area;
 import net.minecraft.world.level.newbiome.area.AreaFactory;

@@ -28,7 +28,6 @@ import com.hrznstudio.galacticraft.entity.BubbleEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.monarkhes.myron.api.Myron;
-import net.minecraft.client.render.*;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -67,7 +66,7 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
         matrices.scale((float) size, (float) size, (float) size);
-        VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.entityTranslucent(getTexture(entity)));
+        VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.entityTranslucent(getTextureLocation(entity)));
         for (BakedQuad quad : bubbleModel.getQuads(null, null, entity.level.random)) {
             consumer.putBulkData(matrices.last(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.NO_OVERLAY);
         }
@@ -80,7 +79,7 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
     }
 
     @Override
-    public ResourceLocation getTexture(BubbleEntity entity) {
+    public ResourceLocation getTextureLocation(BubbleEntity entity) {
         return bubbleModel.getParticleIcon().getName();
     }
 }

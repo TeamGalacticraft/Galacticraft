@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.mixin;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import net.minecraft.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;

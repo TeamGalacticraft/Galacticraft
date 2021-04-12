@@ -47,8 +47,9 @@ public class MoonPillagerBaseFeature extends JigsawFeature {
         super(codec, 0, true, true);
     }
 
+
     @Override
-    protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long l, WorldgenRandom chunkRandom, int i, int j, Biome biome, ChunkPos chunkPos, JigsawConfiguration structurePoolFeatureConfig) {
+    protected boolean isFeatureChunk(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long l, WorldgenRandom chunkRandom, int i, int j, Biome biome, ChunkPos chunkPos, JigsawConfiguration structurePoolFeatureConfig) {
         int k = i >> 4;
         int m = j >> 4;
         chunkRandom.setSeed((long)(k ^ m << 4) ^ l);

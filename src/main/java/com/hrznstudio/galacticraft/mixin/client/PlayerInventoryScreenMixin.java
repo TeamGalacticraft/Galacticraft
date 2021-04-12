@@ -65,7 +65,7 @@ public abstract class PlayerInventoryScreenMixin extends EffectRenderingInventor
         }
     }
 
-    @Inject(method = "drawBackground", at = @At("TAIL"))
+    @Inject(method = "renderBg", at = @At("TAIL"))
     public void drawBackground(PoseStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
         this.minecraft.getTextureManager().bind(TABS_TEXTURE);
         this.blit(matrices, this.leftPos, this.topPos - 28, 0, 0, 57, 32);

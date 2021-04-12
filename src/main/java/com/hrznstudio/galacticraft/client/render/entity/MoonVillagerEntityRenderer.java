@@ -48,7 +48,7 @@ public class MoonVillagerEntityRenderer extends MobRenderer<MoonVillagerEntity, 
     }
 
     @Override
-    public ResourceLocation getTexture(MoonVillagerEntity villagerEntity) {
+    public ResourceLocation getTextureLocation(MoonVillagerEntity villagerEntity) {
         return TEXTURE;
     }
 

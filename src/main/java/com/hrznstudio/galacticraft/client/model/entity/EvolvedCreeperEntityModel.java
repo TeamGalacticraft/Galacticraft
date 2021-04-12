@@ -85,7 +85,7 @@ public class EvolvedCreeperEntityModel extends EntityModel<EvolvedCreeperEntity>
     }
 
     @Override
-    public void setAngles(EvolvedCreeperEntity entity, float limbAngle, float limbDistance, float customAngle, float headYaw, float headPitch) {
+    public void setupAnim(EvolvedCreeperEntity entity, float limbAngle, float limbDistance, float customAngle, float headYaw, float headPitch) {
         this.oxygenMask.yRot = (float) (headYaw / (180.0F / Math.PI));
         this.oxygenMask.xRot = (float) (headPitch / (180.0F / Math.PI));
         this.head.yRot = (float) (headYaw / (180.0F / Math.PI));

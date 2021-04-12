@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(JigsawPlacement.Placer.class)
 public abstract class StructurePoolGeneratorMixin {
-    @Inject(at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "generatePiece")
+    @Inject(at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "tryPlacingChildren")
     public void extraDebugInfoGC(PoolElementStructurePiece piece, MutableObject<VoxelShape> mutableObject, int minY, int currentSize, boolean bl, CallbackInfo ci) {
         if (Galacticraft.configManager.get().isDebugLogEnabled()) {
             Galacticraft.logger.warn("Pool referencer: {}", piece.toString());

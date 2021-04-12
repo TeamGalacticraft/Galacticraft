@@ -49,22 +49,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
-    @Shadow protected abstract int getNextAirOnLand(int air);
+    @Shadow protected abstract int increaseAirSupply(int air);
 
     public LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
 
-    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isSubmergedIn(Lnet/minecraft/tag/Tag;)Z", ordinal = 0))
+    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/Tag;)Z", ordinal = 0))
     private boolean checkOxygenAtmosphere_gcr(LivingEntity entity, Tag<Fluid> tag) {
         return entity.isEyeInFluid(tag) || !((WorldOxygenAccessor) this.level).isBreathable(entity.blockPosition().relative(Direction.UP, (int)Math.floor(entity.getEyeHeight(entity.getPose(), entity.getDimensions(entity.getPose())))));
     }
 
-    @Inject(method = "getNextAirUnderwater", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;getRespiration(Lnet/minecraft/entity/LivingEntity;)I"), cancellable = true)
+    @Inject(method = "decreaseAirSupply", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getRespiration(Lnet/minecraft/world/entity/LivingEntity;)I"), cancellable = true)
     private void overrideOxygen_gcr(int air, CallbackInfoReturnable<Integer> ci) {
         AttributeInstance attribute = ((LivingEntity)(Object)this).getAttribute(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE);
         if (attribute != null && attribute.getValue() >= 0.99D) {
-            ci.setReturnValue(this.getNextAirOnLand(air));
+            ci.setReturnValue(this.increaseAirSupply(air));
         }
 
         FixedItemInv gearInv = ((GearInventoryProvider) this).getGearInv();
@@ -73,12 +73,12 @@ public abstract class LivingEntityMixin extends Entity {
             OxygenTank tank = OxygenTankUtils.getOxygenTank(gearInv.getSlot(6));
             if (tank.getAmount() > 0) {
                 tank.setAmount(tank.getAmount() - 1);
-                ci.setReturnValue(this.getNextAirOnLand(air));
+                ci.setReturnValue(this.increaseAirSupply(air));
             }
             tank = OxygenTankUtils.getOxygenTank(gearInv.getSlot(7));
             if (tank.getAmount() > 0) {
                 tank.setAmount(tank.getAmount() - 1);
-                ci.setReturnValue(this.getNextAirOnLand(air));
+                ci.setReturnValue(this.increaseAirSupply(air));
             }
         }
     }

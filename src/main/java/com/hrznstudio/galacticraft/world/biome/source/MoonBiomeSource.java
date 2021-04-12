@@ -57,13 +57,13 @@ public class MoonBiomeSource extends BiomeSource {
         this.seed = seed;
         this.registry = registry;
         this.sampler = MoonBiomeLayers.build(seed, biomeSize, registry);
-        if (!BuiltinBiomesAccessor.getBY_RAW_ID().containsValue(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)) {
-            BuiltinBiomesAccessor.getBY_RAW_ID().put(registry.getId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)), GalacticraftBiomes.Moon.HIGHLANDS_PLAINS);
-            BuiltinBiomesAccessor.getBY_RAW_ID().put(registry.getId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_ROCKS)), GalacticraftBiomes.Moon.HIGHLANDS_ROCKS);
-            BuiltinBiomesAccessor.getBY_RAW_ID().put(registry.getId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_VALLEY)), GalacticraftBiomes.Moon.HIGHLANDS_VALLEY);
-            BuiltinBiomesAccessor.getBY_RAW_ID().put(registry.getId(registry.get(GalacticraftBiomes.Moon.MARE_PLAINS)), GalacticraftBiomes.Moon.MARE_PLAINS);
-            BuiltinBiomesAccessor.getBY_RAW_ID().put(registry.getId(registry.get(GalacticraftBiomes.Moon.MARE_ROCKS)), GalacticraftBiomes.Moon.MARE_ROCKS);
-            BuiltinBiomesAccessor.getBY_RAW_ID().put(registry.getId(registry.get(GalacticraftBiomes.Moon.MARE_EDGE)), GalacticraftBiomes.Moon.MARE_EDGE);
+        if (!BuiltinBiomesAccessor.getTO_NAME().containsValue(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)) {
+            BuiltinBiomesAccessor.getTO_NAME().put(registry.getId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)), GalacticraftBiomes.Moon.HIGHLANDS_PLAINS);
+            BuiltinBiomesAccessor.getTO_NAME().put(registry.getId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_ROCKS)), GalacticraftBiomes.Moon.HIGHLANDS_ROCKS);
+            BuiltinBiomesAccessor.getTO_NAME().put(registry.getId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_VALLEY)), GalacticraftBiomes.Moon.HIGHLANDS_VALLEY);
+            BuiltinBiomesAccessor.getTO_NAME().put(registry.getId(registry.get(GalacticraftBiomes.Moon.MARE_PLAINS)), GalacticraftBiomes.Moon.MARE_PLAINS);
+            BuiltinBiomesAccessor.getTO_NAME().put(registry.getId(registry.get(GalacticraftBiomes.Moon.MARE_ROCKS)), GalacticraftBiomes.Moon.MARE_ROCKS);
+            BuiltinBiomesAccessor.getTO_NAME().put(registry.getId(registry.get(GalacticraftBiomes.Moon.MARE_EDGE)), GalacticraftBiomes.Moon.MARE_EDGE);
         }
     }
 

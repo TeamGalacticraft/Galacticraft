@@ -56,34 +56,34 @@ public abstract class InGameHudMixin extends GuiComponent {
     private static final int OXYGEN_OVERLAY_X = 24;
     private static final int OXYGEN_OVERLAY_Y = 80;
     @Shadow
-    private int scaledWidth;
+    private int screenWidth;
     @Shadow
     @Final
-    private Minecraft client;
+    private Minecraft minecraft;
 
     @Inject(method = "render", at = @At(value = "TAIL"))
     private void draw(PoseStack matrices, float delta, CallbackInfo ci) {
-        if (CelestialBodyType.getByDimType(client.player.level.dimension()).isPresent() && !CelestialBodyType.getByDimType(client.player.level.dimension()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
-            client.getTextureManager().bind(new ResourceLocation(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY)));
+        if (CelestialBodyType.getByDimType(minecraft.player.level.dimension()).isPresent() && !CelestialBodyType.getByDimType(minecraft.player.level.dimension()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
+            minecraft.getTextureManager().bind(new ResourceLocation(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY)));
 
-            this.blit(matrices, this.scaledWidth - 17, 5, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
-            this.blit(matrices, this.scaledWidth - 34, 5, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
+            this.blit(matrices, this.screenWidth - 17, 5, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
+            this.blit(matrices, this.screenWidth - 34, 5, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
 
-            if (!client.player.isCreative()) {
-                FixedItemInv inv = ((GearInventoryProvider)client.player).getGearInv();
+            if (!minecraft.player.isCreative()) {
+                FixedItemInv inv = ((GearInventoryProvider) minecraft.player).getGearInv();
                 if (inv.getInvStack(6).getItem() instanceof OxygenTankItem) {
-                    this.blit(matrices, this.scaledWidth - 17 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) inv.getInvStack(6).getMaxDamage() - (double) inv.getInvStack(6).getDamageValue()) / (double) inv.getInvStack(6).getMaxDamage()))));
-                } else if (client.player.isCreative()) {
-                    this.blit(matrices, this.scaledWidth - 17 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
+                    this.blit(matrices, this.screenWidth - 17 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) inv.getInvStack(6).getMaxDamage() - (double) inv.getInvStack(6).getDamageValue()) / (double) inv.getInvStack(6).getMaxDamage()))));
+                } else if (minecraft.player.isCreative()) {
+                    this.blit(matrices, this.screenWidth - 17 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
                 }
                 if (inv.getInvStack(7).getItem() instanceof OxygenTankItem) {
-                    this.blit(matrices, this.scaledWidth - 34 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) inv.getInvStack(7).getMaxDamage() - (double) inv.getInvStack(7).getDamageValue()) / (double) inv.getInvStack(7).getMaxDamage()))));
-                } else if (client.player.isCreative()) {
-                    this.blit(matrices, this.scaledWidth - 34 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
+                    this.blit(matrices, this.screenWidth - 34 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) inv.getInvStack(7).getMaxDamage() - (double) inv.getInvStack(7).getDamageValue()) / (double) inv.getInvStack(7).getMaxDamage()))));
+                } else if (minecraft.player.isCreative()) {
+                    this.blit(matrices, this.screenWidth - 34 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
                 }
             } else {
-                this.blit(matrices, this.scaledWidth - 17, 5, 12, 40, OXYGEN_WIDTH, OXYGEN_HEIGHT);
-                this.blit(matrices, this.scaledWidth - 34, 5, 12, 40, OXYGEN_WIDTH, OXYGEN_HEIGHT);
+                this.blit(matrices, this.screenWidth - 17, 5, 12, 40, OXYGEN_WIDTH, OXYGEN_HEIGHT);
+                this.blit(matrices, this.screenWidth - 34, 5, 12, 40, OXYGEN_WIDTH, OXYGEN_HEIGHT);
             }
         }
     }

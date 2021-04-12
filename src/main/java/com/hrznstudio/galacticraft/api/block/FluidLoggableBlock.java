@@ -73,7 +73,7 @@ public interface FluidLoggableBlock extends BucketPickup, LiquidBlockContainer {
         }
 
         @Override
-        public String name(ResourceLocation value) {
+        public String getName(ResourceLocation value) {
             if (value.toString().contains(DOT_REP) || value.toString().contains(DASH_REP) || value.toString().contains(COLON_REP))
                 throw new RuntimeException("Bad fluid!" + value);
             return value.toString().replace(".", DOT_REP).replace("-", DASH_REP).replace(":", COLON_REP);

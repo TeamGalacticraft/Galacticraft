@@ -120,6 +120,11 @@ public class FluidPipeBlockEntity extends BlockEntity implements TickableBlockEn
     }
 
     @Override
+    public BlockPos getPos() {
+        return this.worldPosition;
+    }
+
+    @Override
     public void setNetwork(@NotNull PipeNetwork network) {
         this.network = network;
     }

@@ -48,10 +48,10 @@ public abstract class WorldChunkMixin implements ChunkOxygenAccessor {
     @Final
     private LevelChunkSection[] sections;
 
-    @Shadow public abstract void setShouldSave(boolean shouldSave);
+    @Shadow public abstract void setUnsaved(boolean shouldSave);
 
-    @Shadow @Final private ChunkPos pos;
-    @Shadow @Final private Level world;
+    @Shadow @Final private ChunkPos chunkPos;
+    @Shadow @Final private Level level;
     private @Unique boolean update = false;
     private final @Unique boolean[] updatable = new boolean[16];
 
@@ -71,8 +71,8 @@ public abstract class WorldChunkMixin implements ChunkOxygenAccessor {
         LevelChunkSection section = sections[y >> 4];
         if (!LevelChunkSection.isEmpty(section)) {
             if (value != ((ChunkSectionOxygenAccessor) section).isBreathable(x & 15, y & 15, z & 15)) {
-                if (!this.world.isClientSide) {
-                    setShouldSave(true);
+                if (!this.level.isClientSide) {
+                    setUnsaved(true);
                     update = true;
                     updatable[y >> 4] = true;
                 }
@@ -83,13 +83,13 @@ public abstract class WorldChunkMixin implements ChunkOxygenAccessor {
 
     @Override
     public List<ClientboundCustomPayloadPacket> syncToClient() {
-        if (update && !world.isClientSide) {
+        if (update && !level.isClientSide) {
             update = false;
             List<ClientboundCustomPayloadPacket> list = new LinkedList<>();
             for (int i = 0; i < 16; i++) {
                 if (updatable[i]) {
                     updatable[i] = false;
-                    FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer(1 + ((16 * 16 * 16) / 8) + (4 * 2), 50 + 1 + ((16 * 16 * 16) / 8) + (4 * 2)).writeByte(i).writeInt(this.pos.x).writeInt(this.pos.z));
+                    FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer(1 + ((16 * 16 * 16) / 8) + (4 * 2), 50 + 1 + ((16 * 16 * 16) / 8) + (4 * 2)).writeByte(i).writeInt(this.chunkPos.x).writeInt(this.chunkPos.z));
                     ((ChunkSectionOxygenAccessor) sections[i]).writeOxygen(buf);
                     list.add(new ClientboundCustomPayloadPacket(new ResourceLocation(Constants.MOD_ID, "oxygen_update"), buf));
                 }

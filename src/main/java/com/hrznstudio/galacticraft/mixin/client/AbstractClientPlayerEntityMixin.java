@@ -44,14 +44,14 @@ public abstract class AbstractClientPlayerEntityMixin {
 
     @Shadow
     @Nullable
-    protected abstract PlayerInfo getPlayerListEntry();
+    protected abstract PlayerInfo getPlayerInfo();
 
-    @Inject(method = "getCapeTexture", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getCloakTextureLocation", at = @At("RETURN"), cancellable = true)
     private void getCapeTexture(CallbackInfoReturnable<ResourceLocation> info) {
         if (GalacticraftClient.jsonCapes.areCapesLoaded()) {
-            if (GalacticraftClient.jsonCapes.getCapePlayers().containsKey(this.getPlayerListEntry().getProfile().getId())) {
+            if (GalacticraftClient.jsonCapes.getCapePlayers().containsKey(this.getPlayerInfo().getProfile().getId())) {
                 info.setReturnValue(GalacticraftClient.jsonCapes.getCapePlayers()
-                        .get(this.getPlayerListEntry().getProfile().getId()).getCape().getTexture());
+                        .get(this.getPlayerInfo().getProfile().getId()).getCape().getTexture());
             }
         }
     }

@@ -44,7 +44,6 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.minecraft.block.*;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -188,9 +187,9 @@ public class GalacticraftBlocks {
     public static final Block LUNAR_CARTOGRAPHY_TABLE = registerBlock(new LunarCartographyTableBlock(FabricBlockSettings.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)), Constants.Blocks.LUNAR_CARTOGRAPHY_TABLE);
 
     // MISC WORLD GEN
-    public static final Block CAVERNOUS_VINE = registerBlock(new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.COLOR_GREEN).noDrops().noCollission().lightLevel(0).sound(SoundType.GRASS).randomTicks()), Constants.Blocks.CAVERNOUS_VINE);
-    public static final Block POISONOUS_CAVERNOUS_VINE = registerBlock(new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.COLOR_GREEN).noDrops().noCollission().lightLevel(3).sound(SoundType.GRASS).randomTicks()), Constants.Blocks.POISONOUS_CAVERNOUS_VINE);
-    public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.COLOR_GREEN).noDrops().noCollission().lightLevel(3).sound(SoundType.SWEET_BERRY_BUSH).randomTicks()), Constants.Blocks.MOON_BERRY_BUSH);
+    public static final Block CAVERNOUS_VINE = registerBlock(new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.COLOR_GREEN).noDrops().noCollission().lightLevel((state) -> 0).sound(SoundType.GRASS).randomTicks()), Constants.Blocks.CAVERNOUS_VINE);
+    public static final Block POISONOUS_CAVERNOUS_VINE = registerBlock(new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.COLOR_GREEN).noDrops().noCollission().lightLevel((state) -> 3).sound(SoundType.GRASS).randomTicks()), Constants.Blocks.POISONOUS_CAVERNOUS_VINE);
+    public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.COLOR_GREEN).noDrops().noCollission().lightLevel((state) -> 3).sound(SoundType.SWEET_BERRY_BUSH).randomTicks()), Constants.Blocks.MOON_BERRY_BUSH);
     public static final Block MOON_CHEESE_LEAVES = registerBlock(new LeavesBlock(FabricBlockSettings.of(Material.LEAVES).strength(0.2F, 0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion()), Constants.Blocks.MOON_CHEESE_LEAVES);
     public static final Block MOON_CHEESE_LOG = registerBlock(new RotatedPillarBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_YELLOW).strength(2.0F).sound(SoundType.WOOD)), Constants.Blocks.MOON_CHEESE_LOG);
 

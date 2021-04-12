@@ -37,13 +37,13 @@ import net.minecraft.world.level.chunk.LevelChunk;
 
 @Mixin(ChunkHolder.class)
 public abstract class ChunkHolderMixin {
-    @Shadow protected abstract void sendPacketToPlayersWatching(Packet<?> packet, boolean onlyOnWatchDistanceEdge);
+    @Shadow protected abstract void broadcast(Packet<?> packet, boolean onlyOnWatchDistanceEdge);
 
-    @Inject(method = "flushUpdates", at = @At("HEAD"))
+    @Inject(method = "broadcastChanges", at = @At("HEAD"))
     private void flushGC(LevelChunk chunk, CallbackInfo ci) {
         List<ClientboundCustomPayloadPacket> packets = ((ChunkOxygenAccessor) chunk).syncToClient();
         for (ClientboundCustomPayloadPacket packet : packets) {
-            this.sendPacketToPlayersWatching(packet, false);
+            this.broadcast(packet, false);
         }
     }
 }

@@ -86,9 +86,9 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
             List<Rectangle> l = Lists.newArrayList();
 
             if (machineScreen.securityOpen) {
-                l.add(new Rectangle(screenHooks.gcr_getX() + screenHooks.gcr_getBackgroundWidth(), screenHooks.gcr_getY(), MachineHandledScreen.PANEL_WIDTH, MachineHandledScreen.PANEL_HEIGHT));
+                l.add(new Rectangle(screenHooks.gcr_getX() + screenHooks.gcr_getImageWidth(), screenHooks.gcr_getY(), MachineHandledScreen.PANEL_WIDTH, MachineHandledScreen.PANEL_HEIGHT));
             } else {
-                l.add(new Rectangle(screenHooks.gcr_getX() + screenHooks.gcr_getBackgroundWidth(), screenHooks.gcr_getY(), MachineHandledScreen.TAB_WIDTH, MachineHandledScreen.TAB_HEIGHT));
+                l.add(new Rectangle(screenHooks.gcr_getX() + screenHooks.gcr_getImageWidth(), screenHooks.gcr_getY(), MachineHandledScreen.TAB_WIDTH, MachineHandledScreen.TAB_HEIGHT));
             }
 
             return l;

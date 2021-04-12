@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LevelChunkSection.class)
 @Environment(EnvType.CLIENT)
 public abstract class ClientChunkSectionMixin implements ChunkSectionOxygenAccessor {
-    @Inject(method = "fromPacket", at = @At("RETURN"))
+    @Inject(method = "read", at = @At("RETURN"))
     private void fromPacket(FriendlyByteBuf packetByteBuf, CallbackInfo ci) {
         this.setTotalOxygen(packetByteBuf.readShort());
         if (this.getTotalOxygen() == 0) return;

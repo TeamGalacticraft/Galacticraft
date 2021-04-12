@@ -45,6 +45,7 @@ public class RecipeInputSlot<I extends Container, T extends Recipe<I>> extends S
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean mayPlace(ItemStack stack) {
         return world.getRecipeManager().getRecipeFor(this.type, (I)new SimpleContainer(stack), world).isPresent();
     }

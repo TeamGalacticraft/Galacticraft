@@ -54,7 +54,7 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
+    public BlockState getPlacementState(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
         BlockState blockState = this.defaultBlockState().setValue(GRATING_STATE, GratingState.LOWER)
                 .setValue(FLUID, Registry.FLUID.getKey(fluidState.getType()))

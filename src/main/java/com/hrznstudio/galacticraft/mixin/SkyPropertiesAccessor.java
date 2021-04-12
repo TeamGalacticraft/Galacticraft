@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(DimensionSpecialEffects.class)
 public interface SkyPropertiesAccessor {
     @Accessor
-    static Object2ObjectMap<ResourceLocation, DimensionSpecialEffects> getBY_IDENTIFIER() {
+    static Object2ObjectMap<ResourceLocation, DimensionSpecialEffects> getEFFECTS() {
         throw new UnsupportedOperationException("Untransformed accessor");
     }
 }

@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.village;
 
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.minecraft.core.BlockPos;
-import net.minecraft.item.*;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

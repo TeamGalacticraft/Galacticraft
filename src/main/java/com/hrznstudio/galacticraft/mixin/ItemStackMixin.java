@@ -44,7 +44,7 @@ public abstract class ItemStackMixin {
     public abstract Item getItem();
 
     @SuppressWarnings("RedundantSuppression")
-    @Inject(method = "getName", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getHoverName", at = @At("RETURN"), cancellable = true)
     private void getName(CallbackInfoReturnable<Component> returnable) {
         //noinspection ConstantConditions
         if (false) {

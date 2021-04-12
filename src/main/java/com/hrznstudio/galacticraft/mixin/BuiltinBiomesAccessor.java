@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(Biomes.class)
 public interface BuiltinBiomesAccessor {
 	@Accessor
-	static Int2ObjectMap<ResourceKey<Biome>> getBY_RAW_ID() {
+	static Int2ObjectMap<ResourceKey<Biome>> getTO_NAME() {
 		throw new UnsupportedOperationException("Accessor was not transformed");
 	}
 }

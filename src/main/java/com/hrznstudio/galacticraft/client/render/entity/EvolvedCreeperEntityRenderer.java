@@ -57,7 +57,7 @@ public class EvolvedCreeperEntityRenderer extends MobRenderer<EvolvedCreeperEnti
     }
 
     @Override
-    protected float getAnimationCounter(EvolvedCreeperEntity entity, float tickDelta) {
+    protected float getWhiteOverlayProgress(EvolvedCreeperEntity entity, float tickDelta) {
         float g = entity.getSwelling(tickDelta);
         return (int) (g * 10.0F) % 2 == 0 ? 0.0F : Mth.clamp(g, 0.5F, 1.0F);
     }
@@ -69,7 +69,7 @@ public class EvolvedCreeperEntityRenderer extends MobRenderer<EvolvedCreeperEnti
     }
 
     @Override
-    public ResourceLocation getTexture(EvolvedCreeperEntity entity) {
+    public ResourceLocation getTextureLocation(EvolvedCreeperEntity entity) {
         return TEXTURE;
     }
 }

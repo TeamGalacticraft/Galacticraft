@@ -40,7 +40,7 @@ public class MultiBlockSurfaceBuilder extends SurfaceBuilder<MultiBlockSurfaceCo
     }
 
     @Override
-    public void generate(Random random, ChunkAccess chunk, Biome biome, int i, int j, int k, double d, BlockState blockState, BlockState blockState2, int l, long m, MultiBlockSurfaceConfig multiBlockSurfaceConfig) {
+    public void apply(Random random, ChunkAccess chunk, Biome biome, int i, int j, int k, double d, BlockState blockState, BlockState blockState2, int l, long m, MultiBlockSurfaceConfig multiBlockSurfaceConfig) {
         this.generate(random, chunk, biome, i, j, k, d, blockState, blockState2, multiBlockSurfaceConfig, l);
     }
 
