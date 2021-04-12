@@ -129,7 +129,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState other, WorldAccess world, BlockPos thisWire, BlockPos otherConnectable) {
         return state.with(getPropForDirection(direction), (
                 !other.isAir()
-                        && ((other.getBlock() instanceof FluidPipe && other.get(COLOR) == state.get(COLOR))
+                        && ((other.getBlock() instanceof FluidPipe /*&& other.get(COLOR) == state.get(COLOR)*/)
                         || FluidUtils.isExtractableOrInsertable(world.getBlockEntity(thisWire).getWorld(), otherConnectable, direction.getOpposite())
                 )
         ));

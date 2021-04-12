@@ -143,22 +143,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
     }
 
     private int getShapeIndex(BlockState state) {
-        return this.SHAPE_INDEX_CACHE.computeIntIfAbsent(state, (blockState) -> {
-            int i = 0;
-            if (blockState.get(FACING).equals(Direction.NORTH))
-                i |= getFacingMask(Direction.NORTH);
-            if (blockState.get(FACING).equals(Direction.SOUTH))
-                i |= getFacingMask(Direction.SOUTH);
-            if (blockState.get(FACING).equals(Direction.EAST))
-                i |= getFacingMask(Direction.EAST);
-            if (blockState.get(FACING).equals(Direction.WEST))
-                i |= getFacingMask(Direction.WEST);
-            if (blockState.get(FACING).equals(Direction.UP))
-                i |= getFacingMask(Direction.UP);
-            if (blockState.get(FACING).equals(Direction.DOWN))
-                i |= getFacingMask(Direction.DOWN);
-            return i;
-        });
+        return this.SHAPE_INDEX_CACHE.computeIntIfAbsent(state, (blockState) -> getFacingMask(state.get(FACING)));
     }
 
     private BooleanProperty getPropForDir(Direction direction) {

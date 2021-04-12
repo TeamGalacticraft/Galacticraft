@@ -145,22 +145,7 @@ public class PipeWalkway extends FluidPipe {
     }
 
     private int getShapeIndex(BlockState state) {
-        return this.SHAPE_INDEX_CACHE.computeIntIfAbsent(state, (blockState) -> {
-            int i = 0;
-            if (blockState.get(FACING).equals(Direction.NORTH))
-                i |= getFacingMask(Direction.NORTH);
-            if (blockState.get(FACING).equals(Direction.SOUTH))
-                i |= getFacingMask(Direction.SOUTH);
-            if (blockState.get(FACING).equals(Direction.EAST))
-                i |= getFacingMask(Direction.EAST);
-            if (blockState.get(FACING).equals(Direction.WEST))
-                i |= getFacingMask(Direction.WEST);
-            if (blockState.get(FACING).equals(Direction.UP))
-                i |= getFacingMask(Direction.UP);
-            if (blockState.get(FACING).equals(Direction.DOWN))
-                i |= getFacingMask(Direction.DOWN);
-            return i;
-        });
+        return this.SHAPE_INDEX_CACHE.computeIntIfAbsent(state, (blockState) -> getFacingMask(state.get(FACING)));
     }
 
     private BooleanProperty getPropForDir(Direction direction) {
@@ -208,16 +193,17 @@ public class PipeWalkway extends FluidPipe {
     }
 
     public boolean canConnect(BlockState state, BlockState neighborState, BlockPos pos, BlockPos neighborPos, WorldAccess world, Direction facing) {
+        /* This code tests if the connecting block is on the top of the walkway (it used to be unable to connect there)
         try {
             if (pos.offset(state.get(FACING)).equals(neighborPos))
                 return false;
             if (neighborPos.offset(neighborState.get(FACING)).equals(pos))
                 return false;
         } catch (IllegalArgumentException ignored) {}
-        // TODO: I think the thing will still logically connect on the top face of this block (there's no wire there)
+        */
         if (FluidUtils.isExtractableOrInsertable((World) world, neighborPos, facing.getOpposite()))
             return true;
-        return (neighborState.getBlock() instanceof FluidPipe) && (neighborState.get(COLOR) == state.get(COLOR));
+        return (neighborState.getBlock() instanceof FluidPipe); //&& (neighborState.get(COLOR) == state.get(COLOR));
     }
 
     @Override
