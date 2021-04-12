@@ -29,6 +29,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -222,7 +223,6 @@ public class PipeWalkway extends FluidPipe {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!player.getStackInHand(hand).isEmpty()) {
-            /*
             if (player.getStackInHand(hand).getItem() instanceof DyeItem) {
                 ItemStack stack = player.getStackInHand(hand).copy();
                 DyeColor color = ((DyeItem) stack.getItem()).getColor();
@@ -234,7 +234,7 @@ public class PipeWalkway extends FluidPipe {
                 } else {
                     return ActionResult.FAIL;
                 }
-            } */
+            }
             if (player.getStackInHand(hand).getItem() instanceof StandardWrenchItem) {
                 ItemStack stack = player.getStackInHand(hand).copy();
                 stack.damage(1, world.random, player instanceof ServerPlayerEntity ? ((ServerPlayerEntity) player) : null);
