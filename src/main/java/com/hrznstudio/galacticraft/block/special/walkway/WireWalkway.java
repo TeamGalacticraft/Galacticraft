@@ -47,6 +47,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 /**
@@ -214,7 +215,7 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
                 return false;
         } catch (IllegalArgumentException ignored) {}
         // TODO: The WireBlockEntity will still connect on the top face of this block (there's no wire there)
-        return neighborState.getBlock() instanceof WireBlock || EnergyUtils.canAccessEnergy(world.getBlockEntity(pos).getWorld(), pos.offset(facing), facing.getOpposite());
+        return neighborState.getBlock() instanceof WireBlock || EnergyUtils.canAccessEnergy((World) world, pos.offset(facing), facing.getOpposite());
     }
 
     @Override
