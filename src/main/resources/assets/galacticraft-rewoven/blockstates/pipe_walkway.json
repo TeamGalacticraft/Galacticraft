@@ -1,6 +1,6 @@
 {
   "multipart": [
-    {"apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/none"}},
+    {"apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/white"}},
 
     {"when": {"facing": "up"},    "apply": {"model": "galacticraft-rewoven:block/pipe_walkway"}},
     {"when": {"facing": "down"},  "apply": {"model": "galacticraft-rewoven:block/pipe_walkway", "x": 180}},
@@ -9,11 +9,11 @@
     {"when": {"facing": "east"},  "apply": {"model": "galacticraft-rewoven:block/pipe_walkway", "x": 90, "y": 90}},
     {"when": {"facing": "west"},  "apply": {"model": "galacticraft-rewoven:block/pipe_walkway", "x": 90, "y": 270}},
 
-    {"when": {"north": "true"}, "apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/n"}},
-    {"when": {"east": "true"},  "apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/n", "y": 90}},
-    {"when": {"south": "true"}, "apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/n", "y": 180}},
-    {"when": {"west": "true"},  "apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/n", "y": 270}},
-    {"when": {"up": "true"},    "apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/n", "x": 270, "y": 90}},
-    {"when": {"down": "true"},  "apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/n", "x": 90, "y": 270}}
+    {"when": {"north": "true"}, "apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/side_white"}},
+    {"when": {"east": "true"},  "apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/side_white", "y": 90}},
+    {"when": {"south": "true"}, "apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/side_white", "y": 180}},
+    {"when": {"west": "true"},  "apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/side_white", "y": 270}},
+    {"when": {"up": "true"},    "apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/side_white", "x": 270, "y": 90}},
+    {"when": {"down": "true"},  "apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/side_white", "x": 90, "y": 270}}
   ]
 }

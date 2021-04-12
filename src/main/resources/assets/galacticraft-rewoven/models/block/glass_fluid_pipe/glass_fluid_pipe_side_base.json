@@ -1,0 +1,20 @@
+{
+  "textures": {
+    "particle": "galacticraft-rewoven:block/glass_fluid_pipe/white",
+    "color": "galacticraft-rewoven:block/glass_fluid_pipe/white"
+  },
+  "elements": [
+    {
+      "from": [6, 6, 0],
+      "to": [10, 10, 6],
+      "faces": {
+        "down": {"uv": [6, 0, 10, 6], "texture": "#color"},
+        "up": {"uv": [6, 0, 10, 6], "texture": "#color"},
+        "north": {"uv": [6, 6, 10, 10], "texture": "#color"},
+        "south": {"uv": [6, 6, 10, 10], "texture": "#color"},
+        "west": {"uv": [6, 0, 10, 6], "rotation": 90, "texture": "#color"},
+        "east": {"uv": [6, 0, 10, 6], "rotation": 90, "texture": "#color"}
+      }
+    }
+  ]
+}
