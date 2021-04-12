@@ -50,6 +50,12 @@ public class GalacticraftSounds {
     public static final SoundEvent AMBIENCE_SCARYSCAPE = new SoundEvent(new Identifier(Constants.MOD_ID, "ambience.scaryscape"));
     public static final SoundEvent SHUTTLE_SHUTTLE = new SoundEvent(new Identifier(Constants.MOD_ID, "shuttle.shuttle"));
 
+    // Legacy Discs
+    public static final SoundEvent MUSIC_LEGACY_MARS = new SoundEvent(new Identifier(Constants.MOD_ID, "music.legacy.mars"));
+    public static final SoundEvent MUSIC_LEGACY_MIMAS = new SoundEvent(new Identifier(Constants.MOD_ID, "music.legacy.mimas"));
+    public static final SoundEvent MUSIC_LEGACY_ORBIT = new SoundEvent(new Identifier(Constants.MOD_ID, "music.legacy.orbit"));
+    public static final SoundEvent MUSIC_LEGACY_SPACERACE = new SoundEvent(new Identifier(Constants.MOD_ID, "music.legacy.spacerace"));
+
     public static void register() {
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.music_moon"), MUSIC_MOON);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.music_credits"), MUSIC_CREDITS);
@@ -68,5 +74,11 @@ public class GalacticraftSounds {
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "ambience.singledrip"), AMBIENCE_SINGLEDRIP);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "ambience.scaryscape"), AMBIENCE_SCARYSCAPE);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "shuttle.shuttle"), SHUTTLE_SHUTTLE);
+
+        // Legacy Discs
+        Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.legacy.mars"), MUSIC_LEGACY_MARS);
+        Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.legacy.mimas"), MUSIC_LEGACY_MIMAS);
+        Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.legacy.orbit"), MUSIC_LEGACY_ORBIT);
+        Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.legacy.spacerace"), MUSIC_LEGACY_SPACERACE);
     }
 }

@@ -1,5 +1,7 @@
 steps:
 - name: 'adoptopenjdk/openjdk8-openj9'
+  env:
+    - "DISABLE_VERSION_DECORATION=true"
   args:
     - './gradlew'
     - 'checkLicenses'

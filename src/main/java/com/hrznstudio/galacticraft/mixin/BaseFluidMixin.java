@@ -39,13 +39,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class BaseFluidMixin {
     @Redirect(method = "onScheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private boolean onScheduledTickGC(World world, BlockPos pos, BlockState state, int flags) {
-        if (world.getBlockState(pos).getBlock() instanceof FluidDrainable && world.getBlockState(pos).getBlock() instanceof FluidFillable) {
+        if (state.getBlock() instanceof FluidDrainable && state.getBlock() instanceof FluidFillable) {
             if (state.isAir()) {
-                ((FluidDrainable) world.getBlockState(pos).getBlock()).tryDrainFluid(world, pos, world.getBlockState(pos));
+                ((FluidDrainable) state.getBlock()).tryDrainFluid(world, pos, state);
                 return true;
             } else {
-                ((FluidDrainable) world.getBlockState(pos).getBlock()).tryDrainFluid(world, pos, world.getBlockState(pos));
-                ((FluidFillable) world.getBlockState(pos).getBlock()).tryFillWithFluid(world, pos, world.getBlockState(pos), state.getFluidState());
+                ((FluidDrainable) state.getBlock()).tryDrainFluid(world, pos, state);
+                ((FluidFillable) state.getBlock()).tryFillWithFluid(world, pos, state, state.getFluidState());
                 return true;
             }
         }

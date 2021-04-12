@@ -43,7 +43,7 @@ public abstract class ChunkHolderMixin {
     private void flushGC(WorldChunk chunk, CallbackInfo ci) {
         List<CustomPayloadS2CPacket> packets = ((ChunkOxygenAccessor) chunk).syncToClient();
         for (CustomPayloadS2CPacket packet : packets) {
-            sendPacketToPlayersWatching(packet, false);
+            this.sendPacketToPlayersWatching(packet, false);
         }
     }
 }
