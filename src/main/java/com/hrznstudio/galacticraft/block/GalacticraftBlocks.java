@@ -147,8 +147,8 @@ public class GalacticraftBlocks {
 
     // VACUUM GLASS
     public static final Block VACUUM_GLASS = registerBlock(new VacuumGlass(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.VACUUM_GLASS);
-    public static final Block CLEAR_VACUUM_GLASS = registerBlock(new VacuumGlass(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.CLEAR_VACUUM_GLASS);
-    public static final Block STRONG_VACUUM_GLASS = registerBlock(new VacuumGlass(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.STRONG_VACUUM_GLASS);
+    //public static final Block CLEAR_VACUUM_GLASS = registerBlock(new VacuumGlass(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.CLEAR_VACUUM_GLASS);
+    //public static final Block STRONG_VACUUM_GLASS = registerBlock(new VacuumGlass(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.STRONG_VACUUM_GLASS);
 
     // ORES
     public static final Block SILICON_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constants.Blocks.SILICON_ORE);

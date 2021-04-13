@@ -225,8 +225,6 @@ public class VacuumGlass extends Block implements FluidLoggableBlock {
         }
     }
 
-
-
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         BlockState state = this.getDefaultState();
