@@ -44,7 +44,7 @@ public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            return !mixinClassName.equals("com.hrznstudio.galacticraft.mixin.StructurePoolGeneratorMixin");
+            return !mixinClassName.equals("com.hrznstudio.galacticraft.mixin.JigsawPlacerMixin");
         }
         return true;
     }
