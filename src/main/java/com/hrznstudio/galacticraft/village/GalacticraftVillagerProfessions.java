@@ -38,6 +38,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.village.VillagerProfession;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class GalacticraftVillagerProfessions {
     public static final VillagerProfession LUNAR_CARTOGRAPHER = VillagerProfessionBuilder.create().id(new Identifier(Constants.MOD_ID, "lunar_cartographer")).workstation(GalacticraftPointOfInterestType.LUNAR_CARTOGRAPHER).workSound(SoundEvents.ENTITY_VILLAGER_WORK_CARTOGRAPHER).build();
 
@@ -56,7 +59,7 @@ public class GalacticraftVillagerProfessions {
         });
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 3, factories -> {
             factories.add(new BuyForOneEmeraldFactory(Items.COMPASS, 1, 12, 20));
-//            factories.add(new GalacticraftTradeOffers.SellMapFactory(14, GalacticraftStructures.MOON_RUINS, MapIcon.Type.MANSION, 12, 10));
+            //factories.add(new GalacticraftTradeOffers.SellMapFactory(14, GalacticraftStructures.MOON_RUINS, MapIcon.Type.MANSION, 12, 10));
         });
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 4, factories -> {
             factories.add(new SellItemFactory(Items.ITEM_FRAME, 7, 1, 15));
@@ -77,7 +80,6 @@ public class GalacticraftVillagerProfessions {
             factories.add(new SellItemFactory(Items.ORANGE_BANNER, 3, 1, 15));
             factories.add(new SellItemFactory(Items.LIGHT_GRAY_BANNER, 3, 1, 15));
         });
-
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 5, factories -> factories.add(new SellItemFactory(Items.GLOBE_BANNER_PATTERN, 8, 1, 30)));
     }
 }

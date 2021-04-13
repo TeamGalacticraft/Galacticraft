@@ -29,6 +29,9 @@ import net.minecraft.world.biome.BuiltinBiomes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 @Mixin(BuiltinBiomes.class)
 public interface BuiltinBiomesAccessor {
 	@Accessor

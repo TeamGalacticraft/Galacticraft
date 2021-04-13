@@ -34,6 +34,9 @@ import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import net.minecraft.item.ItemStack;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class OxygenTankUtils {
     private OxygenTankUtils() {}
 

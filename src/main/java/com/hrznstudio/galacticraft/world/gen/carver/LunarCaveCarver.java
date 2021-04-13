@@ -39,6 +39,9 @@ import java.util.BitSet;
 import java.util.Random;
 import java.util.function.Function;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class LunarCaveCarver extends CaveCarver {
     public LunarCaveCarver(Codec<ProbabilityConfig> codec, int i) {
         super(codec, i);
@@ -93,7 +96,6 @@ public class LunarCaveCarver extends CaveCarver {
                         }
                     }
                 }
-
                 return true;
             }
         }

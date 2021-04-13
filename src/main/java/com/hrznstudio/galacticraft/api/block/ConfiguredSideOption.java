@@ -27,6 +27,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class ConfiguredSideOption {
     @NotNull
     private SideOption option;

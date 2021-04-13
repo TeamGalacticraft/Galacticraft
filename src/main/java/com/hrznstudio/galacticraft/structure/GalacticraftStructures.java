@@ -35,6 +35,9 @@ import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class GalacticraftStructures {
     public static final Codec<StructurePoolFeatureConfig> STRUCTURE_POOL_CONFIG_CODEC_UNCAPPED_SIZE = RecordCodecBuilder.create((instance) -> instance.group(StructurePool.REGISTRY_CODEC.fieldOf("start_pool").forGetter(StructurePoolFeatureConfig::getStartPool), Codec.INT.fieldOf("size").forGetter(StructurePoolFeatureConfig::getSize)).apply(instance, StructurePoolFeatureConfig::new));
 
@@ -48,7 +51,6 @@ public class GalacticraftStructures {
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
                 .defaultConfig(32, 16, 23789482).adjustsSurface()
                 .register();
-
         FabricStructureBuilder.create(new Identifier(Constants.MOD_ID, "moon_ruins"), MOON_RUINS)
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
                 .defaultConfig(24, 8, 1903453)

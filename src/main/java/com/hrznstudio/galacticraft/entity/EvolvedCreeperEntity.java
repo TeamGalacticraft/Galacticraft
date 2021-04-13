@@ -112,7 +112,6 @@ public class EvolvedCreeperEntity extends CreeperEntity {
         if (BABY.equals(data)) {
             this.calculateDimensions();
         }
-
         super.onTrackedDataSet(data);
     }
 

@@ -24,6 +24,9 @@ package com.hrznstudio.galacticraft.api.pipe;
 
 import net.minecraft.util.StringIdentifiable;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public enum PipeConnectionType implements StringIdentifiable {
     NONE,
     PIPE,

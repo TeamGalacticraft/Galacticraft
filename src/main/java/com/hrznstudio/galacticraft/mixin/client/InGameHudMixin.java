@@ -55,11 +55,8 @@ public abstract class InGameHudMixin extends DrawableHelper {
     private static final int OXYGEN_HEIGHT = 40;
     private static final int OXYGEN_OVERLAY_X = 24;
     private static final int OXYGEN_OVERLAY_Y = 80;
-    @Shadow
-    private int scaledWidth;
-    @Shadow
-    @Final
-    private MinecraftClient client;
+    @Shadow private int scaledWidth;
+    @Shadow @Final private MinecraftClient client;
 
     @Inject(method = "render", at = @At(value = "TAIL"))
     private void draw(MatrixStack matrices, float delta, CallbackInfo ci) {

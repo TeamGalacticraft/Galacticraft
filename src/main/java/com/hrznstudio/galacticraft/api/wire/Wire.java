@@ -27,6 +27,9 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public interface Wire {
     /**
      * Sets the {@link WireNetwork} associated with this wie

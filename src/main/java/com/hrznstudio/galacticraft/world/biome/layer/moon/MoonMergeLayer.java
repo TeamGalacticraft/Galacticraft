@@ -27,6 +27,9 @@ import net.minecraft.world.biome.layer.util.IdentityCoordinateTransformer;
 import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
 import net.minecraft.world.biome.layer.util.LayerSampler;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public enum MoonMergeLayer implements MergingLayer, IdentityCoordinateTransformer {
     INSTANCE;
 
@@ -36,6 +39,5 @@ public enum MoonMergeLayer implements MergingLayer, IdentityCoordinateTransforme
         int id2 = sampler2.sample(this.transformX(x), this.transformZ(z));
 
         return context.nextInt(10) <= 3 ? id2 : id1;
-
     }
 }

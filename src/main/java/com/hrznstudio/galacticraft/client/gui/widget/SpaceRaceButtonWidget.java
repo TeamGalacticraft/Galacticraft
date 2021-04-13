@@ -25,6 +25,8 @@ package com.hrznstudio.galacticraft.client.gui.widget;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.SpaceRaceScreen;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -34,6 +36,7 @@ import net.minecraft.client.util.math.MatrixStack;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
+@Environment(EnvType.CLIENT)
 public class SpaceRaceButtonWidget extends ButtonWidget {
     private final TextRenderer textRenderer;
     private final int screenWidth;

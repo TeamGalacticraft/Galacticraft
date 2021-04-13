@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class OxygenTankImpl implements OxygenTank, Saveable {
     public static final OxygenTankImpl NULL = new OxygenTankImpl(-1);
     private final int capacity;

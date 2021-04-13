@@ -25,6 +25,9 @@ package com.hrznstudio.galacticraft.api.block.util;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public enum BlockFace {
     FRONT,
     RIGHT,

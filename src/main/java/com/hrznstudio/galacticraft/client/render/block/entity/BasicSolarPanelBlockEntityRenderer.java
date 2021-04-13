@@ -44,7 +44,6 @@ import net.minecraft.util.math.Direction;
  */
 @Environment(EnvType.CLIENT)
 public class BasicSolarPanelBlockEntityRenderer extends BlockEntityRenderer<BasicSolarPanelBlockEntity> {
-
     private static final Identifier solarPanelTexture = new Identifier(Constants.MOD_ID, "textures/model/solar_panel_basic.png");
 
     private final ModelPart panelMain;

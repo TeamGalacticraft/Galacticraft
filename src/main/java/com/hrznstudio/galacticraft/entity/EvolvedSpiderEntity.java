@@ -26,6 +26,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.world.World;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class EvolvedSpiderEntity extends SpiderEntity {
     public EvolvedSpiderEntity(EntityType<? extends SpiderEntity> entityType, World world) {
         super(entityType, world);

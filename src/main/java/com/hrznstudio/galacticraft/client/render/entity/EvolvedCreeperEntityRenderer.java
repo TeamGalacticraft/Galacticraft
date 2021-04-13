@@ -26,6 +26,8 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.client.model.entity.EvolvedCreeperEntityModel;
 import com.hrznstudio.galacticraft.client.render.entity.feature.EvolvedCreeperChargeFeatureRenderer;
 import com.hrznstudio.galacticraft.entity.EvolvedCreeperEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.MobEntityRenderer;
@@ -36,6 +38,7 @@ import net.minecraft.util.math.MathHelper;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
+@Environment(EnvType.CLIENT)
 public class EvolvedCreeperEntityRenderer extends MobEntityRenderer<EvolvedCreeperEntity, EvolvedCreeperEntityModel> {
     private static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, "textures/entity/evolved/creeper.png");
 

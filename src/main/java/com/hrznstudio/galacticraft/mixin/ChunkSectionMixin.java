@@ -32,6 +32,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 @Mixin(ChunkSection.class)
 public abstract class ChunkSectionMixin implements ChunkSectionOxygenAccessor {
     private @Unique boolean[] oxygen;

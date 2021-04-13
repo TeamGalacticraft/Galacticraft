@@ -26,7 +26,6 @@ package com.hrznstudio.galacticraft.items;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
-
     public HotThrowableMeteorChunkItem(Settings settings) {
         super(settings);
     }

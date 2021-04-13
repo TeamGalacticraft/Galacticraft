@@ -36,6 +36,9 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public interface Pipe {
     /**
      * Sets the {@link PipeNetwork} associated with this wie

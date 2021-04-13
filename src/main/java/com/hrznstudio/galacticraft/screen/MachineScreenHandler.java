@@ -101,8 +101,9 @@ public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEnt
         return machine.getSecurity().getPublicity() == ConfigurableMachineBlockEntity.SecurityInfo.Publicity.PUBLIC
                 || !machine.getSecurity().hasOwner()
                 || machine.getSecurity().getOwner().equals(player.getUuid())
+                // TODO: there's a big "false" here making this ⬇ always false
                 || (machine.getSecurity().hasTeam() && machine.getSecurity().getPublicity() == ConfigurableMachineBlockEntity.SecurityInfo.Publicity.SPACE_RACE && false
-//        && blockEntity.getSecurity().getTeam() == player
+            //&& blockEntity.getSecurity().getTeam() == player
         );
     }
 

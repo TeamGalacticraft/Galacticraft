@@ -34,7 +34,6 @@ import java.util.function.Supplier;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public enum GalacticraftToolMaterials implements ToolMaterial {
-
     STEEL(ToolMaterials.IRON.getMiningLevel(), 768, ToolMaterials.IRON.getMiningSpeedMultiplier(), ToolMaterials.IRON.getAttackDamage(), ToolMaterials.IRON.getEnchantability(), () -> {
         return Ingredient.ofStacks(new ItemStack(GalacticraftItems.COMPRESSED_STEEL));
     }),
@@ -46,7 +45,6 @@ public enum GalacticraftToolMaterials implements ToolMaterial {
     TITANIUM(4, 760, 14.0F, 4.0F, 16, () -> {
         return Ingredient.ofStacks(new ItemStack(GalacticraftItems.TITANIUM_INGOT));
     });
-
 
     private final int miningLevel;
     private final int durability;

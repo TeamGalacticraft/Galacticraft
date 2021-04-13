@@ -22,6 +22,9 @@
 
 package com.hrznstudio.galacticraft.util;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class ColorUtils {
     /**@see java.awt.Color#HSBtoRGB*/
     public static int HSBtoRGB(float hue, float saturation, float brightness) {

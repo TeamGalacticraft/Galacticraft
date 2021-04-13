@@ -24,6 +24,9 @@ package com.hrznstudio.galacticraft.accessor;
 
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public interface WorldOxygenAccessor {
     default boolean isBreathable(int x, int y, int z) {
         return isBreathable(new BlockPos(x, y, z));

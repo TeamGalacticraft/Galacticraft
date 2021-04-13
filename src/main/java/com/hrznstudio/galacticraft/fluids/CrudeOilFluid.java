@@ -50,7 +50,6 @@ import java.util.Random;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CrudeOilFluid extends FlowableFluid {
-
     @Override
     public Fluid getFlowing() {
         return GalacticraftFluids.FLOWING_CRUDE_OIL;
@@ -92,7 +91,6 @@ public class CrudeOilFluid extends FlowableFluid {
                     0.0D, 0.0D, 0.0D);
         }
     }
-
 
     @Override
     public int getTickRate(WorldView WorldView) {
@@ -146,7 +144,6 @@ public class CrudeOilFluid extends FlowableFluid {
     }
 
     public static class Flowing extends CrudeOilFluid {
-
         public Flowing() {
         }
 
@@ -168,7 +165,6 @@ public class CrudeOilFluid extends FlowableFluid {
     }
 
     public static class Still extends CrudeOilFluid {
-
         public Still() {
         }
 

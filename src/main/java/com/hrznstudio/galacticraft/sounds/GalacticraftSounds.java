@@ -31,11 +31,13 @@ import net.minecraft.util.registry.Registry;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftSounds {
-
+    // Music
     public static final SoundEvent MUSIC_MOON = new SoundEvent(new Identifier(Constants.MOD_ID, "music.music_moon"));
     public static final SoundEvent MUSIC_CREDITS = new SoundEvent(new Identifier(Constants.MOD_ID, "music.music_credits"));
     public static final SoundEvent MUSIC_ORBIT = new SoundEvent(new Identifier(Constants.MOD_ID, "music.music_orbit"));
     public static final SoundEvent MUSIC_MARS = new SoundEvent(new Identifier(Constants.MOD_ID, "music.music_mars"));
+
+    // SFX
     public static final SoundEvent PLAYER_UNLOCKCHEST = new SoundEvent(new Identifier(Constants.MOD_ID, "player.unlockchest"));
     public static final SoundEvent PLAYER_PARACHUTE = new SoundEvent(new Identifier(Constants.MOD_ID, "player.parachute"));
     public static final SoundEvent PLAYER_OPENAIRLOCK = new SoundEvent(new Identifier(Constants.MOD_ID, "player.openairlock"));
@@ -46,6 +48,8 @@ public class GalacticraftSounds {
     public static final SoundEvent ENTITY_BOSSLAUGH = new SoundEvent(new Identifier(Constants.MOD_ID, "entity.bosslaugh"));
     public static final SoundEvent ENTITY_BOSSDEATH = new SoundEvent(new Identifier(Constants.MOD_ID, "entity.bossdeath"));
     public static final SoundEvent ENTITY_ASTROMINER = new SoundEvent(new Identifier(Constants.MOD_ID, "entity.astrominer"));
+
+    // Ambience
     public static final SoundEvent AMBIENCE_SINGLEDRIP = new SoundEvent(new Identifier(Constants.MOD_ID, "ambience.singledrip"));
     public static final SoundEvent AMBIENCE_SCARYSCAPE = new SoundEvent(new Identifier(Constants.MOD_ID, "ambience.scaryscape"));
     public static final SoundEvent SHUTTLE_SHUTTLE = new SoundEvent(new Identifier(Constants.MOD_ID, "shuttle.shuttle"));
@@ -57,10 +61,13 @@ public class GalacticraftSounds {
     public static final SoundEvent MUSIC_LEGACY_SPACERACE = new SoundEvent(new Identifier(Constants.MOD_ID, "music.legacy.spacerace"));
 
     public static void register() {
+        // Music
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.music_moon"), MUSIC_MOON);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.music_credits"), MUSIC_CREDITS);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.music_orbit"), MUSIC_ORBIT);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.music_mars"), MUSIC_MARS);
+
+        // SFX
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "player.unlockchest"), PLAYER_UNLOCKCHEST);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "player.parachute"), PLAYER_PARACHUTE);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "player.openairlock"), PLAYER_OPENAIRLOCK);
@@ -71,6 +78,8 @@ public class GalacticraftSounds {
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "entity.bosslaugh"), ENTITY_BOSSLAUGH);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "entity.bossdeath"), ENTITY_BOSSDEATH);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "entity.astrominer"), ENTITY_ASTROMINER);
+
+        // Ambience
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "ambience.singledrip"), AMBIENCE_SINGLEDRIP);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "ambience.scaryscape"), AMBIENCE_SCARYSCAPE);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "shuttle.shuttle"), SHUTTLE_SHUTTLE);

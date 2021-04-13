@@ -24,6 +24,9 @@ package com.hrznstudio.galacticraft.attribute.oxygen;
 
 import java.util.function.Consumer;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public enum EmptyOxygenTank implements OxygenTank {
     NULL;
 

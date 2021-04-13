@@ -130,7 +130,6 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
             accessorySlot++;
         }
 
-
         // Player main inv
         for (int slotY = 0; slotY < 3; ++slotY) {
             for (int slotX = 0; slotX < 9; ++slotX) {
@@ -225,7 +224,6 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
                 player.dropItem(itemStack3, false);
             }
         }
-
         return stack;
     }
 }
