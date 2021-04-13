@@ -22,32 +22,42 @@
 
 package com.hrznstudio.galacticraft.attribute.fluid;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
+import alexiil.mc.lib.attributes.fluid.FluidTransferable;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
+import alexiil.mc.lib.attributes.fluid.GroupedFluidInv;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
+import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import com.hrznstudio.galacticraft.accessor.DefaultedListAccessor;
+import alexiil.mc.lib.attributes.misc.Saveable;
 import com.hrznstudio.galacticraft.attribute.Automatable;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.hrznstudio.galacticraft.screen.tank.Tank;
-import com.hrznstudio.galacticraft.util.collection.ResizableDefaultedList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.util.math.Vec3i;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MachineFluidInv extends SimpleFixedFluidInv implements Automatable {
+public class MachineFluidInv implements FixedFluidInv, FluidTransferable, Saveable, Automatable {
     private final List<SlotType> slotTypes = new ArrayList<>();
     private final List<FluidFilter> filters = new ArrayList<>();
     private final List<Vec3i> positions = new ArrayList<>();
 
-    public MachineFluidInv(FluidAmount tankCapacity) {
-        super(0, tankCapacity);
-        ((DefaultedListAccessor<FluidVolume>)this).setDefaultedList_gcr(new ResizableDefaultedList<>(new ArrayList<>(), FluidVolumeUtil.EMPTY));
+    private final List<FluidVolume> tank = new ArrayList<>();
+    private final FluidAmount capacity;
+
+    private final GroupedFluidInv groupedInv = new GroupedFluidInvFixedWrapper(this);
+    private boolean modifiable = true;
+
+    public MachineFluidInv(FluidAmount capacity) {
+        this.capacity = capacity;
     }
 
     @Override
@@ -57,24 +67,52 @@ public class MachineFluidInv extends SimpleFixedFluidInv implements Automatable 
     }
 
     @Override
+    public int getTankCount() {
+        return this.getTanks().size();
+    }
+
+    @Override
+    public FluidVolume getInvFluid(int tank) {
+        return this.getTanks().get(tank);
+    }
+
+    protected List<FluidVolume> getTanks() {
+        this.modifiable = false;
+        return this.tank;
+    }
+
+    @Override
     public boolean isFluidValidForTank(int tank, FluidKey fluid) {
         return this.getFilterForTank(tank).matches(fluid);
     }
 
+    @Override
+    public boolean setInvFluid(int tank, FluidVolume to, Simulation simulation) {
+        if (this.isFluidValidForTank(tank, to.getFluidKey()) && !to.amount().isGreaterThan(this.getMaxAmount_F(tank))) {
+            if (simulation.isAction()) this.getTanks().set(tank, to);
+            return true;
+        }
+        return false;
+    }
+
     public void addSlot(int index, SlotType type, FluidFilter filter, int x, int y, int s) {
+        assert modifiable;
         assert this.getTankCount() == index;
         this.positions.add(index, new Vec3i(x, y, s));
         this.slotTypes.add(index, type);
-        this.filters.add(index, filter);
-        this.tanks.add(index, FluidVolumeUtil.EMPTY);
+        this.filters.add(index, filter.or(FluidKey::isEmpty));
+        this.getTanks().add(index, FluidVolumeUtil.EMPTY);
+        this.modifiable = true;
     }
 
     public void addSlot(int index, SlotType type, FluidFilter filter) {
+        assert modifiable;
         assert this.getTankCount() == index;
         this.positions.add(index, null);
         this.slotTypes.add(index, type);
-        this.filters.add(index, filter);
-        this.tanks.add(index, FluidVolumeUtil.EMPTY);
+        this.filters.add(index, filter.or(FluidKey::isEmpty));
+        this.getTanks().add(index, FluidVolumeUtil.EMPTY);
+        this.modifiable = true;
     }
 
     public void createTanks(MachineScreenHandler<?> screenHandler) {
@@ -90,5 +128,51 @@ public class MachineFluidInv extends SimpleFixedFluidInv implements Automatable 
     @Override
     public List<SlotType> getTypes() {
         return this.slotTypes;
+    }
+
+    @Override
+    public FluidAmount getMaxAmount_F(int tank) {
+        return this.capacity;
+    }
+
+    @Override
+    public FluidVolume attemptExtraction(FluidFilter filter, FluidAmount maxAmount, Simulation simulation) {
+        return this.getGroupedInv().attemptExtraction(filter, maxAmount, simulation);
+    }
+
+    @Override
+    public GroupedFluidInv getGroupedInv() {
+        return this.groupedInv;
+    }
+
+    @Override
+    public FluidVolume attemptInsertion(FluidVolume fluid, Simulation simulation) {
+        return this.getGroupedInv().attemptInsertion(fluid, simulation);
+    }
+
+    @Override
+    public CompoundTag toTag(CompoundTag tag) {
+        ListTag tanksTag = new ListTag();
+        for (FluidVolume volume : this.getTanks()) {
+            tanksTag.add(volume.toTag());
+        }
+        tag.put("tanks", tanksTag);
+        return tag;
+    }
+
+    @Override
+    public void fromTag(CompoundTag tag) {
+        ListTag tanksTag = tag.getList("tanks", new CompoundTag().getType());
+        for (int i = 0; i < tanksTag.size() && i < this.getTanks().size(); i++) {
+            this.getTanks().set(i, FluidVolume.fromTag(tanksTag.getCompound(i)));
+        }
+        for (int i = tanksTag.size(); i < this.getTanks().size(); i++) {
+            this.getTanks().set(i, FluidVolumeUtil.EMPTY);
+        }
+    }
+
+    @Override
+    public FluidVolume attemptAnyExtraction(FluidAmount maxAmount, Simulation simulation) {
+        return this.getGroupedInv().attemptAnyExtraction(maxAmount, simulation);
     }
 }

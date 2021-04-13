@@ -24,7 +24,7 @@ package com.hrznstudio.galacticraft.api.block;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import alexiil.mc.lib.attributes.item.FixedItemInv;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
@@ -216,7 +216,7 @@ public class MachineBlock extends BlockWithEntity implements AttributeProvider {
         super.onBreak(world, pos, state, player);
         BlockEntity entity = world.getBlockEntity(pos);
         if (entity instanceof MachineBlockEntity) {
-            FullFixedItemInv inv = ((MachineBlockEntity) entity).getInventory();
+            FixedItemInv inv = ((MachineBlockEntity) entity).getInventory();
             for (int i = 0; i < inv.getSlotCount(); i++) {
                 ItemStack stack = inv.getInvStack(i);
                 if (!stack.isEmpty()) {

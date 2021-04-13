@@ -108,7 +108,7 @@ public class BatteryItem extends Item implements AttributeProviderItem {
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         if (this.capacity > 0){
             CapacitorView capacitor = GalacticraftEnergy.CAPACITOR_VIEW.getFirst(stack);
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", capacitor.getEnergy() + "/" + capacitor.getMaxCapacity()).setStyle(Constants.Text.getStorageLevelColor((double)capacitor.getEnergy() / (double)capacitor.getMaxCapacity())));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", capacitor.getEnergy() + "/" + capacitor.getMaxCapacity()).setStyle(Constants.Text.getStorageLevelColor(1.0 - ((double)capacitor.getEnergy() / (double)capacitor.getMaxCapacity()))));
         } else {
             lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", new TranslatableText("tooltip.galacticraft-rewoven.infinite").setStyle(Constants.Text.getRainbow(++ticks))));
             lines.add(new TranslatableText("tooltip.galacticraft-rewoven.creative_only").setStyle(Constants.Text.LIGHT_PURPLE_STYLE));

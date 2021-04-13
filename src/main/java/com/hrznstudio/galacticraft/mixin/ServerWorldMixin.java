@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import com.google.common.collect.ImmutableList;
-import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.hrznstudio.galacticraft.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.server.MinecraftServer;
@@ -51,7 +50,7 @@ import java.util.concurrent.Executor;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin implements WorldOxygenAccessor {
+public abstract class ServerWorldMixin {
     @Shadow @Final @Mutable private List<Spawner> spawners;
 
     @Inject(method = "<init>", at = @At("RETURN"))
