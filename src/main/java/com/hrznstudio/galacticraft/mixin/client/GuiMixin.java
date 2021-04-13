@@ -47,7 +47,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(Gui.class)
 @Environment(EnvType.CLIENT)
-public abstract class InGameHudMixin extends GuiComponent {
+public abstract class GuiMixin extends GuiComponent {
 
     private static final int OXYGEN_X = 0;
     private static final int OXYGEN_Y = 40;
@@ -62,7 +62,7 @@ public abstract class InGameHudMixin extends GuiComponent {
     private Minecraft minecraft;
 
     @Inject(method = "render", at = @At(value = "TAIL"))
-    private void draw(PoseStack matrices, float delta, CallbackInfo ci) {
+    private void render(PoseStack matrices, float delta, CallbackInfo ci) {
         if (CelestialBodyType.getByDimType(minecraft.player.level.dimension()).isPresent() && !CelestialBodyType.getByDimType(minecraft.player.level.dimension()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
             minecraft.getTextureManager().bind(new ResourceLocation(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY)));
 

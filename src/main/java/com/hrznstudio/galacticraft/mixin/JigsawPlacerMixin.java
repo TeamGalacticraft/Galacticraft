@@ -20,36 +20,27 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.mixin.client;
+package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.accessor.ChunkSectionOxygenAccessor;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.chunk.LevelChunkSection;
+import com.hrznstudio.galacticraft.Galacticraft;
+import net.minecraft.world.level.levelgen.feature.structures.JigsawPlacement;
+import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(LevelChunkSection.class)
-@Environment(EnvType.CLIENT)
-public abstract class ClientChunkSectionMixin implements ChunkSectionOxygenAccessor {
-    @Inject(method = "read", at = @At("RETURN"))
-    private void fromPacket(FriendlyByteBuf packetByteBuf, CallbackInfo ci) {
-        this.setTotalOxygen(packetByteBuf.readShort());
-        if (this.getTotalOxygen() == 0) return;
-        boolean[] oxygen = this.getArray();
-        for (int i = 0; i < (16 * 16 * 16) / 8; i++) {
-            short b = (short) (packetByteBuf.readByte() + 128);
-            oxygen[(i * 8)] = (b & 1) != 0;
-            oxygen[(i * 8) + 1] = (b & 2) != 0;
-            oxygen[(i * 8) + 2] = (b & 4) != 0;
-            oxygen[(i * 8) + 3] = (b & 8) != 0;
-            oxygen[(i * 8) + 4] = (b & 16) != 0;
-            oxygen[(i * 8) + 5] = (b & 32) != 0;
-            oxygen[(i * 8) + 6] = (b & 64) != 0;
-            oxygen[(i * 8) + 7] = (b & 128) !=0 ;
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
+@Mixin(JigsawPlacement.Placer.class)
+public abstract class JigsawPlacerMixin {
+    @Inject(at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "tryPlacingChildren")
+    public void extraDebugInfoGC(PoolElementStructurePiece piece, MutableObject<VoxelShape> mutableObject, int minY, int currentSize, boolean bl, CallbackInfo ci) {
+        if (Galacticraft.configManager.get().isDebugLogEnabled()) {
+            Galacticraft.logger.warn("Pool referencer: {}", piece.toString());
         }
     }
 }

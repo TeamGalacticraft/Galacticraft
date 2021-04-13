@@ -38,8 +38,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(PauseScreen.class)
 @Environment(EnvType.CLIENT)
-public abstract class PauseMenuScreenMixin extends Screen {
-    protected PauseMenuScreenMixin(Component text) {
+public abstract class PauseScreenMixin extends Screen {
+    protected PauseScreenMixin(Component text) {
         super(text);
     }
 

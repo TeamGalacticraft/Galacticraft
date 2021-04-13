@@ -22,24 +22,37 @@
 
 package com.hrznstudio.galacticraft.mixin.client;
 
+import com.hrznstudio.galacticraft.GalacticraftClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-@Mixin(AbstractContainerScreen.class)
 @Environment(EnvType.CLIENT)
-public interface HandledScreenHooks {
-    @Accessor("leftPos")
-    int gcr_getX();
+@Mixin(AbstractClientPlayer.class)
+public abstract class AbstractClientPlayerMixin {
 
-    @Accessor("topPos")
-    int gcr_getY();
+    @Shadow
+    @Nullable
+    protected abstract PlayerInfo getPlayerInfo();
 
-    @Accessor("imageWidth")
-    int gcr_getImageWidth();
+    @Inject(method = "getCloakTextureLocation", at = @At("RETURN"), cancellable = true)
+    private void getCapeTexture(CallbackInfoReturnable<ResourceLocation> info) {
+        if (GalacticraftClient.jsonCapes.areCapesLoaded()) {
+            if (GalacticraftClient.jsonCapes.getCapePlayers().containsKey(this.getPlayerInfo().getProfile().getId())) {
+                info.setReturnValue(GalacticraftClient.jsonCapes.getCapePlayers()
+                        .get(this.getPlayerInfo().getProfile().getId()).getCape().getTexture());
+            }
+        }
+    }
 }

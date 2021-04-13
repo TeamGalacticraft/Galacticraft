@@ -22,37 +22,34 @@
 
 package com.hrznstudio.galacticraft.mixin.client;
 
-import com.hrznstudio.galacticraft.GalacticraftClient;
+import com.hrznstudio.galacticraft.accessor.ChunkSectionOxygenAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.chunk.LevelChunkSection;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
+@Mixin(LevelChunkSection.class)
 @Environment(EnvType.CLIENT)
-@Mixin(AbstractClientPlayer.class)
-public abstract class AbstractClientPlayerEntityMixin {
-
-    @Shadow
-    @Nullable
-    protected abstract PlayerInfo getPlayerInfo();
-
-    @Inject(method = "getCloakTextureLocation", at = @At("RETURN"), cancellable = true)
-    private void getCapeTexture(CallbackInfoReturnable<ResourceLocation> info) {
-        if (GalacticraftClient.jsonCapes.areCapesLoaded()) {
-            if (GalacticraftClient.jsonCapes.getCapePlayers().containsKey(this.getPlayerInfo().getProfile().getId())) {
-                info.setReturnValue(GalacticraftClient.jsonCapes.getCapePlayers()
-                        .get(this.getPlayerInfo().getProfile().getId()).getCape().getTexture());
-            }
+public abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccessor {
+    @Inject(method = "read", at = @At("RETURN"))
+    private void read(FriendlyByteBuf packetByteBuf, CallbackInfo ci) {
+        this.setTotalOxygen(packetByteBuf.readShort());
+        if (this.getTotalOxygen() == 0) return;
+        boolean[] oxygen = this.getArray();
+        for (int i = 0; i < (16 * 16 * 16) / 8; i++) {
+            short b = (short) (packetByteBuf.readByte() + 128);
+            oxygen[(i * 8)] = (b & 1) != 0;
+            oxygen[(i * 8) + 1] = (b & 2) != 0;
+            oxygen[(i * 8) + 2] = (b & 4) != 0;
+            oxygen[(i * 8) + 3] = (b & 8) != 0;
+            oxygen[(i * 8) + 4] = (b & 16) != 0;
+            oxygen[(i * 8) + 5] = (b & 32) != 0;
+            oxygen[(i * 8) + 6] = (b & 64) != 0;
+            oxygen[(i * 8) + 7] = (b & 128) !=0 ;
         }
     }
 }

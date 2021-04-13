@@ -22,25 +22,33 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.Galacticraft;
-import net.minecraft.world.level.levelgen.feature.structures.JigsawPlacement;
-import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import org.apache.commons.lang3.mutable.MutableObject;
+import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-@Mixin(JigsawPlacement.Placer.class)
-public abstract class StructurePoolGeneratorMixin {
-    @Inject(at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "tryPlacingChildren")
-    public void extraDebugInfoGC(PoolElementStructurePiece piece, MutableObject<VoxelShape> mutableObject, int minY, int currentSize, boolean bl, CallbackInfo ci) {
-        if (Galacticraft.configManager.get().isDebugLogEnabled()) {
-            Galacticraft.logger.warn("Pool referencer: {}", piece.toString());
-        }
+import java.util.Collections;
+import java.util.List;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
+import net.minecraft.world.level.chunk.EmptyLevelChunk;
+
+@Mixin(EmptyLevelChunk.class)
+public abstract class EmptyLevelChunkMixin implements ChunkOxygenAccessor {
+    @Override
+    public boolean isBreathable(int x, int y, int z) {
+        return true;
+    }
+
+    @Override
+    public void setBreathable(int x, int y, int z, boolean value) {
+    }
+
+    @Override
+    public List<ClientboundCustomPayloadPacket> syncToClient() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void readOxygenUpdate(byte b, FriendlyByteBuf packetByteBuf) {
+
     }
 }

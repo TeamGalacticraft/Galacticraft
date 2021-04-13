@@ -50,7 +50,7 @@ import java.util.concurrent.Executor;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(ServerLevel.class)
-public abstract class ServerWorldMixin {
+public abstract class ServerLevelMixin {
     @Shadow @Final @Mutable private List<CustomSpawner> customSpawners;
 
     @Inject(method = "<init>", at = @At("RETURN"))

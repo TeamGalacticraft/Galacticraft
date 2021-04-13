@@ -27,7 +27,6 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import com.hrznstudio.galacticraft.mixin.client.HandledScreenHooks;
 import com.hrznstudio.galacticraft.recipe.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipe.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipe;
@@ -82,13 +81,12 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
     public void registerBounds(DisplayHelper displayHelper) {
         BaseBoundsHandler.getInstance().registerExclusionZones(MachineHandledScreen.class, () -> {
             MachineHandledScreen<?> machineScreen = (MachineHandledScreen<?>) REIHelper.getInstance().getPreviousContainerScreen();
-            HandledScreenHooks screenHooks = (HandledScreenHooks) machineScreen;
             List<Rectangle> l = Lists.newArrayList();
 
             if (machineScreen.securityOpen) {
-                l.add(new Rectangle(screenHooks.gcr_getX() + screenHooks.gcr_getImageWidth(), screenHooks.gcr_getY(), MachineHandledScreen.PANEL_WIDTH, MachineHandledScreen.PANEL_HEIGHT));
+                l.add(new Rectangle(machineScreen.leftPos + machineScreen.imageWidth, machineScreen.topPos, MachineHandledScreen.PANEL_WIDTH, MachineHandledScreen.PANEL_HEIGHT));
             } else {
-                l.add(new Rectangle(screenHooks.gcr_getX() + screenHooks.gcr_getImageWidth(), screenHooks.gcr_getY(), MachineHandledScreen.TAB_WIDTH, MachineHandledScreen.TAB_HEIGHT));
+                l.add(new Rectangle(machineScreen.leftPos + machineScreen.imageWidth, machineScreen.topPos, MachineHandledScreen.TAB_WIDTH, MachineHandledScreen.TAB_HEIGHT));
             }
 
             return l;

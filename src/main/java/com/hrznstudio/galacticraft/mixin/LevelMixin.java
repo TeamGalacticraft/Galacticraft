@@ -44,7 +44,7 @@ import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.storage.WritableLevelData;
 
 @Mixin(Level.class)
-public abstract class WorldMixin implements WorldOxygenAccessor {
+public abstract class LevelMixin implements WorldOxygenAccessor {
     @Shadow
     public static boolean isOutsideBuildHeight(BlockPos pos) {
         throw new UnsupportedOperationException("Shadowed method was not transformed!");

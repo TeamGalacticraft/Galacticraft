@@ -65,7 +65,7 @@ import java.util.Set;
  */
 @Mixin(LevelRenderer.class)
 @Environment(EnvType.CLIENT)
-public abstract class WorldRendererMixin implements WorldRendererAccessor {
+public abstract class LevelRendererMixin implements WorldRendererAccessor {
     private static final ResourceLocation EARTH_TEXTURE = new ResourceLocation(Constants.MOD_ID, "textures/gui/celestialbodies/earth.png");
     private static final ResourceLocation SUN_TEXTURE = new ResourceLocation(Constants.MOD_ID, "textures/gui/celestialbodies/sun.png");
 

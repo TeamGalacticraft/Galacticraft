@@ -50,10 +50,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(InventoryScreen.class)
 @Environment(EnvType.CLIENT)
-public abstract class PlayerInventoryScreenMixin extends EffectRenderingInventoryScreen<InventoryMenu> {
+public abstract class InventoryScreenMixin extends EffectRenderingInventoryScreen<InventoryMenu> {
     private static final ResourceLocation TABS_TEXTURE = new ResourceLocation(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS));
 
-    public PlayerInventoryScreenMixin(InventoryMenu screenHandler, Inventory playerInventory, Component textComponent) {
+    public InventoryScreenMixin(InventoryMenu screenHandler, Inventory playerInventory, Component textComponent) {
         super(screenHandler, playerInventory, textComponent);
     }
 
@@ -66,7 +66,7 @@ public abstract class PlayerInventoryScreenMixin extends EffectRenderingInventor
     }
 
     @Inject(method = "renderBg", at = @At("TAIL"))
-    public void drawBackground(PoseStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
+    public void renderBg(PoseStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
         this.minecraft.getTextureManager().bind(TABS_TEXTURE);
         this.blit(matrices, this.leftPos, this.topPos - 28, 0, 0, 57, 32);
     }

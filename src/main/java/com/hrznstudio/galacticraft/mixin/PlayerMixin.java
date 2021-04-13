@@ -22,16 +22,29 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import net.minecraft.client.renderer.DimensionSpecialEffects;
-import net.minecraft.resources.ResourceLocation;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(DimensionSpecialEffects.class)
-public interface SkyPropertiesAccessor {
-    @Accessor
-    static Object2ObjectMap<ResourceLocation, DimensionSpecialEffects> getEFFECTS() {
-        throw new UnsupportedOperationException("Untransformed accessor");
+@Mixin(Player.class)
+public abstract class PlayerMixin implements GearInventoryProvider {
+    private @Unique final FullFixedItemInv gearInv = new FullFixedItemInv(12);
+
+    @Override
+    public FullFixedItemInv getGearInv() {
+        return gearInv;
+    }
+
+    @Override
+    public CompoundTag writeGearToNbt(CompoundTag tag) {
+        return getGearInv().toTag(tag);
+    }
+
+    @Override
+    public void readGearFromNbt(CompoundTag tag) {
+        getGearInv().fromTag(tag);
     }
 }

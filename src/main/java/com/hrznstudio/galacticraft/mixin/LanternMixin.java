@@ -40,8 +40,8 @@ import org.spongepowered.asm.mixin.Mixin;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(Lantern.class)
-public abstract class LanternBlockMixin extends Block {
-    public LanternBlockMixin(Properties settings) {
+public abstract class LanternMixin extends Block {
+    public LanternMixin(Properties settings) {
         super(settings);
     }
 

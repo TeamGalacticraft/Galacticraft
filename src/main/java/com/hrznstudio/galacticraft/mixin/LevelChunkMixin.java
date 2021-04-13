@@ -43,7 +43,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 
 @Mixin(LevelChunk.class)
-public abstract class WorldChunkMixin implements ChunkOxygenAccessor {
+public abstract class LevelChunkMixin implements ChunkOxygenAccessor {
     @Shadow
     @Final
     private LevelChunkSection[] sections;

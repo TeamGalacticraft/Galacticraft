@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LevelChunkSection.class)
-public abstract class ChunkSectionMixin implements ChunkSectionOxygenAccessor {
+public abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccessor {
     private @Unique boolean[] oxygen;
     private @Unique short oxygenated = 0;
 
@@ -67,7 +67,7 @@ public abstract class ChunkSectionMixin implements ChunkSectionOxygenAccessor {
     }
 
     @Inject(method = "write", at = @At("RETURN"))
-    private void toPacket(FriendlyByteBuf packetByteBuf, CallbackInfo ci) {
+    private void write(FriendlyByteBuf packetByteBuf, CallbackInfo ci) {
         packetByteBuf.writeShort(this.oxygenated);
         if (this.oxygenated > 0) {
             this.writeOxygen(packetByteBuf);

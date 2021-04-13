@@ -45,7 +45,7 @@ public abstract class ItemStackMixin {
 
     @SuppressWarnings("RedundantSuppression")
     @Inject(method = "getHoverName", at = @At("RETURN"), cancellable = true)
-    private void getName(CallbackInfoReturnable<Component> returnable) {
+    private void getHoverName(CallbackInfoReturnable<Component> returnable) {
         //noinspection ConstantConditions
         if (false) {
             ResourceLocation id = Registry.ITEM.getKey(getItem());
