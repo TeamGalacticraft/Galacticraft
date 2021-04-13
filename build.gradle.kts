@@ -49,8 +49,8 @@ val wthitVersion           = project.property("wthit.version").toString()
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("0.6-SNAPSHOT")
-    id("org.cadixdev.licenser") version("0.5.0")
+    id("fabric-loom") version("0.7-SNAPSHOT")
+    id("org.cadixdev.licenser") version("0.5.1")
 }
 
 configure<JavaPluginConvention> {
@@ -110,7 +110,6 @@ repositories {
             includeGroup("com.hrznstudio")
         }
     }
-    jcenter()
 }
 
 /**
@@ -165,7 +164,7 @@ dependencies {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     })
-    include(modImplementation("me.shedaniel.cloth:config-2:$clothConfigVersion") {
+    include(modImplementation("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     })
@@ -176,7 +175,9 @@ dependencies {
     include(modApi("com.hrznstudio:GalacticraftAPI:$galacticraftApiVersion") { isTransitive = false })
     include(modImplementation("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false })
     include(modApi("io.github.cottonmc:cotton-resources:$cottonResourcesVersion") { isTransitive = false })
-    include(modApi("alexiil.mc.lib:libblockattributes-all:$lbaVersion") { })
+    include(modApi("alexiil.mc.lib:libblockattributes-core:$lbaVersion") { isTransitive = false })
+    include(modApi("alexiil.mc.lib:libblockattributes-items:$lbaVersion") { isTransitive = false })
+    include(modApi("alexiil.mc.lib:libblockattributes-fluids:$lbaVersion") { isTransitive = false })
 
     // Optional Dependencies
     optionalImplementation("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }

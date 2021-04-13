@@ -113,7 +113,7 @@ public class MoonVillagerEntity extends VillagerEntity {
         double d = this.random.nextDouble();
         VillagerType villagerType3;
         if (d < 0.5D) {
-            villagerType3 = VillagerType.forBiome(serverWorld.method_31081(this.getBlockPos()));
+            villagerType3 = VillagerType.forBiome(serverWorld.getBiomeKey(this.getBlockPos()));
         } else if (d < 0.75D) {
             villagerType3 = this.getVillagerData().getType();
         } else {

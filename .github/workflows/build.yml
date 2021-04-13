@@ -1,0 +1,24 @@
+name: build
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    container:
+      image: openjdk:8-jdk
+    steps:
+      - name: checkout repository
+      - uses: actions/checkout@v2
+      - name: validate gradle wrapper
+      - uses: gradle/wrapper-validation-action@v1
+      - name: build
+      - uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: checkLicenses build
+          wrapper-cache-enabled: true
+          dependencies-cache-enabled: true
+      - name: capture build artifacts
+      - uses: actions/upload-artifact@v2
+      - with:
+          name: Artifacts
+          path: build/libs/
