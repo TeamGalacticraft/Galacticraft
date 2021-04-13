@@ -80,7 +80,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
         BlockPos pos = context.getBlockPos().toImmutable();
         for (Direction direction : Constants.Misc.DIRECTIONS) {
             BlockState block = context.getWorld().getBlockState(pos.offset(direction));
-            if ((block.getBlock() instanceof FluidPipe && block.get(COLOR) == DyeColor.WHITE) || FluidUtils.isExtractableOrInsertable(context.getWorld(), pos.offset(direction), direction)) state = state.with(propFromDirection(direction), true);
+            if ((block.getBlock() instanceof FluidPipe /*&& block.get(COLOR) == DyeColor.WHITE*/) || FluidUtils.isExtractableOrInsertable(context.getWorld(), pos.offset(direction), direction)) state = state.with(propFromDirection(direction), true);
         }
         return state;
     }
