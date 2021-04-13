@@ -35,6 +35,9 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class MoonRuinsFeature extends StructureFeature<DefaultFeatureConfig> {
    public MoonRuinsFeature(Codec<DefaultFeatureConfig> codec) {
       super(codec);

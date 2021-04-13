@@ -24,6 +24,8 @@ package com.hrznstudio.galacticraft.client.render.entity.feature;
 
 import com.hrznstudio.galacticraft.client.model.entity.EvolvedCreeperEntityModel;
 import com.hrznstudio.galacticraft.entity.EvolvedCreeperEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.feature.EnergySwirlOverlayFeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -32,6 +34,7 @@ import net.minecraft.util.Identifier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
+@Environment(EnvType.CLIENT)
 public class EvolvedCreeperChargeFeatureRenderer extends EnergySwirlOverlayFeatureRenderer<EvolvedCreeperEntity, EvolvedCreeperEntityModel> {
 
     private static final Identifier TEX = new Identifier("textures/entity/creeper/creeper_armor.png");

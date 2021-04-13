@@ -26,6 +26,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.EvokerEntity;
 import net.minecraft.world.World;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class EvolvedEvokerEntity extends EvokerEntity {
     public EvolvedEvokerEntity(EntityType<? extends EvolvedEvokerEntity> entityType, World world) {
         super(entityType, world);

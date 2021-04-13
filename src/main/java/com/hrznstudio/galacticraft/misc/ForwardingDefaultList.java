@@ -28,6 +28,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class ForwardingDefaultList<T> extends DefaultedList<T> {
     private int[] indexes;
     private final T initialElement;

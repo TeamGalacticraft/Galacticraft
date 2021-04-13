@@ -32,6 +32,9 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.api.pipe.Pipe;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class PipeFixedFluidInv implements FixedFluidInv {
     private final Pipe pipe;
 

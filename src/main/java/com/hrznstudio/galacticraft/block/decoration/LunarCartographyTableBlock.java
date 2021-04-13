@@ -24,6 +24,9 @@ package com.hrznstudio.galacticraft.block.decoration;
 
 import net.minecraft.block.CartographyTableBlock;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class LunarCartographyTableBlock extends CartographyTableBlock {
     public LunarCartographyTableBlock(Settings settings) {
         super(settings);

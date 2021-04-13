@@ -45,6 +45,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 @SuppressWarnings("UnstableApiUsage")
 public class WireNetworkImpl implements WireNetwork {
     private final MutableValueGraph<BlockPos, WireConnectionType> graph;

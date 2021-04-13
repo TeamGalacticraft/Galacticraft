@@ -24,11 +24,17 @@ package com.hrznstudio.galacticraft.client.render.block.entity;
 
 import com.hrznstudio.galacticraft.api.pipe.Pipe;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
+@Environment(EnvType.CLIENT)
 public class FluidPipeBlockEntityRenderer extends BlockEntityRenderer<FluidPipeBlockEntity> {
     public FluidPipeBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
         super(dispatcher);
@@ -37,7 +43,7 @@ public class FluidPipeBlockEntityRenderer extends BlockEntityRenderer<FluidPipeB
     @Override
     public void render(FluidPipeBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (entity.getFluidData() != Pipe.FluidData.EMPTY) {
-//            entity.getData().getPath().pLast(); //todo
+            //entity.getData().getPath().pLast(); //todo
         }
     }
 }

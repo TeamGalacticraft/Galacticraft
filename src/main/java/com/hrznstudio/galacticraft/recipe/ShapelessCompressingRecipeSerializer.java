@@ -52,13 +52,12 @@ public class ShapelessCompressingRecipeSerializer<T extends ShapelessCompressing
                 defaultedList_1.add(ingredient_1);
             }
         }
-
         return defaultedList_1;
     }
 
     @Override
     public void write(PacketByteBuf packet, ShapelessCompressingRecipe recipe) {
-//            packet.writeString(recipe.group);
+        //packet.writeString(recipe.group);
         packet.writeVarInt(recipe.getInput().size());
 
         for (Ingredient ingredient : recipe.getInput()) {
@@ -70,7 +69,7 @@ public class ShapelessCompressingRecipeSerializer<T extends ShapelessCompressing
 
     @Override
     public T read(Identifier id, PacketByteBuf packet) {
-//            String group = packet.readString(32767);
+        //String group = packet.readString(32767);
         int ingredientCount = packet.readVarInt();
         DefaultedList<Ingredient> ingredients = DefaultedList.ofSize(ingredientCount, Ingredient.EMPTY);
 
@@ -84,7 +83,7 @@ public class ShapelessCompressingRecipeSerializer<T extends ShapelessCompressing
 
     @Override
     public T read(Identifier id, JsonObject json) {
-//            String group = JsonHelper.getString(json, "group", "");
+        //String group = JsonHelper.getString(json, "group", "");
         DefaultedList<Ingredient> ingredients = getIngredients(JsonHelper.getArray(json, "ingredients"));
         if (ingredients.isEmpty()) {
             throw new JsonParseException("No ingredients for compressing recipe");

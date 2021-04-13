@@ -24,9 +24,15 @@ package com.hrznstudio.galacticraft.client.render.entity;
 
 import com.hrznstudio.galacticraft.client.render.entity.feature.SpaceGearFeatureRenderer;
 import com.hrznstudio.galacticraft.entity.EvolvedEvokerEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EvokerEntityRenderer;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
+@Environment(EnvType.CLIENT)
 public class EvolvedEvokerEntityRenderer extends EvokerEntityRenderer<EvolvedEvokerEntity> {
     public EvolvedEvokerEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher);

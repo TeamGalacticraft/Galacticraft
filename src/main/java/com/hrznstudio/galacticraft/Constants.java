@@ -385,10 +385,15 @@ public interface Constants {
         String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
         String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";
 
-        String ROCKET_SPAWN_EGG_T1 = "rocket_spawn_egg_t1";
         String MOON_VILLAGER_SPAWN_EGG = "moon_villager_spawn_egg";
         String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
-      
+        String EVOLVED_PILLAGER_SPAWN_EGG = "evolved_pillager_spawn_egg";
+        String EVOLVED_VINDICATOR_SPAWN_EGG = "evolved_vindicator_spawn_egg";
+        String EVOLVED_EVOKER_SPAWN_EGG = "evolved_evoker_spawn_egg";
+        String EVOLVED_SPIDER_SPAWN_EGG = "evolved_spider_spawn_egg";
+        String EVOLVED_SKELETON_SPAWN_EGG = "evolved_skeleton_spawn_egg";
+        String EVOLVED_CREEPER_SPAWN_EGG = "evolved_creeper_spawn_egg";
+
         String LEGACY_MUSIC_DISC_MARS = "legacy_music_disc_mars";
         String LEGACY_MUSIC_DISC_MIMAS = "legacy_music_disc_mimas";
         String LEGACY_MUSIC_DISC_ORBIT = "legacy_music_disc_orbit";

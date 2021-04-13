@@ -73,8 +73,7 @@ public class JsonCapes implements CapeListener {
         SATURN("saturn"),
         URANUS("uranus"),
         NEPTUNE("neptune"),
-        DEVELOPER("developer"),
-        ;
+        DEVELOPER("developer");
 
         final String key;
 

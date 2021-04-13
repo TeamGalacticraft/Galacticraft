@@ -83,7 +83,6 @@ public class EvolvedSkeletonEntity extends SkeletonEntity {
             } else {
                 this.goalSelector.add(4, this.meleeCombatGoal);
             }
-
         }
     }
 }

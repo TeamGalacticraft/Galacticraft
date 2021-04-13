@@ -130,7 +130,6 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
         while (i < string_1.length() && string_1.charAt(i) == ' ') {
             ++i;
         }
-
         return i;
     }
 
@@ -140,7 +139,6 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
         while (i >= 0 && string_1.charAt(i) == ' ') {
             --i;
         }
-
         return i;
     }
 
@@ -259,7 +257,6 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
                 }
             }
         }
-
         return true;
     }
 

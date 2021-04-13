@@ -27,6 +27,9 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEnti
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class FilteredSlot extends Slot {
     private final ItemFilter filter;
 

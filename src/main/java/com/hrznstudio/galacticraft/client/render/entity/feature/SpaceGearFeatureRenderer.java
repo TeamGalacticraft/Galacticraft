@@ -23,6 +23,8 @@
 package com.hrznstudio.galacticraft.client.render.entity.feature;
 
 import com.hrznstudio.galacticraft.Constants;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -37,6 +39,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
+@Environment(EnvType.CLIENT)
 public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
     private static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, "textures/entity/oxygen_gear.png");
     private final ModelTransformer<T> maskTransforms;

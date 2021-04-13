@@ -28,6 +28,9 @@ import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 @Mixin(SkyProperties.class)
 public interface SkyPropertiesAccessor {
     @Accessor

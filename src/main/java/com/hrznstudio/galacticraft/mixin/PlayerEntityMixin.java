@@ -29,6 +29,9 @@ import net.minecraft.nbt.CompoundTag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin implements GearInventoryProvider {
     private @Unique final FullFixedItemInv gearInv = new FullFixedItemInv(12);

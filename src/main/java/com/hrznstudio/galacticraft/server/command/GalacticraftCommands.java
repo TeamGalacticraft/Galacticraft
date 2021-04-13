@@ -50,13 +50,11 @@ import java.util.UUID;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftCommands {
-
     private static final HashMap<UUID,Integer> GCR_HOUSTON_TIMERS = new HashMap<>();
     private static final int GCR_HOUSTON_TIMER_LENGTH = 12 * 20; // seconds * tps
 
     public static void register() {
         CommandRegistrationCallback.EVENT.register((commandDispatcher, b) -> {
-
             commandDispatcher.register(
                     CommandManager.literal("gcrhouston")
                     .executes(GalacticraftCommands::teleportToEarth));
@@ -170,12 +168,7 @@ public class GalacticraftCommands {
                     return;
                 }
                 BlockPos pos = getValidTeleportPos(serverWorld, player);
-                player.teleport(serverWorld,
-                        pos.getX(),
-                        pos.getY(),
-                        pos.getZ(),
-                        player.yaw,
-                        player.pitch);
+                player.teleport(serverWorld, pos.getX(), pos.getY(), pos.getZ(), player.yaw, player.pitch);
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.single", serverWorld.getRegistryKey().getValue()), true);
             } catch (CommandSyntaxException e) {
                 context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.dimension").setStyle(Constants.Styles.RED_STYLE));

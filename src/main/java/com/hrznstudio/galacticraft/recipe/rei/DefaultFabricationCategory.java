@@ -41,6 +41,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -53,23 +54,23 @@ import java.util.List;
 public class DefaultFabricationCategory implements RecipeCategory<DefaultFabricationDisplay> {
     private static final Identifier DISPLAY_TEXTURE = new Identifier("galacticraft-rewoven", "textures/gui/rei_display.png");
 
-    public Identifier getIdentifier() {
+    public @NotNull Identifier getIdentifier() {
         return GalacticraftREIPlugin.CIRCUIT_FABRICATION;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public EntryStack getLogo() {
+    public @NotNull EntryStack getLogo() {
         return EntryStack.create(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getDefaultStack());
     }
 
     @Environment(EnvType.CLIENT)
-    public String getCategoryName() {
+    public @NotNull String getCategoryName() {
         return I18n.translate("category.rei.circuit_fabricator");
     }
 
     @Override
-    public List<Widget> setupDisplay(DefaultFabricationDisplay recipeDisplay, Rectangle bounds) {
+    public @NotNull List<Widget> setupDisplay(DefaultFabricationDisplay recipeDisplay, Rectangle bounds) {
         final Point startPoint = new Point(bounds.getCenterX() - 81, bounds.getCenterY() - 41);
 
         class BaseWidget extends Widget {

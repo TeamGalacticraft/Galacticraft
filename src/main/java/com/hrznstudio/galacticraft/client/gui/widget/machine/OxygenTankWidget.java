@@ -26,6 +26,8 @@ import alexiil.mc.lib.attributes.fluid.SingleFluidTankView;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -36,6 +38,10 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
+@Environment(EnvType.CLIENT)
 public class OxygenTankWidget extends AbstractWidget {
     private final SingleFluidTankView view;
     private final int x;

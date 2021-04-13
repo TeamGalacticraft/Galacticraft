@@ -31,6 +31,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 @Mixin(EmptyChunk.class)
 public abstract class EmptyChunkMixin implements ChunkOxygenAccessor {
     @Override
@@ -49,6 +52,5 @@ public abstract class EmptyChunkMixin implements ChunkOxygenAccessor {
 
     @Override
     public void readOxygenUpdate(byte b, PacketByteBuf packetByteBuf) {
-
     }
 }

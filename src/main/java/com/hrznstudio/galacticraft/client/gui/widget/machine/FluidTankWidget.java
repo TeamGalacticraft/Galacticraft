@@ -47,6 +47,9 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 @Environment(EnvType.CLIENT)
 public class FluidTankWidget extends AbstractWidget {
     private static final int[] FLUID_TANK_8_16_DATA = new int[]{

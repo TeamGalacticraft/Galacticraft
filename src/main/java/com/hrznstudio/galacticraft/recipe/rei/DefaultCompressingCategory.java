@@ -42,6 +42,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,21 +54,21 @@ import java.util.stream.Collectors;
 public class DefaultCompressingCategory implements RecipeCategory<DefaultCompressingDisplay> {
     private static final Identifier DISPLAY_TEXTURE = new Identifier("galacticraft-rewoven", "textures/gui/rei_display.png");
 
-    public Identifier getIdentifier() {
+    public @NotNull Identifier getIdentifier() {
         return GalacticraftREIPlugin.COMPRESSING;
     }
 
     @Override
-    public EntryStack getLogo() {
+    public @NotNull EntryStack getLogo() {
         return EntryStack.create(new ItemStack(GalacticraftBlocks.COMPRESSOR));
     }
 
     @Environment(EnvType.CLIENT)
-    public String getCategoryName() {
+    public @NotNull String getCategoryName() {
         return I18n.translate("category.rei.compressing");
     }
 
-    public List<Widget> setupDisplay(DefaultCompressingDisplay recipeDisplay, Rectangle bounds) {
+    public @NotNull List<Widget> setupDisplay(DefaultCompressingDisplay recipeDisplay, Rectangle bounds) {
         final Point startPoint = new Point(bounds.getCenterX() - 68, bounds.getCenterY() - 37);
 
         class BaseWidget extends Widget {
@@ -80,9 +81,9 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
                 MinecraftClient.getInstance().getTextureManager().bindTexture(DefaultCompressingCategory.DISPLAY_TEXTURE);
                 this.drawTexture(matrices, startPoint.x, startPoint.y, 0, 83, 137, 157);
 
-                int height = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D / 1.0D);
+                int height = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
                 this.drawTexture(matrices, startPoint.x + 2, startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
-                int width = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D / 1.0D);
+                int width = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D);
                 this.drawTexture(matrices, startPoint.x + 24, startPoint.y + 18, 82, 91, width, 17);
             }
 

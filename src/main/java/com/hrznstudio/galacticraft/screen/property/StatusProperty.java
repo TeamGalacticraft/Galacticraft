@@ -25,6 +25,9 @@ package com.hrznstudio.galacticraft.screen.property;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import net.minecraft.screen.Property;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class StatusProperty extends Property {
     private final ConfigurableMachineBlockEntity blockEntity;
 

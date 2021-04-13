@@ -22,12 +22,18 @@
 
 package com.hrznstudio.galacticraft.client.gui.widget.machine;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.util.math.MatrixStack;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
+@Environment(EnvType.CLIENT)
 public abstract class AbstractWidget extends DrawableHelper implements Drawable, Element {
     protected final MinecraftClient client = MinecraftClient.getInstance();
 

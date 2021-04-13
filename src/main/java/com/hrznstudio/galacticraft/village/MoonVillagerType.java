@@ -28,6 +28,9 @@ import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerTypeHelper;
 import net.minecraft.util.Identifier;
 import net.minecraft.village.VillagerType;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class MoonVillagerType {
     public static final VillagerType MOON_HIGHLANDS = VillagerTypeHelper.register(new Identifier(Constants.MOD_ID, "moon_highlands"));
     public static final VillagerType MOON_HIGHLANDS_ROCKS = VillagerTypeHelper.register(new Identifier(Constants.MOD_ID, "moon_highlands_rocks"));
