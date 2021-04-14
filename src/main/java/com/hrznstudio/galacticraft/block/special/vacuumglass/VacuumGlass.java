@@ -22,11 +22,14 @@
 
 package com.hrznstudio.galacticraft.block.special.vacuumglass;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.FluidLoggableBlock;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.block.*;
-import net.minecraft.block.enums.ChestType;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
@@ -72,7 +75,7 @@ public class VacuumGlass extends Block implements FluidLoggableBlock {
                 .with(UP, false)
                 .with(DOWN, false)
                 .with(FACING, Direction.NORTH)
-                .with(FLUID, new Identifier("empty"))
+                .with(FLUID, Constants.Misc.EMPTY)
                 .with(FlowableFluid.LEVEL, 8));
     }
 
