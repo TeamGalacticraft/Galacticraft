@@ -37,7 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class DefaultFabricationDisplay implements RecipeDisplay {

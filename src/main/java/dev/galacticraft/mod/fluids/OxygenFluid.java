@@ -37,7 +37,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldView;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenFluid extends Fluid {
     @Override

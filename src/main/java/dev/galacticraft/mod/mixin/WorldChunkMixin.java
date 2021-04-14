@@ -43,7 +43,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Mixin(WorldChunk.class)
 public abstract class WorldChunkMixin implements ChunkOxygenAccessor {

@@ -53,7 +53,7 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Mixin(WorldRenderer.class)
 @Environment(EnvType.CLIENT)

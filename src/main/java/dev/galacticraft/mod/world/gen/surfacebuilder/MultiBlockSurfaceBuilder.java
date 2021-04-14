@@ -33,7 +33,7 @@ import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import java.util.Random;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MultiBlockSurfaceBuilder extends SurfaceBuilder<MultiBlockSurfaceConfig> {
     public MultiBlockSurfaceBuilder(Codec<MultiBlockSurfaceConfig> function) {

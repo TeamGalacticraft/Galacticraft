@@ -38,7 +38,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompressorScreenHandler> {
@@ -70,7 +70,7 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft-rewoven.oxygen_compressor"), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_compressor"), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

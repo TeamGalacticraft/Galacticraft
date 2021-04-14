@@ -35,12 +35,12 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenCollectorBlock extends ConfigurableMachineBlock {
     public OxygenCollectorBlock(Settings settings) {
         super(settings, OxygenCollectorBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft-rewoven.oxygen_collector")
+                new TranslatableText("tooltip.galacticraft.oxygen_collector")
                         .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 

@@ -86,7 +86,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Tickable, ExtendedScreenHandlerFactory {
     private final SecurityInfo security = new SecurityInfo();

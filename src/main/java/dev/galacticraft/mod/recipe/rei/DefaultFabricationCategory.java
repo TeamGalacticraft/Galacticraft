@@ -48,11 +48,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class DefaultFabricationCategory implements RecipeCategory<DefaultFabricationDisplay> {
-    private static final Identifier DISPLAY_TEXTURE = new Identifier("galacticraft-rewoven", "textures/gui/rei_display.png");
+    private static final Identifier DISPLAY_TEXTURE = new Identifier("galacticraft", "textures/gui/rei_display.png");
 
     public @NotNull Identifier getIdentifier() {
         return GalacticraftREIPlugin.CIRCUIT_FABRICATION;

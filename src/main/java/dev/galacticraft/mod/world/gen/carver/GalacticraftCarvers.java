@@ -29,7 +29,7 @@ import net.minecraft.world.gen.ProbabilityConfig;
 import net.minecraft.world.gen.carver.Carver;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftCarvers {
     public static final Carver<ProbabilityConfig> LUNAR_CAVE = Registry.register(Registry.CARVER, new Identifier(Constants.MOD_ID, "lunar_cave"), new LunarCaveCarver(ProbabilityConfig.CODEC, 128));

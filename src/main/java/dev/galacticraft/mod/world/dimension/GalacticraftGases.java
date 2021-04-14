@@ -26,21 +26,21 @@ import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import net.minecraft.util.Identifier;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftGases {
 
     public static final AtmosphericGas NITROGEN_OXIDE =
             new AtmosphericGas(
-                    new Identifier("galacticraft-rewoven", "nitrogen_oxide"),
-                    "ui.galacticraft-rewoven.nitrogen_oxide",
+                    new Identifier("galacticraft", "nitrogen_oxide"),
+                    "ui.galacticraft.nitrogen_oxide",
                     "NO"
             );
 
     public static final AtmosphericGas HYDROGEN_DEUTERIUM_OXYGEN =
             new AtmosphericGas(
-                    new Identifier("galacticraft-rewoven", "hydrogen_deuterium_oxygen"),
-                    "ui.galacticraft-rewoven.hydrogen_deuterium_oxygen",
+                    new Identifier("galacticraft", "hydrogen_deuterium_oxygen"),
+                    "ui.galacticraft.hydrogen_deuterium_oxygen",
                     "HDO"
 
             );

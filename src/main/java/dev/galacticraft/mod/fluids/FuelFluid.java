@@ -47,7 +47,7 @@ import net.minecraft.world.WorldView;
 import java.util.Random;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class FuelFluid extends FlowableFluid {
     @Override

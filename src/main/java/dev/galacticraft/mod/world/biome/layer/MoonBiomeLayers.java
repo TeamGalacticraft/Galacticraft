@@ -37,7 +37,7 @@ import net.minecraft.world.biome.source.BiomeLayerSampler;
 import java.util.function.LongFunction;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonBiomeLayers {
     public static int MOON_HIGHLANDS_PLAINS_ID = -1;

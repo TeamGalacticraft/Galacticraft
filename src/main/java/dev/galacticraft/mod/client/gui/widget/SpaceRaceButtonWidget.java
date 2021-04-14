@@ -34,7 +34,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class SpaceRaceButtonWidget extends ButtonWidget {
@@ -66,7 +66,7 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
         this.drawHorizontalLine(matrices, x, screenWidth, y, 0xFF000000);
         this.drawVerticalLine(matrices, x, screenHeight, y, 0xFF000000);
 
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager.button"), x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager.button_2"), x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
+        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.space_race_manager.button"), x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
+        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.space_race_manager.button_2"), x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
     }
 }

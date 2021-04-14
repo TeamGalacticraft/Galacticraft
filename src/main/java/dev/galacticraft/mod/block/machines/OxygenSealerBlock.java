@@ -32,12 +32,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenSealerBlock extends ConfigurableMachineBlock {
     public OxygenSealerBlock(Settings settings) {
         super(settings, OxygenSealerBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft-rewoven.oxygen_sealer")
+                new TranslatableText("tooltip.galacticraft.oxygen_sealer")
                         .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 

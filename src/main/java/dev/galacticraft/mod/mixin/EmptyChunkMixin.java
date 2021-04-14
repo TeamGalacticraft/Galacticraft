@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Mixin(EmptyChunk.class)
 public abstract class EmptyChunkMixin implements ChunkOxygenAccessor {

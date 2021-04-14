@@ -34,7 +34,7 @@ import net.minecraft.util.Lazy;
 import java.util.function.Supplier;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public enum GalacticraftArmorMaterials implements ArmorMaterial {
     SENSOR_GLASSES("sensor_glasses", 0, new int[]{0, 0, 0, 0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0f, () -> {

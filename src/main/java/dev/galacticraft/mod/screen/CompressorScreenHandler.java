@@ -34,7 +34,7 @@ import net.minecraft.screen.slot.FurnaceOutputSlot;
 import net.minecraft.screen.slot.Slot;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CompressorScreenHandler extends MachineScreenHandler<CompressorBlockEntity> {
     public final Property progress = new Property() {

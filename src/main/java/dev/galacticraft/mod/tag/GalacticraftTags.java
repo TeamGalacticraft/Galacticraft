@@ -32,7 +32,7 @@ import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftTags {
     private static final String COMMON_NAMESPACE = "c";

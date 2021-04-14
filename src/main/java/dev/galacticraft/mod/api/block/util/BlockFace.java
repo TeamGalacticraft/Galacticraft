@@ -26,7 +26,7 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public enum BlockFace {
     FRONT,

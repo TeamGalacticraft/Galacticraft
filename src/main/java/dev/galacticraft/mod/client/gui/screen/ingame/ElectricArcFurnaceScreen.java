@@ -37,7 +37,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFurnaceScreenHandler> {
@@ -68,7 +68,7 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
             this.drawTexture(matrices, this.x + ARROW_X, this.y + ARROW_Y, LIT_ARROW_X, LIT_ARROW_Y, (int) (((double)ARROW_WIDTH) * scale), ARROW_HEIGHT);
         }
 
-        DrawableUtils.drawCenteredString(matrices, textRenderer, new TranslatableText("block.galacticraft-rewoven.electric_arc_furnace"), this.width / 2, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(matrices, textRenderer, new TranslatableText("block.galacticraft.electric_arc_furnace"), this.width / 2, this.y + 5, Formatting.DARK_GRAY.getColorValue());
     }
 
     @Override

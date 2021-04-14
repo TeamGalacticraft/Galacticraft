@@ -51,7 +51,7 @@ import net.minecraft.world.WorldView;
 import java.util.Random;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CavernousVineBlock extends Block implements Waterloggable {
     protected static final EnumProperty<VineTypes> VINES = EnumProperty.of("vinetype", VineTypes.class);

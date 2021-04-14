@@ -56,7 +56,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity {
     public static final int MAX_PROGRESS = 300;
@@ -208,28 +208,28 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     /**
-     * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+     * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
      */
     private enum Status implements MachineStatus {
         /**
          * Fabricator is active and is processing.
          */
-        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.processing"), Formatting.GREEN, StatusType.WORKING),
+        PROCESSING(new TranslatableText("ui.galacticraft.machinestatus.processing"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Fabricator output slot is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableText("ui.galacticraft.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Fabricator does not have the required resources to function.
          */
-        NOT_ENOUGH_RESOURCES(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
+        NOT_ENOUGH_RESOURCES(new TranslatableText("ui.galacticraft.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
 
         /**
          * The fabricator has no energy.
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.GRAY, StatusType.MISSING_ENERGY);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machinestatus.not_enough_energy"), Formatting.GRAY, StatusType.MISSING_ENERGY);
 
         private final Text text;
         private final StatusType type;

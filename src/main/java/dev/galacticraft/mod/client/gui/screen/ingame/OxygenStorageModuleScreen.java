@@ -38,7 +38,7 @@ import net.minecraft.util.Identifier;
 import java.math.RoundingMode;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorageModuleScreenHandler> {
@@ -58,14 +58,14 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
 
         this.drawOxygenBufferBar(matrices);
 
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.current_oxygen", (int)(this.handler.machine.getFluidTank().getInvFluid(0).getAmount_F().asInt(1000, RoundingMode.HALF_DOWN))), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.max_oxygen", (int)(this.handler.machine.getFluidTank().getMaxAmount_F(0).asInt(1000, RoundingMode.HALF_DOWN))), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.current_oxygen", (int)(this.handler.machine.getFluidTank().getInvFluid(0).getAmount_F().asInt(1000, RoundingMode.HALF_DOWN))), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.max_oxygen", (int)(this.handler.machine.getFluidTank().getMaxAmount_F(0).asInt(1000, RoundingMode.HALF_DOWN))), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft-rewoven.oxygen_storage_module"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_storage_module"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 

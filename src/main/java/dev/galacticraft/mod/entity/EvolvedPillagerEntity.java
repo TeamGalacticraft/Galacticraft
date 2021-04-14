@@ -27,7 +27,7 @@ import net.minecraft.entity.mob.PillagerEntity;
 import net.minecraft.world.World;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EvolvedPillagerEntity extends PillagerEntity {
     public EvolvedPillagerEntity(EntityType<? extends EvolvedPillagerEntity> entityType, World world) {

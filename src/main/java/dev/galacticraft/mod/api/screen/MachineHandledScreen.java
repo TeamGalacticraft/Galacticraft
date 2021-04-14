@@ -60,7 +60,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public abstract class MachineHandledScreen<C extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> extends HandledScreen<C> {
@@ -189,7 +189,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
                 this.drawTexture(matrices, this.x - PANEL_WIDTH + 43, this.y + 23, ICON_REDSTONE_TORCH_OFF_X, ICON_REDSTONE_TORCH_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
 
-                drawStringWithShadow(matrices, this.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.redstone_activation_config"), this.x - PANEL_WIDTH + 23, this.y + 12, Formatting.GRAY.getColorValue());
+                drawStringWithShadow(matrices, this.textRenderer, I18n.translate("ui.galacticraft.tabs.redstone_activation_config"), this.x - PANEL_WIDTH + 23, this.y + 12, Formatting.GRAY.getColorValue());
                 DiffuseLighting.enableGuiDepthLighting();
                 this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.REDSTONE), this.x - PANEL_WIDTH + 6, this.y + 7);
                 this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.GUNPOWDER), this.x - PANEL_WIDTH + 6 + 15, this.y + 26);
@@ -285,7 +285,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 }
 
                 this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - PANEL_WIDTH + 6, this.y + 29);
-                drawStringWithShadow(matrices, this.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.x - PANEL_WIDTH + 23, this.y + 33, Formatting.GRAY.getColorValue());
+                drawStringWithShadow(matrices, this.textRenderer, I18n.translate("ui.galacticraft.tabs.side_config"), this.x - PANEL_WIDTH + 23, this.y + 33, Formatting.GRAY.getColorValue());
             } else {
                 this.client.getTextureManager().bindTexture(TABS_TEXTURE);
                 if (!redstoneOpen) {
@@ -320,7 +320,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.drawTexture(matrices, this.x + 174 + 43, this.y + 27, ICON_LOCK_PARTY_X, ICON_LOCK_PARTY_Y + 2, ICONS_WIDTH, ICONS_HEIGHT);
                 this.drawTexture(matrices, this.x + 174 + 65, this.y + 27 - 2, ICON_LOCK_PUBLIC_X, ICON_LOCK_PUBLIC_Y, ICONS_WIDTH, ICONS_HEIGHT);
 
-                drawStringWithShadow(matrices, this.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.security_config"), this.x + 176 + 20, this.y + 12, Formatting.GRAY.getColorValue());
+                drawStringWithShadow(matrices, this.textRenderer, I18n.translate("ui.galacticraft.tabs.security_config"), this.x + 176 + 20, this.y + 12, Formatting.GRAY.getColorValue());
             } else {
                 this.client.getTextureManager().bindTexture(TABS_TEXTURE);
                 this.drawTexture(matrices, this.x + 176, this.y + 5, TAB_SECURITY_X, TAB_SECURITY_Y, TAB_WIDTH, TAB_HEIGHT);
@@ -487,67 +487,67 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         assert this.client != null;
         if (!redstoneOpen) {
             if (mouseX >= this.x - TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + (22 + 3)) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config").setStyle(Constants.Styles.GRAY_STYLE), mouseX, mouseY);
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.redstone_activation_config").setStyle(Constants.Styles.GRAY_STYLE), mouseX, mouseY);
             }
         } else {
             if (mouseX >= (this.x - 78) && mouseX <= (this.x - 78) + 19 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.redstone_activation_config.ignore").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
             }
             if (mouseX >= (this.x - 78) + 22 && mouseX <= (this.x - 78) + 41 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.redstone_activation_config.redstone_means_off").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
             }
             if (mouseX >= (this.x - 78) + 44 && mouseX <= (this.x - 78) + 63 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.redstone_activation_config.redstone_means_on").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
             }
         }
         if (!configOpen) {
             if (redstoneOpen) {
                 if (mouseX >= this.x - TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 96 && mouseY <= this.y + (TAB_HEIGHT + 96)) {
-                    this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
+                    this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.side_config").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
                 }
             } else {
                 if (mouseX >= this.x - TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 26 && mouseY <= this.y + (TAB_HEIGHT + 26)) {
-                    this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
+                    this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.side_config").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
                 }
             }
         } else {
             if (mouseX >= this.x - PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.north").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.FRONT).getFormattedName().asOrderedText()}), mouseX, mouseY);
+                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft.tabs.side_config.north").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.FRONT).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {//Front, Back, Right, Left, Up, Down
-                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.south").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.BACK).getFormattedName().asOrderedText()}), mouseX, mouseY);
+                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft.tabs.side_config.south").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.BACK).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.west").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.RIGHT).getFormattedName().asOrderedText()}), mouseX, mouseY);
+                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft.tabs.side_config.west").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.RIGHT).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.east").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.LEFT).getFormattedName().asOrderedText()}), mouseX, mouseY);
+                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft.tabs.side_config.east").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.LEFT).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 && mouseY <= this.y + 68) {
-                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.up").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.TOP).getFormattedName().asOrderedText()}), mouseX, mouseY);
+                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft.tabs.side_config.up").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.TOP).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 + 18 && mouseY <= this.y + 68 + 18 + 18) {
-                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.down").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.BOTTOM).getFormattedName().asOrderedText()}), mouseX, mouseY);
+                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft.tabs.side_config.down").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.BOTTOM).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
         }
         if (!securityOpen) {
             if (mouseX >= this.x - TAB_WIDTH + 176 + 21 && mouseX <= this.x + 176 + 21 && mouseY >= this.y + 3 && mouseY <= this.y + (TAB_HEIGHT + 3)) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.tabs.security_config").setStyle(Constants.Styles.GRAY_STYLE), mouseX, mouseY);
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.security_config").setStyle(Constants.Styles.GRAY_STYLE), mouseX, mouseY);
             }
         } else {
             if (mouseX >= (this.x - 78) + 273 && mouseX <= (this.x - 78) + 19 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.private").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.security_config.private").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
             }
             if (mouseX >= (this.x - 78) + 22 + 273 && mouseX <= (this.x - 78) + 41 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderOrderedTooltip(matrices, this.textRenderer.wrapLines(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.space_race", "[TEAM NAME]\u00a7r").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), 150), mouseX, mouseY);
+                this.renderOrderedTooltip(matrices, this.textRenderer.wrapLines(new TranslatableText("ui.galacticraft.tabs.security_config.space_race", "[TEAM NAME]\u00a7r").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), 150), mouseX, mouseY);
             }
             if (mouseX >= (this.x - 78) + 44 + 273 && mouseX <= (this.x - 78) + 63 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.public").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.security_config.public").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
             }
         }
     }
@@ -560,7 +560,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             switch (security.getPublicity()) {
                 case PRIVATE:
                     if (!this.playerInventory.player.getUuid().equals(security.getOwner())) {
-                        DrawableUtils.drawCenteredString(matrices, this.textRenderer, "\u00A7l" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.not_your_machine").asString(), (this.width / 2), this.y + 50, Formatting.DARK_RED.getColorValue());
+                        DrawableUtils.drawCenteredString(matrices, this.textRenderer, "\u00A7l" + new TranslatableText("ui.galacticraft.tabs.security_config.not_your_machine").asString(), (this.width / 2), this.y + 50, Formatting.DARK_RED.getColorValue());
                         return;
                     }
                 case SPACE_RACE:

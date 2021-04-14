@@ -31,7 +31,7 @@ import net.minecraft.util.Lazy;
 import java.util.function.Supplier;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public enum GalacticraftToolMaterials implements ToolMaterial {
     STEEL(ToolMaterials.IRON.getMiningLevel(), 768, ToolMaterials.IRON.getMiningSpeedMultiplier(), ToolMaterials.IRON.getAttackDamage(), ToolMaterials.IRON.getEnchantability(), () -> {

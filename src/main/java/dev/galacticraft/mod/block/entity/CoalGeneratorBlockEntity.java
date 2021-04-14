@@ -51,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     private static final Object2IntMap<Item> FUEL_MAP = Util.make(new Object2IntArrayMap<>(3), (map) -> {
@@ -164,33 +164,33 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
     }
 
     /**
-     * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+     * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
      */
     private enum Status implements MachineStatus {
         /**
          * The generator is active and is generating energy.
          */
-        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
+        ACTIVE(new TranslatableText("ui.galacticraft.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * The generator is warming up.
          */
-        WARMING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.warming"), Formatting.GOLD, StatusType.PARTIALLY_WORKING),
+        WARMING(new TranslatableText("ui.galacticraft.machinestatus.warming"), Formatting.GOLD, StatusType.PARTIALLY_WORKING),
 
         /**
          * The generator is cooling down.
          */
-        COOLING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.cooling"), Formatting.AQUA, StatusType.PARTIALLY_WORKING),
+        COOLING(new TranslatableText("ui.galacticraft.machinestatus.cooling"), Formatting.AQUA, StatusType.PARTIALLY_WORKING),
 
         /**
          * The generator is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableText("ui.galacticraft.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * The generator is out of fuel.
          */
-        NOT_ENOUGH_FUEL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS);
+        NOT_ENOUGH_FUEL(new TranslatableText("ui.galacticraft.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS);
 
         private final Text text;
         private final StatusType type;

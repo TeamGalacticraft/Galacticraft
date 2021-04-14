@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class InfiniteBatteryItem extends Item implements AttributeProviderItem {
     private int ticks = 0;
@@ -57,8 +57,8 @@ public class InfiniteBatteryItem extends Item implements AttributeProviderItem {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", new TranslatableText("tooltip.galacticraft-rewoven.infinite").setStyle(Constants.Styles.getRainbow(++ticks))));
-        tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.creative_only").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
+        tooltip.add(new TranslatableText("tooltip.galacticraft.energy_remaining", new TranslatableText("tooltip.galacticraft.infinite").setStyle(Constants.Styles.getRainbow(++ticks))));
+        tooltip.add(new TranslatableText("tooltip.galacticraft.creative_only").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
         if (ticks >= 500) ticks -= 500;
         super.appendTooltip(stack, world, tooltip, context);
     }

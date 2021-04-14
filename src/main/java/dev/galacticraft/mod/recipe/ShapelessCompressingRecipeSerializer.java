@@ -34,7 +34,7 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ShapelessCompressingRecipeSerializer<T extends ShapelessCompressingRecipe> implements RecipeSerializer<T> {
     private final RecipeFactory<T> factory;

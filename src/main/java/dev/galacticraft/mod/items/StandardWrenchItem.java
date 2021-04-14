@@ -48,7 +48,7 @@ import net.minecraft.world.WorldAccess;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class StandardWrenchItem extends Item {
 
@@ -91,9 +91,9 @@ public class StandardWrenchItem extends Item {
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         if (Screen.hasShiftDown()) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.standard_wrench").setStyle(Constants.Styles.GRAY_STYLE));
+            lines.add(new TranslatableText("tooltip.galacticraft.standard_wrench").setStyle(Constants.Styles.GRAY_STYLE));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Styles.GRAY_STYLE));
+            lines.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Constants.Styles.GRAY_STYLE));
         }
     }
 }

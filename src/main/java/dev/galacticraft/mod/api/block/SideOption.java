@@ -31,16 +31,16 @@ import net.minecraft.text.TranslatableText;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public enum SideOption implements Comparable<SideOption> {
-    DEFAULT(new TranslatableText("ui.galacticraft-rewoven.side_option.default").setStyle(Constants.Styles.TOOLTIP_STYLE), false, false, false, false, false),
-    POWER_INPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.energy").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.in").setStyle(Constants.Styles.GREEN_STYLE)), true, false, false, true, false),
-    POWER_OUTPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.energy").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.out").setStyle(Constants.Styles.DARK_RED_STYLE)), true, false, false, false, true),
-    FLUID_INPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.fluids").setStyle(Constants.Styles.GREEN_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.in").setStyle(Constants.Styles.GREEN_STYLE)), false, true, false, true, false),
-    FLUID_OUTPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.fluids").setStyle(Constants.Styles.GREEN_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.out").setStyle(Constants.Styles.DARK_RED_STYLE)), false, true, false, false, true),
-    ITEM_INPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.items").setStyle(Constants.Styles.GOLD_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.in").setStyle(Constants.Styles.GREEN_STYLE)), false, false, true, true, false),
-    ITEM_OUTPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.items").setStyle(Constants.Styles.GOLD_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.out").setStyle(Constants.Styles.DARK_RED_STYLE)), false, false, true, false, true);
+    DEFAULT(new TranslatableText("ui.galacticraft.side_option.default").setStyle(Constants.Styles.TOOLTIP_STYLE), false, false, false, false, false),
+    POWER_INPUT(new TranslatableText("ui.galacticraft.side_option.energy").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE).append(new TranslatableText("ui.galacticraft.side_option.in").setStyle(Constants.Styles.GREEN_STYLE)), true, false, false, true, false),
+    POWER_OUTPUT(new TranslatableText("ui.galacticraft.side_option.energy").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE).append(new TranslatableText("ui.galacticraft.side_option.out").setStyle(Constants.Styles.DARK_RED_STYLE)), true, false, false, false, true),
+    FLUID_INPUT(new TranslatableText("ui.galacticraft.side_option.fluids").setStyle(Constants.Styles.GREEN_STYLE).append(new TranslatableText("ui.galacticraft.side_option.in").setStyle(Constants.Styles.GREEN_STYLE)), false, true, false, true, false),
+    FLUID_OUTPUT(new TranslatableText("ui.galacticraft.side_option.fluids").setStyle(Constants.Styles.GREEN_STYLE).append(new TranslatableText("ui.galacticraft.side_option.out").setStyle(Constants.Styles.DARK_RED_STYLE)), false, true, false, false, true),
+    ITEM_INPUT(new TranslatableText("ui.galacticraft.side_option.items").setStyle(Constants.Styles.GOLD_STYLE).append(new TranslatableText("ui.galacticraft.side_option.in").setStyle(Constants.Styles.GREEN_STYLE)), false, false, true, true, false),
+    ITEM_OUTPUT(new TranslatableText("ui.galacticraft.side_option.items").setStyle(Constants.Styles.GOLD_STYLE).append(new TranslatableText("ui.galacticraft.side_option.out").setStyle(Constants.Styles.DARK_RED_STYLE)), false, false, true, false, true);
 
     private final MutableText name;
     private final boolean energy;

@@ -37,7 +37,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorScreenHandler> {
@@ -64,7 +64,7 @@ public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorScree
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, this.textRenderer, I18n.translate("block.galacticraft-rewoven.coal_generator"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(matrices, this.textRenderer, I18n.translate("block.galacticraft.coal_generator"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

@@ -32,7 +32,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a> and made with the help of <a href="https://blockbench.net/https://blockbench.net/">Blockbench</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a> and made with the help of <a href="https://blockbench.net/https://blockbench.net/">Blockbench</a>
  */
 @Environment(EnvType.CLIENT)
 public class EvolvedCreeperEntityModel extends EntityModel<EvolvedCreeperEntity> {

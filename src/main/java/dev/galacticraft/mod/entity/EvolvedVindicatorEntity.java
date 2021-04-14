@@ -27,7 +27,7 @@ import net.minecraft.entity.mob.VindicatorEntity;
 import net.minecraft.world.World;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EvolvedVindicatorEntity extends VindicatorEntity {
     public EvolvedVindicatorEntity(EntityType<? extends EvolvedVindicatorEntity> entityType, World world) {

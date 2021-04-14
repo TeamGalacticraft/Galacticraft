@@ -36,7 +36,7 @@ import net.minecraft.world.BlockView;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GlowstoneLanternBlock extends LanternBlock {
 
@@ -48,9 +48,9 @@ public class GlowstoneLanternBlock extends LanternBlock {
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableText("tooltip.galacticraft-rewoven.glowstone_lantern").setStyle(Constants.Styles.GRAY_STYLE));
+            list.add(new TranslatableText("tooltip.galacticraft.glowstone_lantern").setStyle(Constants.Styles.GRAY_STYLE));
         } else {
-            list.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Styles.GRAY_STYLE));
+            list.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Constants.Styles.GRAY_STYLE));
         }
     }
 }

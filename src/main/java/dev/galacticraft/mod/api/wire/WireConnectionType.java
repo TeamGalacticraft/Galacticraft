@@ -25,7 +25,7 @@ package dev.galacticraft.mod.api.wire;
 import net.minecraft.util.StringIdentifiable;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public enum WireConnectionType implements StringIdentifiable {
     /**

@@ -36,12 +36,12 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RefineryBlock extends ConfigurableMachineBlock {
     public RefineryBlock(Settings settings) {
         super(settings, RefineryBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft-rewoven.refinery")
+                new TranslatableText("tooltip.galacticraft.refinery")
                         .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 

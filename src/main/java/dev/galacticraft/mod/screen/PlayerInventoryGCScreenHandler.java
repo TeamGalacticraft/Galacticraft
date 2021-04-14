@@ -44,7 +44,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class PlayerInventoryGCScreenHandler extends ScreenHandler {
     private static final Identifier[] EMPTY_ARMOR_SLOT_IDS = new Identifier[]{

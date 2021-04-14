@@ -40,7 +40,7 @@ import java.util.Random;
 import java.util.function.Function;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class LunarCaveCarver extends CaveCarver {
     public LunarCaveCarver(Codec<ProbabilityConfig> codec, int i) {

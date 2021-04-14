@@ -46,7 +46,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @SuppressWarnings("UnstableApiUsage")
 public class WireNetworkImpl implements WireNetwork {

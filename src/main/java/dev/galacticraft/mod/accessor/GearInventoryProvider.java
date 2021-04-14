@@ -26,7 +26,7 @@ import alexiil.mc.lib.attributes.item.FixedItemInv;
 import net.minecraft.nbt.CompoundTag;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface GearInventoryProvider {
     FixedItemInv getGearInv();

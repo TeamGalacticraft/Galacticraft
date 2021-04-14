@@ -48,7 +48,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class BatteryItem extends Item implements AttributeProviderItem {
     public static final int MAX_ENERGY = 15000;
@@ -65,7 +65,7 @@ public class BatteryItem extends Item implements AttributeProviderItem {
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         CapacitorView view = EnergyUtils.getCapacitorView(stack);
-        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", EnergyUtils.getDisplay(view.getEnergy())).setStyle(Constants.Styles.getStorageLevelColor(1.0 - ((double)view.getEnergy()) / ((double)view.getMaxCapacity()))));
+        lines.add(new TranslatableText("tooltip.galacticraft.energy_remaining", EnergyUtils.getDisplay(view.getEnergy())).setStyle(Constants.Styles.getStorageLevelColor(1.0 - ((double)view.getEnergy()) / ((double)view.getMaxCapacity()))));
         super.appendTooltip(stack, world, lines, context);
     }
 

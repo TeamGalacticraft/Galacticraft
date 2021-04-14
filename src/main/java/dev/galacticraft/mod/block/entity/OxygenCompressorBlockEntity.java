@@ -51,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
@@ -157,14 +157,14 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
     }
 
     /**
-     * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+     * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
      */
     private enum Status implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), Formatting.RED, StatusType.MISSING_FLUIDS),
-        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft-rewoven.machinestatus.missing_tank"), Formatting.RED, StatusType.MISSING_ITEMS),
-        CONTAINER_FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-        COMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.compressing"), Formatting.GREEN, StatusType.WORKING);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft.machinestatus.not_enough_oxygen"), Formatting.RED, StatusType.MISSING_FLUIDS),
+        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft.machinestatus.missing_tank"), Formatting.RED, StatusType.MISSING_ITEMS),
+        CONTAINER_FULL(new TranslatableText("ui.galacticraft.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        COMPRESSING(new TranslatableText("ui.galacticraft.machinestatus.compressing"), Formatting.GREEN, StatusType.WORKING);
 
         private final Text text;
         private final StatusType type;

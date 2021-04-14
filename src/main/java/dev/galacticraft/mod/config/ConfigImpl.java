@@ -27,7 +27,7 @@ import dev.galacticraft.mod.api.config.Config;
 import dev.galacticraft.mod.util.EnergyUtils;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ConfigImpl implements Config {
     @Expose

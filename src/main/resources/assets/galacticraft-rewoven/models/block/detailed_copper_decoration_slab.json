@@ -1,8 +1,0 @@
-{
-  "parent": "block/slab",
-  "textures": {
-    "bottom": "galacticraft-rewoven:block/copper_decoration",
-    "top": "galacticraft-rewoven:block/detailed_copper_decoration_top",
-    "side": "galacticraft-rewoven:block/detailed_copper_decoration_side"
-  }
-}

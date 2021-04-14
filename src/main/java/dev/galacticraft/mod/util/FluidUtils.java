@@ -45,7 +45,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class FluidUtils {
     private FluidUtils() {}

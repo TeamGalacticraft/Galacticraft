@@ -25,7 +25,7 @@ package dev.galacticraft.mod.api.capes.models;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CapesModel {
 

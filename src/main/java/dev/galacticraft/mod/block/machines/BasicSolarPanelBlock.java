@@ -35,12 +35,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class BasicSolarPanelBlock extends ConfigurableMachineBlock implements MultiBlockBase {
     public BasicSolarPanelBlock(Settings settings) {
         super(settings, BasicSolarPanelBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel")
+                new TranslatableText("tooltip.galacticraft.basic_solar_panel")
                         .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 

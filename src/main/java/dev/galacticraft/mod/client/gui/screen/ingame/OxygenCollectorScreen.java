@@ -39,7 +39,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorScreenHandler> {
@@ -64,8 +64,8 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft-rewoven.oxygen_collector"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        String statusText = I18n.translate("ui.galacticraft-rewoven.machine.status");
+        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_collector"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        String statusText = I18n.translate("ui.galacticraft.machine.status");
 
         int statusX = this.x + 38;
         int statusY = this.y + 64;
@@ -74,7 +74,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
 
         this.textRenderer.draw(matrices, handler.machine.getStatus().getName(), statusX + this.textRenderer.getWidth(statusText), statusY, 0);
 
-        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("ui.galacticraft-rewoven.machine.collecting", this.handler.machine.collectionAmount).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("ui.galacticraft.machine.collecting", this.handler.machine.collectionAmount).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

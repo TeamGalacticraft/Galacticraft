@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "up": "galacticraft:block/oxygen_collector",
+    "down": "galacticraft:block/oxygen_collector",
+    "north": "galacticraft:block/oxygen_collector",
+    "south": "galacticraft:block/oxygen_collector",
+    "east": "galacticraft:block/oxygen_collector",
+    "west": "galacticraft:block/oxygen_collector",
+    "particle": "galacticraft:block/oxygen_collector"
+  }
+}

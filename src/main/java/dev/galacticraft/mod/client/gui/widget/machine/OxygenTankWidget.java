@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class OxygenTankWidget extends AbstractWidget {
@@ -82,8 +82,8 @@ public class OxygenTankWidget extends AbstractWidget {
     public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
         if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT)) {
             List<Text> lines = new ArrayList<>(2);
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(Screen.hasShiftDown() ? getView().get().getAmount_F().toString() + "B" : (getView().get().getAmount_F().asInt(1000, RoundingMode.HALF_DOWN) + "mB")).setStyle(Constants.Styles.BLUE_STYLE)).setStyle(Constants.Styles.GOLD_STYLE));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", new LiteralText(String.valueOf((int)(OxygenCollectorBlockEntity.MAX_OXYGEN.asInt(1000, RoundingMode.HALF_DOWN)))).setStyle(Constants.Styles.BLUE_STYLE)).setStyle(Constants.Styles.RED_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft.machine.current_oxygen", new LiteralText(Screen.hasShiftDown() ? getView().get().getAmount_F().toString() + "B" : (getView().get().getAmount_F().asInt(1000, RoundingMode.HALF_DOWN) + "mB")).setStyle(Constants.Styles.BLUE_STYLE)).setStyle(Constants.Styles.GOLD_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft.machine.max_oxygen", new LiteralText(String.valueOf((int)(OxygenCollectorBlockEntity.MAX_OXYGEN.asInt(1000, RoundingMode.HALF_DOWN)))).setStyle(Constants.Styles.BLUE_STYLE)).setStyle(Constants.Styles.RED_STYLE));
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
         }

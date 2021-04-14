@@ -65,7 +65,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
@@ -251,12 +251,12 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     /**
-     * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+     * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
      */
     private enum Status implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        DISTRIBUTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.distributing"), Formatting.GREEN, StatusType.WORKING),
-        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), Formatting.AQUA, StatusType.MISSING_FLUIDS);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        DISTRIBUTING(new TranslatableText("ui.galacticraft.machinestatus.distributing"), Formatting.GREEN, StatusType.WORKING),
+        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft.machinestatus.not_enough_oxygen"), Formatting.AQUA, StatusType.MISSING_FLUIDS);
 
         private final Text text;
         private final StatusType type;

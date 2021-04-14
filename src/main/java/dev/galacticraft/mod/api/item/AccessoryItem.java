@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.api.item;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface AccessoryItem {
 }

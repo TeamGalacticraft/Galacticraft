@@ -37,7 +37,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
@@ -72,7 +72,7 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     }
 
     protected String getContainerDisplayName() {
-        return I18n.translate("block.galacticraft-rewoven.compressor");
+        return I18n.translate("block.galacticraft.compressor");
     }
 
     protected void drawFuelProgressBar(MatrixStack matrices) {

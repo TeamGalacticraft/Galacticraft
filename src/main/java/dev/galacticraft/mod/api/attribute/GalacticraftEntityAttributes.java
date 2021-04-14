@@ -29,8 +29,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftEntityAttributes {
-    public static final EntityAttribute CAN_BREATHE_IN_SPACE = Registry.register(Registry.ATTRIBUTE, new Identifier(Constants.MOD_ID, "can_breathe_in_space"), (new ClampedEntityAttribute("galacticraft-rewoven.attribute.name.can_breathe_in_space", 0.0D, 0.0D, 1.0D)).setTracked(true));
+    public static final EntityAttribute CAN_BREATHE_IN_SPACE = Registry.register(Registry.ATTRIBUTE, new Identifier(Constants.MOD_ID, "can_breathe_in_space"), (new ClampedEntityAttribute("galacticraft.attribute.name.can_breathe_in_space", 0.0D, 0.0D, 1.0D)).setTracked(true));
 }

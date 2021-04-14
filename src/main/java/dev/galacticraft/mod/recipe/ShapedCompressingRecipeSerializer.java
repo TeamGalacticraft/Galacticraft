@@ -35,7 +35,7 @@ import net.minecraft.util.collection.DefaultedList;
 import java.util.Map;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ShapedCompressingRecipeSerializer<T extends ShapedCompressingRecipe> implements RecipeSerializer<T> {
     private final RecipeFactory<T> factory;

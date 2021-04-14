@@ -25,7 +25,7 @@ package dev.galacticraft.mod.api.block;
 import net.minecraft.fluid.FlowableFluid;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class FluidBlock extends net.minecraft.block.FluidBlock {
 

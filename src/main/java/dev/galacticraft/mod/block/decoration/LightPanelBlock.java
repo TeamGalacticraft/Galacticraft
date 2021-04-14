@@ -25,7 +25,7 @@ package dev.galacticraft.mod.block.decoration;
 import dev.galacticraft.mod.api.block.AbstractDirectionalBlock;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class LightPanelBlock extends AbstractDirectionalBlock {
 

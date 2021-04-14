@@ -32,7 +32,7 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.registry.Registry;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class FabricationRecipeSerializer<T extends FabricationRecipe> implements RecipeSerializer<T> {
     private final RecipeFactory<T> recipeFactory;

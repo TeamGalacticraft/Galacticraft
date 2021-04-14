@@ -40,7 +40,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScreenHandler> {
@@ -62,11 +62,11 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
         if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 138, this.x + 138 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
             OxygenTank tank = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(PlayerInventoryGCScreenHandler.OXYGEN_TANK_1_SLOT));
-            this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.player_inv_screen.oxygen_tank_level", 1, tank.getAmount(), tank.getCapacity()), x, y);
+            this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, tank.getAmount(), tank.getCapacity()), x, y);
         } else if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 156, this.x + 156 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
             OxygenTank tank = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(PlayerInventoryGCScreenHandler.OXYGEN_TANK_2_SLOT));
-            this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.player_inv_screen.oxygen_tank_level", 2, tank.getAmount(), tank.getCapacity()), x, y);
+            this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, tank.getAmount(), tank.getCapacity()), x, y);
         }
         super.drawMouseoverTooltip(matrices, x, y);
     }

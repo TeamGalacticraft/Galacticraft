@@ -44,7 +44,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ShapedCompressingRecipe implements CompressingRecipe {
     final String group;

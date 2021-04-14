@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
 

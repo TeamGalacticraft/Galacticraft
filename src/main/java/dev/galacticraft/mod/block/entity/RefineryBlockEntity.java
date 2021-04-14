@@ -51,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     private static final ItemFilter[] SLOT_FILTERS;
@@ -166,28 +166,28 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     }
 
     /**
-     * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+     * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
      */
     private enum Status implements MachineStatus {
         /**
          * Refinery is active and is refining oil into fuel.
          */
-        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.refining"), Formatting.GREEN, StatusType.WORKING),
+        ACTIVE(new TranslatableText("ui.galacticraft.machinestatus.refining"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Refinery has oil but the fuel tank is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableText("ui.galacticraft.machinestatus.idle"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * The refinery is out of oil.
          */
-        NOT_ENOUGH_FLUID(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_fluid"), Formatting.BLACK, StatusType.MISSING_FLUIDS),
+        NOT_ENOUGH_FLUID(new TranslatableText("ui.galacticraft.machinestatus.not_enough_fluid"), Formatting.BLACK, StatusType.MISSING_FLUIDS),
 
         /**
          * The refinery is out of energy.
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
 
         private final Text text;
         private final StatusType type;

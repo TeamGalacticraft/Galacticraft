@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class FluidTankWidget extends AbstractWidget {
@@ -120,7 +120,7 @@ public class FluidTankWidget extends AbstractWidget {
         if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinates.FLUID_TANK_WIDTH, this.data[2])) {
             FluidVolume volume = this.getTankView().get();
             if (volume.isEmpty()) {
-                this.client.currentScreen.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.fluid_widget.empty").setStyle(Constants.Styles.GRAY_STYLE), mouseX, mouseY);
+                this.client.currentScreen.renderTooltip(matrices, new TranslatableText("ui.galacticraft.fluid_widget.empty").setStyle(Constants.Styles.GRAY_STYLE), mouseX, mouseY);
                 return;
             }
             MutableText amount;
@@ -131,8 +131,8 @@ public class FluidTankWidget extends AbstractWidget {
             }
 
             List<Text> lines = new ArrayList<>(2);
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.fluid").setStyle(Constants.Styles.GRAY_STYLE).append(new LiteralText(getName(volume.getRawFluid())).setStyle(Constants.Styles.BLUE_STYLE)));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.amount").setStyle(Constants.Styles.GRAY_STYLE).append(amount.setStyle(Style.EMPTY.withColor(Formatting.WHITE))));
+            lines.add(new TranslatableText("ui.galacticraft.fluid_widget.fluid").setStyle(Constants.Styles.GRAY_STYLE).append(new LiteralText(getName(volume.getRawFluid())).setStyle(Constants.Styles.BLUE_STYLE)));
+            lines.add(new TranslatableText("ui.galacticraft.fluid_widget.amount").setStyle(Constants.Styles.GRAY_STYLE).append(amount.setStyle(Style.EMPTY.withColor(Formatting.WHITE))));
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
         }

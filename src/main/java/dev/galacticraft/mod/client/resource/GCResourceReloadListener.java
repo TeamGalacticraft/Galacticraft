@@ -43,7 +43,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class GCResourceReloadListener implements SimpleSynchronousResourceReloadListener {

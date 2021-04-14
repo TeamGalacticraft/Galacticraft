@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CapeLoader {
 
@@ -59,7 +59,7 @@ public class CapeLoader {
         new Thread(() -> {
             CapesModel capesModel = null;
             try {
-                capesModel = this.gson.fromJson(IOUtils.toString(new URL("https://raw.githubusercontent.com/StellarHorizons/Galacticraft-Rewoven/master/capes.json"), Charset.defaultCharset()), CapesModel.class);
+                capesModel = this.gson.fromJson(IOUtils.toString(new URL("https://raw.githubusercontent.com/StellarHorizons/Galacticraft/master/capes.json"), Charset.defaultCharset()), CapesModel.class);
             } catch (IOException e) {
                 Thread.currentThread().interrupt();
             }

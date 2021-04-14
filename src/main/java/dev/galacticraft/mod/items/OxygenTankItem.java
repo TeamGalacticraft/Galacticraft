@@ -52,7 +52,7 @@ import net.minecraft.world.World;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenTankItem extends Item implements AttributeProviderItem {
     private int ticks = 0;
@@ -97,10 +97,10 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         if (this.getMaxDamage() > 0){
             OxygenTank tank = GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", tank.getAmount() + "/" + tank.getCapacity()));
+            lines.add(new TranslatableText("tooltip.galacticraft.oxygen_remaining", tank.getAmount() + "/" + tank.getCapacity()));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", new TranslatableText("tooltip.galacticraft-rewoven.infinite").setStyle(Constants.Styles.getRainbow(++ticks))));
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.creative_only").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
+            lines.add(new TranslatableText("tooltip.galacticraft.oxygen_remaining", new TranslatableText("tooltip.galacticraft.infinite").setStyle(Constants.Styles.getRainbow(++ticks))));
+            lines.add(new TranslatableText("tooltip.galacticraft.creative_only").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
         }
         if (ticks >= 500) ticks -= 500;
         super.appendTooltip(stack, world, lines, context);

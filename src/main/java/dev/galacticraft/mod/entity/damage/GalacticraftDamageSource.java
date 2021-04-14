@@ -25,7 +25,7 @@ package dev.galacticraft.mod.entity.damage;
 import net.minecraft.entity.damage.DamageSource;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftDamageSource extends DamageSource {
     public static final DamageSource VINE_POISON = new GalacticraftDamageSource("gc.vine_poison");

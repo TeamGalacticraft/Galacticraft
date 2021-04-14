@@ -36,7 +36,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompressorScreenHandler> {
@@ -53,7 +53,7 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     }
 
     private String getContainerDisplayName() {
-        return I18n.translate("block.galacticraft-rewoven.electric_compressor");
+        return I18n.translate("block.galacticraft.electric_compressor");
     }
 
     @Override

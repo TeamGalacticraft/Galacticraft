@@ -33,7 +33,7 @@ import net.minecraft.util.registry.Registry;
 import java.math.RoundingMode;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class FluidTankPropertyDelegate implements PropertyDelegate {
     private final FixedFluidInv inv;

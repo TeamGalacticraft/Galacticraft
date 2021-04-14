@@ -55,7 +55,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
@@ -214,14 +214,14 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
     }
 
     /**
-     * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+     * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
      */
     private enum Status implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), Formatting.RED, StatusType.MISSING_FLUIDS),
-        AREA_TOO_LARGE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.area_too_large"), Formatting.GOLD, StatusType.OTHER),
-        ALREADY_SEALED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.already_sealed"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-        SEALED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.sealed"), Formatting.GREEN, StatusType.WORKING);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft.machinestatus.not_enough_oxygen"), Formatting.RED, StatusType.MISSING_FLUIDS),
+        AREA_TOO_LARGE(new TranslatableText("ui.galacticraft.machinestatus.area_too_large"), Formatting.GOLD, StatusType.OTHER),
+        ALREADY_SEALED(new TranslatableText("ui.galacticraft.machinestatus.already_sealed"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        SEALED(new TranslatableText("ui.galacticraft.machinestatus.sealed"), Formatting.GREEN, StatusType.WORKING);
 
         private final Text text;
         private final StatusType type;

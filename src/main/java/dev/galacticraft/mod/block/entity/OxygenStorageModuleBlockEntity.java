@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEntity {
     private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(50);

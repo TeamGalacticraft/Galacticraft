@@ -36,7 +36,7 @@ import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonRuinsFeature extends StructureFeature<DefaultFeatureConfig> {
    public MoonRuinsFeature(Codec<DefaultFeatureConfig> codec) {

@@ -27,7 +27,7 @@ import dev.galacticraft.mod.misc.capes.JsonCapes;
 import java.util.UUID;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CapePlayer {
 

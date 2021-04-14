@@ -37,7 +37,7 @@ import java.util.Deque;
 import java.util.Iterator;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface Pipe {
     /**

@@ -35,7 +35,7 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEntity> extends ScreenHandler {
     public final PlayerEntity player;

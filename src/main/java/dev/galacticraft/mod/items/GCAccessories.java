@@ -26,7 +26,7 @@ import dev.galacticraft.mod.api.item.AccessoryItem;
 import net.minecraft.item.Item;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GCAccessories extends Item implements AccessoryItem {
     public GCAccessories(Settings settings) {

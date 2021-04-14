@@ -30,7 +30,7 @@ import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class AbstractHorizontalDirectionalBlock extends Block {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;

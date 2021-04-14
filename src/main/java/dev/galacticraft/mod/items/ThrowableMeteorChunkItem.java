@@ -25,7 +25,7 @@ package dev.galacticraft.mod.items;
 import net.minecraft.item.Item;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ThrowableMeteorChunkItem extends Item {
 

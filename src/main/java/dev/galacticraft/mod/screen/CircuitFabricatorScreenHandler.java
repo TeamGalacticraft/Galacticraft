@@ -31,7 +31,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CircuitFabricatorScreenHandler extends MachineScreenHandler<CircuitFabricatorBlockEntity> {
     public final Property progress = new Property() {

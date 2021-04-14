@@ -31,7 +31,7 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.world.World;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RecipeInputSlot<I extends Inventory, T extends Recipe<I>> extends Slot {
 

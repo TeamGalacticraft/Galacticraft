@@ -27,7 +27,7 @@ import net.minecraft.entity.mob.EvokerEntity;
 import net.minecraft.world.World;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EvolvedEvokerEntity extends EvokerEntity {
     public EvolvedEvokerEntity(EntityType<? extends EvolvedEvokerEntity> entityType, World world) {

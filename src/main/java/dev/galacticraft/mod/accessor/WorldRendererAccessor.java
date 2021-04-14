@@ -27,7 +27,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.util.math.BlockPos;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public interface WorldRendererAccessor {

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.misc;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @FunctionalInterface
 public interface TriFunction<P1, P2, P3, R> {

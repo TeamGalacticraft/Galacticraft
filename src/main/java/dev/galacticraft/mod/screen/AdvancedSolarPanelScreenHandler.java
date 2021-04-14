@@ -29,7 +29,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class AdvancedSolarPanelScreenHandler extends MachineScreenHandler<AdvancedSolarPanelBlockEntity> {
     public AdvancedSolarPanelScreenHandler(int syncId, PlayerEntity player, AdvancedSolarPanelBlockEntity machine) {

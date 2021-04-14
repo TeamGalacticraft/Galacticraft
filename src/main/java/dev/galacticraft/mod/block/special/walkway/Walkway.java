@@ -46,7 +46,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class Walkway extends Block implements FluidLoggableBlock {
     public static final BooleanProperty NORTH = Properties.NORTH;

@@ -1,0 +1,44 @@
+{
+  "textures": {
+    "particle": "galacticraft:block/cheese_2",
+    "bottom": "galacticraft:block/cheese_1",
+    "top": "galacticraft:block/cheese_1",
+    "side": "galacticraft:block/cheese_2",
+    "inside": "galacticraft:block/cheese_3"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        8,
+        15
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bottom",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#inside"
+        },
+        "east": {
+          "texture": "#side"
+        }
+      }
+    }
+  ]
+}

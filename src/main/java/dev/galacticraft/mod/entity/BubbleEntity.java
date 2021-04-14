@@ -45,7 +45,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class BubbleEntity extends Entity {
     public BubbleEntity(EntityType<?> type, World world) {

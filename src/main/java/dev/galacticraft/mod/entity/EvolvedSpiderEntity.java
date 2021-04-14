@@ -27,7 +27,7 @@ import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.world.World;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EvolvedSpiderEntity extends SpiderEntity {
     public EvolvedSpiderEntity(EntityType<? extends SpiderEntity> entityType, World world) {

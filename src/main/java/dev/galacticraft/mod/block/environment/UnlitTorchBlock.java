@@ -37,7 +37,7 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class UnlitTorchBlock extends TorchBlock {
 

@@ -33,7 +33,7 @@ import dev.galacticraft.mod.api.pipe.Pipe;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class PipeFixedFluidInv implements FixedFluidInv {
     private final Pipe pipe;

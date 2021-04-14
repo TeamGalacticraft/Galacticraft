@@ -28,7 +28,7 @@ import dev.galacticraft.mod.attribute.oxygen.EmptyOxygenTank;
 import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftAttributes {
     public static final DefaultedAttribute<OxygenTank> OXYGEN_TANK_ATTRIBUTE = Attributes.createDefaulted(OxygenTank.class, EmptyOxygenTank.NULL);

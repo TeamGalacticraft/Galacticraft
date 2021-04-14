@@ -25,7 +25,7 @@ package dev.galacticraft.mod.api.capes;
 import dev.galacticraft.mod.api.capes.models.CapesModel;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface CapeListener {
     void loadCapes(CapesModel capesModel);

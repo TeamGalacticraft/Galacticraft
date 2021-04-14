@@ -29,18 +29,18 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftCelestialBodyTypes {
-    public static final CelestialBodyType THE_MOON = new CelestialBodyType.Builder(new Identifier("galacticraft-rewoven", "the_moon"))
-            .translationKey("ui.galacticraft-rewoven.bodies.the_moon")
+    public static final CelestialBodyType THE_MOON = new CelestialBodyType.Builder(new Identifier("galacticraft", "the_moon"))
+            .translationKey("ui.galacticraft.bodies.the_moon")
             .world(GalacticraftDimensions.MOON)
             .parent(CelestialBodyType.EARTH)
             .weight(1)
             .gravity(0.16f)
             .display(
                     new CelestialBodyDisplayInfo.Builder()
-                            .texture(new Identifier("galacticraft-rewoven", "planet_icons"))
+                            .texture(new Identifier("galacticraft", "planet_icons"))
                             .distance(5)
                             .time(46656000d) // 27 mc days in ticks
                             .build()

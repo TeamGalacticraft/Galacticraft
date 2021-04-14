@@ -33,13 +33,13 @@ import net.minecraft.util.math.BlockPos;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class AdvancedSolarPanelBlock extends ConfigurableMachineBlock implements MultiBlockBase {
     public AdvancedSolarPanelBlock(Settings settings) {
         super(settings,
                 AdvancedSolarPanelBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft-rewoven.advanced_solar_panel")
+                new TranslatableText("tooltip.galacticraft.advanced_solar_panel")
                         .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 

@@ -42,14 +42,14 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CoalGeneratorBlock extends ConfigurableMachineBlock {
     public CoalGeneratorBlock(Settings settings) {
         super(settings,
                 (view) -> new CoalGeneratorBlockEntity(),
                 (itemStack, blockView, tooltipContext) ->
-                        new TranslatableText("tooltip.galacticraft-rewoven.coal_generator")
+                        new TranslatableText("tooltip.galacticraft.coal_generator")
                                 .setStyle(Constants.Styles.TOOLTIP_STYLE)
         );
     }

@@ -35,7 +35,7 @@ import dev.galacticraft.mod.tag.GalacticraftTags;
 import net.minecraft.item.ItemStack;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenTankUtils {
     private OxygenTankUtils() {}

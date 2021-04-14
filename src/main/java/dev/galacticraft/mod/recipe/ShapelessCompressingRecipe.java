@@ -40,7 +40,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ShapelessCompressingRecipe implements CompressingRecipe {
     private final Identifier id;

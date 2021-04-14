@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenTankImpl implements OxygenTank, Saveable {
     public static final OxygenTankImpl NULL = new OxygenTankImpl(-1);

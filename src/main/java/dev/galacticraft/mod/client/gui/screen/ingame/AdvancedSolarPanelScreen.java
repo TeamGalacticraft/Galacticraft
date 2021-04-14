@@ -42,7 +42,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolarPanelScreenHandler> {
@@ -68,7 +68,7 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("block.galacticraft-rewoven.advanced_solar_panel"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("block.galacticraft.advanced_solar_panel"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
@@ -82,7 +82,7 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
                 time = 6000 - (time - 6000);
             }
 
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) this.handler.machine.getEnergyConsumption()).setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", (int) this.handler.machine.getEnergyConsumption()).setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
         }
         return lines;
     }

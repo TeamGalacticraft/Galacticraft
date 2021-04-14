@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class BlockStateWithChance implements Comparable<BlockStateWithChance> {
     public static final Codec<BlockStateWithChance> CODEC = RecordCodecBuilder.create((instance) -> instance.group(BlockState.CODEC.fieldOf("state").forGetter((stateWithChance) -> stateWithChance.state), Codec.INT.fieldOf("chance").forGetter((stateWithChance) -> stateWithChance.chance)).apply(instance, BlockStateWithChance::new));

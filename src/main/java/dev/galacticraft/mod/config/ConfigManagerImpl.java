@@ -46,7 +46,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ConfigManagerImpl implements ConfigManager {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();

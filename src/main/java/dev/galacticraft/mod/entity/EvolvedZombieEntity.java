@@ -27,7 +27,7 @@ import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.world.World;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EvolvedZombieEntity extends ZombieEntity {
     public EvolvedZombieEntity(EntityType<? extends EvolvedZombieEntity> entityType, World world) {

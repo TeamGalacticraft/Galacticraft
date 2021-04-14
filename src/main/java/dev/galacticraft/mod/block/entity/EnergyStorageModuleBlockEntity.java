@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final int CHARGE_BATTERY_SLOT = 0;

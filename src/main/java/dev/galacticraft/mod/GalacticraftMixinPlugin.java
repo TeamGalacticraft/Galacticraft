@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
     @Override

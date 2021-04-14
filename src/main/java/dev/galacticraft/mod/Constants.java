@@ -37,10 +37,10 @@ import net.minecraft.util.math.Direction;
 import java.util.function.Predicate;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface Constants {
-    String MOD_ID = "galacticraft-rewoven";
+    String MOD_ID = "galacticraft";
 
     interface Blocks {
         String ITEM_GROUP_BLOCKS = "blocks";
@@ -406,30 +406,30 @@ public interface Constants {
     }
 
     interface Config {
-        String TITLE = "config.galacticraft-rewoven.title";
-        String RESET = "config.galacticraft-rewoven.reset";
+        String TITLE = "config.galacticraft.title";
+        String RESET = "config.galacticraft.reset";
 
-        String DEBUG = "config.galacticraft-rewoven.debug";
-        String DEBUG_LOGGING = "config.galacticraft-rewoven.debug.logging";
+        String DEBUG = "config.galacticraft.debug";
+        String DEBUG_LOGGING = "config.galacticraft.debug.logging";
 
-        String ENERGY = "config.galacticraft-rewoven.energy";
+        String ENERGY = "config.galacticraft.energy";
 
-        String WIRES = "config.galacticraft-rewoven.energy.wires";
-        String WIRE_ENERGY_TRANSFER_LIMIT = "config.galacticraft-rewoven.energy.wires.transfer_limit";
-        String HEAVY_WIRE_ENERGY_TRANSFER_LIMIT = "config.galacticraft-rewoven.energy.wires.heavy_transfer_limit";
+        String WIRES = "config.galacticraft.energy.wires";
+        String WIRE_ENERGY_TRANSFER_LIMIT = "config.galacticraft.energy.wires.transfer_limit";
+        String HEAVY_WIRE_ENERGY_TRANSFER_LIMIT = "config.galacticraft.energy.wires.heavy_transfer_limit";
 
-        String MACHINES = "config.galacticraft-rewoven.energy.machines";
-        String COAL_GENERATOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.coal_generator_energy_production_rate";
-        String SOLAR_PANEL_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.solar_panel_energy_production_rate";
-        String CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.circuit_fabricator_energy_consumption_rate";
-        String ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.electric_compressor_energy_consumption_rate";
-        String OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_collector_energy_consumption_rate";
-        String REFINERY_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate";
-        String ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.electric_furnace_energy_consumption_rate";
-        String ENERGY_STORAGE_MODULE_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_module_storage_size";
-        String ENERGY_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_size";
-        String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_compressor_energy_consumption_rate";
-        String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_decompressor_energy_consumption_rate";
+        String MACHINES = "config.galacticraft.energy.machines";
+        String COAL_GENERATOR_ENERGY_PRODUCTION_RATE = "config.galacticraft.energy.machines.coal_generator_energy_production_rate";
+        String SOLAR_PANEL_ENERGY_PRODUCTION_RATE = "config.galacticraft.energy.machines.solar_panel_energy_production_rate";
+        String CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.circuit_fabricator_energy_consumption_rate";
+        String ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.electric_compressor_energy_consumption_rate";
+        String OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_collector_energy_consumption_rate";
+        String REFINERY_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.refinery_energy_consumption_rate";
+        String ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.electric_furnace_energy_consumption_rate";
+        String ENERGY_STORAGE_MODULE_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_module_storage_size";
+        String ENERGY_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_size";
+        String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_compressor_energy_consumption_rate";
+        String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
     }
 
     interface Energy {

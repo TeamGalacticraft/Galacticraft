@@ -38,7 +38,7 @@ import net.minecraft.world.gen.Spawner;
 import java.util.Random;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EvolvedPillagerSpawner implements Spawner {
    private int ticksUntilNextSpawn;

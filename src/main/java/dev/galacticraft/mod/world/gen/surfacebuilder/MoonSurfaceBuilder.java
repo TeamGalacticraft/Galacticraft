@@ -35,7 +35,7 @@ import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 import java.util.Random;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonSurfaceBuilder<C extends TernarySurfaceConfig> extends SurfaceBuilder<C> {
     private static final BlockState MOON_ROCK = GalacticraftBlocks.MOON_ROCKS[0].getDefaultState();

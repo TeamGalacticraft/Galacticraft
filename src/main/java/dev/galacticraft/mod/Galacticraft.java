@@ -62,13 +62,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class Galacticraft implements ModInitializer {
 
     public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_villager_profession")), Lifecycle.stable());
 
-    public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
+    public static final Logger logger = LogManager.getLogger("Galacticraft");
 
     public static final ConfigManager configManager = new ConfigManagerImpl();
 

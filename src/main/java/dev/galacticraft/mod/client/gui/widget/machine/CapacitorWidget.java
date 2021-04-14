@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class CapacitorWidget extends AbstractWidget {
@@ -64,9 +64,9 @@ public class CapacitorWidget extends AbstractWidget {
         if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT)) {
             List<Text> lines = new LinkedList<>();
             MachineStatus status = statusSupplier.get();
-            if (status != MachineStatus.NULL) lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status").setStyle(Constants.Styles.GRAY_STYLE).append(status.getName()));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy").setStyle(Constants.Styles.GOLD_STYLE).append(EnergyUtils.getDisplay(this.getView().getEnergy()).setStyle(Constants.Styles.BLUE_STYLE)));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy").setStyle(Constants.Styles.RED_STYLE).append(EnergyUtils.getDisplay(this.getView().getMaxCapacity()).setStyle(Constants.Styles.BLUE_STYLE)));
+            if (status != MachineStatus.NULL) lines.add(new TranslatableText("ui.galacticraft.machine.status").setStyle(Constants.Styles.GRAY_STYLE).append(status.getName()));
+            lines.add(new TranslatableText("ui.galacticraft.machine.current_energy").setStyle(Constants.Styles.GOLD_STYLE).append(EnergyUtils.getDisplay(this.getView().getEnergy()).setStyle(Constants.Styles.BLUE_STYLE)));
+            lines.add(new TranslatableText("ui.galacticraft.machine.max_energy").setStyle(Constants.Styles.RED_STYLE).append(EnergyUtils.getDisplay(this.getView().getMaxCapacity()).setStyle(Constants.Styles.BLUE_STYLE)));
             lines.addAll(tooltipSupplier.get());
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);

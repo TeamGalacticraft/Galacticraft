@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GlowstoneWallTorchBlock extends WallTorchBlock {
 
@@ -57,9 +57,9 @@ public class GlowstoneWallTorchBlock extends WallTorchBlock {
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableText("tooltip.galacticraft-rewoven.glowstone_torch").setStyle(Constants.Styles.GRAY_STYLE));
+            list.add(new TranslatableText("tooltip.galacticraft.glowstone_torch").setStyle(Constants.Styles.GRAY_STYLE));
         } else {
-            list.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Styles.GRAY_STYLE));
+            list.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Constants.Styles.GRAY_STYLE));
         }
     }
 }

@@ -49,7 +49,7 @@ import static dev.galacticraft.mod.block.special.fluidpipe.GlassFluidPipeBlock.C
 import static dev.galacticraft.mod.block.special.fluidpipe.GlassFluidPipeBlock.PULL;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class PipeWalkway extends FluidPipe {
     public static final BooleanProperty NORTH = Properties.NORTH;

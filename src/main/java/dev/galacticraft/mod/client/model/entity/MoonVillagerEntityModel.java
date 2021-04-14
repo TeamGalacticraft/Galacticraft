@@ -32,7 +32,7 @@ import net.minecraft.client.render.entity.model.VillagerResemblingModel;
 import java.util.Collections;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class MoonVillagerEntityModel extends VillagerResemblingModel<MoonVillagerEntity> {

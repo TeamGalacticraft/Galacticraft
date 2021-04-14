@@ -25,7 +25,7 @@ package dev.galacticraft.mod.block.special.aluminumwire.tier1;
 import dev.galacticraft.mod.api.block.WireBlock;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SealableAluminumWireBlock extends WireBlock {
 

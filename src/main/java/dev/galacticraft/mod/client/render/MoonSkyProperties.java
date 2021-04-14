@@ -28,7 +28,7 @@ import net.minecraft.client.render.SkyProperties;
 import net.minecraft.util.math.Vec3d;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class MoonSkyProperties extends SkyProperties {
