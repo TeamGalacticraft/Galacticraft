@@ -65,8 +65,8 @@ base {
 }
 
 loom {
-    refmapName = "galacticraft-rewoven.refmap.json"
-    accessWidener = rootProject.file("src/main/resources/galacticraft_rewoven.accesswidener")
+    refmapName = "galacticraft.refmap.json"
+    accessWidener = rootProject.file("src/main/resources/galacticraft.accesswidener")
 }
 
 repositories {
