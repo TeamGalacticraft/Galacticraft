@@ -117,10 +117,14 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [ "com.hrznstudio.galacticraft.Galacticraft" ],
-    "client": [ "com.hrznstudio.galacticraft.GalacticraftClient" ],
-    "rei_plugins": [ "com.hrznstudio.galacticraft.recipe.rei.GalacticraftREIPlugin" ],
-    "modmenu": [ "com.hrznstudio.galacticraft.hooks.ModMenuApiImpl" ]
+    "main": [
+      "dev.galacticraft.mod.Galacticraft"
+    ],
+    "client": [
+      "dev.galacticraft.mod.GalacticraftClient"
+    ],
+    "rei_plugins": [ "dev.galacticraft.mod.recipe.rei.GalacticraftREIPlugin" ],
+    "modmenu": [ "dev.galacticraft.mod.hooks.ModMenuApiImpl" ]
   },
   "mixins": [ "galacticraft-rewoven.mixins.json" ],
   "accessWidener": "galacticraft_rewoven.accesswidener",

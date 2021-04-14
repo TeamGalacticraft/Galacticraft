@@ -1,7 +1,7 @@
 {
   "required": true,
-  "package": "com.hrznstudio.galacticraft.mixin",
-  "plugin": "com.hrznstudio.galacticraft.GalacticraftMixinPlugin",
+  "package": "dev.galacticraft.mod.mixin",
+  "plugin": "dev.galacticraft.mod.GalacticraftMixinPlugin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BaseFluidMixin",
