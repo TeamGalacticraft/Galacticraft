@@ -4,7 +4,7 @@
   "id": "galacticraft",
   "version": "$version",
   "name": "Galacticraft",
-  "icon": "assets/galacticraft-rewoven/icon.png",
+  "icon": "assets/galacticraft/icon.png",
   "description": "FabricMC port of Galacticraft, written from the ground up by a new team.",
   "license": "MIT",
 
