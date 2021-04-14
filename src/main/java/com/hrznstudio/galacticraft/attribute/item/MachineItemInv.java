@@ -22,10 +22,10 @@
 
 package com.hrznstudio.galacticraft.attribute.item;
 
+import alexiil.mc.lib.attributes.ListenerRemovalToken;
+import alexiil.mc.lib.attributes.ListenerToken;
 import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.item.GroupedItemInv;
-import alexiil.mc.lib.attributes.item.ItemTransferable;
+import alexiil.mc.lib.attributes.item.*;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.GroupedItemInvFixedWrapper;
 import alexiil.mc.lib.attributes.item.impl.ItemInvModificationTracker;
@@ -36,18 +36,23 @@ import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
 import com.hrznstudio.galacticraft.screen.slot.AutoFilteredSlot;
 import com.hrznstudio.galacticraft.screen.slot.OutputSlot;
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenCustomHashMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MachineItemInv implements FixedItemInv.CopyingFixedItemInv, ItemTransferable, Saveable, Automatable {
-    private static final ItemFilter EMPTY_ONLY = ItemStack::isEmpty;
+    private static final ItemInvSlotChangeListener[] NO_LISTENERS = new ItemInvSlotChangeListener[0];
+    private static final ItemInvSlotChangeListener[] INVALIDATING_LISTENERS = new ItemInvSlotChangeListener[0];
+    private static final ItemFilter EMPTY_FILTER = ItemStack::isEmpty;
     private final List<SlotType> slotTypes = new ArrayList<>();
     private final List<ItemFilter> filters = new ArrayList<>();
     private final List<SlotFunction> positions = new ArrayList<>();
@@ -55,10 +60,16 @@ public class MachineItemInv implements FixedItemInv.CopyingFixedItemInv, ItemTra
 
     private final GroupedItemInv groupedInv = new GroupedItemInvFixedWrapper(this);
     private boolean modifiable = true;
+    private int changes = 0;
+
+    private final Map<ItemInvSlotChangeListener, ListenerRemovalToken> listeners
+            = new Object2ObjectLinkedOpenCustomHashMap<>(Util.identityHashStrategy());
+
+    private ItemInvSlotChangeListener[] bakedListeners = NO_LISTENERS;
 
     @Override
     public ItemFilter getFilterForSlot(int slot) {
-        if (slot < 0 || slot >= this.getSlotCount()) return EMPTY_ONLY;
+        if (slot < 0 || slot >= this.getSlotCount()) return EMPTY_FILTER;
         return this.filters.get(slot);
     }
 
@@ -79,11 +90,48 @@ public class MachineItemInv implements FixedItemInv.CopyingFixedItemInv, ItemTra
 
     @Override
     public boolean setInvStack(int slot, ItemStack to, Simulation simulation) {
-        if (this.getFilterForSlot(slot).matches(to) && to.getCount() <= this.getMaxAmount(slot, to)) {
-            if (simulation.isAction()) this.getItems().set(slot, to);
+        boolean allowed = false;
+        if (to.isEmpty()) {
+            allowed = true;
+        } else {
+            ItemStack current = getInvStack(slot);
+            if (
+                    !current.isEmpty() && current.getCount() > to.getCount() && ItemStackUtil.areEqualIgnoreAmounts(
+                            to, current
+                    )
+            ) {
+                allowed = true;
+            } else if (isItemValidForSlot(slot, to) && to.getCount() <= getMaxAmount(slot, to)) {
+                allowed = true;
+            }
+        }
+        if (allowed) {
+            if (simulation == Simulation.ACTION) {
+                ItemStack before = this.getItems().get(slot);
+                ItemInvModificationTracker.trackNeverChanging(before);
+                ItemInvModificationTracker.trackNeverChanging(to);
+                this.getItems().set(slot, to);
+                fireSlotChange(slot, before, to);
+                ItemInvModificationTracker.trackNeverChanging(before);
+                ItemInvModificationTracker.trackNeverChanging(to);
+            }
             return true;
         }
         return false;
+    }
+
+    protected final void fireSlotChange(int slot, ItemStack previous, ItemStack current) {
+        changes++;
+        // Iterate over the previous array in case the listeners array is changed while we are iterating
+        final ItemInvSlotChangeListener[] baked = bakedListeners;
+        for (ItemInvSlotChangeListener listener : baked) {
+            listener.onChange(this, slot, previous, current);
+        }
+    }
+
+    @Override
+    public int getChangeValue() {
+        return this.changes;
     }
 
     @Override
@@ -96,7 +144,7 @@ public class MachineItemInv implements FixedItemInv.CopyingFixedItemInv, ItemTra
         assert this.getSlotCount() == index;
         this.positions.add(index, new DefaultSlotFunction(x, y));
         this.slotTypes.add(index, type);
-        this.filters.add(index, filter.or(ItemStack::isEmpty));
+        this.filters.add(index, filter.or(EMPTY_FILTER));
         this.getItems().add(index, ItemStack.EMPTY);
         this.modifiable = true;
     }
@@ -106,7 +154,7 @@ public class MachineItemInv implements FixedItemInv.CopyingFixedItemInv, ItemTra
         assert this.getSlotCount() == index;
         this.positions.add(index, function);
         this.slotTypes.add(index, type);
-        this.filters.add(index, filter.or(ItemStack::isEmpty));
+        this.filters.add(index, filter.or(EMPTY_FILTER));
         this.getItems().add(index, ItemStack.EMPTY);
         this.modifiable = true;
     }
@@ -168,6 +216,46 @@ public class MachineItemInv implements FixedItemInv.CopyingFixedItemInv, ItemTra
             this.getItems().set(i, ItemStack.EMPTY);
         }
     }
+
+    /**
+     * Copied from LBA's FullFixedItemInv
+     */
+    @Override
+    public ListenerToken addListener(ItemInvSlotChangeListener listener, ListenerRemovalToken removalToken) {
+        if (bakedListeners == INVALIDATING_LISTENERS) {
+            // It doesn't really make sense to add listeners while we are invalidating them
+            return null;
+        }
+        ListenerRemovalToken previous = listeners.put(listener, removalToken);
+        if (previous == null) {
+            bakeListeners();
+        } else {
+            assert previous == removalToken : "The same listener object must be registered with the same removal token";
+        }
+        return () -> {
+            ListenerRemovalToken token = listeners.remove(listener);
+            if (token != null) {
+                assert token == removalToken;
+                bakeListeners();
+                removalToken.onListenerRemoved();
+            }
+        };
+    }
+
+    private void bakeListeners() {
+        bakedListeners = listeners.keySet().toArray(new ItemInvSlotChangeListener[0]);
+    }
+
+    public void invalidateListeners() {
+        bakedListeners = INVALIDATING_LISTENERS;
+        ListenerRemovalToken[] removalTokens = listeners.values().toArray(new ListenerRemovalToken[0]);
+        listeners.clear();
+        for (ListenerRemovalToken token : removalTokens) {
+            token.onListenerRemoved();
+        }
+        bakedListeners = NO_LISTENERS;
+    }
+
 
     @FunctionalInterface
     public interface SlotFunction {
