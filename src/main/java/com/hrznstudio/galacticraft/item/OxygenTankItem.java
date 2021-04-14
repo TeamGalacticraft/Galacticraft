@@ -136,7 +136,7 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
     }
 
     @Override
-    public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> itemAttributeList) {
+    public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> to) {
         ItemStack ref = reference.get().copy();
         if (this.size > 0) {
             OxygenTankImpl tank = new OxygenTankImpl(this.size);
@@ -144,15 +144,16 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
             tank.toTag(ref.getOrCreateTag());
             ref.setDamage(this.size - tank.getAmount());
             reference.set(ref);
-            itemAttributeList.offer(tank.listen(view -> {
+            tank.listen((view, previous) -> {
                         ItemStack stack = reference.get().copy();
                         stack.setDamage(this.size - view.getAmount());
                         tank.toTag(stack.getOrCreateTag());
                         reference.set(stack);
                     }
-            ));
+            );
+            to.offer(tank);
         } else {
-            itemAttributeList.offer(InfiniteOxygenTank.INSTANCE);
+            to.offer(InfiniteOxygenTank.INSTANCE);
         }
     }
 }

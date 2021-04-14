@@ -22,7 +22,8 @@
 
 package com.hrznstudio.galacticraft.attribute.oxygen;
 
-import java.util.function.Consumer;
+import alexiil.mc.lib.attributes.ListenerToken;
+import org.jetbrains.annotations.Nullable;
 
 public enum EmptyOxygenTank implements OxygenTank {
     NULL;
@@ -42,8 +43,8 @@ public enum EmptyOxygenTank implements OxygenTank {
     }
 
     @Override
-    public OxygenTank listen(Consumer<OxygenTank> consumer) {
-        return this;
+    public @Nullable ListenerToken listen(OxygenTankChangedListener listener) {
+        return null;
     }
 
     @Override
