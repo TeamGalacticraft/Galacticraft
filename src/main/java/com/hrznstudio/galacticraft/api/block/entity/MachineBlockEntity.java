@@ -22,10 +22,7 @@
 
 package com.hrznstudio.galacticraft.api.block.entity;
 
-import alexiil.mc.lib.attributes.ListenerRemovalToken;
-import alexiil.mc.lib.attributes.ListenerToken;
-import alexiil.mc.lib.attributes.SearchOptions;
-import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.*;
 import alexiil.mc.lib.attributes.fluid.FixedFluidInvView;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
@@ -89,7 +86,7 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Tickable, ExtendedScreenHandlerFactory {
+public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Tickable, ExtendedScreenHandlerFactory, AttributeProviderBlockEntity {
     private final MachineConfiguration configuration = new MachineConfiguration();
 
     private boolean noDrop = false;
@@ -585,6 +582,29 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     @Override
     public Text getDisplayName() {
         return LiteralText.EMPTY;
+    }
+
+    @Override
+    public void addAllAttributes(AttributeList<?> to) {
+        Direction direction = to.getSearchDirection();
+        BlockState state = this.getCachedState();
+        MachineBlockEntity machine = (MachineBlockEntity) world.getBlockEntity(pos);
+        assert machine != null;
+        if (direction == null) {
+            to.offer(machine.getFluidInv());
+            to.offer(machine.getInventory()); //expose everything if not given a direction
+            to.offer(machine.getCapacitor());
+        } else {
+            to.offer(machine.getFluidInvView());
+            to.offer(machine.getInvView());
+            to.offer(machine.getCapacitorView());
+            to.offer(machine.getItemInsertable(state, direction));
+            to.offer(machine.getItemExtractable(state, direction));
+            to.offer(machine.getFluidInsertable(state, direction));
+            to.offer(machine.getFluidExtractable(state, direction));
+            to.offer(machine.getEnergyExtractable(state, direction));
+            to.offer(machine.getEnergyInsertable(state, direction));
+        }
     }
 
     public MachineConfiguration getConfiguration() {

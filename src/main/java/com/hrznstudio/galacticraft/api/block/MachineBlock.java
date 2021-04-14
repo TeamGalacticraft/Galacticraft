@@ -22,8 +22,6 @@
 
 package com.hrznstudio.galacticraft.api.block;
 
-import alexiil.mc.lib.attributes.AttributeList;
-import alexiil.mc.lib.attributes.AttributeProvider;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
@@ -64,7 +62,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
@@ -78,7 +75,7 @@ import java.util.function.Supplier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MachineBlock extends BlockWithEntity implements AttributeProvider {
+public class MachineBlock extends BlockWithEntity {
     public static final BooleanProperty ARBITRARY_BOOLEAN_PROPERTY = BooleanProperty.of("update");
 
     private final Function<BlockView, ? extends MachineBlockEntity> blockEntityFunc;
@@ -267,27 +264,5 @@ public class MachineBlock extends BlockWithEntity implements AttributeProvider {
 
     public Text machineInfo(ItemStack stack, BlockView view, boolean context) {
         return machineInfo.apply(stack, view, context);
-    }
-
-    @Override
-    public void addAllAttributes(World world, BlockPos pos, BlockState blockState, AttributeList<?> attributes) {
-        Direction direction = attributes.getSearchDirection();
-        MachineBlockEntity machine = (MachineBlockEntity) world.getBlockEntity(pos);
-        assert machine != null;
-        if (direction == null) {
-            attributes.offer(machine.getFluidInv());
-            attributes.offer(machine.getInventory()); //expose everything if not given a direction
-            attributes.offer(machine.getCapacitor());
-        } else {
-            attributes.offer(machine.getFluidInvView());
-            attributes.offer(machine.getInvView());
-            attributes.offer(machine.getCapacitorView());
-            attributes.offer(machine.getItemInsertable(blockState, direction));
-            attributes.offer(machine.getItemExtractable(blockState, direction));
-            attributes.offer(machine.getFluidInsertable(blockState, direction));
-            attributes.offer(machine.getFluidExtractable(blockState, direction));
-            attributes.offer(machine.getEnergyExtractable(blockState, direction));
-            attributes.offer(machine.getEnergyInsertable(blockState, direction));
-        }
     }
 }

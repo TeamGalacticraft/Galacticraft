@@ -28,7 +28,6 @@ import alexiil.mc.lib.attributes.fluid.FluidTransferable;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.GroupedFluidInv;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
@@ -46,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MachineFluidInv implements FixedFluidInv, FluidTransferable, Saveable, Automatable {
+    private final FluidFilter EMPTY_ONLY = FluidKey::isEmpty;
     private final List<SlotType> slotTypes = new ArrayList<>();
     private final List<FluidFilter> filters = new ArrayList<>();
     private final List<Vec3i> positions = new ArrayList<>();
@@ -62,7 +62,7 @@ public class MachineFluidInv implements FixedFluidInv, FluidTransferable, Saveab
 
     @Override
     public FluidFilter getFilterForTank(int slot) {
-        if (slot < 0 || slot >= this.getTankCount()) return ConstantFluidFilter.NOTHING;
+        if (slot < 0 || slot >= this.getTankCount()) return EMPTY_ONLY;
         return this.filters.get(slot);
     }
 

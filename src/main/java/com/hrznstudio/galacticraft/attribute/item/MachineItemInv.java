@@ -26,7 +26,6 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.GroupedItemInv;
 import alexiil.mc.lib.attributes.item.ItemTransferable;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.GroupedItemInvFixedWrapper;
 import alexiil.mc.lib.attributes.item.impl.ItemInvModificationTracker;
@@ -48,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MachineItemInv implements FixedItemInv.CopyingFixedItemInv, ItemTransferable, Saveable, Automatable {
+    private static final ItemFilter EMPTY_ONLY = ItemStack::isEmpty;
     private final List<SlotType> slotTypes = new ArrayList<>();
     private final List<ItemFilter> filters = new ArrayList<>();
     private final List<SlotFunction> positions = new ArrayList<>();
@@ -58,7 +58,7 @@ public class MachineItemInv implements FixedItemInv.CopyingFixedItemInv, ItemTra
 
     @Override
     public ItemFilter getFilterForSlot(int slot) {
-        if (slot < 0 || slot >= this.getSlotCount()) return ConstantItemFilter.NOTHING;
+        if (slot < 0 || slot >= this.getSlotCount()) return EMPTY_ONLY;
         return this.filters.get(slot);
     }
 

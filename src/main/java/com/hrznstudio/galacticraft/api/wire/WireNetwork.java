@@ -24,12 +24,13 @@ package com.hrznstudio.galacticraft.api.wire;
 
 import alexiil.mc.lib.attributes.Simulation;
 import com.hrznstudio.galacticraft.api.wire.impl.WireNetworkImpl;
+import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -38,15 +39,6 @@ import java.util.Map;
 public interface WireNetwork {
     static WireNetwork create(ServerWorld world) {
         return new WireNetworkImpl(world);
-    }
-
-    /**
-     * Adds a wire to the network
-     * @param pos The position of the wire being added
-     * @see #addWire(BlockPos, Wire)
-     */
-    default void addWire(@NotNull BlockPos pos) {
-        addWire(pos, null);
     }
 
     /**
@@ -70,35 +62,18 @@ public interface WireNetwork {
     void updateConnections(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos);
 
     /**
-     * Returns the relationship between the two positions
-     * @param from The position to check from
-     * @param to The position to go to
-     * @return The relationship between the two positions
-     */
-    @NotNull WireConnectionType getConnection(BlockPos from, BlockPos to);
-
-    /**
      * Inserts energy into the network
      * @param fromWire The wire that received the energy
-     * @param fromBlock The block that inserted the energy
-     * @param amount The amount of energy, to insert
-     * @param simulate The simulate of action to perform
+     * @param amount The amount of energy to insert
+     * @param simulate Whether to perform the action or not
      * @return the amount of energy that failed to insert
      */
-    int insert(@NotNull BlockPos fromWire, @Nullable BlockPos fromBlock, /*Positive*/ int amount, @NotNull Simulation simulate);
+    int insert(@NotNull BlockPos fromWire, /*Positive*/ int amount, @NotNull Simulation simulate);
 
-    /**
-     * Returns the adjacent connections from a position
-     * @param from The position that will be checked for adjacent connections
-     * @return The adjacent connections from a position
-     */
-    @NotNull Map<Direction, WireConnectionType> getAdjacent(BlockPos from);
+    Collection<BlockPos> getAllWires();
+    Map<BlockPos, EnergyInsertable> getInsertable();
 
-    /**
-     * Returns whether or not you can traverse the network from {@code from} to {@code to}
-     * @param from The position to check from
-     * @param to The position to go to
-     * @return whether or not you can traverse the network from {@code from} to {@code to}
-     */
-    boolean canReach(@NotNull BlockPos from, @NotNull BlockPos to);
+    boolean markedForRemoval();
+
+    void markForRemoval();
 }

@@ -24,15 +24,16 @@ package com.hrznstudio.galacticraft.api.wire;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface Wire {
     /**
-     * Sets the {@link WireNetwork} associated with this wie
+     * Sets the {@link WireNetwork} associated with this wire
      * @param network The network to associate with
      */
-    void setNetwork(WireNetwork network);
+    void setNetwork(@Nullable WireNetwork network);
 
     /**
      * Returns the associated {@link WireNetwork}
@@ -44,6 +45,7 @@ public interface Wire {
      * Returns the associated {@link WireNetwork}
      * @return The associated {@link WireNetwork}
      */
+    @Contract(pure = true)
     @Nullable WireNetwork getNetworkNullable();
 
     /**
@@ -51,11 +53,16 @@ public interface Wire {
      * @param direction the direction offset to the block to check adjacency to
      * @return Whether or not this wire is able to connect to another block on the specified face/direction
      */
-    @NotNull WireConnectionType getConnection(Direction direction, @Nullable BlockEntity entity);
-
-    int getMaxTransferRate();
-
     default boolean canConnect(Direction direction) {
         return true;
     }
+
+    @NotNull WireConnectionType getConnection(Direction direction, @NotNull BlockEntity entity);
+
+
+    /**
+     * Returns the maximum amount of energy (in gJ) allowed to be transferred through this wire.
+     * @return the maximum amount of energy (in gJ) allowed to be transferred through this wire.
+     */
+    int getMaxTransferRate();
 }

@@ -39,7 +39,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
@@ -133,10 +133,15 @@ public class AluminumWireBlock extends WireBlock {
         }
     }
 
+
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction dir, BlockState neighbor, WorldAccess world, BlockPos thisWire, BlockPos otherConnectable) {
-        return state.with(getPropForDirection(dir), !(neighbor).isAir() && (neighbor.getBlock() instanceof WireBlock
-                || EnergyUtils.canAccessEnergy(world.getBlockEntity(thisWire).getWorld(), otherConnectable, dir.getOpposite())
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        super.neighborUpdate(state, world, pos, block, fromPos, notify);
+        BlockState neighbor = world.getBlockState(fromPos);
+        Direction dir = Direction.fromVector(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
+        assert dir != null;
+        world.setBlockState(pos, state.with(getPropForDirection(dir), !neighbor.isAir() && block instanceof WireBlock
+                || EnergyUtils.canAccessEnergy(world, fromPos, dir)
         ));
     }
 

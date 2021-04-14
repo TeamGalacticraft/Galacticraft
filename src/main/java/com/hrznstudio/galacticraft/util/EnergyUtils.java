@@ -28,10 +28,7 @@ import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.misc.Ref;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.energy.api.Capacitor;
-import com.hrznstudio.galacticraft.energy.api.CapacitorView;
-import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
-import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
+import com.hrznstudio.galacticraft.energy.api.*;
 import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
@@ -187,6 +184,32 @@ public class EnergyUtils {
 
     public static MutableText getDisplay(int value) {
         return DefaultEnergyType.INSTANCE.display(value);
+    }
+
+    public static EnergyTransferable getTransferable(EnergyInsertable insertable, EnergyExtractable extractable) {
+        if (insertable instanceof EnergyTransferable) return (EnergyTransferable) insertable;
+        if (extractable instanceof EnergyTransferable) return (EnergyTransferable) extractable;
+        return new EnergyTransferable() {
+            @Override
+            public int tryExtract(EnergyType type, int amount, Simulation simulation) {
+                return extractable.tryExtract(type, amount, simulation);
+            }
+
+            @Override
+            public int tryInsert(EnergyType type, int amount, Simulation simulation) {
+                return insertable.tryInsert(type, amount, simulation);
+            }
+
+            @Override
+            public EnergyExtractable asPureExtractable() {
+                return extractable.asPureExtractable();
+            }
+
+            @Override
+            public EnergyInsertable asPureInsertable() {
+                return insertable.asPureInsertable();
+            }
+        };
     }
 
     public static class Values {
