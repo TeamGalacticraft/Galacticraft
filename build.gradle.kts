@@ -106,7 +106,9 @@ repositories {
         }
     }
     maven("https://maven.galacticraft.dev") {
-        content { includeGroup("dev.galacticraft") }
+        content {
+            includeGroup("dev.galacticraft")
+        }
     }
     jcenter()
 }
