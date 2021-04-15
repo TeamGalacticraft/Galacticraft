@@ -126,5 +126,4 @@ public class EvolvedCreeperEntity extends CreeperEntity {
     public double getHeightOffset() {
         return this.isBaby() ? 0.0D : -0.45D;
     }
-
 }

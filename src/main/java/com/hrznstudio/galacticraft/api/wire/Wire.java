@@ -59,7 +59,6 @@ public interface Wire {
 
     @NotNull WireConnectionType getConnection(Direction direction, @NotNull BlockEntity entity);
 
-
     /**
      * Returns the maximum amount of energy (in gJ) allowed to be transferred through this wire.
      * @return the maximum amount of energy (in gJ) allowed to be transferred through this wire.

@@ -31,6 +31,8 @@ import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
+import com.hrznstudio.galacticraft.attribute.fluid.MachineFluidInv;
+import com.hrznstudio.galacticraft.attribute.item.MachineItemInv;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.OxygenSealerScreenHandler;
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
@@ -68,12 +70,21 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
     private byte sealCheckTime;
     private CelestialBodyType type = null;
 
-
     public OxygenSealerBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_SEALER_TYPE);
-        this.getInventory().addSlot(BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
-        this.getInventory().addSlot(LOX_INPUT, SlotType.OXYGEN_TANK, OxygenTankUtils.OXYGEN_TANK_EXTRACTABLE, 8, 62);
-        this.getFluidInv().addSlot(OXYGEN_TANK, SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
+    }
+
+    @Override
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
+        builder.addSlot(LOX_INPUT, SlotType.OXYGEN_TANK, OxygenTankUtils.OXYGEN_TANK_EXTRACTABLE, 8, 62);
+        return builder;
+    }
+
+    @Override
+    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_IN, 30, 8);
+        return builder;
     }
 
     @Override

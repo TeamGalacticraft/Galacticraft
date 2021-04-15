@@ -57,5 +57,4 @@ public class MoonFloraBlockStateProvider extends BlockStateProvider {
             return random.nextInt(3) > 0 ? Util.getRandom(mix2, random) : GalacticraftBlocks.MOON_BERRY_BUSH.getDefaultState();
         }
     }
-
 }

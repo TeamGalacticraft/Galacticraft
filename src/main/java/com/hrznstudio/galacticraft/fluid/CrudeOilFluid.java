@@ -93,7 +93,6 @@ public class CrudeOilFluid extends FlowableFluid {
         }
     }
 
-
     @Override
     public int getTickRate(WorldView WorldView) {
         return 7;

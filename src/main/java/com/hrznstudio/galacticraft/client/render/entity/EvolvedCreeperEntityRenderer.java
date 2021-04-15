@@ -62,7 +62,6 @@ public class EvolvedCreeperEntityRenderer extends MobEntityRenderer<EvolvedCreep
         return (int) (g * 10.0F) % 2 == 0 ? 0.0F : MathHelper.clamp(g, 0.5F, 1.0F);
     }
 
-
     @Override
     public void render(EvolvedCreeperEntity mobEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         super.render(mobEntity, f, g, matrixStack, vertexConsumerProvider, i);

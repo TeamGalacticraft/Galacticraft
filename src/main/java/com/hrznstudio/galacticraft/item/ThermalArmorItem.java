@@ -60,7 +60,6 @@ public class ThermalArmorItem extends Item {
         return super.use(world, player, hand);
     }
 
-
     public int getSlotIdForType(EquipmentSlot slotType) {
         switch (slotType) {
             case HEAD:

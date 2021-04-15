@@ -93,7 +93,6 @@ public class SecurityInfo {
         this.accessibility = accessibility;
     }
 
-
     public @Nullable GameProfile getOwner() {
         return this.owner;
     }

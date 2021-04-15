@@ -27,6 +27,7 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
+import com.hrznstudio.galacticraft.attribute.item.MachineItemInv;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.CoalGeneratorScreenHandler;
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
@@ -74,8 +75,13 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
 
     public CoalGeneratorBlockEntity() {
         super(GalacticraftBlockEntities.COAL_GENERATOR_TYPE);
-        this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 8);
-        this.getInventory().addSlot(FUEL_SLOT, SlotType.COAL, stack -> FUEL_MAP.containsKey(stack.getItem()), 8, 74);
+    }
+
+    @Override
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 8);
+        builder.addSlot(FUEL_SLOT, SlotType.COAL, stack -> FUEL_MAP.containsKey(stack.getItem()), 8, 74);
+        return builder;
     }
 
     @Override

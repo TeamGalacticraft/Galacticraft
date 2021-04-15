@@ -47,7 +47,6 @@ public enum GalacticraftToolMaterial implements ToolMaterial {
         return Ingredient.ofStacks(new ItemStack(GalacticraftItems.TITANIUM_INGOT));
     });
 
-
     private final int miningLevel;
     private final int durability;
     private final float blockBreakSpeed;

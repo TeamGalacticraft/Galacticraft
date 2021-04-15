@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
-import com.hrznstudio.galacticraft.client.gui.widget.machine.OxygenTankWidget;
 import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -46,7 +45,6 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
         this.backgroundHeight = 181;
 
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 13, 13, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
-        this.addWidget(new OxygenTankWidget(handler.machine.getFluidInv().getTank(0), 36, 13, 48));
     }
 
     @Override

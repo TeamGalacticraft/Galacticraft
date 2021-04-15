@@ -28,6 +28,8 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
+import com.hrznstudio.galacticraft.attribute.fluid.MachineFluidInv;
+import com.hrznstudio.galacticraft.attribute.item.MachineItemInv;
 import com.hrznstudio.galacticraft.attribute.oxygen.EmptyOxygenTank;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
@@ -57,9 +59,19 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity implements T
 
     public OxygenCompressorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COMPRESSOR_TYPE);
-        this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
-        this.getInventory().addSlot(OXYGEN_TANK_SLOT, SlotType.OXYGEN_TANK, OxygenTankUtils::isOxygenTank, 80, 27);
-        this.getFluidInv().addSlot(OXYGEN_TANK, SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY); //80, 27
+    }
+
+    @Override
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
+        builder.addSlot(OXYGEN_TANK_SLOT, SlotType.OXYGEN_TANK, OxygenTankUtils::isOxygenTank, 80, 27);
+        return builder;
+    }
+
+    @Override
+    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_IN, 80, 27);
+        return builder;
     }
 
     @Override

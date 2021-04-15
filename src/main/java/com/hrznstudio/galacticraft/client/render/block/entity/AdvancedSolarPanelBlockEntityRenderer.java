@@ -127,7 +127,6 @@ public class AdvancedSolarPanelBlockEntityRenderer extends BlockEntityRenderer<A
         matrices.pop();
     }
 
-
     public void renderPanel(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         this.panelMain.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         this.sideHorizontal0.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);

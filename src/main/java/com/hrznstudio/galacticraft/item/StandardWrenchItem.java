@@ -76,7 +76,6 @@ public class StandardWrenchItem extends Item {
         return ActionResult.SUCCESS;
     }
 
-
     private void use(PlayerEntity player, BlockState state, WorldAccess world, BlockPos pos, ItemStack stack) {
         Block block = state.getBlock();
         Property<?> property = block.getStateManager().getProperty("facing");

@@ -71,17 +71,21 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
 
     public ElectricCompressorBlockEntity() {
         super(GalacticraftBlockEntities.ELECTRIC_COMPRESSOR_TYPE);
+    }
 
-        this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 3 * 18 + 1, 75);
+    @Override
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 3 * 18 + 1, 75);
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                this.getInventory().addSlot(y * 3 + x + 1, SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 19, y * 18 + 18);
+                builder.addSlot(y * 3 + x + 1, SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 19, y * 18 + 18);
             }
         }
 
-        this.getInventory().addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 29));
-        this.getInventory().addSlot(SECOND_OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 47));
+        builder.addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 29));
+        builder.addSlot(SECOND_OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 47));
+        return builder;
     }
 
     public int getProgress() {

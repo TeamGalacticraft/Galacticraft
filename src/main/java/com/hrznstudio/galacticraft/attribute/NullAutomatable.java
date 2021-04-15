@@ -23,18 +23,12 @@
 package com.hrznstudio.galacticraft.attribute;
 
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
-import net.minecraft.util.Util;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class NullAutomatable implements Automatable {
     public static final Automatable INSTANCE = new NullAutomatable();
-    private static final List<SlotType> SLOT_TYPE_LIST = Util.make(new ArrayList<>(1), list -> {
-        list.add(SlotType.NONE);
-    });
+    private static final SlotType[] SLOT_TYPE_LIST = new SlotType[0];
     @Override
-    public List<SlotType> getTypes() {
+    public SlotType[] getTypes() {
         return SLOT_TYPE_LIST;
     }
 }

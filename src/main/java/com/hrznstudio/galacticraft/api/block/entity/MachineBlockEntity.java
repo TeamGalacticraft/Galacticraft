@@ -93,8 +93,9 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     private boolean loaded = false;
 
     private final @NotNull SimpleCapacitor capacitor = new SimpleCapacitor(DefaultEnergyType.INSTANCE, this.getEnergyCapacity());
-    private final @NotNull MachineItemInv inventory = new MachineItemInv();
-    private final @NotNull MachineFluidInv fluidInv = new MachineFluidInv(this.getFluidTankCapacity());
+    private final @NotNull MachineItemInv inventory = this.createInventory(MachineItemInv.Builder.create()).build();
+
+    private final @NotNull MachineFluidInv fluidInv = this.createFluidInv(MachineFluidInv.Builder.create(this.getFluidTankCapacity())).build();
 
     private final @NotNull CapacitorView capacitorView = new CapacitorView() {
         @Override
@@ -180,6 +181,14 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     public int getEnergyGenerated() {
         if (this.getStatus().getType().isActive()) return getBaseEnergyGenerated();
         return 0;
+    }
+
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        return builder;
+    }
+
+    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+        return builder;
     }
 
     public FluidAmount getFluidTankCapacity() {
@@ -506,7 +515,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     }
 
     public void trySpreadFluids(int tank) {
-        if (this.getFluidInv().getTypes().get(tank).getType().isOutput() && !this.getFluidInv().getInvFluid(tank).isEmpty()) {
+        if (this.getFluidInv().getTypes()[tank].getType().isOutput() && !this.getFluidInv().getInvFluid(tank).isEmpty()) {
             for (BlockFace face : Constants.Misc.BLOCK_FACES) {
                 ConfiguredMachineFace option = this.getIOConfig().get(face);
                 if (option.getAutomationType().isFluid() && option.getAutomationType().isOutput()) {

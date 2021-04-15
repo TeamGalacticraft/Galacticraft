@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.api.cape.model;
 
-
 import com.hrznstudio.galacticraft.misc.cape.JsonCapes;
 
 import java.util.UUID;

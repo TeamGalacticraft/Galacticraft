@@ -38,5 +38,4 @@ public class EvolvedVindicatorEntityRenderer extends VindicatorEntityRenderer {
                 )
         );
     }
-
 }

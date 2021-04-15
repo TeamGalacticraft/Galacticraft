@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
-import com.hrznstudio.galacticraft.client.gui.widget.machine.OxygenTankWidget;
 import com.hrznstudio.galacticraft.screen.BubbleDistributorScreenHandler;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -68,7 +67,6 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
         }));
 
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
-        this.addWidget(new OxygenTankWidget(handler.machine.getFluidInv().getTank(0), 31, 8, 48));
     }
 
     @Override
@@ -115,7 +113,6 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
 
         this.textField.render(matrices, mouseX, mouseY, delta);
 
-
         this.textField.x = this.x + 132;
         this.textField.y = this.y + 59;
 
@@ -139,7 +136,6 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         return super.keyReleased(keyCode, scanCode, modifiers) | textField.keyReleased(keyCode, scanCode, modifiers);
     }
-
 
     private boolean checkClick(double mouseX, double mouseY, int button) {
         if (button == 0) {

@@ -133,7 +133,6 @@ public class AluminumWireBlock extends WireBlock {
         }
     }
 
-
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborUpdate(state, world, pos, block, fromPos, notify);

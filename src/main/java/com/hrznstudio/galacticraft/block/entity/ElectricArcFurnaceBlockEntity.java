@@ -65,19 +65,24 @@ public class ElectricArcFurnaceBlockEntity extends MachineBlockEntity {
 
     public ElectricArcFurnaceBlockEntity(BlockEntityType<? extends ElectricArcFurnaceBlockEntity> blockEntityType) {
         super(blockEntityType);
-        this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 7);
-        this.getInventory().addSlot(INPUT_SLOT, SlotType.INPUT, stack -> {
-            predicateInv.setStack(0, stack);
-            return this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, predicateInv, world).isPresent();
-        }, 56, 25);
-        this.getInventory().addSlot(OUTPUT_SLOT_1, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(109, 25));
-        this.getInventory().addSlot(OUTPUT_SLOT_2, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(127, 25));
         this.subInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
                 return getWrappedInventory().canPlayerUse(player);
             }
         };
+    }
+
+    @Override
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 7);
+        builder.addSlot(INPUT_SLOT, SlotType.INPUT, stack -> {
+            predicateInv.setStack(0, stack);
+            return this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, predicateInv, world).isPresent();
+        }, 56, 25);
+        builder.addSlot(OUTPUT_SLOT_1, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(109, 25));
+        builder.addSlot(OUTPUT_SLOT_2, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(127, 25));
+        return builder;
     }
 
     public ElectricArcFurnaceBlockEntity() {

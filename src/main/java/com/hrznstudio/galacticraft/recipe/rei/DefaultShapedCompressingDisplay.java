@@ -58,7 +58,6 @@ public class DefaultShapedCompressingDisplay implements DefaultCompressingDispla
     //    return Optional.ofNullable(this.display);
     //}
 
-
     @Override
     public @NotNull List<List<EntryStack>> getRequiredEntries() {
         return input;

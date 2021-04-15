@@ -47,5 +47,4 @@ public class CannedFoodItem extends Item {
         stack.decrement(1);
         return stack;
     }
-
 }

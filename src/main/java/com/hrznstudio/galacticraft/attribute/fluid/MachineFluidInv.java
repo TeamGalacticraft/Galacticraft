@@ -22,63 +22,38 @@
 
 package com.hrznstudio.galacticraft.attribute.fluid;
 
-import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
-import alexiil.mc.lib.attributes.fluid.FluidTransferable;
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
-import alexiil.mc.lib.attributes.fluid.GroupedFluidInv;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper;
+import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.lib.attributes.misc.Saveable;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.attribute.Automatable;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
+import com.hrznstudio.galacticraft.screen.tank.OxygenTank;
 import com.hrznstudio.galacticraft.screen.tank.Tank;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.util.math.Vec3i;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MachineFluidInv implements FixedFluidInv, FluidTransferable, Saveable, Automatable {
-    private final FluidFilter EMPTY_ONLY = FluidKey::isEmpty;
-    private final List<SlotType> slotTypes = new ArrayList<>();
-    private final List<FluidFilter> filters = new ArrayList<>();
-    private final List<Vec3i> positions = new ArrayList<>();
+public class MachineFluidInv extends SimpleFixedFluidInv implements Automatable {
+    private final SlotType[] slotTypes;
+    private final FluidFilter[] filters;
+    private final TankProvider[] tankProviders;
 
-    private final List<FluidVolume> tank = new ArrayList<>();
-    private final FluidAmount capacity;
-
-    private final GroupedFluidInv groupedInv = new GroupedFluidInvFixedWrapper(this);
-    private boolean modifiable = true;
-
-    public MachineFluidInv(FluidAmount capacity) {
-        this.capacity = capacity;
+    public MachineFluidInv(FluidAmount capacity, SlotType[] slotTypes, FluidFilter[] filters, TankProvider[] tankProviders) {
+        super(filters.length, capacity);
+        this.slotTypes = slotTypes;
+        this.filters = filters;
+        this.tankProviders = tankProviders;
     }
 
     @Override
     public FluidFilter getFilterForTank(int slot) {
-        if (slot < 0 || slot >= this.getTankCount()) return EMPTY_ONLY;
-        return this.filters.get(slot);
-    }
-
-    @Override
-    public int getTankCount() {
-        return this.getTanks().size();
-    }
-
-    @Override
-    public FluidVolume getInvFluid(int tank) {
-        return this.getTanks().get(tank);
-    }
-
-    protected List<FluidVolume> getTanks() {
-        this.modifiable = false;
-        return this.tank;
+        if (slot < 0 || slot >= this.getTankCount()) return ConstantFluidFilter.NOTHING;
+        return this.filters[slot];
     }
 
     @Override
@@ -86,93 +61,114 @@ public class MachineFluidInv implements FixedFluidInv, FluidTransferable, Saveab
         return this.getFilterForTank(tank).matches(fluid);
     }
 
-    @Override
-    public boolean setInvFluid(int tank, FluidVolume to, Simulation simulation) {
-        if (this.isFluidValidForTank(tank, to.getFluidKey()) && !to.amount().isGreaterThan(this.getMaxAmount_F(tank))) {
-            if (simulation.isAction()) this.getTanks().set(tank, to);
-            return true;
-        }
-        return false;
-    }
-
-    public void addSlot(int index, SlotType type, FluidFilter filter, int x, int y, int s) {
-        assert modifiable;
-        assert this.getTankCount() == index;
-        this.positions.add(index, new Vec3i(x, y, s));
-        this.slotTypes.add(index, type);
-        this.filters.add(index, filter.or(FluidKey::isEmpty));
-        this.getTanks().add(index, FluidVolumeUtil.EMPTY);
-        this.modifiable = true;
-    }
-
-    public void addSlot(int index, SlotType type, FluidFilter filter) {
-        assert modifiable;
-        assert this.getTankCount() == index;
-        this.positions.add(index, null);
-        this.slotTypes.add(index, type);
-        this.filters.add(index, filter.or(FluidKey::isEmpty));
-        this.getTanks().add(index, FluidVolumeUtil.EMPTY);
-        this.modifiable = true;
-    }
-
     public void createTanks(MachineScreenHandler<?> screenHandler) {
-        Vec3i vec;
         for (int i = 0; i < getTankCount(); i++) {
-            vec = positions.get(i);
-            if (vec != null) {
-                screenHandler.addTank(new Tank(i, screenHandler.machine.getFluidInv(), vec.getX(), vec.getY(), vec.getZ()));
-            }
+            screenHandler.addTank(this.tankProviders[i].createTank(i, screenHandler.machine.getFluidInv()));
         }
     }
 
     @Override
-    public List<SlotType> getTypes() {
+    public SlotType[] getTypes() {
         return this.slotTypes;
     }
 
-    @Override
-    public FluidAmount getMaxAmount_F(int tank) {
-        return this.capacity;
-    }
+    public static class Builder {
+        private final FluidFilter EMPTY_ONLY = FluidKey::isEmpty;
+        private final FluidAmount capacity;
+        private final List<SlotType> slotTypes = new ArrayList<>();
+        private final List<FluidFilter> filters = new ArrayList<>();
+        private final List<TankProvider> tankProviders = new ArrayList<>();
 
-    @Override
-    public FluidVolume attemptExtraction(FluidFilter filter, FluidAmount maxAmount, Simulation simulation) {
-        return this.getGroupedInv().attemptExtraction(filter, maxAmount, simulation);
-    }
-
-    @Override
-    public GroupedFluidInv getGroupedInv() {
-        return this.groupedInv;
-    }
-
-    @Override
-    public FluidVolume attemptInsertion(FluidVolume fluid, Simulation simulation) {
-        return this.getGroupedInv().attemptInsertion(fluid, simulation);
-    }
-
-    @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        ListTag tanksTag = new ListTag();
-        for (FluidVolume volume : this.getTanks()) {
-            tanksTag.add(volume.toTag());
+        private Builder(FluidAmount capacity) {
+            this.capacity = capacity;
         }
-        tag.put("tanks", tanksTag);
-        return tag;
+
+        public static Builder create(FluidAmount capacity) {
+            return new Builder(capacity);
+        }
+
+        public void addTank(int index, SlotType type, FluidFilter filter, int x, int y, int s) {
+            this.tankProviders.add(index, new DefaultTankProvider(x, y, s));
+            this.slotTypes.add(index, type);
+            this.filters.add(index, filter.or(EMPTY_ONLY));
+        }
+
+        public void addTank(int index, SlotType type, int x, int y, int s) {
+            this.tankProviders.add(index, new DefaultTankProvider(x, y, s));
+            this.slotTypes.add(index, type);
+            this.filters.add(index, ConstantFluidFilter.ANYTHING);
+        }
+
+        public void addTank(int index, SlotType type, FluidFilter filter, int x, int y) {
+            this.tankProviders.add(index, new DefaultTankProvider(x, y));
+            this.slotTypes.add(index, type);
+            this.filters.add(index, filter.or(EMPTY_ONLY));
+        }
+
+        public void addTank(int index, SlotType type, int x, int y) {
+            this.tankProviders.add(index, new DefaultTankProvider(x, y));
+            this.slotTypes.add(index, type);
+            this.filters.add(index, ConstantFluidFilter.ANYTHING);
+        }
+
+        public void addTank(int index, SlotType type, FluidFilter filter, TankProvider tankProvider) {
+            this.tankProviders.add(index, tankProvider);
+            this.slotTypes.add(index, type);
+            this.filters.add(index, filter.or(EMPTY_ONLY));
+        }
+
+        public void addTank(int index, SlotType type, TankProvider tankProvider) {
+            this.tankProviders.add(index, tankProvider);
+            this.slotTypes.add(index, type);
+            this.filters.add(index, ConstantFluidFilter.ANYTHING);
+        }
+
+        public MachineFluidInv build() {
+            return new MachineFluidInv(this.capacity, this.slotTypes.toArray(new SlotType[0]), this.filters.toArray(new FluidFilter[0]), this.tankProviders.toArray(new TankProvider[0]));
+        }
+
+        public void addLOXTank(int index, SlotType type, int x, int y) {
+            this.addTank(index, type, Constants.Filter.LOX_ONLY, new OxygenTankProvider(x, y));
+        }
     }
 
-    @Override
-    public void fromTag(CompoundTag tag) {
-        ListTag tanksTag = tag.getList("tanks", new CompoundTag().getType());
-        for (int i = 0; i < tanksTag.size() && i < this.getTanks().size(); i++) {
-            this.getTanks().set(i, FluidVolume.fromTag(tanksTag.getCompound(i)));
+    public interface TankProvider {
+        Tank createTank(int index, FixedFluidInv inv);
+    }
+
+    public static class DefaultTankProvider implements TankProvider {
+        private final int x;
+        private final int y;
+        private final int scale;
+
+        public DefaultTankProvider(int x, int y, int scale) {
+            this.x = x;
+            this.y = y;
+            this.scale = scale;
         }
-        for (int i = tanksTag.size(); i < this.getTanks().size(); i++) {
-            this.getTanks().set(i, FluidVolumeUtil.EMPTY);
+
+        public DefaultTankProvider(int x, int y) {
+            this(x, y, 1);
+        }
+
+        @Override
+        public Tank createTank(int index, FixedFluidInv inv) {
+            return new Tank(index, inv, this.x, this.y, this.scale);
         }
     }
 
-    @Override
-    public FluidVolume attemptAnyExtraction(FluidAmount maxAmount, Simulation simulation) {
-        return this.getGroupedInv().attemptAnyExtraction(maxAmount, simulation);
+    public static class OxygenTankProvider implements TankProvider {
+        private final int x;
+        private final int y;
+
+        public OxygenTankProvider(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public Tank createTank(int index, FixedFluidInv inv) {
+            return new OxygenTank(index, inv, x, y);
+        }
     }
 }

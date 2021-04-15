@@ -40,5 +40,4 @@ public class EarthReentryPathfinder {
         this.landingPosition = landingPosition;
         this.startingPosition = startingPosition;
     }
-
 }

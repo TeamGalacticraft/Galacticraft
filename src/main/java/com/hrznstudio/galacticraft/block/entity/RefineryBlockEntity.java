@@ -29,6 +29,8 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
+import com.hrznstudio.galacticraft.attribute.fluid.MachineFluidInv;
+import com.hrznstudio.galacticraft.attribute.item.MachineItemInv;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluid.GalacticraftFluids;
 import com.hrznstudio.galacticraft.screen.RefineryScreenHandler;
@@ -58,15 +60,23 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
     public static final int FLUID_INPUT_SLOT = 1;
     public static final int FLUID_OUTPUT_SLOT = 2;
 
-
     public RefineryBlockEntity() {
         super(GalacticraftBlockEntities.REFINERY_TYPE);
-        this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 7);
-        this.getInventory().addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_INPUT, stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL), 123, 7);
-        this.getInventory().addSlot(FLUID_OUTPUT_SLOT, SlotType.FLUID_TANK_OUTPUT, stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL), 153, 7);
+    }
 
-        this.getFluidInv().addSlot(OIL_TANK, SlotType.OIL, Constants.Filter.OIL, 122, 28, 0);
-        this.getFluidInv().addSlot(FUEL_TANK, SlotType.FUEL_OUT, Constants.Filter.FUEL, 152, 28, 0);
+    @Override
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 7);
+        builder.addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_INPUT, stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL), 123, 7);
+        builder.addSlot(FLUID_OUTPUT_SLOT, SlotType.FLUID_TANK_OUTPUT, stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL), 153, 7);
+        return builder;
+    }
+
+    @Override
+    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+        builder.addTank(OIL_TANK, SlotType.OIL, Constants.Filter.OIL, 122, 28, 1);
+        builder.addTank(FUEL_TANK, SlotType.FUEL_OUT, Constants.Filter.FUEL, 152, 28, 1);
+        return builder;
     }
 
     @Override

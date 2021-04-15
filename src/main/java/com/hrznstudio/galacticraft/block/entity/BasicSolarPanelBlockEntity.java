@@ -26,6 +26,7 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
+import com.hrznstudio.galacticraft.attribute.item.MachineItemInv;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.BasicSolarPanelScreenHandler;
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
@@ -52,7 +53,12 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements Ti
 
     public BasicSolarPanelBlockEntity() {
         super(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_TYPE);
-        this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_INSERTABLE, 8, 62);
+    }
+
+    @Override
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_INSERTABLE, 8, 62);
+        return builder;
     }
 
     @Override
@@ -130,7 +136,6 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements Ti
     public int getBaseEnergyGenerated() {
         return Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate();
     }
-
 
     @Override
     public List<BlockFace> getLockedFaces() {

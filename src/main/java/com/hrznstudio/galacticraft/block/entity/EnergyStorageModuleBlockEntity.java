@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.block.entity;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
+import com.hrznstudio.galacticraft.attribute.item.MachineItemInv;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.EnergyStorageModuleScreenHandler;
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
@@ -46,8 +47,13 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implement
     public EnergyStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE);
         this.setStatus(MachineStatus.NULL);
-        this.getInventory().addSlot(CHARGE_BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 102, 24);
-        this.getInventory().addSlot(DRAIN_BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_INSERTABLE, 102, 48);
+    }
+
+    @Override
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 102, 24);
+        builder.addSlot(DRAIN_BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_INSERTABLE, 102, 48);
+        return builder;
     }
 
     @Override

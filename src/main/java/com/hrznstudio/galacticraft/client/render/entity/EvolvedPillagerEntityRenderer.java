@@ -38,5 +38,4 @@ public class EvolvedPillagerEntityRenderer extends PillagerEntityRenderer {
                 )
         );
     }
-
 }

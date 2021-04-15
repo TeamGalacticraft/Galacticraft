@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.api.screen;
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.ConfiguredMachineFace;
@@ -44,11 +43,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Either;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
-import it.unimi.dsi.fastutil.ints.*;
+import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -58,7 +59,6 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.texture.AbstractTexture;
-import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -691,32 +691,24 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     protected void drawTanks(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         assert this.client != null;
-        Int2IntMap color = getColor(matrices, mouseX, mouseY);
+        Int2IntArrayMap color = getColor(matrices, mouseX, mouseY);
+        color.defaultReturnValue(-1);
+        matrices.push();
+        matrices.translate(this.x, this.y, 0);
         for (Tank tank : this.handler.tanks) {
-            if (tank.scale == 0) continue;
-            int[] data = tank.getPositionData();
-            this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
-            int i = color.get(tank.index);
-            this.drawTextureColor(matrices, this.x, this.y, data[0], data[1] + Constants.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinate.FLUID_TANK_WIDTH, height,i >> 16 & 0xFF, i >> 8 & 0xFF, i & 0xFF);
-
-            FluidVolume content = tank.getFluid();
-            if (content.isEmpty()) return;
-            matrices.push();
-            double scale = content.getAmount_F().div(tank.getCapacity()).asInexactDouble();
-            Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getRawFluid()).getFluidSprites(world, pos, content.getRawFluid().getDefaultState())[0];
-            this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-            drawSprite(matrices, this.x + 1, this.y + 1 - (int)(data[2] * scale) + data[2], 0, Constants.TextureCoordinate.FLUID_TANK_WIDTH - 2, (int)(data[2] * scale) - 2, sprite);
-            matrices.pop();
-            this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
-            this.drawTexture(matrices, this.x, this.y, data[0], data[1], Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2]);
+            tank.render(matrices, this.client, this.world, this.pos, mouseX - this.x, mouseY - this.y, color.get(tank.index) != -1, color);
         }
+        for (Tank tank : this.handler.tanks) {
+            tank.drawTooltip(matrices, this.client, this.world, this.pos, mouseX - this.x, mouseY - this.y);
+        }
+        matrices.pop();
     }
 
-    protected Int2IntMap getColor(MatrixStack matrices, int mouseX, int mouseY) {
+    protected Int2IntArrayMap getColor(MatrixStack matrices, int mouseX, int mouseY) {
         if (Tab.CONFIGURATION.isOpen()) {
             mouseX -= PANEL_WIDTH + this.x;
             mouseY -= this.y + TAB_HEIGHT + SPACING;
-            Int2IntMap out = new Int2IntArrayMap();
+            Int2IntArrayMap out = new Int2IntArrayMap();
             if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) {
                 IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.getFluidInv()));
                 group(out, list);
@@ -744,13 +736,13 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             out.defaultReturnValue(ColorUtils.WHITE);
             return out;
         }
-        return Int2IntMaps.EMPTY_MAP;
+        return new Int2IntArrayMap();
     }
 
     private void group(Int2IntMap out, IntList list) {
         for (Tank tank : this.handler.tanks) {
             if (list.contains(tank.index)) {
-                out.put(tank.index, this.handler.machine.getFluidInv().getTypes().get(tank.index).getColor().getRgb());
+                out.put(tank.index, this.handler.machine.getFluidInv().getTypes()[tank.index].getColor().getRgb());
             }
         }
     }
@@ -807,32 +799,32 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 slot.x - 1, slot.y - 1,
                 slot.x - 1, slot.y + 17,
                 this.getZOffset(),
-                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb(),
-                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb());
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getModel(), bufferBuilder,
                 slot.x - 1, slot.y + 17,
                 slot.x + 17, slot.y - 1,
                 this.getZOffset(),
-                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb(),
-                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb());
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getModel(), bufferBuilder,
                 slot.x + 17, slot.y + 17,
                 slot.x + 17, slot.y - 1,
                 this.getZOffset(),
-                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb(),
-                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb());
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getModel(), bufferBuilder,
                 slot.x + 17, slot.y - 1,
                 slot.x - 1, slot.y - 1,
                 this.getZOffset(),
-                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb(),
-                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb());
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
         tessellator.draw();
         RenderSystem.shadeModel(7424);
         RenderSystem.disableBlend();
@@ -1052,19 +1044,22 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
                 return;
             }
-            List<SlotType> list = sideOption.getAutomationType().getAutomatable(machine).getTypes();
+            SlotType[] slotTypes = sideOption.getAutomationType().getAutomatable(machine).getTypes();
             int i = 0;
             if (sideOption.getMatching() != null && sideOption.getMatching().right().isPresent()) {
-                i = list.indexOf(sideOption.getMatching().right().get());
+                SlotType slotType = sideOption.getMatching().right().get();
+                for (; i < slotTypes.length; i++) {
+                    if (slotTypes[i] == slotType) break;
+                }
                 if (back) i--;
                 else i++;
             }
 
-            if (i == list.size()) i = 0;
-            if (i == -1) i = list.size() - 1;
-            sideOption.setMatching(Either.right(list.get(i)));
+            if (i == slotTypes.length) i = 0;
+            if (i == -1) i = slotTypes.length - 1;
+            sideOption.setMatching(Either.right(slotTypes[i]));
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-            buf.writeBlockPos(machine.getPos()).writeByte(face.ordinal()).writeBoolean(true).writeBoolean(false).writeInt(SlotType.SLOT_TYPES.getRawId(list.get(i)));
+            buf.writeBlockPos(machine.getPos()).writeByte(face.ordinal()).writeBoolean(true).writeBoolean(false).writeInt(SlotType.SLOT_TYPES.getRawId(slotTypes[i]));
             ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
         }), //RIGHT
         CHANGE_MATCH_SLOT((player, machine, face, back, reset) -> {

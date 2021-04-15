@@ -41,5 +41,4 @@ public class LightPanelBlock extends AbstractDirectionalBlock {
         settings.strength(2.0f, 2.0f);
         this.lightLevel = lightLevel;
     }
-
 }

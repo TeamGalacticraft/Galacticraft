@@ -103,19 +103,19 @@ public class ConfiguredMachineFace {
             }
             SlotType type = matching.right().orElseThrow(RuntimeException::new);
             if (type == null) {
-                return IntStream.range(0, automatable.getTypes().size() - 1).toArray();
+                return IntStream.range(0, automatable.getTypes().length - 1).toArray();
             }
             if (type.getType() == AutomationType.NONE) return new int[0];
 
             IntList intList = new IntArrayList(1);
-            for (int i = 0; i < automatable.getTypes().size(); i++) {
-                if (automatable.getTypes().get(i) == type) intList.add(i);
+            for (int i = 0; i < automatable.getTypes().length; i++) {
+                if (automatable.getTypes()[i] == type) intList.add(i);
             }
             return intList.toIntArray();
         }
         IntList intList = new IntArrayList(1);
-        for (int i = 0; i < automatable.getTypes().size(); i++) {
-            if (automatable.getTypes().get(i).getType().canPassAs(this.automationType)) intList.add(i);
+        for (int i = 0; i < automatable.getTypes().length; i++) {
+            if (automatable.getTypes()[i].getType().canPassAs(this.automationType)) intList.add(i);
         }
         return intList.toIntArray();
     }
@@ -146,5 +146,4 @@ public class ConfiguredMachineFace {
             this.matching = null;
         }
     }
-
 }

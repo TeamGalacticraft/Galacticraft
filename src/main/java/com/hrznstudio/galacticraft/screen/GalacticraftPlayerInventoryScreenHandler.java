@@ -130,7 +130,6 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
             accessorySlot++;
         }
 
-
         // Player main inv
         for (int slotY = 0; slotY < 3; ++slotY) {
             for (int slotX = 0; slotX < 9; ++slotX) {

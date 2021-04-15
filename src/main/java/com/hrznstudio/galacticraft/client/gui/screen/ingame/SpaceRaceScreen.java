@@ -113,7 +113,6 @@ public class SpaceRaceScreen extends Screen {
         fill(stack, getLeft(), getTop(), getLeft() + widthSize, getTop() + heightSize, 0x80000000);
     }
 
-
     private void renderForeground(MatrixStack stack, int mouseX, int mouseY) {
         drawCenteredString(stack, this.textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager"), this.width / 2, getTop() - 20, 0xFFFFFF);
 
@@ -361,7 +360,6 @@ public class SpaceRaceScreen extends Screen {
         }
         return height;
     }
-
 
     private boolean isAnimationComplete() {
         int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
