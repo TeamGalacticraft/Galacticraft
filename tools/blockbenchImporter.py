@@ -23,7 +23,7 @@ extendsName = str(input("What is the model this entity inherits from? Example is
 print("Converting...")
 
 newFileData = """/*
- * Copyright (c) 2020 Team Galacticraft
+ * Copyright (c) 2019-2021 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
