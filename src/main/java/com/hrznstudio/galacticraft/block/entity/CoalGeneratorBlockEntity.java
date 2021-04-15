@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
@@ -133,6 +134,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
                 this.heat = Math.min(1, this.heat + 0.004);
             }
         }
+        this.world.setBlockState(this.pos, this.world.getBlockState(pos).with(Constants.Property.ACTIVE, this.getHeat() > 0));
     }
 
     @Nullable
@@ -140,6 +142,10 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
         if (this.getSecurity().hasAccess(player)) return new CoalGeneratorScreenHandler(syncId, player, this);
         return null;
+    }
+
+    public double getHeat() {
+        return this.heat;
     }
 
     /**

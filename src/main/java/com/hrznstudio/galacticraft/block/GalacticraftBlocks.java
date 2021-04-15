@@ -192,7 +192,7 @@ public class GalacticraftBlocks {
             new TranslatableText("tooltip.galacticraft-rewoven.compressor").setStyle(Constants.Text.DARK_GRAY_STYLE)), Constants.Blocks.COMPRESSOR);
     public static final Block ELECTRIC_COMPRESSOR = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new ElectricCompressorBlockEntity(),
             new TranslatableText("tooltip.galacticraft-rewoven.electric_compressor").setStyle(Constants.Text.DARK_GRAY_STYLE)), Constants.Blocks.ELECTRIC_COMPRESSOR);
-    public static final Block COAL_GENERATOR = registerMachine(new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.COAL_GENERATOR);
+    public static final Block COAL_GENERATOR = registerMachine(new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).luminance(state -> state.get(Constants.Property.ACTIVE) ? 13 : 0)), Constants.Blocks.COAL_GENERATOR);
     public static final Block BASIC_SOLAR_PANEL = registerMachine(new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.BASIC_SOLAR_PANEL);
     public static final Block ADVANCED_SOLAR_PANEL = registerMachine(new AdvancedSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ADVANCED_SOLAR_PANEL);
     public static final Block ENERGY_STORAGE_MODULE = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new EnergyStorageModuleBlockEntity(),

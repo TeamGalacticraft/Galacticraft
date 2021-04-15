@@ -27,6 +27,7 @@ import alexiil.mc.lib.attributes.fluid.filter.RawFluidTagFilter;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.ColorUtils;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
@@ -649,6 +650,10 @@ public interface Constants {
         String REDSTONE_INTERACTION_TYPE = "RedstoneInteraction";
         String MATCH = "Match";
         String INTEGER = "Integer";
+    }
+
+    interface Property {
+        BooleanProperty ACTIVE = BooleanProperty.of("active");
     }
 
     interface Misc {
