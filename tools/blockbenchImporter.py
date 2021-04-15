@@ -23,7 +23,7 @@ extendsName = str(input("What is the model this entity inherits from? Example is
 print("Converting...")
 
 newFileData = """/*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2020 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +50,7 @@ import net.minecraft.client.model.Box;
 import net.minecraft.client.model.Model;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a> and made with the help of <a href="https://blockbench.net/https://blockbench.net/">Blockbench</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a> and made with the help of <a href="https://blockbench.net/https://blockbench.net/">Blockbench</a>
  */
 public class {1}Model<{2}_ENTITY> extends {3}<{1}Entity> {{
 

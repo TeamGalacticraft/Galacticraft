@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2020 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,7 +55,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
@@ -198,7 +198,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
     }
 
     /**
-     * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+     * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
      */
     private enum Status implements MachineStatus {
         COLLECTING(new TranslatableText("ui.galacticraft.machine.status.collecting"), Formatting.GREEN, StatusType.WORKING),

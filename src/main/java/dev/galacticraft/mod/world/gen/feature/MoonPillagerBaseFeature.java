@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2020 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonPillagerBaseFeature extends JigsawFeature {
     private static final List<SpawnSettings.SpawnEntry> MONSTER_SPAWNS = ImmutableList.<SpawnSettings.SpawnEntry>builder().add(new SpawnSettings.SpawnEntry(GalacticraftEntityTypes.EVOLVED_PILLAGER, 1, 1, 2)).build();

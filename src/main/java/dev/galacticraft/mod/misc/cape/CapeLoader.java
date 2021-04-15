@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2020 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CapeLoader {
 
@@ -59,7 +59,7 @@ public class CapeLoader {
         new Thread(() -> {
             CapesModel capesModel = null;
             try {
-                capesModel = this.gson.fromJson(IOUtils.toString(new URL("https://raw.githubusercontent.com/StellarHorizons/Galacticraft-Rewoven/master/capes.json"), Charset.defaultCharset()), CapesModel.class);
+                capesModel = this.gson.fromJson(IOUtils.toString(new URL("https://raw.githubusercontent.com/TeamGalacticraft/Galacticraft-Rewoven/master/capes.json"), Charset.defaultCharset()), CapesModel.class);
             } catch (IOException e) {
                 Thread.currentThread().interrupt();
             }

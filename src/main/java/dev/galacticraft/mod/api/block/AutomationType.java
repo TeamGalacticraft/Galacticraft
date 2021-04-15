@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2020 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public enum AutomationType implements Comparable<AutomationType> {
     NONE(new TranslatableText("ui.galacticraft.side_option.none").setStyle(Constants.Text.DARK_GRAY_STYLE), false, false, false, false, false),

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2020 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SolarPanelPartBlock extends BlockWithEntity {
     private static final VoxelShape POLE_SHAPE = createCuboidShape(8 - 2, 0, 8 - 2, 8 + 2, 16, 8 + 2);

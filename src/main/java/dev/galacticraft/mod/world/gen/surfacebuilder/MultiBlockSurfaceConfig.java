@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2020 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MultiBlockSurfaceConfig extends TernarySurfaceConfig {
     public static final Codec<MultiBlockSurfaceConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(BlockStateWithChance.CODEC.listOf().fieldOf("top_materials").forGetter((surfaceConfig) -> Lists.newArrayList(surfaceConfig.topMaterials)), BlockStateWithChance.CODEC.listOf().fieldOf("under_materials").forGetter((surfaceConfig) -> Lists.newArrayList(surfaceConfig.underMaterials)), BlockStateWithChance.CODEC.listOf().fieldOf("underwater_materials").forGetter((surfaceConfig) -> Lists.newArrayList(surfaceConfig.underwaterMaterials))).apply(instance, MultiBlockSurfaceConfig::new));
