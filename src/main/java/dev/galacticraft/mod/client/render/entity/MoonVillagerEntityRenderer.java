@@ -36,6 +36,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.util.Identifier;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 @Environment(EnvType.CLIENT)
 public class MoonVillagerEntityRenderer extends MobEntityRenderer<MoonVillagerEntity, MoonVillagerEntityModel> {
     private static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, "textures/entity/moon_villager/moon_villager.png");

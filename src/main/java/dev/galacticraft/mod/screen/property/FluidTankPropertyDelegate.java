@@ -32,6 +32,9 @@ import net.minecraft.util.registry.Registry;
 
 import java.math.RoundingMode;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class FluidTankPropertyDelegate implements PropertyDelegate {
     private final FixedFluidInv inv;
     private final Fluid[] fluids;
@@ -46,7 +49,7 @@ public class FluidTankPropertyDelegate implements PropertyDelegate {
         if (index % 2 == 0) {
             return Registry.FLUID.getRawId(inv.getInvFluid(index / 2).getRawFluid());
         } else {
-            return (int) (inv.getInvFluid(((index + 1) / 2) - 1).getAmount_F().asInt(1000, RoundingMode.HALF_DOWN));
+            return inv.getInvFluid(((index + 1) / 2) - 1).getAmount_F().asInt(1000, RoundingMode.HALF_DOWN);
         }
     }
 

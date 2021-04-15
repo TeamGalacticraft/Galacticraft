@@ -49,7 +49,7 @@ public abstract class ClientChunkSectionMixin implements ChunkSectionOxygenAcces
             oxygen[(i * 8) + 4] = (b & 16) != 0;
             oxygen[(i * 8) + 5] = (b & 32) != 0;
             oxygen[(i * 8) + 6] = (b & 64) != 0;
-            oxygen[(i * 8) + 7] = (b & 128) !=0 ;
+            oxygen[(i * 8) + 7] = (b & 128) !=0;
         }
     }
 }

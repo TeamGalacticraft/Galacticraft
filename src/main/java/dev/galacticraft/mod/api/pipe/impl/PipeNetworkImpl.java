@@ -47,6 +47,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 @SuppressWarnings("UnstableApiUsage")
 public class PipeNetworkImpl implements PipeNetwork {
     private final MutableValueGraph<BlockPos, PipeConnectionType> graph;

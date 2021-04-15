@@ -25,6 +25,9 @@ package dev.galacticraft.mod.accessor;
 import net.minecraft.network.PacketByteBuf;
 import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public interface ChunkSectionOxygenAccessor {
     boolean isBreathable(int x, int y, int z);
 

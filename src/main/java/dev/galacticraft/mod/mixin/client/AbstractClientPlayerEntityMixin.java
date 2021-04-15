@@ -41,10 +41,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Environment(EnvType.CLIENT)
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin {
-
-    @Shadow
-    @Nullable
-    protected abstract PlayerListEntry getPlayerListEntry();
+    @Shadow @Nullable protected abstract PlayerListEntry getPlayerListEntry();
 
     @Inject(method = "getCapeTexture", at = @At("RETURN"), cancellable = true)
     private void getCapeTexture(CallbackInfoReturnable<Identifier> info) {

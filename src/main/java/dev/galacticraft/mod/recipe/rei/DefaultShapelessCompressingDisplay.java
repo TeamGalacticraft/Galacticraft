@@ -28,6 +28,7 @@ import me.shedaniel.rei.api.EntryStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,17 +60,17 @@ public class DefaultShapelessCompressingDisplay implements DefaultCompressingDis
 //    }
 
     @Override
-    public List<List<EntryStack>> getRequiredEntries() {
+    public @NotNull List<List<EntryStack>> getRequiredEntries() {
         return input;
     }
 
     @Override
-    public List<List<EntryStack>> getInputEntries() {
+    public @NotNull List<List<EntryStack>> getInputEntries() {
         return input;
     }
 
     @Override
-    public List<EntryStack> getOutputEntries() {
+    public @NotNull List<EntryStack> getOutputEntries() {
         return output;
     }
 }

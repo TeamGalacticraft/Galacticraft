@@ -26,8 +26,6 @@ import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.block.FluidLoggableBlock;
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.util.EnergyUtils;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -47,6 +45,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 /**
@@ -60,8 +59,7 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
     public static final BooleanProperty UP = Properties.UP;
     public static final BooleanProperty DOWN = Properties.DOWN;
     public static final DirectionProperty FACING = Properties.FACING;
-    private static final VoxelShape[] shape = new VoxelShape[4096];
-    private final Object2IntMap<BlockState> SHAPE_INDEX_CACHE = new Object2IntOpenHashMap<>();
+    private static final VoxelShape[] shape = new VoxelShape[64];
 
     public WireWalkway(Settings settings) {
         super(settings);
@@ -77,15 +75,11 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
                 .with(FlowableFluid.LEVEL, 8));
     }
 
-    private static int getDirectionMask(Direction dir) {
-        return 1 << dir.getId();
-    }
-
     private static int getFacingMask(Direction dir) {
-        return 1 << (dir.getId() + 6);
+        return 1 << (dir.getId());
     }
 
-    private static VoxelShape createShape(Direction facing, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down) {
+    private static VoxelShape createShape(Direction facing) {
         VoxelShape base = Block.createCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D);
         switch (facing) {
             case UP:
@@ -126,27 +120,6 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
                 break;
         }
 
-        int offset = 2;
-        VoxelShape northC = Block.createCuboidShape(8 - offset, 8 - offset, 0, 8 + offset, 8 + offset, 8 + offset);
-        VoxelShape eastC = Block.createCuboidShape(8 - offset, 8 - offset, 8 - offset, 16, 8 + offset, 8 + offset);
-        VoxelShape southC = Block.createCuboidShape(8 - offset, 8 - offset, 8 - offset, 8 + offset, 8 + offset, 16);
-        VoxelShape westC = Block.createCuboidShape(0, 8 - offset, 8 - offset, 8 + offset, 8 + offset, 8 + offset);
-        VoxelShape upC = Block.createCuboidShape(8 - offset, 8 - offset, 8 - offset, 8 + offset, 16, 8 + offset);
-        VoxelShape downC = Block.createCuboidShape(8 - offset, 0, 8 - offset, 8 + offset, 8 + offset, 8 + offset);
-
-        if (north)
-            base = VoxelShapes.union(base, northC);
-        if (south)
-            base = VoxelShapes.union(base, southC);
-        if (east)
-            base = VoxelShapes.union(base, eastC);
-        if (west)
-            base = VoxelShapes.union(base, westC);
-        if (up)
-            base = VoxelShapes.union(base, upC);
-        if (down)
-            base = VoxelShapes.union(base, downC);
-
         return base;
     }
 
@@ -161,42 +134,11 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
     }
 
     private VoxelShape getShape(BlockState state) {
-        int index = getShapeIndex(state);
+        int index = getFacingMask(state.get(FACING));
         if (shape[index] != null) {
             return shape[index];
         }
-        return shape[index] = createShape(state.get(FACING), state.get(NORTH), state.get(SOUTH), state.get(EAST), state.get(WEST), state.get(UP), state.get(DOWN));
-    }
-
-    private int getShapeIndex(BlockState state) {
-        return this.SHAPE_INDEX_CACHE.computeIntIfAbsent(state, (blockState) -> {
-            int i = 0;
-            if (blockState.get(NORTH))
-                i |= getDirectionMask(Direction.NORTH);
-            if (blockState.get(EAST))
-                i |= getDirectionMask(Direction.EAST);
-            if (blockState.get(SOUTH))
-                i |= getDirectionMask(Direction.SOUTH);
-            if (blockState.get(WEST))
-                i |= getDirectionMask(Direction.WEST);
-            if (blockState.get(UP))
-                i |= getDirectionMask(Direction.UP);
-            if (blockState.get(DOWN))
-                i |= getDirectionMask(Direction.DOWN);
-            if (blockState.get(FACING).equals(Direction.NORTH))
-                i |= getFacingMask(Direction.NORTH);
-            if (blockState.get(FACING).equals(Direction.SOUTH))
-                i |= getFacingMask(Direction.SOUTH);
-            if (blockState.get(FACING).equals(Direction.EAST))
-                i |= getFacingMask(Direction.EAST);
-            if (blockState.get(FACING).equals(Direction.WEST))
-                i |= getFacingMask(Direction.WEST);
-            if (blockState.get(FACING).equals(Direction.UP))
-                i |= getFacingMask(Direction.UP);
-            if (blockState.get(FACING).equals(Direction.DOWN))
-                i |= getFacingMask(Direction.DOWN);
-            return i;
-        });
+        return shape[index] = createShape(state.get(FACING));
     }
 
     private BooleanProperty getPropForDir(Direction direction) {
@@ -244,14 +186,15 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
     }
 
     public boolean canConnect(BlockState state, BlockState neighborState, BlockPos pos, BlockPos neighborPos, WorldAccess world, Direction facing) {
+        /* This code tests if the connecting block is on the top of the walkway (it used to be unable to connect there)
         try {
             if (pos.offset(state.get(FACING)).equals(neighborPos))
                 return false;
             if (neighborPos.offset(neighborState.get(FACING)).equals(pos))
                 return false;
         } catch (IllegalArgumentException ignored) {}
-        // TODO: The WireBlockEntity will still connect on the top face of this block (there's no wire there)
-        return neighborState.getBlock() instanceof WireBlock || EnergyUtils.canAccessEnergy(world.getBlockEntity(pos).getWorld(), pos.offset(facing), facing.getOpposite());
+        */
+        return neighborState.getBlock() instanceof WireBlock || EnergyUtils.canAccessEnergy((World) world, pos.offset(facing), facing.getOpposite());
     }
 
     @Override

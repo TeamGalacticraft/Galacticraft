@@ -27,6 +27,9 @@ import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public interface ChunkOxygenAccessor {
     boolean isBreathable(int x, int y, int z);
 

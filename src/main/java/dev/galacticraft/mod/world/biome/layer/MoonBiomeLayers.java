@@ -84,7 +84,6 @@ public class MoonBiomeLayers {
             MOON_MARE_ROCKS_ID = registry.getRawId(registry.get(GalacticraftBiomes.Moon.MARE_ROCKS));
             MOON_MARE_EDGE_ID = registry.getRawId(registry.get(GalacticraftBiomes.Moon.MARE_EDGE));
         }
-
         LayerFactory<CachingLayerSampler> layerFactory = build(biomeSize, (salt) -> new CachingLayerContext(25, seed, salt), registry);
         MoonBiomeLayers.registry = registry;
         return new BiomeLayerSampler(layerFactory);

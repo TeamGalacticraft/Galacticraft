@@ -29,6 +29,9 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public enum BlockFace {
     FRONT(new TranslatableText("ui.galacticraft.machine.configuration.front"), true, false),
     RIGHT(new TranslatableText("ui.galacticraft.machine.configuration.right"), true, false),

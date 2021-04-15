@@ -51,6 +51,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe, AttributeProviderBlockEntity {
     private PipeNetwork network = null;
     private @NotNull Pipe.FluidData fluidData = Pipe.FluidData.EMPTY;

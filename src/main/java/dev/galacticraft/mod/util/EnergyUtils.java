@@ -37,6 +37,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class EnergyUtils {
     public static final ItemFilter IS_EXTRACTABLE = EnergyUtils::isEnergyExtractable;
     public static final ItemFilter IS_INSERTABLE = EnergyUtils::isEnergyInsertable;

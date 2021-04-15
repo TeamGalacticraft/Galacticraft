@@ -28,6 +28,9 @@ import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPatterns;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class GalacticraftBannerPatterns {
     public static final LoomPattern ROCKET = Registry.register(LoomPatterns.REGISTRY, new Identifier(Constants.MOD_ID, "rocket"), new LoomPattern(false));
 

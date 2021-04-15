@@ -34,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 /**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  * The basic 'Wire Network' spec
  */
 public interface PipeNetwork {

@@ -30,6 +30,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,12 +58,12 @@ public class DefaultFabricationDisplay implements RecipeDisplay {
     }
 
     @Override
-    public List<List<EntryStack>> getInputEntries() {
+    public @NotNull List<List<EntryStack>> getInputEntries() {
         return this.input;
     }
 
     @Override
-    public List<EntryStack> getOutputEntries() {
+    public @NotNull List<EntryStack> getOutputEntries() {
         return this.output;
     }
 
@@ -71,7 +72,7 @@ public class DefaultFabricationDisplay implements RecipeDisplay {
     }
 
     @Override
-    public Identifier getRecipeCategory() {
+    public @NotNull Identifier getRecipeCategory() {
         return GalacticraftREIPlugin.CIRCUIT_FABRICATION;
     }
 }

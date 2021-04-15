@@ -35,6 +35,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.village.VillagerProfession;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class GalacticraftVillagerProfessions {
     public static final VillagerProfession LUNAR_CARTOGRAPHER = VillagerProfessionBuilder.create().id(new Identifier(Constants.MOD_ID, "lunar_cartographer")).workstation(GalacticraftPointOfInterestType.LUNAR_CARTOGRAPHER).workSound(SoundEvents.ENTITY_VILLAGER_WORK_CARTOGRAPHER).build();
 
@@ -74,7 +77,6 @@ public class GalacticraftVillagerProfessions {
             factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.ORANGE_BANNER, 3, 1, 15));
             factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.LIGHT_GRAY_BANNER, 3, 1, 15));
         });
-
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 5, factories -> factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.GLOBE_BANNER_PATTERN, 8, 1, 30)));
     }
 }

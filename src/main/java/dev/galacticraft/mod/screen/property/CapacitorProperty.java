@@ -25,6 +25,9 @@ package dev.galacticraft.mod.screen.property;
 import com.hrznstudio.galacticraft.energy.api.Capacitor;
 import net.minecraft.screen.Property;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class CapacitorProperty extends Property {
     private final Capacitor capacitor;
 

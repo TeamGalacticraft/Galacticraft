@@ -51,6 +51,6 @@ public class GalacticraftDimensions {
         );
 
         Registry.register(Registry.CHUNK_GENERATOR, new Identifier(Constants.MOD_ID, "moon"), MoonChunkGenerator.CODEC);
-//        FabricDimensions.registerDefaultPlacer(MOON, GalacticraftDimensions::placeEntity);
+        //FabricDimensions.registerDefaultPlacer(MOON, GalacticraftDimensions::placeEntity);
     }
 }

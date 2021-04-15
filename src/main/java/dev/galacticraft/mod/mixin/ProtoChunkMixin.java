@@ -34,6 +34,9 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 @Mixin(ProtoChunk.class)
 public abstract class ProtoChunkMixin implements ChunkOxygenAccessor {
     @Shadow @Final private ChunkSection[] sections;

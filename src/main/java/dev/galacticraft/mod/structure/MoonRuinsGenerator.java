@@ -55,10 +55,13 @@ import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class MoonRuinsGenerator {
    private static final Identifier[] PIECES = new Identifier[] {
-//           new Identifier(Constants.MOD_ID, "moon_ruins/ruin_1"),
-//           new Identifier(Constants.MOD_ID, "moon_ruins/ruin_2"),
+           //new Identifier(Constants.MOD_ID, "moon_ruins/ruin_1"),
+           //new Identifier(Constants.MOD_ID, "moon_ruins/ruin_2"),
            new Identifier(Constants.MOD_ID, "moon_ruins/ruin_3"),
            new Identifier(Constants.MOD_ID, "moon_ruins/ruin_4"),
            new Identifier(Constants.MOD_ID, "moon_ruins/ruin_5"),
@@ -218,7 +221,6 @@ public class MoonRuinsGenerator {
          if (k - j > 2 && l > p - 2) {
             i = j + 1;
          }
-
          return i;
       }
    }

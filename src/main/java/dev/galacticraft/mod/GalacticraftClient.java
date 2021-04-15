@@ -32,8 +32,6 @@ import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRe
 import dev.galacticraft.mod.client.render.entity.*;
 import dev.galacticraft.mod.client.resource.GalacticraftResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
-import dev.galacticraft.mod.misc.cape.CapeLoader;
-import dev.galacticraft.mod.misc.cape.JsonCapes;
 import dev.galacticraft.mod.mixin.SkyPropertiesAccessor;
 import dev.galacticraft.mod.particle.GalacticraftParticles;
 import dev.galacticraft.mod.particle.fluid.DrippingCrudeOilParticle;
@@ -62,14 +60,12 @@ import java.util.Collections;
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
 
-    public static final JsonCapes JSON_CAPES = new JsonCapes();
     public static final CapeLoader CAPE_LOADER = new CapeLoader();
 
     @Override
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();
         Galacticraft.LOGGER.info("Starting client initialization.");
-        CAPE_LOADER.register(JSON_CAPES);
         CAPE_LOADER.load();
 
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) -> {
@@ -129,6 +125,8 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.TIN_LADDER, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLASS_FLUID_PIPE, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.WALKWAY, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.WIRE_WALKWAY, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.PIPE_WALKWAY, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.MOON_BERRY_BUSH, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_TORCH, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_WALL_TORCH, RenderLayer.getCutout());

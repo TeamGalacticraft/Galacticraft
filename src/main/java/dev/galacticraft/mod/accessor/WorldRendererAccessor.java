@@ -26,6 +26,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 @Environment(EnvType.CLIENT)
 public interface WorldRendererAccessor {
     default void addChunkToRebuild(BlockPos pos) {

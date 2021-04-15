@@ -25,6 +25,9 @@ package dev.galacticraft.mod.screen.property;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import net.minecraft.screen.Property;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class StatusProperty extends Property {
     private final MachineBlockEntity blockEntity;
 

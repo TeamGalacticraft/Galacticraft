@@ -39,6 +39,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 import java.util.Random;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class GalacticraftTradeOffers {
 
     public static class BuyForOneEmeraldFactory implements TradeOffers.Factory {

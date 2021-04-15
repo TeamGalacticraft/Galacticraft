@@ -31,6 +31,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class OxygenTankImpl implements OxygenTank, Saveable {
     public static final OxygenTankImpl NULL = new OxygenTankImpl(-1);
     private final int capacity;

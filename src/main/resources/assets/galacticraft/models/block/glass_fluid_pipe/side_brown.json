@@ -1,0 +1,7 @@
+{
+  "parent": "galacticraft:block/glass_fluid_pipe/glass_fluid_pipe_side_base",
+  "textures": {
+    "particle": "galacticraft:block/glass_fluid_pipe/brown",
+    "color":    "galacticraft:block/glass_fluid_pipe/brown"
+  }
+}

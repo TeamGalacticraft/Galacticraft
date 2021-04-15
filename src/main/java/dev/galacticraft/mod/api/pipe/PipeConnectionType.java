@@ -24,6 +24,9 @@ package dev.galacticraft.mod.api.pipe;
 
 import net.minecraft.util.StringIdentifiable;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public enum PipeConnectionType implements StringIdentifiable {
     NONE,
     PIPE,

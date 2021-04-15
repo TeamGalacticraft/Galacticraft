@@ -26,6 +26,9 @@ import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.mixin.LootTablesAccessor;
 import net.minecraft.util.Identifier;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class GalacticraftLootTables {
     public static final Identifier BASIC_MOON_RUINS_CHEST = LootTablesAccessor.callRegisterLootTable(new Identifier(Constants.MOD_ID, Constants.LootTable.BASIC_MOON_RUINS_CHEST));
 

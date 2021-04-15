@@ -24,6 +24,9 @@ package dev.galacticraft.mod.block.decoration;
 
 import net.minecraft.block.CartographyTableBlock;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class LunarCartographyTableBlock extends CartographyTableBlock {
     public LunarCartographyTableBlock(Settings settings) {
         super(settings);

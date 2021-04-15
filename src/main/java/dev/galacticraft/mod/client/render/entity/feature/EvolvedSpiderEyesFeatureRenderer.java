@@ -36,6 +36,9 @@ import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 @Environment(EnvType.CLIENT)
 public class EvolvedSpiderEyesFeatureRenderer<T extends EvolvedSpiderEntity, M extends EvolvedSpiderModel<T>> extends FeatureRenderer<T, M> {
     private static final RenderLayer LAYER = RenderLayer.getEyes(new Identifier(Constants.MOD_ID, "textures/entity/evolved/spider_eyes.png"));

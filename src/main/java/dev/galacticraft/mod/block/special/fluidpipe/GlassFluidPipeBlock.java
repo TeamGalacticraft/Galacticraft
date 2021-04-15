@@ -66,8 +66,8 @@ public class GlassFluidPipeBlock extends FluidPipe {
     private static final VoxelShape DOWN = createCuboidShape(8 - 2, 0, 8 - 2, 8 + 2, 8 + 2, 8 + 2);
     private static final VoxelShape NONE = createCuboidShape(8 - 2, 8 - 2, 8 - 2, 8 + 2, 8 + 2, 8 + 2);
 
-    private static final BooleanProperty PULL = BooleanProperty.of("pull"); //todo pull state (what would that mean for conf. sides that are different?)
-    private static final EnumProperty<DyeColor> COLOR = EnumProperty.of("color", DyeColor.class);
+    public static final BooleanProperty PULL = BooleanProperty.of("pull"); //todo pull state (what would that mean for conf. sides that are different?)
+    public static final EnumProperty<DyeColor> COLOR = EnumProperty.of("color", DyeColor.class);
 
     public GlassFluidPipeBlock(Settings settings) {
         super(settings);
@@ -79,8 +79,8 @@ public class GlassFluidPipeBlock extends FluidPipe {
         BlockState state = this.getDefaultState();
         BlockPos pos = context.getBlockPos().toImmutable();
         for (Direction direction : Constants.Misc.DIRECTIONS) {
-            Block block = context.getWorld().getBlockState(pos.offset(direction)).getBlock();
-            if (block instanceof FluidPipe || FluidUtils.isExtractableOrInsertable(context.getWorld(), pos.offset(direction), direction)) state = state.with(propFromDirection(direction), true);
+            BlockState block = context.getWorld().getBlockState(pos.offset(direction));
+            if ((block.getBlock() instanceof FluidPipe /*&& block.get(COLOR) == DyeColor.WHITE*/) || FluidUtils.isExtractableOrInsertable(context.getWorld(), pos.offset(direction), direction)) state = state.with(propFromDirection(direction), true);
         }
         return state;
     }
@@ -129,7 +129,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState other, WorldAccess world, BlockPos thisWire, BlockPos otherConnectable) {
         return state.with(getPropForDirection(direction), (
                 !other.isAir()
-                        && ((other.getBlock() instanceof FluidPipe && other.get(COLOR) == state.get(COLOR))
+                        && ((other.getBlock() instanceof FluidPipe /*&& other.get(COLOR) == state.get(COLOR)*/)
                         || FluidUtils.isExtractableOrInsertable(world.getBlockEntity(thisWire).getWorld(), otherConnectable, direction.getOpposite())
                 )
         ));

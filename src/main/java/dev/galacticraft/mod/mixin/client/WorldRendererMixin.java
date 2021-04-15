@@ -61,23 +61,12 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
     private static final Identifier EARTH_TEXTURE = new Identifier(Constants.MOD_ID, "textures/gui/celestialbodies/earth.png");
     private static final Identifier SUN_TEXTURE = new Identifier(Constants.MOD_ID, "textures/gui/celestialbodies/sun.png");
 
-    @Shadow
-    @Final
-    private MinecraftClient client;
-
-    @Shadow
-    private ClientWorld world;
-
-    @Shadow
-    @Final
-    private VertexFormat skyVertexFormat;
-
-    @Shadow
-    private double lastCameraX;
-    @Shadow
-    private double lastCameraY;
-    @Shadow
-    private double lastCameraZ;
+    @Shadow @Final private MinecraftClient client;
+    @Shadow private ClientWorld world;
+    @Shadow @Final private VertexFormat skyVertexFormat;
+    @Shadow private double lastCameraX;
+    @Shadow private double lastCameraY;
+    @Shadow private double lastCameraZ;
     @Shadow private Set<ChunkBuilder.BuiltChunk> chunksToRebuild;
     @Shadow private BuiltChunkStorage chunks;
     private VertexBuffer starBufferMoon;

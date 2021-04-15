@@ -44,8 +44,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class BubbleEntity extends Entity {
-
     public BubbleEntity(EntityType<?> type, World world) {
         super(type, world);
     }
@@ -56,12 +58,10 @@ public class BubbleEntity extends Entity {
 
     @Override
     protected void readCustomDataFromTag(CompoundTag tag) {
-
     }
 
     @Override
     protected void writeCustomDataToTag(CompoundTag tag) {
-
     }
 
     @Override
@@ -150,12 +150,10 @@ public class BubbleEntity extends Entity {
 
     @Override
     protected void setOnFireFromLava() {
-
     }
 
     @Override
     public void setOnFireFor(int seconds) {
-
     }
 
     @Override
@@ -165,7 +163,6 @@ public class BubbleEntity extends Entity {
 
     @Override
     public void setFireTicks(int ticks) {
-
     }
 
     @Override
