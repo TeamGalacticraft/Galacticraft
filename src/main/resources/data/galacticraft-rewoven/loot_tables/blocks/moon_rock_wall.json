@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:moon_rock_wall"
+          "name": "galacticraft:moon_rock_wall"
         }
       ],
       "conditions": [

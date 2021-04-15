@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:mars_cobblestone_wall"
+          "name": "galacticraft:mars_cobblestone_wall"
         }
       ],
       "conditions": [

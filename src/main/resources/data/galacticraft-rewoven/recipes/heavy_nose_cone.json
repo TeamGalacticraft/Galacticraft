@@ -7,13 +7,13 @@
   ],
   "key": {
     "P": {
-      "item": "galacticraft-rewoven:heavy_plating_t3"
+      "item": "galacticraft:heavy_plating_t3"
     },
     "T": {
       "item": "minecraft:redstone_torch"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:heavy_nose_cone"
+    "item": "galacticraft:heavy_nose_cone"
   }
 }

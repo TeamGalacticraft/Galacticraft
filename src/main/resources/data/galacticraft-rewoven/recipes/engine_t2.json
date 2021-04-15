@@ -7,13 +7,13 @@
   ],
   "key": {
     "P": {
-      "item": "galacticraft-rewoven:heavy_plating_t3"
+      "item": "galacticraft:heavy_plating_t3"
     },
     "T": {
-      "item": "galacticraft-rewoven:tin_canister"
+      "item": "galacticraft:tin_canister"
     },
     "V": {
-      "item": "galacticraft-rewoven:oxygen_vent"
+      "item": "galacticraft:oxygen_vent"
     },
     "F": {
       "item": "minecraft:flint_and_steel"
@@ -23,6 +23,6 @@
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:engine_t2"
+    "item": "galacticraft:engine_t2"
   }
 }

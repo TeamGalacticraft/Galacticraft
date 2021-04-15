@@ -6,11 +6,11 @@
   ],
   "key": {
     "T": {
-      "item": "galacticraft-rewoven:compressed_titanium"
+      "item": "galacticraft:compressed_titanium"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:titanium_helmet",
+    "item": "galacticraft:titanium_helmet",
     "count": 1
   }
 }

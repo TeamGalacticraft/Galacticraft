@@ -1,12 +1,12 @@
 {
-  "type": "galacticraft-rewoven:compressing_shapeless",
+  "type": "galacticraft:compressing_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:desh_ingot"
+      "item": "galacticraft:desh_ingot"
     }
   ],
   "result": {
-    "item": "galacticraft-rewoven:compressed_desh",
+    "item": "galacticraft:compressed_desh",
     "count": 1
   }
 }

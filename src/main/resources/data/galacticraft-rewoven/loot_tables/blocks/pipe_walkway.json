@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:pipe_walkway"
+          "name": "galacticraft:pipe_walkway"
         }
       ],
       "conditions": [

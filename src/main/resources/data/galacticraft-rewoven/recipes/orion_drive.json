@@ -19,23 +19,23 @@
       "item": "minecraft:redstone_ore"
     },
     "E": {
-      "item": "galacticraft-rewoven:beam_core"
+      "item": "galacticraft:beam_core"
     },
     "F": {
       "item": "minecraft:coal_ore"
     },
     "G": {
-      "item": "galacticraft-rewoven:moon_cheese_ore"
+      "item": "galacticraft:moon_cheese_ore"
     },
     "H": {
-      "item": "galacticraft-rewoven:desh_ore"
+      "item": "galacticraft:desh_ore"
     },
     "I": {
-      "item": "galacticraft-rewoven:ilmenite_ore"
+      "item": "galacticraft:ilmenite_ore"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:orion_drive",
+    "item": "galacticraft:orion_drive",
     "count": 1
   }
 }

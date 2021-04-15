@@ -2,14 +2,14 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:walkway"
+      "item": "galacticraft:walkway"
     },
     {
-      "item": "galacticraft-rewoven:glass_fluid_pipe"
+      "item": "galacticraft:glass_fluid_pipe"
     }
   ],
   "result": {
-    "item": "galacticraft-rewoven:pipe_walkway",
+    "item": "galacticraft:pipe_walkway",
     "count": 1
   }
 }

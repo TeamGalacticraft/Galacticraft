@@ -7,22 +7,22 @@
   ],
   "key": {
     "M": {
-      "item": "galacticraft-rewoven:compressed_meteoric_iron"
+      "item": "galacticraft:compressed_meteoric_iron"
     },
     "Y": {
       "item": "minecraft:yellow_wool"
     },
     "F": {
-      "item": "galacticraft-rewoven:fuel_bucket"
+      "item": "galacticraft:fuel_bucket"
     },
     "H": {
-      "item": "galacticraft-rewoven:heavy_plating"
+      "item": "galacticraft:heavy_plating"
     },
     "V": {
-      "item": "galacticraft-rewoven:oxygen_vent"
+      "item": "galacticraft:oxygen_vent"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:engine_t1booster"
+    "item": "galacticraft:engine_t1booster"
   }
 }

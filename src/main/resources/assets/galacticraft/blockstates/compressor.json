@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "galacticraft:block/compressor"
+    },
+    "facing=east": {
+      "model": "galacticraft:block/compressor",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "galacticraft:block/compressor",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "galacticraft:block/compressor",
+      "y": 270
+    }
+  }
+}

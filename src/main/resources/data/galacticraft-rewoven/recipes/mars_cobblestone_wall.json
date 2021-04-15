@@ -6,11 +6,11 @@
   ],
   "key": {
     "L": {
-      "item": "galacticraft-rewoven:mars_cobblestone"
+      "item": "galacticraft:mars_cobblestone"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:mars_cobblestone_wall",
+    "item": "galacticraft:mars_cobblestone_wall",
     "count": 6
   }
 }

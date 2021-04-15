@@ -5,14 +5,14 @@
   ],
   "key": {
     "I": {
-      "item": "galacticraft-rewoven:aluminum_wire"
+      "item": "galacticraft:aluminum_wire"
     },
     "X": {
-      "item": "galacticraft-rewoven:tin_decoration"
+      "item": "galacticraft:tin_decoration"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:sealable_aluminum_wire",
+    "item": "galacticraft:sealable_aluminum_wire",
     "count": 1
   }
 }

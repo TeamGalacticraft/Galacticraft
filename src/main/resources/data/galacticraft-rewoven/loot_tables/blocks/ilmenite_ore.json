@@ -24,7 +24,7 @@
                   }
                 }
               ],
-              "name": "galacticraft-rewoven:ilmenite_ore"
+              "name": "galacticraft:ilmenite_ore"
             },
             {
               "type": "minecraft:item",
@@ -38,7 +38,7 @@
                   "function": "minecraft:explosion_decay"
                 }
               ],
-              "name": "galacticraft-rewoven:titanium_shard"
+              "name": "galacticraft:titanium_shard"
             }
           ]
         }

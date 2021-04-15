@@ -2,14 +2,14 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:parachute"
+      "item": "galacticraft:parachute"
     },
     {
       "item": "minecraft:purple_dye"
     }
   ],
   "result": {
-    "item": "galacticraft-rewoven:purple_parachute",
+    "item": "galacticraft:purple_parachute",
     "count": 1
   }
 }

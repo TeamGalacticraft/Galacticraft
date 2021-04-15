@@ -7,26 +7,26 @@
   ],
   "key": {
     "S": {
-      "item": "galacticraft-rewoven:compressed_steel"
+      "item": "galacticraft:compressed_steel"
     },
     "F": {
-      "item": "galacticraft-rewoven:oxygen_fan"
+      "item": "galacticraft:oxygen_fan"
     },
     "T": {
-      "item": "galacticraft-rewoven:tin_canister"
+      "item": "galacticraft:tin_canister"
     },
     "V": {
-      "item": "galacticraft-rewoven:oxygen_vent"
+      "item": "galacticraft:oxygen_vent"
     },
     "A": {
-      "item": "galacticraft-rewoven:compressed_aluminum"
+      "item": "galacticraft:compressed_aluminum"
     },
     "C": {
-      "item": "galacticraft-rewoven:oxygen_concentrator"
+      "item": "galacticraft:oxygen_concentrator"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:oxygen_collector",
+    "item": "galacticraft:oxygen_collector",
     "count": 1
   }
 }

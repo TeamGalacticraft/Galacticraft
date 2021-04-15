@@ -1,5 +1,5 @@
 {
-  "type": "galacticraft-rewoven:compressing_shapeless",
+  "type": "galacticraft:compressing_shapeless",
   "ingredients": [
     {
       "tag": "c:copper_ingots"
@@ -9,7 +9,7 @@
     }
   ],
   "result": {
-    "item": "galacticraft-rewoven:compressed_copper",
+    "item": "galacticraft:compressed_copper",
     "count": 1
   }
 }

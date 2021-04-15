@@ -7,17 +7,17 @@
   ],
   "key": {
     "S": {
-      "item": "galacticraft-rewoven:compressed_steel"
+      "item": "galacticraft:compressed_steel"
     },
     "R": {
       "item": "minecraft:redstone"
     },
     "W": {
-      "item": "galacticraft-rewoven:basic_wafer"
+      "item": "galacticraft:basic_wafer"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:oxygen_fan",
+    "item": "galacticraft:oxygen_fan",
     "count": 1
   }
 }

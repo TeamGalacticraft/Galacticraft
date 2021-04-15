@@ -5,7 +5,7 @@
         "feature": {
           "config": {
             "state": {
-              "Name": "galacticraft-rewoven:moon_rock"
+              "Name": "galacticraft:moon_rock"
             }
           },
           "type": "minecraft:forest_rock"

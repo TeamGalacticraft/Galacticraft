@@ -7,14 +7,14 @@
   ],
   "key": {
     "C": {
-      "item": "galacticraft-rewoven:cheese_curd"
+      "item": "galacticraft:cheese_curd"
     },
     "M": {
       "item": "minecraft:milk_bucket"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:moon_cheese_block",
+    "item": "galacticraft:moon_cheese_block",
     "count": 1
   }
 }

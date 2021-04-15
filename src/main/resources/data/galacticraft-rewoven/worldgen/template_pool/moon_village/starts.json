@@ -1,11 +1,11 @@
 {
-  "name": "galacticraft-rewoven:moon_village/starts",
+  "name": "galacticraft:moon_village/starts",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 3,
       "element": {
-        "location": "galacticraft-rewoven:moon_village/starts/start_1",
+        "location": "galacticraft:moon_village/starts/start_1",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -14,7 +14,7 @@
     {
       "weight": 4,
       "element": {
-        "location": "galacticraft-rewoven:moon_village/starts/start_2",
+        "location": "galacticraft:moon_village/starts/start_2",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -23,7 +23,7 @@
     {
       "weight": 5,
       "element": {
-        "location": "galacticraft-rewoven:moon_village/starts/start_3",
+        "location": "galacticraft:moon_village/starts/start_3",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"

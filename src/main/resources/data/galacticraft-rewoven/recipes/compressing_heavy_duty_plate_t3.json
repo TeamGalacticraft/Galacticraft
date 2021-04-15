@@ -1,15 +1,15 @@
 {
-  "type": "galacticraft-rewoven:compressing_shapeless",
+  "type": "galacticraft:compressing_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:heavy_plating_t2"
+      "item": "galacticraft:heavy_plating_t2"
     },
     {
-      "item": "galacticraft-rewoven:compressed_desh"
+      "item": "galacticraft:compressed_desh"
     }
   ],
   "result": {
-    "item": "galacticraft-rewoven:heavy_plating_t3",
+    "item": "galacticraft:heavy_plating_t3",
     "count": 1
   }
 }

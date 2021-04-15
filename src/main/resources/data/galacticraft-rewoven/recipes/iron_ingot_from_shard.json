@@ -1,7 +1,7 @@
 {
   "type": "smelting",
   "ingredient": {
-    "item": "galacticraft-rewoven:iron_shard"
+    "item": "galacticraft:iron_shard"
   },
   "result": "minecraft:iron_ingot",
   "experience": 0.1,

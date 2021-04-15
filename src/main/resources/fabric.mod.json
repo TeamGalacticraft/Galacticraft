@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   
-  "id": "galacticraft-rewoven",
+  "id": "galacticraft",
   "version": "$version",
   "name": "Galacticraft: Rewoven",
-  "icon": "assets/galacticraft-rewoven/icon.png",
+  "icon": "assets/galacticraft/icon.png",
   "description": "FabricMC port of Galacticraft, written from the ground up by a new team.",
   "license": "MIT",
 
@@ -117,18 +117,26 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [ "com.hrznstudio.galacticraft.Galacticraft" ],
-    "client": [ "com.hrznstudio.galacticraft.GalacticraftClient" ],
-    "rei_plugins": [ "com.hrznstudio.galacticraft.recipe.rei.GalacticraftREIPlugin" ],
-    "modmenu": [ "com.hrznstudio.galacticraft.compat.hook.ModMenuApiImpl" ]
+    "main": [
+      "dev.galacticraft.mod.Galacticraft"
+    ],
+    "client": [
+      "dev.galacticraft.mod.GalacticraftClient"
+    ],
+    "rei_plugins": [
+      "com.hrznstudio.mod.recipe.rei.GalacticraftREIPlugin"
+    ],
+    "modmenu": [
+      "com.hrznstudio.mod.compat.hook.ModMenuApiImpl"
+    ]
   },
   "custom": {
     "waila:plugins": {
-      "id": "galacticraft-rewoven:plugin",
+      "id": "galacticraft:plugin",
       "initializer": "com.hrznstudio.galacticraft.compat.waila.GalacticraftWailaPlugin"
     }
   },
-  "mixins": [ "galacticraft-rewoven.mixins.json" ],
+  "mixins": [ "galacticraft.mixins.json" ],
   "accessWidener": "galacticraft_rewoven.accesswidener",
 
   "depends": {

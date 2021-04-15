@@ -7,7 +7,7 @@
   ],
   "key": {
     "A": {
-      "item": "galacticraft-rewoven:compressed_tin"
+      "item": "galacticraft:compressed_tin"
     },
     "R": {
       "item": "minecraft:redstone"
@@ -17,7 +17,7 @@
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:battery",
+    "item": "galacticraft:battery",
     "count": 1
   }
 }

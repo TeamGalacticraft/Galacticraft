@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:asteroid_rock"
+          "name": "galacticraft:asteroid_rock"
         }
       ],
       "conditions": [

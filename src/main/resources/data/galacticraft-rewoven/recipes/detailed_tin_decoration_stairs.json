@@ -7,11 +7,11 @@
   ],
   "key": {
     "L": {
-      "item": "galacticraft-rewoven:detailed_tin_decoration"
+      "item": "galacticraft:detailed_tin_decoration"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:detailed_tin_decoration_stairs",
+    "item": "galacticraft:detailed_tin_decoration_stairs",
     "count": 4
   }
 }

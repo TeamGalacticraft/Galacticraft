@@ -1,5 +1,5 @@
 {
-  "type": "galacticraft-rewoven:compressing_shapeless",
+  "type": "galacticraft:compressing_shapeless",
   "ingredients": [
     {
       "tag": "c:aluminum_ingots"
@@ -9,7 +9,7 @@
     }
   ],
   "result": {
-    "item": "galacticraft-rewoven:compressed_aluminum",
+    "item": "galacticraft:compressed_aluminum",
     "count": 1
   }
 }

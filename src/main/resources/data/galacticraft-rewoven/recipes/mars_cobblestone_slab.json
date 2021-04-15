@@ -5,11 +5,11 @@
   ],
   "key": {
     "T": {
-      "item": "galacticraft-rewoven:mars_cobblestone"
+      "item": "galacticraft:mars_cobblestone"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:mars_cobblestone_slab",
+    "item": "galacticraft:mars_cobblestone_slab",
     "count": 6
   }
 }

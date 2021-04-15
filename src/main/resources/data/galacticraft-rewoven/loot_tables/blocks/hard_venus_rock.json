@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:hard_venus_rock"
+          "name": "galacticraft:hard_venus_rock"
         }
       ],
       "conditions": [

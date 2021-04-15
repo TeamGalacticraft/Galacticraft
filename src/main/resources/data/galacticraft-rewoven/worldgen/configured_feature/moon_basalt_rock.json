@@ -5,7 +5,7 @@
         "feature": {
           "config": {
             "state": {
-              "Name": "galacticraft-rewoven:moon_basalt"
+              "Name": "galacticraft:moon_basalt"
             }
           },
           "type": "minecraft:forest_rock"

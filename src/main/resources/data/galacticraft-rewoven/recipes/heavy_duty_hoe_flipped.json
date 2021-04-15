@@ -7,13 +7,13 @@
   ],
   "key": {
     "T": {
-      "item": "galacticraft-rewoven:compressed_steel"
+      "item": "galacticraft:compressed_steel"
     },
     "I": {
       "item": "minecraft:stick"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:heavy_duty_hoe"
+    "item": "galacticraft:heavy_duty_hoe"
   }
 }

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:tin_decoration_slab"
+          "name": "galacticraft:tin_decoration_slab"
         }
       ],
       "conditions": [

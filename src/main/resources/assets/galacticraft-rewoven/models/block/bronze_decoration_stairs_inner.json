@@ -1,8 +1,0 @@
-{
-  "parent": "block/inner_stairs",
-  "textures": {
-    "bottom": "galacticraft-rewoven:block/bronze_decoration",
-    "top": "galacticraft-rewoven:block/bronze_decoration",
-    "side": "galacticraft-rewoven:block/bronze_decoration"
-  }
-}

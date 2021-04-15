@@ -7,11 +7,11 @@
             "feature": {
               "config": {
                 "target": {
-                  "tag": "galacticraft-rewoven:moon_stone",
+                  "tag": "galacticraft:moon_stone",
                   "predicate_type": "minecraft:tag_match"
                 },
                 "state": {
-                  "Name": "galacticraft-rewoven:moon_tin_ore"
+                  "Name": "galacticraft:moon_tin_ore"
                 },
                 "size": 8
               },

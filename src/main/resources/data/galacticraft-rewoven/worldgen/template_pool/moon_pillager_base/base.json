@@ -1,11 +1,11 @@
 {
-  "name": "galacticraft-rewoven:moon_pillager_base/base",
-  "fallback": "galacticraft-rewoven:moon_pillager_base/base_terminators",
+  "name": "galacticraft:moon_pillager_base/base",
+  "fallback": "galacticraft:moon_pillager_base/base_terminators",
   "elements": [
     {
       "weight": 3,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/base/base_1",
+        "location": "galacticraft:moon_pillager_base/base/base_1",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -14,7 +14,7 @@
     {
       "weight": 4,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/base/base_2s",
+        "location": "galacticraft:moon_pillager_base/base/base_2s",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -23,7 +23,7 @@
     {
       "weight": 5,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/base/base_2t",
+        "location": "galacticraft:moon_pillager_base/base/base_2t",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -32,7 +32,7 @@
     {
       "weight": 2,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/base/base_3",
+        "location": "galacticraft:moon_pillager_base/base/base_3",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -41,7 +41,7 @@
     {
       "weight": 1,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/base/base_4",
+        "location": "galacticraft:moon_pillager_base/base/base_4",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -50,7 +50,7 @@
     {
       "weight": 3,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/base/small_base_1",
+        "location": "galacticraft:moon_pillager_base/base/small_base_1",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -59,7 +59,7 @@
     {
       "weight": 3,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/base/small_base_2s",
+        "location": "galacticraft:moon_pillager_base/base/small_base_2s",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -68,7 +68,7 @@
     {
       "weight": 3,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/base/small_base_2t",
+        "location": "galacticraft:moon_pillager_base/base/small_base_2t",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -77,7 +77,7 @@
     {
       "weight": 2,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/base/small_base_3",
+        "location": "galacticraft:moon_pillager_base/base/small_base_3",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -86,7 +86,7 @@
     {
       "weight": 1,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/base/small_base_4",
+        "location": "galacticraft:moon_pillager_base/base/small_base_4",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"

@@ -6,11 +6,11 @@
   ],
   "key": {
     "T": {
-      "item": "galacticraft-rewoven:compressed_titanium"
+      "item": "galacticraft:compressed_titanium"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:titanium_boots",
+    "item": "galacticraft:titanium_boots",
     "count": 1
   }
 }

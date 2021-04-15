@@ -7,13 +7,13 @@
   ],
   "key": {
     "I": {
-      "item": "galacticraft-rewoven:compressed_iron"
+      "item": "galacticraft:compressed_iron"
     },
     "L": {
       "item": "minecraft:leather"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:buggy_wheel"
+    "item": "galacticraft:buggy_wheel"
   }
 }

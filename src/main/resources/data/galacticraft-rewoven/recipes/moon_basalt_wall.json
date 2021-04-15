@@ -6,11 +6,11 @@
   ],
   "key": {
     "L": {
-      "item": "galacticraft-rewoven:moon_basalt"
+      "item": "galacticraft:moon_basalt"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:moon_basalt_wall",
+    "item": "galacticraft:moon_basalt_wall",
     "count": 6
   }
 }

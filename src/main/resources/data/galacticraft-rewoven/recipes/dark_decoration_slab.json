@@ -5,11 +5,11 @@
   ],
   "key": {
     "T": {
-      "item": "galacticraft-rewoven:dark_decoration"
+      "item": "galacticraft:dark_decoration"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:dark_decoration_slab",
+    "item": "galacticraft:dark_decoration_slab",
     "count": 6
   }
 }

@@ -1,8 +1,8 @@
 {
-  "type": "galacticraft-rewoven:circuit_fabricator",
+  "type": "galacticraft:circuit_fabricator",
   "ingredient": {
-    "item": "galacticraft-rewoven:solar_dust"
+    "item": "galacticraft:solar_dust"
   },
-  "result": "galacticraft-rewoven:solar_array_wafer",
+  "result": "galacticraft:solar_array_wafer",
   "count": 3
 }

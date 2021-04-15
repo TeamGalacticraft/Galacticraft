@@ -7,10 +7,10 @@
   ],
   "key": {
     "L": {
-      "item": "galacticraft-rewoven:lunar_sapphire"
+      "item": "galacticraft:lunar_sapphire"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:lunar_sapphire_block"
+    "item": "galacticraft:lunar_sapphire_block"
   }
 }

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:detailed_tin_decoration"
+          "name": "galacticraft:detailed_tin_decoration"
         }
       ],
       "conditions": [

@@ -7,13 +7,13 @@
   ],
   "key": {
     "S": {
-      "item": "galacticraft-rewoven:single_solar_module"
+      "item": "galacticraft:single_solar_module"
     },
     "W": {
-      "item": "galacticraft-rewoven:aluminum_wire"
+      "item": "galacticraft:aluminum_wire"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:full_solar_panel"
+    "item": "galacticraft:full_solar_panel"
   }
 }

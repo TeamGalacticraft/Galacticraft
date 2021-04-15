@@ -5,7 +5,7 @@
         "Properties": {
           "axis": "y"
         },
-        "Name": "galacticraft-rewoven:moon_cheese_log"
+        "Name": "galacticraft:moon_cheese_log"
       },
       "type": "minecraft:rotated_block_provider"
     }

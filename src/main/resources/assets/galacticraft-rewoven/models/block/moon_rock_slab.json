@@ -1,8 +1,0 @@
-{
-  "parent": "block/slab",
-  "textures": {
-    "bottom": "galacticraft-rewoven:block/moon_rock",
-    "top": "galacticraft-rewoven:block/moon_rock",
-    "side": "galacticraft-rewoven:block/moon_rock"
-  }
-}
