@@ -20,35 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.item;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Rarity;
+package dev.galacticraft.mod.items;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GenericLiquidCanister extends Item {
+public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
 
-    private final Fluid allowedFluid;
-
-    public GenericLiquidCanister(Settings settings, Fluid allowedFluid) {
+    public HotThrowableMeteorChunkItem(Settings settings) {
         super(settings);
-        this.allowedFluid = allowedFluid;
-    }
-
-    @Override
-    public int getEnchantability() {
-        return -1;
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public Rarity getRarity(ItemStack par1ItemStack) {
-        return Rarity.RARE;
     }
 }

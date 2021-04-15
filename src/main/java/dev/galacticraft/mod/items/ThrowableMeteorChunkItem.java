@@ -20,34 +20,16 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.item;
+package dev.galacticraft.mod.items;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.FixedItemInv;
-import dev.galacticraft.mod.accessor.GearInventoryProvider;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenMaskItem extends Item {
-    public OxygenMaskItem(Settings settings) {
-        super(settings);
-    }
+public class ThrowableMeteorChunkItem extends Item {
 
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        FixedItemInv inv = ((GearInventoryProvider)player).getGearInv();
-        if (inv.getInvStack(4).isEmpty()) {
-            inv.setInvStack(4, player.getStackInHand(hand), Simulation.ACTION);
-            return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
-        }
-        return super.use(world, player, hand);
+    public ThrowableMeteorChunkItem(Settings settings) {
+        super(settings);
     }
 }

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.recipe.rei;
 
 import dev.galacticraft.mod.block.GalacticraftBlocks;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.items.GalacticraftItems;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.EntryStack;

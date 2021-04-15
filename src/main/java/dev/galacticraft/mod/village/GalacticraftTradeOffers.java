@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.village;
 
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.items.GalacticraftItems;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.*;

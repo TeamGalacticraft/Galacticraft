@@ -26,7 +26,7 @@ import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.GalacticraftBlocks;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.items.GalacticraftItems;
 import dev.galacticraft.mod.mixin.client.HandledScreenHooks;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;

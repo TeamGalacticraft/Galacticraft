@@ -24,7 +24,7 @@ package dev.galacticraft.mod.mixin.client;
 
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.client.gui.screen.ingame.GalacticraftPlayerInventoryScreen;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.items.GalacticraftItems;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

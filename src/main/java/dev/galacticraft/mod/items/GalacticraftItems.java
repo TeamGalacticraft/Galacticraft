@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.item;
+package dev.galacticraft.mod.items;
 
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.block.GalacticraftBlocks;

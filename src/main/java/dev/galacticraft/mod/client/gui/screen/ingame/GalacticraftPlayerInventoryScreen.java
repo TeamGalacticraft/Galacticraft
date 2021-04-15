@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.items.GalacticraftItems;
 import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtils;
 import dev.galacticraft.mod.util.OxygenTankUtils;

@@ -20,31 +20,35 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.item;
+package dev.galacticraft.mod.items;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.util.Rarity;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CannedFoodItem extends Item {
+public class GenericLiquidCanister extends Item {
 
-    CannedFoodItem(Settings settings) {
+    private final Fluid allowedFluid;
+
+    public GenericLiquidCanister(Settings settings, Fluid allowedFluid) {
         super(settings);
+        this.allowedFluid = allowedFluid;
     }
 
     @Override
-    public ItemStack finishUsing(ItemStack stack, World world, LivingEntity entity) {
-        if (entity instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) entity;
-            player.eatFood(world, stack);
-            player.dropStack(new ItemStack(GalacticraftItems.TIN_CANISTER));
-        }
-        stack.decrement(1);
-        return stack;
+    public int getEnchantability() {
+        return -1;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public Rarity getRarity(ItemStack par1ItemStack) {
+        return Rarity.RARE;
     }
 }

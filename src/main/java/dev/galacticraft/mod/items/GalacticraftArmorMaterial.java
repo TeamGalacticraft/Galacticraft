@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.item;
+package dev.galacticraft.mod.items;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

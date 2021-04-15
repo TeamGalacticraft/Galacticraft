@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.item;
+package dev.galacticraft.mod.items;
 
 import dev.galacticraft.mod.api.item.AccessoryItem;
 import net.minecraft.item.Item;

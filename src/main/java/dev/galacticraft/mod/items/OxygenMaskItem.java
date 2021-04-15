@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.item;
+package dev.galacticraft.mod.items;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
@@ -36,16 +36,16 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenGearItem extends Item {
-    public OxygenGearItem(Settings settings) {
+public class OxygenMaskItem extends Item {
+    public OxygenMaskItem(Settings settings) {
         super(settings);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         FixedItemInv inv = ((GearInventoryProvider)player).getGearInv();
-        if (inv.getInvStack(5).isEmpty()) {
-            inv.setInvStack(5, player.getStackInHand(hand), Simulation.ACTION);
+        if (inv.getInvStack(4).isEmpty()) {
+            inv.setInvStack(4, player.getStackInHand(hand), Simulation.ACTION);
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world, player, hand);

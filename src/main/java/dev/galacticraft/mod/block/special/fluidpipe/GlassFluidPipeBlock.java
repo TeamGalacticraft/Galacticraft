@@ -25,7 +25,7 @@ package dev.galacticraft.mod.block.special.fluidpipe;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.block.FluidPipe;
 import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
-import dev.galacticraft.mod.item.StandardWrenchItem;
+import dev.galacticraft.mod.items.StandardWrenchItem;
 import dev.galacticraft.mod.util.ConnectingBlockUtils;
 import dev.galacticraft.mod.util.FluidUtils;
 import net.fabricmc.api.EnvType;

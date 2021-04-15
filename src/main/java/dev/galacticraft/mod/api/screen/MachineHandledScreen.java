@@ -35,7 +35,7 @@ import dev.galacticraft.mod.api.machine.SecurityInfo;
 import dev.galacticraft.mod.block.GalacticraftBlocks;
 import dev.galacticraft.mod.client.gui.widget.machine.AbstractWidget;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.items.GalacticraftItems;
 import dev.galacticraft.mod.screen.MachineScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.screen.tank.Tank;
