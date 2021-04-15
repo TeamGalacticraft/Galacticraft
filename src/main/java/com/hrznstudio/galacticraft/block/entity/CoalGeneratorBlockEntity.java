@@ -134,7 +134,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
                 this.heat = Math.min(1, this.heat + 0.004);
             }
         }
-        this.world.setBlockState(this.pos, this.world.getBlockState(pos).with(Constants.Property.ACTIVE, this.getHeat() > 0));
+        this.world.setBlockState(this.pos, this.getCachedState().with(Constants.Property.ACTIVE, this.getHeat() > 0));
     }
 
     @Nullable

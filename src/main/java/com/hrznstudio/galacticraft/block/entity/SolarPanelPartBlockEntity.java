@@ -59,7 +59,7 @@ public class SolarPanelPartBlockEntity extends BlockEntity {
     }
 
     public void setBasePos(BlockPos basePos) {
-        if (this.world.getBlockState(basePos).getBlock() instanceof MultiBlockBase) {
+        if (this.getCachedState().getBlock() instanceof MultiBlockBase) {
             this.basePos = basePos;
             this.markDirty();
         }

@@ -495,7 +495,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             for (BlockFace face : Constants.Misc.BLOCK_FACES) {
                 ConfiguredMachineFace option = this.getIOConfig().get(face);
                 if (option.getAutomationType().isEnergy() && option.getAutomationType().isOutput()) {
-                    Direction dir = face.toDirection(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
+                    Direction dir = face.toDirection(this.getCachedState().get(Properties.HORIZONTAL_FACING));
                     EnergyInsertable insertable = GalacticraftEnergy.INSERTABLE.getFirst(world, pos.offset(dir), SearchOptions.inDirection(dir.getOpposite()));
                     if (insertable != RejectingEnergyInsertable.NULL) {
                         this.getCapacitor().insert(insertable.tryInsert(DefaultEnergyType.INSTANCE, this.getCapacitor().extract(2048), Simulation.ACTION));
@@ -510,7 +510,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             for (BlockFace face : Constants.Misc.BLOCK_FACES) {
                 ConfiguredMachineFace option = this.getIOConfig().get(face);
                 if (option.getAutomationType().isFluid() && option.getAutomationType().isOutput()) {
-                    Direction dir = face.toDirection(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
+                    Direction dir = face.toDirection(this.getCachedState().get(Properties.HORIZONTAL_FACING));
                     FluidInsertable insertable = FluidAttributes.INSERTABLE.getFromNeighbour(this, dir);
                     this.getFluidInv().insertFluid(tank, insertable.attemptInsertion(this.getFluidInv().extractFluid(tank, ConstantFluidFilter.ANYTHING, null, FluidAmount.ONE, Simulation.ACTION), Simulation.ACTION), Simulation.ACTION);
                 }
@@ -570,7 +570,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     @Override
     public void sync() {
         BlockEntityClientSerializable.super.sync();
-        BlockState state = this.world.getBlockState(this.pos);
+        BlockState state = this.getCachedState();
         this.world.setBlockState(this.pos, state.with(MachineBlock.ARBITRARY_BOOLEAN_PROPERTY, !state.get(MachineBlock.ARBITRARY_BOOLEAN_PROPERTY)), 11);
     }
 

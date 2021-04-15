@@ -173,13 +173,13 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     private static final int TOP_FACE_X = 33;
     private static final int TOP_FACE_Y = 26;
 
-    private static final int LEFT_FACE_X = 14;
+    private static final int LEFT_FACE_X = 52;
     private static final int LEFT_FACE_Y = 45;
 
     private static final int FRONT_FACE_X = 33;
     private static final int FRONT_FACE_Y = 45;
 
-    private static final int RIGHT_FACE_X = 52;
+    private static final int RIGHT_FACE_X = 14;
     private static final int RIGHT_FACE_Y = 45;
 
     private static final int BACK_FACE_X = 71;
@@ -295,7 +295,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.stats")
                         .setStyle(Constants.Text.GREEN_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
                 List<OrderedText> text = this.textRenderer.wrapLines(new TranslatableText((machine.getCachedState() != null ? machine.getCachedState()
-                        : this.world.getBlockState(this.pos)).getBlock().getTranslationKey()), 64);
+                        : this.handler.machine.getCachedState()).getBlock().getTranslationKey()), 64);
                 int offsetY = 0;
                 for (OrderedText orderedText : text) {
                     this.textRenderer.draw(matrices, orderedText, 40, 22 + offsetY, ColorUtils.WHITE);
