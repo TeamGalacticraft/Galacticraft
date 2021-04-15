@@ -53,6 +53,8 @@ public class CoalGeneratorBlock extends MachineBlock {
                         new TranslatableText("tooltip.galacticraft-rewoven.coal_generator")
                                 .setStyle(Constants.Text.DARK_GRAY_STYLE)
         );
+
+        this.setDefaultState(this.getDefaultState().with(Constants.Property.ACTIVE, false));
     }
 
     @Environment(EnvType.CLIENT)

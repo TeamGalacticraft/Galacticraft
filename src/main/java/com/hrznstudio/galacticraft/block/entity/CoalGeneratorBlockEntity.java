@@ -62,8 +62,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
     public static final int FUEL_SLOT = 1;
 
     public Status status = Status.FULL;
-    public int fuelLength;
-    public int fuelTime;
+    public int fuelLength = 0;
+    public int fuelTime = 0;
     private double heat = 0.0d;
 
     /*
