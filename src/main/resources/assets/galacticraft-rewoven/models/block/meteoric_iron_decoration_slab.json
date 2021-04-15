@@ -1,8 +1,0 @@
-{
-  "parent": "block/slab",
-  "textures": {
-    "bottom": "galacticraft-rewoven:block/meteoric_iron_decoration",
-    "top": "galacticraft-rewoven:block/meteoric_iron_decoration",
-    "side": "galacticraft-rewoven:block/meteoric_iron_decoration"
-  }
-}

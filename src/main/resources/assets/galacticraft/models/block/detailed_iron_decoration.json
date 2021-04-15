@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "down": "galacticraft:block/detailed_iron_decoration_top",
+    "up": "galacticraft:block/iron_decoration",
+    "north": "galacticraft:block/detailed_iron_decoration_side",
+    "south": "galacticraft:block/detailed_iron_decoration_side",
+    "west": "galacticraft:block/detailed_iron_decoration_side",
+    "east": "galacticraft:block/detailed_iron_decoration_side",
+    "particle": "galacticraft:block/detailed_iron_decoration_side"
+  }
+}

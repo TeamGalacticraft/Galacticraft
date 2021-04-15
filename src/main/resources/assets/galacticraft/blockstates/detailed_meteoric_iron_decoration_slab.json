@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "galacticraft:block/detailed_meteoric_iron_decoration_slab"
+    },
+    "type=top": {
+      "model": "galacticraft:block/detailed_meteoric_iron_decoration_slab_top"
+    },
+    "type=double": {
+      "model": "galacticraft:block/detailed_meteoric_iron_decoration"
+    }
+  }
+}

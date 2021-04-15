@@ -1,0 +1,8 @@
+{
+  "parent": "block/wall_inventory",
+  "textures": {
+    "wall": "galacticraft:block/detailed_tin_decoration_side",
+    "wall_bot": "galacticraft:block/detailed_tin_decoration_top",
+    "wall_top": "galacticraft:block/tin_decoration"
+  }
+}

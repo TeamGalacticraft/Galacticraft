@@ -65,8 +65,8 @@ base {
 }
 
 loom {
-    refmapName = "galacticraft-rewoven.refmap.json"
-    accessWidener = rootProject.file("src/main/resources/galacticraft_rewoven.accesswidener")
+    refmapName = "galacticraft.refmap.json"
+    accessWidener = rootProject.file("src/main/resources/galacticraft.accesswidener")
 }
 
 repositories {
@@ -103,6 +103,11 @@ repositories {
         setUrl("https://cdn.hrzn.studio/maven/")
         content {
             includeGroup("com.hrznstudio")
+        }
+    }
+    maven("https://maven.galacticraft.dev") {
+        content {
+            includeGroup("dev.galacticraft")
         }
     }
     jcenter()
@@ -213,7 +218,7 @@ tasks.jar {
         attributes(mapOf(
             "Implementation-Title"     to modName,
             "Implementation-Version"   to project.version,
-            "Implementation-Vendor"    to "HRZN LTD",
+            "Implementation-Vendor"    to "Team Galacticraft",
             "Implementation-Timestamp" to DateTimeFormatter.ISO_DATE_TIME,
             "Maven-Artifact"           to "$modGroup:$modName:$project.version"
         ))
@@ -223,8 +228,8 @@ tasks.jar {
 publishing {
     publications {
         register("mavenJava", MavenPublication::class) {
-            groupId = "com.hrznstudio"
-            artifactId = "galacticraft"
+            groupId = "dev.galacticraft"
+            artifactId = "Galacticraft"
 
             artifact(tasks.remapJar) { builtBy(tasks.remapJar) }
             artifact(tasks.getByName("sourcesJar", Jar::class)) { builtBy(tasks.remapSourcesJar) }
@@ -233,7 +238,7 @@ publishing {
     }
     repositories {
         maven {
-            setUrl("s3://cdn.hrzn.studio/maven")
+            setUrl("s3://maven.galacticraft.dev")
             authentication {
                 register("awsIm", AwsImAuthentication::class)
             }
@@ -243,11 +248,11 @@ publishing {
 
 license {
     header = project.file("LICENSE_HEADER.txt")
-    include("**/com/hrznstudio/**/*.java")
+    include("**/dev/galacticraft/**/*.java")
     include("build.gradle.kts")
     ext {
         set("year", Year.now().value)
-        set("company", "HRZN LTD")
+        set("company", "Team Galacticraft")
     }
 }
 

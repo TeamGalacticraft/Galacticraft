@@ -1,7 +1,0 @@
-{
-  "parent": "galacticraft-rewoven:block/glass_fluid_pipe/glass_fluid_pipe_side_base",
-  "textures": {
-    "particle": "galacticraft-rewoven:block/glass_fluid_pipe/lime",
-    "color":    "galacticraft-rewoven:block/glass_fluid_pipe/lime"
-  }
-}
