@@ -23,7 +23,7 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.mod.api.config.ConfigManager;
-import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
+import com.hrznstudio.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.mod.block.GalacticraftBlocks;
 import dev.galacticraft.mod.config.ConfigManagerImpl;
 import dev.galacticraft.mod.entity.GalacticraftBlockEntities;

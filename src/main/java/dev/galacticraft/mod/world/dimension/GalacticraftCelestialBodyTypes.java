@@ -24,7 +24,7 @@ package dev.galacticraft.mod.world.dimension;
 
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyDisplayInfo;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
-import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
+import com.hrznstudio.galacticraft.api.registry.AddonRegistry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
