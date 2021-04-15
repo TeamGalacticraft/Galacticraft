@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.items;
+package dev.galacticraft.mod.items;
 
 import net.minecraft.item.ItemStack;
 
