@@ -46,6 +46,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -67,6 +68,20 @@ public class GalacticraftClient implements ClientModInitializer {
         long startInitTime = System.currentTimeMillis();
         Galacticraft.LOGGER.info("Starting client initialization.");
         CapesLoader.load();
+
+        // Render gear on player
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper) -> {
+        if (entityRenderer instanceof PlayerEntityRenderer) {
+            registrationHelper.register(new PlayerSpaceGearFeatureRenderer<>(
+                    (PlayerEntityRenderer) entityRenderer, 1.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F,
+                    (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
+                        stack.translate(0.0F, -0.1F, 0.0F);
+                        stack.scale(0.8F, 0.8F, 0.8F);
+                    },
+                    (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.translate(0.0F, 1.0F, 0.0F),
+                    (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.scale(0.8F, 0.8F, 0.8F),
+                    true, true, true));
+        }});
 
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) -> {
             for (int i = 0; i <= 8; i++) {
