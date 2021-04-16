@@ -1,6 +1,6 @@
 {
   "config": {
-    "start_pool": "galacticraft-rewoven:moon_village/starts",
+    "start_pool": "galacticraft:moon_village/starts",
     "size": 6
   },
   "type": "minecraft:village"

@@ -2,10 +2,10 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:raw_meteoric_iron"
+      "item": "galacticraft:raw_meteoric_iron"
     }
   ],
   "result": {
-    "item": "galacticraft-rewoven:throwable_meteor_chunk"
+    "item": "galacticraft:throwable_meteor_chunk"
   }
 }

@@ -7,20 +7,20 @@
   ],
   "key": {
     "T": {
-      "item": "galacticraft-rewoven:compressed_tin"
+      "item": "galacticraft:compressed_tin"
     },
     "S": {
-      "item": "galacticraft-rewoven:compressed_steel"
+      "item": "galacticraft:compressed_steel"
     },
     "C": {
-      "item": "galacticraft-rewoven:tin_canister"
+      "item": "galacticraft:tin_canister"
     },
     "V": {
-      "item": "galacticraft-rewoven:oxygen_vent"
+      "item": "galacticraft:oxygen_vent"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:oxygen_concentrator",
+    "item": "galacticraft:oxygen_concentrator",
     "count": 1
   }
 }

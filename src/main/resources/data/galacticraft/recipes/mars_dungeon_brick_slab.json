@@ -5,11 +5,11 @@
   ],
   "key": {
     "T": {
-      "item": "galacticraft-rewoven:mars_dungeon_brick"
+      "item": "galacticraft:mars_dungeon_brick"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:mars_dungeon_brick_slab",
+    "item": "galacticraft:mars_dungeon_brick_slab",
     "count": 6
   }
 }

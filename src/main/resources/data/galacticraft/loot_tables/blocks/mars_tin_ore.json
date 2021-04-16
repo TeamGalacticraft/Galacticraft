@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:mars_tin_ore"
+          "name": "galacticraft:mars_tin_ore"
         }
       ],
       "conditions": [

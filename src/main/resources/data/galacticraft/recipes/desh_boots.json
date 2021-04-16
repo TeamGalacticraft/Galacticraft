@@ -6,11 +6,11 @@
   ],
   "key": {
     "D": {
-      "item": "galacticraft-rewoven:desh_ingot"
+      "item": "galacticraft:desh_ingot"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:desh_boots",
+    "item": "galacticraft:desh_boots",
     "count": 1
   }
 }

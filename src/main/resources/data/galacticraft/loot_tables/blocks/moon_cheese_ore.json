@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:moon_cheese_ore"
+          "name": "galacticraft:moon_cheese_ore"
         }
       ],
       "conditions": [

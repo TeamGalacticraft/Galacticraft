@@ -6,14 +6,14 @@
   ],
   "key": {
     "D": {
-      "item": "galacticraft-rewoven:desh_ingot"
+      "item": "galacticraft:desh_ingot"
     },
     "V": {
-      "item": "galacticraft-rewoven:oxygen_vent"
+      "item": "galacticraft:oxygen_vent"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:atmospheric_valve",
+    "item": "galacticraft:atmospheric_valve",
     "count": 1
   }
 }

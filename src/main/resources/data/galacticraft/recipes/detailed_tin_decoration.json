@@ -10,11 +10,11 @@
       "item": "minecraft:stone"
     },
     "T": {
-      "item": "galacticraft-rewoven:compressed_tin"
+      "item": "galacticraft:compressed_tin"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:detailed_tin_decoration",
+    "item": "galacticraft:detailed_tin_decoration",
     "count": 4
   }
 }

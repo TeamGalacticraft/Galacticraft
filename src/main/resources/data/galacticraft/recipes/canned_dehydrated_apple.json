@@ -8,10 +8,10 @@
       "item": "minecraft:apple"
     },
     "C": {
-      "item": "galacticraft-rewoven:tin_canister"
+      "item": "galacticraft:tin_canister"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:canned_dehydrated_apple"
+    "item": "galacticraft:canned_dehydrated_apple"
   }
 }

@@ -10,14 +10,14 @@
       "item": "minecraft:glass"
     },
     "S": {
-      "item": "galacticraft-rewoven:blue_solar_wafer"
+      "item": "galacticraft:blue_solar_wafer"
     },
     "W": {
-      "item": "galacticraft-rewoven:aluminum_wire"
+      "item": "galacticraft:aluminum_wire"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:single_solar_module",
+    "item": "galacticraft:single_solar_module",
     "count": 2
   }
 }

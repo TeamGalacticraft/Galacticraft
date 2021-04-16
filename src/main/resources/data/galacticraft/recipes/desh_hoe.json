@@ -7,14 +7,14 @@
   ],
   "key": {
     "D": {
-      "item": "galacticraft-rewoven:desh_ingot"
+      "item": "galacticraft:desh_ingot"
     },
     "S": {
-      "item": "galacticraft-rewoven:desh_stick"
+      "item": "galacticraft:desh_stick"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:desh_hoe",
+    "item": "galacticraft:desh_hoe",
     "count": 1
   }
 }

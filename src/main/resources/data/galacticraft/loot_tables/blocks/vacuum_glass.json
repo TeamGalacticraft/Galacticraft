@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:vacuum_glass"
+          "name": "galacticraft:vacuum_glass"
         }
       ],
       "conditions": [

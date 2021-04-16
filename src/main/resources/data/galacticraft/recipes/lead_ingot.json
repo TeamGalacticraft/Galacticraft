@@ -3,7 +3,7 @@
   "ingredient": {
     "tag": "c:lead_ore"
   },
-  "result": "galacticraft-rewoven:lead_ingot",
+  "result": "galacticraft:lead_ingot",
   "experience": 0.1,
   "cookingtime": 200
 }

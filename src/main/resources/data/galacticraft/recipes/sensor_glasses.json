@@ -10,16 +10,16 @@
       "item": "minecraft:string"
     },
     "L": {
-      "item": "galacticraft-rewoven:meteoric_iron_ingot"
+      "item": "galacticraft:meteoric_iron_ingot"
     },
     "D": {
       "item": "minecraft:diamond"
     },
     "M": {
-      "item": "galacticraft-rewoven:sensor_lens"
+      "item": "galacticraft:sensor_lens"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:sensor_glasses"
+    "item": "galacticraft:sensor_glasses"
   }
 }

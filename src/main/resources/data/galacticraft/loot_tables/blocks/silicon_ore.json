@@ -24,7 +24,7 @@
                   }
                 }
               ],
-              "name": "galacticraft-rewoven:silicon_ore"
+              "name": "galacticraft:silicon_ore"
             },
             {
               "type": "minecraft:item",
@@ -38,7 +38,7 @@
                   "function": "minecraft:explosion_decay"
                 }
               ],
-              "name": "galacticraft-rewoven:raw_silicon"
+              "name": "galacticraft:raw_silicon"
             }
           ]
         }

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:galena_ore"
+          "name": "galacticraft:galena_ore"
         }
       ],
       "conditions": [

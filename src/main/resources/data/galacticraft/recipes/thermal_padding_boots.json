@@ -6,10 +6,10 @@
   ],
   "key": {
     "C": {
-      "item": "galacticraft-rewoven:thermal_cloth"
+      "item": "galacticraft:thermal_cloth"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:thermal_padding_boots"
+    "item": "galacticraft:thermal_padding_boots"
   }
 }

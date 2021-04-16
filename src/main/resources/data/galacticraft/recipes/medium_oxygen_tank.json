@@ -10,14 +10,14 @@
       "item": "minecraft:orange_wool"
     },
     "T": {
-      "item": "galacticraft-rewoven:tin_canister"
+      "item": "galacticraft:tin_canister"
     },
     "C": {
-      "item": "galacticraft-rewoven:compressed_tin"
+      "item": "galacticraft:compressed_tin"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:medium_oxygen_tank",
+    "item": "galacticraft:medium_oxygen_tank",
     "count": 1
   }
 }

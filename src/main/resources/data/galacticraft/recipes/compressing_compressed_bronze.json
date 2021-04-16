@@ -1,15 +1,15 @@
 {
-  "type": "galacticraft-rewoven:compressing_shapeless",
+  "type": "galacticraft:compressing_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:compressed_copper"
+      "item": "galacticraft:compressed_copper"
     },
     {
-      "item": "galacticraft-rewoven:compressed_tin"
+      "item": "galacticraft:compressed_tin"
     }
   ],
   "result": {
-    "item": "galacticraft-rewoven:compressed_bronze",
+    "item": "galacticraft:compressed_bronze",
     "count": 1
   }
 }

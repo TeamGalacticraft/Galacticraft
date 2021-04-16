@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:moon_dirt"
+          "name": "galacticraft:moon_dirt"
         }
       ],
       "conditions": [

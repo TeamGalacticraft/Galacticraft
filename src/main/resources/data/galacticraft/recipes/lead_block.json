@@ -7,11 +7,11 @@
   ],
   "key": {
     "L": {
-      "item": "galacticraft-rewoven:lead_ingot"
+      "item": "galacticraft:lead_ingot"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:lead_block",
+    "item": "galacticraft:lead_block",
     "count": 1
   }
 }

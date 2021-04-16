@@ -7,7 +7,7 @@
   "category": "none",
   "effects": {
     "music": {
-      "sound": "galacticraft-rewoven:music.music_moon",
+      "sound": "galacticraft:music.music_moon",
       "min_delay": 1200,
       "max_delay": 3600,
       "replace_current_music": true
@@ -17,11 +17,11 @@
     "water_color": 4013374,
     "water_fog_color": 4802890
   },
-  "surface_builder": "galacticraft-rewoven:moon_highlands",
+  "surface_builder": "galacticraft:moon_highlands",
   "carvers": {
     "air": [
-      "galacticraft-rewoven:moon_highlands_cave",
-      "galacticraft-rewoven:canyon"
+      "galacticraft:moon_highlands_cave",
+      "galacticraft:canyon"
     ]
   },
   "features": [
@@ -34,10 +34,10 @@
     ],
     [],
     [
-      "galacticraft-rewoven:disk_moon_basalt",
-      "galacticraft-rewoven:ore_copper_moon",
-      "galacticraft-rewoven:ore_tin_moon",
-      "galacticraft-rewoven:ore_cheese_moon"
+      "galacticraft:disk_moon_basalt",
+      "galacticraft:ore_copper_moon",
+      "galacticraft:ore_tin_moon",
+      "galacticraft:ore_cheese_moon"
     ],
     [],
     [],
@@ -46,29 +46,29 @@
   "starts": [
     {
       "config": {
-        "start_pool": "galacticraft-rewoven:moon_village/starts",
+        "start_pool": "galacticraft:moon_village/starts",
         "size": 6
       },
       "type": "minecraft:village"
     },
     {
       "config": {
-        "start_pool": "galacticraft-rewoven:moon_pillager_base/entrances",
+        "start_pool": "galacticraft:moon_pillager_base/entrances",
         "size": 10
       },
-      "type": "galacticraft-rewoven:moon_pillager_base"
+      "type": "galacticraft:moon_pillager_base"
     }
   ],
   "spawners": {
     "monster": [
       {
-        "type": "galacticraft-rewoven:evolved_zombie",
+        "type": "galacticraft:evolved_zombie",
         "weight": 100,
         "minCount": 4,
         "maxCount": 5
       },
       {
-        "type": "galacticraft-rewoven:evolved_creeper",
+        "type": "galacticraft:evolved_creeper",
         "weight": 100,
         "minCount": 4,
         "maxCount": 5

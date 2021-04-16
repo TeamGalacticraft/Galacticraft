@@ -10,13 +10,13 @@
       "item": "minecraft:redstone"
     },
     "P": {
-      "item": "galacticraft-rewoven:compressed_iron"
+      "item": "galacticraft:compressed_iron"
     },
     "G": {
       "item": "minecraft:glass_pane"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:beam_core"
+    "item": "galacticraft:beam_core"
   }
 }

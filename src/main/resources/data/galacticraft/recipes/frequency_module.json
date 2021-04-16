@@ -7,10 +7,10 @@
   ],
   "key": {
     "A": {
-      "item": "galacticraft-rewoven:compressed_aluminum"
+      "item": "galacticraft:compressed_aluminum"
     },
     "I": {
-      "item": "galacticraft-rewoven:compressed_iron"
+      "item": "galacticraft:compressed_iron"
     },
     "R": {
       "item": "minecraft:repeater"
@@ -19,10 +19,10 @@
       "item": "minecraft:redstone"
     },
     "B": {
-      "item": "galacticraft-rewoven:basic_wafer"
+      "item": "galacticraft:basic_wafer"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:frequency_module"
+    "item": "galacticraft:frequency_module"
   }
 }

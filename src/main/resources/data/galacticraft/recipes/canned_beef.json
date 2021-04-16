@@ -5,13 +5,13 @@
   ],
   "key": {
     "A": {
-      "item": "galacticraft-rewoven:beef_patty"
+      "item": "galacticraft:beef_patty"
     },
     "C": {
-      "item": "galacticraft-rewoven:tin_canister"
+      "item": "galacticraft:tin_canister"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:canned_beef"
+    "item": "galacticraft:canned_beef"
   }
 }

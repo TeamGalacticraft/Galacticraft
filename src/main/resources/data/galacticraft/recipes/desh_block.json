@@ -7,11 +7,11 @@
   ],
   "key": {
     "D": {
-      "item": "galacticraft-rewoven:desh_ingot"
+      "item": "galacticraft:desh_ingot"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:desh_block",
+    "item": "galacticraft:desh_block",
     "count": 1
   }
 }

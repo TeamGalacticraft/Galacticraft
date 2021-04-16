@@ -7,14 +7,14 @@
   ],
   "key": {
     "S": {
-      "item": "galacticraft-rewoven:compressed_steel"
+      "item": "galacticraft:compressed_steel"
     },
     "H": {
-      "item": "galacticraft-rewoven:heavy_plating"
+      "item": "galacticraft:heavy_plating"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:rocket_fins",
+    "item": "galacticraft:rocket_fins",
     "count": 1
   }
 }

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:dark_decoration"
+          "name": "galacticraft:dark_decoration"
         }
       ],
       "conditions": [

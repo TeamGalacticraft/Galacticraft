@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:sealable_aluminum_wire"
+          "name": "galacticraft:sealable_aluminum_wire"
         }
       ],
       "conditions": [

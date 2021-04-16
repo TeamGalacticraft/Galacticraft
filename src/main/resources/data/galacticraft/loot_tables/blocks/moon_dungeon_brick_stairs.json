@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:moon_dungeon_brick_stairs"
+          "name": "galacticraft:moon_dungeon_brick_stairs"
         }
       ],
       "conditions": [

@@ -7,11 +7,11 @@
   ],
   "key": {
     "L": {
-      "item": "galacticraft-rewoven:moon_dungeon_brick"
+      "item": "galacticraft:moon_dungeon_brick"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:moon_dungeon_brick_stairs",
+    "item": "galacticraft:moon_dungeon_brick_stairs",
     "count": 4
   }
 }

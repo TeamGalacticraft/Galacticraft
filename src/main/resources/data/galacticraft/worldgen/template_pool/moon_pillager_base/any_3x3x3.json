@@ -1,11 +1,11 @@
 {
-  "name": "galacticraft-rewoven:moon_pillager_base/any_3x3x3",
+  "name": "galacticraft:moon_pillager_base/any_3x3x3",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional_3x3x3/cage",
+        "location": "galacticraft:moon_pillager_base/optional_3x3x3/cage",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -14,7 +14,7 @@
     {
       "weight": 3,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional_3x3x3/pillagers",
+        "location": "galacticraft:moon_pillager_base/optional_3x3x3/pillagers",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -23,7 +23,7 @@
     {
       "weight": 1,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional_3x3x3/cake",
+        "location": "galacticraft:moon_pillager_base/optional_3x3x3/cake",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -32,7 +32,7 @@
     {
       "weight": 3,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional_3x3x3/cheese",
+        "location": "galacticraft:moon_pillager_base/optional_3x3x3/cheese",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -41,7 +41,7 @@
     {
       "weight": 4,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional_3x3x3/seating",
+        "location": "galacticraft:moon_pillager_base/optional_3x3x3/seating",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"

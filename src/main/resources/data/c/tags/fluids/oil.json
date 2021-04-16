@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "galacticraft-rewoven:crude_oil_still",
-    "galacticraft-rewoven:crude_oil_flowing"
+    "galacticraft:crude_oil_still",
+    "galacticraft:crude_oil_flowing"
   ]
 }

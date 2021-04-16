@@ -1,8 +1,8 @@
 {
   "replace": false,
   "values": [
-    "galacticraft-rewoven:heavy_duty_shovel",
-    "galacticraft-rewoven:desh_shovel",
-    "galacticraft-rewoven:titanium_shovel"
+    "galacticraft:heavy_duty_shovel",
+    "galacticraft:desh_shovel",
+    "galacticraft:titanium_shovel"
   ]
 }

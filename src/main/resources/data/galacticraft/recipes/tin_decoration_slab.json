@@ -5,11 +5,11 @@
   ],
   "key": {
     "T": {
-      "item": "galacticraft-rewoven:tin_decoration"
+      "item": "galacticraft:tin_decoration"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:tin_decoration_slab",
+    "item": "galacticraft:tin_decoration_slab",
     "count": 6
   }
 }

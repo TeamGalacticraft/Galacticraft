@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:spotlight_light_panel"
+          "name": "galacticraft:spotlight_light_panel"
         }
       ],
       "conditions": [

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:mars_dungeon_brick_slab"
+          "name": "galacticraft:mars_dungeon_brick_slab"
         }
       ],
       "conditions": [

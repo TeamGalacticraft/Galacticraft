@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:asteroid_iron_ore"
+          "name": "galacticraft:asteroid_iron_ore"
         }
       ],
       "conditions": [

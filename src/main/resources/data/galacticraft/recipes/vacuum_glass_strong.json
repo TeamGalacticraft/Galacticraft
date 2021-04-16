@@ -7,14 +7,14 @@
   ],
   "key": {
     "A": {
-      "item": "galacticraft-rewoven:compressed_aluminum"
+      "item": "galacticraft:compressed_aluminum"
     },
     "G": {
       "item": "minecraft:glass"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:vacuum_glass_strong",
+    "item": "galacticraft:vacuum_glass_strong",
     "count": 5
   }
 }

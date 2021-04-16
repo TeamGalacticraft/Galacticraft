@@ -7,11 +7,11 @@
   ],
   "key": {
     "I": {
-      "item": "galacticraft-rewoven:compressed_steel"
+      "item": "galacticraft:compressed_steel"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:steel_pole",
+    "item": "galacticraft:steel_pole",
     "count": 2
   }
 }

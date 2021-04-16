@@ -9,14 +9,14 @@
       "item": "minecraft:glass_pane"
     },
     "G": {
-      "item": "galacticraft-rewoven:glowstone_torch"
+      "item": "galacticraft:glowstone_torch"
     },
     "T": {
-      "item": "galacticraft-rewoven:compressed_steel"
+      "item": "galacticraft:compressed_steel"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:dashed_light_panel",
+    "item": "galacticraft:dashed_light_panel",
     "count": 1
   }
 }
