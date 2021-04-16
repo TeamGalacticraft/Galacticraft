@@ -48,6 +48,8 @@ import java.util.Optional;
  */
 public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
 
+    // todo: crashes when placed in world
+
     String DOT_REP = "_gcr_dot_";
     String DASH_REP = "_gcr_dash__"; // yes this is bad.... but who's gonna name a mod/fluid something like that
     String COLON_REP = "_gcr_colon_";
