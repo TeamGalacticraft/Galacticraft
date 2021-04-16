@@ -46,25 +46,30 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
     private static final int TEXTURE_WIDTH = 128;
     private static final int TEXTURE_HEIGHT = 32;
     final ModelTransformer<T> maskTransforms;
-    final ModelTransformer<T> tankTransforms;
+    final ModelTransformer<T> leftTankTransforms;
+    final ModelTransformer<T> rightTankTransforms;
     final ModelTransformer<T> sensorGlassesTransforms;
     final ModelPart oxygenMask;
-    final ModelPart oxygenTank;
+    final ModelPart leftOxygenTank;
+    final ModelPart rightOxygenTank;
     final ModelPart sensorGlasses;
     boolean isOxygenMaskEnabled;
-    boolean isOxygenTankEnabled;
+    boolean isLeftOxygenTankEnabled;
+    boolean isRightOxygenTankEnabled;
     boolean isSensorGlassesEnabled;
 
-    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms, ModelTransformer<T> tankTransforms, ModelTransformer<T> sensorGlassesTransforms) {
-        this(context, extra, maskTransforms, tankTransforms, sensorGlassesTransforms, true, true, false);
+    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms, ModelTransformer<T> leftTankTransforms, ModelTransformer<T> rightTankTransforms, ModelTransformer<T> sensorGlassesTransforms) {
+        this(context, extra, maskTransforms, leftTankTransforms, rightTankTransforms, sensorGlassesTransforms, true, true, true, false);
     }
 
-    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms, ModelTransformer<T> tankTransforms, ModelTransformer<T> sensorGlassesTransforms, boolean isOxygenTankEnabled, boolean isOxygenMaskEnabled, boolean isSensorGlassesEnabled) {
+    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms, ModelTransformer<T> leftTankTransforms, ModelTransformer<T> rightTankTransforms, ModelTransformer<T> sensorGlassesTransforms, boolean isLeftOxygenTankEnabled, boolean isRightOxygenTankEnabled, boolean isOxygenMaskEnabled, boolean isSensorGlassesEnabled) {
         super(context);
         this.maskTransforms = maskTransforms;
-        this.tankTransforms = tankTransforms;
+        this.leftTankTransforms = leftTankTransforms;
+        this.rightTankTransforms = rightTankTransforms;
         this.sensorGlassesTransforms = sensorGlassesTransforms;
-        this.isOxygenTankEnabled = isOxygenTankEnabled;
+        this.isLeftOxygenTankEnabled = isLeftOxygenTankEnabled;
+        this.isRightOxygenTankEnabled = isRightOxygenTankEnabled;
         this.isOxygenMaskEnabled = isOxygenMaskEnabled;
         this.isSensorGlassesEnabled = isSensorGlassesEnabled;
 
@@ -74,25 +79,36 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
         this.sensorGlasses = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 64, 10);
         this.sensorGlasses.setPivot(0.0F, 4.0F, 0.0F);
         this.sensorGlasses.addCuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, extra);
-        this.oxygenTank = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, 0);
-        this.oxygenTank.setPivot(0.0F, 4.0F, 0.0F);
-        this.oxygenTank.addCuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, extra);
-        ModelPart oxygenPipe = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 40, 17);
-        oxygenPipe.setPivot(0.0F, 2.0F, 0.0F);
-        oxygenPipe.addCuboid(-2.0F, -3.0F, 0.0F, 4, 5, 8, extra);
-        this.oxygenTank.addChild(oxygenPipe);
+
+        this.leftOxygenTank = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 20, 0);
+        this.leftOxygenTank.setPivot(0.0F, 2.0F, 0.0F);
+        this.leftOxygenTank.addCuboid(-3.0F, 1.0F, 2.0F, 3, 6, 4, extra);
+        this.rightOxygenTank = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, 0);
+        this.rightOxygenTank.setPivot(0.0F, 2.0F, 0.0F);
+        this.rightOxygenTank.addCuboid(0.0F, 1.0F, 2.0F, 3, 6, 4, extra);
+
+        ModelPart leftOxygenTankWire = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 40, 17);
+        leftOxygenTankWire.setPivot(0.0F, 2.0F, 0.0F);
+        leftOxygenTankWire.addCuboid(-2.0F, -3.0F, 0.0F, 1, 5, 8, extra);
+        this.leftOxygenTank.addChild(leftOxygenTankWire);
+        ModelPart rightOxygenTankWire = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 40, 17);
+        rightOxygenTankWire.setPivot(0.0F, 2.0F, 0.0F);
+        rightOxygenTankWire.addCuboid(1.0F, -3.0F, 0.0F, 1, 5, 8, extra);
+        this.rightOxygenTank.addChild(rightOxygenTankWire);
     }
 
-    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extraHelmet, float extraTank, float extraSensorGlasses, float pivotX, float pivotY, float pivotZ, ModelTransformer<T> maskTransforms, ModelTransformer<T> tankTransforms, ModelTransformer<T> sensorGlassesTransforms) {
-        this(context, extraHelmet, extraTank, extraSensorGlasses, pivotX, pivotY, pivotZ, maskTransforms, tankTransforms, sensorGlassesTransforms, true, true, false);
+    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extraHelmet, float extraTankLeft, float extraTankRight, float extraSensorGlasses, float pivotX, float pivotY, float pivotZ, ModelTransformer<T> maskTransforms, ModelTransformer<T> leftTankTransforms, ModelTransformer<T> rightTankTransforms, ModelTransformer<T> sensorGlassesTransforms) {
+        this(context, extraHelmet, extraTankLeft, extraTankRight, extraSensorGlasses, pivotX, pivotY, pivotZ, maskTransforms, leftTankTransforms, rightTankTransforms, sensorGlassesTransforms, true, true, true, false);
     }
 
-    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extraHelmet, float extraTank, float extraSensorGlasses, float pivotX, float pivotY, float pivotZ, ModelTransformer<T> maskTransforms, ModelTransformer<T> tankTransforms, ModelTransformer<T> sensorGlassesTransforms, boolean isOxygenMaskEnabled, boolean isOxygenTankEnabled, boolean isSensorGlassesEnabled) {
+    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extraHelmet, float extraLeftTank, float extraRightTank, float extraSensorGlasses, float pivotX, float pivotY, float pivotZ, ModelTransformer<T> maskTransforms, ModelTransformer<T> leftTankTransforms, ModelTransformer<T> rightTankTransforms, ModelTransformer<T> sensorGlassesTransforms, boolean isOxygenMaskEnabled, boolean isLeftOxygenTankEnabled, boolean isRightOxygenTankEnabled, boolean isSensorGlassesEnabled) {
         super(context);
         this.maskTransforms = maskTransforms;
-        this.tankTransforms = tankTransforms;
+        this.leftTankTransforms = leftTankTransforms;
+        this.rightTankTransforms = rightTankTransforms;
         this.sensorGlassesTransforms = sensorGlassesTransforms;
-        this.isOxygenTankEnabled = isOxygenTankEnabled;
+        this.isLeftOxygenTankEnabled = isLeftOxygenTankEnabled;
+        this.isRightOxygenTankEnabled = isRightOxygenTankEnabled;
         this.isOxygenMaskEnabled = isOxygenMaskEnabled;
         this.isSensorGlassesEnabled = isSensorGlassesEnabled;
 
@@ -102,13 +118,22 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
         this.sensorGlasses = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 64, 10);
         this.sensorGlasses.setPivot(pivotX, pivotY, pivotZ);
         this.sensorGlasses.addCuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, extraSensorGlasses);
-        this.oxygenTank = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, 0);
-        this.oxygenTank.setPivot(pivotX, pivotY, pivotZ);
-        this.oxygenTank.addCuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, extraTank);
-        ModelPart oxygenPipe = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 40, 17);
-        oxygenPipe.setPivot(0.0F, 2.0F, 0.0F);
-        oxygenPipe.addCuboid(-2.0F, -3.0F, 0.0F, 4, 5, 8, extraTank);
-        this.oxygenTank.addChild(oxygenPipe);
+
+        this.leftOxygenTank = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 20, 0);
+        this.leftOxygenTank.setPivot(pivotX, 2.0F, pivotZ);
+        this.leftOxygenTank.addCuboid(-3.0F, 1.0F, 2.0F, 3, 6, 4, extraLeftTank);
+        this.rightOxygenTank = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, 0);
+        this.rightOxygenTank.setPivot(pivotX, 2.0F, pivotZ);
+        this.rightOxygenTank.addCuboid(0.0F, 1.0F, 2.0F, 3, 6, 4, extraRightTank);
+
+        ModelPart leftOxygenTankWire = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 40, 17);
+        leftOxygenTankWire.setPivot(0.0F, 2.0F, 0.0F);
+        leftOxygenTankWire.addCuboid(-2.0F, -3.0F, 0.0F, 1, 5, 8, extraLeftTank);
+        this.leftOxygenTank.addChild(leftOxygenTankWire);
+        ModelPart rightOxygenTankWire = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 40, 17);
+        rightOxygenTankWire.setPivot(0.0F, 2.0F, 0.0F);
+        rightOxygenTankWire.addCuboid(1.0F, -3.0F, 0.0F, 1, 5, 8, extraRightTank);
+        this.rightOxygenTank.addChild(rightOxygenTankWire);
     }
 
     @Override
@@ -130,9 +155,17 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
             oxygenMask.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
             matrices.pop();
         }
-        tankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
-        if (isOxygenTankEnabled) {
-            oxygenTank.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+        if (isLeftOxygenTankEnabled) {
+            matrices.push();
+            leftTankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+            leftOxygenTank.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+            matrices.pop();
+        }
+        if (isRightOxygenTankEnabled) {
+            matrices.push();
+            rightTankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+            rightOxygenTank.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+            matrices.pop();
         }
         matrices.pop();
     }
@@ -147,8 +180,12 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
         void transformModel(MatrixStack matrices, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch);
     }
 
-    boolean isOxygenTankEnabled() {
-        return this.isOxygenTankEnabled;
+    boolean isLeftOxygenTankEnabled() {
+        return this.isLeftOxygenTankEnabled;
+    }
+
+    boolean isRightOxygenTankEnabled() {
+        return this.isRightOxygenTankEnabled;
     }
 
     boolean isOxygenMaskEnabled() {
@@ -159,8 +196,12 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
         return this.isSensorGlassesEnabled;
     }
 
-    void setOxygenTankEnabled(boolean oxygenTankEnabled) {
-        this.isOxygenTankEnabled = oxygenTankEnabled;
+    void setLeftOxygenTankEnabled(boolean oxygenTankEnabled) {
+        this.isLeftOxygenTankEnabled = oxygenTankEnabled;
+    }
+
+    void setRightOxygenTankEnabled(boolean oxygenTankEnabled) {
+        this.isRightOxygenTankEnabled = oxygenTankEnabled;
     }
 
     void setOxygenMaskEnabled(boolean oxygenMaskEnabled) {
