@@ -37,15 +37,6 @@ import java.util.function.Supplier;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public enum GalacticraftArmorMaterial implements ArmorMaterial {
-    SENSOR_GLASSES("sensor_glasses",
-            0,
-            new int[]{0, 0, 0, 0},
-            0,
-            SoundEvents.ITEM_ARMOR_EQUIP_IRON,
-            0.0f,
-            () -> Ingredient.ofItems(GalacticraftItems.METEORIC_IRON_INGOT),
-            0.0f
-    ), // TODO: add actual functionality
     HEAVY_DUTY(
             "heavy_duty",
             30,
