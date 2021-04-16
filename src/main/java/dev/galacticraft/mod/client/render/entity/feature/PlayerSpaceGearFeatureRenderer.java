@@ -24,18 +24,15 @@ package dev.galacticraft.mod.client.render.entity.feature;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
+import dev.galacticraft.mod.items.SensorGlassesItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Quaternion;
+import net.minecraft.item.ItemStack;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -58,14 +55,16 @@ public class PlayerSpaceGearFeatureRenderer<T extends PlayerEntity, M extends En
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        this.setValues(entity);
-        super.render(matrices, vertexConsumers, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
-    }
-
-    private void setValues(T entity) {
         FullFixedItemInv gearInv = (FullFixedItemInv) ((GearInventoryProvider) entity).getGearInv();
-        // todo: make each tank separate
-        this.setOygenMaskEnabled(gearInv.getSlot(5).get() != null);
-        this.setOxygenTankEnabled(gearInv.getSlot(6).get() != null || gearInv.getSlot(7).get() != null);
+        this.setOxygenMaskEnabled(gearInv.getSlot(4).get() != ItemStack.EMPTY);
+        // todo: add each tank separately
+        this.setOxygenTankEnabled(gearInv.getSlot(6).get() != ItemStack.EMPTY || gearInv.getSlot(7).get() != ItemStack.EMPTY);
+        this.setSensorGlassesEnabled(
+                gearInv.getSlot(8).get().getItem() instanceof SensorGlassesItem ||
+                gearInv.getSlot(9).get().getItem() instanceof SensorGlassesItem ||
+                gearInv.getSlot(10).get().getItem() instanceof SensorGlassesItem ||
+                gearInv.getSlot(11).get().getItem() instanceof SensorGlassesItem
+        );
+        super.render(matrices, vertexConsumers, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
     }
 }

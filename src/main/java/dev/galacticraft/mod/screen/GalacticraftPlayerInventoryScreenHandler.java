@@ -149,6 +149,7 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
 
     private EquipmentSlot getPreferredEquipmentSlot(ItemStack stack) {
         Item item_1 = stack.getItem();
+        // todo: crashes when item of type GCAccessories attempted to be placed in slot
         return ((ThermalArmorItem) item_1).getSlotType();
     }
 
