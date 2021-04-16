@@ -53,7 +53,7 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
     final ModelPart oxygenMask;
     final ModelPart oxygenTank;
     final ModelPart sensorGlasses;
-    boolean isOygenMaskEnabled;
+    boolean isOxygenMaskEnabled;
     boolean isOxygenTankEnabled;
     boolean isSensorGlassesEnabled;
 
@@ -61,23 +61,23 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
         this(context, extra, maskTransforms, tankTransforms, sensorGlassesTransforms, true, true, false);
     }
 
-    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms, ModelTransformer<T> tankTransforms, ModelTransformer<T> sensorGlassesTransforms, boolean isOxygenTankEnabled, boolean isOygenMaskEnabled, boolean isSensorGlassesEnabled) {
+    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms, ModelTransformer<T> tankTransforms, ModelTransformer<T> sensorGlassesTransforms, boolean isOxygenTankEnabled, boolean isOxygenMaskEnabled, boolean isSensorGlassesEnabled) {
         super(context);
         this.maskTransforms = maskTransforms;
         this.tankTransforms = tankTransforms;
         this.sensorGlassesTransforms = sensorGlassesTransforms;
         this.isOxygenTankEnabled = isOxygenTankEnabled;
-        this.isOygenMaskEnabled = isOygenMaskEnabled;
+        this.isOxygenMaskEnabled = isOxygenMaskEnabled;
         this.isSensorGlassesEnabled = isSensorGlassesEnabled;
 
         this.oxygenMask = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, 10);
-        this.oxygenMask.setPivot(0.0F, 8.0F, 0.0F);
+        this.oxygenMask.setPivot(0.0F, 4.0F, 0.0F);
         this.oxygenMask.addCuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, extra);
-        this.sensorGlasses = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, 10);
-        this.sensorGlasses.setPivot(0.0F, 8.0F, 0.0F);
+        this.sensorGlasses = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 64, 10);
+        this.sensorGlasses.setPivot(0.0F, 4.0F, 0.0F);
         this.sensorGlasses.addCuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, extra);
         this.oxygenTank = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, 0);
-        this.oxygenTank.setPivot(0.0F, 8.0F, 0.0F);
+        this.oxygenTank.setPivot(0.0F, 4.0F, 0.0F);
         this.oxygenTank.addCuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, extra);
         ModelPart oxygenPipe = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 40, 17);
         oxygenPipe.setPivot(0.0F, 2.0F, 0.0F);
@@ -89,23 +89,23 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
         this(context, extraHelmet, extraTank, extraSensorGlasses, pivotX, pivotY, pivotZ, maskTransforms, tankTransforms, sensorGlassesTransforms, true, true, false);
     }
 
-    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extraHelmet, float extraTank, float extraSensorGlasses, float pivotX, float pivotY, float pivotZ, ModelTransformer<T> maskTransforms, ModelTransformer<T> tankTransforms, ModelTransformer<T> sensorGlassesTransforms, boolean isOygenMaskEnabled, boolean isOxygenTankEnabled, boolean isSensorGlassesEnabled) {
+    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extraHelmet, float extraTank, float extraSensorGlasses, float pivotX, float pivotY, float pivotZ, ModelTransformer<T> maskTransforms, ModelTransformer<T> tankTransforms, ModelTransformer<T> sensorGlassesTransforms, boolean isOxygenMaskEnabled, boolean isOxygenTankEnabled, boolean isSensorGlassesEnabled) {
         super(context);
         this.maskTransforms = maskTransforms;
         this.tankTransforms = tankTransforms;
         this.sensorGlassesTransforms = sensorGlassesTransforms;
         this.isOxygenTankEnabled = isOxygenTankEnabled;
-        this.isOygenMaskEnabled = isOygenMaskEnabled;
+        this.isOxygenMaskEnabled = isOxygenMaskEnabled;
         this.isSensorGlassesEnabled = isSensorGlassesEnabled;
 
         this.oxygenMask = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, 10);
         this.oxygenMask.setPivot(pivotX, pivotY, pivotZ);
         this.oxygenMask.addCuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, extraHelmet);
-        this.sensorGlasses = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, 10);
-        this.sensorGlasses.setPivot(0.0F, 6.0F, 0.0F);
+        this.sensorGlasses = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 64, 10);
+        this.sensorGlasses.setPivot(pivotX, pivotY, pivotZ);
         this.sensorGlasses.addCuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, extraSensorGlasses);
         this.oxygenTank = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, 0);
-        this.oxygenTank.setPivot(0.0F, 6.0F, 0.0F);
+        this.oxygenTank.setPivot(pivotX, pivotY, pivotZ);
         this.oxygenTank.addCuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, extraTank);
         ModelPart oxygenPipe = new ModelPart(TEXTURE_WIDTH, TEXTURE_HEIGHT, 40, 17);
         oxygenPipe.setPivot(0.0F, 2.0F, 0.0F);
@@ -118,14 +118,24 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(getTexture(entity), true));
         matrices.push();
         maskTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
-        matrices.push();
-        matrices.multiply(new Quaternion(Vector3f.POSITIVE_Y, headYaw, true));
-        matrices.multiply(new Quaternion(Vector3f.POSITIVE_X, headPitch, true));
-        if (isOygenMaskEnabled) oxygenMask.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-        //if (isSensorGlassesEnabled) sensorGlasses.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-        matrices.pop();
+        if (isSensorGlassesEnabled) {
+            matrices.push();
+            matrices.multiply(new Quaternion(Vector3f.POSITIVE_Y, headYaw, true));
+            matrices.multiply(new Quaternion(Vector3f.POSITIVE_X, headPitch, true));
+            sensorGlasses.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+            matrices.pop();
+        }
+        if (isOxygenMaskEnabled) {
+            matrices.push();
+            matrices.multiply(new Quaternion(Vector3f.POSITIVE_Y, headYaw, true));
+            matrices.multiply(new Quaternion(Vector3f.POSITIVE_X, headPitch, true));
+            oxygenMask.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+            matrices.pop();
+        }
         tankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
-        if (isOxygenTankEnabled) oxygenTank.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+        if (isOxygenTankEnabled) {
+            oxygenTank.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+        }
         matrices.pop();
     }
 
@@ -139,27 +149,27 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
         void transformModel(MatrixStack matrices, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch);
     }
 
-    public boolean isOxygenTankEnabled() {
-        return isOxygenTankEnabled;
+    boolean isOxygenTankEnabled() {
+        return this.isOxygenTankEnabled;
     }
 
-    public boolean isOygenMaskEnabled() {
-        return isOygenMaskEnabled;
+    boolean isOxygenMaskEnabled() {
+        return this.isOxygenMaskEnabled;
     }
 
-    public boolean isSensorGlassesEnabled() {
-        return isSensorGlassesEnabled;
+    boolean isSensorGlassesEnabled() {
+        return this.isSensorGlassesEnabled;
     }
 
-    public void setOxygenTankEnabled(boolean oxygenTankEnabled) {
-        isOxygenTankEnabled = oxygenTankEnabled;
+    void setOxygenTankEnabled(boolean oxygenTankEnabled) {
+        this.isOxygenTankEnabled = oxygenTankEnabled;
     }
 
-    public void setOygenMaskEnabled(boolean oygenMaskEnabled) {
-        isOygenMaskEnabled = oygenMaskEnabled;
+    void setOxygenMaskEnabled(boolean oxygenMaskEnabled) {
+        this.isOxygenMaskEnabled = oxygenMaskEnabled;
     }
 
-    public void setSensorGlassesEnabled(boolean sensorGlassesEnabled) {
-        isSensorGlassesEnabled = sensorGlassesEnabled;
+    void setSensorGlassesEnabled(boolean sensorGlassesEnabled) {
+        this.isSensorGlassesEnabled = sensorGlassesEnabled;
     }
 }
