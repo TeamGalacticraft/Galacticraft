@@ -51,6 +51,9 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class Tank {
     private static final int[] FLUID_TANK_8_16_DATA = new int[]{
             Constants.TextureCoordinate.FLUID_TANK_8_16_X,

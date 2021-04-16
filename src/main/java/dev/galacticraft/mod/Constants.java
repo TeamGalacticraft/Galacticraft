@@ -442,7 +442,7 @@ public interface Constants {
         Identifier ENERGY_STORAGE_MODULE_SCREEN = new Identifier(MOD_ID, "textures/gui/energy_storage_module_screen.png");
         Identifier OXYGEN_COLLECTOR_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_collector_screen.png");
 
-        Identifier MACHINE_CONFIG_PANELS = new Identifier(MOD_ID, "textures/gui/machine_config_panels.png");
+        Identifier MACHINE_CONFIG_PANELS = new Identifier(MOD_ID, "textures/gui/machine_config.png");
         Identifier PLAYER_INVENTORY_SCREEN = new Identifier(MOD_ID, "textures/gui/player_inventory_screen.png");
         Identifier PLAYER_INVENTORY_TABS = new Identifier(MOD_ID, "textures/gui/player_inventory_switch_tabs.png");
         Identifier OVERLAY = new Identifier(MOD_ID, "textures/gui/overlay.png");

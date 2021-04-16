@@ -31,7 +31,7 @@ import dev.galacticraft.mod.config.ConfigManagerImpl;
 import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
 import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
 import dev.galacticraft.mod.fluid.GalacticraftFluids;
-import dev.galacticraft.mod.items.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItems;
 import dev.galacticraft.mod.log.GalacticraftPrependingMessageFactory;
 import dev.galacticraft.mod.loot.GalacticraftLootTables;
 import dev.galacticraft.mod.misc.banner.GalacticraftBannerPatterns;

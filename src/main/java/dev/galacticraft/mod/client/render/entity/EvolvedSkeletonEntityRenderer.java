@@ -26,6 +26,9 @@ import dev.galacticraft.mod.client.render.entity.feature.SpaceGearFeatureRendere
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.SkeletonEntityRenderer;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class EvolvedSkeletonEntityRenderer extends SkeletonEntityRenderer {
     public EvolvedSkeletonEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher);

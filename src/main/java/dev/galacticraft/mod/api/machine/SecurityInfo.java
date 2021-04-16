@@ -44,6 +44,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class SecurityInfo {
     private @Nullable GameProfile owner;
     private @Nullable Identifier team;

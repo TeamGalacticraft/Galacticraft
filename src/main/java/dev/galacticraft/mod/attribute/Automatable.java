@@ -24,6 +24,9 @@ package dev.galacticraft.mod.attribute;
 
 import dev.galacticraft.mod.screen.slot.SlotType;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public interface Automatable {
     SlotType[] getTypes();
 }

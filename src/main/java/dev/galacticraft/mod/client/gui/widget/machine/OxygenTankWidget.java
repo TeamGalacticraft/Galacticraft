@@ -35,6 +35,9 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class OxygenTankWidget extends AbstractWidget {
     private final SingleFluidTankView view;
     private final int x;

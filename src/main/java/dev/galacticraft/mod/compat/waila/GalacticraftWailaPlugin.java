@@ -34,6 +34,9 @@ import net.minecraft.text.TranslatableText;
 
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class GalacticraftWailaPlugin implements IWailaPlugin {
     private static final IComponentProvider COMPONENT_PROVIDER = new IComponentProvider() {
         @Override

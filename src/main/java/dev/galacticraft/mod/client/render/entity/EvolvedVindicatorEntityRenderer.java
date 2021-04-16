@@ -26,6 +26,9 @@ import dev.galacticraft.mod.client.render.entity.feature.SpaceGearFeatureRendere
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.VindicatorEntityRenderer;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class EvolvedVindicatorEntityRenderer extends VindicatorEntityRenderer {
     public EvolvedVindicatorEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher);

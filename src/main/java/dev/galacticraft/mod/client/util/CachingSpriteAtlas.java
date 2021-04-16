@@ -29,6 +29,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class CachingSpriteAtlas implements Function<Identifier, Sprite> {
     private final Map<Identifier, Sprite> cache = new HashMap<>();
     private Function<Identifier, Sprite> atlas;

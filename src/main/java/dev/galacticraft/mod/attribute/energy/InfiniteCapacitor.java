@@ -29,6 +29,9 @@ import com.hrznstudio.galacticraft.energy.api.EnergyType;
 import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class InfiniteCapacitor implements Capacitor {
     @Override
     public void setEnergy(int amount) {

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.fluid;
 
 import dev.galacticraft.mod.block.GalacticraftBlocks;
-import dev.galacticraft.mod.items.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItems;
 import dev.galacticraft.mod.particle.GalacticraftParticles;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

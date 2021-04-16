@@ -26,6 +26,9 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public interface MachineStatus {
     MachineStatus NULL = new MachineStatus() {
         @Override

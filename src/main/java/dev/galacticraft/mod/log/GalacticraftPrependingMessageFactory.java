@@ -27,6 +27,9 @@ import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.message.SimpleMessage;
 import org.apache.logging.log4j.message.StringFormattedMessage;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public final class GalacticraftPrependingMessageFactory extends AbstractMessageFactory {
     public static final GalacticraftPrependingMessageFactory INSTANCE = new GalacticraftPrependingMessageFactory();
     private static final String PREPENDED_STRING = "[Galacticraft] ";

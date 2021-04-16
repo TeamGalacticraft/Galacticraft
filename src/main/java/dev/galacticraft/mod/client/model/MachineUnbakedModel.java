@@ -38,6 +38,9 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class MachineUnbakedModel implements UnbakedModel {
     public static final MachineUnbakedModel INSTANCE = new MachineUnbakedModel();
 

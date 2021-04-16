@@ -27,6 +27,9 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class AutoFilteredSlot extends Slot {
     private final ItemFilter filter;
 

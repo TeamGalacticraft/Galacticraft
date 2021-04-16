@@ -27,6 +27,9 @@ import dev.galacticraft.mod.entity.EvolvedEvokerEntity;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EvokerEntityRenderer;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class EvolvedEvokerEntityRenderer extends EvokerEntityRenderer<EvolvedEvokerEntity> {
     public EvolvedEvokerEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher);

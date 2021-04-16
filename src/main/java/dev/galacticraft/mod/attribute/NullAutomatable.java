@@ -24,6 +24,9 @@ package dev.galacticraft.mod.attribute;
 
 import dev.galacticraft.mod.screen.slot.SlotType;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class NullAutomatable implements Automatable {
     public static final Automatable INSTANCE = new NullAutomatable();
     private static final SlotType[] SLOT_TYPE_LIST = new SlotType[0];

@@ -37,6 +37,7 @@ import dev.galacticraft.mod.block.special.TinLadderBlock;
 import dev.galacticraft.mod.block.special.aluminumwire.tier1.AluminumWireBlock;
 import dev.galacticraft.mod.block.special.aluminumwire.tier1.SealableAluminumWireBlock;
 import dev.galacticraft.mod.block.special.fluidpipe.GlassFluidPipeBlock;
+import dev.galacticraft.mod.block.special.walkway.PipeWalkway;
 import dev.galacticraft.mod.block.special.walkway.Walkway;
 import dev.galacticraft.mod.block.special.walkway.WireWalkway;
 import dev.galacticraft.mod.fluid.GalacticraftFluids;

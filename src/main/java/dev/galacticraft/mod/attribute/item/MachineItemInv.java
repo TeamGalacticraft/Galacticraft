@@ -38,6 +38,9 @@ import net.minecraft.screen.slot.Slot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class MachineItemInv extends FullFixedItemInv implements Automatable {
     private final SlotType[] slotTypes;
     private final ItemFilter[] filters;

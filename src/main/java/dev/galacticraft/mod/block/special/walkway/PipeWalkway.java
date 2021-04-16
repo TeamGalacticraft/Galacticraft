@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.block.special.walkway;
 
 import dev.galacticraft.mod.api.block.FluidPipe;
-import dev.galacticraft.mod.items.StandardWrenchItem;
+import dev.galacticraft.mod.item.StandardWrenchItem;
 import dev.galacticraft.mod.util.FluidUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;

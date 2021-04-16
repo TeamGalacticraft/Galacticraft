@@ -52,6 +52,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class ElectricArcFurnaceBlockEntity extends MachineBlockEntity {
     public int cookTime = 0;
     public int cookLength = 0;

@@ -31,6 +31,9 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceScreenHandler> {
     private static final int ARROW_X = 78;
     private static final int ARROW_Y = 24;

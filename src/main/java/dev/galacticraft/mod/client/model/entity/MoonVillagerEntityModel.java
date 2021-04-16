@@ -29,6 +29,9 @@ import net.minecraft.client.render.entity.model.VillagerResemblingModel;
 
 import java.util.Collections;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class MoonVillagerEntityModel extends VillagerResemblingModel<MoonVillagerEntity> {
     private final ModelPart brain;
 

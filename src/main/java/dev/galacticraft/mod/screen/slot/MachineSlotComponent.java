@@ -24,6 +24,9 @@ package dev.galacticraft.mod.screen.slot;
 
 import net.minecraft.screen.slot.Slot;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class MachineSlotComponent extends MachineComponent<Slot> {
     public MachineSlotComponent(Slot slot) {
         super(slot, slot.x, slot.y);

@@ -38,6 +38,9 @@ import dev.galacticraft.mod.screen.tank.Tank;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class MachineFluidInv extends SimpleFixedFluidInv implements Automatable {
     private final SlotType[] slotTypes;
     private final FluidFilter[] filters;

@@ -28,6 +28,9 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class ElectricArcFurnaceScreenHandler extends MachineScreenHandler<ElectricArcFurnaceBlockEntity> {
     public ElectricArcFurnaceScreenHandler(int syncId, PlayerEntity player, ElectricArcFurnaceBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.ELECTRIC_ARC_FURNACE_HANDLER);

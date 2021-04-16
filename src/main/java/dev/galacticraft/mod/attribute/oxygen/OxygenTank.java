@@ -25,6 +25,9 @@ package dev.galacticraft.mod.attribute.oxygen;
 import alexiil.mc.lib.attributes.ListenerToken;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public interface OxygenTank {
     int getCapacity();
 

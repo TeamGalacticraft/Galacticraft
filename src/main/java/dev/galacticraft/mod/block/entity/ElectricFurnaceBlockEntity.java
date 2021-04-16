@@ -52,6 +52,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class ElectricFurnaceBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;

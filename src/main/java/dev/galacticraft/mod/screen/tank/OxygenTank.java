@@ -48,6 +48,9 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class OxygenTank extends Tank {
     public OxygenTank(int index, FixedFluidInv inv, int x, int y) {
         super(index, inv, x, y, 0);

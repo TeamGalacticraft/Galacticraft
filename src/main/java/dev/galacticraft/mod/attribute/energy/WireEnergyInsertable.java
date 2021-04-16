@@ -30,6 +30,9 @@ import dev.galacticraft.mod.api.wire.WireNetwork;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class WireEnergyInsertable implements EnergyInsertable {
     private final int maxTransfer;
     private final BlockPos wire;

@@ -26,6 +26,9 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public interface CompressingRecipe extends Recipe<Inventory> {
     @Override
     default RecipeType<? extends CompressingRecipe> getType() {

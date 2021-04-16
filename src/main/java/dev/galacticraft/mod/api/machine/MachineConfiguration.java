@@ -27,6 +27,9 @@ import dev.galacticraft.mod.Constants;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class MachineConfiguration implements Saveable {
     private MachineStatus status = MachineStatus.NULL;
     private RedstoneInteractionType redstone = RedstoneInteractionType.IGNORE;

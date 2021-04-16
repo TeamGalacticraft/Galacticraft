@@ -28,6 +28,9 @@ import dev.galacticraft.mod.api.block.util.BlockFace;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class MachineIOConfig {
     private final ConfiguredMachineFace front;
     private final ConfiguredMachineFace back;

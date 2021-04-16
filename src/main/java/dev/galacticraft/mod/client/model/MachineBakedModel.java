@@ -69,6 +69,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 @Environment(EnvType.CLIENT)
 public class MachineBakedModel implements FabricBakedModel, BakedModel {
     public static final MachineBakedModel INSTANCE = new MachineBakedModel();

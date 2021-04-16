@@ -40,6 +40,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.IntStream;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class ConfiguredMachineFace {
     private static final Set<AutomationType> CACHED_AUTOMATION_TYPE_SET = new HashSet<>();
     private AutomationType automationType;

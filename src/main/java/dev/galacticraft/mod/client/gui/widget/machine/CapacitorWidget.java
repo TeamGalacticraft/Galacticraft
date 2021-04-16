@@ -36,6 +36,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class CapacitorWidget extends AbstractWidget {
     private final CapacitorView view;
     private final int x;

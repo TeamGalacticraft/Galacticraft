@@ -29,6 +29,9 @@ import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class EvolvedSpiderModel<T extends EvolvedSpiderEntity> extends EntityModel<T> {
     public final ModelPart body;
     public final ModelPart rearEnd;

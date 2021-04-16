@@ -38,6 +38,9 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.Locale;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public enum RedstoneInteractionType implements StringIdentifiable {
     /**
      * Ignores redstone entirely.

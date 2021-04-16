@@ -29,6 +29,9 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class FluidPipeBlockEntityRenderer extends BlockEntityRenderer<FluidPipeBlockEntity> {
     public FluidPipeBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
         super(dispatcher);

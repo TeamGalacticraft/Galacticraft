@@ -26,6 +26,9 @@ import dev.galacticraft.mod.client.render.entity.feature.SpaceGearFeatureRendere
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.PillagerEntityRenderer;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class EvolvedPillagerEntityRenderer extends PillagerEntityRenderer {
     public EvolvedPillagerEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher);

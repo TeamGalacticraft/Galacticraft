@@ -35,6 +35,9 @@ import dev.galacticraft.mod.fluid.GalacticraftFluids;
 import dev.galacticraft.mod.tag.GalacticraftTags;
 import net.minecraft.item.ItemStack;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public enum OxygenTankUtils {
     ;
     public static final ItemFilter OXYGEN_TANK_EXTRACTABLE = stack -> canExtractLOX(stack);
