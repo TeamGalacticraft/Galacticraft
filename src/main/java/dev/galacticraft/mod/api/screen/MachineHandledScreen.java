@@ -430,7 +430,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 return true;
             }
             if (button >= GLFW.GLFW_MOUSE_BUTTON_LEFT && button <= GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-                if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) { //todo side config
+                if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) {
                     SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.TOP, Screen.hasShiftDown(), Screen.hasControlDown());
                     this.playButtonSound();
                     return true;
@@ -706,34 +706,33 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     protected Int2IntArrayMap getColor(MatrixStack matrices, int mouseX, int mouseY) {
         if (Tab.CONFIGURATION.isOpen()) {
-            mouseX -= PANEL_WIDTH + this.x;
+            mouseX -= this.x - PANEL_WIDTH;
             mouseY -= this.y + TAB_HEIGHT + SPACING;
             Int2IntArrayMap out = new Int2IntArrayMap();
-            if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) {
+            if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching() != null) {
                 IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.getFluidInv()));
                 group(out, list);
             }
-            if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16)) {
+            if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching() != null) {
                 IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.handler.machine.getFluidInv()));
                 group(out, list);
             }
-            if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16)) {
+            if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching() != null) {
                 IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.handler.machine.getFluidInv()));
                 group(out, list);
             }
-            if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16)) {
+            if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching() != null) {
                 IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.handler.machine.getFluidInv()));
                 group(out, list);
             }
-            if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16)) {
+            if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching() != null) {
                 IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.handler.machine.getFluidInv()));
                 group(out, list);
             }
-            if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16)) {
+            if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching() != null) {
                 IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getFluidInv()));
                 group(out, list);
             }
-            out.defaultReturnValue(ColorUtils.WHITE);
             return out;
         }
         return new Int2IntArrayMap();

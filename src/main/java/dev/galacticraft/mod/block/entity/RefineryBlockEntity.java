@@ -74,7 +74,7 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
 
     @Override
     protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
-        builder.addTank(OIL_TANK, SlotType.OIL, Constants.Filter.OIL, 122, 28, 1);
+        builder.addTank(OIL_TANK, SlotType.OIL_IN, Constants.Filter.OIL, 122, 28, 1);
         builder.addTank(FUEL_TANK, SlotType.FUEL_OUT, Constants.Filter.FUEL, 152, 28, 1);
         return builder;
     }

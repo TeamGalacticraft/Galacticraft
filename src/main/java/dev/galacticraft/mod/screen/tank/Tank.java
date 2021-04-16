@@ -170,10 +170,10 @@ public class Tank {
         double scale = content.getAmount_F().div(this.getCapacity()).asInexactDouble();
         Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getRawFluid()).getFluidSprites(world, pos, content.getRawFluid().getDefaultState())[0];
         client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-        DrawableHelper.drawSprite(matrices, this.x + 1, this.y + 1 - (int)(data[2] * scale) + data[2], 0, Constants.TextureCoordinate.FLUID_TANK_WIDTH - 2, (int)(data[2] * scale) - 2, sprite);
+        DrawableHelper.drawSprite(matrices, this.x + 1, this.y + 1 - (int)(data[2] * scale) + data[2], 1, Constants.TextureCoordinate.FLUID_TANK_WIDTH - 2, (int)(data[2] * scale) - 2, sprite);
         matrices.pop();
         client.getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
-        DrawableHelper.drawTexture(matrices, this.x, this.y, 0, data[0], data[1], Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128);
+        DrawableHelper.drawTexture(matrices, this.x, this.y, 1, data[0], data[1], Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128);
     }
 
     public void drawTooltip(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY) {
