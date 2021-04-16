@@ -41,6 +41,7 @@ public class EvolvedSkeletonEntityRenderer extends SkeletonEntityRenderer {
                     stack.scale(0.9f, 0.9f, 0.9f);
                 },
                 (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {},
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {},
                 (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}
         ));
     }

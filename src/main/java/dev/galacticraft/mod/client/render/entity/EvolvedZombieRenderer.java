@@ -38,6 +38,7 @@ public class EvolvedZombieRenderer extends ZombieEntityRenderer {
         this.addFeature(new SpaceGearFeatureRenderer<>(this, 0.0F,
                 (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.translate(0.0D, -0.4D, 0.0D),
                 (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {},
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {},
                 (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}
         ));
     }
