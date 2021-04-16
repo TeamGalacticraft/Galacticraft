@@ -30,6 +30,7 @@ import dev.galacticraft.mod.client.network.GalacticraftC2SPacketReceivers;
 import dev.galacticraft.mod.client.render.MoonSkyProperties;
 import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import dev.galacticraft.mod.client.render.entity.*;
+import dev.galacticraft.mod.client.render.entity.feature.PlayerSpaceGearFeatureRenderer;
 import dev.galacticraft.mod.client.resource.GCResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
 import dev.galacticraft.mod.misc.capes.CapeLoader;
@@ -47,10 +48,12 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;
@@ -79,10 +82,25 @@ public class GalacticraftClient implements ClientModInitializer {
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();
         Galacticraft.logger.info("[Galacticraft] Starting client initialization.");
+
         capeLoader = new CapeLoader();
         jsonCapes = new JsonCapes();
         capeLoader.register(jsonCapes);
         capeLoader.load();
+
+        // Render gear on player
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper) -> {
+        if (entityRenderer instanceof PlayerEntityRenderer) {
+            registrationHelper.register(new PlayerSpaceGearFeatureRenderer<>(
+                    (PlayerEntityRenderer) entityRenderer, 1.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F,
+                    (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
+                        stack.translate(0.0F, -0.1F, 0.0F);
+                        stack.scale(0.8F, 0.8F, 0.8F);
+                    },
+                    (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.translate(0.0F, 1.0F, 0.0F),
+                    (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.scale(0.8F, 0.8F, 0.8F),
+                    true, true, true));
+        }});
 
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) -> {
             for (int i = 0; i < 8; i++) {
