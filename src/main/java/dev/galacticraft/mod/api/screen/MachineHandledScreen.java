@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.api.screen;
 
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Either;
@@ -32,6 +33,7 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
+import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.block.GalacticraftBlocks;
 import dev.galacticraft.mod.client.gui.widget.machine.AbstractWidget;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
@@ -206,6 +208,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     protected final BlockPos pos;
     protected final World world;
+    protected Tank focusedTank = null;
 
     private final List<AbstractWidget> widgets = new LinkedList<>();
 
@@ -301,8 +304,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     this.textRenderer.draw(matrices, orderedText, 40, 22 + offsetY, ColorUtils.WHITE);
                     offsetY += this.textRenderer.fontHeight + 2;
                 }
-                this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.machine.stats.gjt", "N/A")
-                        .setStyle(Constants.Text.GRAY_STYLE), 11, 54, ColorUtils.WHITE);
+//                this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.machine.stats.gjt", "N/A")
+//                        .setStyle(Constants.Text.GRAY_STYLE), 11, 54, ColorUtils.WHITE);
                 //                this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.machine.stats.todo", "N/A")
 //                        .setStyle(Constants.Text.GRAY_STYLE), 11, 54, ColorUtils.WHITE);
                 matrices.pop();
@@ -691,57 +694,123 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     protected void drawTanks(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         assert this.client != null;
-        Int2IntArrayMap color = getColor(matrices, mouseX, mouseY);
+        Int2IntArrayMap color = getTankColor(matrices, mouseX, mouseY);
         color.defaultReturnValue(-1);
         matrices.push();
         matrices.translate(this.x, this.y, 0);
+        this.focusedTank = null;
         for (Tank tank : this.handler.tanks) {
             tank.render(matrices, this.client, this.world, this.pos, mouseX - this.x, mouseY - this.y, color.get(tank.index) != -1, color);
+            if (tank.isHoveredOverTank(mouseX - this.x, mouseY - this.y)) {
+                this.focusedTank = tank;
+                tank.renderHighlight(matrices, this.client, this.world, this.pos, mouseX - this.x, mouseY - this.y);
+            }
         }
         for (Tank tank : this.handler.tanks) {
             tank.drawTooltip(matrices, this.client, this.world, this.pos, mouseX - this.x, mouseY - this.y);
         }
         matrices.pop();
+
+        color = getItemColor(matrices, mouseX, mouseY);;
+        color.defaultReturnValue(-1);
+        for (Slot slot : this.handler.slots) {
+            if (slot.inventory instanceof InventoryFixedWrapper && ((InventoryFixedWrapper) slot.inventory).getWrapped() == this.handler.machine.getInventory()) {
+                if (color.get(slot.index) != -1) {
+                    RenderSystem.disableDepthTest();
+                    int c = color.get(slot.index);
+                    int r = (c >> 16 & 255);
+                    int g = (c >> 8 & 255);
+                    int b = (c & 255);
+                    c = 80; c <<= 8; c += r; c <<= 8; c += g; c <<= 8; c += b;
+                    RenderSystem.colorMask(true, true, true, false);
+                    fillGradient(matrices, this.x + slot.x, this.y + slot.y, this.x + slot.x + 16, this.y + slot.y + 16, c, c);
+                    RenderSystem.colorMask(true, true, true, true);
+                    RenderSystem.enableDepthTest();
+                }
+            }
+        }
     }
 
-    protected Int2IntArrayMap getColor(MatrixStack matrices, int mouseX, int mouseY) {
+    protected Int2IntArrayMap getTankColor(MatrixStack matrices, int mouseX, int mouseY) {
         if (Tab.CONFIGURATION.isOpen()) {
             mouseX -= this.x - PANEL_WIDTH;
             mouseY -= this.y + TAB_HEIGHT + SPACING;
             Int2IntArrayMap out = new Int2IntArrayMap();
             if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching() != null) {
                 IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.getFluidInv()));
-                group(out, list);
+                groupFluid(out, list);
             }
             if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching() != null) {
                 IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.handler.machine.getFluidInv()));
-                group(out, list);
+                groupFluid(out, list);
             }
             if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching() != null) {
                 IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.handler.machine.getFluidInv()));
-                group(out, list);
+                groupFluid(out, list);
             }
             if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching() != null) {
                 IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.handler.machine.getFluidInv()));
-                group(out, list);
+                groupFluid(out, list);
             }
             if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching() != null) {
                 IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.handler.machine.getFluidInv()));
-                group(out, list);
+                groupFluid(out, list);
             }
             if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching() != null) {
                 IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getFluidInv()));
-                group(out, list);
+                groupFluid(out, list);
             }
             return out;
         }
         return new Int2IntArrayMap();
     }
 
-    private void group(Int2IntMap out, IntList list) {
+    protected Int2IntArrayMap getItemColor(MatrixStack matrices, int mouseX, int mouseY) {
+        if (Tab.CONFIGURATION.isOpen()) {
+            mouseX -= this.x - PANEL_WIDTH;
+            mouseY -= this.y + TAB_HEIGHT + SPACING;
+            Int2IntArrayMap out = new Int2IntArrayMap();
+            if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.getInventory()));
+                groupItem(out, list);
+            }
+            if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.handler.machine.getInventory()));
+                groupItem(out, list);
+            }
+            if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.handler.machine.getInventory()));
+                groupItem(out, list);
+            }
+            if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.handler.machine.getInventory()));
+                groupItem(out, list);
+            }
+            if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.handler.machine.getInventory()));
+                groupItem(out, list);
+            }
+            if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getInventory()));
+                groupItem(out, list);
+            }
+            return out;
+        }
+        return new Int2IntArrayMap();
+    }
+
+    private void groupFluid(Int2IntMap out, IntList list) {
         for (Tank tank : this.handler.tanks) {
             if (list.contains(tank.index)) {
                 out.put(tank.index, this.handler.machine.getFluidInv().getTypes()[tank.index].getColor().getRgb());
+            }
+        }
+    }
+
+    private void groupItem(Int2IntMap out, IntList list) {
+        for (Slot slot : this.handler.slots) {
+            if (list.contains(slot.index)) {
+                out.put(slot.index, this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
             }
         }
     }

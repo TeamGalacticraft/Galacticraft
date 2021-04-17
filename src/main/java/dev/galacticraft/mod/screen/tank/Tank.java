@@ -22,11 +22,17 @@
 
 package dev.galacticraft.mod.screen.tank;
 
-import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.*;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
+import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import alexiil.mc.lib.attributes.misc.Reference;
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
+import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import net.fabricmc.api.EnvType;
@@ -35,10 +41,14 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -48,6 +58,7 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.math.RoundingMode;
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -203,5 +214,52 @@ public class Tank {
             return WordUtils.capitalizeFully(I18n.translate("block." + id.getNamespace() + "." + id.getPath()));
         }
         return WordUtils.capitalizeFully(id.getPath().replace("flowing", "").replace("still", "").replace("_", " ").trim());
+    }
+
+    public boolean isHoveredOverTank(int mouseX, int mouseY) {
+        int[] data = getPositionData();
+        return SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2]);
+    }
+
+    public void renderHighlight(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY) {
+        int[] data = getPositionData();
+        RenderSystem.disableDepthTest();
+        RenderSystem.colorMask(true, true, true, false);
+        DrawableHelper.fill(matrices, this.x, this.y,this.x + Constants.TextureCoordinate.FLUID_TANK_WIDTH, this.y + data[2], -2130706433);
+        RenderSystem.colorMask(true, true, true, true);
+        RenderSystem.enableDepthTest();
+    }
+
+    public boolean acceptStack(Reference<ItemStack> stack) {
+        if (this.inv instanceof Automatable) {
+            if (((Automatable) this.inv).getTypes()[this.index].getType().isInput()) {
+                FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(stack);
+                FluidVolumeUtil.move(extractable, this.inv.getTank(this.index));
+                return true;
+            } else if (((Automatable) this.inv).getTypes()[this.index].getType().isOutput()) {
+                FluidInsertable insertable = FluidAttributes.INSERTABLE.get(stack);
+                FluidVolumeUtil.move(this.inv.getTank(this.index), insertable);
+                return true;
+            }
+        } else {
+            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(stack);
+            FluidInsertable insertable = FluidAttributes.INSERTABLE.get(stack);
+            if (extractable != EmptyFluidExtractable.NULL) {
+                if (insertable != RejectingFluidInsertable.NULL) {
+                    if (extractable.attemptExtraction(this.inv.getFilterForTank(this.index), FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty()) {
+                        FluidVolumeUtil.move(this.inv.getTank(this.index), insertable);
+                    } else {
+                        FluidVolumeUtil.move(extractable, this.inv.getTank(this.index));
+                    }
+                } else {
+                    FluidVolumeUtil.move(extractable, this.inv.getTank(this.index));
+                }
+                return true;
+            } else if (insertable != RejectingFluidInsertable.NULL) {
+                FluidVolumeUtil.move(this.inv.getTank(this.index), insertable);
+                return true;
+            }
+        }
+        return false;
     }
 }

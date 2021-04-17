@@ -93,6 +93,10 @@ public class OxygenTank extends Tank {
         texturedQuad(matrices, x, y + Constants.TextureCoordinate.OVERLAY_HEIGHT - (Constants.TextureCoordinate.OVERLAY_HEIGHT * scale), Constants.TextureCoordinate.OXYGEN_LIGHT_X, Constants.TextureCoordinate.OXYGEN_LIGHT_Y, Constants.TextureCoordinate.OVERLAY_HEIGHT * scale);
     }
 
+    @Override
+    public void renderHighlight(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY) {
+    }
+
     void texturedQuad(Matrix4f matrices, float x, float y, float u, float v, float height) {
         float x1 = x + (float) Constants.TextureCoordinate.OVERLAY_WIDTH;
         float y1 = y + height;
