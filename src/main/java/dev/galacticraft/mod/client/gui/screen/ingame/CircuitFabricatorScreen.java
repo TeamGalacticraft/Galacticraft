@@ -89,6 +89,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         this.drawProgressBar(matrices);
+        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override

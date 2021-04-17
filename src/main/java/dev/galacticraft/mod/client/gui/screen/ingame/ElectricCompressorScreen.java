@@ -60,6 +60,7 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         this.drawCraftProgressBar(matrices);
+        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override

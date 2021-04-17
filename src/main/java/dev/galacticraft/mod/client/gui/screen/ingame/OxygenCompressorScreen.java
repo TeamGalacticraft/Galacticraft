@@ -58,6 +58,7 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
             height /= -125D;
             this.drawTexture(matrices, this.x + 93, this.y + 64, 187, 18, -11, (int) height);
         }
+        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override

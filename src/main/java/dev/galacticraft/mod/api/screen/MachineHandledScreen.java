@@ -22,7 +22,9 @@
 
 package dev.galacticraft.mod.api.screen;
 
+import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Either;
@@ -33,7 +35,6 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.block.GalacticraftBlocks;
 import dev.galacticraft.mod.client.gui.widget.machine.AbstractWidget;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
@@ -82,10 +83,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -533,16 +531,12 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     protected void setAccessibility(SecurityInfo.Accessibility accessibility) {
         this.handler.machine.getSecurity().setAccessibility(accessibility);
-        PacketByteBuf buf = new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer((Long.SIZE / Byte.SIZE) + 1));
-        buf.writeBlockPos(this.pos).writeByte(accessibility.ordinal());
-        ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "security_config"), buf);
+        ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "security_config"), new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer((Long.SIZE / Byte.SIZE) + 1).writeByte(accessibility.ordinal())));
     }
 
     protected void setRedstone(RedstoneInteractionType redstone) {
         this.handler.machine.setRedstone(redstone);
-        PacketByteBuf buf = new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer((Long.SIZE / Byte.SIZE) + 1));
-        buf.writeBlockPos(this.pos).writeByte(redstone.ordinal());
-        ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "redstone_config"), buf);
+        ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "redstone_config"), new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer((Long.SIZE / Byte.SIZE) + 1).writeByte(redstone.ordinal())));
     }
 
     protected void drawTabTooltips(MatrixStack matrices, int mouseX, int mouseY) {
@@ -681,15 +675,19 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
         super.render(matrices, mouseX, mouseY, delta);
 
-        this.drawConfigTabs(matrices, mouseX, mouseY, delta);
-        this.drawTanks(matrices, mouseX, mouseY, delta);
-        this.handleSlotHighlight(matrices, mouseX, mouseY, delta);
         matrices.push();
         matrices.translate(this.x, this.y, 0);
         for (AbstractWidget widget : this.widgets) {
             widget.render(matrices, mouseX - this.x, mouseY - this.y, delta);
         }
         matrices.pop();
+    }
+
+    @Override
+    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        this.drawConfigTabs(matrices, mouseX, mouseY, delta);
+        this.drawTanks(matrices, mouseX, mouseY, delta);
+        this.handleSlotHighlight(matrices, mouseX, mouseY, delta);
     }
 
     protected void drawTanks(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -906,7 +904,27 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             for (AbstractWidget widget : widgets) {
                 widget.mouseClicked(mouseX - this.x, mouseY - this.y, button);
             }
-            return this.checkTabsClick(mouseX, mouseY, button) | super.mouseClicked(mouseX, mouseY, button);
+            boolean tankMod = false;
+            if (this.focusedTank != null && button == 0) {
+                tankMod = this.focusedTank.acceptStack(new Reference<ItemStack>() {
+                    @Override
+                    public ItemStack get() {
+                        return MachineHandledScreen.this.playerInventory.getCursorStack();
+                    }
+
+                    @Override
+                    public boolean set(ItemStack value) {
+                        MachineHandledScreen.this.playerInventory.setCursorStack(value);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean isValid(ItemStack value) {
+                        return true;
+                    }
+                }, new FixedInventoryVanillaWrapper(this.playerInventory).getInsertable());
+            }
+            return this.checkTabsClick(mouseX, mouseY, button) | super.mouseClicked(mouseX, mouseY, button) | tankMod;
         } else {
             return false;
         }
@@ -1011,19 +1029,15 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         return widget;
     }
 
-    public void drawTextureColor(MatrixStack matrices, int x, int y, int u, int v, int width, int height, int red, int green, int blue) {
-        drawTextureColor(matrices, x, y, this.getZOffset(), (float)u, (float)v, width, height, 256, 256, red, green, blue);
+    public static void drawTextureColor(MatrixStack matrices, int x, int y, int z, float u, float v, int width, int height, int textureHeight, int textureWidth, int red, int green, int blue, int alpha) {
+        drawTextureColor(matrices, x, x + width, y, y + height, z, width, height, u, v, textureWidth, textureHeight, red, green, blue, alpha);
     }
 
-    public static void drawTextureColor(MatrixStack matrices, int x, int y, int z, float u, float v, int width, int height, int textureHeight, int textureWidth, int red, int green, int blue) {
-        drawTextureColor(matrices, x, x + width, y, y + height, z, width, height, u, v, textureWidth, textureHeight, red, green, blue);
+    private static void drawTextureColor(MatrixStack matrices, int x0, int x1, int y0, int y1, int z, int regionWidth, int regionHeight, float u, float v, int textureWidth, int textureHeight, int red, int green, int blue, int alpha) {
+        drawTexturedQuadColor(matrices.peek().getModel(), x0, x1, y0, y1, z, (u + 0.0F) / (float)textureWidth, (u + (float)regionWidth) / (float)textureWidth, (v + 0.0F) / (float)textureHeight, (v + (float)regionHeight) / (float)textureHeight, red, green, blue, alpha);
     }
 
-    private static void drawTextureColor(MatrixStack matrices, int x0, int x1, int y0, int y1, int z, int regionWidth, int regionHeight, float u, float v, int textureWidth, int textureHeight, int red, int green, int blue) {
-        drawTexturedQuadColor(matrices.peek().getModel(), x0, x1, y0, y1, z, (u + 0.0F) / (float)textureWidth, (u + (float)regionWidth) / (float)textureWidth, (v + 0.0F) / (float)textureHeight, (v + (float)regionHeight) / (float)textureHeight, red, green, blue);
-    }
-
-    private static void drawTexturedQuadColor(Matrix4f matrices, int x0, int x1, int y0, int y1, int z, float u0, float u1, float v0, float v1, int red, int green, int blue) {
+    private static void drawTexturedQuadColor(Matrix4f matrices, int x0, int x1, int y0, int y1, int z, float u0, float u1, float v0, float v1, int red, int green, int blue, int alwha) {
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
         bufferBuilder.begin(7, VertexFormats.POSITION_COLOR_TEXTURE);
         bufferBuilder.vertex(matrices, (float)x0, (float)y1, (float)z).color(red, green, blue, 255).texture(u0, v1).next();
@@ -1098,7 +1112,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             sideOption.setOption(types.get(i));
             sideOption.setMatching(null);
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-            buf.writeBlockPos(machine.getPos()).writeByte(face.ordinal()).writeBoolean(false).writeByte(sideOption.getAutomationType().ordinal());
+            buf.writeByte(face.ordinal()).writeBoolean(false).writeByte(sideOption.getAutomationType().ordinal());
             ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
 
         }), //LEFT
@@ -1108,11 +1122,31 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             if (reset) {
                 sideOption.setMatching(null);
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                buf.writeBlockPos(machine.getPos()).writeByte(face.ordinal()).writeBoolean(true).writeBoolean(false).writeInt(-1);
+                buf.writeByte(face.ordinal()).writeBoolean(true).writeBoolean(false).writeInt(-1);
                 ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
                 return;
             }
             SlotType[] slotTypes = sideOption.getAutomationType().getAutomatable(machine).getTypes();
+            slotTypes = Arrays.copyOf(slotTypes, slotTypes.length);
+            int s = 0;
+            for (int i = 0; i < slotTypes.length; i++) {
+                if (!slotTypes[i].getType().canPassAs(sideOption.getAutomationType())) {
+                    slotTypes[i] = null;
+                    s++;
+                }
+            }
+            if (s > 0) {
+                SlotType[] tmp = new SlotType[slotTypes.length - s];
+                s = 0;
+                for (int i = 0; i < slotTypes.length; i++) {
+                    if (slotTypes[i] == null) {
+                        s++;
+                    } else {
+                        tmp[i - s] = slotTypes[i];
+                    }
+                }
+                slotTypes = tmp;
+            }
             int i = 0;
             if (sideOption.getMatching() != null && sideOption.getMatching().right().isPresent()) {
                 SlotType slotType = sideOption.getMatching().right().get();
@@ -1127,7 +1161,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             if (i == -1) i = slotTypes.length - 1;
             sideOption.setMatching(Either.right(slotTypes[i]));
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-            buf.writeBlockPos(machine.getPos()).writeByte(face.ordinal()).writeBoolean(true).writeBoolean(false).writeInt(SlotType.SLOT_TYPES.getRawId(slotTypes[i]));
+            buf.writeByte(face.ordinal()).writeBoolean(true).writeBoolean(false).writeInt(SlotType.SLOT_TYPES.getRawId(slotTypes[i]));
             ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
         }), //RIGHT
         CHANGE_MATCH_SLOT((player, machine, face, back, reset) -> {
@@ -1136,7 +1170,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             if (reset) {
                 sideOption.setMatching(null);
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                buf.writeBlockPos(machine.getPos()).writeByte(face.ordinal()).writeBoolean(true).writeBoolean(true).writeInt(-1);
+                buf.writeByte(face.ordinal()).writeBoolean(true).writeBoolean(true).writeInt(-1);
                 ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
                 return;
             }
@@ -1160,7 +1194,6 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             sideOption.setMatching(Either.left(list.getInt(i)));
 
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-            buf.writeBlockPos(machine.getPos());
             buf.writeByte(face.ordinal());
             buf.writeBoolean(true).writeBoolean(true);
             buf.writeInt(i);

@@ -50,6 +50,7 @@ public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorag
         this.client.getTextureManager().bindTexture(Constants.ScreenTexture.ENERGY_STORAGE_MODULE_SCREEN);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override

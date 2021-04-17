@@ -141,15 +141,15 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
         if (button == 0) {
             if (check(mouseX, mouseY, this.x + 156, this.y + 16, Constants.TextureCoordinate.BUTTON_WIDTH, Constants.TextureCoordinate.BUTTON_HEIGHT)) {
                 handler.machine.bubbleVisible = !handler.machine.bubbleVisible;
-                ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_visible"), new PacketByteBuf(Unpooled.buffer().writeBoolean(handler.machine.bubbleVisible)).writeBlockPos(this.handler.machine.getPos()));
+                ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_visible"), new PacketByteBuf(Unpooled.buffer().writeBoolean(handler.machine.bubbleVisible)));
                 return true;
             }
 
             if (check(mouseX, mouseY, this.x + 158, this.y + 59, Constants.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
                 if (handler.machine.getTargetSize() != Byte.MAX_VALUE) {
                     handler.machine.setTargetSize((byte) (handler.machine.getTargetSize() + 1));
-                    textField.setText(handler.machine.getTargetSize() + "");
-                    ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_max"), new PacketByteBuf(Unpooled.buffer().writeByte(handler.machine.getTargetSize())).writeBlockPos(this.handler.machine.getPos()));
+                    textField.setText(String.valueOf(handler.machine.getTargetSize()));
+                    ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_max"), new PacketByteBuf(Unpooled.buffer().writeByte(handler.machine.getTargetSize())));
                     return true;
                 }
             }
@@ -157,8 +157,8 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
             if (check(mouseX, mouseY, this.x + 158, this.y + 69, Constants.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
                 if (handler.machine.getTargetSize() > 1) {
                     handler.machine.setTargetSize((byte) (handler.machine.getTargetSize() - 1));
-                    textField.setText(handler.machine.getTargetSize() + "");
-                    ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_max"), new PacketByteBuf(Unpooled.buffer().writeByte(handler.machine.getTargetSize())).writeBlockPos(this.handler.machine.getPos()));
+                    textField.setText(String.valueOf(handler.machine.getTargetSize()));
+                    ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_max"), new PacketByteBuf(Unpooled.buffer().writeByte(handler.machine.getTargetSize())));
                     return true;
                 }
             }

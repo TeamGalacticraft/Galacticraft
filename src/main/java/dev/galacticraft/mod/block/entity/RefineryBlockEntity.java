@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.FluidAttributes;
+import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import dev.galacticraft.mod.Constants;
@@ -67,8 +69,8 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
         builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 7);
-        builder.addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_INPUT, stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL), 123, 7);
-        builder.addSlot(FLUID_OUTPUT_SLOT, SlotType.FLUID_TANK_OUTPUT, stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL), 153, 7);
+        builder.addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL), 123, 7);
+        builder.addSlot(FLUID_OUTPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL), 153, 7);
         return builder;
     }
 
@@ -98,7 +100,6 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
     public void updateComponents() {
         super.updateComponents();
         this.attemptChargeFromStack(CHARGE_SLOT);
-
     }
 
     @Override
@@ -111,8 +112,8 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
 
     @Override
     public void tickWork() {
-        this.getFluidInv().insertFluid(OIL_TANK, FluidUtils.extractFluid(this.getInventory().getSlot(FLUID_INPUT_SLOT), this.getFluidInv().getMaxAmount_F(OIL_TANK).sub(this.getFluidInv().getInvFluid(OIL_TANK).getAmount_F()), key -> GalacticraftTags.OIL.contains(key.getRawFluid())), Simulation.ACTION);
-        this.getFluidInv().insertFluid(FUEL_TANK, FluidUtils.insertFluid(this.getInventory().getSlot(FLUID_OUTPUT_SLOT), this.getFluidInv().extractFluid(FUEL_TANK, null, null, FluidAmount.ONE, Simulation.ACTION)), Simulation.ACTION);
+        FluidVolumeUtil.move(FluidAttributes.EXTRACTABLE.getFirst(this.getInventory().getSlot(FLUID_INPUT_SLOT)), this.getFluidInv().getTank(OIL_TANK));
+        FluidVolumeUtil.move(this.getFluidInv().getTank(FUEL_TANK), FluidAttributes.INSERTABLE.getFirst(this.getInventory().getSlot(FLUID_OUTPUT_SLOT)));
 
         if (this.getStatus().getType().isActive()) {
             FluidAmount amount = this.getFluidInv().extractFluid(OIL_TANK, key -> GalacticraftTags.OIL.contains(key.getRawFluid()), null, FluidAmount.of(5, 1000), Simulation.ACTION).getAmount_F();

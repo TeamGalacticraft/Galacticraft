@@ -62,6 +62,7 @@ public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceS
 
             this.drawTexture(matrices, this.x + ARROW_X, this.y + ARROW_Y, LIT_ARROW_X, LIT_ARROW_Y, (int) (((double)ARROW_WIDTH) * scale), ARROW_HEIGHT);
         }
+        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override

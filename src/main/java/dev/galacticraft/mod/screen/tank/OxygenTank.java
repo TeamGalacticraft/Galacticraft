@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.screen.tank;
 
 import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
+import alexiil.mc.lib.attributes.misc.LimitedConsumer;
+import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
@@ -37,6 +39,7 @@ import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -95,6 +98,16 @@ public class OxygenTank extends Tank {
 
     @Override
     public void renderHighlight(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY) {
+    }
+
+    @Override
+    public boolean acceptStack(Reference<ItemStack> stack, LimitedConsumer<ItemStack> excess) {
+        return super.acceptStack(stack, excess);
+    }
+
+    @Override
+    public boolean isHoveredOverTank(int mouseX, int mouseY) {
+        return SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinate.OVERLAY_WIDTH, Constants.TextureCoordinate.OVERLAY_HEIGHT);
     }
 
     void texturedQuad(Matrix4f matrices, float x, float y, float u, float v, float height) {

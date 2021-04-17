@@ -62,6 +62,7 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
         }
 
         drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft.electric_arc_furnace"), this.width / 2, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override

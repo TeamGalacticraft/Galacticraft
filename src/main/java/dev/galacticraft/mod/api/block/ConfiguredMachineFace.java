@@ -34,10 +34,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 /**
@@ -100,6 +97,9 @@ public class ConfiguredMachineFace {
     }
 
     public int[] getMatching(Automatable automatable) {
+        if (Arrays.stream(automatable.getTypes()).anyMatch(type -> !type.getType().canPassAsIgnoreFlow(this.automationType))) {
+            return new int[0];
+        }
         if (matching != null) {
             if (matching.left().isPresent()) {
                 return new int[]{matching.left().get()};

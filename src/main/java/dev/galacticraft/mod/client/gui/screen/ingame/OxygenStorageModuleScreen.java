@@ -54,8 +54,9 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
 
         this.drawOxygenBufferBar(matrices);
 
-        drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.current_oxygen", (int)(this.handler.machine.getFluidInv().getInvFluid(0).getAmount_F().asInt(1000, RoundingMode.HALF_DOWN))), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
-        drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.max_oxygen", (int)(this.handler.machine.getFluidInv().getMaxAmount_F(0).asInt(1000, RoundingMode.HALF_DOWN))), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.current_oxygen", this.handler.machine.getFluidInv().getInvFluid(0).getAmount_F().asInt(1000, RoundingMode.HALF_DOWN)), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.max_oxygen", this.handler.machine.getFluidInv().getMaxAmount_F(0).asInt(1000, RoundingMode.HALF_DOWN)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
+        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override

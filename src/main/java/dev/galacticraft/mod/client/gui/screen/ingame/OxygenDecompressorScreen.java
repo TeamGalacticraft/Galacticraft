@@ -58,6 +58,7 @@ public class OxygenDecompressorScreen extends MachineHandledScreen<OxygenDecompr
             height /= 125;
             this.drawTexture(matrices, this.x + 82, this.y + 46, 176, 0, 11, height);
         }
+        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override

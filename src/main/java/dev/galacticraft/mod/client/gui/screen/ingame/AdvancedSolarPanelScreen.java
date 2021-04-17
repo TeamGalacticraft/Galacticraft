@@ -59,6 +59,7 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
         int topPos = this.y;
 
         this.drawTexture(matrices, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override

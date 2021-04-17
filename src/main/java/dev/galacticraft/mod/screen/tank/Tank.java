@@ -25,30 +25,29 @@ package dev.galacticraft.mod.screen.tank;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.*;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
-import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen;
+import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -58,7 +57,6 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.math.RoundingMode;
-import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -169,8 +167,8 @@ public class Tank {
         int[] data = this.getPositionData();
         MinecraftClient.getInstance().getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
         if (coloured) {
-            int i = color.get(this.index);
-            MachineHandledScreen.drawTextureColor(matrices, this.x, this.y, 0, data[0], data[1] + Constants.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128, i >> 16 & 0xFF, i >> 8 & 0xFF, i & 0xFF);
+            int c = color.get(this.index);
+            MachineHandledScreen.drawTextureColor(matrices, this.x, this.y, 0, data[0], data[1] + Constants.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128, c >> 16 & 0xFF, c >> 8 & 0xFF, c & 0xFF, 80);
         } else {
             DrawableHelper.drawTexture(matrices, this.x, this.y, 0, data[0], data[1] + Constants.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128);
         }
@@ -181,13 +179,14 @@ public class Tank {
         double scale = content.getAmount_F().div(this.getCapacity()).asInexactDouble();
         Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getRawFluid()).getFluidSprites(world, pos, content.getRawFluid().getDefaultState())[0];
         client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-        DrawableHelper.drawSprite(matrices, this.x + 1, this.y + 1 - (int)(data[2] * scale) + data[2], 1, Constants.TextureCoordinate.FLUID_TANK_WIDTH - 2, (int)(data[2] * scale) - 2, sprite);
+        DrawableHelper.drawSprite(matrices, this.x + 1, this.y + 1 - (int)(data[2] * scale) + data[2], 0, Constants.TextureCoordinate.FLUID_TANK_WIDTH - 2, (int)(data[2] * scale) - 2, sprite);
         matrices.pop();
         client.getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
-        DrawableHelper.drawTexture(matrices, this.x, this.y, 1, data[0], data[1], Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128);
+        DrawableHelper.drawTexture(matrices, this.x, this.y, 0, data[0], data[1], Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128);
     }
 
     public void drawTooltip(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY) {
+        matrices.translate(0, 0, 1);
         if (SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinate.FLUID_TANK_WIDTH, this.getPositionData()[2])) {
             List<Text> lines = new ArrayList<>(2);
             FluidVolume volume = this.inv.getInvFluid(this.index);
@@ -206,6 +205,7 @@ public class Tank {
             lines.add(new TranslatableText("ui.galacticraft.machine.fluid_inv.amount").setStyle(Constants.Text.GRAY_STYLE).append(amount.setStyle(Style.EMPTY.withColor(Formatting.WHITE))));
             client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
         }
+        matrices.translate(0, 0, -1);
     }
 
     private String getName(Fluid fluid) {
@@ -230,34 +230,25 @@ public class Tank {
         RenderSystem.enableDepthTest();
     }
 
-    public boolean acceptStack(Reference<ItemStack> stack) {
+    public boolean acceptStack(Reference<ItemStack> stack, LimitedConsumer<ItemStack> excess) {
         if (this.inv instanceof Automatable) {
-            if (((Automatable) this.inv).getTypes()[this.index].getType().isInput()) {
-                FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(stack);
-                FluidVolumeUtil.move(extractable, this.inv.getTank(this.index));
-                return true;
-            } else if (((Automatable) this.inv).getTypes()[this.index].getType().isOutput()) {
-                FluidInsertable insertable = FluidAttributes.INSERTABLE.get(stack);
-                FluidVolumeUtil.move(this.inv.getTank(this.index), insertable);
-                return true;
-            }
-        } else {
-            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(stack);
-            FluidInsertable insertable = FluidAttributes.INSERTABLE.get(stack);
-            if (extractable != EmptyFluidExtractable.NULL) {
-                if (insertable != RejectingFluidInsertable.NULL) {
-                    if (extractable.attemptExtraction(this.inv.getFilterForTank(this.index), FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty()) {
-                        FluidVolumeUtil.move(this.inv.getTank(this.index), insertable);
-                    } else {
-                        FluidVolumeUtil.move(extractable, this.inv.getTank(this.index));
-                    }
-                } else {
+            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.getFirstOrNull(stack, excess);
+            if (extractable != null && !extractable.attemptExtraction(this.inv.getFilterForTank(this.index), FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty()) {
+                if (((Automatable) this.inv).getTypes()[this.index].getType().isInput()) {
                     FluidVolumeUtil.move(extractable, this.inv.getTank(this.index));
+                    ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(this.index)));
+                    return true;
                 }
-                return true;
-            } else if (insertable != RejectingFluidInsertable.NULL) {
-                FluidVolumeUtil.move(this.inv.getTank(this.index), insertable);
-                return true;
+            } else {
+                FluidInsertable insertable = FluidAttributes.INSERTABLE.getFirstOrNull(stack, excess);
+                if (insertable != null) {
+                    if (((Automatable) this.inv).getTypes()[this.index].getType().isOutput()) {
+                        FluidVolumeUtil.move(this.inv.getTank(this.index), insertable);
+                        ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(this.index)));
+                        return true;
+                    }
+
+                }
             }
         }
         return false;

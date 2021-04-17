@@ -88,11 +88,20 @@ public enum AutomationType implements Comparable<AutomationType> {
 
     public boolean canPassAs(AutomationType other) {
         if (other == this) return true;
-        if (other.isEnergy()) if (!this.isEnergy()) return false;
-        if (other.isFluid()) if (!this.isFluid()) return false;
-        if (other.isItem()) if (!this.isItem()) return false;
-        if (other.isInput()) if (!this.isInput()) return false;
-        if (other.isOutput()) return this.isOutput();
+        if (other.isEnergy() != this.isEnergy()) return false;
+        if (other.isFluid() != this.isFluid()) return false;
+        if (other.isItem() != this.isItem()) return false;
+        if (this.isBidirectional()) return true;
+        if (other.isInput() != this.isInput()) return false;
+        if (other.isOutput() != this.isOutput()) return false;
+        return true;
+    }
+
+    public boolean canPassAsIgnoreFlow(AutomationType other) {
+        if (other == this) return true;
+        if (other.isEnergy() != this.isEnergy()) return false;
+        if (other.isFluid() != this.isFluid()) return false;
+        if (other.isItem() != this.isItem()) return false;
         return true;
     }
 

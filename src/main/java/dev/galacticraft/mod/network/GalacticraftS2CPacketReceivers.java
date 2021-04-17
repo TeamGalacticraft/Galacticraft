@@ -22,6 +22,18 @@
 
 package dev.galacticraft.mod.network;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.FluidAttributes;
+import alexiil.mc.lib.attributes.fluid.FluidExtractable;
+import alexiil.mc.lib.attributes.fluid.FluidInsertable;
+import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
+import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
+import alexiil.mc.lib.attributes.item.ItemInsertable;
+import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
+import alexiil.mc.lib.attributes.misc.Ref;
+import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.datafixers.util.Either;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.Galacticraft;
@@ -30,12 +42,21 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
+import dev.galacticraft.mod.api.screen.MachineHandledScreen;
+import dev.galacticraft.mod.attribute.Automatable;
+import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
+import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
 import dev.galacticraft.mod.screen.MachineScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
@@ -53,14 +74,13 @@ public class GalacticraftS2CPacketReceivers {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory(GalacticraftPlayerInventoryScreenHandler::new, LiteralText.EMPTY))));
 
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "side_config"), (server, player, handler, buf, responseSender) -> {
-            BlockPos pos = buf.readBlockPos();
-            BlockFace face  = Constants.Misc.BLOCK_FACES[buf.readByte()];
+            BlockFace face = Constants.Misc.BLOCK_FACES[buf.readByte()];
             if (buf.readBoolean()) { //match
                 if (buf.readBoolean()) { // int or slottype
                     int i = buf.readInt();
                     server.execute(() -> {
-                        MachineBlockEntity machine = doBasicChecksAndGrabEntity(pos, player, false);
-                        if (machine != null) {
+                        MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
+                        if (machine.getSecurity().hasAccess(player)) {
                             if (i == -1) {
                                 machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
                                 return;
@@ -71,8 +91,8 @@ public class GalacticraftS2CPacketReceivers {
                 } else {
                     int i = buf.readInt();
                     server.execute(() -> {
-                        MachineBlockEntity machine = doBasicChecksAndGrabEntity(pos, player, false);
-                        if (machine != null) {
+                        MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
+                        if (machine.getSecurity().hasAccess(player)) {
                             if (i == -1) {
                                 machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
                                 return;
@@ -85,8 +105,8 @@ public class GalacticraftS2CPacketReceivers {
             } else {
                 int i = buf.readByte();
                 server.execute(() -> {
-                    MachineBlockEntity machine = doBasicChecksAndGrabEntity(pos, player, false);
-                    if (machine != null) {
+                    MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
+                    if (machine.getSecurity().hasAccess(player)) {
                         machine.getConfiguration().getSideConfiguration().get(face).setOption(AutomationType.values()[i]);
                         machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
                         machine.sync();
@@ -96,22 +116,20 @@ public class GalacticraftS2CPacketReceivers {
         });
 
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "redstone_config"), (server, player, handler, buf, responseSender) -> {
-            BlockPos pos = buf.readBlockPos();
             RedstoneInteractionType redstoneInteractionType = RedstoneInteractionType.values()[buf.readByte()];
             server.execute(() -> {
-                MachineBlockEntity machine = doBasicChecksAndGrabEntity(pos, player, false);
-                if (machine != null) {
+                MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
+                if (machine.getSecurity().hasAccess(player)) {
                     machine.getConfiguration().setRedstone(redstoneInteractionType);
                 }
             });
         });
 
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "security_config"), (server, player, handler, buf, responseSender) -> {
-            BlockPos pos = buf.readBlockPos();
             SecurityInfo.Accessibility accessibility = SecurityInfo.Accessibility.values()[buf.readByte()];
             server.execute(() -> {
-                MachineBlockEntity machine = doBasicChecksAndGrabEntity(pos, player, true);
-                if (machine != null) {
+                MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
+                if (machine.getSecurity().isOwner(player)) {
                     machine.getConfiguration().getSecurity().setAccessibility(accessibility);
                 }
             });
@@ -119,12 +137,11 @@ public class GalacticraftS2CPacketReceivers {
 
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "bubble_max"), (server, player, handler, buf, responseSender) -> {
             byte max = buf.readByte();
-            BlockPos pos = buf.readBlockPos();
             server.execute(() -> {
-                MachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(pos, player, false);
-                if (blockEntity instanceof BubbleDistributorBlockEntity) {
+                BubbleDistributorBlockEntity machine = ((BubbleDistributorScreenHandler) player.currentScreenHandler).machine;
+                if (machine.getSecurity().hasAccess(player)) {
                     if (max > 0) {
-                        ((BubbleDistributorBlockEntity) blockEntity).setTargetSize(max);
+                        machine.setTargetSize(max);
                     }
                 }
             });
@@ -132,36 +149,52 @@ public class GalacticraftS2CPacketReceivers {
 
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "bubble_visible"), (server, player, handler, buf, responseSender) -> {
             boolean visible = buf.readBoolean();
-            BlockPos pos = buf.readBlockPos();
             server.execute(() -> {
-                MachineBlockEntity entity = doBasicChecksAndGrabEntity(pos, player, false);
-
-                if (entity instanceof BubbleDistributorBlockEntity) {
-                    ((BubbleDistributorBlockEntity) entity).bubbleVisible = visible;
+                BubbleDistributorBlockEntity machine = ((BubbleDistributorScreenHandler) player.currentScreenHandler).machine;
+                if (machine.getSecurity().hasAccess(player)) {
+                    machine.bubbleVisible = visible;
                 }
             });
         });
-    }
 
-    private static @Nullable MachineBlockEntity doBasicChecksAndGrabEntity(@NotNull BlockPos pos, ServerPlayerEntity player, boolean strictAccess) {
-        if (player.getServerWorld().isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4) && player.currentScreenHandler instanceof MachineScreenHandler) {
-            BlockEntity entity = player.getServerWorld().getBlockEntity(pos);
-            if (entity instanceof MachineBlockEntity) {
-                if ((player.getPos().squaredDistanceTo(Vec3d.ofCenter(entity.getPos())) < 64.0 && player.getServerWorld().canPlayerModifyAt(player, pos)) || player.isCreativeLevelTwoOp()) { //todo JamiesWhiteShirt/reach-entity-attributes ?
-                    if (strictAccess) {
-                        if (((MachineBlockEntity) entity).getSecurity().isOwner(player)) {
-                            return (MachineBlockEntity) entity;
-                        }
-                    } else {
-                        if (((MachineBlockEntity) entity).getSecurity().hasAccess(player)) {
-                            return (MachineBlockEntity) entity;
-                        }
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "tank_modify"), (server, player, handler, buf, responseSender) -> {
+            int index = buf.readInt();
+            server.execute(() -> {
+                MachineFluidInv inv = ((MachineScreenHandler<?>) player.currentScreenHandler).machine.getFluidInv();
+                ItemInsertable excess = new FixedInventoryVanillaWrapper(player.inventory).getInsertable();
+                Reference<ItemStack> reference = new Reference<ItemStack>() {
+                    @Override
+                    public ItemStack get() {
+                        return player.inventory.getCursorStack();
+                    }
+
+                    @Override
+                    public boolean set(ItemStack value) {
+                        player.inventory.setCursorStack(value);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean isValid(ItemStack value) {
+                        return true;
+                    }
+                };
+                FluidExtractable extractable = FluidAttributes.EXTRACTABLE.getFirstOrNull(reference, excess);
+                if (extractable != null && !extractable.attemptExtraction(inv.getFilterForTank(index), FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty()) {
+                    if (((Automatable) inv).getTypes()[index].getType().isInput()) {
+                        FluidVolumeUtil.move(extractable, inv.getTank(index));
+                        ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(index)));
                     }
                 } else {
-                    Galacticraft.LOGGER.debug("Player sent machine packet outside of allowed reach distance!");
+                    FluidInsertable insertable = FluidAttributes.INSERTABLE.getFirstOrNull(reference, excess);
+                    if (insertable != null) {
+                        if (((Automatable) inv).getTypes()[index].getType().isOutput()) {
+                            FluidVolumeUtil.move(inv.getTank(index), insertable);
+                            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(index)));
+                        }
+                    }
                 }
-            }
-        }
-        return null;
+            });
+        });
     }
 }
