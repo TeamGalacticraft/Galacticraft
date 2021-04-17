@@ -83,11 +83,13 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
 
     @Override
     default boolean canFillWithFluid(BlockView view, BlockPos pos, BlockState state, Fluid fluid) {
+        if (!(fluid instanceof FlowableFluid)) return false;
         return state.get(FLUID).equals(Constants.Misc.EMPTY);
     }
 
     @Override
     default boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) {
+        if (!(fluidState.getFluid() instanceof FlowableFluid)) return false;
         if (state.get(FLUID).equals(Constants.Misc.EMPTY)) {
             if (!world.isClient()) {
                 world.setBlockState(pos, state.with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
