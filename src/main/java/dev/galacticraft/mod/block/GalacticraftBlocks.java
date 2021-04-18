@@ -31,7 +31,7 @@ import dev.galacticraft.mod.block.decoration.LunarCartographyTableBlock;
 import dev.galacticraft.mod.block.decoration.VacuumGlassBlock;
 import dev.galacticraft.mod.block.entity.*;
 import dev.galacticraft.mod.block.environment.*;
-import dev.galacticraft.mod.block.machines.*;
+import dev.galacticraft.mod.block.machine.*;
 import dev.galacticraft.mod.block.special.SolarPanelPartBlock;
 import dev.galacticraft.mod.block.special.TinLadderBlock;
 import dev.galacticraft.mod.block.special.aluminumwire.tier1.AluminumWireBlock;

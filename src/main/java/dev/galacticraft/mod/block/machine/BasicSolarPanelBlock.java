@@ -20,37 +20,64 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.block.machines;
+package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.block.MachineBlock;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.block.entity.RefineryBlockEntity;
+import dev.galacticraft.mod.api.block.MultiBlockBase;
+import dev.galacticraft.mod.block.entity.BasicSolarPanelBlockEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Random;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class RefineryBlock extends MachineBlock {
-    public RefineryBlock(Settings settings) {
-        super(settings, RefineryBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft.refinery")
+public class BasicSolarPanelBlock extends MachineBlock implements MultiBlockBase {
+    public BasicSolarPanelBlock(Settings settings) {
+        super(settings, BasicSolarPanelBlockEntity::new,
+                new TranslatableText("tooltip.galacticraft.basic_solar_panel")
                         .setStyle(Constants.Text.DARK_GRAY_STYLE));
     }
 
+    @NotNull
+    protected static List<BlockPos> genPartList(BlockPos pos) {
+        List<BlockPos> parts = new LinkedList<>();
+        BlockPos rod = pos.up();
+        BlockPos mid = rod.up();
+        BlockPos front = mid.north();
+        BlockPos back = mid.south();
+
+        BlockPos right = mid.east();
+        BlockPos left = mid.west();
+
+        BlockPos frontLeft = front.east();
+        BlockPos frontRight = front.west();
+        BlockPos backLeft = back.east();
+        BlockPos backRight = back.west();
+
+        parts.add(rod);
+        parts.add(mid);
+        parts.add(front);
+        parts.add(back);
+
+        parts.add(right);
+        parts.add(left);
+
+        parts.add(frontLeft);
+        parts.add(frontRight);
+        parts.add(backLeft);
+        parts.add(backRight);
+
+        return parts;
+    }
+
     @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        super.randomDisplayTick(state, world, pos, random);
-        BlockEntity entity = world.getBlockEntity(pos);
-        if (entity instanceof MachineBlockEntity && ((MachineBlockEntity) entity).getStatus().getType().isActive()) {
-            world.addParticle(ParticleTypes.SMOKE, pos.getX() + random.nextDouble(), pos.getY() + 1, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
-        }
+    public List<BlockPos> getOtherParts(BlockState state, BlockPos pos) {
+        return genPartList(pos);
     }
 }

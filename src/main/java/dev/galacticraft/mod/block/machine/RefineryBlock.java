@@ -20,31 +20,37 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.block.machines;
+package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.block.MachineBlock;
-import dev.galacticraft.mod.api.block.MultiBlockBase;
-import dev.galacticraft.mod.block.entity.AdvancedSolarPanelBlockEntity;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.block.entity.RefineryBlockEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-import java.util.List;
+import java.util.Random;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class AdvancedSolarPanelBlock extends MachineBlock implements MultiBlockBase {
-    public AdvancedSolarPanelBlock(Settings settings) {
-        super(settings,
-                AdvancedSolarPanelBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft.advanced_solar_panel")
+public class RefineryBlock extends MachineBlock {
+    public RefineryBlock(Settings settings) {
+        super(settings, RefineryBlockEntity::new,
+                new TranslatableText("tooltip.galacticraft.refinery")
                         .setStyle(Constants.Text.DARK_GRAY_STYLE));
     }
 
     @Override
-    public List<BlockPos> getOtherParts(BlockState state, BlockPos pos) {
-        return BasicSolarPanelBlock.genPartList(pos);
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        super.randomDisplayTick(state, world, pos, random);
+        BlockEntity entity = world.getBlockEntity(pos);
+        if (entity instanceof MachineBlockEntity && ((MachineBlockEntity) entity).getStatus().getType().isActive()) {
+            world.addParticle(ParticleTypes.SMOKE, pos.getX() + random.nextDouble(), pos.getY() + 1, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
+        }
     }
 }

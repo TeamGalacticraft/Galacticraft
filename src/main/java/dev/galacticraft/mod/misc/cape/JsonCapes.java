@@ -20,13 +20,13 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.misc.capes;
+package dev.galacticraft.mod.misc.cape;
 
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.capes.CapeListener;
-import dev.galacticraft.mod.api.capes.models.CapePlayer;
-import dev.galacticraft.mod.api.capes.models.CapesModel;
+import dev.galacticraft.mod.api.cape.CapeListener;
+import dev.galacticraft.mod.api.cape.models.CapePlayer;
+import dev.galacticraft.mod.api.cape.models.CapesModel;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Logger;
 

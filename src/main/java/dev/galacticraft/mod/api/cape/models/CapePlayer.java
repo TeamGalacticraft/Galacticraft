@@ -20,9 +20,9 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.capes.models;
+package dev.galacticraft.mod.api.cape.models;
 
-import dev.galacticraft.mod.misc.capes.JsonCapes;
+import dev.galacticraft.mod.misc.cape.JsonCapes;
 
 import java.util.UUID;
 

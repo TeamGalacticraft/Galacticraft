@@ -20,12 +20,12 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.misc.capes;
+package dev.galacticraft.mod.misc.cape;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dev.galacticraft.mod.api.capes.CapeListener;
-import dev.galacticraft.mod.api.capes.models.CapesModel;
+import dev.galacticraft.mod.api.cape.CapeListener;
+import dev.galacticraft.mod.api.cape.models.CapesModel;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;

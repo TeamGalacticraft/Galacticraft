@@ -20,13 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.capes;
+package dev.galacticraft.mod.api.cape.models;
 
-import dev.galacticraft.mod.api.capes.models.CapesModel;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public interface CapeListener {
-    void loadCapes(CapesModel capesModel);
+public class CapesModel {
+    private final List<CapePlayer> players;
+
+    public CapesModel(List<CapePlayer> players) {
+        this.players = players;
+    }
+
+    public List<CapePlayer> getPlayers() {
+        return this.players;
+    }
 }

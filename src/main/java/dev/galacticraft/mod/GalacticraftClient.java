@@ -32,8 +32,8 @@ import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRe
 import dev.galacticraft.mod.client.render.entity.*;
 import dev.galacticraft.mod.client.resource.GalacticraftResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
-import dev.galacticraft.mod.misc.capes.CapeLoader;
-import dev.galacticraft.mod.misc.capes.JsonCapes;
+import dev.galacticraft.mod.misc.cape.CapeLoader;
+import dev.galacticraft.mod.misc.cape.JsonCapes;
 import dev.galacticraft.mod.mixin.SkyPropertiesAccessor;
 import dev.galacticraft.mod.particle.GalacticraftParticles;
 import dev.galacticraft.mod.particle.fluid.DrippingCrudeOilParticle;

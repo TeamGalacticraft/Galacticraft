@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.block.machines;
+package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.block.MachineBlock;

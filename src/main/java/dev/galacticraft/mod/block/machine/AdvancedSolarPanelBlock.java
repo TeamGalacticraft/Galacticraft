@@ -20,64 +20,31 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.block.machines;
+package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.api.block.MultiBlockBase;
-import dev.galacticraft.mod.block.entity.BasicSolarPanelBlockEntity;
+import dev.galacticraft.mod.block.entity.AdvancedSolarPanelBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BasicSolarPanelBlock extends MachineBlock implements MultiBlockBase {
-    public BasicSolarPanelBlock(Settings settings) {
-        super(settings, BasicSolarPanelBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft.basic_solar_panel")
+public class AdvancedSolarPanelBlock extends MachineBlock implements MultiBlockBase {
+    public AdvancedSolarPanelBlock(Settings settings) {
+        super(settings,
+                AdvancedSolarPanelBlockEntity::new,
+                new TranslatableText("tooltip.galacticraft.advanced_solar_panel")
                         .setStyle(Constants.Text.DARK_GRAY_STYLE));
-    }
-
-    @NotNull
-    protected static List<BlockPos> genPartList(BlockPos pos) {
-        List<BlockPos> parts = new LinkedList<>();
-        BlockPos rod = pos.up();
-        BlockPos mid = rod.up();
-        BlockPos front = mid.north();
-        BlockPos back = mid.south();
-
-        BlockPos right = mid.east();
-        BlockPos left = mid.west();
-
-        BlockPos frontLeft = front.east();
-        BlockPos frontRight = front.west();
-        BlockPos backLeft = back.east();
-        BlockPos backRight = back.west();
-
-        parts.add(rod);
-        parts.add(mid);
-        parts.add(front);
-        parts.add(back);
-
-        parts.add(right);
-        parts.add(left);
-
-        parts.add(frontLeft);
-        parts.add(frontRight);
-        parts.add(backLeft);
-        parts.add(backRight);
-
-        return parts;
     }
 
     @Override
     public List<BlockPos> getOtherParts(BlockState state, BlockPos pos) {
-        return genPartList(pos);
+        return BasicSolarPanelBlock.genPartList(pos);
     }
 }

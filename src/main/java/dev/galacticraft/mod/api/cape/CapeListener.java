@@ -20,29 +20,13 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.block.machines;
+package dev.galacticraft.mod.api.cape;
 
-import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.api.block.MachineBlock;
-import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import dev.galacticraft.mod.api.cape.models.CapesModel;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenSealerBlock extends MachineBlock {
-    public OxygenSealerBlock(Settings settings) {
-        super(settings, OxygenSealerBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft.oxygen_sealer")
-                        .setStyle(Constants.Text.DARK_GRAY_STYLE));
-    }
-
-    @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborUpdate(state, world, pos, block, fromPos, notify);
-    }
+public interface CapeListener {
+    void loadCapes(CapesModel capesModel);
 }
