@@ -73,7 +73,7 @@ public class GalacticraftClient implements ClientModInitializer {
         CAPE_LOADER.load();
 
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) -> {
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i <= 8; i++) {
                 registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_" + i));
                 registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + i));
             }
