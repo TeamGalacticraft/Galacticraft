@@ -28,6 +28,7 @@ import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.block.GalacticraftBlocks;
 import dev.galacticraft.mod.block.entity.*;
 import dev.galacticraft.mod.block.special.fluidpipe.FluidPipeBlockEntity;
+import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 HRZN LTD
+ * Copyright (c) 2019-2021 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,12 +23,12 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import alexiil.mc.lib.attributes.Simulation;
+import dev.galacticraft.api.part.RocketPartRendererRegistry;
+import dev.galacticraft.api.regisry.AddonRegistry;
+import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.client.rocket.part.RocketPartRendererRegistry;
-import dev.galacticraft.mod.api.regisry.AddonRegistry;
-import dev.galacticraft.mod.api.rocket.RocketData;
-import dev.galacticraft.mod.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.block.GalacticraftBlocks;
 import dev.galacticraft.mod.block.entity.RocketAssemblerBlockEntity;
 import dev.galacticraft.mod.entity.RocketEntity;

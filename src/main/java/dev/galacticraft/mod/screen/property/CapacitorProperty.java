@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.screen.property;
 
-import dev.galacticraft.mod.energy.api.Capacitor;
+import com.hrznstudio.galacticraft.energy.api.Capacitor;
 import net.minecraft.screen.Property;
 
 /**

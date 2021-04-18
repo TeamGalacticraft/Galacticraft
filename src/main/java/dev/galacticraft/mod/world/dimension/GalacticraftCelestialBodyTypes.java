@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.world.dimension;
 
-import dev.galacticraft.mod.api.celestialbodies.CelestialBodyDisplayInfo;
-import dev.galacticraft.mod.api.celestialbodies.CelestialBodyType;
-import dev.galacticraft.mod.api.celestialbodies.CelestialObjectType;
-import dev.galacticraft.mod.api.celestialbodies.satellite.SatelliteRecipe;
-import dev.galacticraft.mod.api.regisry.AddonRegistry;
+import dev.galacticraft.api.celestialbodies.CelestialBodyDisplayInfo;
+import dev.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.api.celestialbodies.CelestialObjectType;
+import dev.galacticraft.api.celestialbodies.satellite.SatelliteRecipe;
+import dev.galacticraft.api.regisry.AddonRegistry;
 import dev.galacticraft.mod.items.GalacticraftItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;

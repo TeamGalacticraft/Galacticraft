@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 HRZN LTD
+ * Copyright (c) 2019-2021 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.block.special.rocketlaunchpad;
 
 import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.api.entity.RocketEntity;
+import dev.galacticraft.mod.entity.RocketEntity;
 import dev.galacticraft.mod.block.GalacticraftBlocks;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.*;

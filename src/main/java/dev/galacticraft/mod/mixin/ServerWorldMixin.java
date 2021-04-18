@@ -23,6 +23,10 @@
 package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
+import dev.galacticraft.api.atmosphere.AtmosphericGas;
+import dev.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
+import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
 import dev.galacticraft.mod.world.dimension.GalacticraftDimensions;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.server.MinecraftServer;
@@ -48,7 +52,7 @@ import java.util.concurrent.Executor;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin {
+public abstract class ServerWorldMixin implements WorldOxygenAccessor {
     @Shadow @Final @Mutable private List<Spawner> spawners;
     private @Unique boolean breathable = true;
 
@@ -60,13 +64,13 @@ public abstract class ServerWorldMixin {
     @Override
     public boolean isBreathable(BlockPos pos) {
         if (breathable) return true;
-        if (((World)(Object)this).isOutOfBuildLimitVertically(pos)) return false;
+        if (World.isOutOfBuildLimitVertically(pos)) return false;
         return ((ChunkOxygenAccessor) ((World)(Object)this).getWorldChunk(pos)).isBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
     }
 
     @Override
     public void setBreathable(BlockPos pos, boolean value) {
-        if (((World)(Object)this).isOutOfBuildLimitVertically(pos) || breathable) return;
+        if (World.isOutOfBuildLimitVertically(pos) || breathable) return;
         ((ChunkOxygenAccessor) ((World)(Object)this).getWorldChunk(pos)).setBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15, value);
     }
 

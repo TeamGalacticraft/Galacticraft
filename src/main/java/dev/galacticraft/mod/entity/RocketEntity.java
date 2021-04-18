@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 HRZN LTD
+ * Copyright (c) 2019-2021 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,12 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
+import dev.galacticraft.api.regisry.AddonRegistry;
+import dev.galacticraft.api.rocket.LaunchStage;
+import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
-import dev.galacticraft.mod.api.regisry.AddonRegistry;
-import dev.galacticraft.mod.api.rocket.LaunchStage;
-import dev.galacticraft.mod.api.rocket.part.RocketPart;
-import dev.galacticraft.mod.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.block.GalacticraftBlocks;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
@@ -79,7 +79,7 @@ import java.util.Collections;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketEntity extends Entity implements dev.galacticraft.mod.api.entity.RocketEntity {
+public class RocketEntity extends Entity implements dev.galacticraft.api.entity.RocketEntity {
     private static final TrackedData<LaunchStage> STAGE = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<LaunchStage>() {
         @Override
         public void write(PacketByteBuf buf, LaunchStage stage) {

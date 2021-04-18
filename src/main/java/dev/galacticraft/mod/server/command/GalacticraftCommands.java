@@ -23,11 +23,12 @@
 package dev.galacticraft.mod.server.command;
 
 import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.block.Block;

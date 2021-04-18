@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.api.atmosphere.AtmosphericGas;
-import dev.galacticraft.mod.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.api.atmosphere.AtmosphericGas;
+import dev.galacticraft.api.celestialbodies.CelestialBodyType;
 import dev.galacticraft.mod.block.GalacticraftBlocks;
 import net.minecraft.block.*;
 import net.minecraft.particle.ParticleTypes;

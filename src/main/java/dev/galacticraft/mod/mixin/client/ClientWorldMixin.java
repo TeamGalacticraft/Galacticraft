@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 HRZN LTD
+ * Copyright (c) 2019-2021 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,11 +22,10 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.api.atmosphere.AtmosphericGas;
+import dev.galacticraft.api.celestialbodies.CelestialBodyType;
 import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
-import dev.galacticraft.mod.api.atmosphere.AtmosphericGas;
-import dev.galacticraft.mod.api.celestialbodies.CelestialBodyType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -47,7 +46,7 @@ import java.util.function.Supplier;
 
 @Mixin(ClientWorld.class)
 @Environment(EnvType.CLIENT)
-public abstract class ClientWorldMixin implements WorldOxygenAccessor{
+public abstract class ClientWorldMixin implements WorldOxygenAccessor {
     private @Unique boolean breathable = true;
 
     @Inject(method = "<init>", at = @At("RETURN"))
@@ -58,13 +57,13 @@ public abstract class ClientWorldMixin implements WorldOxygenAccessor{
     @Override
     public boolean isBreathable(BlockPos pos) {
         if (breathable) return true;
-        if (((World)(Object)this).isOutOfBuildLimitVertically(pos)) return false;
+        if (World.isOutOfBuildLimitVertically(pos)) return false;
         return ((ChunkOxygenAccessor) ((World)(Object)this).getWorldChunk(pos)).isBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
     }
 
     @Override
     public void setBreathable(BlockPos pos, boolean value) {
-        if (((World)(Object)this).isOutOfBuildLimitVertically(pos) || breathable) return;
+        if (World.isOutOfBuildLimitVertically(pos) || breathable) return;
         ((ChunkOxygenAccessor) ((World)(Object)this).getWorldChunk(pos)).setBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15, value);
     }
 }

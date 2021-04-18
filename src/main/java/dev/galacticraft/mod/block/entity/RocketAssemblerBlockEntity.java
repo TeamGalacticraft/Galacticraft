@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 HRZN LTD
+ * Copyright (c) 2019-2021 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,15 +25,14 @@ package dev.galacticraft.mod.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import dev.galacticraft.api.regisry.AddonRegistry;
+import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.accessor.GCRecipeAccessor;
-import dev.galacticraft.mod.api.regisry.AddonRegistry;
-import dev.galacticraft.mod.api.rocket.RocketData;
-import dev.galacticraft.mod.api.rocket.part.RocketPart;
-import dev.galacticraft.mod.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.block.GalacticraftBlocks;
-import dev.galacticraft.mod.energy.impl.DefaultEnergyType;
-import dev.galacticraft.mod.energy.impl.SimpleCapacitor;
+import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
+import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
 import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
 import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
 import dev.galacticraft.mod.entity.RocketEntity;
@@ -107,7 +106,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     private void schematicUpdate(ItemStack prev, ItemStack current) {
         try {
             recipes.clear();
-            for (Recipe<Inventory> recipe : ((GCRecipeAccessor) world.getRecipeManager()).getAllOfTypeGC(GalacticraftRecipes.ROCKET_ASSEMBLER_TYPE).values()) {
+            for (Recipe<Inventory> recipe : world.getRecipeManager().getAllOfType(GalacticraftRecipes.ROCKET_ASSEMBLER_TYPE).values()) {
                 if (recipe instanceof RocketAssemblerRecipe) {
                     recipes.put(((RocketAssemblerRecipe) recipe).getPartOutput(), ((RocketAssemblerRecipe) recipe));
                 }
@@ -217,7 +216,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
 
     private void schematicUpdateFromTag() {
         recipes.clear();
-        for (Recipe<Inventory> recipe : ((GCRecipeAccessor) world.getRecipeManager()).getAllOfTypeGC(GalacticraftRecipes.ROCKET_ASSEMBLER_TYPE).values()) {
+        for (Recipe<Inventory> recipe : world.getRecipeManager().getAllOfType(GalacticraftRecipes.ROCKET_ASSEMBLER_TYPE).values()) {
             if (recipe instanceof RocketAssemblerRecipe) {
                 recipes.put(((RocketAssemblerRecipe) recipe).getPartOutput(), ((RocketAssemblerRecipe) recipe));
             }

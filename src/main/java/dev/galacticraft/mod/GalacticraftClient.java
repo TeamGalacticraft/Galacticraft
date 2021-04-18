@@ -30,6 +30,7 @@ import dev.galacticraft.mod.client.network.GalacticraftC2SPacketReceivers;
 import dev.galacticraft.mod.client.render.MoonSkyProperties;
 import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import dev.galacticraft.mod.client.render.entity.*;
+import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
 import dev.galacticraft.mod.client.resource.GCResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
 import dev.galacticraft.mod.misc.capes.CapeLoader;

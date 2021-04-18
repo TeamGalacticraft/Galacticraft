@@ -48,8 +48,8 @@ val bannerppVersion        = project.property("bannerpp.version").toString()
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("0.6-SNAPSHOT")
-    id("org.cadixdev.licenser") version("0.5.0")
+    id("fabric-loom") version("0.7-SNAPSHOT")
+    id("org.cadixdev.licenser") version("0.5.1")
 }
 
 configure<JavaPluginConvention> {
@@ -168,7 +168,7 @@ dependencies {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     })
-    include(modApi("com.hrznstudio:GalacticraftAPI:$galacticraftApiVersion") { isTransitive = false })
+    include(modApi("dev.galacticraft:GalacticraftAPI:$galacticraftApiVersion") { isTransitive = false })
     include(modImplementation("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false })
     include(modApi("io.github.cottonmc:cotton-resources:$cottonResourcesVersion") { isTransitive = false })
     include(modApi("alexiil.mc.lib:libblockattributes-all:$lbaVersion") { })

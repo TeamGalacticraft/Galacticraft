@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 HRZN LTD
+ * Copyright (c) 2019-2021 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.mixin.client;
 
+import dev.galacticraft.api.entity.RocketEntity;
+import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.api.entity.RocketEntity;
-import dev.galacticraft.mod.api.rocket.LaunchStage;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

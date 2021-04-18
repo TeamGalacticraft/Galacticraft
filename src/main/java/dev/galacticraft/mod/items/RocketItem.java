@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 HRZN LTD
+ * Copyright (c) 2019-2021 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.items;
 
-import dev.galacticraft.mod.api.regisry.AddonRegistry;
-import dev.galacticraft.mod.api.rocket.RocketData;
+import dev.galacticraft.api.regisry.AddonRegistry;
+import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
-import dev.galacticraft.mod.api.rocket.part.RocketPart;
-import dev.galacticraft.mod.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.block.GalacticraftBlocks;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;

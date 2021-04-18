@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 HRZN LTD
+ * Copyright (c) 2019-2021 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.screen;
 
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
-import dev.galacticraft.mod.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.block.entity.RocketAssemblerBlockEntity;
 import dev.galacticraft.mod.items.GalacticraftItems;
 import dev.galacticraft.mod.util.EnergyUtils;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 HRZN LTD
+ * Copyright (c) 2019-2021 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.client.render.rocket;
 
+import dev.galacticraft.api.part.BakedModelRocketPartRenderer;
+import dev.galacticraft.api.part.RocketPartRendererRegistry;
 import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.api.client.rocket.part.BakedModelRocketPartRenderer;
-import dev.galacticraft.mod.api.client.rocket.part.RocketPartRendererRegistry;
 import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
 import dev.monarkhes.myron.api.Myron;
 import net.minecraft.item.ItemStack;

@@ -25,8 +25,11 @@ package dev.galacticraft.mod.client.gui.widget;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen;
 import dev.galacticraft.mod.util.DrawableUtils;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -46,9 +49,9 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
     private final int screenHeight;
 
     public SpaceRaceButtonWidget(MinecraftClient client, int x, int y, int buttonWidth, int buttonHeight, int screenWidth, int screenHeight) {
-        super(x, y, buttonWidth, buttonHeight, new LiteralText(""), (button) -> {
+        super(x, y, buttonWidth, buttonHeight, LiteralText.EMPTY, (button) -> {
             client.openScreen(new SpaceRaceScreen());
-            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "request_scroll"), new PacketByteBuf(Unpooled.buffer(0, 0)));
+            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "request_scroll"), new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer(0, 0)));
         });
         this.textRenderer = client.textRenderer;
         this.screenWidth = screenWidth;

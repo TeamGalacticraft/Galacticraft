@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 HRZN LTD
+ * Copyright (c) 2019-2021 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,15 +24,15 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.api.celestialbodies.CelestialBodyType;
-import dev.galacticraft.mod.api.celestialbodies.CelestialObjectType;
-import dev.galacticraft.mod.api.celestialbodies.SolarSystemType;
-import dev.galacticraft.mod.api.celestialbodies.satellite.Satellite;
-import dev.galacticraft.mod.api.celestialbodies.satellite.SatelliteRecipe;
-import dev.galacticraft.mod.api.internal.accessor.ClientSatelliteAccessor;
-import dev.galacticraft.mod.api.internal.accessor.SatelliteAccessor;
+import dev.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.api.celestialbodies.CelestialObjectType;
+import dev.galacticraft.api.celestialbodies.SolarSystemType;
+import dev.galacticraft.api.celestialbodies.satellite.Satellite;
+import dev.galacticraft.api.celestialbodies.satellite.SatelliteRecipe;
+import dev.galacticraft.api.internal.accessor.ClientSatelliteAccessor;
+import dev.galacticraft.api.internal.accessor.SatelliteAccessor;
 import dev.galacticraft.mod.api.math.Matrix4;
-import dev.galacticraft.mod.api.regisry.AddonRegistry;
+import dev.galacticraft.api.regisry.AddonRegistry;
 import dev.galacticraft.mod.util.ColorUtils;
 import com.ibm.icu.text.ArabicShaping;
 import com.ibm.icu.text.ArabicShapingException;
