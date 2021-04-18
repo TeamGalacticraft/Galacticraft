@@ -27,7 +27,6 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.capes.CapeListener;
 import dev.galacticraft.mod.api.capes.models.CapePlayer;
 import dev.galacticraft.mod.api.capes.models.CapesModel;
-import dev.galacticraft.mod.api.capes.CapeListener;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Logger;
 
