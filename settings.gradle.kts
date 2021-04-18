@@ -12,4 +12,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "Galacticraft-Rewoven"
+rootProject.name = "Galacticraft"

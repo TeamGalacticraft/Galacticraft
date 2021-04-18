@@ -1,0 +1,73 @@
+{
+  "depth": -0.5,
+  "scale": 0.03,
+  "downfall": 0.05,
+  "temperature": -100,
+  "precipitation": "none",
+  "category": "none",
+  "effects": {
+    "music": {
+      "sound": "galacticraft:music.music_moon",
+      "min_delay": 1200,
+      "max_delay": 3600,
+      "replace_current_music": true
+    },
+    "sky_color": 0,
+    "fog_color": 1447446,
+    "water_color": 2170913,
+    "water_fog_color": 2828843
+  },
+  "surface_builder": "galacticraft:moon_mare",
+  "carvers": {
+    "air": [
+      "galacticraft:moon_mare_cave",
+      "galacticraft:canyon"
+    ]
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "galacticraft:disk_moon_basalt",
+      "galacticraft:ore_copper_moon",
+      "galacticraft:ore_tin_moon",
+      "galacticraft:ore_cheese_moon"
+    ],
+    [],
+    [],
+    []
+  ],
+  "starts": [
+    {
+      "config": {
+      },
+      "type": "galacticraft:moon_ruins"
+    }
+  ],
+  "spawners": {
+    "monster": [
+      {
+        "type": "galacticraft:evolved_zombie",
+        "weight": 100,
+        "minCount": 5,
+        "maxCount": 6
+      },
+      {
+        "type": "galacticraft:evolved_creeper",
+        "weight": 100,
+        "minCount": 5,
+        "maxCount": 6
+      }
+    ],
+    "creature": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {},
+  "player_spawn_friendly": false
+}

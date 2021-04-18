@@ -1,0 +1,15 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "TTT"
+  ],
+  "key": {
+    "T": {
+      "item": "galacticraft:moon_dungeon_brick"
+    }
+  },
+  "result": {
+    "item": "galacticraft:moon_dungeon_brick_slab",
+    "count": 6
+  }
+}

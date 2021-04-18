@@ -1,0 +1,14 @@
+{
+  "config": {
+    "state_provider": {
+      "state": {
+        "Properties": {
+          "axis": "y"
+        },
+        "Name": "galacticraft:moon_cheese_log"
+      },
+      "type": "minecraft:rotated_block_provider"
+    }
+  },
+  "type": "minecraft:block_pile"
+}

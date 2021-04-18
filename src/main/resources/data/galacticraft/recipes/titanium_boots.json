@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "T T",
+    "T T"
+  ],
+  "key": {
+    "T": {
+      "item": "galacticraft:compressed_titanium"
+    }
+  },
+  "result": {
+    "item": "galacticraft:titanium_boots",
+    "count": 1
+  }
+}

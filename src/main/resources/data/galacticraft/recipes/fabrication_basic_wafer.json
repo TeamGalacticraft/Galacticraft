@@ -1,0 +1,8 @@
+{
+  "type": "galacticraft:circuit_fabricator",
+  "ingredient": {
+    "item": "minecraft:redstone_torch"
+  },
+  "result": "galacticraft:basic_wafer",
+  "count": 3
+}

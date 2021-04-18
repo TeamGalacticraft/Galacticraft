@@ -1,8 +1,0 @@
-{
-  "type": "galacticraft-rewoven:circuit_fabricator",
-  "ingredient": {
-    "item": "minecraft:repeater"
-  },
-  "result": "galacticraft-rewoven:advanced_wafer",
-  "count": 1
-}

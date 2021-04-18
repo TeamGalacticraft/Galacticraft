@@ -1,0 +1,10 @@
+{
+  "type": "galacticraft:rocket_assembler",
+  "ingredients": [
+    {
+      "item": "galacticraft:heavy_plating",
+      "count": 8
+    }
+  ],
+  "result": "galacticraft:default_body"
+}

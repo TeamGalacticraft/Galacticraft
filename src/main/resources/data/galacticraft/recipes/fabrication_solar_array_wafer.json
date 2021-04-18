@@ -1,0 +1,8 @@
+{
+  "type": "galacticraft:circuit_fabricator",
+  "ingredient": {
+    "item": "galacticraft:solar_dust"
+  },
+  "result": "galacticraft:solar_array_wafer",
+  "count": 3
+}

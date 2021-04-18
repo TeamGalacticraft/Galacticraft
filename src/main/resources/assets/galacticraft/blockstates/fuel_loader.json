@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "connected=true": {
+      "model": "galacticraft:block/fuel_loader_connected"
+    },
+    "connected=false": {
+      "model": "galacticraft:block/fuel_loader"
+    }
+  }
+}

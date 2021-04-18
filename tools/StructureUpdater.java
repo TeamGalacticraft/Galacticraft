@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft;
+package dev.galacticraft.mod;
 
 import com.mojang.datafixers.DataFixer;
 import net.minecraft.nbt.CompoundTag;
@@ -42,7 +42,7 @@ import java.util.stream.Stream;
  */
 public class StructureUpdater {
     public static void update(DataFixer dataFixer) {
-        try (Stream<Path> walk = Files.walk((new File("../src/main/resources/data/galacticraft-rewoven/").toPath()))) {
+        try (Stream<Path> walk = Files.walk((new File("../src/main/resources/data/galacticraft/").toPath()))) {
             List<String> fileNamesList = walk.filter(Files::isRegularFile).map(Path::toString).filter(path -> path.endsWith("nbt")).collect(Collectors.toList());
             LevelStorage storage = new LevelStorage(new File("../run/structure_update/").toPath(), new File("../run/structure_update/backup").toPath(), dataFixer);
             StructureManager manager = new StructureManager(null, storage.createSession("session"), dataFixer);
@@ -51,7 +51,7 @@ public class StructureUpdater {
                 File file = new File(s);
                 Structure structure = manager.createStructure(NbtIo.readCompressed(file));
                 CompoundTag tag = structure.toTag(new CompoundTag());
-                File file1 = new File("../run/structure_update/out/" + s.replace("../src/main/resources/data/galacticraft-rewoven/", ""));
+                File file1 = new File("../run/structure_update/out/" + s.replace("../src/main/resources/data/galacticraft/", ""));
                 file1.getParentFile().mkdirs();
                 NbtIo.writeCompressed(tag, file1);
             }

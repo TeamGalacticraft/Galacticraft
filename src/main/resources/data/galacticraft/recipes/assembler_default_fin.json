@@ -1,0 +1,14 @@
+{
+  "type": "galacticraft:rocket_assembler",
+  "ingredients": [
+    {
+      "item": "galacticraft:heavy_plating",
+      "count": 16
+    },
+    {
+      "item": "galacticraft:compressed_steel",
+      "count": 8
+    }
+  ],
+  "result": "galacticraft:default_fin"
+}

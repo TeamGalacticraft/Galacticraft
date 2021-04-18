@@ -1,8 +1,0 @@
-{
-  "parent": "block/outer_stairs",
-  "textures": {
-    "bottom": "galacticraft-rewoven:block/steel_decoration",
-    "top": "galacticraft-rewoven:block/steel_decoration",
-    "side": "galacticraft-rewoven:block/steel_decoration"
-  }
-}

@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "L  ",
+    "LL ",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "item": "galacticraft:moon_dungeon_brick"
+    }
+  },
+  "result": {
+    "item": "galacticraft:moon_dungeon_brick_stairs",
+    "count": 4
+  }
+}

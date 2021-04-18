@@ -1,0 +1,44 @@
+{
+  "required": true,
+  "package": "dev.galacticraft.mod.mixin",
+  "plugin": "dev.galacticraft.mod.GalacticraftMixinPlugin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "BaseFluidMixin",
+    "BuiltinBiomesAccessor",
+    "ChunkHolderMixin",
+    "ChunkSectionMixin",
+    "ChunkSerializerMixin",
+    "DimensionTypeMixin",
+    "EmptyChunkMixin",
+    "EntityMixin",
+    "ItemStackMixin",
+    "LanternBlockMixin",
+    "LivingEntityMixin",
+    "LootTablesAccessor",
+    "PlayerEntityMixin",
+    "ProtoChunkMixin",
+    "RecipeManagerMixin",
+    "ServerPlayerEntityMixin",
+    "ServerWorldMixin",
+    "SkyPropertiesAccessor",
+    "StructurePoolGeneratorMixin",
+    "TorchBlockMixin",
+    "WorldChunkMixin"
+  ],
+  "client": [
+    "client.AbstractClientPlayerEntityMixin",
+    "client.BipedEntityModelMixin",
+    "client.ClientChunkSectionMixin",
+    "client.ClientPlayerEntityMixin",
+    "client.HandledScreenHooks",
+    "client.InGameHudMixin",
+    "client.PauseMenuScreenMixin",
+    "client.PlayerInventoryScreenMixin",
+    "client.WorldRendererMixin"
+  ],
+  "minVersion": "0.8.0",
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

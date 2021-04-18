@@ -20,12 +20,13 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.mixin.client;
+package dev.galacticraft.mod.mixin.client;
 
-import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
-import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
-import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
+import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
+import dev.galacticraft.mod.api.atmosphere.AtmosphericGas;
+import dev.galacticraft.mod.api.celestialbodies.CelestialBodyType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.ClientPlayNetworkHandler;

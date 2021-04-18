@@ -1,8 +1,0 @@
-{
-  "parent": "block/outer_stairs",
-  "textures": {
-    "bottom": "galacticraft-rewoven:block/moon_basalt_brick",
-    "top": "galacticraft-rewoven:block/moon_basalt_brick",
-    "side": "galacticraft-rewoven:block/moon_basalt_brick"
-  }
-}

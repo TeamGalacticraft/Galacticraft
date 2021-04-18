@@ -1,0 +1,14 @@
+{
+  "type": "galacticraft:rocket_assembler",
+  "ingredients": [
+    {
+      "item": "galacticraft:heavy_plating",
+      "count": 4
+    },
+    {
+      "item": "minecraft:redstone_torch",
+      "count": 1
+    }
+  ],
+  "result": "galacticraft:sloped_cone"
+}

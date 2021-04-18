@@ -58,15 +58,15 @@ configure<JavaPluginConvention> {
 }
 
 group = modGroup
-version = modVersion
+version = modVersion + getVersionDecoration()
 
 base {
     archivesBaseName = modName
 }
 
 loom {
-    refmapName = "galacticraft-rewoven.refmap.json"
-    accessWidener = File("src/main/resources/galacticraft_rewoven.accesswidener")
+    refmapName = "galacticraft.refmap.json"
+    accessWidener = rootProject.file("src/main/resources/galacticraft.accesswidener")
 }
 
 repositories {
@@ -103,6 +103,11 @@ repositories {
         setUrl("https://cdn.hrzn.studio/maven/")
         content {
             includeGroup("com.hrznstudio")
+        }
+    }
+    maven("https://maven.galacticraft.dev") {
+        content {
+            includeGroup("dev.galacticraft")
         }
     }
     jcenter()
@@ -183,10 +188,10 @@ dependencies {
 }
 
 tasks.processResources {
-    inputs.property("version", modVersion)
+    inputs.property("version", project.version)
 
     filesMatching("fabric.mod.json") {
-        expand(mutableMapOf("version" to modVersion))
+        expand(mutableMapOf("version" to project.version))
     }
 
     // Minify json resources
@@ -212,10 +217,10 @@ tasks.jar {
     manifest {
         attributes(mapOf(
             "Implementation-Title"     to modName,
-            "Implementation-Version"   to modVersion,
-            "Implementation-Vendor"    to "HRZN LTD",
+            "Implementation-Version"   to project.version,
+            "Implementation-Vendor"    to "Team Galacticraft",
             "Implementation-Timestamp" to DateTimeFormatter.ISO_DATE_TIME,
-            "Maven-Artifact"           to "$modGroup:$modName:$modVersion"
+            "Maven-Artifact"           to "$modGroup:$modName:$project.version"
         ))
     }
 }
@@ -223,8 +228,8 @@ tasks.jar {
 publishing {
     publications {
         register("mavenJava", MavenPublication::class) {
-            groupId = "com.hrznstudio"
-            artifactId = "galacticraft"
+            groupId = "dev.galacticraft"
+            artifactId = "Galacticraft"
 
             artifact(tasks.remapJar) { builtBy(tasks.remapJar) }
             artifact(tasks.getByName("sourcesJar", Jar::class)) { builtBy(tasks.remapSourcesJar) }
@@ -233,7 +238,7 @@ publishing {
     }
     repositories {
         maven {
-            setUrl("s3://cdn.hrzn.studio/maven")
+            setUrl("s3://maven.galacticraft.dev")
             authentication {
                 register("awsIm", AwsImAuthentication::class)
             }
@@ -243,10 +248,40 @@ publishing {
 
 license {
     header = project.file("LICENSE_HEADER.txt")
-    include("**/com/hrznstudio/**/*.java")
+    include("**/dev/galacticraft/**/*.java")
     include("build.gradle.kts")
     ext {
         set("year", Year.now().value)
-        set("company", "HRZN LTD")
+        set("company", "Team Galacticraft")
     }
+}
+
+// inspired by https://github.com/TerraformersMC/GradleScripts/blob/2.0/ferry.gradle
+fun getVersionDecoration(): String {
+    if((System.getenv("DISABLE_VERSION_DECORATION") ?: "false") == "true") return ""
+    if(project.hasProperty("release")) return ""
+
+    var version = "+build"
+    val branch = "git branch --show-current".execute()
+    if(branch.isNotEmpty() && branch != "main") {
+        version += ".${branch}"
+    }
+    val commitHashLines = "git rev-parse --short HEAD".execute()
+    if(commitHashLines.isNotEmpty()) {
+        version += ".${commitHashLines}"
+    }
+    return version
+}
+
+// from https://discuss.gradle.org/t/how-to-run-execute-string-as-a-shell-command-in-kotlin-dsl/32235/5
+fun String.execute(workingDir: File = project.file("./")): String {
+    val parts = this.split("\\s".toRegex())
+    val proc = ProcessBuilder(*parts.toTypedArray())
+        .directory(workingDir)
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .redirectError(ProcessBuilder.Redirect.PIPE)
+        .start()
+
+    proc.waitFor(1, TimeUnit.MINUTES)
+    return proc.inputStream.bufferedReader().readText().trim()
 }

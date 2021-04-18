@@ -1,0 +1,388 @@
+/*
+ * Copyright (c) 2019-2021 Team Galacticraft
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package dev.galacticraft.mod.client.gui.screen.ingame;
+
+import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.util.DrawableUtils;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.BufferRenderer;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.Matrix4f;
+
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
+@Environment(EnvType.CLIENT)
+public class SpaceRaceScreen extends Screen {
+    private int widthSize = 0;
+    private int heightSize = 0;
+    private Menu menu = Menu.MAIN;
+
+    public SpaceRaceScreen() {
+        super(new TranslatableText("ui." + Constants.MOD_ID + ".space_race_manager"));
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
+    public static boolean check(double mouseX, double mouseY, int x, int y, int width, int height) {
+        return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
+    }
+
+    @Override
+    public void resize(MinecraftClient client, int width, int height) {
+        this.widthSize = 0;
+        this.heightSize = 0;
+        super.resize(client, width, height);
+    }
+
+    private static void fillSolid(Matrix4f matrix, int x1, int y1, int x2, int y2, int color) {
+        int j;
+        if (x1 < x2) {
+            j = x1;
+            x1 = x2;
+            x2 = j;
+        }
+        if (y1 < y2) {
+            j = y1;
+            y1 = y2;
+            y2 = j;
+        }
+        float f = (float) (color >> 24 & 255) / 255.0F;
+        float g = (float) (color >> 16 & 255) / 255.0F;
+        float h = (float) (color >> 8 & 255) / 255.0F;
+        float k = (float) (color & 255) / 255.0F;
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        RenderSystem.disableBlend();
+        RenderSystem.disableTexture();
+        RenderSystem.defaultBlendFunc();
+        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+        bufferBuilder.vertex(matrix, (float) x1, (float) y2, 0.0F).color(g, h, k, f).next();
+        bufferBuilder.vertex(matrix, (float) x2, (float) y2, 0.0F).color(g, h, k, f).next();
+        bufferBuilder.vertex(matrix, (float) x2, (float) y1, 0.0F).color(g, h, k, f).next();
+        bufferBuilder.vertex(matrix, (float) x1, (float) y1, 0.0F).color(g, h, k, f).next();
+        bufferBuilder.end();
+        BufferRenderer.draw(bufferBuilder);
+        RenderSystem.enableTexture();
+    }
+
+    @Override
+    public void drawTexture(MatrixStack matrices, int x, int y, int u, int v, int width, int height) {
+        drawTexture(matrices, x, y, u, v, width, height, 128, 256);
+    }
+
+    @Override
+    public void renderBackground(MatrixStack stack) {
+        // 5% of width
+        int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
+        if (widthSize < maxWidth) {
+            widthSize += Math.min(3, maxWidth - widthSize);
+        }
+        int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
+        if (heightSize < maxHeight) {
+            heightSize += Math.min(2, maxHeight - heightSize);
+        }
+        fill(stack, getLeft(), getTop(), getRight(), getBottom(), 0x80000000);
+    }
+
+    private void renderForeground(MatrixStack matrices, int mouseX, int mouseY) {
+        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("ui.galacticraft.space_race_manager"), this.width / 2, getTop() - 20, 0xFFFFFF);
+
+        if (menu == Menu.MAIN) {
+            if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.exit"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            } else {
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.exit"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            }
+            if (!check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 85, 100, 30)) {
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.add_players"), this.getLeft() + 10, this.getBottom() - 85, 100, 30);
+            } else {
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.add_players"), this.getLeft() + 10, this.getBottom() - 85, 100, 30);
+            }
+            if (!check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 45, 100, 30)) {
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.remove_players"), this.getLeft() + 10, this.getBottom() - 45, 100, 30);
+            } else {
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.remove_players"), this.getLeft() + 10, this.getBottom() - 45, 100, 30);
+            }
+            if (!check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30)) {
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.server_stats"), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
+            } else {
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.coming_soon"), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
+            }
+            if (!check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30)) {
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.global_stats"), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
+            } else {
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.coming_soon"), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
+            }
+        } else if (menu == Menu.ADD_PLAYERS) {
+            if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            } else {
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            }
+        } else if (menu == Menu.REMOVE_PLAYERS) {
+            if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            } else {
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            }
+        } else if (menu == Menu.TEAM_COLOR) {
+            if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            } else {
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            }
+        } else if (menu == Menu.TEAM_FLAG) {
+            if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            } else {
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            }
+        }
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
+    private void drawAndAutotrimTextScaleSplit(MatrixStack matrices, int x, int y, String text, int color, int maxLength, float scale) {
+        if (maxLength > 1048576) {
+            maxLength = 1048576; //large enough that it shouldn't be reached, small enough it shouldn't overflow.
+        }
+        double xOffset = 0;
+        double yOffset = 0;
+        char[] charArray = text.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            char c = charArray[i];
+            if (c == ' ') {
+                float dist = 0;
+                for (int j = i + 1; j < charArray.length; j++) {
+                    if (charArray[j] == ' ') {
+                        break;
+                    }
+                    dist += this.textRenderer.getTextHandler().getWidth(String.valueOf(charArray[j]));
+                }
+                if (xOffset + dist >= maxLength) {
+                    yOffset += this.textRenderer.fontHeight * scale;
+                    xOffset = 0;
+                    continue;
+                }
+                xOffset = xOffset + (this.textRenderer.getTextHandler().getWidth(" ") * scale);
+                continue;
+            }
+
+            if (xOffset + x >= this.getLeft() + 10) {
+                if (xOffset + x + this.textRenderer.getTextHandler().getWidth(String.valueOf(c)) < this.getRight() - 10) {
+                    if (yOffset + y - (this.textRenderer.fontHeight * scale) >= this.getTop() + 10 && yOffset + y + (this.textRenderer.fontHeight * scale) <= this.getBottom() - 10) {
+                        matrices.push();
+                        matrices.translate(x + xOffset, y + yOffset, getZOffset());
+                        matrices.scale(scale, scale, scale);
+                        this.textRenderer.draw(matrices, String.valueOf(c), 0, 0, color);
+                        matrices.pop();
+                    }
+                }
+            }
+            xOffset = xOffset + (this.textRenderer.getTextHandler().getWidth(String.valueOf(c)) * scale);
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (menu == Menu.MAIN) {
+            if (check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
+                this.onClose();
+            }
+            if (check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 85, 100, 30)) {
+                setMenu(Menu.ADD_PLAYERS);
+                return true;
+            }
+            if (check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 45, 100, 30)) {
+                setMenu(Menu.REMOVE_PLAYERS);
+                return true;
+            }
+            if (check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30)) {
+                // server stats
+            }
+            if (check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30)) {
+                //global stats
+            }
+        } else if (menu == Menu.ADD_PLAYERS) {
+            if (check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
+                setMenu(Menu.MAIN);
+            }
+        } else if (menu == Menu.REMOVE_PLAYERS) {
+            if (check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
+                setMenu(Menu.MAIN);
+            }
+        } else if (menu == Menu.TEAM_COLOR) {
+            if (check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
+                setMenu(Menu.MAIN);
+            }
+        } else if (menu == Menu.TEAM_FLAG) {
+            if (check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
+                setMenu(Menu.MAIN);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public void render(MatrixStack stack, int x, int y, float delta) {
+        this.renderBackground(stack);
+
+        if (this.isAnimationComplete()) {
+            this.renderForeground(stack, x, y);
+            this.drawMouseoverTooltip(stack, x, y);
+        }
+
+        super.render(stack, x, y, delta);
+    }
+
+    private void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
+
+    }
+
+    protected void drawHorizontalLineSolid(MatrixStack matrices, int x1, int x2, int y, int color) {
+        if (x2 < x1) {
+            int i = x1;
+            x1 = x2;
+            x2 = i;
+        }
+        fillSolid(matrices.peek().getModel(), x1, y, x2 + 1, y + 1, color);
+    }
+
+    protected void drawVerticalLineSolid(MatrixStack matrices, int x, int y1, int y2, int color) {
+        if (y2 < y1) {
+            int i = y1;
+            y1 = y2;
+            y2 = i;
+        }
+        fillSolid(matrices.peek().getModel(), x, y1 + 1, x + 1, y2, color);
+    }
+
+    private int getBottom() {
+        return getTop() + heightSize;
+    }
+
+    private int getLeft() {
+        return (this.width / 2) - (widthSize / 2);
+    }
+
+    private int getTop() {
+        return (this.height / 2) - (heightSize / 2);
+    }
+
+    private int getRight() {
+        return getLeft() + widthSize;
+    }
+
+    private float getMarginPercent() {
+        return 0.17F;
+    }
+
+    private void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+
+    private int getPosXToFit(int x) {
+        return Math.max(x, this.getLeft() + 10);
+    }
+
+    private int getPosYToFit(int y) {
+        return Math.max(y, this.getTop() + 25);
+    }
+
+    private boolean isAnimationComplete() {
+        int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
+        int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
+
+        return widthSize >= maxWidth && heightSize >= maxHeight;
+    }
+
+    private void renderHoveredButton(MatrixStack stack, Text text, int x, int y, int width, int height) {
+        RenderSystem.disableBlend();
+        stack.push();
+
+        fillSolid(stack.peek().getModel(), x, y, x + width, y + height, 0x1e1e1e);
+
+        drawHorizontalLineSolid(stack, x, x + width, y, 0x3c3c3c);
+        drawVerticalLineSolid(stack, x + width, y, y + height, 0x3c3c3c);
+        drawHorizontalLineSolid(stack, x + width, x, y + height, 0x3c3c3c);
+        drawVerticalLineSolid(stack, x, y, y + height, 0x3c3c3c);
+
+        stack.pop();
+        RenderSystem.enableBlend();
+
+        this.textRenderer.draw(stack, text, x + (width / 2F) - (this.textRenderer.getTextHandler().getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
+    }
+
+    private int getYMargins() {
+        return (int) (this.height * this.getMarginPercent());
+    }
+
+    private int getXMargins() {
+        return (int) (this.width * this.getMarginPercent());
+    }
+
+    private void renderButton(MatrixStack matrices, Text text, int x, int y, int width, int height) {
+        RenderSystem.disableBlend();
+        matrices.push();
+
+        fillSolid(matrices.peek().getModel(), x, y, x + width, y + height, 0x0);
+
+        drawHorizontalLineSolid(matrices, x, x + width, y, 0x2d2d2d);
+        drawVerticalLineSolid(matrices, x + width, y, y + height, 0x2d2d2d);
+        drawHorizontalLineSolid(matrices, x + width, x, y + height, 0x2d2d2d);
+        drawVerticalLineSolid(matrices, x, y, y + height, 0x2d2d2d);
+
+        matrices.pop();
+        RenderSystem.enableBlend();
+
+        this.textRenderer.draw(matrices, text, x + (width / 2F) - (this.textRenderer.getTextHandler().getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
+    }
+
+    private enum Menu {
+        MAIN,
+        ADD_PLAYERS,
+        REMOVE_PLAYERS,
+        TEAM_COLOR,
+        TEAM_FLAG
+    }
+}
