@@ -414,7 +414,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     }
 
     public boolean isTankFull(int tank) {
-        return this.getFluidInv().getInvFluid(tank).getAmount_F().isGreaterThanOrEqual(this.getFluidInv().getMaxAmount_F(tank));
+        return this.getFluidInv().getInvFluid(tank).amount().isGreaterThanOrEqual(this.getFluidInv().getMaxAmount_F(tank));
     }
 
     @NotNull

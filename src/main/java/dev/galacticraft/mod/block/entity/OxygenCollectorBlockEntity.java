@@ -76,7 +76,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
 
     @Override
     protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
-        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_IN, 36, 13);
+        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_OUT, 36, 13);
         return builder;
     }
 

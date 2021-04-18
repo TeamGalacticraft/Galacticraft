@@ -159,7 +159,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
                         volume = FluidVolumeUtil.EMPTY;
                     }
                 }
-                return atlas.apply(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + volume.getAmount_F().div(OxygenStorageModuleBlockEntity.MAX_CAPACITY).asInt(8, RoundingMode.DOWN)));
+                return atlas.apply(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + volume.amount().div(OxygenStorageModuleBlockEntity.MAX_CAPACITY).asInt(8, RoundingMode.DOWN)));
             }
             return atlas.apply(MACHINE);
         });

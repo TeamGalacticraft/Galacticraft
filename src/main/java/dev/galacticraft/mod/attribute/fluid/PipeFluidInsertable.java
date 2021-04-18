@@ -20,50 +20,48 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen.property;
+package dev.galacticraft.mod.attribute.fluid;
 
 import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
+import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.util.registry.Registry;
-
-import java.math.RoundingMode;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import dev.galacticraft.mod.api.pipe.PipeNetwork;
+import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class FluidTankPropertyDelegate implements PropertyDelegate {
-    private final FixedFluidInv inv;
-    private final Fluid[] fluids;
+public class PipeFluidInsertable implements FluidInsertable {
+    private final FluidAmount maxTransfer;
+    private final BlockPos pipe;
+    private @Nullable PipeNetwork network;
 
-    public FluidTankPropertyDelegate(FixedFluidInv inv) {
-        this.inv = inv;
-        this.fluids = new Fluid[inv.getTankCount()];
+    public PipeFluidInsertable(FluidAmount maxTransfer, BlockPos pipe) {
+        this.maxTransfer = maxTransfer;
+        this.pipe = pipe;
     }
 
     @Override
-    public int get(int index) {
-        if (index % 2 == 0) {
-            return Registry.FLUID.getRawId(inv.getInvFluid(index / 2).getRawFluid());
-        } else {
-            return inv.getInvFluid(((index + 1) / 2) - 1).amount().asInt(1000, RoundingMode.HALF_DOWN);
+    public FluidVolume attemptInsertion(FluidVolume volume, Simulation simulation) {
+        if (this.network != null) {
+            if (this.maxTransfer.isLessThan(volume.amount())) {
+                FluidAmount over = volume.amount().sub(this.maxTransfer);
+                volume = this.network.insert(this.pipe, volume, simulation);
+                return volume.withAmount(volume.amount().add(over));
+            }
+            return this.network.insert(this.pipe, volume, simulation);
         }
+        return volume;
     }
 
     @Override
-    public void set(int index, int value) {
-        if (index % 2 == 0) {
-            fluids[index / 2] = Registry.FLUID.get(value);
-        } else {
-            inv.setInvFluid(((index + 1) / 2) - 1, FluidKeys.get(fluids[((index + 1) / 2) - 1]).withAmount(FluidAmount.of(value, 1000)), Simulation.ACTION);
-        }
+    public FluidInsertable getPureInsertable() {
+        return this;
     }
 
-    @Override
-    public int size() {
-        return fluids.length * 2;
+    public void setNetwork(@Nullable PipeNetwork network) {
+        this.network = network;
     }
 }

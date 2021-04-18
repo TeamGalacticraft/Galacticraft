@@ -62,14 +62,14 @@ public class OxygenTank extends Tank {
     @Override
     @Environment(EnvType.CLIENT)
     public void render(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY, boolean colorize, Int2IntMap color) {
-        drawOxygenBuffer(matrices.peek().getModel(), this.x, this.y, (float) inv.getInvFluid(this.index).getAmount_F().div(inv.getMaxAmount_F(this.index)).asInexactDouble(), colorize);
+        drawOxygenBuffer(matrices.peek().getModel(), this.x, this.y, (float) inv.getInvFluid(this.index).amount().div(inv.getMaxAmount_F(this.index)).asInexactDouble(), colorize);
     }
 
     @Override
     public void drawTooltip(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY) {
         if (SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinate.OVERLAY_WIDTH, Constants.TextureCoordinate.OVERLAY_HEIGHT)) {
             List<Text> lines = new ArrayList<>(2);
-            lines.add(new TranslatableText("ui.galacticraft.machine.current_oxygen", new LiteralText(Screen.hasShiftDown() ? this.inv.getInvFluid(this.index).getAmount_F().toString() + "B" : (this.inv.getInvFluid(this.index).getAmount_F().asInt(1000, RoundingMode.HALF_DOWN) + "mB")).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.GOLD_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft.machine.current_oxygen", new LiteralText(Screen.hasShiftDown() ? this.inv.getInvFluid(this.index).amount().toString() + "B" : (this.inv.getInvFluid(this.index).amount().asInt(1000, RoundingMode.HALF_DOWN) + "mB")).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.GOLD_STYLE));
             lines.add(new TranslatableText("ui.galacticraft.machine.max_oxygen", new LiteralText(String.valueOf(OxygenCollectorBlockEntity.MAX_OXYGEN.asInt(1000, RoundingMode.HALF_DOWN))).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.RED_STYLE));
 
             client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);

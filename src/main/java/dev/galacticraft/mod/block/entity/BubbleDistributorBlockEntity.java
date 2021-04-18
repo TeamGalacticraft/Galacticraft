@@ -119,7 +119,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         FluidAmount oxygenRequired = FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D) + 1);
-        if (!this.getFluidInv().extractFluid(OXYGEN_TANK, null, FluidVolumeUtil.EMPTY, oxygenRequired, Simulation.SIMULATE).getAmount_F().equals(oxygenRequired)) return Status.NOT_ENOUGH_OXYGEN;
+        if (!this.getFluidInv().extractFluid(OXYGEN_TANK, null, FluidVolumeUtil.EMPTY, oxygenRequired, Simulation.SIMULATE).amount().equals(oxygenRequired)) return Status.NOT_ENOUGH_OXYGEN;
         return Status.DISTRIBUTING;
     }
 
@@ -210,12 +210,12 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     }
 
     protected void drainOxygenFromStack(int slot) {
-        if (this.getFluidInv().getInvFluid(0).getAmount_F().compareTo(this.getFluidInv().getMaxAmount_F(0)) >= 0) {
+        if (this.getFluidInv().getInvFluid(0).amount().compareTo(this.getFluidInv().getMaxAmount_F(0)) >= 0) {
             return;
         }
         if (FluidUtils.canExtractFluids(this.getInventory().getSlot(slot))) {
             FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(this.getInventory().getSlot(slot));
-            this.getFluidInv().insertFluid(OXYGEN_TANK, extractable.attemptExtraction(Constants.Filter.LOX_ONLY, this.getFluidInv().getMaxAmount_F(0).sub(this.getFluidInv().getInvFluid(0).getAmount_F()), Simulation.ACTION), Simulation.ACTION);
+            this.getFluidInv().insertFluid(OXYGEN_TANK, extractable.attemptExtraction(Constants.Filter.LOX_ONLY, this.getFluidInv().getMaxAmount_F(0).sub(this.getFluidInv().getInvFluid(0).amount()), Simulation.ACTION), Simulation.ACTION);
         }
     }
 

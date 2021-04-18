@@ -25,8 +25,11 @@ package dev.galacticraft.mod.block.entity;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
 import dev.galacticraft.mod.screen.OxygenStorageModuleScreenHandler;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.screen.tank.NullTank;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
@@ -42,6 +45,12 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
 
     public OxygenStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_STORAGE_MODULE_TYPE);
+    }
+
+    @Override
+    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+        builder.addTank(OXYGEN_TANK, SlotType.OXYGEN, (index, inv) -> NullTank.INSTANCE);
+        return builder;
     }
 
     @Override

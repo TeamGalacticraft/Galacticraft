@@ -100,7 +100,7 @@ public enum OxygenTankUtils {
 
     public static int loxToOxygen(FluidVolume volume) {
         assert GalacticraftTags.LIQUID_OXYGEN.contains(volume.getFluidKey().getRawFluid());
-        return volume.getAmount_F().as1620();
+        return volume.amount().as1620();
     }
 
     public static FluidVolume oxygenToLOX(int oxygen) {

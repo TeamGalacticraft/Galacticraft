@@ -24,9 +24,11 @@ package dev.galacticraft.mod.block.special.fluidpipe;
 
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.block.FluidPipe;
+import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
 import dev.galacticraft.mod.item.StandardWrenchItem;
 import dev.galacticraft.mod.util.ConnectingBlockUtils;
+import dev.galacticraft.mod.util.EnergyUtils;
 import dev.galacticraft.mod.util.FluidUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -112,8 +114,14 @@ public class GlassFluidPipeBlock extends FluidPipe {
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos updatedPos, boolean notify) {
-        super.neighborUpdate(state, world, pos, block, updatedPos, notify);
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        super.neighborUpdate(state, world, pos, block, fromPos, notify);
+        BlockState neighbor = world.getBlockState(fromPos);
+        Direction dir = Direction.fromVector(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
+        assert dir != null;
+        world.setBlockState(pos, state.with(getPropForDirection(dir), !neighbor.isAir() && (block instanceof FluidPipe
+                || FluidUtils.isExtractableOrInsertable(world, fromPos, dir))
+        ));
     }
 
     @Override
@@ -123,16 +131,6 @@ public class GlassFluidPipeBlock extends FluidPipe {
 
     private BooleanProperty getPropForDirection(Direction dir) {
         return ConnectingBlockUtils.getBooleanProperty(dir);
-    }
-
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState other, WorldAccess world, BlockPos thisWire, BlockPos otherConnectable) {
-        return state.with(getPropForDirection(direction), (
-                !other.isAir()
-                        && ((other.getBlock() instanceof FluidPipe /*&& other.get(COLOR) == state.get(COLOR)*/)
-                        || FluidUtils.isExtractableOrInsertable(world.getBlockEntity(thisWire).getWorld(), otherConnectable, direction.getOpposite())
-                )
-        ));
     }
 
     @Override
@@ -151,8 +149,8 @@ public class GlassFluidPipeBlock extends FluidPipe {
     }
 
     @Override
-    public @Nullable FluidPipeBlockEntity createBlockEntity(BlockView world) {
-        return new FluidPipeBlockEntity(GalacticraftBlockEntities.GLASS_FLUID_PIPE_TYPE);
+    public @Nullable PipeBlockEntity createBlockEntity(BlockView world) {
+        return new PipeBlockEntity(GalacticraftBlockEntities.GLASS_FLUID_PIPE_TYPE);
     }
 
     @Override

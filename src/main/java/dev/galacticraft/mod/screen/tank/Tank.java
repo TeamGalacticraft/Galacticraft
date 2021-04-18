@@ -124,20 +124,12 @@ public class Tank {
         this.y = y;
         this.scale = scale;
     }
-
-    public FluidVolume getFluid() {
-        return this.inv.getInvFluid(this.index);
-    }
-
-    public FluidAmount getCapacity() {
-        return this.inv.getMaxAmount_F(this.index);
-    }
-
+    
     public int[] getPositionData() {
-        if (getCapacity().asInexactDouble() != Math.floor(getCapacity().asInexactDouble())) {
+        if (this.inv.getMaxAmount_F(this.index).asInexactDouble() != Math.floor(this.inv.getMaxAmount_F(this.index).asInexactDouble())) {
             throw new UnsupportedOperationException("NYI");
         }
-        int size = getCapacity().asInt(1) * scale;
+        int size = this.inv.getMaxAmount_F(this.index).asInt(1) * scale;
 
         if (size < 1 || size > 16) {
             throw new UnsupportedOperationException("NYI");
@@ -178,10 +170,10 @@ public class Tank {
             DrawableHelper.drawTexture(matrices, this.x, this.y, 0, data[0], data[1] + Constants.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128);
         }
 
-        FluidVolume content = this.getFluid();
+        FluidVolume content = this.inv.getInvFluid(this.index);
         if (content.isEmpty()) return;
         matrices.push();
-        double scale = content.getAmount_F().div(this.inv.getMaxAmount_F(this.index)).asInexactDouble();
+        double scale = content.amount().div(this.inv.getMaxAmount_F(this.index)).asInexactDouble();
         Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getRawFluid()).getFluidSprites(world, pos, content.getRawFluid().getDefaultState())[0];
         client.getTextureManager().bindTexture(sprite.getAtlas().getId());
         drawSprite(matrices, this.x + 1, this.y + (float)(-(data[2] - 1) * scale) + data[2] - 1, 0, Constants.TextureCoordinate.FLUID_TANK_WIDTH - 1, (float)((data[2] - 1) * scale), sprite);
@@ -201,9 +193,9 @@ public class Tank {
             }
             MutableText amount;
             if (Screen.hasShiftDown()) {
-                amount = new LiteralText(volume.getAmount_F().toString() + "B");
+                amount = new LiteralText(volume.amount().toString() + "B");
             } else {
-                amount = new LiteralText((volume.getAmount_F().asInt(1000, RoundingMode.HALF_DOWN)) + "mB");
+                amount = new LiteralText((volume.amount().asInt(1000, RoundingMode.HALF_DOWN)) + "mB");
             }
 
             lines.add(new TranslatableText("ui.galacticraft.machine.fluid_inv.fluid").setStyle(Constants.Text.GRAY_STYLE).append(new LiteralText(getName(volume.getRawFluid())).setStyle(Constants.Text.BLUE_STYLE)));

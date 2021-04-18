@@ -54,7 +54,7 @@ public class OxygenTankWidget extends AbstractWidget {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
-        double scale = this.getView().get().getAmount_F().div(this.getView().getMaxAmount_F()).asInexactDouble();
+        double scale = this.getView().get().amount().div(this.getView().getMaxAmount_F()).asInexactDouble();
 
         int height = this.height;
         while (height > 0) {
@@ -78,7 +78,7 @@ public class OxygenTankWidget extends AbstractWidget {
     public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
         if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinate.OVERLAY_WIDTH, Constants.TextureCoordinate.OVERLAY_HEIGHT)) {
             List<net.minecraft.text.Text> lines = new ArrayList<>(2);
-            lines.add(new TranslatableText("ui.galacticraft.machine.current_oxygen", new LiteralText(Screen.hasShiftDown() ? getView().get().getAmount_F().toString() + "B" : (getView().get().getAmount_F().asInt(1000, RoundingMode.HALF_DOWN) + "mB")).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.GOLD_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft.machine.current_oxygen", new LiteralText(Screen.hasShiftDown() ? getView().get().amount().toString() + "B" : (getView().get().amount().asInt(1000, RoundingMode.HALF_DOWN) + "mB")).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.GOLD_STYLE));
             lines.add(new TranslatableText("ui.galacticraft.machine.max_oxygen", new LiteralText(String.valueOf((int)(OxygenCollectorBlockEntity.MAX_OXYGEN.asInt(1000, RoundingMode.HALF_DOWN)))).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.RED_STYLE));
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);

@@ -22,29 +22,22 @@
 
 package dev.galacticraft.mod.api.pipe;
 
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import dev.galacticraft.mod.Constants;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Iterator;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface Pipe {
     /**
-     * Sets the {@link PipeNetwork} associated with this wie
+     * Sets the {@link PipeNetwork} associated with this pipe
      * @param network The network to associate with
      */
-    void setNetwork(@NotNull PipeNetwork network);
+    void setNetwork(@Nullable PipeNetwork network);
 
     /**
      * Returns the associated {@link PipeNetwork}
@@ -52,6 +45,11 @@ public interface Pipe {
      */
     @NotNull PipeNetwork getNetwork();
 
+    /**
+     * Returns the associated {@link PipeNetwork}
+     * @return The associated {@link PipeNetwork}
+     */
+    @Contract(pure = true)
     @Nullable PipeNetwork getNetworkNullable();
 
     /**
@@ -59,90 +57,15 @@ public interface Pipe {
      * @param direction the direction offset to the block to check adjacency to
      * @return Whether or not this pipe is able to connect to another block on the specified face/direction
      */
-    @NotNull PipeConnectionType getConnection(@NotNull Direction direction, @Nullable BlockEntity entity);
-
-    /**
-     * Returns the fluid in the pipe and its transport data
-     * @return The fluid in the pipe and its transport data
-     */
-    @NotNull Pipe.FluidData getFluidData();
-
-    /**
-     * Sets the fluid and the transport data of this pipe
-     * @param data The fluid/transport data
-     */
-    void setFluidData(@NotNull Pipe.FluidData data);
-
     default boolean canConnect(Direction direction) {
         return true;
     }
 
-    BlockPos getPos();
+    @NotNull PipeConnectionType getConnection(Direction direction, @NotNull BlockEntity entity);
 
-    class FluidData {
-        public static final FluidData EMPTY = new FluidData(BlockPos.ORIGIN, new ArrayDeque<>(), FluidVolumeUtil.EMPTY, null);
-        private final BlockPos source;
-        private final Deque<BlockPos> path;
-        private final FluidVolume fluid;
-        private final Direction endDir;
-
-        public FluidData(BlockPos source, Deque<BlockPos> path, FluidVolume fluid, Direction endDir) {
-            this.source = source;
-            this.path = path;
-            this.fluid = fluid;
-            this.endDir = endDir;
-        }
-
-        public BlockPos getSource() {
-            return source;
-        }
-
-        public Deque<BlockPos> getPath() {
-            return path;
-        }
-
-        public Direction getEndDir() {
-            return endDir;
-        }
-
-        public FluidVolume getFluid() {
-            return fluid;
-        }
-
-        public static FluidData fromTag(CompoundTag compoundTag) {
-            if (compoundTag.getBoolean("empty")) return EMPTY;
-            long[] longs = compoundTag.getLongArray(Constants.Nbt.PATH);
-            Deque<BlockPos> queue = new ArrayDeque<>(longs.length);
-            for (long l : longs) {
-                queue.add(BlockPos.fromLong(l));
-            }
-            Direction dir = null;
-            if (compoundTag.getBoolean(Constants.Nbt.HAS_DIRECTION)) {
-                dir = Constants.Misc.DIRECTIONS[compoundTag.getByte(Constants.Nbt.DIRECTION)];
-            }
-            return new FluidData(BlockPos.fromLong(compoundTag.getLong(Constants.Nbt.SOURCE)), queue, FluidVolume.fromTag(compoundTag), dir);
-        }
-
-        public CompoundTag toTag(CompoundTag compoundTag) {
-            if (this == EMPTY) {
-                compoundTag.putBoolean("empty", true);
-                return compoundTag;
-            }
-            compoundTag.putBoolean("empty", false);
-
-            this.fluid.toTag(compoundTag);
-            compoundTag.putLong(Constants.Nbt.SOURCE, this.source.asLong());
-            long[] path = new long[this.path.size()];
-            Iterator<BlockPos> iterator = this.path.iterator();
-            for (int i = 0; i < this.path.size(); i++) {
-                path[i] = iterator.next().asLong();
-            }
-            compoundTag.putLongArray(Constants.Nbt.PATH, path);
-            compoundTag.putBoolean(Constants.Nbt.HAS_DIRECTION, this.endDir != null);
-            if (this.endDir != null) {
-                compoundTag.putByte(Constants.Nbt.DIRECTION, (byte) this.endDir.ordinal());
-            }
-            return compoundTag;
-        }
-    }
+    /**
+     * Returns the maximum amount of fluid allowed to be transferred through this pipe.
+     * @return the maximum amount of fluid allowed to be transferred through this pipe.
+     */
+    FluidAmount getMaxTransferRate();
 }

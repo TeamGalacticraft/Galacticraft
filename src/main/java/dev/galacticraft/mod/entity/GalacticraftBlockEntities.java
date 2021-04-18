@@ -27,7 +27,7 @@ import dev.galacticraft.mod.api.block.FluidPipe;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.block.GalacticraftBlocks;
 import dev.galacticraft.mod.block.entity.*;
-import dev.galacticraft.mod.block.special.fluidpipe.FluidPipeBlockEntity;
+import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
@@ -52,13 +52,13 @@ public class GalacticraftBlockEntities {
     public static final BlockEntityType<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.OXYGEN_COLLECTOR), BlockEntityType.Builder.create(OxygenCollectorBlockEntity::new, GalacticraftBlocks.OXYGEN_COLLECTOR).build(null));
     public static final BlockEntityType<OxygenSealerBlockEntity> OXYGEN_SEALER_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.OXYGEN_SEALER), BlockEntityType.Builder.create(OxygenSealerBlockEntity::new, GalacticraftBlocks.OXYGEN_SEALER).build(null));
     public static final BlockEntityType<WireBlockEntity> WIRE_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ALUMINUM_WIRE), BlockEntityType.Builder.create(WireBlockEntity::new, GalacticraftBlocks.ALUMINUM_WIRE, GalacticraftBlocks.SEALABLE_ALUMINUM_WIRE).build(null));
-    public static final BlockEntityType<FluidPipeBlockEntity> FLUID_PIPE_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.FLUID_PIPE), BlockEntityType.Builder.create(FluidPipeBlockEntity::new, new Block(FabricBlockSettings.of(Material.AIR)) {
+    public static final BlockEntityType<PipeBlockEntity> FLUID_PIPE_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.FLUID_PIPE), BlockEntityType.Builder.create(PipeBlockEntity::new, new Block(FabricBlockSettings.of(Material.AIR)) {
         @Override
         public boolean equals(Object obj) {
             return obj instanceof FluidPipe; //bad stuff
         }
     }).build(null));
-    public static final BlockEntityType<FluidPipeBlockEntity> GLASS_FLUID_PIPE_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.GLASS_FLUID_PIPE), BlockEntityType.Builder.create(FluidPipeBlockEntity::new, GalacticraftBlocks.GLASS_FLUID_PIPE).build(null));
+    public static final BlockEntityType<PipeBlockEntity> GLASS_FLUID_PIPE_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.GLASS_FLUID_PIPE), BlockEntityType.Builder.create(PipeBlockEntity::new, GalacticraftBlocks.GLASS_FLUID_PIPE).build(null));
     public static final BlockEntityType<AdvancedSolarPanelBlockEntity> ADVANCED_SOLAR_PANEL_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ADVANCED_SOLAR_PANEL), BlockEntityType.Builder.create(AdvancedSolarPanelBlockEntity::new, GalacticraftBlocks.ADVANCED_SOLAR_PANEL).build(null));
     public static final BlockEntityType<BubbleDistributorBlockEntity> BUBBLE_DISTRIBUTOR_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.OXYGEN_BUBBLE_DISTRIBUTOR), BlockEntityType.Builder.create(BubbleDistributorBlockEntity::new, GalacticraftBlocks.BUBBLE_DISTRIBUTOR).build(null));
     public static final BlockEntityType<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.OXYGEN_COMPRESSOR), BlockEntityType.Builder.create(OxygenCompressorBlockEntity::new, GalacticraftBlocks.OXYGEN_COMPRESSOR).build(null));
