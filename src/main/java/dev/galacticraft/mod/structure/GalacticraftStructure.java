@@ -24,7 +24,7 @@ package dev.galacticraft.mod.structure;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.gen.feature.MoonPillagerBaseFeature;
 import dev.galacticraft.mod.world.gen.feature.MoonRuinsFeature;
 import net.fabricmc.fabric.api.structure.v1.FabricStructureBuilder;
@@ -44,14 +44,14 @@ public class GalacticraftStructure {
     public static final MoonPillagerBaseFeature MOON_PILLAGER_BASE_FEATURE = new MoonPillagerBaseFeature(STRUCTURE_POOL_CONFIG_CODEC_UNCAPPED_SIZE);
     public static final MoonRuinsFeature MOON_RUINS = new MoonRuinsFeature(DefaultFeatureConfig.CODEC);
 
-    public static final StructurePieceType MOON_RUINS_PIECE = StructurePieceType.register(MoonRuinsGenerator.Piece::new, Constants.MOD_ID + ":moon_ruins_piece");
+    public static final StructurePieceType MOON_RUINS_PIECE = StructurePieceType.register(MoonRuinsGenerator.Piece::new, Constant.MOD_ID + ":moon_ruins_piece");
 
     public static void register() {
-        FabricStructureBuilder.create(new Identifier(Constants.MOD_ID, "moon_pillager_base"), MOON_PILLAGER_BASE_FEATURE)
+        FabricStructureBuilder.create(new Identifier(Constant.MOD_ID, "moon_pillager_base"), MOON_PILLAGER_BASE_FEATURE)
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
                 .defaultConfig(32, 16, 23789482).adjustsSurface()
                 .register();
-        FabricStructureBuilder.create(new Identifier(Constants.MOD_ID, "moon_ruins"), MOON_RUINS)
+        FabricStructureBuilder.create(new Identifier(Constant.MOD_ID, "moon_ruins"), MOON_RUINS)
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
                 .defaultConfig(24, 8, 1903453)
                 .register();

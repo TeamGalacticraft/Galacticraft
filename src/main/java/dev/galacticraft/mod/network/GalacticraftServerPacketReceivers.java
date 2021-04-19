@@ -32,7 +32,7 @@ import alexiil.mc.lib.attributes.item.ItemInsertable;
 import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.datafixers.util.Either;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.AutomationType;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.util.BlockFace;
@@ -60,10 +60,10 @@ import net.minecraft.util.Identifier;
  */
 public class GalacticraftServerPacketReceivers {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory(GalacticraftPlayerInventoryScreenHandler::new, LiteralText.EMPTY))));
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory(GalacticraftPlayerInventoryScreenHandler::new, LiteralText.EMPTY))));
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "side_config"), (server, player, handler, buf, responseSender) -> {
-            BlockFace face = Constants.Misc.BLOCK_FACES[buf.readByte()];
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "side_config"), (server, player, handler, buf, responseSender) -> {
+            BlockFace face = Constant.Misc.BLOCK_FACES[buf.readByte()];
             if (buf.readBoolean()) { //match
                 if (buf.readBoolean()) { // int or slottype
                     int i = buf.readInt();
@@ -104,7 +104,7 @@ public class GalacticraftServerPacketReceivers {
             }
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "redstone_config"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "redstone_config"), (server, player, handler, buf, responseSender) -> {
             RedstoneInteractionType redstoneInteractionType = RedstoneInteractionType.values()[buf.readByte()];
             server.execute(() -> {
                 MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
@@ -114,7 +114,7 @@ public class GalacticraftServerPacketReceivers {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "security_config"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "security_config"), (server, player, handler, buf, responseSender) -> {
             SecurityInfo.Accessibility accessibility = SecurityInfo.Accessibility.values()[buf.readByte()];
             server.execute(() -> {
                 MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
@@ -124,7 +124,7 @@ public class GalacticraftServerPacketReceivers {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "bubble_max"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "bubble_max"), (server, player, handler, buf, responseSender) -> {
             byte max = buf.readByte();
             server.execute(() -> {
                 BubbleDistributorBlockEntity machine = ((BubbleDistributorScreenHandler) player.currentScreenHandler).machine;
@@ -136,7 +136,7 @@ public class GalacticraftServerPacketReceivers {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "bubble_visible"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "bubble_visible"), (server, player, handler, buf, responseSender) -> {
             boolean visible = buf.readBoolean();
             server.execute(() -> {
                 BubbleDistributorBlockEntity machine = ((BubbleDistributorScreenHandler) player.currentScreenHandler).machine;
@@ -146,7 +146,7 @@ public class GalacticraftServerPacketReceivers {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "tank_modify"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "tank_modify"), (server, player, handler, buf, responseSender) -> {
             int index = buf.readInt();
             server.execute(() -> {
                 MachineFluidInv inv = ((MachineScreenHandler<?>) player.currentScreenHandler).machine.getFluidInv();
@@ -172,14 +172,14 @@ public class GalacticraftServerPacketReceivers {
                 if (extractable != null && !extractable.attemptExtraction(inv.getFilterForTank(index), FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty()) {
                     if (((Automatable) inv).getTypes()[index].getType().isInput()) {
                         FluidVolumeUtil.move(extractable, inv.getTank(index));
-                        ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(index)));
+                        ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(index)));
                     }
                 } else {
                     FluidInsertable insertable = FluidAttributes.INSERTABLE.getFirstOrNull(reference, excess);
                     if (insertable != null) {
                         if (((Automatable) inv).getTypes()[index].getType().isOutput()) {
                             FluidVolumeUtil.move(inv.getTank(index), insertable);
-                            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(index)));
+                            ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(index)));
                         }
                     }
                 }

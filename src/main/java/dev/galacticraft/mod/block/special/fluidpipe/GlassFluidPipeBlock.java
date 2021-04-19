@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.special.fluidpipe;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidPipe;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.item.StandardWrenchItem;
@@ -77,7 +77,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
     public BlockState getPlacementState(ItemPlacementContext context) {
         BlockState state = this.getDefaultState();
         BlockPos pos = context.getBlockPos().toImmutable();
-        for (Direction direction : Constants.Misc.DIRECTIONS) {
+        for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockState block = context.getWorld().getBlockState(pos.offset(direction));
             if ((block.getBlock() instanceof FluidPipe /*&& block.get(COLOR) == DyeColor.WHITE*/) || FluidUtils.isExtractableOrInsertable(context.getWorld(), pos.offset(direction), direction)) state = state.with(propFromDirection(direction), true);
         }

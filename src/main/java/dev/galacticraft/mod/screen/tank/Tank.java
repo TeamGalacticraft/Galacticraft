@@ -29,7 +29,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen;
@@ -70,44 +70,44 @@ import java.util.List;
  */
 public class Tank {
     private static final int[] FLUID_TANK_8_16_DATA = new int[]{
-            Constants.TextureCoordinate.FLUID_TANK_8_16_X,
-            Constants.TextureCoordinate.FLUID_TANK_8_16_Y,
-            Constants.TextureCoordinate.FLUID_TANK_8_16_HEIGHT
+            Constant.TextureCoordinate.FLUID_TANK_8_16_X,
+            Constant.TextureCoordinate.FLUID_TANK_8_16_Y,
+            Constant.TextureCoordinate.FLUID_TANK_8_16_HEIGHT
     };
     private static final int[] FLUID_TANK_7_14_DATA = new int[]{
-            Constants.TextureCoordinate.FLUID_TANK_7_14_X,
-            Constants.TextureCoordinate.FLUID_TANK_7_14_Y,
-            Constants.TextureCoordinate.FLUID_TANK_7_14_HEIGHT
+            Constant.TextureCoordinate.FLUID_TANK_7_14_X,
+            Constant.TextureCoordinate.FLUID_TANK_7_14_Y,
+            Constant.TextureCoordinate.FLUID_TANK_7_14_HEIGHT
     };
     private static final int[] FLUID_TANK_6_12_DATA = new int[]{
-            Constants.TextureCoordinate.FLUID_TANK_6_12_X,
-            Constants.TextureCoordinate.FLUID_TANK_6_12_Y,
-            Constants.TextureCoordinate.FLUID_TANK_6_12_HEIGHT
+            Constant.TextureCoordinate.FLUID_TANK_6_12_X,
+            Constant.TextureCoordinate.FLUID_TANK_6_12_Y,
+            Constant.TextureCoordinate.FLUID_TANK_6_12_HEIGHT
     };
     private static final int[] FLUID_TANK_5_10_DATA = new int[]{
-            Constants.TextureCoordinate.FLUID_TANK_5_10_X,
-            Constants.TextureCoordinate.FLUID_TANK_5_10_Y,
-            Constants.TextureCoordinate.FLUID_TANK_5_10_HEIGHT
+            Constant.TextureCoordinate.FLUID_TANK_5_10_X,
+            Constant.TextureCoordinate.FLUID_TANK_5_10_Y,
+            Constant.TextureCoordinate.FLUID_TANK_5_10_HEIGHT
     };
     private static final int[] FLUID_TANK_4_8_DATA = new int[]{
-            Constants.TextureCoordinate.FLUID_TANK_4_8_X,
-            Constants.TextureCoordinate.FLUID_TANK_4_8_Y,
-            Constants.TextureCoordinate.FLUID_TANK_4_8_HEIGHT
+            Constant.TextureCoordinate.FLUID_TANK_4_8_X,
+            Constant.TextureCoordinate.FLUID_TANK_4_8_Y,
+            Constant.TextureCoordinate.FLUID_TANK_4_8_HEIGHT
     };
     private static final int[] FLUID_TANK_3_6_DATA = new int[]{
-            Constants.TextureCoordinate.FLUID_TANK_3_6_X,
-            Constants.TextureCoordinate.FLUID_TANK_3_6_Y,
-            Constants.TextureCoordinate.FLUID_TANK_3_6_HEIGHT
+            Constant.TextureCoordinate.FLUID_TANK_3_6_X,
+            Constant.TextureCoordinate.FLUID_TANK_3_6_Y,
+            Constant.TextureCoordinate.FLUID_TANK_3_6_HEIGHT
     };
     private static final int[] FLUID_TANK_2_4_DATA = new int[]{
-            Constants.TextureCoordinate.FLUID_TANK_2_4_X,
-            Constants.TextureCoordinate.FLUID_TANK_2_4_Y,
-            Constants.TextureCoordinate.FLUID_TANK_2_4_HEIGHT
+            Constant.TextureCoordinate.FLUID_TANK_2_4_X,
+            Constant.TextureCoordinate.FLUID_TANK_2_4_Y,
+            Constant.TextureCoordinate.FLUID_TANK_2_4_HEIGHT
     };
     private static final int[] FLUID_TANK_1_2_DATA = new int[]{
-            Constants.TextureCoordinate.FLUID_TANK_1_2_X,
-            Constants.TextureCoordinate.FLUID_TANK_1_2_Y,
-            Constants.TextureCoordinate.FLUID_TANK_1_2_HEIGHT
+            Constant.TextureCoordinate.FLUID_TANK_1_2_X,
+            Constant.TextureCoordinate.FLUID_TANK_1_2_Y,
+            Constant.TextureCoordinate.FLUID_TANK_1_2_HEIGHT
     };
 
     public int id;
@@ -162,12 +162,12 @@ public class Tank {
     public void render(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY, boolean coloured, Int2IntMap color) {
         if (this.scale == 0) return;
         int[] data = this.getPositionData();
-        MinecraftClient.getInstance().getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(Constant.ScreenTexture.OVERLAY);
         if (coloured) {
             int c = color.get(this.index);
-            MachineHandledScreen.drawTextureColor(matrices, this.x, this.y, 0, data[0], data[1] + Constants.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128, c >> 16 & 0xFF, c >> 8 & 0xFF, c & 0xFF, 80);
+            MachineHandledScreen.drawTextureColor(matrices, this.x, this.y, 0, data[0], data[1] + Constant.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constant.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128, c >> 16 & 0xFF, c >> 8 & 0xFF, c & 0xFF, 80);
         } else {
-            DrawableHelper.drawTexture(matrices, this.x, this.y, 0, data[0], data[1] + Constants.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128);
+            DrawableHelper.drawTexture(matrices, this.x, this.y, 0, data[0], data[1] + Constant.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constant.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128);
         }
 
         FluidVolume content = this.inv.getInvFluid(this.index);
@@ -176,19 +176,19 @@ public class Tank {
         double scale = content.amount().div(this.inv.getMaxAmount_F(this.index)).asInexactDouble();
         Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getRawFluid()).getFluidSprites(world, pos, content.getRawFluid().getDefaultState())[0];
         client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-        drawSprite(matrices, this.x + 1, this.y + (float)(-(data[2] - 1) * scale) + data[2] - 1, 0, Constants.TextureCoordinate.FLUID_TANK_WIDTH - 1, (float)((data[2] - 1) * scale), sprite);
+        drawSprite(matrices, this.x + 1, this.y + (float)(-(data[2] - 1) * scale) + data[2] - 1, 0, Constant.TextureCoordinate.FLUID_TANK_WIDTH - 1, (float)((data[2] - 1) * scale), sprite);
         matrices.pop();
-        client.getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
-        DrawableHelper.drawTexture(matrices, this.x, this.y, 0, data[0], data[1], Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128);
+        client.getTextureManager().bindTexture(Constant.ScreenTexture.OVERLAY);
+        DrawableHelper.drawTexture(matrices, this.x, this.y, 0, data[0], data[1], Constant.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128);
     }
 
     public void drawTooltip(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY) {
         matrices.translate(0, 0, 1);
-        if (SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinate.FLUID_TANK_WIDTH, this.getPositionData()[2])) {
+        if (SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.FLUID_TANK_WIDTH, this.getPositionData()[2])) {
             List<Text> lines = new ArrayList<>(2);
             FluidVolume volume = this.inv.getInvFluid(this.index);
             if (volume.isEmpty()) {
-                client.currentScreen.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.fluid_inv.empty").setStyle(Constants.Text.GRAY_STYLE), mouseX, mouseY);
+                client.currentScreen.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.fluid_inv.empty").setStyle(Constant.Text.GRAY_STYLE), mouseX, mouseY);
                 return;
             }
             MutableText amount;
@@ -198,8 +198,8 @@ public class Tank {
                 amount = new LiteralText((volume.amount().asInt(1000, RoundingMode.HALF_DOWN)) + "mB");
             }
 
-            lines.add(new TranslatableText("ui.galacticraft.machine.fluid_inv.fluid").setStyle(Constants.Text.GRAY_STYLE).append(new LiteralText(getName(volume.getRawFluid())).setStyle(Constants.Text.BLUE_STYLE)));
-            lines.add(new TranslatableText("ui.galacticraft.machine.fluid_inv.amount").setStyle(Constants.Text.GRAY_STYLE).append(amount.setStyle(Style.EMPTY.withColor(Formatting.WHITE))));
+            lines.add(new TranslatableText("ui.galacticraft.machine.fluid_inv.fluid").setStyle(Constant.Text.GRAY_STYLE).append(new LiteralText(getName(volume.getRawFluid())).setStyle(Constant.Text.BLUE_STYLE)));
+            lines.add(new TranslatableText("ui.galacticraft.machine.fluid_inv.amount").setStyle(Constant.Text.GRAY_STYLE).append(amount.setStyle(Style.EMPTY.withColor(Formatting.WHITE))));
             client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
         }
         matrices.translate(0, 0, -1);
@@ -215,14 +215,14 @@ public class Tank {
 
     public boolean isHoveredOverTank(int mouseX, int mouseY) {
         int[] data = getPositionData();
-        return SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2]);
+        return SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.FLUID_TANK_WIDTH, data[2]);
     }
 
     public void renderHighlight(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY) {
         int[] data = getPositionData();
         RenderSystem.disableDepthTest();
         RenderSystem.colorMask(true, true, true, false);
-        DrawableHelper.fill(matrices, this.x, this.y,this.x + Constants.TextureCoordinate.FLUID_TANK_WIDTH, this.y + data[2], -2130706433);
+        DrawableHelper.fill(matrices, this.x, this.y,this.x + Constant.TextureCoordinate.FLUID_TANK_WIDTH, this.y + data[2], -2130706433);
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.enableDepthTest();
     }
@@ -233,7 +233,7 @@ public class Tank {
             if (extractable != null && !extractable.attemptExtraction(this.inv.getFilterForTank(this.index), FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty()) {
                 if (((Automatable) this.inv).getTypes()[this.index].getType().isInput()) {
                     FluidVolumeUtil.move(extractable, this.inv.getTank(this.index));
-                    ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(this.index)));
+                    ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(this.index)));
                     return true;
                 }
             } else {
@@ -241,7 +241,7 @@ public class Tank {
                 if (insertable != null) {
                     if (((Automatable) this.inv).getTypes()[this.index].getType().isOutput()) {
                         FluidVolumeUtil.move(this.inv.getTank(this.index), insertable);
-                        ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(this.index)));
+                        ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(this.index)));
                         return true;
                     }
 

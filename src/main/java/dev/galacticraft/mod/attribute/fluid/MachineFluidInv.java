@@ -28,7 +28,7 @@ import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.screen.MachineScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
@@ -131,7 +131,7 @@ public class MachineFluidInv extends SimpleFixedFluidInv implements Automatable 
         }
 
         public void addLOXTank(int index, SlotType type, int x, int y) {
-            this.addTank(index, type, Constants.Filter.LOX_ONLY, new OxygenTankProvider(x, y));
+            this.addTank(index, type, Constant.Filter.LOX_ONLY, new OxygenTankProvider(x, y));
         }
     }
 

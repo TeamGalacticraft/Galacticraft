@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.biome.source.MoonBiomeSource;
 import dev.galacticraft.mod.world.gen.chunk.MoonChunkGenerator;
 import net.minecraft.util.Identifier;
@@ -45,6 +45,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class DimensionTypeMixin {
     @Inject(method = "createDefaultDimensionOptions", at = @At(value = "RETURN", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void addGCDimOptions(Registry<DimensionType> registry, Registry<Biome> registry2, Registry<ChunkGeneratorSettings> registry3, long l, CallbackInfoReturnable<SimpleRegistry<DimensionOptions>> cir, SimpleRegistry<DimensionOptions> simpleRegistry) {
-        Registry.register(simpleRegistry, new Identifier(Constants.MOD_ID, "moon"), new DimensionOptions(() -> registry.get(new Identifier(Constants.MOD_ID, "moon")), new MoonChunkGenerator(new MoonBiomeSource(l, 4, registry2), l)));
+        Registry.register(simpleRegistry, new Identifier(Constant.MOD_ID, "moon"), new DimensionOptions(() -> registry.get(new Identifier(Constant.MOD_ID, "moon")), new MoonChunkGenerator(new MoonBiomeSource(l, 4, registry2), l)));
     }
 }

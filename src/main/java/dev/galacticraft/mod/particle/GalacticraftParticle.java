@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.particle;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.util.Identifier;
@@ -33,8 +33,8 @@ import net.minecraft.util.registry.Registry;
  */
 public class GalacticraftParticle {
 
-    public static final DefaultParticleType DRIPPING_FUEL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particle.DRIPPING_CRUDE_OIL_PARTICLE), FabricParticleTypes.simple());
-    public static final DefaultParticleType DRIPPING_CRUDE_OIL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particle.DRIPPING_FUEL_PARTICLE), FabricParticleTypes.simple());
+    public static final DefaultParticleType DRIPPING_FUEL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constant.MOD_ID, Constant.Particle.DRIPPING_CRUDE_OIL_PARTICLE), FabricParticleTypes.simple());
+    public static final DefaultParticleType DRIPPING_CRUDE_OIL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constant.MOD_ID, Constant.Particle.DRIPPING_FUEL_PARTICLE), FabricParticleTypes.simple());
 
     public static void register() {
     }

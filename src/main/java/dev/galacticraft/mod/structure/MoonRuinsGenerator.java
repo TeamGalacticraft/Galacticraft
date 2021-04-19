@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.structure;
 
 import com.google.common.collect.Lists;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
 import dev.galacticraft.mod.loot.GalacticraftLootTable;
 import net.minecraft.block.BlockState;
@@ -62,10 +62,10 @@ public class MoonRuinsGenerator {
    private static final Identifier[] PIECES = new Identifier[] {
            //new Identifier(Constants.MOD_ID, "moon_ruins/ruin_1"),
            //new Identifier(Constants.MOD_ID, "moon_ruins/ruin_2"),
-           new Identifier(Constants.MOD_ID, "moon_ruins/ruin_3"),
-           new Identifier(Constants.MOD_ID, "moon_ruins/ruin_4"),
-           new Identifier(Constants.MOD_ID, "moon_ruins/ruin_5"),
-           new Identifier(Constants.MOD_ID, "moon_ruins/ruin_6"),
+           new Identifier(Constant.MOD_ID, "moon_ruins/ruin_3"),
+           new Identifier(Constant.MOD_ID, "moon_ruins/ruin_4"),
+           new Identifier(Constant.MOD_ID, "moon_ruins/ruin_5"),
+           new Identifier(Constant.MOD_ID, "moon_ruins/ruin_6"),
    };
 
    private static Identifier getPiece(Random random) {

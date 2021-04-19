@@ -74,24 +74,24 @@ public class GalacticraftClient implements ClientModInitializer {
 
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) -> {
             for (int i = 0; i <= 8; i++) {
-                registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_" + i));
-                registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + i));
+                registry.register(new Identifier(Constant.MOD_ID, "block/energy_storage_module_" + i));
+                registry.register(new Identifier(Constant.MOD_ID, "block/oxygen_storage_module_" + i));
             }
 
-            registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_sealer_top"));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_HEAD));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_CHEST));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_PANTS));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_BOOTS));
+            registry.register(new Identifier(Constant.MOD_ID, "block/oxygen_sealer_top"));
+            registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_HEAD));
+            registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_CHEST));
+            registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_PANTS));
+            registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_BOOTS));
 
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.OXYGEN_MASK));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.OXYGEN_GEAR));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.OXYGEN_TANK));
+            registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_MASK));
+            registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_GEAR));
+            registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_TANK));
 
-            registry.register(Constants.Fluid.getIdentifier(Constants.Fluid.CRUDE_OIL_STILL));
-            registry.register(Constants.Fluid.getIdentifier(Constants.Fluid.CRUDE_OIL_FLOWING));
-            registry.register(Constants.Fluid.getIdentifier(Constants.Fluid.FUEL_STILL));
-            registry.register(Constants.Fluid.getIdentifier(Constants.Fluid.FUEL_FLOWING));
+            registry.register(Constant.Fluid.getIdentifier(Constant.Fluid.CRUDE_OIL_STILL));
+            registry.register(Constant.Fluid.getIdentifier(Constant.Fluid.CRUDE_OIL_FLOWING));
+            registry.register(Constant.Fluid.getIdentifier(Constant.Fluid.FUEL_STILL));
+            registry.register(Constant.Fluid.getIdentifier(Constant.Fluid.FUEL_FLOWING));
         });
 
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.BASIC_SOLAR_PANEL_HANDLER, BasicSolarPanelScreen::new);
@@ -158,7 +158,7 @@ public class GalacticraftClient implements ClientModInitializer {
             return null;
         });
 
-        SkyPropertiesAccessor.getBY_IDENTIFIER().put(new Identifier(Constants.MOD_ID, "moon"), new MoonSkyProperties());
+        SkyPropertiesAccessor.getBY_IDENTIFIER().put(new Identifier(Constant.MOD_ID, "moon"), new MoonSkyProperties());
 
         Galacticraft.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

@@ -25,7 +25,7 @@ package dev.galacticraft.mod.api.block;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
 import com.mojang.authlib.GameProfile;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
@@ -157,27 +157,27 @@ public class MachineBlock extends BlockWithEntity {
                 }
                 tooltip.add(new LiteralText(builder.toString()).setStyle(text.getStyle()));
             } else {
-                tooltip.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Constants.Text.DARK_GRAY_STYLE));
+                tooltip.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Constant.Text.DARK_GRAY_STYLE));
             }
         }
 
-        if (stack != null && stack.getTag() != null && stack.getTag().contains(Constants.Nbt.BLOCK_ENTITY_TAG)) {
-            CompoundTag tag = stack.getTag().getCompound(Constants.Nbt.BLOCK_ENTITY_TAG);
+        if (stack != null && stack.getTag() != null && stack.getTag().contains(Constant.Nbt.BLOCK_ENTITY_TAG)) {
+            CompoundTag tag = stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG);
             tooltip.add(LiteralText.EMPTY);
-            if (tag.contains(Constants.Nbt.ENERGY, NbtType.INT)) tooltip.add(new TranslatableText("ui.galacticraft.machine.current_energy", new LiteralText(String.valueOf(tag.getInt(Constants.Nbt.ENERGY))).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.GOLD_STYLE));
-            if (tag.contains(Constants.Nbt.SECURITY, NbtType.COMPOUND)) {
-                CompoundTag security = tag.getCompound(Constants.Nbt.SECURITY);
-                if (security.contains(Constants.Nbt.OWNER, NbtType.COMPOUND)) {
-                    GameProfile profile = NbtHelper.toGameProfile(security.getCompound(Constants.Nbt.OWNER));
-                    MutableText text1 = new TranslatableText("ui.galacticraft.machine.security.owner", new LiteralText(profile.getName()).setStyle(Constants.Text.LIGHT_PURPLE_STYLE)).setStyle(Constants.Text.GRAY_STYLE);
+            if (tag.contains(Constant.Nbt.ENERGY, NbtType.INT)) tooltip.add(new TranslatableText("ui.galacticraft.machine.current_energy", new LiteralText(String.valueOf(tag.getInt(Constant.Nbt.ENERGY))).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.GOLD_STYLE));
+            if (tag.contains(Constant.Nbt.SECURITY, NbtType.COMPOUND)) {
+                CompoundTag security = tag.getCompound(Constant.Nbt.SECURITY);
+                if (security.contains(Constant.Nbt.OWNER, NbtType.COMPOUND)) {
+                    GameProfile profile = NbtHelper.toGameProfile(security.getCompound(Constant.Nbt.OWNER));
+                    MutableText text1 = new TranslatableText("ui.galacticraft.machine.security.owner", new LiteralText(profile.getName()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE)).setStyle(Constant.Text.GRAY_STYLE);
                     if (Screen.hasControlDown()) {
-                        text1.append(new LiteralText(" (" + profile.getId().toString() + ")").setStyle(Constants.Text.AQUA_STYLE));
+                        text1.append(new LiteralText(" (" + profile.getId().toString() + ")").setStyle(Constant.Text.AQUA_STYLE));
                     }
                     tooltip.add(text1);
-                    tooltip.add(new TranslatableText("ui.galacticraft.machine.security.accessibility", SecurityInfo.Accessibility.valueOf(security.getString(Constants.Nbt.ACCESSIBILITY)).getName()).setStyle(Constants.Text.GREEN_STYLE));
+                    tooltip.add(new TranslatableText("ui.galacticraft.machine.security.accessibility", SecurityInfo.Accessibility.valueOf(security.getString(Constant.Nbt.ACCESSIBILITY)).getName()).setStyle(Constant.Text.GREEN_STYLE));
                 }
             }
-            tooltip.add(new TranslatableText("ui.galacticraft.machine.redstone.redstone", RedstoneInteractionType.fromTag(tag).getName()).setStyle(Constants.Text.DARK_RED_STYLE));
+            tooltip.add(new TranslatableText("ui.galacticraft.machine.redstone.redstone", RedstoneInteractionType.fromTag(tag).getName()).setStyle(Constant.Text.DARK_RED_STYLE));
         }
     }
 
@@ -233,7 +233,7 @@ public class MachineBlock extends BlockWithEntity {
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
         BlockEntity entity = builder.get(LootContextParameters.BLOCK_ENTITY);
-        if (entity.toTag(new CompoundTag()).getBoolean(Constants.Nbt.NO_DROP)) return Collections.emptyList();
+        if (entity.toTag(new CompoundTag()).getBoolean(Constant.Nbt.NO_DROP)) return Collections.emptyList();
         return super.getDroppedStacks(state, builder);
     }
 
@@ -255,7 +255,7 @@ public class MachineBlock extends BlockWithEntity {
         ItemStack stack = super.getPickStack(view, pos, state);
         CompoundTag tag = (stack.getTag() != null ? stack.getTag() : new CompoundTag());
         if (view.getBlockEntity(pos) != null) {
-            tag.put(Constants.Nbt.BLOCK_ENTITY_TAG, view.getBlockEntity(pos).toTag(new CompoundTag()));
+            tag.put(Constant.Nbt.BLOCK_ENTITY_TAG, view.getBlockEntity(pos).toTag(new CompoundTag()));
         }
 
         stack.setTag(tag);

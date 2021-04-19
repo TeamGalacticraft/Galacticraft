@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.util;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
@@ -36,7 +36,7 @@ import java.util.List;
 public enum SpriteUtil {
     ;
     public static SpriteIdentifier identifier(String path) {
-        return identifier(new Identifier(Constants.MOD_ID, path));
+        return identifier(new Identifier(Constant.MOD_ID, path));
     }
 
     public static SpriteIdentifier identifier(Identifier id) {

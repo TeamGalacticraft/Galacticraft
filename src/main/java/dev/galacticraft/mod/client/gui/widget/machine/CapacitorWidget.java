@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.gui.widget.machine;
 
 import com.hrznstudio.galacticraft.energy.api.CapacitorView;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.client.util.math.MatrixStack;
@@ -57,12 +57,12 @@ public class CapacitorWidget extends AbstractWidget {
 
     @Override
     public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
-        if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinate.OVERLAY_WIDTH, Constants.TextureCoordinate.OVERLAY_HEIGHT)) {
+        if (check(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
             List<Text> lines = new LinkedList<>();
             MachineStatus status = statusSupplier.get();
-            if (status != MachineStatus.NULL) lines.add(new TranslatableText("ui.galacticraft.machine.status").setStyle(Constants.Text.GRAY_STYLE).append(status.getName()));
-            lines.add(new TranslatableText("ui.galacticraft.machine.current_energy", EnergyUtil.getDisplay(this.getView().getEnergy()).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.GOLD_STYLE));
-            lines.add(new TranslatableText("ui.galacticraft.machine.max_energy", EnergyUtil.getDisplay(this.getView().getMaxCapacity()).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.RED_STYLE));
+            if (status != MachineStatus.NULL) lines.add(new TranslatableText("ui.galacticraft.machine.status").setStyle(Constant.Text.GRAY_STYLE).append(status.getName()));
+            lines.add(new TranslatableText("ui.galacticraft.machine.current_energy", EnergyUtil.getDisplay(this.getView().getEnergy()).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.GOLD_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft.machine.max_energy", EnergyUtil.getDisplay(this.getView().getMaxCapacity()).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.RED_STYLE));
             lines.addAll(tooltipSupplier.get());
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
@@ -71,20 +71,20 @@ public class CapacitorWidget extends AbstractWidget {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.OVERLAY);
         double scale = ((double) this.getView().getEnergy()) / ((double) this.getView().getMaxCapacity());
 
         int height = this.height;
         while (height != 0) {
-            int renderHeight = Math.min(height, Constants.TextureCoordinate.OVERLAY_HEIGHT);
+            int renderHeight = Math.min(height, Constant.TextureCoordinate.OVERLAY_HEIGHT);
             this.render(matrices, height, scale);
             height -= renderHeight;
         }
     }
 
     private void render(MatrixStack matrices, int height, double scale) {
-        this.drawTexture(matrices, this.x, this.y, Constants.TextureCoordinate.ENERGY_DARK_X, Constants.TextureCoordinate.ENERGY_DARK_Y, Constants.TextureCoordinate.OVERLAY_WIDTH, height);
-        this.drawTexture(matrices, this.x, (int) ((this.y - (height * scale)) + height), Constants.TextureCoordinate.ENERGY_LIGHT_X, Constants.TextureCoordinate.ENERGY_LIGHT_Y, Constants.TextureCoordinate.OVERLAY_WIDTH, (int) (height * scale));
+        this.drawTexture(matrices, this.x, this.y, Constant.TextureCoordinate.ENERGY_DARK_X, Constant.TextureCoordinate.ENERGY_DARK_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, height);
+        this.drawTexture(matrices, this.x, (int) ((this.y - (height * scale)) + height), Constant.TextureCoordinate.ENERGY_LIGHT_X, Constant.TextureCoordinate.ENERGY_LIGHT_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, (int) (height * scale));
     }
 
     @Override

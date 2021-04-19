@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.misc.banner;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPattern;
 import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPatterns;
 import net.minecraft.util.Identifier;
@@ -32,7 +32,7 @@ import net.minecraft.util.registry.Registry;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftBannerPattern {
-    public static final LoomPattern ROCKET = Registry.register(LoomPatterns.REGISTRY, new Identifier(Constants.MOD_ID, "rocket"), new LoomPattern(false));
+    public static final LoomPattern ROCKET = Registry.register(LoomPatterns.REGISTRY, new Identifier(Constant.MOD_ID, "rocket"), new LoomPattern(false));
 
     public static void register() {
     }

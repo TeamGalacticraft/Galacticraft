@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.screen.OxygenStorageModuleScreenHandler;
 import net.fabricmc.api.EnvType;
@@ -49,7 +49,7 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         this.drawOxygenBufferBar(matrices);
@@ -69,7 +69,7 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
     private void drawOxygenBufferBar(MatrixStack matrices) {
         double oxygenScale = this.handler.machine.getFluidInv().getInvFluid(0).amount().div(this.handler.machine.getFluidInv().getMaxAmount_F(0)).asInexactDouble();
 
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
         this.drawTexture(matrices, this.x + 52, this.y + 57, 176, 0, (int) (72.0D * oxygenScale), 3);
     }
 }

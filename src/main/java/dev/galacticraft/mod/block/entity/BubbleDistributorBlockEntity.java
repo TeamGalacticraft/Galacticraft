@@ -27,14 +27,13 @@ import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.entity.BubbleEntity;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
@@ -166,7 +165,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
         }
         if (prevSize != size || players != world.getPlayers().size()) {
             for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
-                ServerPlayNetworking.send(player, new Identifier(Constants.MOD_ID, "bubble_size"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(this.pos).writeDouble(this.size)));
+                ServerPlayNetworking.send(player, new Identifier(Constant.MOD_ID, "bubble_size"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(this.pos).writeDouble(this.size)));
             }
         }
     }
@@ -182,17 +181,17 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putByte(Constants.Nbt.MAX_SIZE, targetSize);
-        tag.putDouble(Constants.Nbt.SIZE, size);
+        tag.putByte(Constant.Nbt.MAX_SIZE, targetSize);
+        tag.putDouble(Constant.Nbt.SIZE, size);
         return tag;
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        this.size = tag.getDouble(Constants.Nbt.SIZE);
+        this.size = tag.getDouble(Constant.Nbt.SIZE);
         if (size < 0) size = 0;
-        this.targetSize = tag.getByte(Constants.Nbt.MAX_SIZE);
+        this.targetSize = tag.getByte(Constant.Nbt.MAX_SIZE);
         if (targetSize < 1) targetSize = 1;
     }
 
@@ -215,7 +214,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
         }
         if (FluidUtils.canExtractFluids(this.getInventory().getSlot(slot))) {
             FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(this.getInventory().getSlot(slot));
-            this.getFluidInv().insertFluid(OXYGEN_TANK, extractable.attemptExtraction(Constants.Filter.LOX_ONLY, this.getFluidInv().getMaxAmount_F(0).sub(this.getFluidInv().getInvFluid(0).amount()), Simulation.ACTION), Simulation.ACTION);
+            this.getFluidInv().insertFluid(OXYGEN_TANK, extractable.attemptExtraction(Constant.Filter.LOX_ONLY, this.getFluidInv().getMaxAmount_F(0).sub(this.getFluidInv().getInvFluid(0).amount()), Simulation.ACTION), Simulation.ACTION);
         }
     }
 

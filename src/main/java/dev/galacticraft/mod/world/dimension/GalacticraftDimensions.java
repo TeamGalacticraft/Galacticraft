@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.world.dimension;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.world.gen.chunk.MoonChunkGenerator;
 import net.minecraft.block.Blocks;
@@ -37,10 +37,10 @@ import net.minecraft.world.gen.chunk.*;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftDimensions {
-    public static final RegistryKey<World> MOON = RegistryKey.of(Registry.DIMENSION, new Identifier(Constants.MOD_ID, "moon"));
+    public static final RegistryKey<World> MOON = RegistryKey.of(Registry.DIMENSION, new Identifier(Constant.MOD_ID, "moon"));
 
     public static void register() {
-        BuiltinRegistries.add(BuiltinRegistries.CHUNK_GENERATOR_SETTINGS, new Identifier(Constants.MOD_ID, "moon"), new ChunkGeneratorSettings(
+        BuiltinRegistries.add(BuiltinRegistries.CHUNK_GENERATOR_SETTINGS, new Identifier(Constant.MOD_ID, "moon"), new ChunkGeneratorSettings(
                 new StructuresConfig(false),
                 new GenerationShapeConfig(
                         256, new NoiseSamplingConfig(0.9999999814507745D, 0.9999999814507745D, 80.0D, 160.0D),
@@ -50,7 +50,7 @@ public class GalacticraftDimensions {
                 GalacticraftBlock.MOON_ROCKS[0].getDefaultState(), Blocks.AIR.getDefaultState(), -10, 0, 63, false)
         );
 
-        Registry.register(Registry.CHUNK_GENERATOR, new Identifier(Constants.MOD_ID, "moon"), MoonChunkGenerator.CODEC);
+        Registry.register(Registry.CHUNK_GENERATOR, new Identifier(Constant.MOD_ID, "moon"), MoonChunkGenerator.CODEC);
         //FabricDimensions.registerDefaultPlacer(MOON, GalacticraftDimensions::placeEntity);
     }
 }

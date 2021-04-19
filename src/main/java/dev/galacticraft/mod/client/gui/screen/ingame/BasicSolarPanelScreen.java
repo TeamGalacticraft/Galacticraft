@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.BasicSolarPanelScreenHandler;
@@ -54,7 +54,7 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelS
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.SOLAR_PANEL_SCREEN);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         super.drawBackground(matrices, delta, mouseX, mouseY);
@@ -72,7 +72,7 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelS
     protected Collection<? extends Text> getEnergyTooltipLines() {
         List<Text> lines = new LinkedList<>();
         if (this.handler.machine.getStatus().getType().isActive()) {
-            lines.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", this.handler.machine.getEnergyGenerated()).setStyle(Constants.Text.LIGHT_PURPLE_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", this.handler.machine.getEnergyGenerated()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
         }
         return lines;
     }

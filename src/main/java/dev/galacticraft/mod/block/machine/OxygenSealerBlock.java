@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.machine;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
 import net.minecraft.block.Block;
@@ -38,7 +38,7 @@ public class OxygenSealerBlock extends MachineBlock {
     public OxygenSealerBlock(Settings settings) {
         super(settings, OxygenSealerBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft.oxygen_sealer")
-                        .setStyle(Constants.Text.DARK_GRAY_STYLE));
+                        .setStyle(Constant.Text.DARK_GRAY_STYLE));
     }
 
     @Override

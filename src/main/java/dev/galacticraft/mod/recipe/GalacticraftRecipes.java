@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.recipe;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
@@ -50,7 +50,7 @@ public class GalacticraftRecipes {
     }
 
     private static <T extends Recipe<?>> RecipeType<T> registerType(String id) {
-        return Registry.register(Registry.RECIPE_TYPE, new Identifier(Constants.MOD_ID, id), new RecipeType<T>() {
+        return Registry.register(Registry.RECIPE_TYPE, new Identifier(Constant.MOD_ID, id), new RecipeType<T>() {
             public String toString() {
                 return id;
             }
@@ -58,6 +58,6 @@ public class GalacticraftRecipes {
     }
 
     private static <S extends RecipeSerializer<T>, T extends Recipe<?>> S registerSerializer(String id, S serializer) {
-        return Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constants.MOD_ID, id), serializer);
+        return Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, id), serializer);
     }
 }

@@ -28,7 +28,7 @@ import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
 import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
 import com.hrznstudio.galacticraft.energy.impl.EmptyEnergyExtractable;
 import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireConnectionType;
 import dev.galacticraft.mod.api.wire.WireNetwork;
@@ -63,7 +63,7 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     public @NotNull WireNetwork getNetwork() {
         if (this.network == null) {
             if (!this.world.isClient()) {
-                for (Direction direction : Constants.Misc.DIRECTIONS) {
+                for (Direction direction : Constant.Misc.DIRECTIONS) {
                     BlockEntity entity = world.getBlockEntity(pos.offset(direction));
                     if (entity instanceof Wire && ((Wire) entity).getNetworkNullable() != null) {
                         ((Wire) entity).getNetwork().addWire(pos, this);

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.api.machine;
 
 import alexiil.mc.lib.attributes.misc.Saveable;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 
@@ -66,16 +66,16 @@ public class MachineConfiguration implements Saveable {
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        tag.put(Constants.Nbt.SECURITY, this.getSecurity().toTag(new CompoundTag()));
-        tag.put(Constants.Nbt.CONFIGURATION, this.getSideConfiguration().toTag(new CompoundTag()));
+        tag.put(Constant.Nbt.SECURITY, this.getSecurity().toTag(new CompoundTag()));
+        tag.put(Constant.Nbt.CONFIGURATION, this.getSideConfiguration().toTag(new CompoundTag()));
         this.redstone.toTag(tag);
         return tag;
     }
 
     public CompoundTag toClientTag(CompoundTag tag, PlayerEntity player) {
         if (security.hasAccess(player)) {
-            tag.put(Constants.Nbt.SECURITY, this.getSecurity().toTag(new CompoundTag()));
-            tag.put(Constants.Nbt.CONFIGURATION, this.getSideConfiguration().toTag(new CompoundTag()));
+            tag.put(Constant.Nbt.SECURITY, this.getSecurity().toTag(new CompoundTag()));
+            tag.put(Constant.Nbt.CONFIGURATION, this.getSideConfiguration().toTag(new CompoundTag()));
             this.redstone.toTag(tag);
         }
         return tag;
@@ -83,21 +83,21 @@ public class MachineConfiguration implements Saveable {
 
     @Override
     public void fromTag(CompoundTag tag) {
-        this.getSecurity().fromTag(tag.getCompound(Constants.Nbt.SECURITY));
-        this.getSideConfiguration().fromTag(tag.getCompound(Constants.Nbt.CONFIGURATION));
+        this.getSecurity().fromTag(tag.getCompound(Constant.Nbt.SECURITY));
+        this.getSideConfiguration().fromTag(tag.getCompound(Constant.Nbt.CONFIGURATION));
         this.redstone = RedstoneInteractionType.fromTag(tag);
     }
 
     public static MachineConfiguration fromClientTag(CompoundTag tag) {
         MachineConfiguration configuration = new MachineConfiguration();
-        if (tag.contains(Constants.Nbt.REDSTONE_INTERACTION_TYPE)) {
+        if (tag.contains(Constant.Nbt.REDSTONE_INTERACTION_TYPE)) {
             configuration.setRedstone(RedstoneInteractionType.fromTag(tag));
         }
-        if (tag.contains(Constants.Nbt.CONFIGURATION)) {
-            configuration.getSideConfiguration().fromTag(tag.getCompound(Constants.Nbt.CONFIGURATION));
+        if (tag.contains(Constant.Nbt.CONFIGURATION)) {
+            configuration.getSideConfiguration().fromTag(tag.getCompound(Constant.Nbt.CONFIGURATION));
         }
-        if (tag.contains(Constants.Nbt.SECURITY)) {
-            configuration.getSecurity().fromTag(tag.getCompound(Constants.Nbt.SECURITY));
+        if (tag.contains(Constant.Nbt.SECURITY)) {
+            configuration.getSecurity().fromTag(tag.getCompound(Constant.Nbt.SECURITY));
         }
         return configuration;
     }

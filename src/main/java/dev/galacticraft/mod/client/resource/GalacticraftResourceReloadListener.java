@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.resource;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
 import dev.galacticraft.mod.client.render.entity.BubbleEntityRenderer;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
@@ -50,7 +50,7 @@ public class GalacticraftResourceReloadListener implements SimpleSynchronousReso
 
     @Override
     public Identifier getFabricId() {
-        return new Identifier(Constants.MOD_ID, "resource_reload_listener");
+        return new Identifier(Constant.MOD_ID, "resource_reload_listener");
     }
 
     @Override
@@ -62,9 +62,9 @@ public class GalacticraftResourceReloadListener implements SimpleSynchronousReso
     public void apply(ResourceManager resourceManager) {
         Function<Identifier, Sprite> atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
         MachineBakedModel.setSpriteAtlas(atlas);
-        FluidRenderHandler oil = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constants.MOD_ID, "block/crude_oil_still")), atlas.apply(new Identifier(Constants.MOD_ID, "block/crude_oil_flowing"))};
-        FluidRenderHandler fuel = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constants.MOD_ID, "block/fuel_still")), atlas.apply(new Identifier(Constants.MOD_ID, "block/fuel_flowing"))};
-        FluidRenderHandler oxygen = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constants.MOD_ID, "block/oxygen")), atlas.apply(new Identifier(Constants.MOD_ID, "block/oxygen"))};
+        FluidRenderHandler oil = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constant.MOD_ID, "block/crude_oil_still")), atlas.apply(new Identifier(Constant.MOD_ID, "block/crude_oil_flowing"))};
+        FluidRenderHandler fuel = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constant.MOD_ID, "block/fuel_still")), atlas.apply(new Identifier(Constant.MOD_ID, "block/fuel_flowing"))};
+        FluidRenderHandler oxygen = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constant.MOD_ID, "block/oxygen")), atlas.apply(new Identifier(Constant.MOD_ID, "block/oxygen"))};
 
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.CRUDE_OIL, oil);
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.FLOWING_CRUDE_OIL, oil);

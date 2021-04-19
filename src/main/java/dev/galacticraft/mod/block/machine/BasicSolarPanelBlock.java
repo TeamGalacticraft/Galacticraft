@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.machine;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.block.entity.BasicSolarPanelBlockEntity;
@@ -41,7 +41,7 @@ public class BasicSolarPanelBlock extends MachineBlock implements MultiBlockBase
     public BasicSolarPanelBlock(Settings settings) {
         super(settings, BasicSolarPanelBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft.basic_solar_panel")
-                        .setStyle(Constants.Text.DARK_GRAY_STYLE));
+                        .setStyle(Constant.Text.DARK_GRAY_STYLE));
     }
 
     @NotNull

@@ -28,7 +28,7 @@ import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import dev.galacticraft.mod.util.FluidUtils;
@@ -66,7 +66,7 @@ public class PipeNetworkImpl implements PipeNetwork {
         assert pipe != null : "Attempted to add pipe that does not exist!";
         pipe.setNetwork(this);
         this.pipes.add(pos);
-        for (Direction direction : Constants.Misc.DIRECTIONS) {
+        for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockEntity entity = world.getBlockEntity(pos.offset(direction));
             if (entity != null && !entity.isRemoved()) {
                 if (entity instanceof Pipe) {
@@ -110,7 +110,7 @@ public class PipeNetworkImpl implements PipeNetwork {
         this.reattachAdjacent(pos, this.insertable, (blockPos, direction) -> FluidUtils.getInsertable(this.world, blockPos, direction), list);
         list.clear();
 
-        for (Direction direction : Constants.Misc.DIRECTIONS) {
+        for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockPos pos1 = pos.offset(direction);
             if (this.pipes.contains(pos1)) {
                 if (((Pipe) this.world.getBlockEntity(pos1)).canConnect(direction.getOpposite())) list.add(pos1); //dont bother testing if it was unable to connect
@@ -142,7 +142,7 @@ public class PipeNetworkImpl implements PipeNetwork {
 
     private void traverse(List<BlockPos> list, BlockPos pos, @Nullable Direction ignore) {
         BlockPos pos1;
-        for (Direction direction : Constants.Misc.DIRECTIONS) {
+        for (Direction direction : Constant.Misc.DIRECTIONS) {
             if (direction.getOpposite() == ignore) continue;
             pos1 = pos.offset(direction);
             if (this.pipes.contains(pos1)) {
@@ -155,10 +155,10 @@ public class PipeNetworkImpl implements PipeNetwork {
     }
 
     private <T> void reattachAdjacent(BlockPos pos, Object2ObjectOpenHashMap<BlockPos, T> map, BiFunction<BlockPos, Direction, T> function, List<BlockPos> optionalList) {
-        for (Direction direction : Constants.Misc.DIRECTIONS) {
+        for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockPos pos1 = pos.offset(direction);
             if (map.remove(pos1) != null) {
-                for (Direction direction1 : Constants.Misc.DIRECTIONS) {
+                for (Direction direction1 : Constant.Misc.DIRECTIONS) {
                     if (direction1 == direction.getOpposite()) continue;
                     if (this.pipes.contains(pos1.offset(direction1))) {
                         if (((Pipe) this.world.getBlockEntity(pos1)).canConnect(direction1.getOpposite())) {

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.api.machine;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.CompoundTag;
@@ -45,17 +45,17 @@ public enum RedstoneInteractionType implements StringIdentifiable {
     /**
      * Ignores redstone entirely.
      */
-    IGNORE(new TranslatableText("ui.galacticraft.redstone.ignore"), Constants.Text.GRAY_STYLE),
+    IGNORE(new TranslatableText("ui.galacticraft.redstone.ignore"), Constant.Text.GRAY_STYLE),
 
     /**
      * When powered with redstone, the machine turns off.
      */
-    LOW(new TranslatableText("ui.galacticraft.redstone.low"), Constants.Text.DARK_RED_STYLE),
+    LOW(new TranslatableText("ui.galacticraft.redstone.low"), Constant.Text.DARK_RED_STYLE),
 
     /**
      * When powered with redstone, the machine turns on.
      */
-    HIGH(new TranslatableText("ui.galacticraft.redstone.high"), Constants.Text.RED_STYLE);
+    HIGH(new TranslatableText("ui.galacticraft.redstone.high"), Constant.Text.RED_STYLE);
 
     private final MutableText name;
 
@@ -71,7 +71,7 @@ public enum RedstoneInteractionType implements StringIdentifiable {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBlockPos(pos);
         buf.writeByte(this.ordinal());
-        ServerPlayNetworking.send(player, new Identifier(Constants.MOD_ID, "redstone_update"), buf);
+        ServerPlayNetworking.send(player, new Identifier(Constant.MOD_ID, "redstone_update"), buf);
     }
 
     public Text getName() {
@@ -84,10 +84,10 @@ public enum RedstoneInteractionType implements StringIdentifiable {
     }
 
     public void toTag(CompoundTag tag) {
-        tag.putString(Constants.Nbt.REDSTONE_INTERACTION_TYPE, this.asString());
+        tag.putString(Constant.Nbt.REDSTONE_INTERACTION_TYPE, this.asString());
     }
 
     public static RedstoneInteractionType fromTag(CompoundTag tag) {
-        return fromString(tag.getString(Constants.Nbt.REDSTONE_INTERACTION_TYPE));
+        return fromString(tag.getString(Constant.Nbt.REDSTONE_INTERACTION_TYPE));
     }
 }

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.api.block;
 
 import com.mojang.datafixers.util.Either;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.screen.slot.SlotType;
@@ -124,26 +124,26 @@ public class ConfiguredMachineFace {
     }
 
     public CompoundTag toTag(CompoundTag tag) {
-        tag.putString(Constants.Nbt.AUTOMATION_TYPE, automationType.name());
-        tag.putBoolean(Constants.Nbt.MATCH, this.matching != null);
+        tag.putString(Constant.Nbt.AUTOMATION_TYPE, automationType.name());
+        tag.putBoolean(Constant.Nbt.MATCH, this.matching != null);
         if (this.matching != null) {
-            tag.putBoolean(Constants.Nbt.INTEGER, this.matching.left().isPresent());
+            tag.putBoolean(Constant.Nbt.INTEGER, this.matching.left().isPresent());
             if (this.matching.left().isPresent()) {
-                tag.putInt(Constants.Nbt.VALUE, this.matching.left().get());
+                tag.putInt(Constant.Nbt.VALUE, this.matching.left().get());
             } else {
-                tag.putString(Constants.Nbt.VALUE, this.matching.right().orElseThrow(RuntimeException::new).getId().toString());
+                tag.putString(Constant.Nbt.VALUE, this.matching.right().orElseThrow(RuntimeException::new).getId().toString());
             }
         }
         return tag;
     }
 
     public void fromTag(CompoundTag tag) {
-        this.automationType = AutomationType.valueOf(tag.getString(Constants.Nbt.AUTOMATION_TYPE));
-        if (tag.getBoolean(Constants.Nbt.MATCH)) {
-            if (tag.getBoolean(Constants.Nbt.INTEGER)) {
-                this.matching = Either.left(tag.getInt(Constants.Nbt.VALUE));
+        this.automationType = AutomationType.valueOf(tag.getString(Constant.Nbt.AUTOMATION_TYPE));
+        if (tag.getBoolean(Constant.Nbt.MATCH)) {
+            if (tag.getBoolean(Constant.Nbt.INTEGER)) {
+                this.matching = Either.left(tag.getInt(Constant.Nbt.VALUE));
             } else {
-                this.matching = Either.right(SlotType.SLOT_TYPES.get(new Identifier(tag.getString(Constants.Nbt.VALUE))));
+                this.matching = Either.right(SlotType.SLOT_TYPES.get(new Identifier(tag.getString(Constant.Nbt.VALUE))));
             }
         } else {
             this.matching = null;

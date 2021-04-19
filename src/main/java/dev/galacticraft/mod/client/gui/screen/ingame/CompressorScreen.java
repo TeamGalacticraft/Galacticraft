@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
 import net.fabricmc.api.EnvType;
@@ -52,7 +52,7 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.COMPRESSOR_SCREEN);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.COMPRESSOR_SCREEN);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
@@ -84,7 +84,7 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     protected void drawCraftProgressBar(MatrixStack matrices) {
         float progressScale = (((float)this.handler.machine.getProgress()) / ((float)this.handler.machine.getMaxProgress()));
 
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.COMPRESSOR_SCREEN);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.COMPRESSOR_SCREEN);
         this.drawTexture(matrices, this.x + 77, this.x + 28, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 

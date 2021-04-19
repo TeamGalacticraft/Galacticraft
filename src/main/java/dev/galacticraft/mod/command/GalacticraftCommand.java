@@ -27,7 +27,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.block.Block;
 import net.minecraft.command.argument.BlockPosArgumentType;
@@ -108,25 +108,25 @@ public class GalacticraftCommand {
         context.getSource().getMinecraftServer().execute(() -> {
             try {
                 if (!CelestialBodyType.getByDimType(context.getSource().getWorld().getRegistryKey()).isPresent()) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.gcrhouston.cannot_detect_signal").setStyle(Constants.Text.RED_STYLE));
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft.gcrhouston.cannot_detect_signal").setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
                     return;
                 }
                 ServerPlayerEntity player = context.getSource().getPlayer();
                 ServerWorld serverWorld = context.getSource().getMinecraftServer().getWorld(World.OVERWORLD);
                 if (serverWorld == null) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constants.Text.RED_STYLE));
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
                     return;
                 } else if (context.getSource().getWorld().equals(serverWorld)) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.gcrhouston.on_earth_already").setStyle(Constants.Text.RED_STYLE));
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft.gcrhouston.on_earth_already").setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
                     return;
                 }
                 UUID playerID = context.getSource().getPlayer().getGameProfile().getId();
                 if (!GCR_HOUSTON_TIMERS.containsKey(playerID)) {
                     GCR_HOUSTON_TIMERS.put(playerID, context.getSource().getMinecraftServer().getTicks());
-                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.gcrhouston.confirm", serverWorld.getRegistryKey().getValue()).setStyle(Constants.Text.RED_STYLE), false);
+                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.gcrhouston.confirm", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.RED_STYLE), false);
                 } else if (GCR_HOUSTON_TIMERS.get(playerID) + GCR_HOUSTON_TIMER_LENGTH > context.getSource().getMinecraftServer().getTicks()) {
                     GCR_HOUSTON_TIMERS.remove(playerID);
                     BlockPos pos = getValidTeleportPos(serverWorld, player);
@@ -136,10 +136,10 @@ public class GalacticraftCommand {
                             pos.getZ(),
                             player.yaw,
                             player.pitch);
-                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.gcrhouston.success", serverWorld.getRegistryKey().getValue()).setStyle(Constants.Text.GREEN_STYLE), true);
+                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.gcrhouston.success", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.GREEN_STYLE), true);
                 }
             } catch (CommandSyntaxException e) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft.gchouston.error").setStyle(Constants.Text.RED_STYLE));
+                context.getSource().sendError(new TranslatableText("commands.galacticraft.gchouston.error").setStyle(Constant.Text.RED_STYLE));
                 e.printStackTrace();
                 retval[0] = -1;
             }
@@ -154,18 +154,18 @@ public class GalacticraftCommand {
             try {
                 player = context.getSource().getPlayer();
             } catch (CommandSyntaxException e) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constants.Text.RED_STYLE));
+                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constant.Text.RED_STYLE));
                 retval[0] = -1;
                 return;
             }
             try {
                 ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
                 if (serverWorld == null) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constants.Text.RED_STYLE));
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
                     return;
                 } else if (context.getSource().getWorld().equals(serverWorld)) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.already_in_dimension", serverWorld.getRegistryKey().getValue()).setStyle(Constants.Text.RED_STYLE));
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.already_in_dimension", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
                     return;
                 }
@@ -178,7 +178,7 @@ public class GalacticraftCommand {
                         player.pitch);
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.dimensiontp.success.single", serverWorld.getRegistryKey().getValue()), true);
             } catch (CommandSyntaxException e) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constants.Text.RED_STYLE));
+                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.RED_STYLE));
                 retval[0] = -1;
             }
         });
@@ -223,16 +223,16 @@ public class GalacticraftCommand {
                 serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
                 pos = BlockPosArgumentType.getBlockPos(context, "pos");
                 if (serverWorld == null || pos == null) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constants.Text.RED_STYLE));
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
                     return;
                 } else if (context.getSource().getWorld().equals(serverWorld)) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.already_in_dimension", serverWorld.getRegistryKey().getValue()).setStyle(Constants.Text.RED_STYLE));
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.already_in_dimension", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
                     return;
                 }
             } catch (CommandSyntaxException e) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constants.Text.RED_STYLE));
+                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.RED_STYLE));
                 retval[0] = -1;
                 return;
             }
@@ -246,7 +246,7 @@ public class GalacticraftCommand {
                         player.pitch);
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.dimensiontp.success.pos", serverWorld.getRegistryKey().getValue(), pos.getX(), pos.getY(), pos.getZ()), true);
             } catch (CommandSyntaxException e) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constants.Text.RED_STYLE));
+                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constant.Text.RED_STYLE));
                 retval[0] = -1;
             }
         });

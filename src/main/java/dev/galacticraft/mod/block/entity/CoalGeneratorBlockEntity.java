@@ -23,12 +23,11 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
@@ -140,7 +139,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
                 this.heat = Math.min(1, this.heat + 0.004);
             }
         }
-        this.world.setBlockState(this.pos, this.getCachedState().with(Constants.Property.ACTIVE, this.getHeat() > 0));
+        this.world.setBlockState(this.pos, this.getCachedState().with(Constant.Property.ACTIVE, this.getHeat() > 0));
     }
 
     @Nullable

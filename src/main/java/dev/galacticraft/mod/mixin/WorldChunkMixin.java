@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.mod.accessor.ChunkSectionOxygenAccessor;
 import io.netty.buffer.Unpooled;
@@ -94,7 +94,7 @@ public abstract class WorldChunkMixin implements ChunkOxygenAccessor {
                     updatable[i] = false;
                     PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer(1 + ((16 * 16 * 16) / 8) + (4 * 2), 50 + 1 + ((16 * 16 * 16) / 8) + (4 * 2)).writeByte(i).writeInt(this.pos.x).writeInt(this.pos.z));
                     ((ChunkSectionOxygenAccessor) sections[i]).writeOxygen(buf);
-                    list.add(new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "oxygen_update"), buf));
+                    list.add(new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "oxygen_update"), buf));
                 }
             }
             return list;

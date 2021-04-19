@@ -27,7 +27,7 @@ import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
 import com.hrznstudio.galacticraft.api.teams.Teams;
 import com.hrznstudio.galacticraft.api.teams.data.Team;
 import com.mojang.authlib.GameProfile;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
@@ -117,25 +117,25 @@ public class SecurityInfo {
 
     public CompoundTag toTag(CompoundTag tag) {
         if (this.getOwner() != null) {
-            tag.put(Constants.Nbt.OWNER, NbtHelper.fromGameProfile(new CompoundTag(), this.getOwner()));
+            tag.put(Constant.Nbt.OWNER, NbtHelper.fromGameProfile(new CompoundTag(), this.getOwner()));
         }
-        tag.putString(Constants.Nbt.ACCESSIBILITY, this.accessibility.name());
+        tag.putString(Constant.Nbt.ACCESSIBILITY, this.accessibility.name());
         if (this.getTeam() != null) {
-            tag.putString(Constants.Nbt.TEAM, team.toString());
+            tag.putString(Constant.Nbt.TEAM, team.toString());
         }
         return tag;
     }
 
     public void fromTag(CompoundTag tag) {
-        if (tag.contains(Constants.Nbt.OWNER)) {
-            this.owner = NbtHelper.toGameProfile(tag.getCompound(Constants.Nbt.OWNER));
+        if (tag.contains(Constant.Nbt.OWNER)) {
+            this.owner = NbtHelper.toGameProfile(tag.getCompound(Constant.Nbt.OWNER));
         }
 
-        if (tag.contains(Constants.Nbt.TEAM)) {
-            this.team = new Identifier(tag.getString(Constants.Nbt.TEAM));
+        if (tag.contains(Constant.Nbt.TEAM)) {
+            this.team = new Identifier(tag.getString(Constant.Nbt.TEAM));
         }
 
-        this.accessibility = Accessibility.valueOf(tag.getString(Constants.Nbt.ACCESSIBILITY));
+        this.accessibility = Accessibility.valueOf(tag.getString(Constant.Nbt.ACCESSIBILITY));
     }
 
     public void sendPacket(BlockPos pos, ServerPlayerEntity player) {
@@ -144,7 +144,7 @@ public class SecurityInfo {
         buf.writeBlockPos(pos);
         buf.writeByte(this.accessibility.ordinal());
         buf.writeCompoundTag(NbtHelper.fromGameProfile(new CompoundTag(), this.owner));
-        ServerPlayNetworking.send(player, new Identifier(Constants.MOD_ID, "security_update"), buf);
+        ServerPlayNetworking.send(player, new Identifier(Constant.MOD_ID, "security_update"), buf);
     }
 
     public enum Accessibility implements StringIdentifiable {

@@ -29,7 +29,7 @@ import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
 import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.PipeConnectionType;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
@@ -69,7 +69,7 @@ public class PipeBlockEntity extends BlockEntity implements Pipe, AttributeProvi
     public @NotNull PipeNetwork getNetwork() {
         if (this.network == null) {
             if (!this.world.isClient()) {
-                for (Direction direction : Constants.Misc.DIRECTIONS) {
+                for (Direction direction : Constant.Misc.DIRECTIONS) {
                     BlockEntity entity = world.getBlockEntity(pos.offset(direction));
                     if (entity instanceof Pipe && ((Pipe) entity).getNetworkNullable() != null) {
                         ((Pipe) entity).getNetwork().addPipe(pos, this);

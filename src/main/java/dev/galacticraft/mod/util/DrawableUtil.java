@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -51,9 +51,9 @@ public interface DrawableUtil {
     }
 
     default void drawOxygenBuffer(MatrixStack matrices, int x, int y, int z, float scale) {
-        MinecraftClient.getInstance().getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
-        texturedQuad(matrices.peek().getModel(), x, y, z, Constants.TextureCoordinate.OXYGEN_DARK_X, Constants.TextureCoordinate.OXYGEN_DARK_Y, Constants.TextureCoordinate.OVERLAY_WIDTH, Constants.TextureCoordinate.OVERLAY_HEIGHT);
-        texturedQuad(matrices.peek().getModel(), x, y + Constants.TextureCoordinate.OVERLAY_HEIGHT - (Constants.TextureCoordinate.OVERLAY_HEIGHT * scale), z, Constants.TextureCoordinate.OXYGEN_LIGHT_X, Constants.TextureCoordinate.OXYGEN_LIGHT_Y, Constants.TextureCoordinate.OVERLAY_WIDTH, Constants.TextureCoordinate.OVERLAY_HEIGHT * scale);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(Constant.ScreenTexture.OVERLAY);
+        texturedQuad(matrices.peek().getModel(), x, y, z, Constant.TextureCoordinate.OXYGEN_DARK_X, Constant.TextureCoordinate.OXYGEN_DARK_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT);
+        texturedQuad(matrices.peek().getModel(), x, y + Constant.TextureCoordinate.OVERLAY_HEIGHT - (Constant.TextureCoordinate.OVERLAY_HEIGHT * scale), z, Constant.TextureCoordinate.OXYGEN_LIGHT_X, Constant.TextureCoordinate.OXYGEN_LIGHT_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT * scale);
     }
 
     default void texturedQuad(Matrix4f matrices, float x, float y, float z, float u, float v, float width, float height) {

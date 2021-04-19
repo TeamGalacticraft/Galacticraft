@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.misc.cape;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.cape.CapeListener;
 import dev.galacticraft.mod.api.cape.model.CapePlayer;
@@ -95,7 +95,7 @@ public class JsonCapes implements CapeListener {
         }
 
         public Identifier getTexture() {
-            return new Identifier(Constants.MOD_ID, "textures/cape/cape_" + this.key + ".png");
+            return new Identifier(Constant.MOD_ID, "textures/cape/cape_" + this.key + ".png");
         }
     }
 }

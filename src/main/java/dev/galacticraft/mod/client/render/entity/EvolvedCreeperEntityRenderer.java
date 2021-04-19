@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.EvolvedCreeperEntityModel;
 import dev.galacticraft.mod.client.render.entity.feature.EvolvedCreeperChargeFeatureRenderer;
 import dev.galacticraft.mod.entity.EvolvedCreeperEntity;
@@ -37,7 +37,7 @@ import net.minecraft.util.math.MathHelper;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EvolvedCreeperEntityRenderer extends MobEntityRenderer<EvolvedCreeperEntity, EvolvedCreeperEntityModel> {
-    private static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, "textures/entity/evolved/creeper.png");
+    private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/evolved/creeper.png");
 
     public EvolvedCreeperEntityRenderer(EntityRenderDispatcher dispatcher) {
         super(dispatcher, new EvolvedCreeperEntityModel(0.0F), 0.5F);

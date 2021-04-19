@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
@@ -48,7 +48,7 @@ public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorScree
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.COAL_GENERATOR_SCREEN);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.COAL_GENERATOR_SCREEN);
 
         int leftPos = this.x;
         int topPos = this.y;

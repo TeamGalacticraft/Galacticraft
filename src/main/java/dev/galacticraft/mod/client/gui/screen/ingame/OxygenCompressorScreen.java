@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.OxygenCompressorScreenHandler;
@@ -49,7 +49,7 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         if (handler.machine.getStatus().getType().isActive()) {

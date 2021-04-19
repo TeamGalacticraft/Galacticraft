@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.api.block;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidDrainable;
 import net.minecraft.block.FluidFillable;
@@ -63,7 +63,7 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
                         VALUES.add(Registry.FLUID.getId(f));
                     }
                 }
-                VALUES.add(Constants.Misc.EMPTY);
+                VALUES.add(Constant.Misc.EMPTY);
             }
             return VALUES;
         }
@@ -84,13 +84,13 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
     @Override
     default boolean canFillWithFluid(BlockView view, BlockPos pos, BlockState state, Fluid fluid) {
         if (!(fluid instanceof FlowableFluid)) return false;
-        return state.get(FLUID).equals(Constants.Misc.EMPTY);
+        return state.get(FLUID).equals(Constant.Misc.EMPTY);
     }
 
     @Override
     default boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) {
         if (!(fluidState.getFluid() instanceof FlowableFluid)) return false;
-        if (state.get(FLUID).equals(Constants.Misc.EMPTY)) {
+        if (state.get(FLUID).equals(Constant.Misc.EMPTY)) {
             if (!world.isClient()) {
                 world.setBlockState(pos, state.with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
                         .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1)), 3);
@@ -104,8 +104,8 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
 
     @Override
     default Fluid tryDrainFluid(WorldAccess world, BlockPos pos, BlockState state) {
-        if (!state.get(FLUID).equals(Constants.Misc.EMPTY)) {
-            world.setBlockState(pos, state.with(FLUID, Constants.Misc.EMPTY), 3);
+        if (!state.get(FLUID).equals(Constant.Misc.EMPTY)) {
+            world.setBlockState(pos, state.with(FLUID, Constant.Misc.EMPTY), 3);
             if (Registry.FLUID.get(state.get(FLUID)).getDefaultState().isStill()) {
                 return Registry.FLUID.get(state.get(FLUID));
             }

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.world.biome.source;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -32,6 +32,6 @@ import net.minecraft.util.registry.Registry;
 public class GalacticraftBiomeSource {
 
     public static void register() {
-        Registry.register(Registry.BIOME_SOURCE, new Identifier(Constants.MOD_ID, "moon"), MoonBiomeSource.CODEC);
+        Registry.register(Registry.BIOME_SOURCE, new Identifier(Constant.MOD_ID, "moon"), MoonBiomeSource.CODEC);
     }
 }

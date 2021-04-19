@@ -28,7 +28,7 @@ import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
 import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
 import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.util.EnergyUtil;
@@ -66,7 +66,7 @@ public class WireNetworkImpl implements WireNetwork {
         assert wire != null : "Attempted to add wire that does not exist!";
         wire.setNetwork(this);
         this.wires.add(pos);
-        for (Direction direction : Constants.Misc.DIRECTIONS) {
+        for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockEntity entity = world.getBlockEntity(pos.offset(direction));
             if (entity != null && !entity.isRemoved()) {
                 if (entity instanceof Wire) {
@@ -110,7 +110,7 @@ public class WireNetworkImpl implements WireNetwork {
         this.reattachAdjacent(pos, this.insertable, (blockPos, direction) -> GalacticraftEnergy.INSERTABLE.getFirst(this.world, blockPos, SearchOptions.inDirection(direction)), list);
         list.clear();
 
-        for (Direction direction : Constants.Misc.DIRECTIONS) {
+        for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockPos pos1 = pos.offset(direction);
             if (this.wires.contains(pos1)) {
                 if (((Wire) this.world.getBlockEntity(pos1)).canConnect(direction.getOpposite())) list.add(pos1); //dont bother testing if it was unable to connect
@@ -142,7 +142,7 @@ public class WireNetworkImpl implements WireNetwork {
 
     private void traverse(List<BlockPos> list, BlockPos pos, @Nullable Direction ignore) {
         BlockPos pos1;
-        for (Direction direction : Constants.Misc.DIRECTIONS) {
+        for (Direction direction : Constant.Misc.DIRECTIONS) {
             if (direction.getOpposite() == ignore) continue;
             pos1 = pos.offset(direction);
             if (this.wires.contains(pos1)) {
@@ -155,10 +155,10 @@ public class WireNetworkImpl implements WireNetwork {
     }
 
     private <T> void reattachAdjacent(BlockPos pos, Object2ObjectOpenHashMap<BlockPos, T> map, BiFunction<BlockPos, Direction, T> function, List<BlockPos> optionalList) {
-        for (Direction direction : Constants.Misc.DIRECTIONS) {
+        for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockPos pos1 = pos.offset(direction);
             if (map.remove(pos1) != null) {
-                for (Direction direction1 : Constants.Misc.DIRECTIONS) {
+                for (Direction direction1 : Constant.Misc.DIRECTIONS) {
                     if (direction1 == direction.getOpposite()) continue;
                     if (this.wires.contains(pos1.offset(direction1))) {
                         if (((Wire) this.world.getBlockEntity(pos1)).canConnect(direction1.getOpposite())) {

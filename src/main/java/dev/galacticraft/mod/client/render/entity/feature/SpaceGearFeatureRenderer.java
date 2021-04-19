@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.render.entity.feature;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -41,7 +41,7 @@ import net.minecraft.util.math.Quaternion;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
-    private static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, "textures/entity/oxygen_gear.png");
+    private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/oxygen_gear.png");
     private final ModelTransformer<T> maskTransforms;
     private final ModelTransformer<T> tankTransforms;
     private final ModelPart oxygenMask;

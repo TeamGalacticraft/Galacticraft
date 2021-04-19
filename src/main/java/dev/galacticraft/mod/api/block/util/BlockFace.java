@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.api.block.util;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -45,7 +45,7 @@ public enum BlockFace {
     private final boolean vertical;
 
     BlockFace(MutableText name, boolean horizontal, boolean vertical) {
-        this.name = name.setStyle(Constants.Text.GOLD_STYLE);
+        this.name = name.setStyle(Constant.Text.GOLD_STYLE);
         this.horizontal = horizontal;
         this.vertical = vertical;
     }

@@ -25,11 +25,10 @@ package dev.galacticraft.mod.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipes;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
@@ -165,16 +164,16 @@ public class CompressorBlockEntity extends MachineBlockEntity {
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        tag.putInt(Constants.Nbt.PROGRESS, this.progress);
-        tag.putInt(Constants.Nbt.FUEL_TIME, this.fuelTime);
+        tag.putInt(Constant.Nbt.PROGRESS, this.progress);
+        tag.putInt(Constant.Nbt.FUEL_TIME, this.fuelTime);
         return super.toTag(tag);
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        this.progress = tag.getInt(Constants.Nbt.PROGRESS);
-        this.fuelTime = tag.getInt(Constants.Nbt.FUEL_TIME);
+        this.progress = tag.getInt(Constant.Nbt.PROGRESS);
+        this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
     }
 
     @Nullable

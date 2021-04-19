@@ -29,7 +29,7 @@ import alexiil.mc.lib.attributes.misc.Reference;
 import com.hrznstudio.galacticraft.energy.api.CapacitorView;
 import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
 import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.EnergyUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -65,7 +65,7 @@ public class BatteryItem extends Item implements AttributeProviderItem {
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         CapacitorView view = EnergyUtil.getCapacitorView(stack);
-        lines.add(new TranslatableText("tooltip.galacticraft.energy_remaining", EnergyUtil.getDisplay(view.getEnergy())).setStyle(Constants.Text.getStorageLevelColor(1.0 - ((double)view.getEnergy()) / ((double)view.getMaxCapacity()))));
+        lines.add(new TranslatableText("tooltip.galacticraft.energy_remaining", EnergyUtil.getDisplay(view.getEnergy())).setStyle(Constant.Text.getStorageLevelColor(1.0 - ((double)view.getEnergy()) / ((double)view.getMaxCapacity()))));
         super.appendTooltip(stack, world, lines, context);
     }
 

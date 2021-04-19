@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.recipe.rei;
 
 import com.google.common.collect.Lists;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.item.GalacticraftItems;
@@ -47,8 +47,8 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public class GalacticraftREIPlugin implements REIPluginV0 {
-    public static final Identifier CIRCUIT_FABRICATION = new Identifier(Constants.MOD_ID, "plugins/circuit_fabricator");
-    public static final Identifier COMPRESSING = new Identifier(Constants.MOD_ID, "plugins/compressing");
+    public static final Identifier CIRCUIT_FABRICATION = new Identifier(Constant.MOD_ID, "plugins/circuit_fabricator");
+    public static final Identifier COMPRESSING = new Identifier(Constant.MOD_ID, "plugins/compressing");
 
     public void registerPluginCategories(RecipeHelper recipeHelper) {
         recipeHelper.registerCategory(new DefaultFabricationCategory());
@@ -63,7 +63,7 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
 
     @Override
     public Identifier getPluginIdentifier() {
-        return new Identifier(Constants.MOD_ID, Constants.MOD_ID);
+        return new Identifier(Constant.MOD_ID, Constant.MOD_ID);
     }
 
     @Override

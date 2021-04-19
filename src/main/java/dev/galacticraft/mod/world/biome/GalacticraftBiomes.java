@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.world.biome;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -34,12 +34,12 @@ import net.minecraft.world.biome.Biome;
 public class GalacticraftBiomes {
 
     public static class Moon {
-        public static final RegistryKey<Biome> HIGHLANDS_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biome.Moon.HIGHLANDS_PLAINS));
-        public static final RegistryKey<Biome> HIGHLANDS_ROCKS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biome.Moon.HIGHLANDS_ROCKS));
-        public static final RegistryKey<Biome> HIGHLANDS_VALLEY = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biome.Moon.HIGHLANDS_VALLEY));
-        public static final RegistryKey<Biome> MARE_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biome.Moon.MARE_PLAINS));
-        public static final RegistryKey<Biome> MARE_ROCKS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biome.Moon.MARE_ROCKS));
-        public static final RegistryKey<Biome> MARE_EDGE = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biome.Moon.MARE_EDGE));
+        public static final RegistryKey<Biome> HIGHLANDS_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.HIGHLANDS_PLAINS));
+        public static final RegistryKey<Biome> HIGHLANDS_ROCKS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.HIGHLANDS_ROCKS));
+        public static final RegistryKey<Biome> HIGHLANDS_VALLEY = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.HIGHLANDS_VALLEY));
+        public static final RegistryKey<Biome> MARE_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.MARE_PLAINS));
+        public static final RegistryKey<Biome> MARE_ROCKS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.MARE_ROCKS));
+        public static final RegistryKey<Biome> MARE_EDGE = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.MARE_EDGE));
 
         private static void init() {
         }

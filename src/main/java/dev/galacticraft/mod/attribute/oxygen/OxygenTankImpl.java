@@ -24,7 +24,7 @@ package dev.galacticraft.mod.attribute.oxygen;
 
 import alexiil.mc.lib.attributes.ListenerToken;
 import alexiil.mc.lib.attributes.misc.Saveable;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,13 +65,13 @@ public class OxygenTankImpl implements OxygenTank, Saveable {
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        tag.putInt(Constants.Nbt.AMOUNT, amount);
+        tag.putInt(Constant.Nbt.AMOUNT, amount);
         return tag;
     }
 
     @Override
     public void fromTag(CompoundTag tag) {
-        this.amount = tag.getInt(Constants.Nbt.AMOUNT);
+        this.amount = tag.getInt(Constant.Nbt.AMOUNT);
     }
 
     @Override

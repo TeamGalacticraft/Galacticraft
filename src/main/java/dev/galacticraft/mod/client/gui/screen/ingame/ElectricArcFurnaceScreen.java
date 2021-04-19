@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.ElectricArcFurnaceScreenHandler;
@@ -53,7 +53,7 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         if (handler.machine.cookLength != 0 && handler.machine.cookTime != 0) {
             double scale = ((double)handler.machine.cookTime) / ((double)handler.machine.cookLength);

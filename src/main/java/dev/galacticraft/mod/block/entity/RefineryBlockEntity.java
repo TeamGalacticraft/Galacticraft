@@ -27,13 +27,12 @@ import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.screen.RefineryScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
@@ -76,8 +75,8 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
 
     @Override
     protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
-        builder.addTank(OIL_TANK, SlotType.OIL_IN, Constants.Filter.OIL, 122, 28, 1);
-        builder.addTank(FUEL_TANK, SlotType.FUEL_OUT, Constants.Filter.FUEL, 152, 28, 1);
+        builder.addTank(OIL_TANK, SlotType.OIL_IN, Constant.Filter.OIL, 122, 28, 1);
+        builder.addTank(FUEL_TANK, SlotType.FUEL_OUT, Constant.Filter.FUEL, 152, 28, 1);
         return builder;
     }
 

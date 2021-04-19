@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.machine;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
 import net.minecraft.block.BlockState;
@@ -41,7 +41,7 @@ public class OxygenCollectorBlock extends MachineBlock {
     public OxygenCollectorBlock(Settings settings) {
         super(settings, OxygenCollectorBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft.oxygen_collector")
-                        .setStyle(Constants.Text.DARK_GRAY_STYLE));
+                        .setStyle(Constant.Text.DARK_GRAY_STYLE));
     }
 
     @Override

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.screen.ElectricCompressorScreenHandler;
 import net.fabricmc.api.EnvType;
@@ -55,7 +55,7 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
@@ -73,7 +73,7 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     protected void drawCraftProgressBar(MatrixStack matrices) {
         float progressScale = (((float)this.handler.machine.getProgress()) / ((float)this.handler.machine.getMaxProgress()));
 
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
         this.drawTexture(matrices, this.x + 77, this.y + 29, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 }

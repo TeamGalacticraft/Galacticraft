@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.entity;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -64,7 +64,7 @@ public class EvolvedCreeperEntity extends CreeperEntity {
 
     @Override
     public void readCustomDataFromTag(CompoundTag tag) {
-        this.setBaby(tag.getBoolean(Constants.Nbt.BABY));
+        this.setBaby(tag.getBoolean(Constant.Nbt.BABY));
         tag.putByte("ExplosionRadius", (byte) (this.isBaby() ? 2 : 4)); //overwrite
         tag.putShort("Fuse", (short) 37); //overwrite
         super.readCustomDataFromTag(tag);
@@ -78,7 +78,7 @@ public class EvolvedCreeperEntity extends CreeperEntity {
     @Override
     public void writeCustomDataToTag(CompoundTag tag) {
         super.writeCustomDataToTag(tag);
-        tag.putBoolean(Constants.Nbt.BABY, isBaby());
+        tag.putBoolean(Constant.Nbt.BABY, isBaby());
         tag.putByte("ExplosionRadius", (byte) (this.isBaby() ? 2 : 4));
         tag.putShort("Fuse", (short) 37); //overwrite
     }

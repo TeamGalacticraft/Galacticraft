@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -46,7 +46,7 @@ public class SpaceRaceScreen extends Screen {
     private Menu menu = Menu.MAIN;
 
     public SpaceRaceScreen() {
-        super(new TranslatableText("ui." + Constants.MOD_ID + ".space_race_manager"));
+        super(new TranslatableText("ui." + Constant.MOD_ID + ".space_race_manager"));
     }
 
     @Override

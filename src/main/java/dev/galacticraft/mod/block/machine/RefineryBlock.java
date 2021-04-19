@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.machine;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.block.entity.RefineryBlockEntity;
@@ -42,7 +42,7 @@ public class RefineryBlock extends MachineBlock {
     public RefineryBlock(Settings settings) {
         super(settings, RefineryBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft.refinery")
-                        .setStyle(Constants.Text.DARK_GRAY_STYLE));
+                        .setStyle(Constant.Text.DARK_GRAY_STYLE));
     }
 
     @Override

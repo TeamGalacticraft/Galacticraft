@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.AdvancedSolarPanelScreenHandler;
@@ -53,7 +53,7 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.SOLAR_PANEL_SCREEN);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
 
         int leftPos = this.x;
         int topPos = this.y;
@@ -79,7 +79,7 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
                 time = 6000 - (time - 6000);
             }
 
-            lines.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", (int) this.handler.machine.getEnergyConsumption()).setStyle(Constants.Text.LIGHT_PURPLE_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", (int) this.handler.machine.getEnergyConsumption()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
         }
         return lines;
     }

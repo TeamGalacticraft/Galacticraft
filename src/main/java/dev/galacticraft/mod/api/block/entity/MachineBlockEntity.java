@@ -44,7 +44,7 @@ import com.hrznstudio.galacticraft.energy.api.EnergyType;
 import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
 import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
 import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.block.ConfiguredMachineFace;
@@ -455,7 +455,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         if (this.getInventory().getSlotCount()> 0) this.getInventory().toTag(tag);
         if (this.getFluidInv().getTankCount() > 0) this.getFluidInv().toTag(tag);
         this.configuration.toTag(tag);
-        tag.putBoolean(Constants.Nbt.NO_DROP, this.noDrop);
+        tag.putBoolean(Constant.Nbt.NO_DROP, this.noDrop);
         return tag;
     }
 
@@ -466,7 +466,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         if (this.getInventory().getSlotCount() > 0) this.getInventory().fromTag(tag);
         if (this.getFluidInv().getTankCount() > 0) this.getFluidInv().fromTag(tag);
         this.configuration.fromTag(tag);
-        this.noDrop = tag.getBoolean(Constants.Nbt.NO_DROP);
+        this.noDrop = tag.getBoolean(Constant.Nbt.NO_DROP);
         if (loaded && !world.isClient) {
             this.sync();
         } else {
@@ -501,7 +501,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
     public void trySpreadEnergy() {
         if (this.canExtractEnergy()) {
-            for (BlockFace face : Constants.Misc.BLOCK_FACES) {
+            for (BlockFace face : Constant.Misc.BLOCK_FACES) {
                 ConfiguredMachineFace option = this.getIOConfig().get(face);
                 if (option.getAutomationType().isEnergy() && option.getAutomationType().isOutput()) {
                     Direction dir = face.toDirection(this.getCachedState().get(Properties.HORIZONTAL_FACING));
@@ -516,7 +516,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
     public void trySpreadFluids(int tank) {
         if (this.getFluidInv().getTypes()[tank].getType().isOutput() && !this.getFluidInv().getInvFluid(tank).isEmpty()) {
-            for (BlockFace face : Constants.Misc.BLOCK_FACES) {
+            for (BlockFace face : Constant.Misc.BLOCK_FACES) {
                 ConfiguredMachineFace option = this.getIOConfig().get(face);
                 if (option.getAutomationType().isFluid() && option.getAutomationType().isOutput()) {
                     Direction dir = face.toDirection(this.getCachedState().get(Properties.HORIZONTAL_FACING));

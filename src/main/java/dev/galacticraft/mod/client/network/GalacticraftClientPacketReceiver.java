@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.network;
 
 import com.hrznstudio.galacticraft.api.internal.data.ClientWorldTeamsGetter;
 import com.mojang.authlib.GameProfile;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
@@ -52,7 +52,7 @@ import java.util.UUID;
 @Environment(EnvType.CLIENT)
 public class GalacticraftClientPacketReceiver {
     public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "security_update"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "security_update"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
             BlockPos pos = buf.readBlockPos();
             SecurityInfo.Accessibility accessibility = SecurityInfo.Accessibility.values()[buf.readByte()];
             GameProfile profile = NbtHelper.toGameProfile(Objects.requireNonNull(buf.readCompoundTag()));
@@ -70,7 +70,7 @@ public class GalacticraftClientPacketReceiver {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "redstone_update"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "redstone_update"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
             BlockPos pos = buf.readBlockPos();
             RedstoneInteractionType redstone = RedstoneInteractionType.values()[buf.readByte()];
 
@@ -84,7 +84,7 @@ public class GalacticraftClientPacketReceiver {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "entity_spawn"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "entity_spawn"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             client.execute(() -> {
                 int id = buffer.readVarInt();
@@ -100,7 +100,7 @@ public class GalacticraftClientPacketReceiver {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "bubble_size"), (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "bubble_size"), (client, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             client.execute(() -> {
                 BlockPos pos = buffer.readBlockPos();
@@ -113,13 +113,13 @@ public class GalacticraftClientPacketReceiver {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "oxygen_update"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "oxygen_update"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
             byte b = packetByteBuf.readByte();
             ChunkOxygenAccessor accessor = ((ChunkOxygenAccessor) clientPlayNetworkHandler.getWorld().getChunk(packetByteBuf.readInt(), packetByteBuf.readInt()));
             accessor.readOxygenUpdate(b, packetByteBuf);
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "open_screen"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "open_screen"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
 
         });
     }

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.machine;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.block.entity.CoalGeneratorBlockEntity;
 import net.fabricmc.api.EnvType;
@@ -51,10 +51,10 @@ public class CoalGeneratorBlock extends MachineBlock {
                 (view) -> new CoalGeneratorBlockEntity(),
                 (itemStack, blockView, tooltipContext) ->
                         new TranslatableText("tooltip.galacticraft.coal_generator")
-                                .setStyle(Constants.Text.DARK_GRAY_STYLE)
+                                .setStyle(Constant.Text.DARK_GRAY_STYLE)
         );
 
-        this.setDefaultState(this.getDefaultState().with(Constants.Property.ACTIVE, false));
+        this.setDefaultState(this.getDefaultState().with(Constant.Property.ACTIVE, false));
     }
 
     @Environment(EnvType.CLIENT)
@@ -83,6 +83,6 @@ public class CoalGeneratorBlock extends MachineBlock {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(Constants.Property.ACTIVE);
+        builder.add(Constant.Property.ACTIVE);
     }
 }

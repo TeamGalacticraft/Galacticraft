@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.special.aluminumwire.tier1;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.util.EnergyUtil;
 import net.fabricmc.api.EnvType;
@@ -103,7 +103,7 @@ public class AluminumWireBlock extends WireBlock {
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         BlockState state = this.getDefaultState();
-        for (Direction direction : Constants.Misc.DIRECTIONS) {
+        for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockState block = context.getWorld().getBlockState(context.getBlockPos().offset(direction));
             state = state.with(getPropForDirection(direction), !block.isAir() && (block.getBlock() instanceof WireBlock
                     || EnergyUtil.canAccessEnergy(context.getWorld(), context.getBlockPos().offset(direction), direction)));

@@ -28,7 +28,7 @@ import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Either;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.AutomationType;
 import dev.galacticraft.mod.api.block.ConfiguredMachineFace;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
@@ -239,7 +239,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         if (this.handler.machine != null) {
             final MachineBlockEntity machine = this.handler.machine;
             boolean secondary = false;
-            this.client.getTextureManager().bindTexture(Constants.ScreenTexture.MACHINE_CONFIG_PANELS);
+            this.client.getTextureManager().bindTexture(Constant.ScreenTexture.MACHINE_CONFIG_PANELS);
             for (Tab tab : Tab.values()) { // 0, 1, 2, 3
                 if (secondary) matrices.translate(0, SPACING, 0);
                 this.drawTexture(matrices, this.x + (tab.isLeft() ? tab.isOpen() ? -PANEL_WIDTH : -22 : this.backgroundWidth), this.y + (secondary ? Tab.values()[tab.ordinal() - 1].isOpen() ? PANEL_HEIGHT : TAB_HEIGHT : 0) + SPACING, tab.getU(), tab.getV(), tab.isOpen() ? PANEL_WIDTH : TAB_WIDTH, tab.isOpen() ? PANEL_HEIGHT : TAB_HEIGHT);
@@ -261,13 +261,13 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.renderItemIcon(matrices, REDSTONE_HIGH_X, REDSTONE_HIGH_Y - 2, REDSTONE_TORCH);
 
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.redstone")
-                        .setStyle(Constants.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
+                        .setStyle(Constant.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.redstone.state",
-                        machine.getRedstoneInteraction().getName()).setStyle(Constants.Text.DARK_GRAY_STYLE), REDSTONE_STATE_TEXT_X, REDSTONE_STATE_TEXT_Y, ColorUtils.WHITE);
+                        machine.getRedstoneInteraction().getName()).setStyle(Constant.Text.DARK_GRAY_STYLE), REDSTONE_STATE_TEXT_X, REDSTONE_STATE_TEXT_Y, ColorUtils.WHITE);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.redstone.status",
-                        !machine.disabled() ? new TranslatableText("ui.galacticraft.machine.redstone.status.enabled").setStyle(Constants.Text.GREEN_STYLE)
-                                : new TranslatableText("ui.galacticraft.machine.redstone.status.disabled").setStyle(Constants.Text.DARK_RED_STYLE))
-                        .setStyle(Constants.Text.DARK_GRAY_STYLE), REDSTONE_STATUS_TEXT_X, REDSTONE_STATUS_TEXT_Y + this.textRenderer.fontHeight, ColorUtils.WHITE);
+                        !machine.disabled() ? new TranslatableText("ui.galacticraft.machine.redstone.status.enabled").setStyle(Constant.Text.GREEN_STYLE)
+                                : new TranslatableText("ui.galacticraft.machine.redstone.status.disabled").setStyle(Constant.Text.DARK_RED_STYLE))
+                        .setStyle(Constant.Text.DARK_GRAY_STYLE), REDSTONE_STATUS_TEXT_X, REDSTONE_STATUS_TEXT_Y + this.textRenderer.fontHeight, ColorUtils.WHITE);
 
                 matrices.pop();
             }
@@ -276,7 +276,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 matrices.translate(-PANEL_WIDTH, TAB_HEIGHT + SPACING + SPACING, 0);
                 this.renderItemIcon(matrices, PANEL_ICON_X, PANEL_ICON_Y, WRENCH);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.configuration")
-                        .setStyle(Constants.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
+                        .setStyle(Constant.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
 
                 this.client.getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
                 this.drawMachineFace(matrices, TOP_FACE_X, TOP_FACE_Y, machine, BlockFace.TOP);
@@ -294,7 +294,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.client.getTextureManager().bindTexture(this.ownerSkin);
                 drawTexture(matrices, OWNER_FACE_X, OWNER_FACE_Y, OWNER_FACE_WIDTH, OWNER_FACE_HEIGHT, 8, 8, 8, 8, 64, 64);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.stats")
-                        .setStyle(Constants.Text.GREEN_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
+                        .setStyle(Constant.Text.GREEN_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
                 List<OrderedText> text = this.textRenderer.wrapLines(new TranslatableText((machine.getCachedState() != null ? machine.getCachedState()
                         : this.handler.machine.getCachedState()).getBlock().getTranslationKey()), 64);
                 int offsetY = 0;
@@ -312,7 +312,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             if (Tab.SECURITY.isOpen()) {
                 matrices.push();
                 matrices.translate(this.backgroundWidth, TAB_HEIGHT + SPACING + SPACING, 0);
-                this.client.getTextureManager().bindTexture(Constants.ScreenTexture.MACHINE_CONFIG_PANELS);
+                this.client.getTextureManager().bindTexture(Constant.ScreenTexture.MACHINE_CONFIG_PANELS);
                 this.drawTexture(matrices, PANEL_ICON_X, PANEL_ICON_Y, ICON_LOCK_PRIVATE_U, ICON_LOCK_PRIVATE_V, ICON_WIDTH, ICON_HEIGHT);
 
                 this.drawButton(matrices, SECURITY_PUBLIC_X, SECURITY_PUBLIC_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PUBLIC || !machine.getSecurity().isOwner(playerInventory.player));
@@ -323,9 +323,9 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.drawTexture(matrices, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, ICON_LOCK_PUBLIC_U, ICON_LOCK_PUBLIC_V, ICON_WIDTH, ICON_HEIGHT);
 
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.security")
-                        .setStyle(Constants.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
+                        .setStyle(Constant.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.security.state",
-                        machine.getSecurity().getAccessibility().getName()).setStyle(Constants.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y, ColorUtils.WHITE);
+                        machine.getSecurity().getAccessibility().getName()).setStyle(Constant.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y, ColorUtils.WHITE);
 //                assert machine.getSecurity().getOwner() != null;
 //                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.security.owned_by", machine.getSecurity().getOwner().getName())
 //                        .setStyle(Constants.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y + this.textRenderer.fontHeight + 4, ColorUtils.WHITE);
@@ -366,7 +366,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     public void drawButton(MatrixStack matrices, int x, int y, double mouseX, double mouseY, float delta, boolean pressed) {
         assert this.client != null;
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.MACHINE_CONFIG_PANELS);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.MACHINE_CONFIG_PANELS);
         if (pressed) {
             this.drawTexture(matrices, x, y, BUTTON_U, BUTTON_PRESSED_V, BUTTON_WIDTH, BUTTON_HEIGHT);
             return;
@@ -531,12 +531,12 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     protected void setAccessibility(SecurityInfo.Accessibility accessibility) {
         this.handler.machine.getSecurity().setAccessibility(accessibility);
-        ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "security_config"), new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer((Long.SIZE / Byte.SIZE) + 1).writeByte(accessibility.ordinal())));
+        ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "security_config"), new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer((Long.SIZE / Byte.SIZE) + 1).writeByte(accessibility.ordinal())));
     }
 
     protected void setRedstone(RedstoneInteractionType redstone) {
         this.handler.machine.setRedstone(redstone);
-        ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "redstone_config"), new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer((Long.SIZE / Byte.SIZE) + 1).writeByte(redstone.ordinal())));
+        ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "redstone_config"), new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer((Long.SIZE / Byte.SIZE) + 1).writeByte(redstone.ordinal())));
     }
 
     protected void drawTabTooltips(MatrixStack matrices, int mouseX, int mouseY) {
@@ -560,7 +560,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             mouseX += TAB_WIDTH;
             mouseY -= SPACING;
             if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.redstone").setStyle(Constants.Text.RED_STYLE), mX, mY);
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.redstone").setStyle(Constant.Text.RED_STYLE), mX, mY);
             }
         }
         mouseX = mX - this.x;
@@ -594,7 +594,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 mouseY -= TAB_HEIGHT + SPACING;
             }
             if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.configuration").setStyle(Constants.Text.BLUE_STYLE), mX, mY);
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.configuration").setStyle(Constant.Text.BLUE_STYLE), mX, mY);
             }
         }
         mouseX = mX - this.x;
@@ -608,7 +608,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             }
         } else {
             if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.stats").setStyle(Constants.Text.YELLOW_STYLE), mX, mY);
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.stats").setStyle(Constant.Text.YELLOW_STYLE), mX, mY);
             }
         }
         mouseX = mX - this.x;
@@ -642,7 +642,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 mouseY -= TAB_HEIGHT + SPACING + SPACING;
             }
             if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.security").setStyle(Constants.Text.BLUE_STYLE), mX, mY);
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.security").setStyle(Constant.Text.BLUE_STYLE), mX, mY);
             }
         }
     }
@@ -655,9 +655,9 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         }
         if (configuredFace.getMatching() != null) {
             if (configuredFace.getMatching().left().isPresent()) {
-                tooltipCache.add(new TranslatableText("ui.galacticraft.machine.configuration.matches", new LiteralText(String.valueOf(configuredFace.getMatching().left().get())).setStyle(Constants.Text.AQUA_STYLE)).setStyle(Constants.Text.GRAY_STYLE));
+                tooltipCache.add(new TranslatableText("ui.galacticraft.machine.configuration.matches", new LiteralText(String.valueOf(configuredFace.getMatching().left().get())).setStyle(Constant.Text.AQUA_STYLE)).setStyle(Constant.Text.GRAY_STYLE));
             } else {
-                tooltipCache.add(new TranslatableText("ui.galacticraft.machine.configuration.matches", configuredFace.getMatching().right().get().getName()).setStyle(Constants.Text.GRAY_STYLE));
+                tooltipCache.add(new TranslatableText("ui.galacticraft.machine.configuration.matches", configuredFace.getMatching().right().get().getName()).setStyle(Constant.Text.GRAY_STYLE));
             }
         }
         this.renderTooltip(matrices, tooltipCache, mouseX, mouseY);
@@ -1113,7 +1113,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             sideOption.setMatching(null);
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
             buf.writeByte(face.ordinal()).writeBoolean(false).writeByte(sideOption.getAutomationType().ordinal());
-            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
+            ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "side_config"), buf);
 
         }), //LEFT
         CHANGE_MATCH((player, machine, face, back, reset) -> {
@@ -1123,7 +1123,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 sideOption.setMatching(null);
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
                 buf.writeByte(face.ordinal()).writeBoolean(true).writeBoolean(false).writeInt(-1);
-                ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
+                ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "side_config"), buf);
                 return;
             }
             SlotType[] slotTypes = sideOption.getAutomationType().getAutomatable(machine).getTypes();
@@ -1162,7 +1162,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             sideOption.setMatching(Either.right(slotTypes[i]));
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
             buf.writeByte(face.ordinal()).writeBoolean(true).writeBoolean(false).writeInt(SlotType.SLOT_TYPES.getRawId(slotTypes[i]));
-            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
+            ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "side_config"), buf);
         }), //RIGHT
         CHANGE_MATCH_SLOT((player, machine, face, back, reset) -> {
             ConfiguredMachineFace sideOption = machine.getIOConfig().get(face);
@@ -1171,7 +1171,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 sideOption.setMatching(null);
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
                 buf.writeByte(face.ordinal()).writeBoolean(true).writeBoolean(true).writeInt(-1);
-                ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
+                ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "side_config"), buf);
                 return;
             }
             int i = 0;
@@ -1197,7 +1197,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             buf.writeByte(face.ordinal());
             buf.writeBoolean(true).writeBoolean(true);
             buf.writeInt(i);
-            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
+            ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "side_config"), buf);
         }); //MID
 
         static final SideConfigurationAction[] VALUES = SideConfigurationAction.values();

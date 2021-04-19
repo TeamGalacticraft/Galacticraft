@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.village;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.biome.GalacticraftBiomes;
 import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerTypeHelper;
 import net.minecraft.util.Identifier;
@@ -32,8 +32,8 @@ import net.minecraft.village.VillagerType;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonVillagerType {
-    public static final VillagerType MOON_HIGHLANDS = VillagerTypeHelper.register(new Identifier(Constants.MOD_ID, "moon_highlands"));
-    public static final VillagerType MOON_HIGHLANDS_ROCKS = VillagerTypeHelper.register(new Identifier(Constants.MOD_ID, "moon_highlands_rocks"));
+    public static final VillagerType MOON_HIGHLANDS = VillagerTypeHelper.register(new Identifier(Constant.MOD_ID, "moon_highlands"));
+    public static final VillagerType MOON_HIGHLANDS_ROCKS = VillagerTypeHelper.register(new Identifier(Constant.MOD_ID, "moon_highlands_rocks"));
 
     public static void register() {
         VillagerTypeHelper.addVillagerTypeToBiome(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS, MOON_HIGHLANDS);

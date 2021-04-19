@@ -37,10 +37,10 @@ import net.minecraft.util.math.Direction;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public interface Constants {
+public interface Constant {
     String MOD_ID = "galacticraft";
 
-    interface Blocks {
+    interface Block {
         String ITEM_GROUP_BLOCKS = "blocks";
         String ITEM_GROUP_MACHINES = "machines";
 
@@ -224,7 +224,7 @@ public interface Constants {
         String LIQUID_OXYGEN = "liquid_oxygen";
 
         static Identifier getIdentifier(String s) {
-            return new Identifier(Constants.MOD_ID, "block/" + s);
+            return new Identifier(Constant.MOD_ID, "block/" + s);
         }
     }
 

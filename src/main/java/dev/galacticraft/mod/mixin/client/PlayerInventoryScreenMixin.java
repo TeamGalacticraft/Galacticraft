@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.screen.ingame.GalacticraftPlayerInventoryScreen;
 import dev.galacticraft.mod.item.GalacticraftItems;
 import io.netty.buffer.Unpooled;
@@ -59,13 +59,13 @@ public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
         if (GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseX), x + 30, x + 59)
                 && GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseY), y - 26, y)) {
-            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "open_gc_inv"), new PacketByteBuf(Unpooled.buffer(0)));
+            ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "open_gc_inv"), new PacketByteBuf(Unpooled.buffer(0)));
         }
     }
 
     @Inject(method = "drawBackground", at = @At("TAIL"))
     public void drawBackground(MatrixStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.PLAYER_INVENTORY_TABS);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.PLAYER_INVENTORY_TABS);
         this.drawTexture(matrices, this.x, this.y - 28, 0, 0, 57, 32);
     }
 

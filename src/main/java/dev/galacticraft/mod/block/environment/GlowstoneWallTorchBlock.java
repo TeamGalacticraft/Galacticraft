@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.environment;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -57,9 +57,9 @@ public class GlowstoneWallTorchBlock extends WallTorchBlock {
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableText("tooltip.galacticraft.glowstone_torch").setStyle(Constants.Text.GRAY_STYLE));
+            list.add(new TranslatableText("tooltip.galacticraft.glowstone_torch").setStyle(Constant.Text.GRAY_STYLE));
         } else {
-            list.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Constants.Text.GRAY_STYLE));
+            list.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Constant.Text.GRAY_STYLE));
         }
     }
 }

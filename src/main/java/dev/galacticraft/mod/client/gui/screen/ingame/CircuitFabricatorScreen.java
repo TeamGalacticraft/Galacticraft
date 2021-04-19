@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.CircuitFabricatorScreenHandler;
@@ -85,7 +85,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         this.drawProgressBar(matrices);
@@ -103,7 +103,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     //24 + 19 + 18 + 65 + 14 = 140
     private void drawProgressBar(MatrixStack matrices) {
         assert this.client != null;
-        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         if (this.handler.machine.getProgress() > 0) {
             int progress = (int) ((((double) this.handler.machine.getProgress()) / ((double) this.handler.machine.getMaxProgress())) * 140.0);
             if (progress <= 24) {

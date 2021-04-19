@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.screen.slot;
 
 import com.mojang.serialization.Lifecycle;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.AutomationType;
 import dev.galacticraft.mod.util.ColorUtils;
 import net.minecraft.text.Style;
@@ -42,24 +42,24 @@ import java.util.Objects;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SlotType implements StringIdentifiable {
-    public static final Registry<SlotType> SLOT_TYPES = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "slot_type")), Lifecycle.experimental());
-    public static final SlotType INPUT = new SlotType(new Identifier(Constants.MOD_ID, "input"), TextColor.fromRgb(ColorUtils.rgb(0, 160, 7)), new TranslatableText("ui.galacticraft.io_config.input"), AutomationType.ITEM_INPUT);
-    public static final SlotType FLUID_TANK_IO = new SlotType(new Identifier(Constants.MOD_ID, "fluid_tank_io"), TextColor.fromRgb(ColorUtils.rgb(91, 156, 175)), new TranslatableText("ui.galacticraft.io_config.fluid_tank_io"), AutomationType.ITEM_IO);
-    public static final SlotType OUTPUT = new SlotType(new Identifier(Constants.MOD_ID, "output"), TextColor.fromRgb(ColorUtils.rgb(187, 16, 18)), new TranslatableText("ui.galacticraft.io_config.output"), AutomationType.ITEM_OUTPUT);
-    public static final SlotType CHARGE = new SlotType(new Identifier(Constants.MOD_ID, "charge"), TextColor.fromRgb(ColorUtils.rgb(220, 196, 57)), new TranslatableText("ui.galacticraft.io_config.charge"), AutomationType.ITEM_IO);
-    public static final SlotType OXYGEN_TANK = new SlotType(new Identifier(Constants.MOD_ID, "oxygen_tank"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft.io_config.oxygen_tank"), AutomationType.ITEM_IO);
-    public static final SlotType OTHER = new SlotType(new Identifier(Constants.MOD_ID, "other"), TextColor.fromRgb(ColorUtils.rgb(141, 50, 199)), new TranslatableText("ui.galacticraft.io_config.other"), AutomationType.ITEM_IO);
+    public static final Registry<SlotType> SLOT_TYPES = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constant.MOD_ID, "slot_type")), Lifecycle.experimental());
+    public static final SlotType INPUT = new SlotType(new Identifier(Constant.MOD_ID, "input"), TextColor.fromRgb(ColorUtils.rgb(0, 160, 7)), new TranslatableText("ui.galacticraft.io_config.input"), AutomationType.ITEM_INPUT);
+    public static final SlotType FLUID_TANK_IO = new SlotType(new Identifier(Constant.MOD_ID, "fluid_tank_io"), TextColor.fromRgb(ColorUtils.rgb(91, 156, 175)), new TranslatableText("ui.galacticraft.io_config.fluid_tank_io"), AutomationType.ITEM_IO);
+    public static final SlotType OUTPUT = new SlotType(new Identifier(Constant.MOD_ID, "output"), TextColor.fromRgb(ColorUtils.rgb(187, 16, 18)), new TranslatableText("ui.galacticraft.io_config.output"), AutomationType.ITEM_OUTPUT);
+    public static final SlotType CHARGE = new SlotType(new Identifier(Constant.MOD_ID, "charge"), TextColor.fromRgb(ColorUtils.rgb(220, 196, 57)), new TranslatableText("ui.galacticraft.io_config.charge"), AutomationType.ITEM_IO);
+    public static final SlotType OXYGEN_TANK = new SlotType(new Identifier(Constant.MOD_ID, "oxygen_tank"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft.io_config.oxygen_tank"), AutomationType.ITEM_IO);
+    public static final SlotType OTHER = new SlotType(new Identifier(Constant.MOD_ID, "other"), TextColor.fromRgb(ColorUtils.rgb(141, 50, 199)), new TranslatableText("ui.galacticraft.io_config.other"), AutomationType.ITEM_IO);
 
-    public static final SlotType WILDCARD_ITEM = new SlotType(new Identifier(Constants.MOD_ID, "wildcard_item"), TextColor.fromRgb(ColorUtils.rgb(141, 50, 199)), new TranslatableText("ui.galacticraft.io_config.wildcard_item"), AutomationType.ITEM_IO);
-    public static final SlotType WILDCARD_FLUID = new SlotType(new Identifier(Constants.MOD_ID, "wildcard_fluid"), TextColor.fromRgb(ColorUtils.rgb(141, 50, 199)), new TranslatableText("ui.galacticraft.io_config.wildcard_fluid"), AutomationType.ITEM_IO);
+    public static final SlotType WILDCARD_ITEM = new SlotType(new Identifier(Constant.MOD_ID, "wildcard_item"), TextColor.fromRgb(ColorUtils.rgb(141, 50, 199)), new TranslatableText("ui.galacticraft.io_config.wildcard_item"), AutomationType.ITEM_IO);
+    public static final SlotType WILDCARD_FLUID = new SlotType(new Identifier(Constant.MOD_ID, "wildcard_fluid"), TextColor.fromRgb(ColorUtils.rgb(141, 50, 199)), new TranslatableText("ui.galacticraft.io_config.wildcard_fluid"), AutomationType.ITEM_IO);
 
-    public static final SlotType OIL_IN = new SlotType(new Identifier(Constants.MOD_ID, "oil"), TextColor.fromRgb(ColorUtils.rgb(40, 40, 40)), new TranslatableText("ui.galacticraft.io_config.oil"), AutomationType.FLUID_INPUT);
-    public static final SlotType OXYGEN_IN = new SlotType(new Identifier(Constants.MOD_ID, "oxygen_in"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft.io_config.oxygen_in"), AutomationType.FLUID_INPUT);
-    public static final SlotType OXYGEN_OUT = new SlotType(new Identifier(Constants.MOD_ID, "oxygen_out"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft.io_config.oxygen_out"), AutomationType.FLUID_OUTPUT);
-    public static final SlotType OXYGEN = new SlotType(new Identifier(Constants.MOD_ID, "oxygen"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft.io_config.oxygen"), AutomationType.FLUID_IO);
-    public static final SlotType FUEL_OUT = new SlotType(new Identifier(Constants.MOD_ID, "fuel"), TextColor.fromRgb(ColorUtils.rgb(70, 65, 11)), new TranslatableText("ui.galacticraft.io_config.fuel"), AutomationType.FLUID_OUTPUT);
-    public static final SlotType COAL = new SlotType(new Identifier(Constants.MOD_ID, "coal"), TextColor.fromRgb(ColorUtils.rgb(30, 30, 30)), new TranslatableText("ui.galacticraft.io_config.coal"), AutomationType.ITEM_INPUT);
-    public static final SlotType NONE = new SlotType(new Identifier(Constants.MOD_ID, "none"), TextColor.fromRgb(ColorUtils.rgb(0, 0, 0)), new TranslatableText("ui.galacticraft.io_config.none"), AutomationType.NONE);
+    public static final SlotType OIL_IN = new SlotType(new Identifier(Constant.MOD_ID, "oil"), TextColor.fromRgb(ColorUtils.rgb(40, 40, 40)), new TranslatableText("ui.galacticraft.io_config.oil"), AutomationType.FLUID_INPUT);
+    public static final SlotType OXYGEN_IN = new SlotType(new Identifier(Constant.MOD_ID, "oxygen_in"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft.io_config.oxygen_in"), AutomationType.FLUID_INPUT);
+    public static final SlotType OXYGEN_OUT = new SlotType(new Identifier(Constant.MOD_ID, "oxygen_out"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft.io_config.oxygen_out"), AutomationType.FLUID_OUTPUT);
+    public static final SlotType OXYGEN = new SlotType(new Identifier(Constant.MOD_ID, "oxygen"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft.io_config.oxygen"), AutomationType.FLUID_IO);
+    public static final SlotType FUEL_OUT = new SlotType(new Identifier(Constant.MOD_ID, "fuel"), TextColor.fromRgb(ColorUtils.rgb(70, 65, 11)), new TranslatableText("ui.galacticraft.io_config.fuel"), AutomationType.FLUID_OUTPUT);
+    public static final SlotType COAL = new SlotType(new Identifier(Constant.MOD_ID, "coal"), TextColor.fromRgb(ColorUtils.rgb(30, 30, 30)), new TranslatableText("ui.galacticraft.io_config.coal"), AutomationType.ITEM_INPUT);
+    public static final SlotType NONE = new SlotType(new Identifier(Constant.MOD_ID, "none"), TextColor.fromRgb(ColorUtils.rgb(0, 0, 0)), new TranslatableText("ui.galacticraft.io_config.none"), AutomationType.NONE);
 
     private final Identifier id;
     private final TextColor color;
