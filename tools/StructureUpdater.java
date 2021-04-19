@@ -20,11 +20,15 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft;
+package dev.galacticraft.mod;
 
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.DataFixer;
+import net.minecraft.datafixer.Schemas;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.world.level.storage.LevelStorage;
@@ -39,24 +43,27 @@ import java.util.stream.Stream;
 
 /**
  * updates gc structures' data format
+ * and removes the "-rewoven" suffix
  */
 public class StructureUpdater {
-    public static void update(DataFixer dataFixer) {
-        try (Stream<Path> walk = Files.walk((new File("../src/main/resources/data/galacticraft/").toPath()))) {
+    public static void run() {
+        DataFixer dataFixer = Schemas.getFixer();
+        try (Stream<Path> walk = Files.walk(new File("../src/main/resources/data/galacticraft/").toPath())) {
             List<String> fileNamesList = walk.filter(Files::isRegularFile).map(Path::toString).filter(path -> path.endsWith("nbt")).collect(Collectors.toList());
-            LevelStorage storage = new LevelStorage(new File("../run/structure_update/").toPath(), new File("../run/structure_update/backup").toPath(), dataFixer);
+            LevelStorage storage = new LevelStorage(new File("./structure_update/").toPath(), new File("./structure_update/backup").toPath(), dataFixer);
             StructureManager manager = new StructureManager(null, storage.createSession("session"), dataFixer);
 
             for (String s : fileNamesList) {
                 File file = new File(s);
                 Structure structure = manager.createStructure(NbtIo.readCompressed(file));
                 CompoundTag tag = structure.toTag(new CompoundTag());
-                File file1 = new File("../run/structure_update/out/" + s.replace("../src/main/resources/data/galacticraft/", ""));
+                tag = new StringNbtReader(new StringReader(tag.toString().replaceAll("[- ][Rr]ewoven", ""))).parseCompoundTag();
+                File file1 = new File("./structure_update/out/" + s.replace("../src/main/resources/data/galacticraft/", ""));
                 file1.getParentFile().mkdirs();
                 NbtIo.writeCompressed(tag, file1);
             }
 
-        } catch (IOException e) {
+        } catch (IOException | CommandSyntaxException e) {
             e.printStackTrace();
         }
         System.out.println("Structures updated successfully! Exiting...");
