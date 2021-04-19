@@ -36,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Property;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Util;
@@ -88,7 +89,7 @@ public class StandardWrenchItem extends Item {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendTooltip(ItemStack stack, World world, List<net.minecraft.text.Text> lines, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         if (Screen.hasShiftDown()) {
             lines.add(new TranslatableText("tooltip.galacticraft.standard_wrench").setStyle(Constants.Text.GRAY_STYLE));
         } else {

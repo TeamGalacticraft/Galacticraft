@@ -120,7 +120,7 @@
     "main": [ "dev.galacticraft.mod.Galacticraft" ],
     "client": [ "dev.galacticraft.mod.GalacticraftClient" ],
     "rei_plugins": [ "dev.galacticraft.mod.recipe.rei.GalacticraftREIPlugin" ],
-    "modmenu": [ "dev.galacticraft.mod.compat.hook.ModMenuApiImpl" ]
+    "modmenu": [ "dev.galacticraft.mod.compat.modmenu.ModMenuApiImpl" ]
   },
   "mixins": [
     "galacticraft.mixins.json"

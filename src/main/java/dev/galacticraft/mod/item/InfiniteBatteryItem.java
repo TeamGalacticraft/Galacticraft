@@ -33,6 +33,7 @@ import dev.galacticraft.mod.Constants;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -55,7 +56,7 @@ public class InfiniteBatteryItem extends Item implements AttributeProviderItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<net.minecraft.text.Text> tooltip, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         tooltip.add(new TranslatableText("tooltip.galacticraft.energy_remaining", new TranslatableText("tooltip.galacticraft.infinite").setStyle(Constants.Text.getRainbow(++ticks))));
         tooltip.add(new TranslatableText("tooltip.galacticraft.creative_only").setStyle(Constants.Text.LIGHT_PURPLE_STYLE));
         if (ticks >= 500) ticks -= 500;

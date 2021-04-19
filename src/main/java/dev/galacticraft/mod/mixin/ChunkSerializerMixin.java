@@ -69,12 +69,12 @@ public abstract class ChunkSerializerMixin {
             }
             compoundTag3.putByteArray(Constants.Nbt.OXYGEN, array);
         }
-        compoundTag3.put(Constants.Nbt.GCR_DATA, tag);
+        compoundTag3.put(Constants.Nbt.GC_DATA, tag);
     }
 
     @Inject(method = "deserialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/ChunkSection;calculateCounts()V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void deserializeGCR(ServerWorld world, StructureManager structureManager, PointOfInterestStorage poiStorage, ChunkPos pos, CompoundTag tag, CallbackInfoReturnable<ProtoChunk> cir, ChunkGenerator chunkGenerator, BiomeSource biomeSource, CompoundTag compoundTag, BiomeArray biomeArray, UpgradeData upgradeData, ChunkTickScheduler chunkTickScheduler, ChunkTickScheduler chunkTickScheduler2, boolean bl, ListTag listTag, int i, ChunkSection[] chunkSections, boolean bl2, ChunkManager chunkManager, LightingProvider lightingProvider, int j, CompoundTag compoundTag2, int k, ChunkSection chunkSection) {
-        CompoundTag compound = compoundTag2.getCompound(Constants.Nbt.GCR_DATA);
+        CompoundTag compound = compoundTag2.getCompound(Constants.Nbt.GC_DATA);
         ((ChunkSectionOxygenAccessor) chunkSection).setTotalOxygen(compound.getShort(Constants.Nbt.TOTAL_OXYGEN));
         if (compound.getShort(Constants.Nbt.TOTAL_OXYGEN) > 0) {
             boolean[] oxygen = ((ChunkSectionOxygenAccessor) chunkSection).getArray();

@@ -637,7 +637,7 @@ public interface Constants {
         String PROGRESS = "Progress";
         String SIZE = "Size";
         String MAX_SIZE = "MaxSize";
-        String GCR_DATA = "GCR_DATA";
+        String GC_DATA = "GCData";
         String FUEL_TIME = "FuelTime";
         String TEAM = "Team";
         String ACCESSIBILITY = "Accessibility";
@@ -665,6 +665,7 @@ public interface Constants {
         Identifier EMPTY = new Identifier("empty");
         Direction[] DIRECTIONS = Direction.values();
         BlockFace[] BLOCK_FACES = BlockFace.values();
+        String LOGGER_PREFIX = "[Galacticraft] ";
         boolean DEBUG = false;
     }
 }

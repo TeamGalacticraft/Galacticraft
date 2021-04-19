@@ -71,11 +71,6 @@ public class CapacitorWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderOutline(TextColor color) {
-
-    }
-
-    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
         double scale = ((double) this.getView().getEnergy()) / ((double) this.getView().getMaxCapacity());

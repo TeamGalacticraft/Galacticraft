@@ -24,6 +24,7 @@ package dev.galacticraft.mod.fluid;
 
 import dev.galacticraft.mod.Constants;
 import net.minecraft.fluid.FlowableFluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -36,7 +37,7 @@ public class GalacticraftFluids {
     public static final FlowableFluid FLOWING_CRUDE_OIL = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluid.CRUDE_OIL_FLOWING), new CrudeOilFluid.Flowing());
     public static final FlowableFluid FUEL = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluid.FUEL_STILL), new FuelFluid.Still());
     public static final FlowableFluid FLOWING_FUEL = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluid.FUEL_FLOWING), new FuelFluid.Flowing());
-    public static final net.minecraft.fluid.Fluid LIQUID_OXYGEN = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluid.LIQUID_OXYGEN), new OxygenFluid());
+    public static final Fluid LIQUID_OXYGEN = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluid.LIQUID_OXYGEN), new OxygenFluid());
 
     public static void register() {
 
