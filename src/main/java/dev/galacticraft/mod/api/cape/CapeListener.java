@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.api.cape;
 
-import dev.galacticraft.mod.api.cape.models.CapesModel;
+import dev.galacticraft.mod.api.cape.model.CapeModel;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface CapeListener {
-    void loadCapes(CapesModel capesModel);
+    void loadCapes(CapeModel capeModel);
 }

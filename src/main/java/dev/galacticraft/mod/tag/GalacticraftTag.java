@@ -20,21 +20,28 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.particle;
+package dev.galacticraft.mod.tag;
 
 import dev.galacticraft.mod.Constants;
-import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.minecraft.particle.DefaultParticleType;
+import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.fabricmc.fabric.mixin.tag.extension.AccessorFluidTags;
+import net.minecraft.block.Block;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftParticles {
+public class GalacticraftTag {
+    private static final String COMMON_NAMESPACE = "c";
+    public static final Tag.Identified<Fluid> OIL = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "oil"), AccessorFluidTags.getRequiredTags()::getGroup);
+    public static final Tag.Identified<Fluid> FUEL = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "fuel"), AccessorFluidTags.getRequiredTags()::getGroup);
+    public static final Tag.Identified<Fluid> LIQUID_OXYGEN = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "oxygen"), AccessorFluidTags.getRequiredTags()::getGroup);
 
-    public static final DefaultParticleType DRIPPING_FUEL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particle.DRIPPING_CRUDE_OIL_PARTICLE), FabricParticleTypes.simple());
-    public static final DefaultParticleType DRIPPING_CRUDE_OIL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particle.DRIPPING_FUEL_PARTICLE), FabricParticleTypes.simple());
+    public static final Tag.Identified<Block> INFINIBURN_MOON = TagRegistry.create(new Identifier(Constants.MOD_ID, "infiniburn_moon"), BlockTags::getTagGroup);
+    public static final Tag.Identified<Block> MOON_STONE = TagRegistry.create(new Identifier(Constants.MOD_ID, "moon_stone"), BlockTags::getTagGroup);
 
     public static void register() {
     }

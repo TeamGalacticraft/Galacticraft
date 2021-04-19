@@ -40,9 +40,9 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class EnergyUtils {
-    public static final ItemFilter IS_EXTRACTABLE = EnergyUtils::isEnergyExtractable;
-    public static final ItemFilter IS_INSERTABLE = EnergyUtils::isEnergyInsertable;
+public class EnergyUtil {
+    public static final ItemFilter IS_EXTRACTABLE = EnergyUtil::isEnergyExtractable;
+    public static final ItemFilter IS_INSERTABLE = EnergyUtil::isEnergyInsertable;
 
     public static boolean isEnergyExtractable(Reference<ItemStack> reference) {
         return GalacticraftEnergy.EXTRACTABLE.getFirstOrNull(reference) != null;

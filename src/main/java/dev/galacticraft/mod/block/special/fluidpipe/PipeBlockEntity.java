@@ -34,7 +34,7 @@ import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.PipeConnectionType;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import dev.galacticraft.mod.attribute.fluid.PipeFluidInsertable;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.util.FluidUtils;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -52,7 +52,7 @@ public class PipeBlockEntity extends BlockEntity implements Pipe, AttributeProvi
     private static final FluidAmount MAX_TRANSFER_RATE = FluidAmount.of(5, 100);
 
     public PipeBlockEntity() {
-        super(GalacticraftBlockEntities.FLUID_PIPE_TYPE);
+        super(GalacticraftBlockEntityType.FLUID_PIPE);
     }
 
     public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type) {

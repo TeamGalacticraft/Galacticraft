@@ -30,7 +30,7 @@ import com.hrznstudio.galacticraft.energy.api.CapacitorView;
 import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
 import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
 import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -64,8 +64,8 @@ public class BatteryItem extends Item implements AttributeProviderItem {
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        CapacitorView view = EnergyUtils.getCapacitorView(stack);
-        lines.add(new TranslatableText("tooltip.galacticraft.energy_remaining", EnergyUtils.getDisplay(view.getEnergy())).setStyle(Constants.Text.getStorageLevelColor(1.0 - ((double)view.getEnergy()) / ((double)view.getMaxCapacity()))));
+        CapacitorView view = EnergyUtil.getCapacitorView(stack);
+        lines.add(new TranslatableText("tooltip.galacticraft.energy_remaining", EnergyUtil.getDisplay(view.getEnergy())).setStyle(Constants.Text.getStorageLevelColor(1.0 - ((double)view.getEnergy()) / ((double)view.getMaxCapacity()))));
         super.appendTooltip(stack, world, lines, context);
     }
 
@@ -73,11 +73,11 @@ public class BatteryItem extends Item implements AttributeProviderItem {
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group)) {
             ItemStack charged = new ItemStack(this);
-            EnergyUtils.setEnergy(charged, getMaxCapacity());
+            EnergyUtil.setEnergy(charged, getMaxCapacity());
             stacks.add(charged);
 
             ItemStack depleted = new ItemStack(this);
-            EnergyUtils.setEnergy(depleted, 0);
+            EnergyUtil.setEnergy(depleted, 0);
             depleted.setDamage(depleted.getMaxDamage() - 1);
             stacks.add(depleted);
         }

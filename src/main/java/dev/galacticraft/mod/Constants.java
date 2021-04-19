@@ -25,7 +25,7 @@ package dev.galacticraft.mod;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.RawFluidTagFilter;
 import dev.galacticraft.mod.api.block.util.BlockFace;
-import dev.galacticraft.mod.tag.GalacticraftTags;
+import dev.galacticraft.mod.tag.GalacticraftTag;
 import dev.galacticraft.mod.util.ColorUtils;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Style;
@@ -211,7 +211,6 @@ public interface Constants {
         String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
     }
 
-    // Fluids
     interface Fluid {
         String CRUDE_OIL_FLOWING = "crude_oil_flowing";
         String CRUDE_OIL_STILL = "crude_oil_still";
@@ -229,7 +228,6 @@ public interface Constants {
         }
     }
 
-    //Items
     interface Item {
         String ITEM_GROUP = "items";
         String LEAD_INGOT = "lead_ingot";
@@ -601,9 +599,9 @@ public interface Constants {
     }
 
     interface Filter {
-        FluidFilter LOX_ONLY = new RawFluidTagFilter(GalacticraftTags.LIQUID_OXYGEN);
-        FluidFilter OIL = new RawFluidTagFilter(GalacticraftTags.OIL);
-        FluidFilter FUEL = new RawFluidTagFilter(GalacticraftTags.FUEL);
+        FluidFilter LOX_ONLY = new RawFluidTagFilter(GalacticraftTag.LIQUID_OXYGEN);
+        FluidFilter OIL = new RawFluidTagFilter(GalacticraftTag.OIL);
+        FluidFilter FUEL = new RawFluidTagFilter(GalacticraftTag.FUEL);
     }
 
     interface Text {

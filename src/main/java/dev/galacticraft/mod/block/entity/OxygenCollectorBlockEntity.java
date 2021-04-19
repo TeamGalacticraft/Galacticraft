@@ -32,11 +32,11 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
-import dev.galacticraft.mod.fluid.GalacticraftFluids;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.screen.OxygenCollectorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
@@ -65,12 +65,12 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
     public int collectionAmount = 0;
 
     public OxygenCollectorBlockEntity() {
-        super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);
+        super(GalacticraftBlockEntityType.OXYGEN_COLLECTOR);
     }
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 13, 69);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 13, 69);
         return builder;
     }
 
@@ -181,7 +181,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
         this.collectionAmount = 0;
         if (this.getStatus().getType().isActive()) {
             this.collectionAmount = collectOxygen();
-            this.getFluidInv().insertFluid(OXYGEN_TANK, FluidKeys.get(GalacticraftFluids.LIQUID_OXYGEN).withAmount(FluidAmount.of(collectionAmount, 100)), Simulation.ACTION);
+            this.getFluidInv().insertFluid(OXYGEN_TANK, FluidKeys.get(GalacticraftFluid.LIQUID_OXYGEN).withAmount(FluidAmount.of(collectionAmount, 100)), Simulation.ACTION);
         }
     }
 

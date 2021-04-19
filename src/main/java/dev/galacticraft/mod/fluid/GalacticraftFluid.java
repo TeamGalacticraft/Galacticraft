@@ -20,37 +20,26 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.dimension;
+package dev.galacticraft.mod.fluid;
 
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyDisplayInfo;
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
-import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
+import dev.galacticraft.mod.Constants;
+import net.minecraft.fluid.FlowableFluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftCelestialBodyTypes {
-    public static final CelestialBodyType THE_MOON = new CelestialBodyType.Builder(new Identifier("galacticraft", "the_moon"))
-            .translationKey("ui.galacticraft.bodies.the_moon")
-            .world(GalacticraftDimensions.MOON)
-            .parent(CelestialBodyType.EARTH)
-            .weight(1)
-            .gravity(0.16f)
-            .display(
-                    new CelestialBodyDisplayInfo.Builder()
-                            .texture(new Identifier("galacticraft", "planet_icons"))
-                            .distance(5)
-                            .time(46656000d) // 27 mc days in ticks
-                            .build()
-            )
-            .build();
+public class GalacticraftFluid {
 
-    private static CelestialBodyType register(CelestialBodyType type) {
-        return Registry.register(AddonRegistry.CELESTIAL_BODIES, type.getId(), type);
-    }
+    public static final FlowableFluid CRUDE_OIL = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluid.CRUDE_OIL_STILL), new CrudeOilFluid.Still());
+    public static final FlowableFluid FLOWING_CRUDE_OIL = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluid.CRUDE_OIL_FLOWING), new CrudeOilFluid.Flowing());
+    public static final FlowableFluid FUEL = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluid.FUEL_STILL), new FuelFluid.Still());
+    public static final FlowableFluid FLOWING_FUEL = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluid.FUEL_FLOWING), new FuelFluid.Flowing());
+    public static final Fluid LIQUID_OXYGEN = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluid.LIQUID_OXYGEN), new OxygenFluid());
 
-    public static void init() {
+    public static void register() {
+
     }
 }

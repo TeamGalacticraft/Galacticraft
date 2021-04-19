@@ -55,9 +55,10 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
 /**
+ * Handles server-bound (C2S) packets.
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftS2CPacketReceivers {
+public class GalacticraftServerPacketReceivers {
     public static void register() {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory(GalacticraftPlayerInventoryScreenHandler::new, LiteralText.EMPTY))));
 

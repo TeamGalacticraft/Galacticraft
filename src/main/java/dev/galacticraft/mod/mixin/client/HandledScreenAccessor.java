@@ -20,20 +20,26 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.carver;
+package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.Constants;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.ProbabilityConfig;
-import net.minecraft.world.gen.carver.Carver;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftCarvers {
-    public static final Carver<ProbabilityConfig> LUNAR_CAVE = Registry.register(Registry.CARVER, new Identifier(Constants.MOD_ID, "lunar_cave"), new LunarCaveCarver(ProbabilityConfig.CODEC, 128));
+@Mixin(HandledScreen.class)
+@Environment(EnvType.CLIENT)
+public interface HandledScreenAccessor {
+    @Accessor("x")
+    int gc_getX();
 
-    public static void register() {
-    }
+    @Accessor("y")
+    int gc_getY();
+
+    @Accessor("backgroundWidth")
+    int gc_getBackgroundWidth();
 }

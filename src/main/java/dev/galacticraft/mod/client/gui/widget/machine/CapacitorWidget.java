@@ -25,10 +25,9 @@ package dev.galacticraft.mod.client.gui.widget.machine;
 import com.hrznstudio.galacticraft.energy.api.CapacitorView;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 
 import java.util.Collection;
@@ -62,8 +61,8 @@ public class CapacitorWidget extends AbstractWidget {
             List<Text> lines = new LinkedList<>();
             MachineStatus status = statusSupplier.get();
             if (status != MachineStatus.NULL) lines.add(new TranslatableText("ui.galacticraft.machine.status").setStyle(Constants.Text.GRAY_STYLE).append(status.getName()));
-            lines.add(new TranslatableText("ui.galacticraft.machine.current_energy", EnergyUtils.getDisplay(this.getView().getEnergy()).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.GOLD_STYLE));
-            lines.add(new TranslatableText("ui.galacticraft.machine.max_energy", EnergyUtils.getDisplay(this.getView().getMaxCapacity()).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.RED_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft.machine.current_energy", EnergyUtil.getDisplay(this.getView().getEnergy()).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.GOLD_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft.machine.max_energy", EnergyUtil.getDisplay(this.getView().getMaxCapacity()).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.RED_STYLE));
             lines.addAll(tooltipSupplier.get());
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);

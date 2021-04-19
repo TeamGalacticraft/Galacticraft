@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.cape.models;
+package dev.galacticraft.mod.api.cape.model;
 
 import dev.galacticraft.mod.misc.cape.JsonCapes;
 

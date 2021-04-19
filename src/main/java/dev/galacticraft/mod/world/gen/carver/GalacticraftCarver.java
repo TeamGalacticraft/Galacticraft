@@ -20,18 +20,20 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.render.block.entity;
+package dev.galacticraft.mod.world.gen.carver;
 
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
+import dev.galacticraft.mod.Constants;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.gen.ProbabilityConfig;
+import net.minecraft.world.gen.carver.Carver;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftBlockEntityRenderers {
+public class GalacticraftCarver {
+    public static final Carver<ProbabilityConfig> LUNAR_CAVE = Registry.register(Registry.CARVER, new Identifier(Constants.MOD_ID, "lunar_cave"), new LunarCaveCarver(ProbabilityConfig.CODEC, 128));
+
     public static void register() {
-        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_TYPE, BasicSolarPanelBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.ADVANCED_SOLAR_PANEL_TYPE, AdvancedSolarPanelBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.GLASS_FLUID_PIPE_TYPE, FluidPipeBlockEntityRenderer::new);
     }
 }

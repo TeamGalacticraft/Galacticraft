@@ -33,8 +33,8 @@ import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireConnectionType;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.attribute.energy.WireEnergyInsertable;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Direction;
@@ -50,7 +50,7 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     private static final int MAX_TRANSFER_RATE = 240;
 
     public WireBlockEntity() {
-        super(GalacticraftBlockEntities.WIRE_TYPE);
+        super(GalacticraftBlockEntityType.WIRE);
     }
 
     @Override
@@ -92,8 +92,8 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     public @NotNull WireConnectionType getConnection(Direction direction, @NotNull BlockEntity entity) {
         if (!this.canConnect(direction)) return WireConnectionType.NONE;
         if (entity instanceof Wire && ((Wire) entity).canConnect(direction.getOpposite())) return WireConnectionType.WIRE;
-        EnergyInsertable insertable = EnergyUtils.getEnergyInsertable(world, entity.getPos(), direction);
-        EnergyExtractable extractable = EnergyUtils.getEnergyExtractable(world, entity.getPos(), direction);
+        EnergyInsertable insertable = EnergyUtil.getEnergyInsertable(world, entity.getPos(), direction);
+        EnergyExtractable extractable = EnergyUtil.getEnergyExtractable(world, entity.getPos(), direction);
         if (insertable != RejectingEnergyInsertable.NULL && extractable != EmptyEnergyExtractable.NULL) {
             return WireConnectionType.ENERGY_IO;
         } else if (insertable != RejectingEnergyInsertable.NULL) {

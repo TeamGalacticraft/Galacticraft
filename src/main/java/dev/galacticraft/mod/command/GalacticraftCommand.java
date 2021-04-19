@@ -49,7 +49,7 @@ import java.util.UUID;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftCommands {
+public class GalacticraftCommand {
 
     private static final HashMap<UUID,Integer> GCR_HOUSTON_TIMERS = new HashMap<>();
     private static final int GCR_HOUSTON_TIMER_LENGTH = 12 * 20; // seconds * tps
@@ -59,7 +59,7 @@ public class GalacticraftCommands {
 
             commandDispatcher.register(
                     CommandManager.literal("gcrhouston")
-                    .executes(GalacticraftCommands::teleportToEarth));
+                    .executes(GalacticraftCommand::teleportToEarth));
 
             /* This looks convoluted, but it works. Essentially, it registers three branches of the same command.
              * One as the base, one to also teleport entities, and one to also teleport to a specific position.
@@ -71,7 +71,7 @@ public class GalacticraftCommands {
                     CommandManager.literal("dimensiontp")
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-                    .executes(GalacticraftCommands::teleport)));
+                    .executes(GalacticraftCommand::teleport)));
             // TODO: either fix this or remove it
             /* LiteralCommandNode<ServerCommandSource> dimensiontp_entities = commandDispatcher.register(
                     LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
@@ -84,7 +84,7 @@ public class GalacticraftCommands {
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
                     .then(CommandManager.argument("pos", BlockPosArgumentType.blockPos())
-                    .executes(GalacticraftCommands::teleportToCoords))));
+                    .executes(GalacticraftCommand::teleportToCoords))));
 
             // Because I don't like to type
             commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimensiontp_root));
@@ -93,7 +93,7 @@ public class GalacticraftCommands {
 
             commandDispatcher.register(
                     CommandManager.literal("gcrlistbodies")
-                    .executes(GalacticraftCommands::listBodies));
+                    .executes(GalacticraftCommand::listBodies));
         });
     }
 

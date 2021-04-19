@@ -24,7 +24,7 @@ package dev.galacticraft.mod.village;
 
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.structure.GalacticraftStructures;
+import dev.galacticraft.mod.structure.GalacticraftStructure;
 import dev.galacticraft.mod.world.poi.GalacticraftPointOfInterestType;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerProfessionBuilder;
@@ -38,7 +38,7 @@ import net.minecraft.village.VillagerProfession;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftVillagerProfessions {
+public class GalacticraftVillagerProfession {
     public static final VillagerProfession LUNAR_CARTOGRAPHER = VillagerProfessionBuilder.create().id(new Identifier(Constants.MOD_ID, "lunar_cartographer")).workstation(GalacticraftPointOfInterestType.LUNAR_CARTOGRAPHER).workSound(SoundEvents.ENTITY_VILLAGER_WORK_CARTOGRAPHER).build();
 
     public static void register() {
@@ -47,36 +47,36 @@ public class GalacticraftVillagerProfessions {
         Registry.register(Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY, new Identifier(Constants.MOD_ID, "lunar_cartographer"), LUNAR_CARTOGRAPHER);
 
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 1, factories -> {
-            factories.add(new GalacticraftTradeOffers.BuyForOneEmeraldFactory(Items.PAPER, 24, 16, 2));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.MAP, 7, 1, 1));
+            factories.add(new GalacticraftTradeOffer.BuyForOneEmeraldFactory(Items.PAPER, 24, 16, 2));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.MAP, 7, 1, 1));
         });
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 2, factories -> {
-            factories.add(new GalacticraftTradeOffers.BuyForOneEmeraldFactory(Items.GLASS_PANE, 11, 16, 10));
-            factories.add(new GalacticraftTradeOffers.SellMapFactory(13, GalacticraftStructures.MOON_RUINS, MapIcon.Type.RED_X, 12, 5));
+            factories.add(new GalacticraftTradeOffer.BuyForOneEmeraldFactory(Items.GLASS_PANE, 11, 16, 10));
+            factories.add(new GalacticraftTradeOffer.SellMapFactory(13, GalacticraftStructure.MOON_RUINS, MapIcon.Type.RED_X, 12, 5));
         });
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 3, factories -> {
-            factories.add(new GalacticraftTradeOffers.BuyForOneEmeraldFactory(Items.COMPASS, 1, 12, 20));
+            factories.add(new GalacticraftTradeOffer.BuyForOneEmeraldFactory(Items.COMPASS, 1, 12, 20));
 //            factories.add(new GalacticraftTradeOffers.SellMapFactory(14, GalacticraftStructures.MOON_RUINS, MapIcon.Type.MANSION, 12, 10));
         });
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 4, factories -> {
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.ITEM_FRAME, 7, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.WHITE_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.BLUE_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.LIGHT_BLUE_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.RED_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.PINK_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.GREEN_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.LIME_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.GRAY_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.BLACK_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.PURPLE_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.MAGENTA_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.CYAN_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.BROWN_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.YELLOW_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.ORANGE_BANNER, 3, 1, 15));
-            factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.LIGHT_GRAY_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.ITEM_FRAME, 7, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.WHITE_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.BLUE_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.LIGHT_BLUE_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.RED_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.PINK_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.GREEN_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.LIME_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.GRAY_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.BLACK_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.PURPLE_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.MAGENTA_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.CYAN_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.BROWN_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.YELLOW_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.ORANGE_BANNER, 3, 1, 15));
+            factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.LIGHT_GRAY_BANNER, 3, 1, 15));
         });
-        TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 5, factories -> factories.add(new GalacticraftTradeOffers.SellItemFactory(Items.GLOBE_BANNER_PATTERN, 8, 1, 30)));
+        TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 5, factories -> factories.add(new GalacticraftTradeOffer.SellItemFactory(Items.GLOBE_BANNER_PATTERN, 8, 1, 30)));
     }
 }

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.world.dimension;
 
 import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.world.gen.chunk.MoonChunkGenerator;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
@@ -47,7 +47,7 @@ public class GalacticraftDimensions {
                         new SlideConfig(-10, 3, 0), new SlideConfig(-30, 0, 0),
                         1, 2, 1.0D, -0.46875D, true,
                         true, false, false),
-                GalacticraftBlocks.MOON_ROCKS[0].getDefaultState(), Blocks.AIR.getDefaultState(), -10, 0, 63, false)
+                GalacticraftBlock.MOON_ROCKS[0].getDefaultState(), Blocks.AIR.getDefaultState(), -10, 0, 63, false)
         );
 
         Registry.register(Registry.CHUNK_GENERATOR, new Identifier(Constants.MOD_ID, "moon"), MoonChunkGenerator.CODEC);

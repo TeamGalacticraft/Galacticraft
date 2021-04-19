@@ -28,7 +28,7 @@
   "client": [
     "client.AbstractClientPlayerEntityMixin",
     "client.ClientChunkSectionMixin",
-    "client.HandledScreenHooks",
+    "client.HandledScreenAccessor",
     "client.InGameHudMixin",
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",

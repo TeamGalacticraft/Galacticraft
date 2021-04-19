@@ -22,20 +22,20 @@
 
 package dev.galacticraft.mod;
 
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
 import dev.galacticraft.mod.client.model.MachineUnbakedModel;
-import dev.galacticraft.mod.client.network.GalacticraftC2SPacketReceivers;
+import dev.galacticraft.mod.client.network.GalacticraftClientPacketReceiver;
 import dev.galacticraft.mod.client.render.MoonSkyProperties;
-import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRenderers;
+import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.entity.*;
 import dev.galacticraft.mod.client.resource.GalacticraftResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
 import dev.galacticraft.mod.misc.cape.CapeLoader;
 import dev.galacticraft.mod.misc.cape.JsonCapes;
 import dev.galacticraft.mod.mixin.SkyPropertiesAccessor;
-import dev.galacticraft.mod.particle.GalacticraftParticles;
+import dev.galacticraft.mod.particle.GalacticraftParticle;
 import dev.galacticraft.mod.particle.fluid.DrippingCrudeOilParticle;
 import dev.galacticraft.mod.particle.fluid.DrippingFuelParticle;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerTypes;
@@ -122,27 +122,27 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_VINDICATOR, (dispatcher, context) -> new EvolvedVindicatorEntityRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.BUBBLE, (dispatcher, context) -> new BubbleEntityRenderer(dispatcher));
 
-        GalacticraftBlockEntityRenderers.register();
-        GalacticraftC2SPacketReceivers.register();
+        GalacticraftBlockEntityRenderer.register();
+        GalacticraftClientPacketReceiver.register();
         MachineBakedModel.registerDefaults();
 
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.TIN_LADDER, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLASS_FLUID_PIPE, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.WALKWAY, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.WIRE_WALKWAY, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.PIPE_WALKWAY, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.MOON_BERRY_BUSH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_TORCH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_WALL_TORCH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_TORCH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_WALL_TORCH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_LANTERN, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_LANTERN, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.TIN_LADDER, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLASS_FLUID_PIPE, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.WALKWAY, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.WIRE_WALKWAY, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.PIPE_WALKWAY, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.MOON_BERRY_BUSH, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLOWSTONE_TORCH, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLOWSTONE_WALL_TORCH, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.UNLIT_TORCH, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.UNLIT_WALL_TORCH, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLOWSTONE_LANTERN, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.UNLIT_LANTERN, RenderLayer.getCutout());
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new GalacticraftResourceReloadListener());
 
-        ParticleFactoryRegistry.getInstance().register(GalacticraftParticles.DRIPPING_FUEL_PARTICLE, (type, world, x, y, z, velX, velY, velZ) -> new DrippingFuelParticle(world, x, y, z, velX, velY, velZ));
-        ParticleFactoryRegistry.getInstance().register(GalacticraftParticles.DRIPPING_CRUDE_OIL_PARTICLE, (type, world, x, y, z, velX, velY, velZ) -> new DrippingCrudeOilParticle(world, x, y, z, velX, velY, velZ));
+        ParticleFactoryRegistry.getInstance().register(GalacticraftParticle.DRIPPING_FUEL_PARTICLE, (type, world, x, y, z, velX, velY, velZ) -> new DrippingFuelParticle(world, x, y, z, velX, velY, velZ));
+        ParticleFactoryRegistry.getInstance().register(GalacticraftParticle.DRIPPING_CRUDE_OIL_PARTICLE, (type, world, x, y, z, velX, velY, velZ) -> new DrippingCrudeOilParticle(world, x, y, z, velX, velY, velZ));
 
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(resourceManager -> (resourceId, context) -> {
             if (MachineBakedModel.MACHINE_MARKER.equals(resourceId)) {

@@ -26,9 +26,9 @@ import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.impl.EmptyFixedItemInv;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
-import dev.galacticraft.mod.api.entity.attribute.GalacticraftEntityAttributes;
+import dev.galacticraft.mod.api.entity.attribute.GalacticraftEntityAttribute;
 import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
-import dev.galacticraft.mod.util.OxygenTankUtils;
+import dev.galacticraft.mod.util.OxygenTankUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -62,7 +62,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "getNextAirUnderwater", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;getRespiration(Lnet/minecraft/entity/LivingEntity;)I"), cancellable = true)
     private void overrideOxygen_gcr(int air, CallbackInfoReturnable<Integer> ci) {
-        EntityAttributeInstance attribute = ((LivingEntity)(Object)this).getAttributeInstance(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE);
+        EntityAttributeInstance attribute = ((LivingEntity)(Object)this).getAttributeInstance(GalacticraftEntityAttribute.CAN_BREATHE_IN_SPACE);
         if (attribute != null && attribute.getValue() >= 0.99D) {
             ci.setReturnValue(this.getNextAirOnLand(air));
         }
@@ -70,12 +70,12 @@ public abstract class LivingEntityMixin extends Entity {
         FixedItemInv gearInv = ((GearInventoryProvider) this).getGearInv();
         if (gearInv != EmptyFixedItemInv.INSTANCE) {
 
-            OxygenTank tank = OxygenTankUtils.getOxygenTank(gearInv.getSlot(6));
+            OxygenTank tank = OxygenTankUtil.getOxygenTank(gearInv.getSlot(6));
             if (tank.getAmount() > 0) {
                 tank.setAmount(tank.getAmount() - 1);
                 ci.setReturnValue(this.getNextAirOnLand(air));
             }
-            tank = OxygenTankUtils.getOxygenTank(gearInv.getSlot(7));
+            tank = OxygenTankUtil.getOxygenTank(gearInv.getSlot(7));
             if (tank.getAmount() > 0) {
                 tank.setAmount(tank.getAmount() - 1);
                 ci.setReturnValue(this.getNextAirOnLand(air));

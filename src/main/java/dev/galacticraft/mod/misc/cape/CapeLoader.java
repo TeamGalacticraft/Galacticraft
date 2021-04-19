@@ -25,7 +25,7 @@ package dev.galacticraft.mod.misc.cape;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dev.galacticraft.mod.api.cape.CapeListener;
-import dev.galacticraft.mod.api.cape.models.CapesModel;
+import dev.galacticraft.mod.api.cape.model.CapeModel;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -57,17 +57,17 @@ public class CapeLoader {
 
     public void load() {
         new Thread(() -> {
-            CapesModel capesModel = null;
+            CapeModel capeModel = null;
             try {
-                capesModel = this.gson.fromJson(IOUtils.toString(new URL("https://raw.githubusercontent.com/StellarHorizons/Galacticraft/master/capes.json"), Charset.defaultCharset()), CapesModel.class);
+                capeModel = this.gson.fromJson(IOUtils.toString(new URL("https://raw.githubusercontent.com/StellarHorizons/Galacticraft/master/capes.json"), Charset.defaultCharset()), CapeModel.class);
             } catch (IOException e) {
                 Thread.currentThread().interrupt();
             }
 
             while (!Thread.currentThread().isInterrupted()) {
-                if (capesModel != null) {
-                    CapesModel finalCapesModel = capesModel;
-                    this.listeners.forEach(l -> l.loadCapes(finalCapesModel));
+                if (capeModel != null) {
+                    CapeModel finalCapeModel = capeModel;
+                    this.listeners.forEach(l -> l.loadCapes(finalCapeModel));
                     Thread.currentThread().interrupt();
                 }
             }

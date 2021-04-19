@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.mod.api.block.MultiBlockBase;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
@@ -36,7 +36,7 @@ public class SolarPanelPartBlockEntity extends BlockEntity {
     public BlockPos basePos = BlockPos.ORIGIN;
 
     public SolarPanelPartBlockEntity() {
-        super(GalacticraftBlockEntities.SOLAR_PANEL_PART_TYPE);
+        super(GalacticraftBlockEntityType.SOLAR_PANEL_PART);
     }
 
     @Override

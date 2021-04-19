@@ -46,10 +46,11 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
+ * Handles client-bound (S2C) packets
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class GalacticraftC2SPacketReceivers {
+public class GalacticraftClientPacketReceiver {
     public static void register() {
         ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "security_update"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
             BlockPos pos = buf.readBlockPos();

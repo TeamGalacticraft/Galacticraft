@@ -32,8 +32,8 @@ import net.minecraft.util.shape.VoxelShapes;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ConnectingBlockUtils {
-    private ConnectingBlockUtils() {
+public class ConnectingBlockUtil {
+    private ConnectingBlockUtil() {
     }
 
     public static final BooleanProperty ATTACHED_NORTH = BooleanProperty.of("attached_north");

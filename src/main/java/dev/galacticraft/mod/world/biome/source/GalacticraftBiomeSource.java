@@ -20,18 +20,18 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.loot;
+package dev.galacticraft.mod.world.biome.source;
 
 import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.mixin.LootTablesAccessor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftLootTables {
-    public static final Identifier BASIC_MOON_RUINS_CHEST = LootTablesAccessor.callRegisterLootTable(new Identifier(Constants.MOD_ID, Constants.LootTable.BASIC_MOON_RUINS_CHEST));
+public class GalacticraftBiomeSource {
 
     public static void register() {
+        Registry.register(Registry.BIOME_SOURCE, new Identifier(Constants.MOD_ID, "moon"), MoonBiomeSource.CODEC);
     }
 }

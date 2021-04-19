@@ -24,7 +24,7 @@ package dev.galacticraft.mod.block.special.aluminumwire.tier1;
 
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.block.WireBlock;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -106,7 +106,7 @@ public class AluminumWireBlock extends WireBlock {
         for (Direction direction : Constants.Misc.DIRECTIONS) {
             BlockState block = context.getWorld().getBlockState(context.getBlockPos().offset(direction));
             state = state.with(getPropForDirection(direction), !block.isAir() && (block.getBlock() instanceof WireBlock
-                    || EnergyUtils.canAccessEnergy(context.getWorld(), context.getBlockPos().offset(direction), direction)));
+                    || EnergyUtil.canAccessEnergy(context.getWorld(), context.getBlockPos().offset(direction), direction)));
 
         }
 
@@ -139,7 +139,7 @@ public class AluminumWireBlock extends WireBlock {
         Direction dir = Direction.fromVector(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
         assert dir != null;
         world.setBlockState(pos, state.with(getPropForDirection(dir), !neighbor.isAir() && block instanceof WireBlock
-                || EnergyUtils.canAccessEnergy(world, fromPos, dir)
+                || EnergyUtil.canAccessEnergy(world, fromPos, dir)
         ));
     }
 

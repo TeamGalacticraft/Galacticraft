@@ -20,17 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.entity.attribute;
+package dev.galacticraft.mod.api.cape.model;
 
-import dev.galacticraft.mod.Constants;
-import net.minecraft.entity.attribute.ClampedEntityAttribute;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftEntityAttributes {
-    public static final EntityAttribute CAN_BREATHE_IN_SPACE = Registry.register(Registry.ATTRIBUTE, new Identifier(Constants.MOD_ID, "can_breathe_in_space"), (new ClampedEntityAttribute("galacticraft.attribute.name.can_breathe_in_space", 0.0D, 0.0D, 1.0D)).setTracked(true));
+public class CapeModel {
+    private final List<CapePlayer> players;
+
+    public CapeModel(List<CapePlayer> players) {
+        this.players = players;
+    }
+
+    public List<CapePlayer> getPlayers() {
+        return this.players;
+    }
 }

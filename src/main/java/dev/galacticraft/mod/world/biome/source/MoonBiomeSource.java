@@ -27,7 +27,7 @@ import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.mixin.BuiltinBiomesAccessor;
 import dev.galacticraft.mod.world.biome.GalacticraftBiomes;
-import dev.galacticraft.mod.world.biome.layer.MoonBiomeLayers;
+import dev.galacticraft.mod.world.biome.layer.MoonBiomeLayer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.registry.Registry;
@@ -57,7 +57,7 @@ public class MoonBiomeSource extends BiomeSource {
         this.biomeSize = biomeSize;
         this.seed = seed;
         this.registry = registry;
-        this.sampler = MoonBiomeLayers.build(seed, biomeSize, registry);
+        this.sampler = MoonBiomeLayer.build(seed, biomeSize, registry);
         if (!BuiltinBiomesAccessor.getBY_RAW_ID().containsValue(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)) {
             BuiltinBiomesAccessor.getBY_RAW_ID().put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)), GalacticraftBiomes.Moon.HIGHLANDS_PLAINS);
             BuiltinBiomesAccessor.getBY_RAW_ID().put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_ROCKS)), GalacticraftBiomes.Moon.HIGHLANDS_ROCKS);

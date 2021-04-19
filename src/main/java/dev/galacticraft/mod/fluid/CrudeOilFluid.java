@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.fluid;
 
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.item.GalacticraftItems;
-import dev.galacticraft.mod.particle.GalacticraftParticles;
+import dev.galacticraft.mod.particle.GalacticraftParticle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -53,12 +53,12 @@ public class CrudeOilFluid extends FlowableFluid {
 
     @Override
     public Fluid getFlowing() {
-        return GalacticraftFluids.FLOWING_CRUDE_OIL;
+        return GalacticraftFluid.FLOWING_CRUDE_OIL;
     }
 
     @Override
     public Fluid getStill() {
-        return GalacticraftFluids.CRUDE_OIL;
+        return GalacticraftFluid.CRUDE_OIL;
     }
 
     @Override
@@ -73,19 +73,19 @@ public class CrudeOilFluid extends FlowableFluid {
 
     @Environment(EnvType.CLIENT)
     public ParticleEffect getParticle() {
-        return GalacticraftParticles.DRIPPING_CRUDE_OIL_PARTICLE;
+        return GalacticraftParticle.DRIPPING_CRUDE_OIL_PARTICLE;
     }
 
     @Override
     public boolean canBeReplacedWith(FluidState fluidState, BlockView blockView, BlockPos blockPos, Fluid fluid, Direction direction) {
-        return direction == Direction.DOWN && !fluid.matchesType(GalacticraftFluids.CRUDE_OIL);
+        return direction == Direction.DOWN && !fluid.matchesType(GalacticraftFluid.CRUDE_OIL);
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public void randomDisplayTick(World world, BlockPos blockPos, FluidState fluidState, Random random) {
         if (random.nextInt(10) == 0) {
-            world.addParticle(GalacticraftParticles.DRIPPING_CRUDE_OIL_PARTICLE,
+            world.addParticle(GalacticraftParticle.DRIPPING_CRUDE_OIL_PARTICLE,
                     (double) blockPos.getX() + 0.5D - random.nextGaussian() + random.nextGaussian(),
                     (double) blockPos.getY() + 1.1F,
                     (double) blockPos.getZ() + 0.5D - random.nextGaussian() + random.nextGaussian(),
@@ -131,7 +131,7 @@ public class CrudeOilFluid extends FlowableFluid {
 
     @Override
     public BlockState toBlockState(FluidState fluidState) {
-        return GalacticraftBlocks.CRUDE_OIL.getDefaultState().with(FluidBlock.LEVEL, method_15741(fluidState));
+        return GalacticraftBlock.CRUDE_OIL.getDefaultState().with(FluidBlock.LEVEL, method_15741(fluidState));
     }
 
     @Override

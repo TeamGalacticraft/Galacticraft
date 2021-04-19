@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.environment;
 
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.entity.damage.GalacticraftDamageSource;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -56,7 +56,7 @@ public class CavernousVineBlockPoisonous extends CavernousVineBlock {
     @Override
     public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         if (player.getStackInHand(hand).getItem() instanceof ShearsItem) {
-            world.setBlockState(blockPos, GalacticraftBlocks.CAVERNOUS_VINE.getDefaultState().with(VINES, blockState.get(VINES)));
+            world.setBlockState(blockPos, GalacticraftBlock.CAVERNOUS_VINE.getDefaultState().with(VINES, blockState.get(VINES)));
             world.playSound(blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 1f, 1f, true);
             return ActionResult.SUCCESS;
         }

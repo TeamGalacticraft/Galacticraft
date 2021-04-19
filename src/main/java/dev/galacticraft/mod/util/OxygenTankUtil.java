@@ -31,14 +31,14 @@ import alexiil.mc.lib.attributes.misc.Reference;
 import dev.galacticraft.mod.attribute.GalacticraftAttributes;
 import dev.galacticraft.mod.attribute.oxygen.EmptyOxygenTank;
 import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
-import dev.galacticraft.mod.fluid.GalacticraftFluids;
-import dev.galacticraft.mod.tag.GalacticraftTags;
+import dev.galacticraft.mod.fluid.GalacticraftFluid;
+import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.minecraft.item.ItemStack;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public enum OxygenTankUtils {
+public enum OxygenTankUtil {
     ;
     public static final ItemFilter OXYGEN_TANK_EXTRACTABLE = stack -> canExtractLOX(stack);
 
@@ -99,13 +99,13 @@ public enum OxygenTankUtils {
     }
 
     public static int loxToOxygen(FluidVolume volume) {
-        assert GalacticraftTags.LIQUID_OXYGEN.contains(volume.getFluidKey().getRawFluid());
+        assert GalacticraftTag.LIQUID_OXYGEN.contains(volume.getFluidKey().getRawFluid());
         return volume.amount().as1620();
     }
 
     public static FluidVolume oxygenToLOX(int oxygen) {
         assert oxygen > 0;
-        return FluidKeys.get(GalacticraftFluids.LIQUID_OXYGEN).withAmount(FluidAmount.of1620(oxygen));
+        return FluidKeys.get(GalacticraftFluid.LIQUID_OXYGEN).withAmount(FluidAmount.of1620(oxygen));
     }
 
     public static int oxygenToAirTicks(int oxygen) {

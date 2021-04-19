@@ -33,11 +33,11 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.screen.OxygenSealerScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtils;
-import dev.galacticraft.mod.util.OxygenTankUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
+import dev.galacticraft.mod.util.OxygenTankUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -71,13 +71,13 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
     private CelestialBodyType type = null;
 
     public OxygenSealerBlockEntity() {
-        super(GalacticraftBlockEntities.OXYGEN_SEALER_TYPE);
+        super(GalacticraftBlockEntityType.OXYGEN_SEALER);
     }
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
-        builder.addSlot(LOX_INPUT, SlotType.OXYGEN_TANK, OxygenTankUtils.OXYGEN_TANK_EXTRACTABLE, 8, 62);
+        builder.addSlot(BATTERY_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
+        builder.addSlot(LOX_INPUT, SlotType.OXYGEN_TANK, OxygenTankUtil.OXYGEN_TANK_EXTRACTABLE, 8, 62);
         return builder;
     }
 

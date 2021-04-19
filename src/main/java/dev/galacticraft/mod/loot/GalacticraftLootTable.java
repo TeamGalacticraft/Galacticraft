@@ -20,26 +20,18 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin.client;
+package dev.galacticraft.mod.loot;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.mixin.LootTablesAccessor;
+import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(HandledScreen.class)
-@Environment(EnvType.CLIENT)
-public interface HandledScreenHooks {
-    @Accessor("x")
-    int gcr_getX();
+public class GalacticraftLootTable {
+    public static final Identifier BASIC_MOON_RUINS_CHEST = LootTablesAccessor.callRegisterLootTable(new Identifier(Constants.MOD_ID, Constants.LootTable.BASIC_MOON_RUINS_CHEST));
 
-    @Accessor("y")
-    int gcr_getY();
-
-    @Accessor("backgroundWidth")
-    int gcr_getBackgroundWidth();
+    public static void register() {
+    }
 }

@@ -20,18 +20,22 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.biome.source;
+package dev.galacticraft.mod.particle;
 
 import dev.galacticraft.mod.Constants;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftBiomeSources {
+public class GalacticraftParticle {
+
+    public static final DefaultParticleType DRIPPING_FUEL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particle.DRIPPING_CRUDE_OIL_PARTICLE), FabricParticleTypes.simple());
+    public static final DefaultParticleType DRIPPING_CRUDE_OIL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particle.DRIPPING_FUEL_PARTICLE), FabricParticleTypes.simple());
 
     public static void register() {
-        Registry.register(Registry.BIOME_SOURCE, new Identifier(Constants.MOD_ID, "moon"), MoonBiomeSource.CODEC);
     }
 }

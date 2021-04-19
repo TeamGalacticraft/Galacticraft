@@ -35,7 +35,7 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.client.gui.widget.machine.AbstractWidget;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
 import dev.galacticraft.mod.item.GalacticraftItems;
@@ -43,7 +43,7 @@ import dev.galacticraft.mod.screen.MachineScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.screen.tank.Tank;
 import dev.galacticraft.mod.util.ColorUtils;
-import dev.galacticraft.mod.util.DrawableUtils;
+import dev.galacticraft.mod.util.DrawableUtil;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
@@ -89,12 +89,12 @@ import java.util.*;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public abstract class MachineHandledScreen<C extends MachineScreenHandler<? extends MachineBlockEntity>> extends HandledScreen<C> implements DrawableUtils {
+public abstract class MachineHandledScreen<C extends MachineScreenHandler<? extends MachineBlockEntity>> extends HandledScreen<C> implements DrawableUtil {
     private static final ItemStack REDSTONE = new ItemStack(Items.REDSTONE);
     private static final ItemStack UNLIT_TORCH = new ItemStack(GalacticraftItems.UNLIT_TORCH);
     private static final ItemStack REDSTONE_TORCH = new ItemStack(Items.REDSTONE_TORCH);
     private static final ItemStack WRENCH = new ItemStack(GalacticraftItems.STANDARD_WRENCH);
-    private static final ItemStack ALUMINUM_WIRE = new ItemStack(GalacticraftBlocks.ALUMINUM_WIRE);
+    private static final ItemStack ALUMINUM_WIRE = new ItemStack(GalacticraftBlock.ALUMINUM_WIRE);
 
     public static final int PANEL_WIDTH = 100;
     public static final int PANEL_HEIGHT = 93;

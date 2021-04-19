@@ -30,7 +30,7 @@ import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.item.GalacticraftItems;
 import dev.galacticraft.mod.item.ThermalArmorItem;
 import dev.galacticraft.mod.screen.slot.ItemSpecificSlot;
-import dev.galacticraft.mod.util.OxygenTankUtils;
+import dev.galacticraft.mod.util.OxygenTankUtil;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -164,7 +164,7 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
 
         @Override
         public boolean canInsert(ItemStack stack) {
-            return OxygenTankUtils.isOxygenTank(stack);
+            return OxygenTankUtil.isOxygenTank(stack);
         }
 
         @Override

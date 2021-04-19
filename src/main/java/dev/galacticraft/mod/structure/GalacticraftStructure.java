@@ -38,7 +38,7 @@ import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftStructures {
+public class GalacticraftStructure {
     public static final Codec<StructurePoolFeatureConfig> STRUCTURE_POOL_CONFIG_CODEC_UNCAPPED_SIZE = RecordCodecBuilder.create((instance) -> instance.group(StructurePool.REGISTRY_CODEC.fieldOf("start_pool").forGetter(StructurePoolFeatureConfig::getStartPool), Codec.INT.fieldOf("size").forGetter(StructurePoolFeatureConfig::getSize)).apply(instance, StructurePoolFeatureConfig::new));
 
     public static final MoonPillagerBaseFeature MOON_PILLAGER_BASE_FEATURE = new MoonPillagerBaseFeature(STRUCTURE_POOL_CONFIG_CODEC_UNCAPPED_SIZE);

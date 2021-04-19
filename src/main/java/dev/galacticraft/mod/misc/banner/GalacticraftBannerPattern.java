@@ -20,28 +20,19 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.tag;
+package dev.galacticraft.mod.misc.banner;
 
 import dev.galacticraft.mod.Constants;
-import net.fabricmc.fabric.api.tag.TagRegistry;
-import net.fabricmc.fabric.mixin.tag.extension.AccessorFluidTags;
-import net.minecraft.block.Block;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.Tag;
+import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPattern;
+import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPatterns;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftTags {
-    private static final String COMMON_NAMESPACE = "c";
-    public static final Tag.Identified<Fluid> OIL = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "oil"), AccessorFluidTags.getRequiredTags()::getGroup);
-    public static final Tag.Identified<Fluid> FUEL = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "fuel"), AccessorFluidTags.getRequiredTags()::getGroup);
-    public static final Tag.Identified<Fluid> LIQUID_OXYGEN = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "oxygen"), AccessorFluidTags.getRequiredTags()::getGroup);
-
-    public static final Tag.Identified<Block> INFINIBURN_MOON = TagRegistry.create(new Identifier(Constants.MOD_ID, "infiniburn_moon"), BlockTags::getTagGroup);
-    public static final Tag.Identified<Block> MOON_STONE = TagRegistry.create(new Identifier(Constants.MOD_ID, "moon_stone"), BlockTags::getTagGroup);
+public class GalacticraftBannerPattern {
+    public static final LoomPattern ROCKET = Registry.register(LoomPatterns.REGISTRY, new Identifier(Constants.MOD_ID, "rocket"), new LoomPattern(false));
 
     public static void register() {
     }

@@ -53,7 +53,7 @@ import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.*;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -543,8 +543,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
         Reference<ItemStack> stack = this.getInventory().getSlot(slot);
         int neededEnergy = Math.min(this.getBatteryTransferRate(), this.getCapacitor().getMaxCapacity() - this.getCapacitor().getEnergy());
-        if (EnergyUtils.isEnergyExtractable(stack)) {
-            this.getCapacitor().insert(EnergyUtils.extractEnergy(stack, neededEnergy));
+        if (EnergyUtil.isEnergyExtractable(stack)) {
+            this.getCapacitor().insert(EnergyUtil.extractEnergy(stack, neededEnergy));
         }
     }
 
@@ -559,8 +559,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             return;
         }
         Reference<ItemStack> stack = this.getInventory().getSlot(slot);
-        if (EnergyUtils.isEnergyInsertable(stack)) {
-            this.getCapacitor().insert(EnergyUtils.insert(stack, this.getCapacitor().extract(available)));
+        if (EnergyUtil.isEnergyInsertable(stack)) {
+            this.getCapacitor().insert(EnergyUtil.insert(stack, this.getCapacitor().extract(available)));
         }
     }
 

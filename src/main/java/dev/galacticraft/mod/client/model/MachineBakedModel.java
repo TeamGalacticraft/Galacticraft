@@ -31,7 +31,7 @@ import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.MachineConfiguration;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.OxygenStorageModuleBlockEntity;
 import dev.galacticraft.mod.client.util.CachingSpriteAtlas;
 import net.fabricmc.api.EnvType;
@@ -105,17 +105,17 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     }
 
     public static void registerDefaults() {
-        register(GalacticraftBlocks.ADVANCED_SOLAR_PANEL, new ZAxisSpriteProvider(new Identifier(Constants.MOD_ID, "block/advanced_solar_panel"), false));
+        register(GalacticraftBlock.ADVANCED_SOLAR_PANEL, new ZAxisSpriteProvider(new Identifier(Constants.MOD_ID, "block/advanced_solar_panel"), false));
 
-        register(GalacticraftBlocks.BASIC_SOLAR_PANEL, new ZAxisSpriteProvider(new Identifier(Constants.MOD_ID, "block/basic_solar_panel"), false));
+        register(GalacticraftBlock.BASIC_SOLAR_PANEL, new ZAxisSpriteProvider(new Identifier(Constants.MOD_ID, "block/basic_solar_panel"), false));
 
-        register(GalacticraftBlocks.BUBBLE_DISTRIBUTOR, new SingleSpriteProvider(new Identifier(Constants.MOD_ID, "block/oxygen_bubble_distributor")));
+        register(GalacticraftBlock.BUBBLE_DISTRIBUTOR, new SingleSpriteProvider(new Identifier(Constants.MOD_ID, "block/oxygen_bubble_distributor")));
 
-        register(GalacticraftBlocks.CIRCUIT_FABRICATOR, new FrontFaceSpriteProvider(new Identifier(Constants.MOD_ID, "block/circuit_fabricator")));
+        register(GalacticraftBlock.CIRCUIT_FABRICATOR, new FrontFaceSpriteProvider(new Identifier(Constants.MOD_ID, "block/circuit_fabricator")));
 
-        register(GalacticraftBlocks.COAL_GENERATOR, new FrontFaceSpriteProvider(new Identifier(Constants.MOD_ID, "block/coal_generator")));
+        register(GalacticraftBlock.COAL_GENERATOR, new FrontFaceSpriteProvider(new Identifier(Constants.MOD_ID, "block/coal_generator")));
 
-        register(GalacticraftBlocks.ENERGY_STORAGE_MODULE, (machine, stack, face, atlas, view, pos) -> {
+        register(GalacticraftBlock.ENERGY_STORAGE_MODULE, (machine, stack, face, atlas, view, pos) -> {
             if (face == BlockFace.FRONT || face == BlockFace.BACK) {
                 double energy;
                 if (machine != null) {
@@ -132,13 +132,13 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
             return atlas.apply(MACHINE);
         });
 
-        register(GalacticraftBlocks.OXYGEN_COLLECTOR, new SingleSpriteProvider(new Identifier(Constants.MOD_ID, "block/oxygen_collector")));
+        register(GalacticraftBlock.OXYGEN_COLLECTOR, new SingleSpriteProvider(new Identifier(Constants.MOD_ID, "block/oxygen_collector")));
 
-        register(GalacticraftBlocks.OXYGEN_COMPRESSOR, new ZAxisSpriteProvider(new Identifier(Constants.MOD_ID, "block/oxygen_compressor"), new Identifier(Constants.MOD_ID, "block/oxygen_compressor_back"), true));
+        register(GalacticraftBlock.OXYGEN_COMPRESSOR, new ZAxisSpriteProvider(new Identifier(Constants.MOD_ID, "block/oxygen_compressor"), new Identifier(Constants.MOD_ID, "block/oxygen_compressor_back"), true));
         
-        register(GalacticraftBlocks.OXYGEN_DECOMPRESSOR, new ZAxisSpriteProvider(new Identifier(Constants.MOD_ID, "block/oxygen_decompressor"), new Identifier(Constants.MOD_ID, "block/oxygen_decompressor_back"), true));
+        register(GalacticraftBlock.OXYGEN_DECOMPRESSOR, new ZAxisSpriteProvider(new Identifier(Constants.MOD_ID, "block/oxygen_decompressor"), new Identifier(Constants.MOD_ID, "block/oxygen_decompressor_back"), true));
 
-        register(GalacticraftBlocks.OXYGEN_STORAGE_MODULE, (machine, stack, face, atlas, view, pos) -> {
+        register(GalacticraftBlock.OXYGEN_STORAGE_MODULE, (machine, stack, face, atlas, view, pos) -> {
             if (face == BlockFace.FRONT || face == BlockFace.BACK) {
                 FluidVolume volume;
                 if (machine != null) {
@@ -164,17 +164,17 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
             return atlas.apply(MACHINE);
         });
 
-        register(GalacticraftBlocks.REFINERY, new ZAxisSpriteProvider(new Identifier(Constants.MOD_ID, "block/refinery_front"), new Identifier(Constants.MOD_ID, "block/refinery_back"), true));
+        register(GalacticraftBlock.REFINERY, new ZAxisSpriteProvider(new Identifier(Constants.MOD_ID, "block/refinery_front"), new Identifier(Constants.MOD_ID, "block/refinery_back"), true));
 
-        register(GalacticraftBlocks.OXYGEN_SEALER, (machine, stack, face, atlas, view, pos) -> {
+        register(GalacticraftBlock.OXYGEN_SEALER, (machine, stack, face, atlas, view, pos) -> {
             if (face == BlockFace.TOP) return atlas.apply(new Identifier(Constants.MOD_ID, "block/oxygen_sealer_top"));
             if (face.isHorizontal()) atlas.apply(MACHINE_SIDE);
             return atlas.apply(MACHINE);
         });
 
-        register(GalacticraftBlocks.ELECTRIC_FURNACE, new FrontFaceSpriteProvider(new Identifier(Constants.MOD_ID, "block/electric_furnace")));
+        register(GalacticraftBlock.ELECTRIC_FURNACE, new FrontFaceSpriteProvider(new Identifier(Constants.MOD_ID, "block/electric_furnace")));
         
-        register(GalacticraftBlocks.ELECTRIC_ARC_FURNACE, new FrontFaceSpriteProvider(new Identifier(Constants.MOD_ID, "block/electric_arc_furnace")));
+        register(GalacticraftBlock.ELECTRIC_ARC_FURNACE, new FrontFaceSpriteProvider(new Identifier(Constants.MOD_ID, "block/electric_arc_furnace")));
     }
 
     @ApiStatus.Internal

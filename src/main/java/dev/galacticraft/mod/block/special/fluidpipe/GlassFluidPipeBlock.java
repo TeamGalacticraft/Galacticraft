@@ -24,11 +24,9 @@ package dev.galacticraft.mod.block.special.fluidpipe;
 
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.block.FluidPipe;
-import dev.galacticraft.mod.api.block.WireBlock;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.item.StandardWrenchItem;
-import dev.galacticraft.mod.util.ConnectingBlockUtils;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.FluidUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -52,7 +50,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -73,7 +70,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
 
     public GlassFluidPipeBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.getStateManager().getDefaultState().with(PULL, false).with(COLOR, DyeColor.WHITE).with(ConnectingBlockUtils.ATTACHED_NORTH, false).with(ConnectingBlockUtils.ATTACHED_EAST, false).with(ConnectingBlockUtils.ATTACHED_SOUTH, false).with(ConnectingBlockUtils.ATTACHED_WEST, false).with(ConnectingBlockUtils.ATTACHED_UP, false).with(ConnectingBlockUtils.ATTACHED_DOWN, false));
+        this.setDefaultState(this.getStateManager().getDefaultState().with(PULL, false).with(COLOR, DyeColor.WHITE).with(ConnectingBlockUtil.ATTACHED_NORTH, false).with(ConnectingBlockUtil.ATTACHED_EAST, false).with(ConnectingBlockUtil.ATTACHED_SOUTH, false).with(ConnectingBlockUtil.ATTACHED_WEST, false).with(ConnectingBlockUtil.ATTACHED_UP, false).with(ConnectingBlockUtil.ATTACHED_DOWN, false));
     }
 
     @Override
@@ -126,11 +123,11 @@ public class GlassFluidPipeBlock extends FluidPipe {
 
     @Override
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
-        return ConnectingBlockUtils.getVoxelShape(blockState, NORTH, SOUTH, EAST, WEST, UP, DOWN, NONE);
+        return ConnectingBlockUtil.getVoxelShape(blockState, NORTH, SOUTH, EAST, WEST, UP, DOWN, NONE);
     }
 
     private BooleanProperty getPropForDirection(Direction dir) {
-        return ConnectingBlockUtils.getBooleanProperty(dir);
+        return ConnectingBlockUtil.getBooleanProperty(dir);
     }
 
     @Override
@@ -145,17 +142,17 @@ public class GlassFluidPipeBlock extends FluidPipe {
     }
 
     private BooleanProperty propFromDirection(Direction direction) {
-        return ConnectingBlockUtils.getBooleanProperty(direction);
+        return ConnectingBlockUtil.getBooleanProperty(direction);
     }
 
     @Override
     public @Nullable PipeBlockEntity createBlockEntity(BlockView world) {
-        return new PipeBlockEntity(GalacticraftBlockEntities.GLASS_FLUID_PIPE_TYPE);
+        return new PipeBlockEntity(GalacticraftBlockEntityType.GLASS_FLUID_PIPE);
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(PULL, COLOR, ConnectingBlockUtils.ATTACHED_NORTH, ConnectingBlockUtils.ATTACHED_EAST, ConnectingBlockUtils.ATTACHED_SOUTH, ConnectingBlockUtils.ATTACHED_WEST, ConnectingBlockUtils.ATTACHED_UP, ConnectingBlockUtils.ATTACHED_DOWN);
+        builder.add(PULL, COLOR, ConnectingBlockUtil.ATTACHED_NORTH, ConnectingBlockUtil.ATTACHED_EAST, ConnectingBlockUtil.ATTACHED_SOUTH, ConnectingBlockUtil.ATTACHED_WEST, ConnectingBlockUtil.ATTACHED_UP, ConnectingBlockUtil.ATTACHED_DOWN);
     }
 }

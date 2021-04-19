@@ -27,10 +27,10 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.screen.BasicSolarPanelScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
@@ -52,12 +52,12 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements Ti
     public static final int CHARGE_SLOT = 0;
 
     public BasicSolarPanelBlockEntity() {
-        super(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_TYPE);
+        super(GalacticraftBlockEntityType.BASIC_SOLAR_PANEL);
     }
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_INSERTABLE, 8, 62);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_INSERTABLE, 8, 62);
         return builder;
     }
 

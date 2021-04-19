@@ -42,7 +42,7 @@ import java.util.Random;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftTradeOffers {
+public class GalacticraftTradeOffer {
 
     public static class BuyForOneEmeraldFactory implements TradeOffers.Factory {
         private final Item buy;

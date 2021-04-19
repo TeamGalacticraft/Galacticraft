@@ -25,7 +25,7 @@ package dev.galacticraft.mod.api.block;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -76,6 +76,6 @@ public class FluidPipe extends Block implements BlockEntityProvider {
 
     @Override
     public @Nullable PipeBlockEntity createBlockEntity(BlockView world) {
-        return new PipeBlockEntity(GalacticraftBlockEntities.FLUID_PIPE_TYPE);
+        return new PipeBlockEntity(GalacticraftBlockEntityType.FLUID_PIPE);
     }
 }

@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.resource;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
 import dev.galacticraft.mod.client.render.entity.BubbleEntityRenderer;
-import dev.galacticraft.mod.fluid.GalacticraftFluids;
+import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
@@ -66,11 +66,11 @@ public class GalacticraftResourceReloadListener implements SimpleSynchronousReso
         FluidRenderHandler fuel = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constants.MOD_ID, "block/fuel_still")), atlas.apply(new Identifier(Constants.MOD_ID, "block/fuel_flowing"))};
         FluidRenderHandler oxygen = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constants.MOD_ID, "block/oxygen")), atlas.apply(new Identifier(Constants.MOD_ID, "block/oxygen"))};
 
-        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.CRUDE_OIL, oil);
-        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FLOWING_CRUDE_OIL, oil);
-        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FUEL, fuel);
-        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FLOWING_FUEL, fuel);
-        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.LIQUID_OXYGEN, oxygen);
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.CRUDE_OIL, oil);
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.FLOWING_CRUDE_OIL, oil);
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.FUEL, fuel);
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.FLOWING_FUEL, fuel);
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.LIQUID_OXYGEN, oxygen);
         BubbleEntityRenderer.bubbleModel = null;
     }
 }

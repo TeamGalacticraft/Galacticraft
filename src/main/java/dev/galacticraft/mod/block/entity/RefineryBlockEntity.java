@@ -33,12 +33,12 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
-import dev.galacticraft.mod.fluid.GalacticraftFluids;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.screen.RefineryScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.tag.GalacticraftTags;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.tag.GalacticraftTag;
+import dev.galacticraft.mod.util.EnergyUtil;
 import dev.galacticraft.mod.util.FluidUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -63,14 +63,14 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
     public static final int FLUID_OUTPUT_SLOT = 2;
 
     public RefineryBlockEntity() {
-        super(GalacticraftBlockEntities.REFINERY_TYPE);
+        super(GalacticraftBlockEntityType.REFINERY);
     }
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 7);
-        builder.addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL), 123, 7);
-        builder.addSlot(FLUID_OUTPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL), 153, 7);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 7);
+        builder.addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtils.canExtractFluids(stack, GalacticraftTag.OIL), 123, 7);
+        builder.addSlot(FLUID_OUTPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluid.FUEL), 153, 7);
         return builder;
     }
 
@@ -116,8 +116,8 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
         FluidVolumeUtil.move(this.getFluidInv().getTank(FUEL_TANK), FluidAttributes.INSERTABLE.getFirst(this.getInventory().getSlot(FLUID_OUTPUT_SLOT)));
 
         if (this.getStatus().getType().isActive()) {
-            FluidAmount amount = this.getFluidInv().extractFluid(OIL_TANK, key -> GalacticraftTags.OIL.contains(key.getRawFluid()), null, FluidAmount.of(5, 1000), Simulation.ACTION).amount();
-            amount = this.getFluidInv().insertFluid(FUEL_TANK, FluidKeys.get(GalacticraftFluids.FUEL).withAmount(amount), Simulation.ACTION).amount();
+            FluidAmount amount = this.getFluidInv().extractFluid(OIL_TANK, key -> GalacticraftTag.OIL.contains(key.getRawFluid()), null, FluidAmount.of(5, 1000), Simulation.ACTION).amount();
+            amount = this.getFluidInv().insertFluid(FUEL_TANK, FluidKeys.get(GalacticraftFluid.FUEL).withAmount(amount), Simulation.ACTION).amount();
             this.getFluidInv().insertFluid(OIL_TANK, this.getFluidInv().getInvFluid(OIL_TANK).getFluidKey().withAmount(amount), Simulation.ACTION);
         }
     }

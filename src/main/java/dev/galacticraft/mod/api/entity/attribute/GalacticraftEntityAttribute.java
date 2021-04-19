@@ -20,20 +20,17 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.misc.banner;
+package dev.galacticraft.mod.api.entity.attribute;
 
 import dev.galacticraft.mod.Constants;
-import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPattern;
-import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPatterns;
+import net.minecraft.entity.attribute.ClampedEntityAttribute;
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftBannerPatterns {
-    public static final LoomPattern ROCKET = Registry.register(LoomPatterns.REGISTRY, new Identifier(Constants.MOD_ID, "rocket"), new LoomPattern(false));
-
-    public static void register() {
-    }
+public class GalacticraftEntityAttribute {
+    public static final EntityAttribute CAN_BREATHE_IN_SPACE = Registry.register(Registry.ATTRIBUTE, new Identifier(Constants.MOD_ID, "can_breathe_in_space"), (new ClampedEntityAttribute("galacticraft.attribute.name.can_breathe_in_space", 0.0D, 0.0D, 1.0D)).setTracked(true));
 }

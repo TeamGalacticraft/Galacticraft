@@ -25,7 +25,7 @@ package dev.galacticraft.mod.block.special.walkway;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.block.FluidLoggableBlock;
 import dev.galacticraft.mod.api.block.WireBlock;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -194,7 +194,7 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
                 return false;
         } catch (IllegalArgumentException ignored) {}
         */
-        return neighborState.getBlock() instanceof WireBlock || EnergyUtils.canAccessEnergy((World) world, pos.offset(facing), facing.getOpposite());
+        return neighborState.getBlock() instanceof WireBlock || EnergyUtil.canAccessEnergy((World) world, pos.offset(facing), facing.getOpposite());
     }
 
     @Override

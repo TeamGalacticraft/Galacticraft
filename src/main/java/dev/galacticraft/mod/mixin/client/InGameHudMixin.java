@@ -30,7 +30,7 @@ import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.attribute.GalacticraftAttributes;
 import dev.galacticraft.mod.attribute.oxygen.InfiniteOxygenTank;
 import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
-import dev.galacticraft.mod.util.DrawableUtils;
+import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -49,7 +49,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(InGameHud.class)
 @Environment(EnvType.CLIENT)
-public abstract class InGameHudMixin extends DrawableHelper implements DrawableUtils {
+public abstract class InGameHudMixin extends DrawableHelper implements DrawableUtil {
 
     @Shadow
     @Final

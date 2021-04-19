@@ -32,11 +32,11 @@ import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.attribute.oxygen.EmptyOxygenTank;
 import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.screen.OxygenCompressorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtils;
-import dev.galacticraft.mod.util.OxygenTankUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
+import dev.galacticraft.mod.util.OxygenTankUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
@@ -58,13 +58,13 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity implements T
     public static final int OXYGEN_TANK = 0;
 
     public OxygenCompressorBlockEntity() {
-        super(GalacticraftBlockEntities.OXYGEN_COMPRESSOR_TYPE);
+        super(GalacticraftBlockEntityType.OXYGEN_COMPRESSOR);
     }
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
-        builder.addSlot(OXYGEN_TANK_SLOT, SlotType.OXYGEN_TANK, OxygenTankUtils::isOxygenTank, 80, 27);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
+        builder.addSlot(OXYGEN_TANK_SLOT, SlotType.OXYGEN_TANK, OxygenTankUtil::isOxygenTank, 80, 27);
         return builder;
     }
 
@@ -99,7 +99,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity implements T
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         if (this.getFluidInv().getInvFluid(OXYGEN_TANK).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
-        OxygenTank tank = OxygenTankUtils.getOxygenTank(this.getInventory().getSlot(1));
+        OxygenTank tank = OxygenTankUtil.getOxygenTank(this.getInventory().getSlot(1));
         if (tank == EmptyOxygenTank.NULL) return Status.NOT_ENOUGH_ITEMS;
         if (tank.getCapacity() >= tank.getCapacity()) return Status.CONTAINER_FULL;
         return Status.COMPRESSING;
@@ -108,8 +108,8 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity implements T
     @Override
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
-            OxygenTank tank = OxygenTankUtils.getOxygenTank(this.getInventory().getSlot(1));
-            this.getFluidInv().insertFluid(OXYGEN_TANK, OxygenTankUtils.insertLiquidOxygen(tank, this.getFluidInv().attemptExtraction(Constants.Filter.LOX_ONLY, FluidAmount.of1620(1620 / 60), Simulation.ACTION)), Simulation.ACTION);
+            OxygenTank tank = OxygenTankUtil.getOxygenTank(this.getInventory().getSlot(1));
+            this.getFluidInv().insertFluid(OXYGEN_TANK, OxygenTankUtil.insertLiquidOxygen(tank, this.getFluidInv().attemptExtraction(Constants.Filter.LOX_ONLY, FluidAmount.of1620(1620 / 60), Simulation.ACTION)), Simulation.ACTION);
         }
     }
 

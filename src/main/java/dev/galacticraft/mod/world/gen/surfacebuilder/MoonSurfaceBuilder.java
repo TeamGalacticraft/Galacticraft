@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.world.gen.surfacebuilder;
 
 import com.mojang.serialization.Codec;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -38,7 +38,7 @@ import java.util.Random;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonSurfaceBuilder<C extends TernarySurfaceConfig> extends SurfaceBuilder<C> {
-    private static final BlockState MOON_ROCK = GalacticraftBlocks.MOON_ROCKS[0].getDefaultState();
+    private static final BlockState MOON_ROCK = GalacticraftBlock.MOON_ROCKS[0].getDefaultState();
     public MoonSurfaceBuilder(Codec<C> codec) {
         super(codec);
     }
@@ -90,7 +90,7 @@ public class MoonSurfaceBuilder<C extends TernarySurfaceConfig> extends SurfaceB
                 } else if (i > 0) {
                     --i;
                     chunk.setBlockState(mutable, blockState2, false);
-                    if (i == 0 && blockState2.isOf(GalacticraftBlocks.MOON_TURF) && j > 1) {
+                    if (i == 0 && blockState2.isOf(GalacticraftBlock.MOON_TURF) && j > 1) {
                         i = random.nextInt(4) + Math.max(0, m - 63);
                         blockState2 = MOON_ROCK;
                     }

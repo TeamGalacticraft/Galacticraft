@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.recipe.rei;
 
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.item.GalacticraftItems;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
@@ -61,7 +61,7 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
     @Override
     @Environment(EnvType.CLIENT)
     public @NotNull EntryStack getLogo() {
-        return EntryStack.create(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getDefaultStack());
+        return EntryStack.create(GalacticraftBlock.CIRCUIT_FABRICATOR.asItem().getDefaultStack());
     }
 
     @Environment(EnvType.CLIENT)

@@ -29,7 +29,7 @@ import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipes;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
@@ -67,7 +67,7 @@ public class CompressorBlockEntity extends MachineBlockEntity {
     public int progress;
 
     public CompressorBlockEntity() {
-        super(GalacticraftBlockEntities.COMPRESSOR_TYPE);
+        super(GalacticraftBlockEntityType.COMPRESSOR);
         this.craftingInv = new InventoryFixedWrapper(this.getInventory().getSubInv(0, 9)) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {

@@ -20,21 +20,18 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.cape.models;
+package dev.galacticraft.mod.client.render.block.entity;
 
-import java.util.List;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CapesModel {
-    private final List<CapePlayer> players;
-
-    public CapesModel(List<CapePlayer> players) {
-        this.players = players;
-    }
-
-    public List<CapePlayer> getPlayers() {
-        return this.players;
+public class GalacticraftBlockEntityRenderer {
+    public static void register() {
+        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntityType.BASIC_SOLAR_PANEL, BasicSolarPanelBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntityType.ADVANCED_SOLAR_PANEL, AdvancedSolarPanelBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntityType.GLASS_FLUID_PIPE, FluidPipeBlockEntityRenderer::new);
     }
 }

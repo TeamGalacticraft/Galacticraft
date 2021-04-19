@@ -29,12 +29,12 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipes;
 import dev.galacticraft.mod.screen.ElectricCompressorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -70,12 +70,12 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
     public int progress;
 
     public ElectricCompressorBlockEntity() {
-        super(GalacticraftBlockEntities.ELECTRIC_COMPRESSOR_TYPE);
+        super(GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR);
     }
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 3 * 18 + 1, 75);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 3 * 18 + 1, 75);
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {

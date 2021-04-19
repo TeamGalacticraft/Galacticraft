@@ -39,7 +39,7 @@ import java.util.function.LongFunction;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class MoonBiomeLayers {
+public class MoonBiomeLayer {
     public static int MOON_HIGHLANDS_PLAINS_ID = -1;
     public static int MOON_HIGHLANDS_ROCKS_ID = -1;
     public static int MOON_HIGHLANDS_VALLEY_ID = -1;
@@ -85,7 +85,7 @@ public class MoonBiomeLayers {
             MOON_MARE_EDGE_ID = registry.getRawId(registry.get(GalacticraftBiomes.Moon.MARE_EDGE));
         }
         LayerFactory<CachingLayerSampler> layerFactory = build(biomeSize, (salt) -> new CachingLayerContext(25, seed, salt), registry);
-        MoonBiomeLayers.registry = registry;
+        MoonBiomeLayer.registry = registry;
         return new BiomeLayerSampler(layerFactory);
     }
 }

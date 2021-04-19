@@ -25,8 +25,8 @@ package dev.galacticraft.mod.misc.cape;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.cape.CapeListener;
-import dev.galacticraft.mod.api.cape.models.CapePlayer;
-import dev.galacticraft.mod.api.cape.models.CapesModel;
+import dev.galacticraft.mod.api.cape.model.CapePlayer;
+import dev.galacticraft.mod.api.cape.model.CapeModel;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Logger;
 
@@ -49,8 +49,8 @@ public class JsonCapes implements CapeListener {
     }
 
     @Override
-    public void loadCapes(CapesModel capesModel) {
-        for (CapePlayer player : capesModel.getPlayers()) {
+    public void loadCapes(CapeModel capeModel) {
+        for (CapePlayer player : capeModel.getPlayers()) {
             capePlayers.put(player.getUuid(), player);
         }
 

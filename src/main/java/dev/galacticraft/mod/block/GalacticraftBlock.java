@@ -40,7 +40,7 @@ import dev.galacticraft.mod.block.special.fluidpipe.GlassFluidPipeBlock;
 import dev.galacticraft.mod.block.special.walkway.PipeWalkway;
 import dev.galacticraft.mod.block.special.walkway.Walkway;
 import dev.galacticraft.mod.block.special.walkway.WireWalkway;
-import dev.galacticraft.mod.fluid.GalacticraftFluids;
+import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
@@ -59,15 +59,15 @@ import net.minecraft.util.registry.Registry;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @SuppressWarnings("unused")
-public class GalacticraftBlocks {
+public class GalacticraftBlock {
     //ITEM GROUPS
     public static final ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_BLOCKS))
-            .icon(() -> new ItemStack(GalacticraftBlocks.MOON_TURF)).build();
+            .icon(() -> new ItemStack(GalacticraftBlock.MOON_TURF)).build();
 
     public static final ItemGroup MACHINES_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_MACHINES))
-            .icon(() -> new ItemStack(GalacticraftBlocks.COAL_GENERATOR)).build();
+            .icon(() -> new ItemStack(GalacticraftBlock.COAL_GENERATOR)).build();
 
     // TORCHES
     public static final Block GLOWSTONE_TORCH = registerBlockWithoutItem(new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).sounds(BlockSoundGroup.WOOD)), Constants.Blocks.GLOWSTONE_TORCH);
@@ -78,11 +78,11 @@ public class GalacticraftBlocks {
     public static final Block UNLIT_LANTERN = registerBlockWithoutItem(new UnlitLanternBlock(FabricBlockSettings.copy(Blocks.LANTERN).luminance(state -> 0)), Constants.Blocks.UNLIT_LANTERN);
 
     // LIQUIDS
-    public static final dev.galacticraft.mod.api.block.FluidBlock CRUDE_OIL = registerBlockWithoutItem(new CrudeOilBlock(GalacticraftFluids.CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.BLACK)
+    public static final dev.galacticraft.mod.api.block.FluidBlock CRUDE_OIL = registerBlockWithoutItem(new CrudeOilBlock(GalacticraftFluid.CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.BLACK)
             .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
             .strength(100.0F, 1000.0F).dropsNothing()), Constants.Blocks.CRUDE_OIL);
 
-    public static final dev.galacticraft.mod.api.block.FluidBlock FUEL = registerBlockWithoutItem(new FluidBlock(GalacticraftFluids.FUEL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.YELLOW)
+    public static final dev.galacticraft.mod.api.block.FluidBlock FUEL = registerBlockWithoutItem(new FluidBlock(GalacticraftFluid.FUEL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.YELLOW)
             .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
             .strength(50.0F, 50.0F).dropsNothing()), Constants.Blocks.FUEL);
 

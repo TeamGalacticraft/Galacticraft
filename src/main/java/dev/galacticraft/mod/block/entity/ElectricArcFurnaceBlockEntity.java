@@ -29,10 +29,10 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.screen.ElectricArcFurnaceScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -78,7 +78,7 @@ public class ElectricArcFurnaceBlockEntity extends MachineBlockEntity {
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 7);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 7);
         builder.addSlot(INPUT_SLOT, SlotType.INPUT, stack -> {
             predicateInv.setStack(0, stack);
             return this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, predicateInv, world).isPresent();
@@ -89,7 +89,7 @@ public class ElectricArcFurnaceBlockEntity extends MachineBlockEntity {
     }
 
     public ElectricArcFurnaceBlockEntity() {
-        this(GalacticraftBlockEntities.ELECTRIC_ARC_FURNACE_TYPE);
+        this(GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE);
     }
 
     @Override

@@ -26,10 +26,10 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.screen.EnergyStorageModuleScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
@@ -45,14 +45,14 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implement
     public static final int DRAIN_BATTERY_SLOT = 1;
 
     public EnergyStorageModuleBlockEntity() {
-        super(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE);
+        super(GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE);
         this.setStatus(MachineStatus.NULL);
     }
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 102, 24);
-        builder.addSlot(DRAIN_BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_INSERTABLE, 102, 48);
+        builder.addSlot(CHARGE_BATTERY_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 102, 24);
+        builder.addSlot(DRAIN_BATTERY_SLOT, SlotType.CHARGE, EnergyUtil.IS_INSERTABLE, 102, 48);
         return builder;
     }
 

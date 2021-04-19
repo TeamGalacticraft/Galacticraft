@@ -31,7 +31,7 @@ import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
@@ -80,7 +80,7 @@ public class WireNetworkImpl implements WireNetwork {
                     continue;
                 }
             }
-            EnergyInsertable insertable = EnergyUtils.getEnergyInsertable(world, pos.offset(direction), direction);
+            EnergyInsertable insertable = EnergyUtil.getEnergyInsertable(world, pos.offset(direction), direction);
             if (insertable != RejectingEnergyInsertable.NULL) {
                 this.insertable.put(pos.offset(direction), insertable);
             }
@@ -181,7 +181,7 @@ public class WireNetworkImpl implements WireNetwork {
         this.insertable.remove(updatedPos);
         BlockPos vector = adjacentToUpdated.subtract(updatedPos);
         Direction direction = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
-        EnergyInsertable insertable = EnergyUtils.getEnergyInsertable(world, updatedPos, direction);
+        EnergyInsertable insertable = EnergyUtil.getEnergyInsertable(world, updatedPos, direction);
         if (insertable != RejectingEnergyInsertable.NULL) {
             this.insertable.put(updatedPos, insertable);
         }

@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.api.pipe.impl;
 
-import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
@@ -32,8 +31,6 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
-import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
-import dev.galacticraft.mod.util.EnergyUtils;
 import dev.galacticraft.mod.util.FluidUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;

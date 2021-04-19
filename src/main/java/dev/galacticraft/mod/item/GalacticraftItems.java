@@ -23,10 +23,10 @@
 package dev.galacticraft.mod.item;
 
 import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
-import dev.galacticraft.mod.fluid.GalacticraftFluids;
-import dev.galacticraft.mod.sound.GalacticraftSounds;
+import dev.galacticraft.mod.fluid.GalacticraftFluid;
+import dev.galacticraft.mod.sound.GalacticraftSound;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
@@ -48,8 +48,8 @@ import java.util.List;
 public class GalacticraftItems {
     public static final List<Item> HIDDEN_ITEMS = new LinkedList<>();
 
-    public static final Item GLOWSTONE_TORCH = registerItem(Constants.Blocks.GLOWSTONE_TORCH, new WallStandingBlockItem(GalacticraftBlocks.GLOWSTONE_TORCH, GalacticraftBlocks.GLOWSTONE_WALL_TORCH, (new Item.Settings())/*.group(GalacticraftBlocks.BLOCKS_GROUP)*/));
-    public static final Item UNLIT_TORCH = registerItem(Constants.Blocks.UNLIT_TORCH, new WallStandingBlockItem(GalacticraftBlocks.UNLIT_TORCH, GalacticraftBlocks.UNLIT_WALL_TORCH, (new Item.Settings())/*.group(GalacticraftBlocks.BLOCKS_GROUP)*/));
+    public static final Item GLOWSTONE_TORCH = registerItem(Constants.Blocks.GLOWSTONE_TORCH, new WallStandingBlockItem(GalacticraftBlock.GLOWSTONE_TORCH, GalacticraftBlock.GLOWSTONE_WALL_TORCH, (new Item.Settings())/*.group(GalacticraftBlocks.BLOCKS_GROUP)*/));
+    public static final Item UNLIT_TORCH = registerItem(Constants.Blocks.UNLIT_TORCH, new WallStandingBlockItem(GalacticraftBlock.UNLIT_TORCH, GalacticraftBlock.UNLIT_WALL_TORCH, (new Item.Settings())/*.group(GalacticraftBlocks.BLOCKS_GROUP)*/));
 
     public static final ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constants.MOD_ID, Constants.Item.ITEM_GROUP))
@@ -169,8 +169,8 @@ public class GalacticraftItems {
     public static final Item BATTERY = registerItem(Constants.Item.BATTERY, new BatteryItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item INFINITE_BATTERY = registerItem(Constants.Item.INFINITE_BATTERY, new InfiniteBatteryItem(new Item.Settings().group(ITEMS_GROUP).rarity(Rarity.EPIC)));
     //Fluid buckets
-    public static final BucketItem CRUDE_OIL_BUCKET = registerItem(Constants.Item.CRUDE_OIL_BUCKET, new BucketItem(GalacticraftFluids.CRUDE_OIL, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(ITEMS_GROUP)));
-    public static final BucketItem FUEL_BUCKET = registerItem(Constants.Item.FUEL_BUCKET, new BucketItem(GalacticraftFluids.FUEL, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(ITEMS_GROUP)));
+    public static final BucketItem CRUDE_OIL_BUCKET = registerItem(Constants.Item.CRUDE_OIL_BUCKET, new BucketItem(GalacticraftFluid.CRUDE_OIL, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(ITEMS_GROUP)));
+    public static final BucketItem FUEL_BUCKET = registerItem(Constants.Item.FUEL_BUCKET, new BucketItem(GalacticraftFluid.FUEL, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(ITEMS_GROUP)));
     //GC INVENTORY
     private static final Item.Settings PARACHUTE_SETTINGS = new Item.Settings().group(ITEMS_GROUP).maxCount(1);
     public static final Item PARACHUTE = registerItem(Constants.Item.PARACHUTE, new Item(PARACHUTE_SETTINGS));
@@ -219,10 +219,10 @@ public class GalacticraftItems {
     public static final Item THROWABLE_METEOR_CHUNK = registerItem(Constants.Item.THROWABLE_METEOR_CHUNK, new ThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HOT_THROWABLE_METEOR_CHUNK = registerItem(Constants.Item.HOT_THROWABLE_METEOR_CHUNK, new HotThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
 
-    public static final Item LEGACY_MUSIC_DISC_MARS = registerItem(Constants.Item.LEGACY_MUSIC_DISC_MARS, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_MARS, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
-    public static final Item LEGACY_MUSIC_DISC_MIMAS = registerItem(Constants.Item.LEGACY_MUSIC_DISC_MIMAS, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_MIMAS, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
-    public static final Item LEGACY_MUSIC_DISC_ORBIT = registerItem(Constants.Item.LEGACY_MUSIC_DISC_ORBIT, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_ORBIT, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
-    public static final Item LEGACY_MUSIC_DISC_SPACERACE = registerItem(Constants.Item.LEGACY_MUSIC_DISC_SPACERACE, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_SPACERACE, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
+    public static final Item LEGACY_MUSIC_DISC_MARS = registerItem(Constants.Item.LEGACY_MUSIC_DISC_MARS, new MusicDiscItem(15, GalacticraftSound.MUSIC_LEGACY_MARS, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
+    public static final Item LEGACY_MUSIC_DISC_MIMAS = registerItem(Constants.Item.LEGACY_MUSIC_DISC_MIMAS, new MusicDiscItem(15, GalacticraftSound.MUSIC_LEGACY_MIMAS, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
+    public static final Item LEGACY_MUSIC_DISC_ORBIT = registerItem(Constants.Item.LEGACY_MUSIC_DISC_ORBIT, new MusicDiscItem(15, GalacticraftSound.MUSIC_LEGACY_ORBIT, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
+    public static final Item LEGACY_MUSIC_DISC_SPACERACE = registerItem(Constants.Item.LEGACY_MUSIC_DISC_SPACERACE, new MusicDiscItem(15, GalacticraftSound.MUSIC_LEGACY_SPACERACE, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
 
     private static <T extends Item> T registerItem(String id, T item) {
         return Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), item);

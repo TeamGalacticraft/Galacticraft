@@ -30,7 +30,7 @@ import net.minecraft.util.registry.Registry;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftSounds {
+public class GalacticraftSound {
 
     public static final SoundEvent MUSIC_MOON = new SoundEvent(new Identifier(Constants.MOD_ID, "music.music_moon"));
     public static final SoundEvent MUSIC_CREDITS = new SoundEvent(new Identifier(Constants.MOD_ID, "music.music_credits"));
