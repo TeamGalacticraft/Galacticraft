@@ -8,4 +8,4 @@ The [FabricMC](https://fabricmc.net) rewrite of [Galacticraft](https://micdoodle
 This version of Galacticraft has been rewritten from the ground up for the [FabricMC](https://fabricmc.net) modding framework.
 
 ## Addon Development
-Addon development guides and examples are all contained in a separate repository: [TeamGalacticraft/Addon-API](https://github.com/TeamGalacticraft/Addon-API).
+Addon development guides and examples are all contained in a separate repository: [TeamGalacticraft/GalacticraftAPI](https://github.com/TeamGalacticraft/GalacticraftAPI).
