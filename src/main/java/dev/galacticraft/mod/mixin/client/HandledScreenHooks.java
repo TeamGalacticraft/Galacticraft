@@ -35,11 +35,11 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Environment(EnvType.CLIENT)
 public interface HandledScreenHooks {
     @Accessor("x")
-    int gcr_getX();
+    int gc_getX();
 
     @Accessor("y")
-    int gcr_getY();
+    int gc_getY();
 
     @Accessor("backgroundWidth")
-    int gcr_getBackgroundWidth();
+    int gc_getBackgroundWidth();
 }

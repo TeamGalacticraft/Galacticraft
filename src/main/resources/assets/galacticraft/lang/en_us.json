@@ -447,7 +447,7 @@
   "commands.galacticraft.gchouston.success": "You have been rescued. Better luck next time...",
   "advancements.galacticraft.travel_moon.title": "To the Moon!",
   "advancements.galacticraft.travel_moon.description": "Take a Tier 1 rocket to the Moon!",
-  "config.galacticraft.title": "Galacticraft: Rewoven Config",
+  "config.galacticraft.title": "Galacticraft Config",
   "config.galacticraft.debug": "Debug",
   "config.galacticraft.debug.logging": "Debug Logging",
   "config.galacticraft.reset": "Reset",
