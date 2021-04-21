@@ -36,7 +36,7 @@ import net.minecraft.world.gen.chunk.*;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftDimensions {
+public class GalacticraftDimension {
     public static final RegistryKey<World> MOON = RegistryKey.of(Registry.DIMENSION, new Identifier(Constant.MOD_ID, "moon"));
 
     public static void register() {

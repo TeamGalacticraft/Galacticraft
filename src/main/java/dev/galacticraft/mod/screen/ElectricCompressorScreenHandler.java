@@ -33,7 +33,7 @@ import net.minecraft.screen.Property;
  */
 public class ElectricCompressorScreenHandler extends MachineScreenHandler<ElectricCompressorBlockEntity> {
     public ElectricCompressorScreenHandler(int syncId, PlayerEntity player, ElectricCompressorBlockEntity blockEntity) {
-        super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.ELECTRIC_COMPRESSOR_HANDLER);
+        super(syncId, player, blockEntity, GalacticraftScreenHandlerType.ELECTRIC_COMPRESSOR_HANDLER);
         this.addProperty(new Property() {
             @Override
             public int get() {

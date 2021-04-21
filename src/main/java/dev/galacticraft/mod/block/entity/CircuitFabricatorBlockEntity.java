@@ -33,7 +33,7 @@ import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.item.GalacticraftItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
-import dev.galacticraft.mod.recipe.GalacticraftRecipes;
+import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.CircuitFabricatorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
@@ -145,7 +145,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
 
     private Optional<FabricationRecipe> getRecipe(Inventory input) {
         if (this.world == null) return Optional.empty();
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.FABRICATION_TYPE, input, this.world);
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipe.FABRICATION_TYPE, input, this.world);
     }
 
     public int getProgress() {

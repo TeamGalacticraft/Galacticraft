@@ -33,7 +33,7 @@ import net.minecraft.network.PacketByteBuf;
 public class CoalGeneratorScreenHandler extends MachineScreenHandler<CoalGeneratorBlockEntity> {
 
     public CoalGeneratorScreenHandler(int syncId, PlayerEntity player, CoalGeneratorBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.COAL_GENERATOR_HANDLER);
+        super(syncId, player, machine, GalacticraftScreenHandlerType.COAL_GENERATOR_HANDLER);
         this.addPlayerInventorySlots(0, 94);
     }
 

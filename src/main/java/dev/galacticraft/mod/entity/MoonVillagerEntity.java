@@ -120,7 +120,7 @@ public class MoonVillagerEntity extends VillagerEntity {
             villagerType3 = ((VillagerEntity) passiveEntity).getVillagerData().getType();
         }
 
-        MoonVillagerEntity moonVillager = new MoonVillagerEntity(GalacticraftEntityTypes.MOON_VILLAGER, serverWorld, villagerType3);
+        MoonVillagerEntity moonVillager = new MoonVillagerEntity(GalacticraftEntityType.MOON_VILLAGER, serverWorld, villagerType3);
         moonVillager.initialize(serverWorld, serverWorld.getLocalDifficulty(moonVillager.getBlockPos()), SpawnReason.BREEDING, null, null);
         return moonVillager;
     }

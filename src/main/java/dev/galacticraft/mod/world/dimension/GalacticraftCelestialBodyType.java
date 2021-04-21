@@ -34,7 +34,7 @@ import net.minecraft.util.registry.Registry;
 public class GalacticraftCelestialBodyType {
     public static final CelestialBodyType THE_MOON = new CelestialBodyType.Builder(new Identifier("galacticraft", "the_moon"))
             .translationKey("ui.galacticraft.bodies.the_moon")
-            .world(GalacticraftDimensions.MOON)
+            .world(GalacticraftDimension.MOON)
             .parent(CelestialBodyType.EARTH)
             .weight(1)
             .gravity(0.16f)

@@ -20,10 +20,16 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.item;
+package dev.galacticraft.mod.attribute;
+
+import alexiil.mc.lib.attributes.Attributes;
+import alexiil.mc.lib.attributes.DefaultedAttribute;
+import dev.galacticraft.mod.attribute.oxygen.EmptyOxygenTank;
+import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public interface AccessoryItem {
+public class GalacticraftAttribute {
+    public static final DefaultedAttribute<OxygenTank> OXYGEN_TANK_ATTRIBUTE = Attributes.createDefaulted(OxygenTank.class, EmptyOxygenTank.NULL);
 }

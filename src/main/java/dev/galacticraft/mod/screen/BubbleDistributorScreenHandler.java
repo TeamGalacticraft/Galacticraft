@@ -33,7 +33,7 @@ import net.minecraft.network.PacketByteBuf;
 public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleDistributorBlockEntity> {
 
     public BubbleDistributorScreenHandler(int syncId, PlayerEntity player, BubbleDistributorBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.BUBBLE_DISTRIBUTOR_HANDLER);
+        super(syncId, player, machine, GalacticraftScreenHandlerType.BUBBLE_DISTRIBUTOR_HANDLER);
 
         this.addPlayerInventorySlots(0, 84);
     }

@@ -32,7 +32,7 @@ import net.minecraft.network.PacketByteBuf;
  */
 public class OxygenCompressorScreenHandler extends MachineScreenHandler<OxygenCompressorBlockEntity> {
     public OxygenCompressorScreenHandler(int syncId, PlayerEntity player, OxygenCompressorBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.OXYGEN_COMPRESSOR_HANDLER);
+        super(syncId, player, machine, GalacticraftScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER);
         this.addPlayerInventorySlots(0, 84);
     }
 

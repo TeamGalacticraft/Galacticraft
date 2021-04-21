@@ -37,7 +37,7 @@ import java.util.UUID;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class JsonCapes implements CapeListener {
+public class JsonCape implements CapeListener {
 
     private static final Logger LOGGER = Galacticraft.LOGGER;
     private final Map<UUID, CapePlayer> capePlayers = new HashMap<>();

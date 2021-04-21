@@ -20,16 +20,31 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.attribute;
+package dev.galacticraft.mod.world.dimension;
 
-import alexiil.mc.lib.attributes.Attributes;
-import alexiil.mc.lib.attributes.DefaultedAttribute;
-import dev.galacticraft.mod.attribute.oxygen.EmptyOxygenTank;
-import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
+import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
+import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftAttributes {
-    public static final DefaultedAttribute<OxygenTank> OXYGEN_TANK_ATTRIBUTE = Attributes.createDefaulted(OxygenTank.class, EmptyOxygenTank.NULL);
+public class GalacticraftGas {
+
+    public static final AtmosphericGas NITROGEN_OXIDE =
+            new AtmosphericGas(
+                    new Identifier("galacticraft", "nitrogen_oxide"),
+                    "ui.galacticraft.nitrogen_oxide",
+                    "NO"
+            );
+
+    public static final AtmosphericGas HYDROGEN_DEUTERIUM_OXYGEN =
+            new AtmosphericGas(
+                    new Identifier("galacticraft", "hydrogen_deuterium_oxygen"),
+                    "ui.galacticraft.hydrogen_deuterium_oxygen",
+                    "HDO"
+
+            );
+
+    public static void init() {
+    }
 }

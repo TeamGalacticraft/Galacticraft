@@ -33,7 +33,7 @@ import net.minecraft.network.PacketByteBuf;
 public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEntity> {
 
     public RefineryScreenHandler(int syncId, PlayerEntity player, RefineryBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.REFINERY_HANDLER);
+        super(syncId, player, machine, GalacticraftScreenHandlerType.REFINERY_HANDLER);
         this.addPlayerInventorySlots(0, 86);
     }
 

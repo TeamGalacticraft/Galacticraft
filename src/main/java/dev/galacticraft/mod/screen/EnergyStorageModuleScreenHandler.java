@@ -33,7 +33,7 @@ import net.minecraft.network.PacketByteBuf;
  */
 public class EnergyStorageModuleScreenHandler extends MachineScreenHandler<EnergyStorageModuleBlockEntity> {
     public EnergyStorageModuleScreenHandler(int syncId, PlayerEntity player, EnergyStorageModuleBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.ENERGY_STORAGE_MODULE_HANDLER);
+        super(syncId, player, machine, GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER);
         this.addSlot(new AutoFilteredSlot(machine, 0, 18 * 6 - 6, 18 + 6));
         this.addSlot(new AutoFilteredSlot(machine, 1, 18 * 6 - 6, 18 * 2 + 12));
         this.addPlayerInventorySlots(0, 84);

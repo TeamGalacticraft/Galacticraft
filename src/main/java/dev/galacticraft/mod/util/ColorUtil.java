@@ -25,7 +25,7 @@ package dev.galacticraft.mod.util;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public enum ColorUtils {
+public enum ColorUtil {
     ;
     public static final int WHITE = 0xffffff;
 

@@ -56,7 +56,7 @@ public class CompressorScreenHandler extends MachineScreenHandler<CompressorBloc
     };
 
     public CompressorScreenHandler(int syncId, PlayerEntity player, CompressorBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.COMPRESSOR_HANDLER);
+        super(syncId, player, machine, GalacticraftScreenHandlerType.COMPRESSOR_HANDLER);
         this.addProperty(progress);
         this.addProperty(fuelTime);
         this.addPlayerInventorySlots(0, 110);

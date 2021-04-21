@@ -72,7 +72,7 @@ public class ShapelessCompressingRecipe implements CompressingRecipe {
 
     @Override
     public RecipeSerializer<? extends ShapelessCompressingRecipe> getSerializer() {
-        return GalacticraftRecipes.SHAPELESS_COMPRESSING_SERIALIZER;
+        return GalacticraftRecipe.SHAPELESS_COMPRESSING_SERIALIZER;
     }
 
     @Override

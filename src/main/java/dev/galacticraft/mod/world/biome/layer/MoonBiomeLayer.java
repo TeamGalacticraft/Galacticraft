@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.world.biome.layer;
 
-import dev.galacticraft.mod.world.biome.GalacticraftBiomes;
+import dev.galacticraft.mod.world.biome.GalacticraftBiome;
 import dev.galacticraft.mod.world.biome.layer.moon.MoonHighlandsBiomeLayer;
 import dev.galacticraft.mod.world.biome.layer.moon.MoonMareBiomeLayer;
 import dev.galacticraft.mod.world.biome.layer.moon.MoonMergeLayer;
@@ -76,13 +76,13 @@ public class MoonBiomeLayer {
     }
 
     public static BiomeLayerSampler build(long seed, int biomeSize, Registry<Biome> registry) {
-        if (MOON_HIGHLANDS_PLAINS_ID == -1 || MOON_HIGHLANDS_PLAINS_ID != registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS))) {
-            MOON_HIGHLANDS_PLAINS_ID = registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS));
-            MOON_HIGHLANDS_ROCKS_ID = registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_ROCKS));
-            MOON_HIGHLANDS_VALLEY_ID = registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_VALLEY));
-            MOON_MARE_PLAINS_ID = registry.getRawId(registry.get(GalacticraftBiomes.Moon.MARE_PLAINS));
-            MOON_MARE_ROCKS_ID = registry.getRawId(registry.get(GalacticraftBiomes.Moon.MARE_ROCKS));
-            MOON_MARE_EDGE_ID = registry.getRawId(registry.get(GalacticraftBiomes.Moon.MARE_EDGE));
+        if (MOON_HIGHLANDS_PLAINS_ID == -1 || MOON_HIGHLANDS_PLAINS_ID != registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_PLAINS))) {
+            MOON_HIGHLANDS_PLAINS_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_PLAINS));
+            MOON_HIGHLANDS_ROCKS_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_ROCKS));
+            MOON_HIGHLANDS_VALLEY_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_VALLEY));
+            MOON_MARE_PLAINS_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_PLAINS));
+            MOON_MARE_ROCKS_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_ROCKS));
+            MOON_MARE_EDGE_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_EDGE));
         }
         LayerFactory<CachingLayerSampler> layerFactory = build(biomeSize, (salt) -> new CachingLayerContext(25, seed, salt), registry);
         MoonBiomeLayer.registry = registry;

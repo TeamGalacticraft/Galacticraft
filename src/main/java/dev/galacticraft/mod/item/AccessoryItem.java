@@ -20,21 +20,16 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.surfacebuilder;
+package dev.galacticraft.mod.item;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
-import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
+import dev.galacticraft.mod.api.item.Accessory;
+import net.minecraft.item.Item;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftSurfaceBuilders {
-    public static final SurfaceBuilder<MultiBlockSurfaceConfig> MULTI_BLOCK_SURFACE_BUILDER = Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constant.MOD_ID, "multi_block"), new MultiBlockSurfaceBuilder(MultiBlockSurfaceConfig.CODEC));
-    public static final SurfaceBuilder<TernarySurfaceConfig> MOON = Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constant.MOD_ID, "moon"), new MoonSurfaceBuilder<>(TernarySurfaceConfig.CODEC));
-
-    public static void register() {
+public class AccessoryItem extends Item implements Accessory {
+    public AccessoryItem(Settings settings) {
+        super(settings);
     }
 }

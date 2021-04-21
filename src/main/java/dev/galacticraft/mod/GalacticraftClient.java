@@ -31,14 +31,14 @@ import dev.galacticraft.mod.client.render.MoonSkyProperties;
 import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.entity.*;
 import dev.galacticraft.mod.client.resource.GalacticraftResourceReloadListener;
-import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
+import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.misc.cape.CapeLoader;
-import dev.galacticraft.mod.misc.cape.JsonCapes;
+import dev.galacticraft.mod.misc.cape.JsonCape;
 import dev.galacticraft.mod.mixin.SkyPropertiesAccessor;
 import dev.galacticraft.mod.particle.GalacticraftParticle;
 import dev.galacticraft.mod.particle.fluid.DrippingCrudeOilParticle;
 import dev.galacticraft.mod.particle.fluid.DrippingFuelParticle;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerTypes;
+import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -62,7 +62,7 @@ import java.util.Collections;
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
 
-    public static final JsonCapes JSON_CAPES = new JsonCapes();
+    public static final JsonCape JSON_CAPES = new JsonCape();
     public static final CapeLoader CAPE_LOADER = new CapeLoader();
 
     @Override
@@ -94,33 +94,33 @@ public class GalacticraftClient implements ClientModInitializer {
             registry.register(Constant.Fluid.getIdentifier(Constant.Fluid.FUEL_FLOWING));
         });
 
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.BASIC_SOLAR_PANEL_HANDLER, BasicSolarPanelScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.ADVANCED_SOLAR_PANEL_HANDLER, AdvancedSolarPanelScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.COAL_GENERATOR_HANDLER, CoalGeneratorScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.CIRCUIT_FABRICATOR_HANDLER, CircuitFabricatorScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.REFINERY_HANDLER, RefineryScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.ELECTRIC_FURNACE_HANDLER, ElectricFurnaceScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.ELECTRIC_ARC_FURNACE_HANDLER, ElectricArcFurnaceScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.COMPRESSOR_HANDLER, CompressorScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.ELECTRIC_COMPRESSOR_HANDLER, ElectricCompressorScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.ENERGY_STORAGE_MODULE_HANDLER, EnergyStorageModuleScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.OXYGEN_COLLECTOR_HANDLER, OxygenCollectorScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.OXYGEN_COMPRESSOR_HANDLER, OxygenCompressorScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.OXYGEN_DECOMPRESSOR_HANDLER, OxygenDecompressorScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.PLAYER_INV_GC_HANDLER, GalacticraftPlayerInventoryScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.BUBBLE_DISTRIBUTOR_HANDLER, BubbleDistributorScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.OXYGEN_STORAGE_MODULE_HANDLER, OxygenStorageModuleScreen::new);
-        ScreenRegistry.register(GalacticraftScreenHandlerTypes.OXYGEN_SEALER_HANDLER, OxygenSealerScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER, BasicSolarPanelScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.ADVANCED_SOLAR_PANEL_HANDLER, AdvancedSolarPanelScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.COAL_GENERATOR_HANDLER, CoalGeneratorScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.CIRCUIT_FABRICATOR_HANDLER, CircuitFabricatorScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.REFINERY_HANDLER, RefineryScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.ELECTRIC_FURNACE_HANDLER, ElectricFurnaceScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER, ElectricArcFurnaceScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.COMPRESSOR_HANDLER, CompressorScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.ELECTRIC_COMPRESSOR_HANDLER, ElectricCompressorScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER, EnergyStorageModuleScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.OXYGEN_COLLECTOR_HANDLER, OxygenCollectorScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER, OxygenCompressorScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER, OxygenDecompressorScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.PLAYER_INV_GC_HANDLER, GalacticraftPlayerInventoryScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.BUBBLE_DISTRIBUTOR_HANDLER, BubbleDistributorScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER, OxygenStorageModuleScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerType.OXYGEN_SEALER_HANDLER, OxygenSealerScreen::new);
 
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.MOON_VILLAGER, (dispatcher, context) -> new MoonVillagerEntityRenderer(dispatcher, context.getResourceManager()));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_ZOMBIE, (dispatcher, context) -> new EvolvedZombieRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_CREEPER, (dispatcher, context) -> new EvolvedCreeperEntityRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_SKELETON, (dispatcher, context) -> new EvolvedSkeletonEntityRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_SPIDER, (dispatcher, context) -> new EvolvedSpiderEntityRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_EVOKER, (dispatcher, context) -> new EvolvedEvokerEntityRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_PILLAGER, (dispatcher, context) -> new EvolvedPillagerEntityRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_VINDICATOR, (dispatcher, context) -> new EvolvedVindicatorEntityRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.BUBBLE, (dispatcher, context) -> new BubbleEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.MOON_VILLAGER, (dispatcher, context) -> new MoonVillagerEntityRenderer(dispatcher, context.getResourceManager()));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_ZOMBIE, (dispatcher, context) -> new EvolvedZombieRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_CREEPER, (dispatcher, context) -> new EvolvedCreeperEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_SKELETON, (dispatcher, context) -> new EvolvedSkeletonEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_SPIDER, (dispatcher, context) -> new EvolvedSpiderEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_EVOKER, (dispatcher, context) -> new EvolvedEvokerEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_PILLAGER, (dispatcher, context) -> new EvolvedPillagerEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_VINDICATOR, (dispatcher, context) -> new EvolvedVindicatorEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.BUBBLE, (dispatcher, context) -> new BubbleEntityRenderer(dispatcher));
 
         GalacticraftBlockEntityRenderer.register();
         GalacticraftClientPacketReceiver.register();

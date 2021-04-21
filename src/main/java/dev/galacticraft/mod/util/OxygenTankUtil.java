@@ -28,7 +28,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.misc.Reference;
-import dev.galacticraft.mod.attribute.GalacticraftAttributes;
+import dev.galacticraft.mod.attribute.GalacticraftAttribute;
 import dev.galacticraft.mod.attribute.oxygen.EmptyOxygenTank;
 import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
@@ -83,19 +83,19 @@ public enum OxygenTankUtil {
     }
 
     public static boolean isOxygenTank(ItemStack stack) {
-        return GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(stack) != EmptyOxygenTank.NULL;
+        return GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(stack) != EmptyOxygenTank.NULL;
     }
 
     public static OxygenTank getOxygenTank(ItemStack stack) {
-        return GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
+        return GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
     }
 
     public static boolean isOxygenTank(Reference<ItemStack> stack) {
-        return GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(stack) != EmptyOxygenTank.NULL;
+        return GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(stack) != EmptyOxygenTank.NULL;
     }
 
     public static OxygenTank getOxygenTank(Reference<ItemStack> stack) {
-        return GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
+        return GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
     }
 
     public static int loxToOxygen(FluidVolume volume) {

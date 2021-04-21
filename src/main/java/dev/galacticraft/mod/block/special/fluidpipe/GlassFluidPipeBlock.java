@@ -27,7 +27,7 @@ import dev.galacticraft.mod.api.block.FluidPipe;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.item.StandardWrenchItem;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
-import dev.galacticraft.mod.util.FluidUtils;
+import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -79,7 +79,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
         BlockPos pos = context.getBlockPos().toImmutable();
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockState block = context.getWorld().getBlockState(pos.offset(direction));
-            if ((block.getBlock() instanceof FluidPipe /*&& block.get(COLOR) == DyeColor.WHITE*/) || FluidUtils.isExtractableOrInsertable(context.getWorld(), pos.offset(direction), direction)) state = state.with(propFromDirection(direction), true);
+            if ((block.getBlock() instanceof FluidPipe /*&& block.get(COLOR) == DyeColor.WHITE*/) || FluidUtil.isExtractableOrInsertable(context.getWorld(), pos.offset(direction), direction)) state = state.with(propFromDirection(direction), true);
         }
         return state;
     }
@@ -117,7 +117,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
         Direction dir = Direction.fromVector(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
         assert dir != null;
         world.setBlockState(pos, state.with(getPropForDirection(dir), !neighbor.isAir() && (block instanceof FluidPipe
-                || FluidUtils.isExtractableOrInsertable(world, fromPos, dir))
+                || FluidUtil.isExtractableOrInsertable(world, fromPos, dir))
         ));
     }
 

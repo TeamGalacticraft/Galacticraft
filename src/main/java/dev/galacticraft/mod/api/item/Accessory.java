@@ -20,16 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.item;
-
-import dev.galacticraft.mod.api.item.AccessoryItem;
-import net.minecraft.item.Item;
+package dev.galacticraft.mod.api.item;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GCAccessories extends Item implements AccessoryItem {
-    public GCAccessories(Settings settings) {
-        super(settings);
-    }
+public interface Accessory {
 }

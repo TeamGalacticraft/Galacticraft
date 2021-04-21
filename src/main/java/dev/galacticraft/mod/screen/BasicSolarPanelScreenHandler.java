@@ -32,7 +32,7 @@ import net.minecraft.network.PacketByteBuf;
  */
 public class BasicSolarPanelScreenHandler extends MachineScreenHandler<BasicSolarPanelBlockEntity> {
     public BasicSolarPanelScreenHandler(int syncId, PlayerEntity player, BasicSolarPanelBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.BASIC_SOLAR_PANEL_HANDLER);
+        super(syncId, player, machine, GalacticraftScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER);
 
         this.addPlayerInventorySlots(0, 84);
     }

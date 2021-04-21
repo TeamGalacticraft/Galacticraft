@@ -34,11 +34,11 @@ import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.entity.BubbleEntity;
-import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
+import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
-import dev.galacticraft.mod.util.FluidUtils;
+import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.OxygenTankUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -131,7 +131,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
             this.setSize(Math.max(size - 0.1F, targetSize));
         }
         if (size > 0.0D && bubbleVisible && bubbleId == -1 && (world instanceof ServerWorld)) {
-            BubbleEntity entity = new BubbleEntity(GalacticraftEntityTypes.BUBBLE, world);
+            BubbleEntity entity = new BubbleEntity(GalacticraftEntityType.BUBBLE, world);
             entity.setPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
             entity.prevX = this.getPos().getX();
             entity.prevY = this.getPos().getY();
@@ -212,7 +212,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
         if (this.getFluidInv().getInvFluid(0).amount().compareTo(this.getFluidInv().getMaxAmount_F(0)) >= 0) {
             return;
         }
-        if (FluidUtils.canExtractFluids(this.getInventory().getSlot(slot))) {
+        if (FluidUtil.canExtractFluids(this.getInventory().getSlot(slot))) {
             FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(this.getInventory().getSlot(slot));
             this.getFluidInv().insertFluid(OXYGEN_TANK, extractable.attemptExtraction(Constant.Filter.LOX_ONLY, this.getFluidInv().getMaxAmount_F(0).sub(this.getFluidInv().getInvFluid(0).amount()), Simulation.ACTION), Simulation.ACTION);
         }

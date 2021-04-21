@@ -35,7 +35,7 @@ import dev.galacticraft.mod.api.pipe.PipeConnectionType;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import dev.galacticraft.mod.attribute.fluid.PipeFluidInsertable;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
-import dev.galacticraft.mod.util.FluidUtils;
+import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.server.world.ServerWorld;
@@ -98,8 +98,8 @@ public class PipeBlockEntity extends BlockEntity implements Pipe, AttributeProvi
     public @NotNull PipeConnectionType getConnection(Direction direction, @NotNull BlockEntity entity) {
         if (!this.canConnect(direction)) return PipeConnectionType.NONE;
         if (entity instanceof Pipe && ((Pipe) entity).canConnect(direction.getOpposite())) return PipeConnectionType.PIPE;
-        FluidInsertable insertable = FluidUtils.getInsertable(world, entity.getPos(), direction);
-        FluidExtractable extractable = FluidUtils.getExtractable(world, entity.getPos(), direction);
+        FluidInsertable insertable = FluidUtil.getInsertable(world, entity.getPos(), direction);
+        FluidExtractable extractable = FluidUtil.getExtractable(world, entity.getPos(), direction);
         if (insertable != RejectingFluidInsertable.NULL && extractable != EmptyFluidExtractable.NULL) {
             return PipeConnectionType.FLUID_IO;
         } else if (insertable != RejectingFluidInsertable.NULL) {

@@ -27,7 +27,7 @@ import net.minecraft.item.FoodComponent;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftFoodComponents {
+public class GalacticraftFoodComponent {
     public static final FoodComponent MOON_BERRIES = new FoodComponent.Builder().hunger(1).saturationModifier(0.0F).build();
     public static final FoodComponent CHEESE_CURD = new FoodComponent.Builder().hunger(1).saturationModifier(0.1F).build();
     public static final FoodComponent CHEESE_SLICE = new FoodComponent.Builder().hunger(2).saturationModifier(0.1F).build();

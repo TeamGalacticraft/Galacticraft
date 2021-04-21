@@ -31,7 +31,7 @@ import net.minecraft.world.biome.Biome;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftBiomes {
+public class GalacticraftBiome {
 
     public static class Moon {
         public static final RegistryKey<Biome> HIGHLANDS_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.HIGHLANDS_PLAINS));

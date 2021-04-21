@@ -30,7 +30,7 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
-import dev.galacticraft.mod.recipe.GalacticraftRecipes;
+import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
@@ -151,7 +151,7 @@ public class CompressorBlockEntity extends MachineBlockEntity {
 
     private Optional<CompressingRecipe> getRecipe(Inventory input) {
         if (this.world == null) return Optional.empty();
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, input, this.world);
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipe.COMPRESSING_TYPE, input, this.world);
     }
 
     public int getProgress() {

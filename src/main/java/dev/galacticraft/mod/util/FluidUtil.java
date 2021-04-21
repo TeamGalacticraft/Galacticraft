@@ -47,8 +47,8 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class FluidUtils {
-    private FluidUtils() {}
+public class FluidUtil {
+    private FluidUtil() {}
 
     public static FluidVolume extractFluid(Reference<ItemStack> stackRef, FluidAmount maxAmount, FluidFilter filter) {
         return extractFluid(stackRef, maxAmount, filter, Simulation.ACTION);

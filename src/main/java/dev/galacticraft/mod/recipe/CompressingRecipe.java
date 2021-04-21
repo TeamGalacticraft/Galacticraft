@@ -32,6 +32,6 @@ import net.minecraft.recipe.RecipeType;
 public interface CompressingRecipe extends Recipe<Inventory> {
     @Override
     default RecipeType<? extends CompressingRecipe> getType() {
-        return GalacticraftRecipes.COMPRESSING_TYPE;
+        return GalacticraftRecipe.COMPRESSING_TYPE;
     }
 }

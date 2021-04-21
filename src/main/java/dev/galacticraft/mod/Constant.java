@@ -26,7 +26,7 @@ import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.RawFluidTagFilter;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.tag.GalacticraftTag;
-import dev.galacticraft.mod.util.ColorUtils;
+import dev.galacticraft.mod.util.ColorUtil;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
@@ -622,7 +622,7 @@ public interface Constant {
         }
 
         static Style getRainbow(int ticks) {
-            return Style.EMPTY.withColor(TextColor.fromRgb(ColorUtils.hsbToRGB(ticks / 500.0f, 1, 1)));
+            return Style.EMPTY.withColor(TextColor.fromRgb(ColorUtil.hsbToRGB(ticks / 500.0f, 1, 1)));
         }
     }
 

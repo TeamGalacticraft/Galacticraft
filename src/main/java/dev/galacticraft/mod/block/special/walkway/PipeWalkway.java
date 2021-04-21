@@ -24,7 +24,7 @@ package dev.galacticraft.mod.block.special.walkway;
 
 import dev.galacticraft.mod.api.block.FluidPipe;
 import dev.galacticraft.mod.item.StandardWrenchItem;
-import dev.galacticraft.mod.util.FluidUtils;
+import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -197,7 +197,7 @@ public class PipeWalkway extends FluidPipe {
                 return false;
         } catch (IllegalArgumentException ignored) {}
         */
-        if (FluidUtils.isExtractableOrInsertable((World) world, neighborPos, facing.getOpposite()))
+        if (FluidUtil.isExtractableOrInsertable((World) world, neighborPos, facing.getOpposite()))
             return true;
         return (neighborState.getBlock() instanceof FluidPipe); //&& (neighborState.get(COLOR) == state.get(COLOR));
     }

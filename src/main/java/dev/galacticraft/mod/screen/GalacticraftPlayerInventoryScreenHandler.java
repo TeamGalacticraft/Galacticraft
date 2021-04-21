@@ -61,7 +61,7 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
     private final PlayerEntity player;
 
     public GalacticraftPlayerInventoryScreenHandler(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        super(GalacticraftScreenHandlerTypes.PLAYER_INV_GC_HANDLER, syncId);
+        super(GalacticraftScreenHandlerType.PLAYER_INV_GC_HANDLER, syncId);
 
         this.player = player;
         this.inventory = ((GearInventoryProvider)player).getGearInv();

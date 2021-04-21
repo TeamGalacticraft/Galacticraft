@@ -32,7 +32,7 @@ import net.minecraft.util.registry.Registry;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftRecipes {
+public class GalacticraftRecipe {
     public static RecipeType<FabricationRecipe> FABRICATION_TYPE;
     public static RecipeType<CompressingRecipe> COMPRESSING_TYPE;
     static FabricationRecipeSerializer<FabricationRecipe> FABRICATION_SERIALIZER;

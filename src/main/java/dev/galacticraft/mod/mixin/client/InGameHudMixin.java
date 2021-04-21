@@ -27,7 +27,7 @@ import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
-import dev.galacticraft.mod.attribute.GalacticraftAttributes;
+import dev.galacticraft.mod.attribute.GalacticraftAttribute;
 import dev.galacticraft.mod.attribute.oxygen.InfiniteOxygenTank;
 import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
 import dev.galacticraft.mod.util.DrawableUtil;
@@ -63,10 +63,10 @@ public abstract class InGameHudMixin extends DrawableHelper implements DrawableU
 
             client.getTextureManager().bindTexture(Constant.ScreenTexture.OVERLAY);
             FixedItemInv inv = ((GearInventoryProvider) client.player).getGearInv();
-            OxygenTank tank = GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(inv.getSlot(7));
+            OxygenTank tank = GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(inv.getSlot(7));
             if (client.player.isCreative() && tank.getCapacity() == 0) tank = InfiniteOxygenTank.INSTANCE;
             this.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 5, 5, this.getZOffset(), tank.getAmount(), tank.getCapacity());
-            tank = GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(inv.getSlot(6));
+            tank = GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(inv.getSlot(6));
             if (client.player.isCreative() && tank.getCapacity() == 0) tank = InfiniteOxygenTank.INSTANCE;
             this.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * 2) - 10, 5, this.getZOffset(), tank.getAmount(), tank.getCapacity());
         }

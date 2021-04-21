@@ -33,7 +33,7 @@ import net.minecraft.screen.Property;
  */
 public class ElectricFurnaceScreenHandler extends MachineScreenHandler<ElectricFurnaceBlockEntity> {
     public ElectricFurnaceScreenHandler(int syncId, PlayerEntity player, ElectricFurnaceBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.ELECTRIC_FURNACE_HANDLER);
+        super(syncId, player, machine, GalacticraftScreenHandlerType.ELECTRIC_FURNACE_HANDLER);
 
         this.addProperty(new Property() {
             @Override

@@ -42,7 +42,7 @@ import dev.galacticraft.mod.item.GalacticraftItems;
 import dev.galacticraft.mod.screen.MachineScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.screen.tank.Tank;
-import dev.galacticraft.mod.util.ColorUtils;
+import dev.galacticraft.mod.util.ColorUtil;
 import dev.galacticraft.mod.util.DrawableUtil;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
@@ -261,13 +261,13 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.renderItemIcon(matrices, REDSTONE_HIGH_X, REDSTONE_HIGH_Y - 2, REDSTONE_TORCH);
 
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.redstone")
-                        .setStyle(Constant.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
+                        .setStyle(Constant.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtil.WHITE);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.redstone.state",
-                        machine.getRedstoneInteraction().getName()).setStyle(Constant.Text.DARK_GRAY_STYLE), REDSTONE_STATE_TEXT_X, REDSTONE_STATE_TEXT_Y, ColorUtils.WHITE);
+                        machine.getRedstoneInteraction().getName()).setStyle(Constant.Text.DARK_GRAY_STYLE), REDSTONE_STATE_TEXT_X, REDSTONE_STATE_TEXT_Y, ColorUtil.WHITE);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.redstone.status",
                         !machine.disabled() ? new TranslatableText("ui.galacticraft.machine.redstone.status.enabled").setStyle(Constant.Text.GREEN_STYLE)
                                 : new TranslatableText("ui.galacticraft.machine.redstone.status.disabled").setStyle(Constant.Text.DARK_RED_STYLE))
-                        .setStyle(Constant.Text.DARK_GRAY_STYLE), REDSTONE_STATUS_TEXT_X, REDSTONE_STATUS_TEXT_Y + this.textRenderer.fontHeight, ColorUtils.WHITE);
+                        .setStyle(Constant.Text.DARK_GRAY_STYLE), REDSTONE_STATUS_TEXT_X, REDSTONE_STATUS_TEXT_Y + this.textRenderer.fontHeight, ColorUtil.WHITE);
 
                 matrices.pop();
             }
@@ -276,7 +276,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 matrices.translate(-PANEL_WIDTH, TAB_HEIGHT + SPACING + SPACING, 0);
                 this.renderItemIcon(matrices, PANEL_ICON_X, PANEL_ICON_Y, WRENCH);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.configuration")
-                        .setStyle(Constant.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
+                        .setStyle(Constant.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtil.WHITE);
 
                 this.client.getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
                 this.drawMachineFace(matrices, TOP_FACE_X, TOP_FACE_Y, machine, BlockFace.TOP);
@@ -294,12 +294,12 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.client.getTextureManager().bindTexture(this.ownerSkin);
                 drawTexture(matrices, OWNER_FACE_X, OWNER_FACE_Y, OWNER_FACE_WIDTH, OWNER_FACE_HEIGHT, 8, 8, 8, 8, 64, 64);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.stats")
-                        .setStyle(Constant.Text.GREEN_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
+                        .setStyle(Constant.Text.GREEN_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtil.WHITE);
                 List<OrderedText> text = this.textRenderer.wrapLines(new TranslatableText((machine.getCachedState() != null ? machine.getCachedState()
                         : this.handler.machine.getCachedState()).getBlock().getTranslationKey()), 64);
                 int offsetY = 0;
                 for (OrderedText orderedText : text) {
-                    this.textRenderer.draw(matrices, orderedText, 40, 22 + offsetY, ColorUtils.WHITE);
+                    this.textRenderer.draw(matrices, orderedText, 40, 22 + offsetY, ColorUtil.WHITE);
                     offsetY += this.textRenderer.fontHeight + 2;
                 }
 //                this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.machine.stats.gjt", "N/A")
@@ -323,9 +323,9 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.drawTexture(matrices, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, ICON_LOCK_PUBLIC_U, ICON_LOCK_PUBLIC_V, ICON_WIDTH, ICON_HEIGHT);
 
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.security")
-                        .setStyle(Constant.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
+                        .setStyle(Constant.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtil.WHITE);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.security.state",
-                        machine.getSecurity().getAccessibility().getName()).setStyle(Constant.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y, ColorUtils.WHITE);
+                        machine.getSecurity().getAccessibility().getName()).setStyle(Constant.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y, ColorUtil.WHITE);
 //                assert machine.getSecurity().getOwner() != null;
 //                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.security.owned_by", machine.getSecurity().getOwner().getName())
 //                        .setStyle(Constants.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y + this.textRenderer.fontHeight + 4, ColorUtils.WHITE);

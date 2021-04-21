@@ -25,7 +25,7 @@ package dev.galacticraft.mod.mixin.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.WorldRendererAccessor;
-import dev.galacticraft.mod.world.dimension.GalacticraftDimensions;
+import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -79,7 +79,7 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
 
     @Inject(method = "renderClouds(Lnet/minecraft/client/util/math/MatrixStack;FDDD)V", at = @At("HEAD"), cancellable = true)
     private void renderClouds(MatrixStack matrices, float tickDelta, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
-        if (this.world.getRegistryKey() == GalacticraftDimensions.MOON) {
+        if (this.world.getRegistryKey() == GalacticraftDimension.MOON) {
             ci.cancel();
             //noinspection UnnecessaryReturnStatement
             return;
@@ -88,7 +88,7 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
 
     @Inject(at = @At("HEAD"), method = "renderSky", cancellable = true)
     private void renderSkyGC(MatrixStack matrices, float delta, CallbackInfo ci) {
-        if (this.world.getRegistryKey() == GalacticraftDimensions.MOON) {
+        if (this.world.getRegistryKey() == GalacticraftDimension.MOON) {
             this.client.getProfiler().push("moon_sky_render");
             RenderSystem.disableTexture();
             RenderSystem.disableFog();
@@ -178,7 +178,7 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/SkyProperties;useThickFog(II)Z"))
     private boolean useThickFogGC(SkyProperties skyProperties, int camX, int camY) {
-        if (client.world.getRegistryKey().equals(GalacticraftDimensions.MOON)) {
+        if (client.world.getRegistryKey().equals(GalacticraftDimension.MOON)) {
             //noinspection ConstantConditions
             return client.world.getBiome(new BlockPos(lastCameraX, lastCameraY, lastCameraZ)).getEffects().getFogColor() == 1447446;
         }

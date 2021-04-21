@@ -30,7 +30,7 @@ import net.minecraft.util.Identifier;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftScreenHandlerTypes {
+public class GalacticraftScreenHandlerType {
 
     public static final Identifier BASIC_SOLAR_PANEL_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.BASIC_SOLAR_SCREEN_HANDLER);
     public static final ScreenHandlerType<BasicSolarPanelScreenHandler> BASIC_SOLAR_PANEL_HANDLER =

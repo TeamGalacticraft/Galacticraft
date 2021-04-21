@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.api.cape.model;
 
-import dev.galacticraft.mod.misc.cape.JsonCapes;
+import dev.galacticraft.mod.misc.cape.JsonCape;
 
 import java.util.UUID;
 
@@ -42,9 +42,9 @@ public class CapePlayer {
         return name;
     }
 
-    public JsonCapes.Cape getCape() {
-        JsonCapes.Cape cape = JsonCapes.Cape.valueOfIgnoreCase(this.cape);
-        if (cape == null) return JsonCapes.Cape.EARTH;
+    public JsonCape.Cape getCape() {
+        JsonCape.Cape cape = JsonCape.Cape.valueOfIgnoreCase(this.cape);
+        if (cape == null) return JsonCape.Cape.EARTH;
         else return cape;
     }
 }

@@ -31,7 +31,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
-import dev.galacticraft.mod.util.FluidUtils;
+import dev.galacticraft.mod.util.FluidUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
@@ -80,7 +80,7 @@ public class PipeNetworkImpl implements PipeNetwork {
                     continue;
                 }
             }
-            FluidInsertable insertable = FluidUtils.getInsertable(world, pos.offset(direction), direction);
+            FluidInsertable insertable = FluidUtil.getInsertable(world, pos.offset(direction), direction);
             if (insertable != RejectingFluidInsertable.NULL) {
                 this.insertable.put(pos.offset(direction), insertable);
             }
@@ -107,7 +107,7 @@ public class PipeNetworkImpl implements PipeNetwork {
         if (this.pipes.size() == 0) return;
 
         List<BlockPos> list = new LinkedList<>();
-        this.reattachAdjacent(pos, this.insertable, (blockPos, direction) -> FluidUtils.getInsertable(this.world, blockPos, direction), list);
+        this.reattachAdjacent(pos, this.insertable, (blockPos, direction) -> FluidUtil.getInsertable(this.world, blockPos, direction), list);
         list.clear();
 
         for (Direction direction : Constant.Misc.DIRECTIONS) {
@@ -181,7 +181,7 @@ public class PipeNetworkImpl implements PipeNetwork {
         this.insertable.remove(updatedPos);
         BlockPos vector = adjacentToUpdated.subtract(updatedPos);
         Direction direction = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
-        FluidInsertable insertable = FluidUtils.getInsertable(world, updatedPos, direction);
+        FluidInsertable insertable = FluidUtil.getInsertable(world, updatedPos, direction);
         if (insertable != RejectingFluidInsertable.NULL) {
             this.insertable.put(updatedPos, insertable);
         }

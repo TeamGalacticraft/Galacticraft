@@ -24,7 +24,7 @@ package dev.galacticraft.mod.item;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
+import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.sound.GalacticraftSound;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -101,18 +101,18 @@ public class GalacticraftItems {
     public static final Item ORION_DRIVE = registerItem(Constant.Item.ORION_DRIVE, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item ATMOSPHERIC_VALVE = registerItem(Constant.Item.ATMOSPHERIC_VALVE, new Item(new Item.Settings().group(ITEMS_GROUP)));
     //FOOD
-    public static final Item MOON_BERRIES = registerItem(Constant.Item.MOON_BERRIES, new Item(new Item.Settings().food(GalacticraftFoodComponents.MOON_BERRIES).group(ITEMS_GROUP)));
-    public static final Item CHEESE_CURD = registerItem(Constant.Item.CHEESE_CURD, new Item(new Item.Settings().food(GalacticraftFoodComponents.CHEESE_CURD).group(ITEMS_GROUP)));
-    public static final Item CHEESE_SLICE = registerItem(Constant.Item.CHEESE_SLICE, new Item(new Item.Settings().food(GalacticraftFoodComponents.CHEESE_SLICE).group(ITEMS_GROUP)));
-    public static final Item BURGER_BUN = registerItem(Constant.Item.BURGER_BUN, new Item(new Item.Settings().food(GalacticraftFoodComponents.BURGER_BUN).group(ITEMS_GROUP)));
-    public static final Item GROUND_BEEF = registerItem(Constant.Item.GROUND_BEEF, new Item(new Item.Settings().food(GalacticraftFoodComponents.GROUND_BEEF).group(ITEMS_GROUP)));
-    public static final Item BEEF_PATTY = registerItem(Constant.Item.BEEF_PATTY, new Item(new Item.Settings().food(GalacticraftFoodComponents.BEEF_PATTY).group(ITEMS_GROUP)));
-    public static final Item CHEESEBURGER = registerItem(Constant.Item.CHEESEBURGER, new Item(new Item.Settings().food(GalacticraftFoodComponents.CHEESEBURGER).group(ITEMS_GROUP)));
-    public static final Item CANNED_DEHYDRATED_APPLE = registerItem(Constant.Item.CANNED_DEHYDRATED_APPLE, new CannedFoodItem(new Item.Settings().food(GalacticraftFoodComponents.DEHYDRATED_APPLE).group(ITEMS_GROUP)));
-    public static final Item CANNED_DEHYDRATED_CARROT = registerItem(Constant.Item.CANNED_DEHYDRATED_CARROT, new CannedFoodItem(new Item.Settings().food(GalacticraftFoodComponents.DEHYDRATED_CARROT).group(ITEMS_GROUP)));
-    public static final Item CANNED_DEHYDRATED_MELON = registerItem(Constant.Item.CANNED_DEHYDRATED_MELON, new CannedFoodItem(new Item.Settings().food(GalacticraftFoodComponents.DEHYDRATED_MELON).group(ITEMS_GROUP)));
-    public static final Item CANNED_DEHYDRATED_POTATO = registerItem(Constant.Item.CANNED_DEHYDRATED_POTATO, new CannedFoodItem(new Item.Settings().food(GalacticraftFoodComponents.DEHYDRATED_POTATO).group(ITEMS_GROUP)));
-    public static final Item CANNED_BEEF = registerItem(Constant.Item.CANNED_BEEF, new CannedFoodItem(new Item.Settings().food(GalacticraftFoodComponents.CANNED_BEEF).group(ITEMS_GROUP)));
+    public static final Item MOON_BERRIES = registerItem(Constant.Item.MOON_BERRIES, new Item(new Item.Settings().food(GalacticraftFoodComponent.MOON_BERRIES).group(ITEMS_GROUP)));
+    public static final Item CHEESE_CURD = registerItem(Constant.Item.CHEESE_CURD, new Item(new Item.Settings().food(GalacticraftFoodComponent.CHEESE_CURD).group(ITEMS_GROUP)));
+    public static final Item CHEESE_SLICE = registerItem(Constant.Item.CHEESE_SLICE, new Item(new Item.Settings().food(GalacticraftFoodComponent.CHEESE_SLICE).group(ITEMS_GROUP)));
+    public static final Item BURGER_BUN = registerItem(Constant.Item.BURGER_BUN, new Item(new Item.Settings().food(GalacticraftFoodComponent.BURGER_BUN).group(ITEMS_GROUP)));
+    public static final Item GROUND_BEEF = registerItem(Constant.Item.GROUND_BEEF, new Item(new Item.Settings().food(GalacticraftFoodComponent.GROUND_BEEF).group(ITEMS_GROUP)));
+    public static final Item BEEF_PATTY = registerItem(Constant.Item.BEEF_PATTY, new Item(new Item.Settings().food(GalacticraftFoodComponent.BEEF_PATTY).group(ITEMS_GROUP)));
+    public static final Item CHEESEBURGER = registerItem(Constant.Item.CHEESEBURGER, new Item(new Item.Settings().food(GalacticraftFoodComponent.CHEESEBURGER).group(ITEMS_GROUP)));
+    public static final Item CANNED_DEHYDRATED_APPLE = registerItem(Constant.Item.CANNED_DEHYDRATED_APPLE, new CannedFoodItem(new Item.Settings().food(GalacticraftFoodComponent.DEHYDRATED_APPLE).group(ITEMS_GROUP)));
+    public static final Item CANNED_DEHYDRATED_CARROT = registerItem(Constant.Item.CANNED_DEHYDRATED_CARROT, new CannedFoodItem(new Item.Settings().food(GalacticraftFoodComponent.DEHYDRATED_CARROT).group(ITEMS_GROUP)));
+    public static final Item CANNED_DEHYDRATED_MELON = registerItem(Constant.Item.CANNED_DEHYDRATED_MELON, new CannedFoodItem(new Item.Settings().food(GalacticraftFoodComponent.DEHYDRATED_MELON).group(ITEMS_GROUP)));
+    public static final Item CANNED_DEHYDRATED_POTATO = registerItem(Constant.Item.CANNED_DEHYDRATED_POTATO, new CannedFoodItem(new Item.Settings().food(GalacticraftFoodComponent.DEHYDRATED_POTATO).group(ITEMS_GROUP)));
+    public static final Item CANNED_BEEF = registerItem(Constant.Item.CANNED_BEEF, new CannedFoodItem(new Item.Settings().food(GalacticraftFoodComponent.CANNED_BEEF).group(ITEMS_GROUP)));
     //ROCKET PARTS
     public static final Item TIER_1_HEAVY_DUTY_PLATE = registerItem(Constant.Item.TIER_1_HEAVY_DUTY_PLATE, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TIER_2_HEAVY_DUTY_PLATE = registerItem(Constant.Item.TIER_2_HEAVY_DUTY_PLATE, new Item(new Item.Settings().group(ITEMS_GROUP)));
@@ -191,8 +191,8 @@ public class GalacticraftItems {
     public static final Item BLACK_PARACHUTE = registerItem(Constant.Item.BLACK_PARACHUTE, new Item(PARACHUTE_SETTINGS));
     public static final Item OXYGEN_MASK = registerItem(Constant.Item.OXYGEN_MASK, new OxygenMaskItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item OXYGEN_GEAR = registerItem(Constant.Item.OXYGEN_GEAR, new OxygenGearItem(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item SHIELD_CONTROLLER = registerItem(Constant.Item.SHIELD_CONTROLLER, new GCAccessories(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item FREQUENCY_MODULE = registerItem(Constant.Item.FREQUENCY_MODULE, new GCAccessories(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item SHIELD_CONTROLLER = registerItem(Constant.Item.SHIELD_CONTROLLER, new AccessoryItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item FREQUENCY_MODULE = registerItem(Constant.Item.FREQUENCY_MODULE, new AccessoryItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item SMALL_OXYGEN_TANK = registerItem(Constant.Item.SMALL_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP), 1620 * 10)); // 16200 ticks
     public static final Item MEDIUM_OXYGEN_TANK = registerItem(Constant.Item.MEDIUM_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP), 1620 * 20)); //32400 ticks
     public static final Item LARGE_OXYGEN_TANK = registerItem(Constant.Item.LARGE_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP), 1620 * 30)); //48600 ticks
@@ -207,14 +207,14 @@ public class GalacticraftItems {
     public static final Item TIER_3_ROCKET_SCHEMATIC = registerItem(Constant.Item.TIER_3_ROCKET_SCHEMATIC, new SchematicItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item ASTRO_MINER_SCHEMATIC = registerItem(Constant.Item.ASTRO_MINER_SCHEMATIC, new SchematicItem(new Item.Settings().group(ITEMS_GROUP)));
     // SPAWN EGGS
-    public static final Item MOON_VILLAGER_SPAWN_EGG = registerItem(Constant.Item.MOON_VILLAGER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityTypes.MOON_VILLAGER, 0xC0C9C0, 0x5698D8, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_ZOMBIE_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityTypes.EVOLVED_ZOMBIE, 0xC0CCC0, 0x99EE99, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item EVOLVED_EVOKER_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_EVOKER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityTypes.EVOLVED_EVOKER, 0x888888, 0xDDDDDD, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item EVOLVED_VINDICATOR_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_VINDICATOR_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityTypes.EVOLVED_VINDICATOR, 0x888888, 0xDDDDDD, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item EVOLVED_CREEPER_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_CREEPER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityTypes.EVOLVED_CREEPER, 0x6AFF8A, 0x99EE99, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item EVOLVED_SPIDER_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_SPIDER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityTypes.EVOLVED_SPIDER, 0xEE9999, 0x99EE99, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item EVOLVED_PILLAGER_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_PILLAGER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityTypes.EVOLVED_PILLAGER, 0x888888, 0xDDDDDD, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item EVOLVED_SKELETON_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_SKELETON_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityTypes.EVOLVED_SKELETON, 0x888888, 0xDDDDDD, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item MOON_VILLAGER_SPAWN_EGG = registerItem(Constant.Item.MOON_VILLAGER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.MOON_VILLAGER, 0xC0C9C0, 0x5698D8, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_ZOMBIE_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_ZOMBIE, 0xC0CCC0, 0x99EE99, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item EVOLVED_EVOKER_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_EVOKER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_EVOKER, 0x888888, 0xDDDDDD, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item EVOLVED_VINDICATOR_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_VINDICATOR_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_VINDICATOR, 0x888888, 0xDDDDDD, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item EVOLVED_CREEPER_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_CREEPER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_CREEPER, 0x6AFF8A, 0x99EE99, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item EVOLVED_SPIDER_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_SPIDER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_SPIDER, 0xEE9999, 0x99EE99, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item EVOLVED_PILLAGER_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_PILLAGER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_PILLAGER, 0x888888, 0xDDDDDD, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item EVOLVED_SKELETON_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_SKELETON_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_SKELETON, 0x888888, 0xDDDDDD, new Item.Settings().group(ITEMS_GROUP)));
     // THROWABLE METEOR CHUNKS
     public static final Item THROWABLE_METEOR_CHUNK = registerItem(Constant.Item.THROWABLE_METEOR_CHUNK, new ThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HOT_THROWABLE_METEOR_CHUNK = registerItem(Constant.Item.HOT_THROWABLE_METEOR_CHUNK, new HotThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));

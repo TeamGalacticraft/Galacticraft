@@ -38,7 +38,7 @@ import dev.galacticraft.mod.screen.RefineryScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import dev.galacticraft.mod.util.EnergyUtil;
-import dev.galacticraft.mod.util.FluidUtils;
+import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
@@ -68,8 +68,8 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
         builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 7);
-        builder.addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtils.canExtractFluids(stack, GalacticraftTag.OIL), 123, 7);
-        builder.addSlot(FLUID_OUTPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluid.FUEL), 153, 7);
+        builder.addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtil.canExtractFluids(stack, GalacticraftTag.OIL), 123, 7);
+        builder.addSlot(FLUID_OUTPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtil.canInsertFluids(stack, GalacticraftFluid.FUEL), 153, 7);
         return builder;
     }
 

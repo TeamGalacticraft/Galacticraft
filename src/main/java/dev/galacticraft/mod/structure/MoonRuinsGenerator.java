@@ -24,7 +24,7 @@ package dev.galacticraft.mod.structure;
 
 import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
+import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.loot.GalacticraftLootTable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -169,9 +169,9 @@ public class MoonRuinsGenerator {
             MobEntity entity;
             int i = arg.getRandom().nextInt(2);
             if (i == 0) {
-               entity = GalacticraftEntityTypes.EVOLVED_ZOMBIE.create(arg.toServerWorld());
+               entity = GalacticraftEntityType.EVOLVED_ZOMBIE.create(arg.toServerWorld());
             } else {
-               entity = GalacticraftEntityTypes.EVOLVED_CREEPER.create(arg.toServerWorld());
+               entity = GalacticraftEntityType.EVOLVED_CREEPER.create(arg.toServerWorld());
             }
             assert entity != null;
             entity.setPersistent();

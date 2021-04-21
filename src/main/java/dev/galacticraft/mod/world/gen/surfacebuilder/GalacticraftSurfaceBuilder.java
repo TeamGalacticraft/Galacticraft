@@ -20,31 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.dimension;
+package dev.galacticraft.mod.world.gen.surfacebuilder;
 
-import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
+import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftGases {
+public class GalacticraftSurfaceBuilder {
+    public static final SurfaceBuilder<MultiBlockSurfaceConfig> MULTI_BLOCK_SURFACE_BUILDER = Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constant.MOD_ID, "multi_block"), new MultiBlockSurfaceBuilder(MultiBlockSurfaceConfig.CODEC));
+    public static final SurfaceBuilder<TernarySurfaceConfig> MOON = Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constant.MOD_ID, "moon"), new MoonSurfaceBuilder<>(TernarySurfaceConfig.CODEC));
 
-    public static final AtmosphericGas NITROGEN_OXIDE =
-            new AtmosphericGas(
-                    new Identifier("galacticraft", "nitrogen_oxide"),
-                    "ui.galacticraft.nitrogen_oxide",
-                    "NO"
-            );
-
-    public static final AtmosphericGas HYDROGEN_DEUTERIUM_OXYGEN =
-            new AtmosphericGas(
-                    new Identifier("galacticraft", "hydrogen_deuterium_oxygen"),
-                    "ui.galacticraft.hydrogen_deuterium_oxygen",
-                    "HDO"
-
-            );
-
-    public static void init() {
+    public static void register() {
     }
 }

@@ -33,7 +33,7 @@ import net.minecraft.screen.Property;
  */
 public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCollectorBlockEntity> {
     public OxygenCollectorScreenHandler(int syncId, PlayerEntity player, OxygenCollectorBlockEntity blockEntity) {
-        super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_COLLECTOR_HANDLER);
+        super(syncId, player, blockEntity, GalacticraftScreenHandlerType.OXYGEN_COLLECTOR_HANDLER);
         this.addProperty(new Property() {
             @Override
             public int get() {

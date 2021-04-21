@@ -45,7 +45,7 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
     };
 
     public CircuitFabricatorScreenHandler(int syncId, PlayerEntity player, CircuitFabricatorBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.CIRCUIT_FABRICATOR_HANDLER);
+        super(syncId, player, machine, GalacticraftScreenHandlerType.CIRCUIT_FABRICATOR_HANDLER);
         this.addProperty(this.progress);
         this.addPlayerInventorySlots(0, 94);
     }
