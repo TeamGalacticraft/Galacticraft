@@ -58,7 +58,7 @@ import net.minecraft.util.Identifier;
  * Handles server-bound (C2S) packets.
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftServerPacketReceivers {
+public class GalacticraftServerPacketReceiver {
     public static void register() {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory(GalacticraftPlayerInventoryScreenHandler::new, LiteralText.EMPTY))));
 
