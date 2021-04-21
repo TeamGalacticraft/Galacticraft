@@ -54,10 +54,10 @@ public class StructureUpdater {
             StructureManager manager = new StructureManager(null, storage.createSession("session"), dataFixer);
 
             for (String s : fileNamesList) {
-                File file = new File(s);
-                Structure structure = manager.createStructure(NbtIo.readCompressed(file));
-                CompoundTag tag = structure.toTag(new CompoundTag());
+                CompoundTag tag = NbtIo.readCompressed(new File(s));
                 tag = new StringNbtReader(new StringReader(tag.toString().replaceAll("[- ][Rr]ewoven", ""))).parseCompoundTag();
+                Structure structure = manager.createStructure(tag);
+                tag = structure.toTag(new CompoundTag());
                 File file1 = new File("./structure_update/out/" + s.replace("../src/main/resources/data/galacticraft/", ""));
                 file1.getParentFile().mkdirs();
                 NbtIo.writeCompressed(tag, file1);
