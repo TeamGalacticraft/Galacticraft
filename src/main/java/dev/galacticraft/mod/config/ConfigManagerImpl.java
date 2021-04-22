@@ -96,6 +96,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .setSavingRunnable(this::save);
 
         SubCategoryBuilder dB = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constant.Config.DEBUG));
+
         dB.add(new BooleanToggleBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.DEBUG_LOGGING),
