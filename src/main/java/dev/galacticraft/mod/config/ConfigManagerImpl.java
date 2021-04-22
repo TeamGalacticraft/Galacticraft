@@ -105,6 +105,15 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
+        dB.add(new BooleanToggleBuilder(
+                new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.HIDE_ALPHA_WARNING),
+                this.config.isAlphaWarningHidden())
+                .setSaveConsumer(flag -> this.config.setAlphaWarningHidden(flag))
+                .setDefaultValue(false)
+                .build()
+        );
+
         SubCategoryBuilder wires = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constant.Config.WIRES));
 
         wires.add(new IntFieldBuilder(
