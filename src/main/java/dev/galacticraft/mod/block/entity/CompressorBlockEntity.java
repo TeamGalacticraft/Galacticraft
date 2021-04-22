@@ -67,7 +67,7 @@ public class CompressorBlockEntity extends MachineBlockEntity {
 
     public CompressorBlockEntity() {
         super(GalacticraftBlockEntityType.COMPRESSOR);
-        this.craftingInv = new InventoryFixedWrapper(this.getInventory().getSubInv(0, 9)) {
+        this.craftingInv = new InventoryFixedWrapper(this.getInventory().getSubInv(1, 10)) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
                 return getWrappedInventory().canPlayerUse(player);

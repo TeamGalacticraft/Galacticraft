@@ -69,7 +69,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity implements
 
     @Override
     protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
-        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_OUT, 80, 27);
+        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_OUT, 30, 8);
         return builder;
     }
 

@@ -59,7 +59,7 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
     private static final int MAX_PROGRESS = 200; // In ticks, 100/20 = 10 seconds
 
-    private final Inventory craftingInv = new InventoryFixedWrapper(this.getInventory().getSubInv(0, 9)) {
+    private final Inventory craftingInv = new InventoryFixedWrapper(this.getInventory().getSubInv(1, 10)) {
         @Override
         public boolean canPlayerUse(PlayerEntity player) {
             return getWrappedInventory().canPlayerUse(player);
