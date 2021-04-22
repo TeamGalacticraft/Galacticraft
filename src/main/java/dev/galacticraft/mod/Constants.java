@@ -411,6 +411,7 @@ public interface Constants {
 
         String DEBUG = "config.galacticraft.debug";
         String DEBUG_LOGGING = "config.galacticraft.debug.logging";
+        String HIDE_ALPHA_WARNING = "config.galacticraft.debug.hide_alpha_warning";
 
         String ENERGY = "config.galacticraft.energy";
 
