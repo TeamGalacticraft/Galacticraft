@@ -26,10 +26,10 @@ import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.client.render.entity.feature.gear.LeftOxygenTankFeatureRenderer;
 import dev.galacticraft.mod.client.render.entity.feature.ModelTransformer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenTankTextureOffset;
 import dev.galacticraft.mod.item.OxygenTankItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -47,13 +47,27 @@ import net.minecraft.item.ItemStack;
 public class PlayerLeftOxygenTankFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T>> extends LeftOxygenTankFeatureRenderer<T, M> {
 
     public PlayerLeftOxygenTankFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> leftTankTransforms) {
-        super(context, extra, leftTankTransforms);
+        super(context, extra, leftTankTransforms, OxygenTankTextureOffset.HEAVY_TANK);
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         ItemStack itemStack = ((FullFixedItemInv)((GearInventoryProvider) entity).getGearInv()).getSlot(7).get();
         if (itemStack.getItem() instanceof OxygenTankItem) {
+            switch (((OxygenTankItem) itemStack.getItem()).getTankType()) {
+                case SMALL:
+                    this.textureType = OxygenTankTextureOffset.SMALL_TANK;
+                    break;
+                case MEDIUM:
+                    this.textureType = OxygenTankTextureOffset.MEDIUM_TANK;
+                    break;
+                case HEAVY:
+                    this.textureType = OxygenTankTextureOffset.HEAVY_TANK;
+                    break;
+                case INFINITE:
+                    this.textureType = OxygenTankTextureOffset.INFINITE_TANK;
+                    break;
+            }
             if (itemStack.hasGlint()) {
                 VertexConsumer vertexConsumerGlint = ItemRenderer.getArmorGlintConsumer(vertexConsumers, RenderLayer.getArmorCutoutNoCull(getTexture(entity)), false, itemStack.hasGlint());
                 super.render(matrices, vertexConsumerGlint, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);

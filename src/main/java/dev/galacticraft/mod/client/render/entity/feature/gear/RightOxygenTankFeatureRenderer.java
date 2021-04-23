@@ -45,35 +45,69 @@ import net.minecraft.util.Identifier;
 public class RightOxygenTankFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.GEAR);
     final ModelTransformer<T> rightTankTransforms;
-    final ModelPart rightOxygenTank;
+    final ModelPart rightOxygenTankLight;
+    final ModelPart rightOxygenTankMedium;
+    final ModelPart rightOxygenTankHeavy;
+    final ModelPart rightOxygenTankInfinite;
+    public OxygenTankTextureOffset textureType;
 
-    public RightOxygenTankFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> rightTankTransforms) {
+    public RightOxygenTankFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> rightTankTransforms, OxygenTankTextureOffset textureType) {
         super(context);
         this.rightTankTransforms = rightTankTransforms;
 
-        this.rightOxygenTank = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, 0, 0);
-        this.rightOxygenTank.setPivot(0.0F, 2.0F, 0.0F);
-        this.rightOxygenTank.addCuboid(0.0F, 1.0F, 2.0F, 3, 6, 4, extra);
-
-        ModelPart rightOxygenTankWire = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, 40, 17);
-        rightOxygenTankWire.setPivot(0.0F, 2.0F, 0.0F);
-        rightOxygenTankWire.addCuboid(1.0F, -3.0F, 0.0F, 1, 5, 8, extra);
-        this.rightOxygenTank.addChild(rightOxygenTankWire);
+        this.rightOxygenTankLight = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, 0, 0);
+        this.rightOxygenTankLight.setPivot(0.0F, 2.0F, 0.0F);
+        this.rightOxygenTankLight.addCuboid(0.0F, 1.0F, 2.0F, 3, 6, 4, extra);
+        this.rightOxygenTankMedium = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, 0, 0);
+        this.rightOxygenTankMedium.setPivot(0.0F, 2.0F, 0.0F);
+        this.rightOxygenTankMedium.addCuboid(0.0F, 1.0F, 2.0F, 3, 6, 4, extra);
+        this.rightOxygenTankHeavy = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, 0, 0);
+        this.rightOxygenTankHeavy.setPivot(0.0F, 2.0F, 0.0F);
+        this.rightOxygenTankHeavy.addCuboid(0.0F, 1.0F, 2.0F, 3, 6, 4, extra);
+        this.rightOxygenTankInfinite = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, 0, 0);
+        this.rightOxygenTankInfinite.setPivot(0.0F, 2.0F, 0.0F);
+        this.rightOxygenTankInfinite.addCuboid(0.0F, 1.0F, 2.0F, 3, 6, 4, extra);
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(getTexture(entity), true));
         matrices.push();
-        rightTankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
-        rightOxygenTank.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+        this.rightTankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+        switch (this.textureType) {
+            case SMALL_TANK:
+                this.rightOxygenTankLight.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+            case MEDIUM_TANK:
+                this.rightOxygenTankMedium.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+            case HEAVY_TANK:
+                this.rightOxygenTankHeavy.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+            case INFINITE_TANK:
+                this.rightOxygenTankInfinite.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+        }
         matrices.pop();
     }
 
     public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         matrices.push();
-        rightTankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
-        rightOxygenTank.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+        this.rightTankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+        switch (this.textureType) {
+            case SMALL_TANK:
+                this.rightOxygenTankLight.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+            case MEDIUM_TANK:
+                this.rightOxygenTankMedium.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+            case HEAVY_TANK:
+                this.rightOxygenTankHeavy.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+            case INFINITE_TANK:
+                this.rightOxygenTankInfinite.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+        }
         matrices.pop();
     }
 

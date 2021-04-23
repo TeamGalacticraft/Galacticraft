@@ -57,10 +57,12 @@ import java.util.List;
 public class OxygenTankItem extends Item implements AttributeProviderItem {
     private int ticks = 0;
     private final int size;
+    private final TankType type;
 
-    public OxygenTankItem(Settings settings, int size) {
+    public OxygenTankItem(Settings settings, int size, TankType type) {
         super(settings.maxDamage(size));
         this.size = size;
+        this.type = type;
     }
 
     @Override
@@ -156,5 +158,16 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
         } else {
             to.offer(InfiniteOxygenTank.INSTANCE);
         }
+    }
+
+    public TankType getTankType() {
+        return this.type;
+    }
+
+    public enum TankType {
+        SMALL,
+        MEDIUM,
+        HEAVY,
+        INFINITE
     }
 }
