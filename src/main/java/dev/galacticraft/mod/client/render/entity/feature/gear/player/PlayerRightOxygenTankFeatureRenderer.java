@@ -35,8 +35,11 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -50,8 +53,14 @@ public class PlayerRightOxygenTankFeatureRenderer<T extends PlayerEntity, M exte
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        if (((FullFixedItemInv)((GearInventoryProvider) entity).getGearInv()).getSlot(6).get().getItem() instanceof OxygenTankItem) {
-            super.render(matrices, vertexConsumers, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+        ItemStack itemStack = ((FullFixedItemInv)((GearInventoryProvider) entity).getGearInv()).getSlot(6).get();
+        if (itemStack.getItem() instanceof OxygenTankItem) {
+            if (itemStack.hasGlint()) {
+                VertexConsumer vertexConsumerGlint = ItemRenderer.getArmorGlintConsumer(vertexConsumers, RenderLayer.getArmorCutoutNoCull(getTexture(entity)), false, itemStack.hasGlint());
+                super.render(matrices, vertexConsumerGlint, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+            } else {
+                super.render(matrices, vertexConsumers, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+            }
         }
     }
 }

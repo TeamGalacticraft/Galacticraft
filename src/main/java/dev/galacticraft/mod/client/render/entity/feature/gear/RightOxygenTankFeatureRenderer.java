@@ -70,6 +70,13 @@ public class RightOxygenTankFeatureRenderer<T extends Entity, M extends EntityMo
         matrices.pop();
     }
 
+    public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
+        matrices.push();
+        rightTankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+        rightOxygenTank.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+        matrices.pop();
+    }
+
     @Override
     protected Identifier getTexture(T entity) {
         return TEXTURE;
