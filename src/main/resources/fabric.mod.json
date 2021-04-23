@@ -129,7 +129,7 @@
   "custom": {
     "waila:plugins": {
       "id": "galacticraft:plugin",
-      "initializer": "com.hrznstudio.galacticraft.compat.waila.GalacticraftWailaPlugin"
+      "initializer": "dev.galacticraft.mod.compat.waila.GalacticraftWailaPlugin"
     }
   },
   "depends": {
