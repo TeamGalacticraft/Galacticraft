@@ -20,36 +20,35 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.render.entity.feature;
+package dev.galacticraft.mod.client.render.entity.feature.gear.player;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.model.entity.EvolvedSpiderModel;
-import dev.galacticraft.mod.entity.EvolvedSpiderEntity;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import dev.galacticraft.mod.accessor.GearInventoryProvider;
+import dev.galacticraft.mod.client.render.entity.feature.ModelTransformer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenMaskFeatureRenderer;
+import dev.galacticraft.mod.item.OxygenMaskItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
+import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.entity.player.PlayerEntity;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class EvolvedSpiderEyesFeatureRenderer<T extends EvolvedSpiderEntity, M extends EvolvedSpiderModel<T>> extends FeatureRenderer<T, M> {
-    private static final RenderLayer LAYER = RenderLayer.getEyes(new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.EVOLVED_SPIDER_EYES));
+public class PlayerOxygenMaskFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T>> extends OxygenMaskFeatureRenderer<T, M> {
 
-    public EvolvedSpiderEyesFeatureRenderer(FeatureRendererContext<T, M> featureRendererContext) {
-        super(featureRendererContext);
+    public PlayerOxygenMaskFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms) {
+        super(context, extra, maskTransforms);
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(LAYER);
-        this.getContextModel().render(matrices, vertexConsumer, 15728640, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
+        if (((FullFixedItemInv)((GearInventoryProvider) entity).getGearInv()).getSlot(4).get().getItem() instanceof OxygenMaskItem) {
+            super.render(matrices, vertexConsumers, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+        }
     }
 }

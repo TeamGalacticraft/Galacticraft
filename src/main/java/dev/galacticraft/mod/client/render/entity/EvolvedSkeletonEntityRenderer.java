@@ -22,7 +22,9 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.client.render.entity.feature.SpaceGearFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.LeftOxygenTankFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenMaskFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.RightOxygenTankFeatureRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.SkeletonEntityRenderer;
 
@@ -32,14 +34,14 @@ import net.minecraft.client.render.entity.SkeletonEntityRenderer;
 public class EvolvedSkeletonEntityRenderer extends SkeletonEntityRenderer {
     public EvolvedSkeletonEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher);
-        this.addFeature(new SpaceGearFeatureRenderer<>(this, 0.0F,
+        this.addFeature(new OxygenMaskFeatureRenderer<>(this, 0.0F,
                 (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
-                    stack.translate(0.0D, -0.4D, 0.0D);
-                    stack.scale(0.9f, 0.9f, 0.9f);
-                },
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {},
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {},
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}
-        ));
+                    stack.translate(0.0F, -0.4F, 0.0F);
+                    stack.scale(0.9F, 0.9F, 0.9F);
+                }));
+        this.addFeature(new LeftOxygenTankFeatureRenderer<>(this, 0.0F,
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}));
+        this.addFeature(new RightOxygenTankFeatureRenderer<>(this, 0.0F,
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}));
     }
 }

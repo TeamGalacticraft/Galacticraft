@@ -22,7 +22,9 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.client.render.entity.feature.SpaceGearFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.LeftOxygenTankFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenMaskFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.RightOxygenTankFeatureRenderer;
 import dev.galacticraft.mod.entity.EvolvedEvokerEntity;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EvokerEntityRenderer;
@@ -33,15 +35,11 @@ import net.minecraft.client.render.entity.EvokerEntityRenderer;
 public class EvolvedEvokerEntityRenderer extends EvokerEntityRenderer<EvolvedEvokerEntity> {
     public EvolvedEvokerEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher);
-        this.addFeature(new SpaceGearFeatureRenderer<>(this, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F,
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
-                    stack.translate(0.0F, -0.1F, 0.0F);
-//                  stack.scale(0.0F, 1.1F, 0.0F);
-                },
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {},
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {},
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}
-            )
-        );
+        this.addFeature(new OxygenMaskFeatureRenderer<>(this, 1.0F,
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.translate(0.0F, -0.1F, 0.0F)));
+        this.addFeature(new LeftOxygenTankFeatureRenderer<>(this, 0.0F,
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}));
+        this.addFeature(new RightOxygenTankFeatureRenderer<>(this, 0.0F,
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}));
     }
 }

@@ -20,36 +20,57 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.render.entity.feature;
+package dev.galacticraft.mod.client.render.entity.feature.gear;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.model.entity.EvolvedSpiderModel;
-import dev.galacticraft.mod.entity.EvolvedSpiderEntity;
+import dev.galacticraft.mod.client.render.entity.feature.ModelTransformer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
+import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Quaternion;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class EvolvedSpiderEyesFeatureRenderer<T extends EvolvedSpiderEntity, M extends EvolvedSpiderModel<T>> extends FeatureRenderer<T, M> {
-    private static final RenderLayer LAYER = RenderLayer.getEyes(new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.EVOLVED_SPIDER_EYES));
+public class SensorGlassesFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
+    private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.GEAR);
+    final ModelTransformer<T> sensorGlassesTransforms;
+    final ModelPart sensorGlasses;
 
-    public EvolvedSpiderEyesFeatureRenderer(FeatureRendererContext<T, M> featureRendererContext) {
-        super(featureRendererContext);
+    public SensorGlassesFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> sensorGlassesTransforms) {
+        super(context);
+        this.sensorGlassesTransforms = sensorGlassesTransforms;
+
+        this.sensorGlasses = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, 64, 10);
+        this.sensorGlasses.setPivot(0.0F, 4.0F, 0.0F);
+        this.sensorGlasses.addCuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, extra);
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(LAYER);
-        this.getContextModel().render(matrices, vertexConsumer, 15728640, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(getTexture(entity), true));
+        matrices.push();
+        this.sensorGlassesTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+        matrices.multiply(new Quaternion(Vector3f.POSITIVE_Y, headYaw, true));
+        matrices.multiply(new Quaternion(Vector3f.POSITIVE_X, headPitch, true));
+        this.sensorGlasses.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+        matrices.pop();
+    }
+
+    @Override
+    protected Identifier getTexture(T entity) {
+        return TEXTURE;
     }
 }

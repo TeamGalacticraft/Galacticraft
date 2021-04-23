@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.render.entity.feature;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.EvolvedCreeperEntityModel;
 import dev.galacticraft.mod.entity.EvolvedCreeperEntity;
 import net.minecraft.client.render.entity.feature.EnergySwirlOverlayFeatureRenderer;
@@ -33,8 +34,7 @@ import net.minecraft.util.Identifier;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EvolvedCreeperChargeFeatureRenderer extends EnergySwirlOverlayFeatureRenderer<EvolvedCreeperEntity, EvolvedCreeperEntityModel> {
-
-    private static final Identifier TEX = new Identifier("textures/entity/creeper/creeper_armor.png");
+    private static final Identifier TEX = new Identifier(Constant.FeatureRendererTexture.EVOLVED_CREEPER_CHARGE);
     private final EvolvedCreeperEntityModel model = new EvolvedCreeperEntityModel(2.0F);
 
     public EvolvedCreeperChargeFeatureRenderer(FeatureRendererContext<EvolvedCreeperEntity, EvolvedCreeperEntityModel> featureRendererContext) {

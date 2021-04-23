@@ -562,6 +562,15 @@ public interface Constant {
 
     }
 
+    interface FeatureRendererTexture {
+        String EVOLVED_CREEPER_CHARGE = "textures/entity/creeper/creeper_armor.png";
+        String EVOLVED_SPIDER_EYES = "textures/entity/evolved/spider_eyes.png";
+
+        String GEAR = "textures/entity/galacticraft_gear.png";
+        int GEAR_WIDTH = 128;
+        int GEAR_HEIGHT = 32;
+    }
+
     interface ScreenHandler {
         String COAL_GENERATOR_SCREEN_HANDLER = "coal_generator_screen_handler";
         String BASIC_SOLAR_SCREEN_HANDLER = "basic_solar_panel_screen_handler";

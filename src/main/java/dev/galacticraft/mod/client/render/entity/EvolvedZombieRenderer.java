@@ -22,7 +22,9 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.client.render.entity.feature.SpaceGearFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.LeftOxygenTankFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenMaskFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.RightOxygenTankFeatureRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.ZombieEntityRenderer;
 
@@ -32,11 +34,11 @@ import net.minecraft.client.render.entity.ZombieEntityRenderer;
 public class EvolvedZombieRenderer extends ZombieEntityRenderer {
     public EvolvedZombieRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher);
-        this.addFeature(new SpaceGearFeatureRenderer<>(this, 0.0F,
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.translate(0.0D, -0.4D, 0.0D),
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {},
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {},
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}
-        ));
+        this.addFeature(new OxygenMaskFeatureRenderer<>(this, 0.0F,
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.translate(0.0F, -0.4F, 0.0F)));
+        this.addFeature(new LeftOxygenTankFeatureRenderer<>(this, 0.0F,
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}));
+        this.addFeature(new RightOxygenTankFeatureRenderer<>(this, 0.0F,
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}));
     }
 }
