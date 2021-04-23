@@ -129,7 +129,6 @@ public class GalacticraftItem {
     public static final Item TITANIUM_CHESTPLATE = registerItem(Constant.Item.TITANIUM_CHESTPLATE, new ArmorItem(GalacticraftArmorMaterial.TITANIUM, EquipmentSlot.CHEST, (new Item.Settings().group(ITEMS_GROUP))));
     public static final Item TITANIUM_LEGGINGS = registerItem(Constant.Item.TITANIUM_LEGGINGS, new ArmorItem(GalacticraftArmorMaterial.TITANIUM, EquipmentSlot.LEGS, (new Item.Settings().group(ITEMS_GROUP))));
     public static final Item TITANIUM_BOOTS = registerItem(Constant.Item.TITANIUM_BOOTS, new ArmorItem(GalacticraftArmorMaterial.TITANIUM, EquipmentSlot.FEET, (new Item.Settings().group(ITEMS_GROUP))));
-    public static final Item SENSOR_GLASSES = registerItem(Constant.Item.SENSOR_GLASSES, new ArmorItem(GalacticraftArmorMaterial.SENSOR_GLASSES, EquipmentSlot.HEAD, new Item.Settings().group(ITEMS_GROUP)));
     //TOOLS + WEAPONS
     public static final Item HEAVY_DUTY_SWORD = registerItem(Constant.Item.HEAVY_DUTY_SWORD, new SwordItem(GalacticraftToolMaterial.STEEL, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP)) {
         @Override
@@ -192,6 +191,7 @@ public class GalacticraftItem {
     public static final Item OXYGEN_GEAR = registerItem(Constant.Item.OXYGEN_GEAR, new OxygenGearItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item SHIELD_CONTROLLER = registerItem(Constant.Item.SHIELD_CONTROLLER, new AccessoryItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item FREQUENCY_MODULE = registerItem(Constant.Item.FREQUENCY_MODULE, new AccessoryItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item SENSOR_GLASSES = registerItem(Constant.Item.SENSOR_GLASSES, new SensorGlassesItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item SMALL_OXYGEN_TANK = registerItem(Constant.Item.SMALL_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP), 1620 * 10)); // 16200 ticks
     public static final Item MEDIUM_OXYGEN_TANK = registerItem(Constant.Item.MEDIUM_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP), 1620 * 20)); //32400 ticks
     public static final Item LARGE_OXYGEN_TANK = registerItem(Constant.Item.LARGE_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP), 1620 * 30)); //48600 ticks

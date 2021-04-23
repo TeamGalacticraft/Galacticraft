@@ -20,14 +20,16 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.items;
+package dev.galacticraft.mod.item;
+
+import net.minecraft.item.Item;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class SensorGlassesItem extends GCAccessories {
+public class SensorGlassesItem extends AccessoryItem {
     // note: this exists to make rendering on a head easier
-    public SensorGlassesItem(Settings settings) {
+    public SensorGlassesItem(Item.Settings settings) {
         super(settings);
     }
 }
