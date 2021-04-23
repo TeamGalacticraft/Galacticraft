@@ -191,7 +191,7 @@ public class GalacticraftItems {
     public static final Item OXYGEN_MASK = registerItem(Constant.Item.OXYGEN_MASK, new OxygenMaskItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item OXYGEN_GEAR = registerItem(Constant.Item.OXYGEN_GEAR, new OxygenGearItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item SHIELD_CONTROLLER = registerItem(Constant.Item.SHIELD_CONTROLLER, new AccessoryItem(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item FREQUENCY_MODULE = registerItem(Constant.Item.FREQUENCY_MODULE, new AccessoryItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item FREQUENCY_MODULE = registerItem(Constant.Item.FREQUENCY_MODULE, new FrequencyModuleItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item SENSOR_GLASSES = registerItem(Constant.Item.SENSOR_GLASSES, new SensorGlassesItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item SMALL_OXYGEN_TANK = registerItem(Constant.Item.SMALL_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP), 1620 * 10)); // 16200 ticks
     public static final Item MEDIUM_OXYGEN_TANK = registerItem(Constant.Item.MEDIUM_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP), 1620 * 20)); //32400 ticks

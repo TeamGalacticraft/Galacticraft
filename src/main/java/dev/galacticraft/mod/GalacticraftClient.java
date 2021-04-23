@@ -30,10 +30,7 @@ import dev.galacticraft.mod.client.network.GalacticraftClientPacketReceiver;
 import dev.galacticraft.mod.client.render.MoonSkyProperties;
 import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.entity.*;
-import dev.galacticraft.mod.client.render.entity.feature.gear.player.PlayerLeftOxygenTankFeatureRenderer;
-import dev.galacticraft.mod.client.render.entity.feature.gear.player.PlayerOxygenMaskFeatureRenderer;
-import dev.galacticraft.mod.client.render.entity.feature.gear.player.PlayerRightOxygenTankFeatureRenderer;
-import dev.galacticraft.mod.client.render.entity.feature.gear.player.PlayerSensorGlassesFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.player.*;
 import dev.galacticraft.mod.client.resource.GalacticraftResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.misc.cape.CapeLoader;
@@ -82,15 +79,20 @@ public class GalacticraftClient implements ClientModInitializer {
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper) -> {
             if (entityRenderer instanceof PlayerEntityRenderer) {
                 registrationHelper.register(new PlayerOxygenMaskFeatureRenderer<>((PlayerEntityRenderer) entityRenderer, 1.0F,
-                        (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.scale(0.825F, 0.825F, 0.825F)));
+                        (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.scale(0.825F, 0.825F, 0.825F)
+                ));
                 registrationHelper.register(new PlayerLeftOxygenTankFeatureRenderer<>((PlayerEntityRenderer) entityRenderer, 0.0F,
-                        (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
-                }));
+                        (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}
+                ));
                 registrationHelper.register(new PlayerRightOxygenTankFeatureRenderer<>((PlayerEntityRenderer) entityRenderer, 0.0F,
-                        (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
-                }));
+                        (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}
+                ));
                 registrationHelper.register(new PlayerSensorGlassesFeatureRenderer<>((PlayerEntityRenderer) entityRenderer, 1.0F,
-                        (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.scale(0.75F, 0.75F, 0.75F)));
+                        (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.scale(0.75F, 0.75F, 0.75F)
+                ));
+                registrationHelper.register(new PlayerFrequencyModuleFeatureRenderer<>((PlayerEntityRenderer) entityRenderer, 1.0F,
+                        (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.scale(0.6F, 0.6F, 0.6F)
+                ));
             }
         });
 

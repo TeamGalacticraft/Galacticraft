@@ -25,7 +25,8 @@ package dev.galacticraft.mod.client.render.entity.feature.gear.player;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.client.render.entity.feature.ModelTransformer;
-import dev.galacticraft.mod.client.render.entity.feature.gear.SensorGlassesFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.FrequencyModuleFeatureRenderer;
+import dev.galacticraft.mod.item.FrequencyModuleItem;
 import dev.galacticraft.mod.item.SensorGlassesItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,15 +40,15 @@ import net.minecraft.entity.player.PlayerEntity;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class PlayerSensorGlassesFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T>> extends SensorGlassesFeatureRenderer<T, M> implements PlayerAccessoryRenderer {
+public class PlayerFrequencyModuleFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T>> extends FrequencyModuleFeatureRenderer<T, M> implements PlayerAccessoryRenderer {
 
-    public PlayerSensorGlassesFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> sensorGlassesTransforms) {
+    public PlayerFrequencyModuleFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> sensorGlassesTransforms) {
         super(context, extra, sensorGlassesTransforms);
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        if (shouldRenderAccessory((FullFixedItemInv)((GearInventoryProvider) entity).getGearInv(), SensorGlassesItem.class)) {
+        if (shouldRenderAccessory((FullFixedItemInv)((GearInventoryProvider) entity).getGearInv(), FrequencyModuleItem.class)) {
             super.render(matrices, vertexConsumers, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
         }
     }
