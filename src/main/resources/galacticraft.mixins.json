@@ -33,7 +33,8 @@
     "client.InGameHudMixin",
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",
-    "client.WorldRendererMixin"
+    "client.WorldRendererMixin",
+    "client.AlphaWarningTitleScreenMixin"
   ],
   "minVersion": "0.8.0",
   "injectors": {
