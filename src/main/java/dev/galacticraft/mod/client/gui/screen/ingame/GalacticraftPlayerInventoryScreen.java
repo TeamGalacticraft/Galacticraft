@@ -67,6 +67,9 @@ public class GalacticraftPlayerInventoryScreen extends HandledScreen<Galacticraf
     }
 
     @Override
+    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {}
+
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         super.render(matrices, mouseX, mouseY, delta);
@@ -84,7 +87,6 @@ public class GalacticraftPlayerInventoryScreen extends HandledScreen<Galacticraf
             this.client.openScreen(new InventoryScreen(this.handler.player));
             return true;
         }
-
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
