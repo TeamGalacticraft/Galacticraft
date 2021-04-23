@@ -46,8 +46,8 @@ import net.minecraft.util.math.Quaternion;
 @Environment(EnvType.CLIENT)
 public class FrequencyModuleFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.GEAR);
-    final ModelTransformer<T> freqModuleTransforms;
-    final ModelPart freqModule;
+    public final ModelTransformer<T> freqModuleTransforms;
+    public final ModelPart freqModule;
 
     public FrequencyModuleFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> freqModuleTransforms) {
         super(context);

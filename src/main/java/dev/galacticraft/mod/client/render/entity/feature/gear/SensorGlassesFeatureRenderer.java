@@ -46,8 +46,8 @@ import net.minecraft.util.math.Quaternion;
 @Environment(EnvType.CLIENT)
 public class SensorGlassesFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.GEAR);
-    final ModelTransformer<T> sensorGlassesTransforms;
-    final ModelPart sensorGlasses;
+    public final ModelTransformer<T> sensorGlassesTransforms;
+    public final ModelPart sensorGlasses;
 
     public SensorGlassesFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> sensorGlassesTransforms) {
         super(context);

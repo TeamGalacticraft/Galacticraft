@@ -46,8 +46,8 @@ import net.minecraft.util.math.Quaternion;
 @Environment(EnvType.CLIENT)
 public class OxygenMaskFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.GEAR);
-    final ModelTransformer<T> maskTransforms;
-    final ModelPart oxygenMask;
+    public final ModelTransformer<T> maskTransforms;
+    public final ModelPart oxygenMask;
 
     public OxygenMaskFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms) {
         super(context);
