@@ -54,7 +54,7 @@ public class SensorGlassesFeatureRenderer<T extends Entity, M extends EntityMode
         this.sensorGlassesTransforms = sensorGlassesTransforms;
 
         this.sensorGlasses = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, 64, 10);
-        this.sensorGlasses.setPivot(0.0F, 4.0F, 0.0F);
+        this.sensorGlasses.setPivot(0.0F, 0.0F, 0.0F);
         this.sensorGlasses.addCuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, extra);
     }
 
