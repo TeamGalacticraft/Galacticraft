@@ -54,7 +54,7 @@ public class OxygenMaskFeatureRenderer<T extends Entity, M extends EntityModel<T
         this.maskTransforms = maskTransforms;
 
         this.oxygenMask = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, 0, 10);
-        this.oxygenMask.setPivot(0.0F, 4.0F, 0.0F);
+        this.oxygenMask.setPivot(0.0F, 0.0F, 0.0F);
         this.oxygenMask.addCuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, extra);
     }
 
