@@ -170,6 +170,6 @@ public class GalacticraftClient implements ClientModInitializer {
 
         SkyPropertiesAccessor.getBY_IDENTIFIER().put(new Identifier(Constant.MOD_ID, "moon"), new MoonSkyProperties());
 
-        Galacticraft.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
+        Galacticraft.LOGGER.info(String.format("Client initialization complete. (Took %.3fms.)", System.currentTimeMillis() - startInitTime));
     }
 }
