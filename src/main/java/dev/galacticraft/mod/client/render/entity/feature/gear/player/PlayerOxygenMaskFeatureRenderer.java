@@ -37,14 +37,13 @@ import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.ModelWithHead;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class PlayerOxygenMaskFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T>> extends OxygenMaskFeatureRenderer<T, M> {
+public class PlayerOxygenMaskFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T> & ModelWithHead> extends OxygenMaskFeatureRenderer<T, M> {
 
     public PlayerOxygenMaskFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms) {
         super(context, extra, maskTransforms);
@@ -55,7 +54,7 @@ public class PlayerOxygenMaskFeatureRenderer<T extends PlayerEntity, M extends E
         if (((FullFixedItemInv)((GearInventoryProvider) entity).getGearInv()).getSlot(4).get().getItem() instanceof OxygenMaskItem) {
             VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(getTexture(entity), true));
             matrices.push();
-            ((ModelWithHead) this.getContextModel()).getHead().rotate(matrices);
+            this.getContextModel().getHead().rotate(matrices);
             this.maskTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
             this.oxygenMask.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
             matrices.pop();

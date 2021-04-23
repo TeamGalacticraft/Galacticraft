@@ -37,14 +37,13 @@ import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.ModelWithHead;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class PlayerSensorGlassesFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T>> extends SensorGlassesFeatureRenderer<T, M> implements PlayerAccessoryRenderer {
+public class PlayerSensorGlassesFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T> & ModelWithHead> extends SensorGlassesFeatureRenderer<T, M> implements PlayerAccessoryRenderer {
 
     public PlayerSensorGlassesFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> sensorGlassesTransforms) {
         super(context, extra, sensorGlassesTransforms);
@@ -55,7 +54,7 @@ public class PlayerSensorGlassesFeatureRenderer<T extends PlayerEntity, M extend
         if (shouldRenderAccessory((FullFixedItemInv)((GearInventoryProvider) entity).getGearInv(), SensorGlassesItem.class)) {
             VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(getTexture(entity), true));
             matrices.push();
-            ((ModelWithHead) this.getContextModel()).getHead().rotate(matrices);
+            this.getContextModel().getHead().rotate(matrices);
             this.sensorGlassesTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
             this.sensorGlasses.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
             matrices.pop();

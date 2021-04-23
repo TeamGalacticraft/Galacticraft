@@ -44,8 +44,8 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class LeftOxygenTankFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.GEAR);
-    final ModelTransformer<T> leftTankTransforms;
-    final ModelPart leftOxygenTank;
+    public final ModelTransformer<T> leftTankTransforms;
+    public final ModelPart leftOxygenTank;
 
     public LeftOxygenTankFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> leftTankTransforms) {
         super(context);
