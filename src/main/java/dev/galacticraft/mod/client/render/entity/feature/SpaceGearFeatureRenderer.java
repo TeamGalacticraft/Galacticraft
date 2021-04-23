@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.client.render.entity.feature;
 
 import dev.galacticraft.mod.Constant;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -42,7 +44,7 @@ import net.minecraft.util.math.Quaternion;
  */
 @Environment(EnvType.CLIENT)
 public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
-    private static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, "textures/entity/galacticraft_gear.png");
+    private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/galacticraft_gear.png");
     private static final int TEXTURE_WIDTH = 128;
     private static final int TEXTURE_HEIGHT = 32;
     final ModelTransformer<T> maskTransforms;

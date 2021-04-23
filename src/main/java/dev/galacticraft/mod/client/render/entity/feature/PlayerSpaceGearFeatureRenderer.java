@@ -24,7 +24,9 @@ package dev.galacticraft.mod.client.render.entity.feature;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
-import dev.galacticraft.mod.items.*;
+import dev.galacticraft.mod.item.OxygenMaskItem;
+import dev.galacticraft.mod.item.OxygenTankItem;
+import dev.galacticraft.mod.item.SensorGlassesItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -32,7 +34,6 @@ import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
