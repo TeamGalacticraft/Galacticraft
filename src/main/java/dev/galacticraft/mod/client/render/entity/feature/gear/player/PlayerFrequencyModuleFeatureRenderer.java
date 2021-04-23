@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.client.render.entity.feature.gear.player;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import com.mojang.authlib.GameProfile;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.client.render.entity.feature.ModelTransformer;
 import dev.galacticraft.mod.client.render.entity.feature.gear.FrequencyModuleFeatureRenderer;
@@ -30,11 +31,34 @@ import dev.galacticraft.mod.item.FrequencyModuleItem;
 import dev.galacticraft.mod.item.SensorGlassesItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.AbstractSkullBlock;
+import net.minecraft.block.entity.SkullBlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.block.entity.SkullBlockEntityRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.entity.model.ModelWithHead;
+import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.mob.ZombieVillagerEntity;
+import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.util.math.Direction;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.UUID;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -49,7 +73,12 @@ public class PlayerFrequencyModuleFeatureRenderer<T extends PlayerEntity, M exte
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         if (shouldRenderAccessory((FullFixedItemInv)((GearInventoryProvider) entity).getGearInv(), FrequencyModuleItem.class)) {
-            super.render(matrices, vertexConsumers, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+            VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(getTexture(entity), true));
+            matrices.push();
+            ((ModelWithHead) this.getContextModel()).getHead().rotate(matrices);
+            this.freqModuleTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+            this.freqModule.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+            matrices.pop();
         }
     }
 }

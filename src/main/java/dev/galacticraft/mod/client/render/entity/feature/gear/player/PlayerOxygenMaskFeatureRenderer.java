@@ -29,10 +29,15 @@ import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenMaskFeatureR
 import dev.galacticraft.mod.item.OxygenMaskItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.entity.model.ModelWithHead;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 
 /**
@@ -48,7 +53,12 @@ public class PlayerOxygenMaskFeatureRenderer<T extends PlayerEntity, M extends E
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         if (((FullFixedItemInv)((GearInventoryProvider) entity).getGearInv()).getSlot(4).get().getItem() instanceof OxygenMaskItem) {
-            super.render(matrices, vertexConsumers, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+            VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(getTexture(entity), true));
+            matrices.push();
+            ((ModelWithHead) this.getContextModel()).getHead().rotate(matrices);
+            this.maskTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+            this.oxygenMask.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+            matrices.pop();
         }
     }
 }
