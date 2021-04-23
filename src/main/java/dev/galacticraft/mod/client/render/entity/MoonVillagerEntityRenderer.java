@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.MoonVillagerEntityModel;
 import dev.galacticraft.mod.entity.MoonVillagerEntity;
 import net.fabricmc.api.EnvType;
@@ -41,7 +41,7 @@ import net.minecraft.util.Identifier;
  */
 @Environment(EnvType.CLIENT)
 public class MoonVillagerEntityRenderer extends MobEntityRenderer<MoonVillagerEntity, MoonVillagerEntityModel> {
-    private static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, "textures/entity/moon_villager/moon_villager.png");
+    private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/moon_villager/moon_villager.png");
 
     public MoonVillagerEntityRenderer(EntityRenderDispatcher dispatcher, ReloadableResourceManager reloadableResourceManager) {
         super(dispatcher, new MoonVillagerEntityModel(0.0F), 0.5F);

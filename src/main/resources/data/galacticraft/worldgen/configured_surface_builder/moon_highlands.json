@@ -1,13 +1,13 @@
 {
   "config": {
     "top_material": {
-      "Name": "galacticraft-rewoven:moon_turf"
+      "Name": "galacticraft:moon_turf"
     },
     "under_material": {
-      "Name": "galacticraft-rewoven:moon_dirt"
+      "Name": "galacticraft:moon_dirt"
     },
     "underwater_material": {
-      "Name": "galacticraft-rewoven:moon_dirt"
+      "Name": "galacticraft:moon_dirt"
     }
   },
   "type": "minecraft:default"

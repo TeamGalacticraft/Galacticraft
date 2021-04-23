@@ -10,14 +10,14 @@
       "item": "minecraft:red_wool"
     },
     "T": {
-      "item": "galacticraft-rewoven:tin_canister"
+      "item": "galacticraft:tin_canister"
     },
     "C": {
-      "item": "galacticraft-rewoven:compressed_steel"
+      "item": "galacticraft:compressed_steel"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:large_oxygen_tank",
+    "item": "galacticraft:large_oxygen_tank",
     "count": 1
   }
 }

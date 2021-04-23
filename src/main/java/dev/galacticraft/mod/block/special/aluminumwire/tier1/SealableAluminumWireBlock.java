@@ -32,5 +32,4 @@ public class SealableAluminumWireBlock extends WireBlock {
     public SealableAluminumWireBlock(Settings settings) {
         super(settings);
     }
-
 }

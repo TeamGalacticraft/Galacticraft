@@ -22,12 +22,10 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
-import dev.galacticraft.mod.client.gui.widget.machine.OxygenTankWidget;
 import dev.galacticraft.mod.screen.OxygenCompressorScreenHandler;
-import dev.galacticraft.mod.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
@@ -35,27 +33,23 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompressorScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_COMPRESSOR_SCREEN));
-
     public OxygenCompressorScreen(OxygenCompressorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
-        this.addWidget(new OxygenTankWidget(handler.machine.getFluidTank().getTank(0), 30, 8, 48));
     }
 
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         if (handler.machine.getStatus().getType().isActive()) {
@@ -64,13 +58,13 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
             height /= -125D;
             this.drawTexture(matrices, this.x + 93, this.y + 64, 187, 18, -11, (int) height);
         }
-
+        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_compressor"), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_compressor"), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

@@ -24,16 +24,16 @@ package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.SideOption;
-import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
-import dev.galacticraft.mod.recipe.GalacticraftRecipes;
+import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.ElectricCompressorScreenHandler;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -48,19 +48,18 @@ import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntity {
-    public static final int CHARGE_SLOT = 9;
+public class ElectricCompressorBlockEntity extends MachineBlockEntity {
+    public static final int CHARGE_SLOT = 0;
     public static final int OUTPUT_SLOT = 10;
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
     private static final int MAX_PROGRESS = 200; // In ticks, 100/20 = 10 seconds
 
-    private final Inventory craftingInv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
+    private final Inventory craftingInv = new InventoryFixedWrapper(this.getInventory().getSubInv(1, 10)) {
         @Override
         public boolean canPlayerUse(PlayerEntity player) {
             return getWrappedInventory().canPlayerUse(player);
@@ -70,34 +69,30 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     public int progress;
 
     public ElectricCompressorBlockEntity() {
-        super(GalacticraftBlockEntities.ELECTRIC_COMPRESSOR_TYPE);
+        super(GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR);
     }
 
     @Override
-    public int getInventorySize() {
-        return 12;
-    }
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 3 * 18 + 1, 75);
 
-    @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 3; x++) {
+                builder.addSlot(y * 3 + x + 1, SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 19, y * 18 + 18);
+            }
+        }
+
+        builder.addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 29));
+        builder.addSlot(SECOND_OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 47));
+        return builder;
     }
 
     public int getProgress() {
-        return progress;
+        return this.progress;
     }
 
     public int getMaxProgress() {
         return MAX_PROGRESS;
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        if (slot == CHARGE_SLOT) {
-            return EnergyUtils.IS_EXTRACTABLE;
-        } else {
-            return super.getFilterForSlot(slot);
-        }
     }
 
     @Override
@@ -147,7 +142,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     protected void craftItem(ItemStack craftingResult) {
         boolean canCraftTwo = true;
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 1; i < 10; i++) {
             ItemStack stack = getInventory().getInvStack(i);
             if (!stack.isEmpty() && stack.getCount() < 2) {
                 canCraftTwo = false;
@@ -168,7 +163,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
             craftingResult.setCount(craftingResult.getCount() * 2);
         }
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 1; i < 10; i++) {
             this.decrement(i, canCraftTwo ? 2 : 1);
         }
         this.getInventory().insertStack(SECOND_OUTPUT_SLOT, this.getInventory().insertStack(OUTPUT_SLOT, craftingResult, Simulation.ACTION), Simulation.ACTION);
@@ -176,22 +171,12 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
 
     private Optional<CompressingRecipe> getRecipe(Inventory input) {
         if (this.world == null) return Optional.empty();
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, input, this.world);
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipe.COMPRESSING_TYPE, input, this.world);
     }
 
     @Override
     public int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().electricCompressorEnergyConsumptionRate();
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return slot == OUTPUT_SLOT || slot == SECOND_OUTPUT_SLOT;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return !(slot == OUTPUT_SLOT || slot == SECOND_OUTPUT_SLOT);
+        return Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate();
     }
 
     @Nullable
@@ -209,22 +194,22 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
         /**
          * Compressor is compressing items.
          */
-        COMPRESSING(new TranslatableText("ui.galacticraft.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
+        COMPRESSING(new TranslatableText("ui.galacticraft.machine.status.active"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Compressor has no valid recipe.
          */
-        INVALID_RECIPE(new TranslatableText("ui.galacticraft.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
+        INVALID_RECIPE(new TranslatableText("ui.galacticraft.machine.status.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
 
         /**
          * Compressor has no valid recipe.
          */
-        OUTPUT_FULL(new TranslatableText("ui.galacticraft.machinestatus.output_full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        OUTPUT_FULL(new TranslatableText("ui.galacticraft.machine.status.output_full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Compressor has no items to process.
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
 
         private final Text text;
         private final StatusType type;

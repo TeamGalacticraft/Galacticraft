@@ -24,18 +24,19 @@ package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
-import dev.galacticraft.mod.Constants;
+import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
-import dev.galacticraft.mod.api.block.SideOption;
-import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
+import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.screen.OxygenSealerScreenHandler;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.util.EnergyUtil;
+import dev.galacticraft.mod.util.OxygenTankUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,6 +46,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Pair;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -57,20 +59,31 @@ import java.util.*;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class OxygenSealerBlockEntity extends MachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int BATTERY_SLOT = 0;
+    public static final int LOX_INPUT = 1;
+    public static final int OXYGEN_TANK = 0;
     private final Set<BlockPos> set = new HashSet<>();
     public static final byte SEAL_CHECK_TIME = 5 * 20;
     private byte sealCheckTime;
+    private CelestialBodyType type = null;
 
     public OxygenSealerBlockEntity() {
-        super(GalacticraftBlockEntities.OXYGEN_SEALER_TYPE);
+        super(GalacticraftBlockEntityType.OXYGEN_SEALER);
     }
 
     @Override
-    public int getInventorySize() {
-        return 1;
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(BATTERY_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
+        builder.addSlot(LOX_INPUT, SlotType.OXYGEN_TANK, OxygenTankUtil.OXYGEN_TANK_EXTRACTABLE, 8, 62);
+        return builder;
+    }
+
+    @Override
+    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_IN, 30, 8);
+        return builder;
     }
 
     @Override
@@ -79,19 +92,10 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 1;
-    }
-
-    @Override
     public void setLocation(World world, BlockPos pos) {
         super.setLocation(world, pos);
-        sealCheckTime = SEAL_CHECK_TIME;
-    }
-
-    @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT);
+        this.sealCheckTime = SEAL_CHECK_TIME;
+        this.type = CelestialBodyType.getByDimType(world.getRegistryKey()).orElse(null);
     }
 
     @Override
@@ -100,34 +104,21 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
     }
 
     @Override
-    public boolean canExtractEnergy() {
-        return false;
-    }
-
-    @Override
     public boolean canInsertEnergy() {
         return true;
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        if (slot == BATTERY_SLOT) {
-            return EnergyUtils.IS_EXTRACTABLE;
-        }
-        return ConstantItemFilter.NOTHING;
     }
 
     @Override
     public void updateComponents() {
         super.updateComponents();
         this.attemptChargeFromStack(BATTERY_SLOT);
-        if (!world.isClient && this.getStatus().getType().isActive()) this.getFluidTank().extractFluid(0, Constants.Misc.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
+        if (!world.isClient && this.getStatus().getType().isActive()) this.getFluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
     }
 
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.getFluidTank().getInvFluid(0).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
+        if (this.getFluidInv().getInvFluid(OXYGEN_TANK).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
         return Status.SEALED;
     }
 
@@ -140,22 +131,38 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
             if (sealCheckTime == 0) {
                 sealCheckTime = SEAL_CHECK_TIME;
                 BlockPos pos = this.getPos();
-                Queue<BlockPos> queue = new LinkedList<>();
-                if (set.isEmpty() && ((WorldOxygenAccessor) world).isBreathable(pos.up())) {
-                    setStatus(Status.ALREADY_SEALED);
+                if (this.type == null
+                        || this.type.getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)
+                        || (set.isEmpty()
+                        && ((WorldOxygenAccessor) world).isBreathable(pos.up()))) {
+                    this.setStatus(Status.ALREADY_SEALED);
                     return;
                 }
                 set.clear();
-                {
-                    BlockPos pos1 = pos.offset(Direction.UP);
-                    BlockState state = world.getBlockState(pos1);
-                    if (state.isAir() || !Block.isFaceFullSquare(state.getCollisionShape(world, pos1), Direction.DOWN)) {
-                        queue.add(pos1);
+                Queue<Pair<BlockPos, Direction>> queue = new LinkedList<>();
+                List<BlockPos> checked = new LinkedList<>();
+                BlockPos pos1 = pos.offset(Direction.UP);
+                BlockState state;
+                Pair<BlockPos, Direction> pair;
+                BlockPos.Mutable mutable = new BlockPos.Mutable();
+                queue.add(new Pair<>(pos1, Direction.UP));
+                while (!queue.isEmpty()){
+                    pair = queue.poll();
+                    pos1 = pair.getLeft();
+                    state = world.getBlockState(pos1);
+                    checked.add(pos1);
+                    if (state.isAir() || !Block.isFaceFullSquare(state.getCollisionShape(world, pos1), pair.getRight().getOpposite())) {
                         set.add(pos1);
+                        for (Direction direction : Constant.Misc.DIRECTIONS) {
+                            mutable.set(pos1).offset(direction);
+                            if (!checked.contains(mutable)) {
+                                queue.add(new Pair<>(mutable.toImmutable(), direction));
+                            }
+                        }
                     }
                 }
-                for (BlockPos pos1 : set) {
-                    ((WorldOxygenAccessor) world).setBreathable(pos1, true);
+                for (BlockPos pos2 : set) {
+                    ((WorldOxygenAccessor) world).setBreathable(pos2, true);
                 }
                 setStatus(Status.SEALED);
             }
@@ -175,7 +182,7 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
 
     @Override
     protected int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().oxygenCompressorEnergyConsumptionRate();
+        return Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate();
     }
 
     @Override
@@ -184,26 +191,6 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
         for (BlockPos pos : set) {
             ((WorldOxygenAccessor) world).setBreathable(pos, false);
         }
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return true;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return true;
-    }
-
-    @Override
-    public boolean canPipeInsertFluid(int tank) {
-        return true;
-    }
-
-    @Override
-    public FluidFilter getFilterForTank(int tank) {
-        return Constants.Misc.LOX_ONLY;
     }
 
     @Nullable
@@ -217,11 +204,11 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
      * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
      */
     private enum Status implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft.machinestatus.not_enough_oxygen"), Formatting.RED, StatusType.MISSING_FLUIDS),
-        AREA_TOO_LARGE(new TranslatableText("ui.galacticraft.machinestatus.area_too_large"), Formatting.GOLD, StatusType.OTHER),
-        ALREADY_SEALED(new TranslatableText("ui.galacticraft.machinestatus.already_sealed"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-        SEALED(new TranslatableText("ui.galacticraft.machinestatus.sealed"), Formatting.GREEN, StatusType.WORKING);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft.machine.status.not_enough_oxygen"), Formatting.RED, StatusType.MISSING_FLUIDS),
+        AREA_TOO_LARGE(new TranslatableText("ui.galacticraft.machine.status.area_too_large"), Formatting.GOLD, StatusType.OTHER),
+        ALREADY_SEALED(new TranslatableText("ui.galacticraft.machine.status.already_sealed"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        SEALED(new TranslatableText("ui.galacticraft.machine.status.sealed"), Formatting.GREEN, StatusType.WORKING);
 
         private final Text text;
         private final StatusType type;

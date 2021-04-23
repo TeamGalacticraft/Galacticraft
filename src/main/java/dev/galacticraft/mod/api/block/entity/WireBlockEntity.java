@@ -24,19 +24,17 @@ package dev.galacticraft.mod.api.block.entity;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProviderBlockEntity;
-import alexiil.mc.lib.attributes.Simulation;
-import dev.galacticraft.mod.Constants;
+import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
+import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
+import com.hrznstudio.galacticraft.energy.impl.EmptyEnergyExtractable;
+import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireConnectionType;
 import dev.galacticraft.mod.api.wire.WireNetwork;
-import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
-import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
-import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
-import com.hrznstudio.galacticraft.energy.impl.EmptyEnergyExtractable;
-import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
-import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.attribute.energy.WireEnergyInsertable;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Direction;
@@ -47,30 +45,28 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class WireBlockEntity extends BlockEntity implements Wire, AttributeProviderBlockEntity {
-    private WireNetwork network;
-    private static final int MAX_TRANSFER_RATE = 120;
+    private @Nullable WireNetwork network = null;
+    private @Nullable WireEnergyInsertable insertable = null;
+    private static final int MAX_TRANSFER_RATE = 240;
 
     public WireBlockEntity() {
-        super(GalacticraftBlockEntities.WIRE_TYPE);
+        super(GalacticraftBlockEntityType.WIRE);
     }
 
     @Override
-    public void setNetwork(WireNetwork network) {
+    public void setNetwork(@Nullable WireNetwork network) {
         this.network = network;
+        this.getInsertable().setNetwork(network);
     }
 
     @Override
     public @NotNull WireNetwork getNetwork() {
         if (this.network == null) {
             if (!this.world.isClient()) {
-                for (Direction direction : Constants.Misc.DIRECTIONS) {
+                for (Direction direction : Constant.Misc.DIRECTIONS) {
                     BlockEntity entity = world.getBlockEntity(pos.offset(direction));
-                    if (entity instanceof Wire) {
-                        //noinspection ConstantConditions
-                        if (((Wire) entity).getNetworkNullable() != null) {
-                            ((Wire) entity).getNetworkNullable().addWire(pos, this);
-                            break;
-                        }
+                    if (entity instanceof Wire && ((Wire) entity).getNetworkNullable() != null) {
+                        ((Wire) entity).getNetwork().addWire(pos, this);
                     }
                 }
                 if (this.network == null) {
@@ -87,12 +83,17 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
         return this.network;
     }
 
+    public WireEnergyInsertable getInsertable() {
+        if (this.insertable == null) this.insertable = new WireEnergyInsertable(this.getMaxTransferRate(), this.pos);
+        return this.insertable;
+    }
+
     @Override
-    public @NotNull WireConnectionType getConnection(Direction direction, @Nullable BlockEntity entity) {
-        if (entity == null || !this.canConnect(direction.getOpposite())) return WireConnectionType.NONE;
-        if (entity instanceof Wire && ((Wire) entity).canConnect(direction)) return WireConnectionType.WIRE;
-        EnergyInsertable insertable = EnergyUtils.getEnergyInsertable(world, entity.getPos(), direction);
-        EnergyExtractable extractable = EnergyUtils.getEnergyExtractable(world, entity.getPos(), direction);
+    public @NotNull WireConnectionType getConnection(Direction direction, @NotNull BlockEntity entity) {
+        if (!this.canConnect(direction)) return WireConnectionType.NONE;
+        if (entity instanceof Wire && ((Wire) entity).canConnect(direction.getOpposite())) return WireConnectionType.WIRE;
+        EnergyInsertable insertable = EnergyUtil.getEnergyInsertable(world, entity.getPos(), direction);
+        EnergyExtractable extractable = EnergyUtil.getEnergyExtractable(world, entity.getPos(), direction);
         if (insertable != RejectingEnergyInsertable.NULL && extractable != EmptyEnergyExtractable.NULL) {
             return WireConnectionType.ENERGY_IO;
         } else if (insertable != RejectingEnergyInsertable.NULL) {
@@ -109,17 +110,15 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     }
 
     @Override
-    public void addAllAttributes(AttributeList<?> attributeList) {
-        attributeList.offer(new SimpleCapacitor(DefaultEnergyType.INSTANCE, getMaxTransferRate()) {
-            @Override
-            public int insert(int amount, Simulation simulation) {
-                return WireBlockEntity.this.getNetwork().insert(WireBlockEntity.this.getPos(), null, amount, simulation);
-            }
+    public void markRemoved() {
+        super.markRemoved();
+        if (this.getNetworkNullable() != null) {
+            this.getNetwork().removeWire(this.pos);
+        }
+    }
 
-            @Override
-            public int getEnergy() {
-                return 0;
-            }
-        });
+    @Override
+    public void addAllAttributes(AttributeList<?> to) {
+        to.offer(this.getInsertable());
     }
 }

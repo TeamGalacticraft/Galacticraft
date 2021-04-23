@@ -22,16 +22,15 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.SideOption;
-import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.util.BlockFace;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.screen.AdvancedSolarPanelScreenHandler;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
@@ -49,31 +48,22 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements Tickable {
     public static final int CHARGE_SLOT = 0;
     
     public AdvancedSolarPanelBlockEntity() {
-        super(GalacticraftBlockEntities.ADVANCED_SOLAR_PANEL_TYPE);
+        super(GalacticraftBlockEntityType.ADVANCED_SOLAR_PANEL);
     }
 
     @Override
-    public int getInventorySize() {
-        return 1;
-    }
-
-    @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_OUTPUT);
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_INSERTABLE, 8, 62);
+        return builder;
     }
 
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        return slot == CHARGE_SLOT ? EnergyUtils.IS_INSERTABLE : ConstantItemFilter.NOTHING;
     }
 
     @Override
@@ -144,7 +134,7 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
 
     @Override
     public int getBaseEnergyGenerated() {
-        return Galacticraft.configManager.get().solarPanelEnergyProductionRate();
+        return Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate();
     }
 
     @Override
@@ -166,27 +156,27 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
         /**
          * Solar panel is active and is generating energy.
          */
-        COLLECTING(new TranslatableText("ui.galacticraft.machinestatus.collecting"), Formatting.GREEN, StatusType.WORKING),
+        COLLECTING(new TranslatableText("ui.galacticraft.machine.status.collecting"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Solar Panel can generate energy, but the buffer is full.
          */
-        FULL(new TranslatableText("ui.galacticraft.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableText("ui.galacticraft.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Solar Panel is generating energy, but less efficiently as it is blocked or raining.
          */
-        PARTIALLY_BLOCKED(new TranslatableText("ui.galacticraft.machinestatus.partially_blocked"), Formatting.DARK_AQUA, StatusType.PARTIALLY_WORKING),
+        PARTIALLY_BLOCKED(new TranslatableText("ui.galacticraft.machine.status.partially_blocked"), Formatting.DARK_AQUA, StatusType.PARTIALLY_WORKING),
 
         /**
          * Solar Panel is generating very little energy as it is night.
          */
-        NIGHT(new TranslatableText("ui.galacticraft.machinestatus.night"), Formatting.BLUE, StatusType.PARTIALLY_WORKING),
+        NIGHT(new TranslatableText("ui.galacticraft.machine.status.night"), Formatting.BLUE, StatusType.PARTIALLY_WORKING),
 
         /**
          * The sun is not visible.
          */
-        BLOCKED(new TranslatableText("ui.galacticraft.machinestatus.blocked"), Formatting.DARK_GRAY, StatusType.MISSING_RESOURCE);
+        BLOCKED(new TranslatableText("ui.galacticraft.machine.status.blocked"), Formatting.DARK_GRAY, StatusType.MISSING_RESOURCE);
 
         private final Text text;
         private final MachineStatus.StatusType type;

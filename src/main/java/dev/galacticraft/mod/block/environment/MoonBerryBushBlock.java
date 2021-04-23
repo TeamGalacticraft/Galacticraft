@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.block.environment;
 
-import dev.galacticraft.mod.block.GalacticraftBlocks;
-import dev.galacticraft.mod.items.GalacticraftItems;
+import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.item.GalacticraftItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -115,7 +115,7 @@ public class MoonBerryBushBlock extends PlantBlock {
 
     @Override
     protected boolean canPlantOnTop(BlockState blockState, BlockView blockView, BlockPos blockPos) {
-        return blockState.getBlock() == GalacticraftBlocks.MOON_DIRT;
+        return blockState.getBlock() == GalacticraftBlock.MOON_DIRT;
     }
 
     @Override

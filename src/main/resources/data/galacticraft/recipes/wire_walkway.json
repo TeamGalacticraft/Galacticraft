@@ -7,14 +7,14 @@
   ],
   "key": {
     "T": {
-      "item": "galacticraft-rewoven:compressed_titanium"
+      "item": "galacticraft:compressed_titanium"
     },
     "W": {
-      "item": "galacticraft-rewoven:aluminum_wire"
+      "item": "galacticraft:aluminum_wire"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:wire_walkway",
+    "item": "galacticraft:wire_walkway",
     "count": 5
   }
 }

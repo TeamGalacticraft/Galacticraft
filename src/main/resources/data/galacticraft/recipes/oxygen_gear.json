@@ -7,13 +7,13 @@
   ],
   "key": {
     "C": {
-      "item": "galacticraft-rewoven:oxygen_concentrator"
+      "item": "galacticraft:oxygen_concentrator"
     },
     "P": {
-      "item": "galacticraft-rewoven:glass_fluid_pipe"
+      "item": "galacticraft:glass_fluid_pipe"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:oxygen_gear"
+    "item": "galacticraft:oxygen_gear"
   }
 }

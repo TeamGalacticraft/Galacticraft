@@ -10,13 +10,13 @@
       "item": "minecraft:redstone"
     },
     "P": {
-      "item": "galacticraft-rewoven:compressed_meteoric_iron"
+      "item": "galacticraft:compressed_meteoric_iron"
     },
     "G": {
       "item": "minecraft:glass_pane"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:sensor_lens"
+    "item": "galacticraft:sensor_lens"
   }
 }

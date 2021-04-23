@@ -7,11 +7,11 @@
   ],
   "key": {
     "T": {
-      "item": "galacticraft-rewoven:titanium_ingot"
+      "item": "galacticraft:titanium_ingot"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:titanium_block",
+    "item": "galacticraft:titanium_block",
     "count": 1
   }
 }

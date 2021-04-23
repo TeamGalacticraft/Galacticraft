@@ -7,14 +7,14 @@
   ],
   "key": {
     "S": {
-      "item": "galacticraft-rewoven:compressed_steel"
+      "item": "galacticraft:compressed_steel"
     },
     "B": {
-      "item": "galacticraft-rewoven:battery"
+      "item": "galacticraft:battery"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:energy_storage_module",
+    "item": "galacticraft:energy_storage_module",
     "count": 1
   }
 }

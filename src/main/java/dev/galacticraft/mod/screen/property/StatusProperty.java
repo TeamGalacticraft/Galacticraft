@@ -22,16 +22,16 @@
 
 package dev.galacticraft.mod.screen.property;
 
-import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import net.minecraft.screen.Property;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class StatusProperty extends Property {
-    private final ConfigurableMachineBlockEntity blockEntity;
+    private final MachineBlockEntity blockEntity;
 
-    public StatusProperty(ConfigurableMachineBlockEntity blockEntity) {
+    public StatusProperty(MachineBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
     }
 

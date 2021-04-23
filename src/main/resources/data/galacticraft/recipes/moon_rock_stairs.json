@@ -7,11 +7,11 @@
   ],
   "key": {
     "L": {
-      "item": "galacticraft-rewoven:moon_rock"
+      "item": "galacticraft:moon_rock"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:moon_rock_stairs",
+    "item": "galacticraft:moon_rock_stairs",
     "count": 4
   }
 }

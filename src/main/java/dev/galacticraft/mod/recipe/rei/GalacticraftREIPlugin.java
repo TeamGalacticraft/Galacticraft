@@ -23,11 +23,11 @@
 package dev.galacticraft.mod.recipe.rei;
 
 import com.google.common.collect.Lists;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
-import dev.galacticraft.mod.items.GalacticraftItems;
-import dev.galacticraft.mod.mixin.client.HandledScreenHooks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.mixin.client.HandledScreenAccessor;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
@@ -47,8 +47,8 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public class GalacticraftREIPlugin implements REIPluginV0 {
-    public static final Identifier CIRCUIT_FABRICATION = new Identifier(Constants.MOD_ID, "plugins/circuit_fabricator");
-    public static final Identifier COMPRESSING = new Identifier(Constants.MOD_ID, "plugins/compressing");
+    public static final Identifier CIRCUIT_FABRICATION = new Identifier(Constant.MOD_ID, "plugins/circuit_fabricator");
+    public static final Identifier COMPRESSING = new Identifier(Constant.MOD_ID, "plugins/compressing");
 
     public void registerPluginCategories(RecipeHelper recipeHelper) {
         recipeHelper.registerCategory(new DefaultFabricationCategory());
@@ -57,13 +57,13 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
 
     @Override
     public void registerOthers(RecipeHelper recipeHelper) {
-        recipeHelper.registerWorkingStations(CIRCUIT_FABRICATION, EntryStack.create(GalacticraftBlocks.CIRCUIT_FABRICATOR));
-        recipeHelper.registerWorkingStations(COMPRESSING, EntryStack.create(GalacticraftBlocks.COMPRESSOR), EntryStack.create(GalacticraftBlocks.ELECTRIC_COMPRESSOR));
+        recipeHelper.registerWorkingStations(CIRCUIT_FABRICATION, EntryStack.create(GalacticraftBlock.CIRCUIT_FABRICATOR));
+        recipeHelper.registerWorkingStations(COMPRESSING, EntryStack.create(GalacticraftBlock.COMPRESSOR), EntryStack.create(GalacticraftBlock.ELECTRIC_COMPRESSOR));
     }
 
     @Override
     public Identifier getPluginIdentifier() {
-        return new Identifier(Constants.MOD_ID, Constants.MOD_ID);
+        return new Identifier(Constant.MOD_ID, Constant.MOD_ID);
     }
 
     @Override
@@ -83,13 +83,13 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
     public void registerBounds(DisplayHelper displayHelper) {
         BaseBoundsHandler.getInstance().registerExclusionZones(MachineHandledScreen.class, () -> {
             MachineHandledScreen<?> machineScreen = (MachineHandledScreen<?>) REIHelper.getInstance().getPreviousContainerScreen();
-            HandledScreenHooks screenHooks = (HandledScreenHooks) machineScreen;
+            HandledScreenAccessor screenHooks = (HandledScreenAccessor) machineScreen;
             List<Rectangle> l = Lists.newArrayList();
 
-            if (machineScreen.securityOpen) {
-                l.add(new Rectangle(screenHooks.gcr_getX() + screenHooks.gcr_getBackgroundWidth(), screenHooks.gcr_getY(), MachineHandledScreen.PANEL_WIDTH, MachineHandledScreen.PANEL_HEIGHT));
+            if (MachineHandledScreen.Tab.SECURITY.isOpen()) {
+                l.add(new Rectangle(screenHooks.gc_getX() + screenHooks.gc_getBackgroundWidth(), screenHooks.gc_getY(), MachineHandledScreen.PANEL_WIDTH, MachineHandledScreen.PANEL_HEIGHT));
             } else {
-                l.add(new Rectangle(screenHooks.gcr_getX() + screenHooks.gcr_getBackgroundWidth(), screenHooks.gcr_getY(), MachineHandledScreen.TAB_WIDTH, MachineHandledScreen.TAB_HEIGHT));
+                l.add(new Rectangle(screenHooks.gc_getX() + screenHooks.gc_getBackgroundWidth(), screenHooks.gc_getY(), MachineHandledScreen.TAB_WIDTH, MachineHandledScreen.TAB_HEIGHT));
             }
 
             return l;

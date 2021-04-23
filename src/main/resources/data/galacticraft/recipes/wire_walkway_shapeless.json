@@ -2,14 +2,14 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:walkway"
+      "item": "galacticraft:walkway"
     },
     {
-      "item": "galacticraft-rewoven:aluminum_wire"
+      "item": "galacticraft:aluminum_wire"
     }
   ],
   "result": {
-    "item": "galacticraft-rewoven:wire_walkway",
+    "item": "galacticraft:wire_walkway",
     "count": 1
   }
 }

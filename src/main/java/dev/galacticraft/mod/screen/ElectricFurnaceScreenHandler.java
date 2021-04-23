@@ -23,8 +23,6 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.mod.block.entity.ElectricFurnaceBlockEntity;
-import dev.galacticraft.mod.screen.slot.FilteredSlot;
-import dev.galacticraft.mod.screen.slot.OutputSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -35,12 +33,7 @@ import net.minecraft.screen.Property;
  */
 public class ElectricFurnaceScreenHandler extends MachineScreenHandler<ElectricFurnaceBlockEntity> {
     public ElectricFurnaceScreenHandler(int syncId, PlayerEntity player, ElectricFurnaceBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.ELECTRIC_FURNACE_HANDLER);
-
-        this.addSlot(new FilteredSlot(machine, ElectricFurnaceBlockEntity.CHARGE_SLOT, 8, 7)); //charge
-        this.addSlot(new FilteredSlot(machine, ElectricFurnaceBlockEntity.INPUT_SLOT, 56, 25)); //in
-        this.addSlot(new OutputSlot(machine.getWrappedInventory(), ElectricFurnaceBlockEntity.OUTPUT_SLOT, 109, 25)); //out
-        this.addPlayerInventorySlots(0, 84);
+        super(syncId, player, machine, GalacticraftScreenHandlerType.ELECTRIC_FURNACE_HANDLER);
 
         this.addProperty(new Property() {
             @Override
@@ -65,6 +58,8 @@ public class ElectricFurnaceScreenHandler extends MachineScreenHandler<ElectricF
                 machine.cookLength = value;
             }
         });
+
+        this.addPlayerInventorySlots(0, 84);
     }
 
     public ElectricFurnaceScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {

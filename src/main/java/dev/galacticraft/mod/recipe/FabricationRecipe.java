@@ -72,7 +72,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
 
     @Override
     public RecipeType<?> getType() {
-        return GalacticraftRecipes.FABRICATION_TYPE;
+        return GalacticraftRecipe.FABRICATION_TYPE;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return GalacticraftRecipes.FABRICATION_SERIALIZER;
+        return GalacticraftRecipe.FABRICATION_SERIALIZER;
     }
 
     public Ingredient getInput() {

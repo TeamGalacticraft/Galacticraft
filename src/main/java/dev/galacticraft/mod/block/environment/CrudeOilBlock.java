@@ -51,6 +51,4 @@ public class CrudeOilBlock extends FluidBlock {
             ((LivingEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 6 * 20));
         }
     }
-
-
 }

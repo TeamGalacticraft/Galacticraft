@@ -10,10 +10,10 @@
       "item": "minecraft:iron_nugget"
     },
     "T": {
-      "item": "galacticraft-rewoven:glowstone_torch"
+      "item": "galacticraft:glowstone_torch"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:glowstone_lantern"
+    "item": "galacticraft:glowstone_lantern"
   }
 }

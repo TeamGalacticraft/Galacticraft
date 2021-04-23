@@ -23,8 +23,6 @@
 package dev.galacticraft.mod.client.model.entity;
 
 import dev.galacticraft.mod.entity.EvolvedSpiderEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -34,7 +32,6 @@ import net.minecraft.util.math.MathHelper;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
 public class EvolvedSpiderModel<T extends EvolvedSpiderEntity> extends EntityModel<T> {
     public final ModelPart body;
     public final ModelPart rearEnd;

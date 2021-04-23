@@ -8,10 +8,10 @@
       "item": "minecraft:melon_slice"
     },
     "C": {
-      "item": "galacticraft-rewoven:tin_canister"
+      "item": "galacticraft:tin_canister"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:canned_dehydrated_melon"
+    "item": "galacticraft:canned_dehydrated_melon"
   }
 }

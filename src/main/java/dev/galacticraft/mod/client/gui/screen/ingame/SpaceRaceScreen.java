@@ -22,11 +22,8 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -34,6 +31,7 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -42,14 +40,13 @@ import net.minecraft.util.math.Matrix4f;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
 public class SpaceRaceScreen extends Screen {
     private int widthSize = 0;
     private int heightSize = 0;
     private Menu menu = Menu.MAIN;
 
     public SpaceRaceScreen() {
-        super(new TranslatableText("ui." + Constants.MOD_ID + ".space_race_manager"));
+        super(new TranslatableText("ui." + Constant.MOD_ID + ".space_race_manager"));
     }
 
     @Override
@@ -116,9 +113,8 @@ public class SpaceRaceScreen extends Screen {
         fill(stack, getLeft(), getTop(), getLeft() + widthSize, getTop() + heightSize, 0x80000000);
     }
 
-
     private void renderForeground(MatrixStack stack, int mouseX, int mouseY) {
-        DrawableUtils.drawCenteredString(stack, this.textRenderer, new TranslatableText("ui.galacticraft.space_race_manager"), this.width / 2, getTop() - 20, 0xFFFFFF);
+        drawCenteredString(stack, this.textRenderer, I18n.translate("ui.galacticraft.space_race_manager"), this.width / 2, getTop() - 20, 0xFFFFFF);
 
         if (menu == Menu.MAIN) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
@@ -186,7 +182,7 @@ public class SpaceRaceScreen extends Screen {
             }
 
         } else if (menu == Menu.RESEARCH) {
-            DrawableUtils.drawCenteredString(stack, this.textRenderer, new TranslatableText("ui.galacticraft.space_race_manager.research"), this.width / 2, getTop() + 2, 0xFFFFFF);
+            drawCenteredString(stack, this.textRenderer, I18n.translate("ui.galacticraft.space_race_manager.research"), this.width / 2, getTop() + 2, 0xFFFFFF);
 
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
                 renderButton(stack, textRenderer, new TranslatableText("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
@@ -364,7 +360,6 @@ public class SpaceRaceScreen extends Screen {
         }
         return height;
     }
-
 
     private boolean isAnimationComplete() {
         int maxWidth = (int) (this.width - (getXMargins() * 1.5D));

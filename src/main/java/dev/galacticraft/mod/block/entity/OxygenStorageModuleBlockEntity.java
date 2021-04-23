@@ -23,30 +23,34 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
-import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.api.block.SideOption;
-import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.screen.OxygenStorageModuleScreenHandler;
-import dev.galacticraft.mod.util.FluidUtils;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.screen.tank.NullTank;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEntity {
-    private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(50);
+public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
+    private static final int OXYGEN_TANK = 0;
+    public static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(50);
+
     public OxygenStorageModuleBlockEntity() {
-        super(GalacticraftBlockEntities.OXYGEN_STORAGE_MODULE_TYPE);
+        super(GalacticraftBlockEntityType.OXYGEN_STORAGE_MODULE);
+    }
+
+    @Override
+    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+        builder.addTank(OXYGEN_TANK, SlotType.OXYGEN, (index, inv) -> NullTank.INSTANCE);
+        return builder;
     }
 
     @Override
@@ -55,29 +59,14 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 1;
-    }
-
-    @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
-    }
-
-    @Override
     protected MachineStatus getStatusById(int index) {
         return MachineStatus.NULL;
     }
 
     @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        return stack -> FluidUtils.canExtractFluids(stack, Constants.Misc.LOX_ONLY);
-    }
-
-    @Override
     public void updateComponents() {
         super.updateComponents();
-        this.trySpreadFluids(0);
+        this.trySpreadFluids(OXYGEN_TANK);
     }
 
     @Override
@@ -92,21 +81,6 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     @Override
     public int getEnergyCapacity() {
         return 0;
-    }
-
-    @Override
-    public boolean canPipeExtractFluid(int tank) {
-        return true;
-    }
-
-    @Override
-    public boolean canPipeInsertFluid(int tank) {
-        return true;
-    }
-
-    @Override
-    public FluidFilter getFilterForTank(int tank) {
-        return Constants.Misc.LOX_ONLY;
     }
 
     @Nullable

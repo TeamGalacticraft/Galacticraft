@@ -9,9 +9,9 @@
   "license": "MIT",
 
   "contact": {
-    "homepage": "https://galacticraft.team",
-    "sources": "https://github.com/TeamGalacticraft/Galacticraft-Rewoven",
-    "issues": "https://github.com/TeamGalacticraft/Galacticraft-Rewoven/issues"
+    "homepage": "https://galacticraft.team/",
+    "sources": "https://github.com/TeamGalacticraft/Galacticraft-Rewoven/",
+    "issues": "https://github.com/TeamGalacticraft/Galacticraft-Rewoven/issues/"
   },
   "authors": [
     {
@@ -117,20 +117,21 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "dev.galacticraft.mod.Galacticraft"
-    ],
-    "client": [
-      "dev.galacticraft.mod.GalacticraftClient"
-    ],
+    "main": [ "dev.galacticraft.mod.Galacticraft" ],
+    "client": [ "dev.galacticraft.mod.GalacticraftClient" ],
     "rei_plugins": [ "dev.galacticraft.mod.recipe.rei.GalacticraftREIPlugin" ],
-    "modmenu": [ "dev.galacticraft.mod.hooks.ModMenuApiImpl" ]
+    "modmenu": [ "dev.galacticraft.mod.compat.modmenu.ModMenuApiImpl" ]
   },
   "mixins": [
     "galacticraft.mixins.json"
   ],
   "accessWidener": "galacticraft.accesswidener",
-
+  "custom": {
+    "waila:plugins": {
+      "id": "galacticraft:plugin",
+      "initializer": "com.hrznstudio.galacticraft.compat.waila.GalacticraftWailaPlugin"
+    }
+  },
   "depends": {
     "minecraft": ">=1.16.2",
     "fabricloader": ">=0.9.0",
@@ -164,6 +165,7 @@
     "fabric-tool-attribute-api-v1": "*"
   },
   "suggests": {
-    "modmenu": ">=1.16"
+    "modmenu": ">=1.16",
+    "waila": ">=2"
   }
 }

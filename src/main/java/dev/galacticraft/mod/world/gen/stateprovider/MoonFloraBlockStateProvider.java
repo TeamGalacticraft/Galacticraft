@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.world.gen.stateprovider;
 
-import dev.galacticraft.mod.block.GalacticraftBlocks;
-import dev.galacticraft.mod.world.gen.feature.GalacticraftFeatures;
 import com.mojang.serialization.Codec;
+import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.world.gen.feature.GalacticraftFeature;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
@@ -41,12 +41,12 @@ public class MoonFloraBlockStateProvider extends BlockStateProvider {
     public static final Codec<MoonFloraBlockStateProvider> CODEC = Codec.unit(() -> MoonFloraBlockStateProvider.INSTANCE);
     public static final MoonFloraBlockStateProvider INSTANCE = new MoonFloraBlockStateProvider();
 
-    public static final BlockState[] mix1 = new BlockState[]{GalacticraftBlocks.MOON_BERRY_BUSH.getDefaultState()};
-    public static final BlockState[] mix2 = new BlockState[]{GalacticraftBlocks.MOON_BERRY_BUSH.getDefaultState()};
+    public static final BlockState[] mix1 = new BlockState[]{GalacticraftBlock.MOON_BERRY_BUSH.getDefaultState()};
+    public static final BlockState[] mix2 = new BlockState[]{GalacticraftBlock.MOON_BERRY_BUSH.getDefaultState()};
 
     @Override
     protected BlockStateProviderType<MoonFloraBlockStateProvider> getType() {
-        return GalacticraftFeatures.MOON_FLOWER_PROVIDER;
+        return GalacticraftFeature.MOON_FLOWER_PROVIDER;
     }
 
     public BlockState getBlockState(Random random, BlockPos pos) {
@@ -54,8 +54,7 @@ public class MoonFloraBlockStateProvider extends BlockStateProvider {
         if (d < -0.8D) {
             return Util.getRandom(mix1, random);
         } else {
-            return random.nextInt(3) > 0 ? Util.getRandom(mix2, random) : GalacticraftBlocks.MOON_BERRY_BUSH.getDefaultState();
+            return random.nextInt(3) > 0 ? Util.getRandom(mix2, random) : GalacticraftBlock.MOON_BERRY_BUSH.getDefaultState();
         }
     }
-
 }

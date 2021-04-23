@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.mod.block.entity.EnergyStorageModuleBlockEntity;
-import dev.galacticraft.mod.screen.slot.FilteredSlot;
+import dev.galacticraft.mod.screen.slot.AutoFilteredSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -33,9 +33,9 @@ import net.minecraft.network.PacketByteBuf;
  */
 public class EnergyStorageModuleScreenHandler extends MachineScreenHandler<EnergyStorageModuleBlockEntity> {
     public EnergyStorageModuleScreenHandler(int syncId, PlayerEntity player, EnergyStorageModuleBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.ENERGY_STORAGE_MODULE_HANDLER);
-        this.addSlot(new FilteredSlot(machine, 0, 18 * 6 - 6, 18 + 6));
-        this.addSlot(new FilteredSlot(machine, 1, 18 * 6 - 6, 18 * 2 + 12));
+        super(syncId, player, machine, GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER);
+        this.addSlot(new AutoFilteredSlot(machine, 0, 18 * 6 - 6, 18 + 6));
+        this.addSlot(new AutoFilteredSlot(machine, 1, 18 * 6 - 6, 18 * 2 + 12));
         this.addPlayerInventorySlots(0, 84);
     }
 

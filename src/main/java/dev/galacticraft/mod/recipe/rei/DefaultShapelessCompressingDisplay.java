@@ -59,7 +59,6 @@ public class DefaultShapelessCompressingDisplay implements DefaultCompressingDis
 //        return Optional.ofNullable(this.display);
 //    }
 
-
     @Override
     public @NotNull List<List<EntryStack>> getRequiredEntries() {
         return input;

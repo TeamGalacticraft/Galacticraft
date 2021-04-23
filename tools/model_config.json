@@ -1,6 +1,6 @@
 {
   "name": "oxygen_bubble_distributor",
-  "mod-id": "galacticraft-rewoven",
+  "mod-id": "galacticraft",
   "sides": {
     "north": {
       "texture": "block/oxygen_bubble_distributor"

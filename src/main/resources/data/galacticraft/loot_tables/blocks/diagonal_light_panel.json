@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:diagonal_light_panel"
+          "name": "galacticraft:diagonal_light_panel"
         }
       ],
       "conditions": [

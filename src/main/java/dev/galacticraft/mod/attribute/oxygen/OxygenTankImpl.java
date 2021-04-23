@@ -22,12 +22,14 @@
 
 package dev.galacticraft.mod.attribute.oxygen;
 
+import alexiil.mc.lib.attributes.ListenerToken;
 import alexiil.mc.lib.attributes.misc.Saveable;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -35,7 +37,7 @@ import java.util.function.Consumer;
 public class OxygenTankImpl implements OxygenTank, Saveable {
     public static final OxygenTankImpl NULL = new OxygenTankImpl(-1);
     private final int capacity;
-    private final List<Consumer<OxygenTank>> listeners = new ArrayList<>();
+    private final List<OxygenTankChangedListener> listeners = new ArrayList<>();
     private int amount;
 
     public OxygenTankImpl(int capacity) {
@@ -49,9 +51,10 @@ public class OxygenTankImpl implements OxygenTank, Saveable {
 
     @Override
     public void setAmount(int amount) {
+        int prev = this.amount;
         this.amount = amount;
-        for (Consumer<OxygenTank> listener : listeners) {
-            listener.accept(this);
+        for (OxygenTankChangedListener listener : listeners) {
+            listener.onChanged(this, prev);
         }
     }
 
@@ -62,19 +65,19 @@ public class OxygenTankImpl implements OxygenTank, Saveable {
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        tag.putInt("amount", amount);
+        tag.putInt(Constant.Nbt.AMOUNT, amount);
         return tag;
     }
 
     @Override
     public void fromTag(CompoundTag tag) {
-        this.amount = tag.getInt("amount");
+        this.amount = tag.getInt(Constant.Nbt.AMOUNT);
     }
 
     @Override
-    public OxygenTankImpl listen(Consumer<OxygenTank> consumer) {
-        listeners.add(consumer);
-        return this;
+    public @Nullable ListenerToken listen(OxygenTankChangedListener listener) {
+        listeners.add(listener);
+        return () -> listeners.remove(listener);
     }
 
     @Override

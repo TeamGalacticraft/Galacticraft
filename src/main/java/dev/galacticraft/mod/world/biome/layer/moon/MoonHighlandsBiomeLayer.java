@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.world.biome.layer.moon;
 
-import dev.galacticraft.mod.world.biome.layer.MoonBiomeLayers;
+import dev.galacticraft.mod.world.biome.layer.MoonBiomeLayer;
 import net.minecraft.world.biome.layer.type.InitLayer;
 import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
 
@@ -35,9 +35,9 @@ public enum MoonHighlandsBiomeLayer implements InitLayer {
     public int sample(LayerRandomnessSource context, int x, int y) {
         int i = context.nextInt(10);
         if (i <= 9) {
-            return MoonBiomeLayers.MOON_HIGHLANDS_PLAINS_ID;
+            return MoonBiomeLayer.MOON_HIGHLANDS_PLAINS_ID;
         } else {
-            return MoonBiomeLayers.MOON_HIGHLANDS_ROCKS_ID;
+            return MoonBiomeLayer.MOON_HIGHLANDS_ROCKS_ID;
         }
     }
 }

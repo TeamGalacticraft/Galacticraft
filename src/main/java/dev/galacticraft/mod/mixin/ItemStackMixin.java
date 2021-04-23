@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -49,7 +49,7 @@ public abstract class ItemStackMixin {
         //noinspection ConstantConditions
         if (false) {
             Identifier id = Registry.ITEM.getId(getItem());
-            if (id.getNamespace().equals(Constants.MOD_ID)) {
+            if (id.getNamespace().equals(Constant.MOD_ID)) {
                 Text returnVal = returnable.getReturnValue();
                 if (returnVal.getStyle().getColor() == null) {
                     returnable.setReturnValue(returnVal.shallowCopy().setStyle(returnVal.getStyle().withColor(Formatting.BLUE)));

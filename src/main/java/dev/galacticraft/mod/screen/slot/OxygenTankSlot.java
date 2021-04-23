@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.screen.slot;
 
-import dev.galacticraft.mod.util.OxygenTankUtils;
+import dev.galacticraft.mod.util.OxygenTankUtil;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
@@ -42,6 +42,6 @@ public class OxygenTankSlot extends Slot {
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        return OxygenTankUtils.isOxygenTank(stack);
+        return OxygenTankUtil.isOxygenTank(stack);
     }
 }

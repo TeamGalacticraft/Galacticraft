@@ -7,13 +7,13 @@
   ],
   "key": {
     "T": {
-      "item": "galacticraft-rewoven:compressed_titanium"
+      "item": "galacticraft:compressed_titanium"
     },
     "I": {
       "tag": "c:iron_ingots"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:titanium_shovel"
+    "item": "galacticraft:titanium_shovel"
   }
 }

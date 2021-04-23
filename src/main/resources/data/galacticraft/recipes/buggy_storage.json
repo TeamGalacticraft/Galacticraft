@@ -7,16 +7,16 @@
   ],
   "key": {
     "S": {
-      "item": "galacticraft-rewoven:compressed_steel"
+      "item": "galacticraft:compressed_steel"
     },
     "I": {
-      "item": "galacticraft-rewoven:compressed_iron"
+      "item": "galacticraft:compressed_iron"
     },
     "C": {
       "item": "minecraft:chest"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:buggy_storage"
+    "item": "galacticraft:buggy_storage"
   }
 }

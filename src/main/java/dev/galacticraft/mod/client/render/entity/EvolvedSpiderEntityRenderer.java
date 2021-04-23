@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.EvolvedSpiderModel;
 import dev.galacticraft.mod.client.render.entity.feature.EvolvedSpiderEyesFeatureRenderer;
 import dev.galacticraft.mod.entity.EvolvedSpiderEntity;
@@ -37,7 +37,7 @@ import net.minecraft.util.Identifier;
  */
 @Environment(EnvType.CLIENT)
 public class EvolvedSpiderEntityRenderer extends MobEntityRenderer<EvolvedSpiderEntity, EvolvedSpiderModel<EvolvedSpiderEntity>> {
-    public static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, "textures/entity/evolved/spider.png");
+    public static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/evolved/spider.png");
 
     public EvolvedSpiderEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher, new EvolvedSpiderModel<>(0.0F), 1.0F);

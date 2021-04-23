@@ -49,7 +49,7 @@ public class FluidTankPropertyDelegate implements PropertyDelegate {
         if (index % 2 == 0) {
             return Registry.FLUID.getRawId(inv.getInvFluid(index / 2).getRawFluid());
         } else {
-            return inv.getInvFluid(((index + 1) / 2) - 1).getAmount_F().asInt(1000, RoundingMode.HALF_DOWN);
+            return inv.getInvFluid(((index + 1) / 2) - 1).amount().asInt(1000, RoundingMode.HALF_DOWN);
         }
     }
 

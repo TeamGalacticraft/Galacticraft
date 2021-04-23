@@ -25,14 +25,14 @@ package dev.galacticraft.mod.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.SideOption;
-import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.screen.ElectricArcFurnaceScreenHandler;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -50,21 +50,16 @@ import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
+public class ElectricArcFurnaceBlockEntity extends MachineBlockEntity {
     public int cookTime = 0;
     public int cookLength = 0;
-    private final Inventory subInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
-        @Override
-        public boolean canPlayerUse(PlayerEntity player) {
-            return getWrappedInventory().canPlayerUse(player);
-        }
-    };
+    private final Inventory subInv;
+    private final SimpleInventory predicateInv = new SimpleInventory(1);
 
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
@@ -73,10 +68,28 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
 
     public ElectricArcFurnaceBlockEntity(BlockEntityType<? extends ElectricArcFurnaceBlockEntity> blockEntityType) {
         super(blockEntityType);
+        this.subInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
+            @Override
+            public boolean canPlayerUse(PlayerEntity player) {
+                return getWrappedInventory().canPlayerUse(player);
+            }
+        };
+    }
+
+    @Override
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 7);
+        builder.addSlot(INPUT_SLOT, SlotType.INPUT, stack -> {
+            predicateInv.setStack(0, stack);
+            return this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, predicateInv, world).isPresent();
+        }, 56, 25);
+        builder.addSlot(OUTPUT_SLOT_1, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(109, 25));
+        builder.addSlot(OUTPUT_SLOT_2, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(127, 25));
+        return builder;
     }
 
     public ElectricArcFurnaceBlockEntity() {
-        this(GalacticraftBlockEntities.ELECTRIC_ARC_FURNACE_TYPE);
+        this(GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE);
     }
 
     @Override
@@ -86,34 +99,7 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
 
     @Override
     protected int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().electricArcFurnaceEnergyConsumptionRate();
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return slot == OUTPUT_SLOT_1 || slot == OUTPUT_SLOT_2;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return slot == INPUT_SLOT;
-    }
-
-    @Override
-    public int getInventorySize() {
-        return 4;
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        if (slot == CHARGE_SLOT) return EnergyUtils::isEnergyExtractable;
-        if (slot == INPUT_SLOT) return (stack) -> world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, new SimpleInventory(stack), world).isPresent();
-        return (slot == OUTPUT_SLOT_1 || slot == OUTPUT_SLOT_2) ? ConstantItemFilter.ANYTHING : ConstantItemFilter.NOTHING;
-    }
-
-    @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
+        return Galacticraft.CONFIG_MANAGER.get().electricArcFurnaceEnergyConsumptionRate();
     }
 
     @Override
@@ -122,12 +108,19 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
+    public void updateComponents() {
+        super.updateComponents();
+        this.attemptChargeFromStack(CHARGE_SLOT);
+    }
+
+    @Override
     public @NotNull MachineStatus updateStatus() {
         Optional<SmeltingRecipe> recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, subInv, this.world);
         if (!recipe.isPresent()) return Status.NOT_ENOUGH_ITEMS;
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (!this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1, 
-                recipe.get().getOutput().copy(), Simulation.SIMULATE), Simulation.SIMULATE).isEmpty()) return Status.OUTPUT_FULL;
+        if (!this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1,
+                recipe.get().getOutput().copy(), Simulation.SIMULATE), Simulation.SIMULATE).isEmpty())
+            return Status.OUTPUT_FULL;
         return Status.ACTIVE;
     }
 
@@ -141,10 +134,12 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
             }
             if (this.cookTime++ >= this.cookLength) {
                 SmeltingRecipe recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, subInv, this.world).orElseThrow(AssertionError::new);
-                if (this.getInventory().extractStack(INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+                if (this.getInventory().extractStack(INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty())
+                    return;
                 this.cookTime = 0;
                 this.cookLength = 0;
-                if (this.world.getRecipeManager().getFirstMatch(RecipeType.BLASTING, subInv, this.world).isPresent()) this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1, recipe.getOutput().copy(), Simulation.ACTION), Simulation.ACTION);
+                if (this.world.getRecipeManager().getFirstMatch(RecipeType.BLASTING, subInv, this.world).isPresent())
+                    this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1, recipe.getOutput().copy(), Simulation.ACTION), Simulation.ACTION);
                 this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1,
                         recipe.getOutput().copy(), Simulation.ACTION), Simulation.ACTION);
 
@@ -165,22 +160,22 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
         /**
          * The electric arc furnace is cooking/smelting items
          */
-        ACTIVE(new TranslatableText("ui.galacticraft.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
+        ACTIVE(new TranslatableText("ui.galacticraft.machine.status.active"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * The output slot is full.
          */
-        OUTPUT_FULL(new TranslatableText("ui.galacticraft.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        OUTPUT_FULL(new TranslatableText("ui.galacticraft.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * There are no valid items to smelt/cook.
          */
-        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft.machinestatus.not_enough_items"), Formatting.GRAY, StatusType.MISSING_ITEMS),
+        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft.machine.status.not_enough_items"), Formatting.GRAY, StatusType.MISSING_ITEMS),
 
         /**
          * The electric arc furnace has no more energy
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
 
         private final Text name;
         private final StatusType type;

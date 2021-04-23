@@ -194,7 +194,7 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
     }
 
     public RecipeSerializer<?> getSerializer() {
-        return GalacticraftRecipes.SHAPED_COMPRESSING_SERIALIZER;
+        return GalacticraftRecipe.SHAPED_COMPRESSING_SERIALIZER;
     }
 
     @Environment(EnvType.CLIENT)

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:titanium_block"
+          "name": "galacticraft:titanium_block"
         }
       ],
       "conditions": [

@@ -23,20 +23,22 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.FluidAttributes;
+import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.SideOption;
-import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
-import dev.galacticraft.mod.fluids.GalacticraftFluids;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
+import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.screen.RefineryScreenHandler;
-import dev.galacticraft.mod.tag.GalacticraftTags;
-import dev.galacticraft.mod.util.EnergyUtils;
-import dev.galacticraft.mod.util.FluidUtils;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.tag.GalacticraftTag;
+import dev.galacticraft.mod.util.EnergyUtil;
+import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
@@ -48,13 +50,10 @@ import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
-    private static final ItemFilter[] SLOT_FILTERS;
+public class RefineryBlockEntity extends MachineBlockEntity implements Tickable {
     private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(8);
     public static final int OIL_TANK = 0;
     public static final int FUEL_TANK = 1;
@@ -62,40 +61,28 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     public static final int FLUID_INPUT_SLOT = 1;
     public static final int FLUID_OUTPUT_SLOT = 2;
 
-    static {
-        SLOT_FILTERS = new ItemFilter[3];
-        SLOT_FILTERS[CHARGE_SLOT] = EnergyUtils.IS_EXTRACTABLE;
-        SLOT_FILTERS[FLUID_INPUT_SLOT] = stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL);
-        SLOT_FILTERS[FLUID_OUTPUT_SLOT] = stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL);
-    }
-
     public RefineryBlockEntity() {
-        super(GalacticraftBlockEntities.REFINERY_TYPE);
+        super(GalacticraftBlockEntityType.REFINERY);
     }
 
     @Override
-    public int getInventorySize() {
-        return 3;
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 7);
+        builder.addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtil.canExtractFluids(stack, GalacticraftTag.OIL), 123, 7);
+        builder.addSlot(FLUID_OUTPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtil.canInsertFluids(stack, GalacticraftFluid.FUEL), 153, 7);
+        return builder;
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 2;
+    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+        builder.addTank(OIL_TANK, SlotType.OIL_IN, Constant.Filter.OIL, 122, 28, 1);
+        builder.addTank(FUEL_TANK, SlotType.FUEL_OUT, Constant.Filter.FUEL, 152, 28, 1);
+        return builder;
     }
 
     @Override
     public FluidAmount getFluidTankCapacity() {
         return MAX_CAPACITY;
-    }
-
-    @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        return SLOT_FILTERS[slot];
     }
 
     @Override
@@ -112,50 +99,31 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     public void updateComponents() {
         super.updateComponents();
         this.attemptChargeFromStack(CHARGE_SLOT);
-
     }
 
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.getFluidTank().getInvFluid(OIL_TANK).getAmount_F().compareTo(FluidAmount.ZERO) <= 0) return Status.NOT_ENOUGH_FLUID;
+        if (this.getFluidInv().getInvFluid(OIL_TANK).amount().compareTo(FluidAmount.ZERO) <= 0) return Status.NOT_ENOUGH_FLUID;
         if (this.isTankFull(FUEL_TANK)) return Status.FULL;
         return Status.ACTIVE;
     }
 
     @Override
     public void tickWork() {
-        this.getFluidTank().insertFluid(OIL_TANK, FluidUtils.extractFluid(this.getInventory().getSlot(FLUID_INPUT_SLOT), this.getFluidTank().getMaxAmount_F(OIL_TANK).sub(this.getFluidTank().getInvFluid(OIL_TANK).getAmount_F()), key -> GalacticraftTags.OIL.contains(key.getRawFluid())), Simulation.ACTION);
-        this.getFluidTank().insertFluid(FUEL_TANK, FluidUtils.insertFluid(this.getInventory().getSlot(FLUID_OUTPUT_SLOT), this.getFluidTank().extractFluid(FUEL_TANK, null, null, FluidAmount.ONE, Simulation.ACTION)), Simulation.ACTION);
+        FluidVolumeUtil.move(FluidAttributes.EXTRACTABLE.getFirst(this.getInventory().getSlot(FLUID_INPUT_SLOT)), this.getFluidInv().getTank(OIL_TANK));
+        FluidVolumeUtil.move(this.getFluidInv().getTank(FUEL_TANK), FluidAttributes.INSERTABLE.getFirst(this.getInventory().getSlot(FLUID_OUTPUT_SLOT)));
 
         if (this.getStatus().getType().isActive()) {
-            FluidAmount amount = this.getFluidTank().extractFluid(OIL_TANK, key -> GalacticraftTags.OIL.contains(key.getRawFluid()), null, FluidAmount.of(5, 1000), Simulation.ACTION).getAmount_F();
-            amount = this.getFluidTank().insertFluid(FUEL_TANK, FluidKeys.get(GalacticraftFluids.FUEL).withAmount(amount), Simulation.ACTION).getAmount_F();
-            this.getFluidTank().insertFluid(OIL_TANK, this.getFluidTank().getInvFluid(OIL_TANK).getFluidKey().withAmount(amount), Simulation.ACTION);
+            FluidAmount amount = this.getFluidInv().extractFluid(OIL_TANK, key -> GalacticraftTag.OIL.contains(key.getRawFluid()), null, FluidAmount.of(5, 1000), Simulation.ACTION).amount();
+            amount = this.getFluidInv().insertFluid(FUEL_TANK, FluidKeys.get(GalacticraftFluid.FUEL).withAmount(amount), Simulation.ACTION).amount();
+            this.getFluidInv().insertFluid(OIL_TANK, this.getFluidInv().getInvFluid(OIL_TANK).getFluidKey().withAmount(amount), Simulation.ACTION);
         }
     }
 
     @Override
     public int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().refineryEnergyConsumptionRate();
-    }
-
-    @Override
-    public boolean canPipeExtractFluid(int tank) {
-        return tank == FUEL_TANK;
-    }
-
-    @Override
-    public boolean canPipeInsertFluid(int tank) {
-        return tank == OIL_TANK;
-    }
-
-    @Override
-    public FluidFilter getFilterForTank(int tank) {
-        if (tank == OIL_TANK) {
-            return key -> GalacticraftTags.OIL.contains(key.getRawFluid());
-        }
-        return key -> GalacticraftTags.FUEL.contains(key.getRawFluid());
+        return Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate();
     }
 
     @Nullable
@@ -172,22 +140,22 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
         /**
          * Refinery is active and is refining oil into fuel.
          */
-        ACTIVE(new TranslatableText("ui.galacticraft.machinestatus.refining"), Formatting.GREEN, StatusType.WORKING),
+        ACTIVE(new TranslatableText("ui.galacticraft.machine.status.refining"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Refinery has oil but the fuel tank is full.
          */
-        FULL(new TranslatableText("ui.galacticraft.machinestatus.idle"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableText("ui.galacticraft.machine.status.idle"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * The refinery is out of oil.
          */
-        NOT_ENOUGH_FLUID(new TranslatableText("ui.galacticraft.machinestatus.not_enough_fluid"), Formatting.BLACK, StatusType.MISSING_FLUIDS),
+        NOT_ENOUGH_FLUID(new TranslatableText("ui.galacticraft.machine.status.not_enough_fluid"), Formatting.BLACK, StatusType.MISSING_FLUIDS),
 
         /**
          * The refinery is out of energy.
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
 
         private final Text text;
         private final StatusType type;

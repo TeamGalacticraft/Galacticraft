@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:glowstone_torch"
+          "name": "galacticraft:glowstone_torch"
         }
       ],
       "conditions": [

@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.world.gen.carver;
 
 import com.google.common.collect.ImmutableSet;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
 import com.mojang.serialization.Codec;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -46,11 +46,11 @@ public class LunarCaveCarver extends CaveCarver {
     public LunarCaveCarver(Codec<ProbabilityConfig> codec, int i) {
         super(codec, i);
         this.alwaysCarvableBlocks = ImmutableSet.<Block>builder().addAll(this.alwaysCarvableBlocks)
-                .add(GalacticraftBlocks.MOON_ROCKS[0])
-                .add(GalacticraftBlocks.MOON_SURFACE_ROCK)
-                .add(GalacticraftBlocks.MOON_TURF)
-                .add(GalacticraftBlocks.MOON_BASALTS[0])
-                .add(GalacticraftBlocks.MOON_DIRT)
+                .add(GalacticraftBlock.MOON_ROCKS[0])
+                .add(GalacticraftBlock.MOON_SURFACE_ROCK)
+                .add(GalacticraftBlock.MOON_TURF)
+                .add(GalacticraftBlock.MOON_BASALTS[0])
+                .add(GalacticraftBlock.MOON_DIRT)
                 .build();
     }
 
@@ -78,7 +78,7 @@ public class LunarCaveCarver extends CaveCarver {
             mutable.set(x, y, z);
             BlockState blockState = chunk.getBlockState(mutable);
             BlockState blockState2 = chunk.getBlockState(mutable2.set(mutable, Direction.UP));
-            if (blockState.isOf(GalacticraftBlocks.MOON_BASALTS[0]) || blockState.isOf(GalacticraftBlocks.MOON_ROCKS[0])) {
+            if (blockState.isOf(GalacticraftBlock.MOON_BASALTS[0]) || blockState.isOf(GalacticraftBlock.MOON_ROCKS[0])) {
                 mutableBoolean.setTrue();
             }
 
@@ -91,11 +91,12 @@ public class LunarCaveCarver extends CaveCarver {
                     chunk.setBlockState(mutable, CAVE_AIR, false);
                     if (mutableBoolean.isTrue()) {
                         mutable3.set(mutable, Direction.DOWN);
-                        if (chunk.getBlockState(mutable3).isOf(GalacticraftBlocks.MOON_DIRT)) {
+                        if (chunk.getBlockState(mutable3).isOf(GalacticraftBlock.MOON_DIRT)) {
                             chunk.setBlockState(mutable3, posToBiome.apply(mutable).getGenerationSettings().getSurfaceConfig().getTopMaterial(), false);
                         }
                     }
                 }
+
                 return true;
             }
         }

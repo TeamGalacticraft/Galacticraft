@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.block.special.walkway;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggableBlock;
 import dev.galacticraft.mod.api.block.WireBlock;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -71,7 +71,7 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
                 .with(UP, false)
                 .with(DOWN, false)
                 .with(FACING, Direction.UP)
-                .with(FLUID, Constants.Misc.EMPTY)
+                .with(FLUID, Constant.Misc.EMPTY)
                 .with(FlowableFluid.LEVEL, 8));
     }
 
@@ -194,14 +194,14 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
                 return false;
         } catch (IllegalArgumentException ignored) {}
         */
-        return neighborState.getBlock() instanceof WireBlock || EnergyUtils.canAccessEnergy((World) world, pos.offset(facing), facing.getOpposite());
+        return neighborState.getBlock() instanceof WireBlock || EnergyUtil.canAccessEnergy((World) world, pos.offset(facing), facing.getOpposite());
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         BlockState state = this.getDefaultState();
         FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
-        for (Direction direction : Direction.values()) {
+        for (Direction direction : Constant.Misc.DIRECTIONS) {
             state = state.with(getPropForDir(direction), this.canConnect(state,
                     context.getWorld().getBlockState(context.getBlockPos().offset(direction)),
                     context.getBlockPos(),
@@ -216,7 +216,7 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
     }
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-           if (!state.get(FLUID).equals(Constants.Misc.EMPTY)) {
+           if (!state.get(FLUID).equals(Constant.Misc.EMPTY)) {
             world.getFluidTickScheduler().schedule(pos, Registry.FLUID.get(state.get(FLUID)), Registry.FLUID.get(state.get(FLUID)).getTickRate(world));
         }
         return state.with(getPropForDir(facing), this.canConnect(state, neighborState, pos, neighborPos, world, facing));

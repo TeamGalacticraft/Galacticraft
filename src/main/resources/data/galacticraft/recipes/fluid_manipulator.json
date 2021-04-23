@@ -7,19 +7,19 @@
   ],
   "key": {
     "M": {
-      "item": "galacticraft-rewoven:meteoric_iron_ingot"
+      "item": "galacticraft:meteoric_iron_ingot"
     },
     "F": {
-      "item": "galacticraft-rewoven:oxygen_fan"
+      "item": "galacticraft:oxygen_fan"
     },
     "S": {
       "item": "minecraft:slime_ball"
     },
     "A": {
-      "item": "galacticraft-rewoven:advanced_wafer"
+      "item": "galacticraft:advanced_wafer"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:fluid_manipulator"
+    "item": "galacticraft:fluid_manipulator"
   }
 }

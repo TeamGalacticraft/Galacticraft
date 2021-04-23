@@ -23,9 +23,9 @@
 package dev.galacticraft.mod.structure;
 
 import com.google.common.collect.Lists;
-import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
-import dev.galacticraft.mod.loot.GalacticraftLootTables;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.entity.GalacticraftEntityType;
+import dev.galacticraft.mod.loot.GalacticraftLootTable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -62,10 +62,10 @@ public class MoonRuinsGenerator {
    private static final Identifier[] PIECES = new Identifier[] {
            //new Identifier(Constants.MOD_ID, "moon_ruins/ruin_1"),
            //new Identifier(Constants.MOD_ID, "moon_ruins/ruin_2"),
-           new Identifier(Constants.MOD_ID, "moon_ruins/ruin_3"),
-           new Identifier(Constants.MOD_ID, "moon_ruins/ruin_4"),
-           new Identifier(Constants.MOD_ID, "moon_ruins/ruin_5"),
-           new Identifier(Constants.MOD_ID, "moon_ruins/ruin_6"),
+           new Identifier(Constant.MOD_ID, "moon_ruins/ruin_3"),
+           new Identifier(Constant.MOD_ID, "moon_ruins/ruin_4"),
+           new Identifier(Constant.MOD_ID, "moon_ruins/ruin_5"),
+           new Identifier(Constant.MOD_ID, "moon_ruins/ruin_6"),
    };
 
    private static Identifier getPiece(Random random) {
@@ -128,7 +128,7 @@ public class MoonRuinsGenerator {
       private final BlockRotation rotation;
 
       public Piece(StructureManager structureManager, Identifier template, BlockPos pos, BlockRotation rotation, float integrity) {
-         super(GalacticraftStructures.MOON_RUINS_PIECE, 0);
+         super(GalacticraftStructure.MOON_RUINS_PIECE, 0);
          this.template = template;
          this.pos = pos;
          this.rotation = rotation;
@@ -137,7 +137,7 @@ public class MoonRuinsGenerator {
       }
 
       public Piece(StructureManager manager, CompoundTag tag) {
-         super(GalacticraftStructures.MOON_RUINS_PIECE, tag);
+         super(GalacticraftStructure.MOON_RUINS_PIECE, tag);
          this.template = new Identifier(tag.getString("Template"));
          this.rotation = BlockRotation.valueOf(tag.getString("Rot"));
          this.integrity = tag.getFloat("Integrity");
@@ -163,15 +163,15 @@ public class MoonRuinsGenerator {
          if ("chest".equals(metadata)) {
             BlockEntity blockEntity = arg.getBlockEntity(pos.offset(Direction.DOWN));
             if (blockEntity instanceof ChestBlockEntity) {
-               ((ChestBlockEntity)blockEntity).setLootTable(GalacticraftLootTables.BASIC_MOON_RUINS_CHEST, random.nextLong());
+               ((ChestBlockEntity)blockEntity).setLootTable(GalacticraftLootTable.BASIC_MOON_RUINS_CHEST, random.nextLong());
             }
          } else if ("monster".equals(metadata)) {
             MobEntity entity;
             int i = arg.getRandom().nextInt(2);
             if (i == 0) {
-               entity = GalacticraftEntityTypes.EVOLVED_ZOMBIE.create(arg.toServerWorld());
+               entity = GalacticraftEntityType.EVOLVED_ZOMBIE.create(arg.toServerWorld());
             } else {
-               entity = GalacticraftEntityTypes.EVOLVED_CREEPER.create(arg.toServerWorld());
+               entity = GalacticraftEntityType.EVOLVED_CREEPER.create(arg.toServerWorld());
             }
             assert entity != null;
             entity.setPersistent();

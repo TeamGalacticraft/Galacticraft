@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:desh_block"
+          "name": "galacticraft:desh_block"
         }
       ],
       "conditions": [

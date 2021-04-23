@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:moon_turf"
+          "name": "galacticraft:moon_turf"
         }
       ],
       "conditions": [

@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
-import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
+import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.registry.RegistryKey;

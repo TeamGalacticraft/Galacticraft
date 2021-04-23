@@ -33,7 +33,7 @@ import net.minecraft.client.gui.screen.Screen;
 public interface ConfigManager {
 
     static ConfigManager getInstance() {
-        return Galacticraft.configManager;
+        return Galacticraft.CONFIG_MANAGER;
     }
 
     void save();

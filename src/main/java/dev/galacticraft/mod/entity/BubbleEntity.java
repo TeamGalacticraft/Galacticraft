@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.entity;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -277,6 +277,6 @@ public class BubbleEntity extends Entity {
         buf.writeShort((int) (e * 8000.0D));
         buf.writeShort((int) (f * 8000.0D));
         buf.writeShort((int) (g * 8000.0D));
-        return new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "entity_spawn"), buf);
+        return new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "entity_spawn"), buf);
     }
 }

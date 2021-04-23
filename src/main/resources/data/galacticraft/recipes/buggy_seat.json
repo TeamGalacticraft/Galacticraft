@@ -7,13 +7,13 @@
   ],
   "key": {
     "S": {
-      "item": "galacticraft-rewoven:compressed_steel"
+      "item": "galacticraft:compressed_steel"
     },
     "I": {
-      "item": "galacticraft-rewoven:compressed_iron"
+      "item": "galacticraft:compressed_iron"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:buggy_seat"
+    "item": "galacticraft:buggy_seat"
   }
 }

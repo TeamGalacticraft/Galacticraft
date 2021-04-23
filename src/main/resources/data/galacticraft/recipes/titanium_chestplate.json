@@ -7,11 +7,11 @@
   ],
   "key": {
     "T": {
-      "item": "galacticraft-rewoven:compressed_titanium"
+      "item": "galacticraft:compressed_titanium"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:titanium_chestplate",
+    "item": "galacticraft:titanium_chestplate",
     "count": 1
   }
 }

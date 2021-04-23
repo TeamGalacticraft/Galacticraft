@@ -1,5 +1,5 @@
 {
-  "name": "galacticraft-rewoven:moon_pillager_base/pillagers",
+  "name": "galacticraft:moon_pillager_base/pillagers",
   "fallback": "minecraft:empty",
   "elements": [
     {

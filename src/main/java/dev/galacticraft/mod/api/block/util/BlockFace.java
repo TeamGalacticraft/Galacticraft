@@ -22,6 +22,10 @@
 
 package dev.galacticraft.mod.api.block.util;
 
+import dev.galacticraft.mod.Constant;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,16 +33,30 @@ import org.jetbrains.annotations.NotNull;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public enum BlockFace {
-    FRONT,
-    RIGHT,
-    BACK,
-    LEFT,
-    TOP,
-    BOTTOM;
+    FRONT(new TranslatableText("ui.galacticraft.machine.configuration.front"), true, false),
+    RIGHT(new TranslatableText("ui.galacticraft.machine.configuration.right"), true, false),
+    BACK(new TranslatableText("ui.galacticraft.machine.configuration.back"), true, false),
+    LEFT(new TranslatableText("ui.galacticraft.machine.configuration.left"), true, false),
+    TOP(new TranslatableText("ui.galacticraft.machine.configuration.top"), false, true),
+    BOTTOM(new TranslatableText("ui.galacticraft.machine.configuration.bottom"), false, true);
+
+    private final MutableText name;
+    private final boolean horizontal;
+    private final boolean vertical;
+
+    BlockFace(MutableText name, boolean horizontal, boolean vertical) {
+        this.name = name.setStyle(Constant.Text.GOLD_STYLE);
+        this.horizontal = horizontal;
+        this.vertical = vertical;
+    }
+
+    public Text getName() {
+        return name;
+    }
 
     @NotNull
     public static BlockFace toFace(Direction facing, Direction target) {
-        assert facing == Direction.NORTH || facing == Direction.SOUTH || facing == Direction.EAST || facing == Direction.WEST;
+        assert facing.getAxis() != Direction.Axis.Y;
 
         if (target == Direction.DOWN) {
             return BOTTOM;
@@ -180,5 +198,13 @@ public enum BlockFace {
                 return BACK;
         }
         throw new RuntimeException();
+    }
+
+    public boolean isHorizontal() {
+        return horizontal;
+    }
+
+    public boolean isVertical() {
+        return vertical;
     }
 }

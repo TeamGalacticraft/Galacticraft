@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.world.poi;
 
 import com.google.common.collect.ImmutableSet;
-import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.poi.PointOfInterestType;
@@ -33,7 +33,7 @@ import net.minecraft.world.poi.PointOfInterestType;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftPointOfInterestType {
-    public static final PointOfInterestType LUNAR_CARTOGRAPHER = PointOfInterestHelper.register(new Identifier(Constants.MOD_ID, "lunar_cartographer"), 1, 1, ImmutableSet.copyOf(GalacticraftBlocks.LUNAR_CARTOGRAPHY_TABLE.getStateManager().getStates()));
+    public static final PointOfInterestType LUNAR_CARTOGRAPHER = PointOfInterestHelper.register(new Identifier(Constant.MOD_ID, "lunar_cartographer"), 1, 1, ImmutableSet.copyOf(GalacticraftBlock.LUNAR_CARTOGRAPHY_TABLE.getStateManager().getStates()));
 
     public static void register() {
     }

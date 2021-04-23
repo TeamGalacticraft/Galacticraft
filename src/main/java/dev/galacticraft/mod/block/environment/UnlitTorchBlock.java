@@ -56,7 +56,6 @@ public class UnlitTorchBlock extends TorchBlock {
         return super.onUse(state, world, pos, player, hand, hit);
     }
 
-
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         // stop particles from spawning

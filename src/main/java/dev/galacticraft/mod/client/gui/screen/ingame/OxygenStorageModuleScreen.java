@@ -22,10 +22,9 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.screen.OxygenStorageModuleScreenHandler;
-import dev.galacticraft.mod.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
@@ -33,7 +32,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 
 import java.math.RoundingMode;
 
@@ -42,8 +40,6 @@ import java.math.RoundingMode;
  */
 @Environment(EnvType.CLIENT)
 public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorageModuleScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_STORAGE_MODULE_SCREEN));
-
     public OxygenStorageModuleScreen(OxygenStorageModuleScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundWidth = 176;
@@ -53,26 +49,27 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         this.drawOxygenBufferBar(matrices);
 
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.current_oxygen", (int)(this.handler.machine.getFluidTank().getInvFluid(0).getAmount_F().asInt(1000, RoundingMode.HALF_DOWN))), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.max_oxygen", (int)(this.handler.machine.getFluidTank().getMaxAmount_F(0).asInt(1000, RoundingMode.HALF_DOWN))), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.current_oxygen", this.handler.machine.getFluidInv().getInvFluid(0).amount().asInt(1000, RoundingMode.HALF_DOWN)), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.max_oxygen", this.handler.machine.getFluidInv().getMaxAmount_F(0).asInt(1000, RoundingMode.HALF_DOWN)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
+        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_storage_module"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_storage_module"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
     private void drawOxygenBufferBar(MatrixStack matrices) {
-        double oxygenScale = this.handler.machine.getFluidTank().getInvFluid(0).getAmount_F().div(this.handler.machine.getFluidTank().getMaxAmount_F(0)).asInexactDouble();
+        double oxygenScale = this.handler.machine.getFluidInv().getInvFluid(0).amount().div(this.handler.machine.getFluidInv().getMaxAmount_F(0)).asInexactDouble();
 
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
         this.drawTexture(matrices, this.x + 52, this.y + 57, 176, 0, (int) (72.0D * oxygenScale), 3);
     }
 }

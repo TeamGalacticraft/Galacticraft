@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.screen.slot;
 
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
@@ -42,6 +42,6 @@ public class ChargeSlot extends Slot {
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        return EnergyUtils.isEnergyExtractable(stack);
+        return EnergyUtil.isEnergyExtractable(stack);
     }
 }

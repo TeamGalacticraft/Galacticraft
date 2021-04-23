@@ -23,8 +23,6 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
-import dev.galacticraft.mod.screen.slot.ChargeSlot;
-import dev.galacticraft.mod.screen.slot.OxygenTankSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -35,10 +33,7 @@ import net.minecraft.network.PacketByteBuf;
 public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleDistributorBlockEntity> {
 
     public BubbleDistributorScreenHandler(int syncId, PlayerEntity player, BubbleDistributorBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.BUBBLE_DISTRIBUTOR_HANDLER);
-
-        this.addSlot(new ChargeSlot(machine.getWrappedInventory(), BubbleDistributorBlockEntity.BATTERY_SLOT, 8, 62));
-        this.addSlot(new OxygenTankSlot(machine.getWrappedInventory(), BubbleDistributorBlockEntity.OXYGEN_TANK_SLOT, 31, 62));
+        super(syncId, player, machine, GalacticraftScreenHandlerType.BUBBLE_DISTRIBUTOR_HANDLER);
 
         this.addPlayerInventorySlots(0, 84);
     }

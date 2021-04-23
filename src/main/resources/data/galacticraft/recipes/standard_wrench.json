@@ -7,13 +7,13 @@
   ],
   "key": {
     "B": {
-      "item": "galacticraft-rewoven:compressed_bronze"
+      "item": "galacticraft:compressed_bronze"
     },
     "S": {
-      "item": "galacticraft-rewoven:compressed_steel"
+      "item": "galacticraft:compressed_steel"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:standard_wrench"
+    "item": "galacticraft:standard_wrench"
   }
 }

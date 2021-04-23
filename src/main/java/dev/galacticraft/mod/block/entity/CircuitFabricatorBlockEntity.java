@@ -25,17 +25,18 @@ package dev.galacticraft.mod.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
+import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.SideOption;
-import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
-import dev.galacticraft.mod.items.GalacticraftItems;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.item.GalacticraftItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
-import dev.galacticraft.mod.recipe.GalacticraftRecipes;
+import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.CircuitFabricatorScreenHandler;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -52,13 +53,12 @@ import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity {
+public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     public static final int MAX_PROGRESS = 300;
 
     public static final int CHARGE_SLOT = 0;
@@ -69,29 +69,31 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     public static final int INPUT_SLOT = 5;
     public static final int OUTPUT_SLOT = 6;
 
-    private static final ItemFilter[] SLOT_FILTERS;
-    private final Inventory recipeSlotInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
-        @Override
-        public boolean canPlayerUse(PlayerEntity player) {
-            return getWrappedInventory().canPlayerUse(player);
-        }
-    };
-
-    static {
-        SLOT_FILTERS = new ItemFilter[5];
-        SLOT_FILTERS[CHARGE_SLOT] = EnergyUtils.IS_EXTRACTABLE;
-        SLOT_FILTERS[INPUT_SLOT_DIAMOND] = stack -> stack.getItem() == Items.DIAMOND;
-        SLOT_FILTERS[INPUT_SLOT_SILICON] = stack -> stack.getItem() == GalacticraftItems.RAW_SILICON;
-        SLOT_FILTERS[INPUT_SLOT_SILICON_2] = stack -> stack.getItem() == GalacticraftItems.RAW_SILICON;
-        SLOT_FILTERS[INPUT_SLOT_REDSTONE] = stack -> stack.getItem() == Items.REDSTONE;
-    }
-
+    private final Inventory recipeSlotInv;
 
     public Status status = Status.NOT_ENOUGH_RESOURCES;
     public int progress;
 
     public CircuitFabricatorBlockEntity() {
-        super(GalacticraftBlockEntities.CIRCUIT_FABRICATOR_TYPE);
+        super(GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
+        this.recipeSlotInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
+            @Override
+            public boolean canPlayerUse(PlayerEntity player) {
+                return getWrappedInventory().canPlayerUse(player);
+            }
+        };
+    }
+
+    @Override
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 70);
+        builder.addSlot(INPUT_SLOT_DIAMOND, SlotType.INPUT, ExactItemFilter.createFilter(Items.DIAMOND), 31, 15);
+        builder.addSlot(INPUT_SLOT_SILICON, SlotType.INPUT, ExactItemFilter.createFilter(GalacticraftItems.RAW_SILICON), 62, 45);
+        builder.addSlot(INPUT_SLOT_SILICON_2, SlotType.INPUT, ExactItemFilter.createFilter(GalacticraftItems.RAW_SILICON), 62, 63);
+        builder.addSlot(INPUT_SLOT_REDSTONE, SlotType.INPUT, ExactItemFilter.createFilter(Items.REDSTONE), 107, 70);
+        builder.addSlot(INPUT_SLOT, SlotType.INPUT, stack -> this.getRecipe(new SimpleInventory(stack)).isPresent(), 134, 15);
+        builder.addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(152, 70));
+        return builder;
     }
 
     @Override
@@ -102,24 +104,6 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
-    }
-
-    @Override
-    public int getInventorySize() {
-        return 7;
-    }
-
-    @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        if (slot == INPUT_SLOT) return stack -> this.getRecipe(new SimpleInventory(stack)).isPresent();
-        if (slot == OUTPUT_SLOT) return ConstantItemFilter.ANYTHING;
-
-        return SLOT_FILTERS[slot];
     }
 
     @Override
@@ -161,7 +145,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
 
     private Optional<FabricationRecipe> getRecipe(Inventory input) {
         if (this.world == null) return Optional.empty();
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.FABRICATION_TYPE, input, this.world);
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipe.FABRICATION_TYPE, input, this.world);
     }
 
     public int getProgress() {
@@ -175,29 +159,19 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putInt("Progress", this.progress);
+        tag.putInt(Constant.Nbt.PROGRESS, this.progress);
         return tag;
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        progress = tag.getInt("Progress");
+        progress = tag.getInt(Constant.Nbt.PROGRESS);
     }
 
     @Override
     public int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().circuitFabricatorEnergyConsumptionRate();
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return slot == OUTPUT_SLOT;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return slot != CHARGE_SLOT && slot != OUTPUT_SLOT;
+        return Galacticraft.CONFIG_MANAGER.get().circuitFabricatorEnergyConsumptionRate();
     }
 
     @Nullable
@@ -214,22 +188,22 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
         /**
          * Fabricator is active and is processing.
          */
-        PROCESSING(new TranslatableText("ui.galacticraft.machinestatus.processing"), Formatting.GREEN, StatusType.WORKING),
+        PROCESSING(new TranslatableText("ui.galacticraft.machine.status.processing"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Fabricator output slot is full.
          */
-        FULL(new TranslatableText("ui.galacticraft.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableText("ui.galacticraft.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Fabricator does not have the required resources to function.
          */
-        NOT_ENOUGH_RESOURCES(new TranslatableText("ui.galacticraft.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
+        NOT_ENOUGH_RESOURCES(new TranslatableText("ui.galacticraft.machine.status.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
 
         /**
          * The fabricator has no energy.
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machinestatus.not_enough_energy"), Formatting.GRAY, StatusType.MISSING_ENERGY);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machine.status.not_enough_energy"), Formatting.GRAY, StatusType.MISSING_ENERGY);
 
         private final Text text;
         private final StatusType type;

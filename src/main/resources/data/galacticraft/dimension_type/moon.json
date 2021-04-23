@@ -1,7 +1,7 @@
 {
   "logical_height": 256,
-  "infiniburn": "galacticraft-rewoven:infiniburn_moon",
-  "effects": "galacticraft-rewoven:moon",
+  "infiniburn": "galacticraft:infiniburn_moon",
+  "effects": "galacticraft:moon",
   "ambient_light": 0.0,
   "bed_works": false,
   "respawn_anchor_works": false,

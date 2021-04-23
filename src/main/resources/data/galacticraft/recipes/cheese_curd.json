@@ -1,9 +1,9 @@
 {
   "type": "smelting",
   "ingredient": {
-    "item": "galacticraft-rewoven:moon_cheese_ore"
+    "item": "galacticraft:moon_cheese_ore"
   },
-  "result": "galacticraft-rewoven:cheese_curd",
+  "result": "galacticraft:cheese_curd",
   "experience": 0.1,
   "cookingtime": 200
 }

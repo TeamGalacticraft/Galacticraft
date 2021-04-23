@@ -7,22 +7,22 @@
   ],
   "key": {
     "S": {
-      "item": "galacticraft-rewoven:compressed_steel"
+      "item": "galacticraft:compressed_steel"
     },
     "F": {
-      "item": "galacticraft-rewoven:full_solar_panel"
+      "item": "galacticraft:full_solar_panel"
     },
     "P": {
-      "item": "galacticraft-rewoven:steel_pole"
+      "item": "galacticraft:steel_pole"
     },
     "W": {
-      "item": "galacticraft-rewoven:aluminum_wire"
+      "item": "galacticraft:aluminum_wire"
     },
     "A": {
-      "item": "galacticraft-rewoven:basic_wafer"
+      "item": "galacticraft:basic_wafer"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:basic_solar_panel"
+    "item": "galacticraft:basic_solar_panel"
   }
 }

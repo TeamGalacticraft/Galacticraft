@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.render.entity.feature;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.EvolvedSpiderModel;
 import dev.galacticraft.mod.entity.EvolvedSpiderEntity;
 import net.fabricmc.api.EnvType;
@@ -41,7 +41,7 @@ import net.minecraft.util.Identifier;
  */
 @Environment(EnvType.CLIENT)
 public class EvolvedSpiderEyesFeatureRenderer<T extends EvolvedSpiderEntity, M extends EvolvedSpiderModel<T>> extends FeatureRenderer<T, M> {
-    private static final RenderLayer LAYER = RenderLayer.getEyes(new Identifier(Constants.MOD_ID, "textures/entity/evolved/spider_eyes.png"));
+    private static final RenderLayer LAYER = RenderLayer.getEyes(new Identifier(Constant.MOD_ID, "textures/entity/evolved/spider_eyes.png"));
 
     public EvolvedSpiderEyesFeatureRenderer(FeatureRendererContext<T, M> featureRendererContext) {
         super(featureRendererContext);

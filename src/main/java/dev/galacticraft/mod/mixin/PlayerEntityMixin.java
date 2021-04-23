@@ -34,7 +34,7 @@ import org.spongepowered.asm.mixin.Unique;
  */
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin implements GearInventoryProvider {
-    private @Unique final FullFixedItemInv gearInv = new FullFixedItemInv(12);
+    private final @Unique FullFixedItemInv gearInv = new FullFixedItemInv(12);
 
     @Override
     public FullFixedItemInv getGearInv() {

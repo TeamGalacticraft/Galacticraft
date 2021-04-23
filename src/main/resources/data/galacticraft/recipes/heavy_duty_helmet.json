@@ -6,11 +6,11 @@
   ],
   "key": {
     "S": {
-      "item": "galacticraft-rewoven:compressed_steel"
+      "item": "galacticraft:compressed_steel"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:heavy_duty_helmet",
+    "item": "galacticraft:heavy_duty_helmet",
     "count": 1
   }
 }

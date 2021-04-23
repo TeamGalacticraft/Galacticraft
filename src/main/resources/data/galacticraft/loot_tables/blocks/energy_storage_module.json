@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:energy_storage_module"
+          "name": "galacticraft:energy_storage_module"
         }
       ],
       "conditions": [

@@ -2,11 +2,11 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:silicon_block"
+      "item": "galacticraft:silicon_block"
     }
   ],
   "result": {
-    "item": "galacticraft-rewoven:raw_silicon",
+    "item": "galacticraft:raw_silicon",
     "count": 9
   }
 }

@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
-import dev.galacticraft.mod.screen.slot.FilteredSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -34,7 +33,7 @@ import net.minecraft.screen.Property;
  */
 public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCollectorBlockEntity> {
     public OxygenCollectorScreenHandler(int syncId, PlayerEntity player, OxygenCollectorBlockEntity blockEntity) {
-        super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_COLLECTOR_HANDLER);
+        super(syncId, player, blockEntity, GalacticraftScreenHandlerType.OXYGEN_COLLECTOR_HANDLER);
         this.addProperty(new Property() {
             @Override
             public int get() {
@@ -46,7 +45,6 @@ public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCol
                 machine.collectionAmount = value;
             }
         });
-        this.addSlot(new FilteredSlot(blockEntity, OxygenCollectorBlockEntity.CHARGE_SLOT, 13, 69));
         this.addPlayerInventorySlots(0, 99);
     }
 
