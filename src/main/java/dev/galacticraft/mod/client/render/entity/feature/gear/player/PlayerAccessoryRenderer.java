@@ -24,17 +24,14 @@ package dev.galacticraft.mod.client.render.entity.feature.gear.player;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import dev.galacticraft.mod.item.AccessoryItem;
-import dev.galacticraft.mod.item.FrequencyModuleItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.item.Item;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public interface PlayerAccessoryRenderer {
-
     default boolean shouldRenderAccessory(FullFixedItemInv gearInv, Class<? extends AccessoryItem> clazz) {
         return clazz.isInstance(gearInv.getSlot(8).get().getItem()) ||
                clazz.isInstance(gearInv.getSlot(9).get().getItem()) ||
