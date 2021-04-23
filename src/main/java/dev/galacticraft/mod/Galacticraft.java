@@ -109,6 +109,6 @@ public class Galacticraft implements ModInitializer {
 //        CelestialBodyRegistryCallback.EVENT.register(registry -> {
             Registry.register(AddonRegistry.CELESTIAL_BODIES, GalacticraftCelestialBodyType.THE_MOON.getId(), GalacticraftCelestialBodyType.THE_MOON);
 //        });
-        LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
+        LOGGER.info(String.format("Initialization complete. (Took %d ms.)", System.currentTimeMillis() - startInitTime));
     }
 }

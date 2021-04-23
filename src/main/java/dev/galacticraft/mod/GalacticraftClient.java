@@ -30,7 +30,7 @@ import dev.galacticraft.mod.client.network.GalacticraftClientPacketReceiver;
 import dev.galacticraft.mod.client.render.MoonSkyProperties;
 import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.entity.*;
-import dev.galacticraft.mod.client.render.entity.feature.PlayerSpaceGearFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.PlayerFeatureRenderer;
 import dev.galacticraft.mod.client.resource.GalacticraftResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.misc.cape.CapeLoader;
@@ -78,12 +78,12 @@ public class GalacticraftClient implements ClientModInitializer {
         // Render gear on player
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper) -> {
         if (entityRenderer instanceof PlayerEntityRenderer) {
-            registrationHelper.register(new PlayerSpaceGearFeatureRenderer<>(
+            registrationHelper.register(new PlayerFeatureRenderer<>(
                     (PlayerEntityRenderer) entityRenderer, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F,
-                    (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.scale(0.9F, 0.9F, 0.9F),
+                    (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.scale(0.875F, 0.875F, 0.875F),
                     (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {},
                     (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {},
-                    (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.scale(0.8F, 0.8F, 0.8F),
+                    (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.scale(0.75F, 0.75F, 0.75F),
                     false, false, false, false));
         }});
 
@@ -175,6 +175,6 @@ public class GalacticraftClient implements ClientModInitializer {
 
         SkyPropertiesAccessor.getBY_IDENTIFIER().put(new Identifier(Constant.MOD_ID, "moon"), new MoonSkyProperties());
 
-        Galacticraft.LOGGER.info(String.format("Client initialization complete. (Took %.3fms.)", System.currentTimeMillis() - startInitTime));
+        Galacticraft.LOGGER.info(String.format("Client initialization complete. (Took %d ms.)", System.currentTimeMillis() - startInitTime));
     }
 }

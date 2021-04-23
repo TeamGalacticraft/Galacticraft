@@ -39,18 +39,18 @@ import net.minecraft.entity.player.PlayerEntity;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class PlayerSpaceGearFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T>> extends SpaceGearFeatureRenderer<T, M> {
+public class PlayerFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T>> extends SpaceGearFeatureRenderer<T, M> {
 
-    public PlayerSpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms, ModelTransformer<T> leftTankTransforms, ModelTransformer<T> rightTankTransforms, ModelTransformer<T> sensorGlassesTransforms) {
+    public PlayerFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms, ModelTransformer<T> leftTankTransforms, ModelTransformer<T> rightTankTransforms, ModelTransformer<T> sensorGlassesTransforms) {
         super(context, extra, maskTransforms, leftTankTransforms, rightTankTransforms, sensorGlassesTransforms);
     }
-    public PlayerSpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms, ModelTransformer<T> leftTankTransforms, ModelTransformer<T> rightTankTransforms, ModelTransformer<T> sensorGlassesTransforms, boolean isLeftOxygenTankEnabled, boolean isRightOxygenTankEnabled, boolean isOxygenMaskEnabled, boolean isSensorGlassesEnabled) {
+    public PlayerFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms, ModelTransformer<T> leftTankTransforms, ModelTransformer<T> rightTankTransforms, ModelTransformer<T> sensorGlassesTransforms, boolean isLeftOxygenTankEnabled, boolean isRightOxygenTankEnabled, boolean isOxygenMaskEnabled, boolean isSensorGlassesEnabled) {
         super(context, extra, maskTransforms, leftTankTransforms, rightTankTransforms, sensorGlassesTransforms, isLeftOxygenTankEnabled, isRightOxygenTankEnabled, isOxygenMaskEnabled, isSensorGlassesEnabled);
     }
-    public PlayerSpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extraHelmet, float extraTankLeft, float extraTankRight, float extraSensorGlasses, float pivotX, float pivotY, float pivotZ, ModelTransformer<T> maskTransforms, ModelTransformer<T> leftTankTransforms, ModelTransformer<T> rightTankTransforms, ModelTransformer<T> sensorGlassesTransforms) {
+    public PlayerFeatureRenderer(FeatureRendererContext<T, M> context, float extraHelmet, float extraTankLeft, float extraTankRight, float extraSensorGlasses, float pivotX, float pivotY, float pivotZ, ModelTransformer<T> maskTransforms, ModelTransformer<T> leftTankTransforms, ModelTransformer<T> rightTankTransforms, ModelTransformer<T> sensorGlassesTransforms) {
         super(context, extraHelmet, extraTankLeft, extraTankRight, extraSensorGlasses, pivotX, pivotY, pivotZ, maskTransforms, leftTankTransforms, rightTankTransforms, sensorGlassesTransforms);
     }
-    public PlayerSpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extraHelmet, float extraLeftTank, float extraRightTank, float extraSensorGlasses, float pivotX, float pivotY, float pivotZ, ModelTransformer<T> maskTransforms, ModelTransformer<T> leftTankTransforms, ModelTransformer<T> rightTankTransforms, ModelTransformer<T> sensorGlassesTransforms, boolean isOxygenMaskEnabled, boolean isLeftOxygenTankEnabled, boolean isRightOxygenTankEnabled, boolean isSensorGlassesEnabled) {
+    public PlayerFeatureRenderer(FeatureRendererContext<T, M> context, float extraHelmet, float extraLeftTank, float extraRightTank, float extraSensorGlasses, float pivotX, float pivotY, float pivotZ, ModelTransformer<T> maskTransforms, ModelTransformer<T> leftTankTransforms, ModelTransformer<T> rightTankTransforms, ModelTransformer<T> sensorGlassesTransforms, boolean isOxygenMaskEnabled, boolean isLeftOxygenTankEnabled, boolean isRightOxygenTankEnabled, boolean isSensorGlassesEnabled) {
         super(context, extraHelmet, extraLeftTank, extraRightTank, extraSensorGlasses, pivotX, pivotY, pivotZ, maskTransforms, leftTankTransforms, rightTankTransforms, sensorGlassesTransforms, isOxygenMaskEnabled, isLeftOxygenTankEnabled, isRightOxygenTankEnabled, isSensorGlassesEnabled);
     }
 
@@ -58,7 +58,6 @@ public class PlayerSpaceGearFeatureRenderer<T extends PlayerEntity, M extends En
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         FullFixedItemInv gearInv = (FullFixedItemInv) ((GearInventoryProvider) entity).getGearInv();
         this.setOxygenMaskEnabled(gearInv.getSlot(4).get().getItem() instanceof OxygenMaskItem);
-        // todo: add each tank separately
         this.setLeftOxygenTankEnabled(gearInv.getSlot(7).get().getItem() instanceof OxygenTankItem);
         this.setRightOxygenTankEnabled(gearInv.getSlot(6).get().getItem() instanceof OxygenTankItem);
         this.setSensorGlassesEnabled(
