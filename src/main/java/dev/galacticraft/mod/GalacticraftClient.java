@@ -80,7 +80,7 @@ public class GalacticraftClient implements ClientModInitializer {
         if (entityRenderer instanceof PlayerEntityRenderer) {
             registrationHelper.register(new PlayerFeatureRenderer<>(
                     (PlayerEntityRenderer) entityRenderer, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F,
-                    (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.scale(0.875F, 0.875F, 0.875F),
+                    (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.scale(0.825F, 0.825F, 0.825F),
                     (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {},
                     (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {},
                     (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.scale(0.75F, 0.75F, 0.75F),
