@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.client.render.entity.feature.gear.LeftOxygenTankFeatureRenderer;
 import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenMaskFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenTankTextureOffset;
 import dev.galacticraft.mod.client.render.entity.feature.gear.RightOxygenTankFeatureRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.SkeletonEntityRenderer;
@@ -40,8 +41,8 @@ public class EvolvedSkeletonEntityRenderer extends SkeletonEntityRenderer {
                     stack.scale(0.9F, 0.9F, 0.9F);
                 }));
         this.addFeature(new LeftOxygenTankFeatureRenderer<>(this, 0.0F,
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}));
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}, OxygenTankTextureOffset.HEAVY_TANK));
         this.addFeature(new RightOxygenTankFeatureRenderer<>(this, 0.0F,
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}));
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}, OxygenTankTextureOffset.HEAVY_TANK));
     }
 }

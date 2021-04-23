@@ -37,6 +37,7 @@ import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -45,35 +46,70 @@ import net.minecraft.util.Identifier;
 public class LeftOxygenTankFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.GEAR);
     public final ModelTransformer<T> leftTankTransforms;
-    public final ModelPart leftOxygenTank;
+    public final ModelPart leftOxygenTankLight;
+    public final ModelPart leftOxygenTankMedium;
+    public final ModelPart leftOxygenTankHeavy;
+    public final ModelPart leftOxygenTankInfinite;
+    public OxygenTankTextureOffset textureType;
 
-    public LeftOxygenTankFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> leftTankTransforms) {
+    public LeftOxygenTankFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> leftTankTransforms, @NotNull OxygenTankTextureOffset textureType) {
         super(context);
         this.leftTankTransforms = leftTankTransforms;
+        this.textureType = textureType;
 
-        this.leftOxygenTank = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, 20, 0);
-        this.leftOxygenTank.setPivot(0.0F, 2.0F, 0.0F);
-        this.leftOxygenTank.addCuboid(-3.0F, 1.0F, 2.0F, 3, 6, 4, extra);
-
-        ModelPart leftOxygenTankWire = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, 40, 17);
-        leftOxygenTankWire.setPivot(0.0F, 2.0F, 0.0F);
-        leftOxygenTankWire.addCuboid(-2.0F, -3.0F, 0.0F, 1, 5, 8, extra);
-        this.leftOxygenTank.addChild(leftOxygenTankWire);
+        this.leftOxygenTankLight = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, OxygenTankTextureOffset.SMALL_TANK.X, OxygenTankTextureOffset.SMALL_TANK.Y);
+        this.leftOxygenTankLight.setPivot(0.0F, 2.0F, 0.0F);
+        this.leftOxygenTankLight.addCuboid(-3.0F, 1.0F, 2.0F, 3, 6, 4, extra);
+        this.leftOxygenTankMedium = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, OxygenTankTextureOffset.MEDIUM_TANK.X, OxygenTankTextureOffset.MEDIUM_TANK.Y);
+        this.leftOxygenTankMedium.setPivot(0.0F, 2.0F, 0.0F);
+        this.leftOxygenTankMedium.addCuboid(-3.0F, 1.0F, 2.0F, 3, 6, 4, extra);
+        this.leftOxygenTankHeavy = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, OxygenTankTextureOffset.HEAVY_TANK.X, OxygenTankTextureOffset.HEAVY_TANK.Y);
+        this.leftOxygenTankHeavy.setPivot(0.0F, 2.0F, 0.0F);
+        this.leftOxygenTankHeavy.addCuboid(-3.0F, 1.0F, 2.0F, 3, 6, 4, extra);
+        this.leftOxygenTankInfinite = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, OxygenTankTextureOffset.INFINITE_TANK.X, OxygenTankTextureOffset.INFINITE_TANK.Y);
+        this.leftOxygenTankInfinite.setPivot(0.0F, 2.0F, 0.0F);
+        this.leftOxygenTankInfinite.addCuboid(-3.0F, 1.0F, 2.0F, 3, 6, 4, extra);
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(getTexture(entity), true));
         matrices.push();
-        leftTankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
-        leftOxygenTank.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+        this.leftTankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+        switch (this.textureType) {
+            case SMALL_TANK:
+                this.leftOxygenTankLight.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+            case MEDIUM_TANK:
+                this.leftOxygenTankMedium.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+            case HEAVY_TANK:
+                this.leftOxygenTankHeavy.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+            case INFINITE_TANK:
+                this.leftOxygenTankInfinite.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+        }
         matrices.pop();
     }
 
     public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         matrices.push();
-        leftTankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
-        leftOxygenTank.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+        this.leftTankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+        switch (this.textureType) {
+            case SMALL_TANK:
+                this.leftOxygenTankLight.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+            case MEDIUM_TANK:
+                this.leftOxygenTankMedium.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+            case HEAVY_TANK:
+                this.leftOxygenTankHeavy.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+            case INFINITE_TANK:
+                this.leftOxygenTankInfinite.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+                break;
+        }
         matrices.pop();
     }
 
