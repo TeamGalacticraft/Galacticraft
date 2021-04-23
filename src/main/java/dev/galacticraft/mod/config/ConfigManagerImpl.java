@@ -106,8 +106,8 @@ public class ConfigManagerImpl implements ConfigManager {
         );
 
         dB.add(new BooleanToggleBuilder(
-                new TranslatableText(Constants.Config.RESET),
-                new TranslatableText(Constants.Config.HIDE_ALPHA_WARNING),
+                new TranslatableText(Constant.Config.RESET),
+                new TranslatableText(Constant.Config.HIDE_ALPHA_WARNING),
                 this.config.isAlphaWarningHidden())
                 .setSaveConsumer(flag -> this.config.setAlphaWarningHidden(flag))
                 .setDefaultValue(false)

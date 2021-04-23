@@ -1,6 +1,6 @@
 package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(TitleScreen.class)
 public abstract class AlphaWarningTitleScreenMixin extends Screen {
     private boolean warningHidden = false;
-    private static final Identifier ALPHA_WARNING_GC_TEXTURE = new Identifier(Constants.MOD_ID, "textures/gui/alpha_warning.png");
+    private static final Identifier ALPHA_WARNING_GC_TEXTURE = new Identifier(Constant.MOD_ID, "textures/gui/alpha_warning.png");
     private static final TranslatableText ALPHA_WARNING_GC_HEADER = new TranslatableText("ui.galacticraft.alpha_warning.header");
     private static final TranslatableText ALPHA_WARNING_GC_CONTENT1 = new TranslatableText("ui.galacticraft.alpha_warning.content1");
     private static final TranslatableText ALPHA_WARNING_GC_CONTENT2 = new TranslatableText("ui.galacticraft.alpha_warning.content2");
@@ -34,7 +34,7 @@ public abstract class AlphaWarningTitleScreenMixin extends Screen {
 
     @Inject(method = "init()V", at = @At("TAIL"))
     protected void init(CallbackInfo ci) {
-        if (Galacticraft.configManager.get().isAlphaWarningHidden()) {
+        if (Galacticraft.CONFIG_MANAGER.get().isAlphaWarningHidden()) {
             warningHidden = true;
         }
     }
