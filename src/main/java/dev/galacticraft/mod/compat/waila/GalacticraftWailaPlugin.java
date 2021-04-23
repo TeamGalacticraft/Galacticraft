@@ -54,7 +54,6 @@ public class GalacticraftWailaPlugin implements IWailaPlugin {
         registrar.registerBlockDataProvider((data, player, world, blockEntity) -> {
             ((MachineBlockEntity) blockEntity).getConfiguration().toClientTag(data, player);
         }, MachineBlock.class);
-
         registrar.registerComponentProvider(COMPONENT_PROVIDER, TooltipPosition.TAIL, MachineBlock.class);
     }
 }

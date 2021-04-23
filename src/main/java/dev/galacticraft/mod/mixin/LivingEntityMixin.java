@@ -56,12 +56,12 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isSubmergedIn(Lnet/minecraft/tag/Tag;)Z", ordinal = 0))
-    private boolean checkOxygenAtmosphere_gcr(LivingEntity entity, Tag<Fluid> tag) {
+    private boolean checkOxygenAtmosphere_gc(LivingEntity entity, Tag<Fluid> tag) {
         return entity.isSubmergedIn(tag) || !((WorldOxygenAccessor) this.world).isBreathable(entity.getBlockPos().offset(Direction.UP, (int)Math.floor(entity.getEyeHeight(entity.getPose(), entity.getDimensions(entity.getPose())))));
     }
 
     @Inject(method = "getNextAirUnderwater", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;getRespiration(Lnet/minecraft/entity/LivingEntity;)I"), cancellable = true)
-    private void overrideOxygen_gcr(int air, CallbackInfoReturnable<Integer> ci) {
+    private void overrideOxygen_gc(int air, CallbackInfoReturnable<Integer> ci) {
         EntityAttributeInstance attribute = ((LivingEntity)(Object)this).getAttributeInstance(GalacticraftEntityAttribute.CAN_BREATHE_IN_SPACE);
         if (attribute != null && attribute.getValue() >= 0.99D) {
             ci.setReturnValue(this.getNextAirOnLand(air));

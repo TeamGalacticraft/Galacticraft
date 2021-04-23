@@ -48,9 +48,9 @@ import java.util.Optional;
  */
 public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
 
-    String DOT_REP = "_gcr_dot_";
-    String DASH_REP = "_gcr_dash__"; // yes this is bad.... but who's gonna name a mod/fluid something like that
-    String COLON_REP = "_gcr_colon_";
+    String DOT_REP = "_gc_dot_";
+    String DASH_REP = "_gc_dash__"; // yes this is bad.... but who's gonna name a mod/fluid something like that
+    String COLON_REP = "_gc_colon_";
 
     Property<Identifier> FLUID = new Property<Identifier>("fluid", Identifier.class) {
         private final List<Identifier> VALUES = new LinkedList<>();

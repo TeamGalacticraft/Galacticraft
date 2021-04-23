@@ -50,15 +50,14 @@ import java.util.UUID;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftCommand {
-
-    private static final HashMap<UUID,Integer> GCR_HOUSTON_TIMERS = new HashMap<>();
-    private static final int GCR_HOUSTON_TIMER_LENGTH = 12 * 20; // seconds * tps
+    private static final HashMap<UUID,Integer> GC_HOUSTON_TIMERS = new HashMap<>();
+    private static final int GC_HOUSTON_TIMER_LENGTH = 12 * 20; // seconds * tps
 
     public static void register() {
         CommandRegistrationCallback.EVENT.register((commandDispatcher, b) -> {
 
             commandDispatcher.register(
-                    CommandManager.literal("gcrhouston")
+                    CommandManager.literal("gchouston")
                     .executes(GalacticraftCommand::teleportToEarth));
 
             /* This looks convoluted, but it works. Essentially, it registers three branches of the same command.
@@ -92,7 +91,7 @@ public class GalacticraftCommand {
             commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimensiontp_pos));
 
             commandDispatcher.register(
-                    CommandManager.literal("gcrlistbodies")
+                    CommandManager.literal("gclistbodies")
                     .executes(GalacticraftCommand::listBodies));
         });
     }
@@ -100,15 +99,15 @@ public class GalacticraftCommand {
     private static int teleportToEarth(CommandContext<ServerCommandSource> context) {
         final int[] retval = new int[]{Command.SINGLE_SUCCESS};
         // Clear the expired timers
-        for (UUID id : GCR_HOUSTON_TIMERS.keySet()) {
-            if (GCR_HOUSTON_TIMERS.get(id) + GCR_HOUSTON_TIMER_LENGTH < context.getSource().getMinecraftServer().getTicks()) {
-                GCR_HOUSTON_TIMERS.remove(id);
+        for (UUID id : GC_HOUSTON_TIMERS.keySet()) {
+            if (GC_HOUSTON_TIMERS.get(id) + GC_HOUSTON_TIMER_LENGTH < context.getSource().getMinecraftServer().getTicks()) {
+                GC_HOUSTON_TIMERS.remove(id);
             }
         }
         context.getSource().getMinecraftServer().execute(() -> {
             try {
                 if (!CelestialBodyType.getByDimType(context.getSource().getWorld().getRegistryKey()).isPresent()) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.gcrhouston.cannot_detect_signal").setStyle(Constant.Text.RED_STYLE));
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft.gchouston.cannot_detect_signal").setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
                     return;
                 }
@@ -119,16 +118,16 @@ public class GalacticraftCommand {
                     retval[0] = -1;
                     return;
                 } else if (context.getSource().getWorld().equals(serverWorld)) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.gcrhouston.on_earth_already").setStyle(Constant.Text.RED_STYLE));
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft.gchouston.on_earth_already").setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
                     return;
                 }
                 UUID playerID = context.getSource().getPlayer().getGameProfile().getId();
-                if (!GCR_HOUSTON_TIMERS.containsKey(playerID)) {
-                    GCR_HOUSTON_TIMERS.put(playerID, context.getSource().getMinecraftServer().getTicks());
-                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.gcrhouston.confirm", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.RED_STYLE), false);
-                } else if (GCR_HOUSTON_TIMERS.get(playerID) + GCR_HOUSTON_TIMER_LENGTH > context.getSource().getMinecraftServer().getTicks()) {
-                    GCR_HOUSTON_TIMERS.remove(playerID);
+                if (!GC_HOUSTON_TIMERS.containsKey(playerID)) {
+                    GC_HOUSTON_TIMERS.put(playerID, context.getSource().getMinecraftServer().getTicks());
+                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.gchouston.confirm", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.RED_STYLE), false);
+                } else if (GC_HOUSTON_TIMERS.get(playerID) + GC_HOUSTON_TIMER_LENGTH > context.getSource().getMinecraftServer().getTicks()) {
+                    GC_HOUSTON_TIMERS.remove(playerID);
                     BlockPos pos = getValidTeleportPos(serverWorld, player);
                     player.teleport(serverWorld,
                             pos.getX(),
@@ -136,7 +135,7 @@ public class GalacticraftCommand {
                             pos.getZ(),
                             player.yaw,
                             player.pitch);
-                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.gcrhouston.success", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.GREEN_STYLE), true);
+                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.gchouston.success", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.GREEN_STYLE), true);
                 }
             } catch (CommandSyntaxException e) {
                 context.getSource().sendError(new TranslatableText("commands.galacticraft.gchouston.error").setStyle(Constant.Text.RED_STYLE));
