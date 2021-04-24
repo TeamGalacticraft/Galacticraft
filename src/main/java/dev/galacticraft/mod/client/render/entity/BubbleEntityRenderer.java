@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
 import dev.galacticraft.mod.entity.BubbleEntity;
 import dev.monarkhes.myron.api.Myron;
@@ -42,7 +42,7 @@ import net.minecraft.util.Identifier;
  */
 @Environment(EnvType.CLIENT)
 public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
-    private static final Identifier MODEL = new Identifier(Constants.MOD_ID, "models/misc/sphere");
+    private static final Identifier MODEL = new Identifier(Constant.MOD_ID, "models/misc/sphere");
     public static BakedModel bubbleModel = null;
 
     public BubbleEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {

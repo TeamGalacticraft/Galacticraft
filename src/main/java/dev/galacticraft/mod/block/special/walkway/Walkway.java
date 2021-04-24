@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.special.walkway;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -69,7 +69,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
                 .with(UP, false)
                 .with(DOWN, false)
                 .with(FACING, Direction.UP)
-                .with(FLUID, Constants.Misc.EMPTY)
+                .with(FLUID, Constant.Misc.EMPTY)
                 .with(FlowableFluid.LEVEL, 8));
     }
 
@@ -203,7 +203,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
     }
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (!state.get(FLUID).equals(Constants.Misc.EMPTY)) {
+        if (!state.get(FLUID).equals(Constant.Misc.EMPTY)) {
             world.getFluidTickScheduler().schedule(pos, Registry.FLUID.get(state.get(FLUID)), Registry.FLUID.get(state.get(FLUID)).getTickRate(world));
         }
         return state.with(getPropForDir(facing), this.canConnect(state, neighborState, pos, neighborPos));

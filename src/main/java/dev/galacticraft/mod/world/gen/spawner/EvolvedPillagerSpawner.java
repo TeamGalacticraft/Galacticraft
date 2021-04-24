@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.world.gen.spawner;
 
-import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
+import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.PatrolEntity;
@@ -117,12 +117,12 @@ public class EvolvedPillagerSpawner implements Spawner {
     */
    private boolean spawnPillager(ServerWorld world, BlockPos pos, Random random, boolean captain) {
       BlockState blockState = world.getBlockState(pos);
-      if (!SpawnHelper.isClearForSpawn(world, pos, blockState, blockState.getFluidState(), GalacticraftEntityTypes.EVOLVED_PILLAGER)) {
+      if (!SpawnHelper.isClearForSpawn(world, pos, blockState, blockState.getFluidState(), GalacticraftEntityType.EVOLVED_PILLAGER)) {
          return false;
-      } else if (!PatrolEntity.canSpawn(GalacticraftEntityTypes.EVOLVED_PILLAGER, world, SpawnReason.PATROL, pos, random)) {
+      } else if (!PatrolEntity.canSpawn(GalacticraftEntityType.EVOLVED_PILLAGER, world, SpawnReason.PATROL, pos, random)) {
          return false;
       } else {
-         PatrolEntity patrolEntity = GalacticraftEntityTypes.EVOLVED_PILLAGER.create(world);
+         PatrolEntity patrolEntity = GalacticraftEntityType.EVOLVED_PILLAGER.create(world);
          if (patrolEntity != null) {
             if (captain) {
                patrolEntity.setPatrolLeader(true);

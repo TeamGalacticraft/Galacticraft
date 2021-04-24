@@ -30,13 +30,13 @@ import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
 import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
 import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
-import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
+import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.entity.RocketEntity;
-import dev.galacticraft.mod.items.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItems;
 import dev.galacticraft.mod.recipe.GalacticraftRecipes;
 import dev.galacticraft.mod.recipe.RocketAssemblerRecipe;
 import dev.galacticraft.mod.util.EnergyUtils;
@@ -100,7 +100,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
 
         });
         
-        fakeEntity = new RocketEntity(GalacticraftEntityTypes.ROCKET, null);
+        fakeEntity = new RocketEntity(GalacticraftEntityType.ROCKET, null);
     }
 
     private void schematicUpdate(ItemStack prev, ItemStack current) {
@@ -347,7 +347,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
 
     @Override
     public void fromClientTag(CompoundTag compoundTag) {
-        this.fromTag(GalacticraftBlocks.ROCKET_ASSEMBLER.getDefaultState(), compoundTag);
+        this.fromTag(GalacticraftBlock.ROCKET_ASSEMBLER.getDefaultState(), compoundTag);
     }
 
     @Override

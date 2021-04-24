@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.mod.block.entity.BasicSolarPanelBlockEntity;
-import dev.galacticraft.mod.screen.slot.FilteredSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -33,9 +32,8 @@ import net.minecraft.network.PacketByteBuf;
  */
 public class BasicSolarPanelScreenHandler extends MachineScreenHandler<BasicSolarPanelBlockEntity> {
     public BasicSolarPanelScreenHandler(int syncId, PlayerEntity player, BasicSolarPanelBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.BASIC_SOLAR_PANEL_HANDLER);
+        super(syncId, player, machine, GalacticraftScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER);
 
-        this.addSlot(new FilteredSlot(machine, BasicSolarPanelBlockEntity.CHARGE_SLOT, 8, 62));
         this.addPlayerInventorySlots(0, 84);
     }
 

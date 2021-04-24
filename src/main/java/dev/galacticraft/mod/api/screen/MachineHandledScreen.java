@@ -22,40 +22,66 @@
 
 package dev.galacticraft.mod.api.screen;
 
-import com.google.common.collect.Lists;
-import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.SideOption;
-import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
+import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.misc.Reference;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Either;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.AutomationType;
+import dev.galacticraft.mod.api.block.ConfiguredMachineFace;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.util.BlockFace;
+import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
+import dev.galacticraft.mod.api.machine.SecurityInfo;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.client.gui.widget.machine.AbstractWidget;
-import dev.galacticraft.mod.items.GalacticraftItems;
+import dev.galacticraft.mod.client.model.MachineBakedModel;
+import dev.galacticraft.mod.item.GalacticraftItems;
 import dev.galacticraft.mod.screen.MachineScreenHandler;
-import dev.galacticraft.mod.util.DrawableUtils;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.screen.tank.Tank;
+import dev.galacticraft.mod.util.ColorUtil;
+import dev.galacticraft.mod.util.DrawableUtil;
+import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.*;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.*;
-import net.minecraft.util.Formatting;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.OrderedText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Matrix4f;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 
@@ -63,98 +89,143 @@ import java.util.*;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public abstract class MachineHandledScreen<C extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> extends HandledScreen<C> {
-    public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
-    public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
-    public static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
+public abstract class MachineHandledScreen<C extends MachineScreenHandler<? extends MachineBlockEntity>> extends HandledScreen<C> implements DrawableUtil {
+    private static final ItemStack REDSTONE = new ItemStack(Items.REDSTONE);
+    private static final ItemStack UNLIT_TORCH = new ItemStack(GalacticraftItems.UNLIT_TORCH);
+    private static final ItemStack REDSTONE_TORCH = new ItemStack(Items.REDSTONE_TORCH);
+    private static final ItemStack WRENCH = new ItemStack(GalacticraftItems.STANDARD_WRENCH);
+    private static final ItemStack ALUMINUM_WIRE = new ItemStack(GalacticraftBlock.ALUMINUM_WIRE);
 
-    public static final int PANEL_WIDTH = 99;
-    public static final int PANEL_HEIGHT = 91;
+    public static final int PANEL_WIDTH = 100;
+    public static final int PANEL_HEIGHT = 93;
     public static final int TAB_WIDTH = 22;
     public static final int TAB_HEIGHT = 22;
 
-    private static final int BUTTON_X = 0;
-    private static final int BUTTON_OFF_Y = 240;
-    private static final int BUTTON_ON_Y = 224;
+    private static final int SPACING = 4;
 
-    private static final int ICONS_WIDTH = 16;
-    private static final int ICONS_HEIGHT = 16;
+    private static final int BUTTON_U = 0;
+    private static final int BUTTON_V = 208;
+    private static final int BUTTON_HOVERED_V = 224;
+    private static final int BUTTON_PRESSED_V = 240;
+    private static final int BUTTON_WIDTH = 16;
+    private static final int BUTTON_HEIGHT = 16;
 
-    private static final int ICON_LOCK_OWNER_X = 208;
-    private static final int ICON_LOCK_OWNER_Y = 48;
+    private static final int ICON_WIDTH = 16;
+    private static final int ICON_HEIGHT = 16;
 
-    private static final int ICON_LOCK_PARTY_X = 224;
-    private static final int ICON_LOCK_PARTY_Y = 48;
+    private static final int ICON_LOCK_PRIVATE_U = 221;
+    private static final int ICON_LOCK_PRIVATE_V = 47;
 
-    private static final int ICON_LOCK_PUBLIC_X = 208;
-    private static final int ICON_LOCK_PUBLIC_Y = 64;
+    private static final int ICON_LOCK_PARTY_U = 204;
+    private static final int ICON_LOCK_PARTY_V = 64;
 
-    private static final int ICON_REDSTONE_TORCH_OFF_X = 224;
-    private static final int ICON_REDSTONE_TORCH_OFF_Y = 62;
+    private static final int ICON_LOCK_PUBLIC_U = 204;
+    private static final int ICON_LOCK_PUBLIC_V = 47;
 
-    private static final int TAB_REDSTONE_X = 0;
-    private static final int TAB_REDSTONE_Y = 46;
+    private static final int TAB_REDSTONE_U = 203;
+    private static final int TAB_REDSTONE_V = 0;
 
-    private static final int TAB_CONFIG_X = 0;
-    private static final int TAB_CONFIG_Y = 69;
+    private static final int TAB_CONFIG_U = 203;
+    private static final int TAB_CONFIG_V = 23;
 
-    private static final int TAB_SECURITY_X = 23;
-    private static final int TAB_SECURITY_Y = 23;
+    private static final int TAB_STATS_U = 226;
+    private static final int TAB_STATS_V = 0;
 
-    private static final int PANEL_REDSTONE_X = 0;
-    private static final int PANEL_REDSTONE_Y = 0;
+    private static final int TAB_SECURITY_U = 226;
+    private static final int TAB_SECURITY_V = 23;
 
-    private static final int PANEL_CONFIG_X = 0;
-    private static final int PANEL_CONFIG_Y = 93;
+    private static final int PANEL_REDSTONE_U = 0;
+    private static final int PANEL_REDSTONE_V = 0;
 
-    private static final int PANEL_SECURITY_X = 101;
-    private static final int PANEL_SECURITY_Y = 0;
+    private static final int PANEL_CONFIG_U = 0;
+    private static final int PANEL_CONFIG_V = 93;
 
-    private static final int CONFIG_BUTTON_SPACING = 19;
-    private static final int BASE_CONFIG_BUTTON_X = (-PANEL_WIDTH) + 35;
-    private static final int BASE_CONFIG_BUTTON_Y = 70;
+    private static final int PANEL_STATS_U = 101;
+    private static final int PANEL_STATS_V = 0;
+
+    private static final int PANEL_SECURITY_U = 101;
+    private static final int PANEL_SECURITY_V = 93;
+
+    public static final int PANEL_ICON_X = 3;
+    public static final int PANEL_ICON_Y = 3;
+
+    public static final int PANEL_TITLE_X = 19;
+    public static final int PANEL_TITLE_Y = 7;
+
+    private static final int REDSTONE_IGNORE_X = 18;
+    private static final int REDSTONE_IGNORE_Y = 30;
+    
+    private static final int REDSTONE_LOW_X = 43;
+    private static final int REDSTONE_LOW_Y = 30;
+
+    private static final int REDSTONE_HIGH_X = 68;
+    private static final int REDSTONE_HIGH_Y = 30;
+
+    private static final int SECURITY_PUBLIC_X = 18;
+    private static final int SECURITY_PUBLIC_Y = 30;
+
+    private static final int SECURITY_TEAM_X = 43;
+    private static final int SECURITY_TEAM_Y = 30;
+
+    private static final int SECURITY_PRIVATE_X = 68;
+    private static final int SECURITY_PRIVATE_Y = 30;
+
+    private static final int TOP_FACE_X = 33;
+    private static final int TOP_FACE_Y = 26;
+
+    private static final int LEFT_FACE_X = 52;
+    private static final int LEFT_FACE_Y = 45;
+
+    private static final int FRONT_FACE_X = 33;
+    private static final int FRONT_FACE_Y = 45;
+
+    private static final int RIGHT_FACE_X = 14;
+    private static final int RIGHT_FACE_Y = 45;
+
+    private static final int BACK_FACE_X = 71;
+    private static final int BACK_FACE_Y = 45;
+
+    private static final int BOTTOM_FACE_X = 33;
+    private static final int BOTTOM_FACE_Y = 64;
+
+    private static final int OWNER_FACE_X = 6;
+    private static final int OWNER_FACE_Y = 20;
+
+    private static final int OWNER_FACE_WIDTH = 32;
+    private static final int OWNER_FACE_HEIGHT = 32;
+    private static final int PANEL_UPPER_HEIGHT = 20;
+
+    private static final int REDSTONE_STATE_TEXT_X = 11;
+    private static final int REDSTONE_STATE_TEXT_Y = 53;
+
+    private static final int REDSTONE_STATUS_TEXT_X = 11;
+    private static final int REDSTONE_STATUS_TEXT_Y = 57; //add fontheight
+
+    private static final int SECURITY_STATE_TEXT_X = 11;
+    private static final int SECURITY_STATE_TEXT_Y = 53;
 
     protected final BlockPos pos;
     protected final World world;
+    protected Tank focusedTank = null;
+
     private final List<AbstractWidget> widgets = new LinkedList<>();
 
-    public boolean securityOpen = false;
-    public boolean redstoneOpen = false;
-    public boolean configOpen = false;
+    private @NotNull Identifier ownerSkin = new Identifier("textures/entity/steve.png");
+    private final MachineBakedModel.SpriteProvider spriteProvider;
+    private final List<Text> tooltipCache = new LinkedList<>();
 
-    private final Map<BlockFace, SideOption> config = new EnumMap<>(BlockFace.class);
-
-    public MachineHandledScreen(C screenHandler, PlayerInventory playerInventory, World world, BlockPos pos, Text textComponent) {
-        super(screenHandler, playerInventory, textComponent);
+    public MachineHandledScreen(C handler, PlayerInventory playerInventory, World world, BlockPos pos, Text textComponent) {
+        super(handler, playerInventory, textComponent);
         this.pos = pos;
         this.world = world;
 
-        ConfigurableMachineBlockEntity.SecurityInfo security = this.handler.machine.getSecurity();
-        if (!security.hasOwner()) {
-            security.setOwner(this.playerInventory.player);
-            security.setPublicity(ConfigurableMachineBlockEntity.SecurityInfo.Publicity.PRIVATE);
-            sendSecurityUpdate(this.handler.machine);
-        } else if (security.getOwner().equals(playerInventory.player.getUuid())
-                && !security.getUsername().equals(playerInventory.player.getEntityName())) {
-            security.setUsername(playerInventory.player.getEntityName());
-            sendSecurityUpdate(this.handler.machine);
-        }
+        this.spriteProvider = MachineBakedModel.SPRITE_PROVIDERS.getOrDefault(handler.machine.getCachedState() == null ? world.getBlockState(pos).getBlock() : handler.machine.getCachedState().getBlock(), MachineBakedModel.SpriteProvider.DEFAULT);
 
-        for (BlockFace face : Constants.Misc.BLOCK_FACES) {
-            config.put(face, screenHandler.machine.getSideConfiguration().get(face).getOption());
-        }
-    }
-
-    private void sendSecurityUpdate(ConfigurableMachineBlockEntity entity) {
-        if (this.playerInventory.player.getUuid().equals(entity.getSecurity().getOwner()) || !entity.getSecurity().hasOwner()) {
-            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "security"),
-                    new PacketByteBuf(Unpooled.buffer())
-                            .writeBlockPos(pos)
-                            .writeEnumConstant(entity.getSecurity().getPublicity())
-            );
-        } else {
-            Galacticraft.logger.error("Tried to send security update when not the owner!");
-        }
+        MinecraftClient.getInstance().getSkinProvider().loadSkin(handler.machine.getSecurity().getOwner(), (type, identifier, texture) -> {
+            if (type == MinecraftProfileTexture.Type.SKIN && identifier != null) {
+                MachineHandledScreen.this.ownerSkin = identifier;
+            }
+        }, true);
     }
 
     @NotNull
@@ -162,419 +233,448 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         return Collections.emptyList();
     }
 
-    public void drawConfigTabs(MatrixStack matrices, int mouseX, int mouseY) {
+    public void drawConfigTabs(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         DiffuseLighting.disable();
+        assert this.client != null;
         if (this.handler.machine != null) {
-            final ConfigurableMachineBlockEntity entity = this.handler.machine;
+            final MachineBlockEntity machine = this.handler.machine;
+            boolean secondary = false;
+            this.client.getTextureManager().bindTexture(Constant.ScreenTexture.MACHINE_CONFIG_PANELS);
+            for (Tab tab : Tab.values()) { // 0, 1, 2, 3
+                if (secondary) matrices.translate(0, SPACING, 0);
+                this.drawTexture(matrices, this.x + (tab.isLeft() ? tab.isOpen() ? -PANEL_WIDTH : -22 : this.backgroundWidth), this.y + (secondary ? Tab.values()[tab.ordinal() - 1].isOpen() ? PANEL_HEIGHT : TAB_HEIGHT : 0) + SPACING, tab.getU(), tab.getV(), tab.isOpen() ? PANEL_WIDTH : TAB_WIDTH, tab.isOpen() ? PANEL_HEIGHT : TAB_HEIGHT);
+                if (secondary) matrices.translate(0, -SPACING, 0);
+                secondary = !secondary;
+            }
+            matrices.push();
+            matrices.translate(this.x, this.y, 0);
 
-            if (redstoneOpen) {
-                this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
-                this.drawTexture(matrices, this.x - PANEL_WIDTH, this.y + 3, PANEL_REDSTONE_X, PANEL_REDSTONE_Y, PANEL_WIDTH, PANEL_HEIGHT);
+            if (Tab.REDSTONE.isOpen()) {
+                matrices.push();
+                matrices.translate(-PANEL_WIDTH, SPACING, 0);
+                this.drawButton(matrices, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.IGNORE);
+                this.drawButton(matrices, REDSTONE_LOW_X, REDSTONE_LOW_Y, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.LOW);
+                this.drawButton(matrices, REDSTONE_HIGH_X, REDSTONE_HIGH_Y, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.HIGH);
+                this.renderItemIcon(matrices, PANEL_ICON_X, PANEL_ICON_Y, REDSTONE);
+                this.renderItemIcon(matrices, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, REDSTONE);
+                this.renderItemIcon(matrices, REDSTONE_LOW_X, REDSTONE_LOW_Y - 2, UNLIT_TORCH);
+                this.renderItemIcon(matrices, REDSTONE_HIGH_X, REDSTONE_HIGH_Y - 2, REDSTONE_TORCH);
 
-                this.drawTexture(matrices, this.x - PANEL_WIDTH + 21, this.y + 26, BUTTON_X, BUTTON_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
-                this.drawTexture(matrices, this.x - PANEL_WIDTH + 21 + 22, this.y + 26, BUTTON_X, BUTTON_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
-                this.drawTexture(matrices, this.x - PANEL_WIDTH + 21 + 44, this.y + 26, BUTTON_X, BUTTON_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
+                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.redstone")
+                        .setStyle(Constant.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtil.WHITE);
+                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.redstone.state",
+                        machine.getRedstoneInteraction().getName()).setStyle(Constant.Text.DARK_GRAY_STYLE), REDSTONE_STATE_TEXT_X, REDSTONE_STATE_TEXT_Y, ColorUtil.WHITE);
+                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.redstone.status",
+                        !machine.disabled() ? new TranslatableText("ui.galacticraft.machine.redstone.status.enabled").setStyle(Constant.Text.GREEN_STYLE)
+                                : new TranslatableText("ui.galacticraft.machine.redstone.status.disabled").setStyle(Constant.Text.DARK_RED_STYLE))
+                        .setStyle(Constant.Text.DARK_GRAY_STYLE), REDSTONE_STATUS_TEXT_X, REDSTONE_STATUS_TEXT_Y + this.textRenderer.fontHeight, ColorUtil.WHITE);
 
-                switch (entity.getRedstone()) {
-                    case IGNORE:
-                        this.drawTexture(matrices, this.x - PANEL_WIDTH + 21, this.y + 26, BUTTON_X, BUTTON_ON_Y, ICONS_WIDTH, ICONS_HEIGHT);
-                        break;
-                    case OFF:
-                        this.drawTexture(matrices, this.x - PANEL_WIDTH + 43, this.y + 26, BUTTON_X, BUTTON_ON_Y, ICONS_WIDTH, ICONS_HEIGHT);
-                        break;
-                    case ON:
-                        this.drawTexture(matrices, this.x - PANEL_WIDTH + 65, this.y + 26, BUTTON_X, BUTTON_ON_Y, ICONS_WIDTH, ICONS_HEIGHT);
-                        break;
+                matrices.pop();
+            }
+            if (Tab.CONFIGURATION.isOpen()) {
+                matrices.push();
+                matrices.translate(-PANEL_WIDTH, TAB_HEIGHT + SPACING + SPACING, 0);
+                this.renderItemIcon(matrices, PANEL_ICON_X, PANEL_ICON_Y, WRENCH);
+                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.configuration")
+                        .setStyle(Constant.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtil.WHITE);
+
+                this.client.getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+                this.drawMachineFace(matrices, TOP_FACE_X, TOP_FACE_Y, machine, BlockFace.TOP);
+                this.drawMachineFace(matrices, LEFT_FACE_X, LEFT_FACE_Y, machine, BlockFace.LEFT);
+                this.drawMachineFace(matrices, FRONT_FACE_X, FRONT_FACE_Y, machine, BlockFace.FRONT);
+                this.drawMachineFace(matrices, RIGHT_FACE_X, RIGHT_FACE_Y, machine, BlockFace.RIGHT);
+                this.drawMachineFace(matrices, BACK_FACE_X, BACK_FACE_Y, machine, BlockFace.BACK);
+                this.drawMachineFace(matrices, BOTTOM_FACE_X, BOTTOM_FACE_Y, machine, BlockFace.BOTTOM);
+                matrices.pop();
+            }
+            if (Tab.STATS.isOpen()) {
+                matrices.push();
+                matrices.translate(this.backgroundWidth, SPACING, 0);
+                this.renderItemIcon(matrices, PANEL_ICON_X, PANEL_ICON_Y, ALUMINUM_WIRE);
+                this.client.getTextureManager().bindTexture(this.ownerSkin);
+                drawTexture(matrices, OWNER_FACE_X, OWNER_FACE_Y, OWNER_FACE_WIDTH, OWNER_FACE_HEIGHT, 8, 8, 8, 8, 64, 64);
+                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.stats")
+                        .setStyle(Constant.Text.GREEN_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtil.WHITE);
+                List<OrderedText> text = this.textRenderer.wrapLines(new TranslatableText((machine.getCachedState() != null ? machine.getCachedState()
+                        : this.handler.machine.getCachedState()).getBlock().getTranslationKey()), 64);
+                int offsetY = 0;
+                for (OrderedText orderedText : text) {
+                    this.textRenderer.draw(matrices, orderedText, 40, 22 + offsetY, ColorUtil.WHITE);
+                    offsetY += this.textRenderer.fontHeight + 2;
                 }
-
-                this.drawTexture(matrices, this.x - PANEL_WIDTH + 43, this.y + 23, ICON_REDSTONE_TORCH_OFF_X, ICON_REDSTONE_TORCH_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
-
-                drawStringWithShadow(matrices, this.textRenderer, I18n.translate("ui.galacticraft.tabs.redstone_activation_config"), this.x - PANEL_WIDTH + 23, this.y + 12, Formatting.GRAY.getColorValue());
-                DiffuseLighting.enableGuiDepthLighting();
-                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.REDSTONE), this.x - PANEL_WIDTH + 6, this.y + 7);
-                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.GUNPOWDER), this.x - PANEL_WIDTH + 6 + 15, this.y + 26);
-                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.REDSTONE_TORCH), this.x - PANEL_WIDTH + 6 + 15 + 15, this.y + 25 - 2);
-                DiffuseLighting.disableGuiDepthLighting();
-            } else {
-                this.client.getTextureManager().bindTexture(TABS_TEXTURE);
-                this.drawTexture(matrices, this.x - TAB_WIDTH, this.y + 3, TAB_REDSTONE_X, TAB_REDSTONE_Y, TAB_WIDTH, TAB_HEIGHT);
-                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.REDSTONE), this.x - TAB_WIDTH + 4, this.y + 6);
+//                this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.machine.stats.gjt", "N/A")
+//                        .setStyle(Constant.Text.GRAY_STYLE), 11, 54, ColorUtils.WHITE);
+                //                this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.machine.stats.todo", "N/A")
+//                        .setStyle(Constant.Text.GRAY_STYLE), 11, 54, ColorUtils.WHITE);
+                matrices.pop();
             }
 
-            if (configOpen) {
-                this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
-                this.drawTexture(matrices, this.x - PANEL_WIDTH, this.y + 26, PANEL_CONFIG_X, PANEL_CONFIG_Y, PANEL_WIDTH, PANEL_HEIGHT);
+            if (Tab.SECURITY.isOpen()) {
+                matrices.push();
+                matrices.translate(this.backgroundWidth, TAB_HEIGHT + SPACING + SPACING, 0);
+                this.client.getTextureManager().bindTexture(Constant.ScreenTexture.MACHINE_CONFIG_PANELS);
+                this.drawTexture(matrices, PANEL_ICON_X, PANEL_ICON_Y, ICON_LOCK_PRIVATE_U, ICON_LOCK_PRIVATE_V, ICON_WIDTH, ICON_HEIGHT);
 
-                { // CONFIGURABLE SIDE BUTTONS
-                    this.drawTexture(matrices, this.x + BASE_CONFIG_BUTTON_X, this.y + BASE_CONFIG_BUTTON_Y - 18, getX(config.get(BlockFace.TOP), false), getY(config.get(BlockFace.TOP)), ICONS_WIDTH, ICONS_HEIGHT); //TOP - Top
-                    this.drawTexture(matrices, this.x + BASE_CONFIG_BUTTON_X, this.y + BASE_CONFIG_BUTTON_Y + 18, getX(config.get(BlockFace.BOTTOM), false), getY(config.get(BlockFace.BOTTOM)), ICONS_WIDTH, ICONS_HEIGHT); //BOTTOM - BOTTOM
-                    this.drawTexture(matrices, this.x + BASE_CONFIG_BUTTON_X, this.y + BASE_CONFIG_BUTTON_Y, getX(config.get(BlockFace.FRONT), true), getY(config.get(BlockFace.FRONT)), ICONS_WIDTH, ICONS_HEIGHT); //CENTER LEFT-CENTER - Front
-                    this.drawTexture(matrices, this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING, this.y + BASE_CONFIG_BUTTON_Y, getX(config.get(BlockFace.LEFT), true), getY(config.get(BlockFace.LEFT)), ICONS_WIDTH, ICONS_HEIGHT); //CENTER RIGHT-CENTER - left
-                    this.drawTexture(matrices, this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING + CONFIG_BUTTON_SPACING, this.y + BASE_CONFIG_BUTTON_Y, getX(config.get(BlockFace.BACK), true), getY(config.get(BlockFace.BACK)), ICONS_WIDTH, ICONS_HEIGHT); //RIGHT - Back
-                    this.drawTexture(matrices, this.x + BASE_CONFIG_BUTTON_X - CONFIG_BUTTON_SPACING, this.y + BASE_CONFIG_BUTTON_Y, getX(config.get(BlockFace.RIGHT), true), getY(config.get(BlockFace.RIGHT)), ICONS_WIDTH, ICONS_HEIGHT); //CENTER LEFT - right
-                }
+                this.drawButton(matrices, SECURITY_PUBLIC_X, SECURITY_PUBLIC_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PUBLIC || !machine.getSecurity().isOwner(playerInventory.player));
+                this.drawButton(matrices, SECURITY_TEAM_X, SECURITY_TEAM_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.TEAM || !machine.getSecurity().isOwner(playerInventory.player));
+                this.drawButton(matrices, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PRIVATE || !machine.getSecurity().isOwner(playerInventory.player));
+                this.drawTexture(matrices, SECURITY_PUBLIC_X, SECURITY_PUBLIC_Y, ICON_LOCK_PRIVATE_U, ICON_LOCK_PRIVATE_V, ICON_WIDTH, ICON_HEIGHT);
+                this.drawTexture(matrices, SECURITY_TEAM_X, SECURITY_TEAM_Y, ICON_LOCK_PARTY_U, ICON_LOCK_PARTY_V, ICON_WIDTH, ICON_HEIGHT);
+                this.drawTexture(matrices, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, ICON_LOCK_PUBLIC_U, ICON_LOCK_PUBLIC_V, ICON_WIDTH, ICON_HEIGHT);
 
-                if (hasShiftDown()) {
-                    if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X, this.y + BASE_CONFIG_BUTTON_Y - 18, ICONS_WIDTH, ICONS_HEIGHT)) {
-                        if (config.get(BlockFace.TOP).isItem()) {
-                            if (handler.machine.getSideConfiguration().getTopValue() != -1) {
-                                textRenderer.draw(matrices, String.valueOf(handler.machine.getSideConfiguration().getTopValue()), this.x + BASE_CONFIG_BUTTON_X + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y - 18) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
-                            }
-                            for (Slot slot : handler.slots) {
-                                if (slot.inventory != playerInventory) {
-                                    this.textRenderer.draw(matrices, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 10, this.y + slot.y + 8, Formatting.GOLD.getColorValue());
-                                }
-                            }
-                        }
-                    } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X, this.y + BASE_CONFIG_BUTTON_Y + 18, ICONS_WIDTH, ICONS_HEIGHT)) {
-                        if (handler.machine.getSideConfiguration().getBottomValue() != -1) {
-                            textRenderer.draw(matrices, String.valueOf(handler.machine.getSideConfiguration().getBottomValue()), this.x + BASE_CONFIG_BUTTON_X + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y + 18) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
-                        }
-                        if (config.get(BlockFace.BOTTOM).isItem()) {
-                            for (Slot slot : handler.slots) {
-                                if (slot.inventory != playerInventory) {
-                                    this.textRenderer.draw(matrices, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 10, this.y + slot.y + 8, Formatting.GOLD.getColorValue());
-                                }
-                            }
-                        }
-                    } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X, this.y + BASE_CONFIG_BUTTON_Y, ICONS_WIDTH, ICONS_HEIGHT)) {
-                        if (handler.machine.getSideConfiguration().getFrontValue() != -1) {
-                            textRenderer.draw(matrices, String.valueOf(handler.machine.getSideConfiguration().getFrontValue()), this.x + BASE_CONFIG_BUTTON_X + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
-                        }
-                        if (config.get(BlockFace.FRONT).isItem()) {
-                            for (Slot slot : handler.slots) {
-                                if (slot.inventory != playerInventory) {
-                                    this.textRenderer.draw(matrices, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 10, this.y + slot.y + 8, Formatting.GOLD.getColorValue());
-                                }
-                            }
-                        }
-                    } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING, this.y + BASE_CONFIG_BUTTON_Y, ICONS_WIDTH, ICONS_HEIGHT)) {
-                        if (handler.machine.getSideConfiguration().getLeftValue() != -1) {
-                            textRenderer.draw(matrices, String.valueOf(handler.machine.getSideConfiguration().getLeftValue()), this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
-                        }
-                        if (config.get(BlockFace.LEFT).isItem()) {
-                            for (Slot slot : handler.slots) {
-                                if (slot.inventory != playerInventory) {
-                                    this.textRenderer.draw(matrices, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 10, this.y + slot.y + 8, Formatting.GOLD.getColorValue());
-                                }
-                            }
-                        }
-                    } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING + CONFIG_BUTTON_SPACING, this.y + BASE_CONFIG_BUTTON_Y, ICONS_WIDTH, ICONS_HEIGHT)) {
-                        if (handler.machine.getSideConfiguration().getBackValue() != -1) {
-                            textRenderer.draw(matrices, String.valueOf(handler.machine.getSideConfiguration().getBackValue()), this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING + CONFIG_BUTTON_SPACING + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
-                        }
-                        if (config.get(BlockFace.BACK).isItem()) {
-                            for (Slot slot : handler.slots) {
-                                if (slot.inventory != playerInventory) {
-                                    this.textRenderer.draw(matrices, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 10, this.y + slot.y + 8, Formatting.GOLD.getColorValue());
-                                }
-                            }
-                        }
-                    } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X - CONFIG_BUTTON_SPACING, this.y + BASE_CONFIG_BUTTON_Y, ICONS_WIDTH, ICONS_HEIGHT)) {
-                        if (handler.machine.getSideConfiguration().getRightValue() != -1) {
-                            textRenderer.draw(matrices, String.valueOf(handler.machine.getSideConfiguration().getRightValue()), this.x + BASE_CONFIG_BUTTON_X - CONFIG_BUTTON_SPACING + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
-                        }
-                        if (config.get(BlockFace.RIGHT).isItem()) {
-                            for (Slot slot : handler.slots) {
-                                if (slot.inventory != playerInventory) {
-                                    this.textRenderer.draw(matrices, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 10, this.y + slot.y + 8, Formatting.GOLD.getColorValue());
-                                }
-                            }
-                        }
-                    }
-                }
+                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.security")
+                        .setStyle(Constant.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtil.WHITE);
+                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.security.state",
+                        machine.getSecurity().getAccessibility().getName()).setStyle(Constant.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y, ColorUtil.WHITE);
+//                assert machine.getSecurity().getOwner() != null;
+//                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.security.owned_by", machine.getSecurity().getOwner().getName())
+//                        .setStyle(Constant.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y + this.textRenderer.fontHeight + 4, ColorUtils.WHITE);
 
-                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - PANEL_WIDTH + 6, this.y + 29);
-                drawStringWithShadow(matrices, this.textRenderer, I18n.translate("ui.galacticraft.tabs.side_config"), this.x - PANEL_WIDTH + 23, this.y + 33, Formatting.GRAY.getColorValue());
-            } else {
-                this.client.getTextureManager().bindTexture(TABS_TEXTURE);
-                if (!redstoneOpen) {
-                    this.drawTexture(matrices, this.x - TAB_WIDTH, this.y + 26, TAB_CONFIG_X, TAB_CONFIG_Y, TAB_WIDTH, TAB_HEIGHT);
-                    this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - TAB_WIDTH + 4, this.y + 26 + 3);
-                } else {
-                    this.drawTexture(matrices, this.x - TAB_WIDTH, this.y + 96, TAB_CONFIG_X, TAB_CONFIG_Y, TAB_WIDTH, TAB_HEIGHT);
-                    this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - TAB_WIDTH + 4, this.y + 96 + 3);
-                }
+                matrices.pop();
             }
-            if (securityOpen) {
-                this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
-                this.drawTexture(matrices, this.x + 176, this.y + 3, PANEL_SECURITY_X, PANEL_SECURITY_Y, PANEL_WIDTH, PANEL_HEIGHT);
-                this.drawTexture(matrices, this.x + 176 + 4, this.y + 6, ICON_LOCK_PARTY_X, ICON_LOCK_PARTY_Y + 2, ICONS_WIDTH, ICONS_HEIGHT);
-                this.drawTexture(matrices, this.x + 174 + 21, this.y + 26, BUTTON_X, BUTTON_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
-                this.drawTexture(matrices, this.x + 174 + 43, this.y + 26, BUTTON_X, BUTTON_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
-                this.drawTexture(matrices, this.x + 174 + 65, this.y + 26, BUTTON_X, BUTTON_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
-
-                switch (entity.getSecurity().getPublicity()) {
-                    case PRIVATE:
-                        this.drawTexture(matrices, this.x + 174 + 21, this.y + 26, BUTTON_X, BUTTON_ON_Y, ICONS_WIDTH, ICONS_HEIGHT);
-                        break;
-                    case SPACE_RACE:
-                        this.drawTexture(matrices, this.x + 174 + 43, this.y + 26, BUTTON_X, BUTTON_ON_Y, ICONS_WIDTH, ICONS_HEIGHT);
-                        break;
-                    case PUBLIC:
-                        this.drawTexture(matrices, this.x + 174 + 65, this.y + 26, BUTTON_X, BUTTON_ON_Y, ICONS_WIDTH, ICONS_HEIGHT);
-                        break;
-                }
-
-                this.drawTexture(matrices, this.x + 174 + 21, this.y + 27, ICON_LOCK_OWNER_X, ICON_LOCK_OWNER_Y + 2, ICONS_WIDTH, ICONS_HEIGHT);
-                this.drawTexture(matrices, this.x + 174 + 43, this.y + 27, ICON_LOCK_PARTY_X, ICON_LOCK_PARTY_Y + 2, ICONS_WIDTH, ICONS_HEIGHT);
-                this.drawTexture(matrices, this.x + 174 + 65, this.y + 27 - 2, ICON_LOCK_PUBLIC_X, ICON_LOCK_PUBLIC_Y, ICONS_WIDTH, ICONS_HEIGHT);
-
-                drawStringWithShadow(matrices, this.textRenderer, I18n.translate("ui.galacticraft.tabs.security_config"), this.x + 176 + 20, this.y + 12, Formatting.GRAY.getColorValue());
-            } else {
-                this.client.getTextureManager().bindTexture(TABS_TEXTURE);
-                this.drawTexture(matrices, this.x + 176, this.y + 5, TAB_SECURITY_X, TAB_SECURITY_Y, TAB_WIDTH, TAB_HEIGHT);
-            }
+            matrices.pop();
         }
     }
 
-    public boolean checkTabsClick(MatrixStack matrices, double mouseX, double mouseY, int button) {
-        if (button != 3) {
-            if (this.handler.machine != null) {
-                ConfigurableMachineBlockEntity entity = this.handler.machine;
-                if (!redstoneOpen) {
-                    if (mouseX >= this.x - TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + TAB_HEIGHT + 3) {
-                        redstoneOpen = true;
-                        configOpen = false;
-                        playButtonSound();
-                        return true;
-                    }
-                } else {
-                    if (mouseX >= this.x - PANEL_WIDTH && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + TAB_HEIGHT + 3) {
-                        redstoneOpen = false;
-                        playButtonSound();
-                        return true;
-                    }
+    private void drawMachineFace(MatrixStack matrices, int x, int y, MachineBlockEntity machine, BlockFace face) {
+        drawSprite(matrices, x, y, 0, 16, 16, MachineBakedModel.getSprite(face, machine, null, this.spriteProvider, machine.getConfiguration().getSideConfiguration().get(face).getAutomationType()));
+    }
 
-                    if (mouseX >= this.x - 78 && mouseX <= this.x - 78 + 19 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                        entity.setRedstone(ConfigurableMachineBlockEntity.RedstoneState.IGNORE);
-                        sendRedstoneUpdate(entity);
-                        playButtonSound();
-                        return true;
-                    }
-                    if (mouseX >= this.x - 78 + 22 && mouseX <= this.x - 78 + 41 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                        entity.setRedstone(ConfigurableMachineBlockEntity.RedstoneState.OFF);
-                        sendRedstoneUpdate(entity);
-                        playButtonSound();
-                        return true;
-                    }
-                    if (mouseX >= this.x - 78 + 44 && mouseX <= this.x - 78 + 63 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                        entity.setRedstone(ConfigurableMachineBlockEntity.RedstoneState.ON);
-                        sendRedstoneUpdate(entity);
-                        playButtonSound();
-                        return true;
-                    }
+    private void renderItemIcon(MatrixStack matrices, int x, int y, ItemStack stack) {
+        assert this.client != null;
+        BakedModel model = this.itemRenderer.getHeldItemModel(stack, this.world, this.playerInventory.player);
+        matrices.push();
+        AbstractTexture blockAtlasTexture = this.client.getTextureManager().getTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+        assert blockAtlasTexture != null;
+        blockAtlasTexture.setFilter(false, false);
+        blockAtlasTexture.bindTexture();
+        matrices.translate(x + 8, y + 8, 100.0F + this.getZOffset());
+        matrices.scale(16, -16, 16);
+        VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+        boolean bl = !model.isSideLit();
+        if (bl) {
+            DiffuseLighting.disableGuiDepthLighting();
+        }
+
+        this.itemRenderer.renderItem(stack, ModelTransformation.Mode.GUI, false, matrices, immediate, 15728880, OverlayTexture.DEFAULT_UV, model);
+        immediate.draw();
+        if (bl) {
+            DiffuseLighting.enableGuiDepthLighting();
+        }
+        matrices.pop();
+    }
+
+    public void drawButton(MatrixStack matrices, int x, int y, double mouseX, double mouseY, float delta, boolean pressed) {
+        assert this.client != null;
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.MACHINE_CONFIG_PANELS);
+        if (pressed) {
+            this.drawTexture(matrices, x, y, BUTTON_U, BUTTON_PRESSED_V, BUTTON_WIDTH, BUTTON_HEIGHT);
+            return;
+        }
+        if (this.check(mouseX, mouseY, x, y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+            this.drawTexture(matrices, x, y, BUTTON_U, BUTTON_HOVERED_V, BUTTON_WIDTH, BUTTON_HEIGHT);
+        } else {
+            this.drawTexture(matrices, x, y, BUTTON_U, BUTTON_V, BUTTON_WIDTH, BUTTON_HEIGHT);
+        }
+    }
+
+    public boolean checkTabsClick(double mouseX, double mouseY, int button) {
+        assert this.client != null;
+        assert this.handler.machine != null;
+
+        final double mX = mouseX, mY = mouseY;
+        final MachineBlockEntity machine = this.handler.machine;
+        mouseX = mX - this.x;
+        mouseY = mY - this.y;
+        if (Tab.REDSTONE.isOpen()) {
+            mouseX += PANEL_WIDTH;
+            mouseY -= SPACING;
+            if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_UPPER_HEIGHT)) {
+                Tab.REDSTONE.click();
+                return true;
+            }
+            if (this.check(mouseX, mouseY, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                this.setRedstone(RedstoneInteractionType.IGNORE);
+                this.playButtonSound();
+                return true;
+            }
+            if (this.check(mouseX, mouseY, REDSTONE_LOW_X, REDSTONE_LOW_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                this.setRedstone(RedstoneInteractionType.LOW);
+                this.playButtonSound();
+                return true;
+            }
+            if (this.check(mouseX, mouseY, REDSTONE_HIGH_X, REDSTONE_HIGH_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                this.setRedstone(RedstoneInteractionType.HIGH);
+                this.playButtonSound();
+                return true;
+            }
+            if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT)) {
+                    return true;
                 }
-
-                if (!configOpen) {
-                    if (redstoneOpen) {
-                        if (mouseX >= this.x - TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 96 && mouseY <= this.y + TAB_HEIGHT + 96) {
-                            redstoneOpen = false;
-                            configOpen = true;
-                            playButtonSound();
-                            return true;
-                        }
-                    } else {
-                        if (mouseX >= this.x - TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 26 && mouseY <= this.y + TAB_HEIGHT + 26) {
-                            redstoneOpen = false;
-                            configOpen = true;
-                            playButtonSound();
-                            return true;
-                        }
-                    }
-                } else {
-                    if (mouseX >= this.x - PANEL_WIDTH && mouseX <= this.x && mouseY >= this.y + 26 && mouseY <= this.y + TAB_HEIGHT + 26) {
-                        configOpen = false;
-                        playButtonSound();
-                        return true;
-                    }
-
-                    if (mouseX >= (this.x - PANEL_WIDTH + 43) - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (!this.handler.machine.getLockedFaces().contains(BlockFace.FRONT)) {
-                            updateSides(button, BlockFace.FRONT);
-                            return true;
-                        }
-                    }
-
-                    if (mouseX >= (this.x - PANEL_WIDTH + 43) - 3 - 5 + 19 + 19 && (mouseX + 48) - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (!this.handler.machine.getLockedFaces().contains(BlockFace.BACK)) {
-                            updateSides(button, BlockFace.BACK);
-                            return true;
-                        }
-                    }
-
-                    if (mouseX >= (this.x - PANEL_WIDTH + 43) - 3 - 5 - 19 && mouseX + 48 + 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (!this.handler.machine.getLockedFaces().contains(BlockFace.RIGHT)) {
-                            updateSides(button, BlockFace.RIGHT);
-                            return true;
-                        }
-                    }
-
-                    if (mouseX >= (this.x - PANEL_WIDTH + 43) - 3 - 5 + 19 && mouseX + 48 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (!this.handler.machine.getLockedFaces().contains(BlockFace.LEFT)) {
-                            updateSides(button, BlockFace.LEFT);
-                            return true;
-                        }
-                    }
-
-                    if (mouseX >= (this.x - PANEL_WIDTH + 43) - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 && mouseY <= this.y + 68) {
-                        if (!this.handler.machine.getLockedFaces().contains(BlockFace.TOP)) {
-                            updateSides(button, BlockFace.TOP);
-                            return true;
-                        }
-                    }
-
-                    if (mouseX >= (this.x - PANEL_WIDTH + 43) - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 + 18 && mouseY <= this.y + 68 + 18 + 18) {
-                        if (!this.handler.machine.getLockedFaces().contains(BlockFace.BOTTOM)) {
-                            updateSides(button, BlockFace.BOTTOM);
-                            return true;
-                        }
-                    }
+            }
+        } else {
+            mouseX += TAB_WIDTH;
+            mouseY -= SPACING;
+            if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
+                Tab.REDSTONE.click();
+                return true;
+            }
+        }
+        mouseX = mX - this.x;
+        mouseY = mY - this.y;
+        if (Tab.CONFIGURATION.isOpen()) {
+            mouseX += PANEL_WIDTH;
+            mouseY -= TAB_HEIGHT + SPACING + SPACING;
+            if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_UPPER_HEIGHT)) {
+                Tab.CONFIGURATION.click();
+                return true;
+            }
+            if (button >= GLFW.GLFW_MOUSE_BUTTON_LEFT && button <= GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) {
+                    SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.TOP, Screen.hasShiftDown(), Screen.hasControlDown());
+                    this.playButtonSound();
+                    return true;
                 }
-
-                if (!securityOpen) {
-                    if (entity.getSecurity().isOwner(playerInventory.player) && mouseX >= this.x - TAB_WIDTH + 176 + 21 && mouseX <= this.x + 176 + 21 && mouseY >= this.y + 3 && mouseY <= this.y + TAB_HEIGHT + 3) {
-                        securityOpen = true;
-                        playButtonSound();
-                        return true;
-                    }
-                } else if (entity.getSecurity().isOwner(playerInventory.player)) {
-                    ConfigurableMachineBlockEntity.SecurityInfo security = entity.getSecurity();
-                    if (mouseX >= this.x - PANEL_WIDTH + 176 + 21 && mouseX <= this.x + 176 + 21 && mouseY >= this.y + 3 && mouseY <= this.y + TAB_HEIGHT + 3) {
-                        securityOpen = false;
-                        playButtonSound();
-                        return true;
-                    }
-
-                    this.drawTexture(matrices, this.x + 174 + 21, this.y + 26, BUTTON_X, BUTTON_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
-
-                    //273 = r -> s
-
-                    if (mouseX >= this.x - 78 + 273 && mouseX <= this.x - 78 + 19 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                        if (security.getOwner().equals(this.playerInventory.player.getUuid())) {
-                            security.setUsername(this.playerInventory.player.getName().asString());
-                            security.setPublicity(ConfigurableMachineBlockEntity.SecurityInfo.Publicity.PRIVATE);
-                            sendSecurityUpdate(entity);
-                            playButtonSound();
-                            return true;
-                        }
-                    }
-                    if (mouseX >= (this.x - 78) + 22 + 273 && mouseX <= (this.x - 78) + 41 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                        if (security.getOwner().equals(this.playerInventory.player.getUuid())) {
-                            security.setUsername(this.playerInventory.player.getName().asString());
-                            security.setPublicity(ConfigurableMachineBlockEntity.SecurityInfo.Publicity.SPACE_RACE);
-                            sendSecurityUpdate(entity);
-                            playButtonSound();
-                            return true;
-                        }
-                    }
-                    if (mouseX >= this.x - 78 + 44 + 273 && mouseX <= this.x - 78 + 63 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                        if (security.getOwner().equals(this.playerInventory.player.getUuid())) {
-                            security.setUsername(this.playerInventory.player.getName().asString());
-                            security.setPublicity(ConfigurableMachineBlockEntity.SecurityInfo.Publicity.PUBLIC);
-                            sendSecurityUpdate(entity);
-                            playButtonSound();
-                            return true;
-                        }
-                    }
+                if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16)) {
+                    SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.LEFT, Screen.hasShiftDown(), Screen.hasControlDown());
+                    this.playButtonSound();
+                    return true;
                 }
+                if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16)) {
+                    SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.FRONT, Screen.hasShiftDown(), Screen.hasControlDown());
+                    this.playButtonSound();
+                    return true;
+                }
+                if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16)) {
+                    SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.RIGHT, Screen.hasShiftDown(), Screen.hasControlDown());
+                    this.playButtonSound();
+                    return true;
+                }
+                if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16)) {
+                    SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.BACK, Screen.hasShiftDown(), Screen.hasControlDown());
+                    this.playButtonSound();
+                    return true;
+                }
+                if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16)) {
+                    SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.BOTTOM, Screen.hasShiftDown(), Screen.hasControlDown());
+                    this.playButtonSound();
+                    return true;
+                }
+            }
+        } else {
+            mouseX += TAB_WIDTH;
+            if (Tab.REDSTONE.isOpen()) {
+                mouseY -= PANEL_HEIGHT + SPACING + SPACING;
+            } else {
+                mouseY -= TAB_HEIGHT + SPACING + SPACING;
+            }
+            if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
+                Tab.CONFIGURATION.click();
+                return true;
+            }
+        }
+        mouseX = mX - this.x;
+        mouseY = mY - this.y;
+        mouseX -= this.backgroundWidth;
+        mouseY -= SPACING;
+        if (Tab.STATS.isOpen()) {
+            if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_UPPER_HEIGHT)) {
+                Tab.STATS.click();
+                return true;
+            }
+        } else {
+            if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
+                Tab.STATS.click();
+                return true;
+            }
+        }
+        mouseX = mX - this.x;
+        mouseY = mY - this.y;
+        mouseX -= this.backgroundWidth;
+        if (Tab.SECURITY.isOpen()) {
+            mouseY -= TAB_HEIGHT + SPACING + SPACING;
+            if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_UPPER_HEIGHT)) {
+                Tab.SECURITY.click();
+                return true;
+            }
+
+            if (machine.getSecurity().isOwner(this.playerInventory.player)) {
+                if (this.check(mouseX, mouseY, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                    this.setAccessibility(SecurityInfo.Accessibility.PRIVATE);
+                    this.playButtonSound();
+                    return true;
+                }
+                if (this.check(mouseX, mouseY, SECURITY_TEAM_X, SECURITY_TEAM_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                    this.setAccessibility(SecurityInfo.Accessibility.TEAM);
+                    this.playButtonSound();
+                    return true;
+                }
+                if (this.check(mouseX, mouseY, SECURITY_PUBLIC_X, SECURITY_PUBLIC_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                    this.setAccessibility(SecurityInfo.Accessibility.PUBLIC);
+                    this.playButtonSound();
+                    return true;
+                }
+            }
+        } else {
+            if (Tab.STATS.isOpen()) {
+                mouseY -= PANEL_HEIGHT + SPACING + SPACING;
+            } else {
+                mouseY -= TAB_HEIGHT + SPACING + SPACING;
+            }
+            if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
+                Tab.SECURITY.click();
             }
         }
         return false;
     }
 
+    protected void setAccessibility(SecurityInfo.Accessibility accessibility) {
+        this.handler.machine.getSecurity().setAccessibility(accessibility);
+        ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "security_config"), new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer((Long.SIZE / Byte.SIZE) + 1).writeByte(accessibility.ordinal())));
+    }
+
+    protected void setRedstone(RedstoneInteractionType redstone) {
+        this.handler.machine.setRedstone(redstone);
+        ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "redstone_config"), new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer((Long.SIZE / Byte.SIZE) + 1).writeByte(redstone.ordinal())));
+    }
+
     protected void drawTabTooltips(MatrixStack matrices, int mouseX, int mouseY) {
-        assert this.client != null;
-        if (!redstoneOpen) {
-            if (mouseX >= this.x - TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + (22 + 3)) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.redstone_activation_config").setStyle(Constants.Styles.GRAY_STYLE), mouseX, mouseY);
+        final MachineBlockEntity machine = this.handler.machine;
+        final int mX = mouseX, mY = mouseY;
+        mouseX = mX - this.x;
+        mouseY = mY - this.y;
+        if (Tab.REDSTONE.isOpen()) {
+            mouseX += PANEL_WIDTH;
+            mouseY -= SPACING;
+            if (this.check(mouseX, mouseY, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                this.renderTooltip(matrices, RedstoneInteractionType.IGNORE.getName(), mX, mY);
+            }
+            if (this.check(mouseX, mouseY, REDSTONE_LOW_X, REDSTONE_LOW_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                this.renderTooltip(matrices, RedstoneInteractionType.LOW.getName(), mX, mY);
+            }
+            if (this.check(mouseX, mouseY, REDSTONE_HIGH_X, REDSTONE_HIGH_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                this.renderTooltip(matrices, RedstoneInteractionType.HIGH.getName(), mX, mY);
             }
         } else {
-            if (mouseX >= (this.x - 78) && mouseX <= (this.x - 78) + 19 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.redstone_activation_config.ignore").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
-            }
-            if (mouseX >= (this.x - 78) + 22 && mouseX <= (this.x - 78) + 41 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.redstone_activation_config.redstone_means_off").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
-            }
-            if (mouseX >= (this.x - 78) + 44 && mouseX <= (this.x - 78) + 63 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.redstone_activation_config.redstone_means_on").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
+            mouseX += TAB_WIDTH;
+            mouseY -= SPACING;
+            if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.redstone").setStyle(Constant.Text.RED_STYLE), mX, mY);
             }
         }
-        if (!configOpen) {
-            if (redstoneOpen) {
-                if (mouseX >= this.x - TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 96 && mouseY <= this.y + (TAB_HEIGHT + 96)) {
-                    this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.side_config").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
+        mouseX = mX - this.x;
+        mouseY = mY - this.y;
+        if (Tab.CONFIGURATION.isOpen()) {
+            mouseX += PANEL_WIDTH;
+            mouseY -= TAB_HEIGHT + SPACING + SPACING;
+            if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) {
+                this.renderFaceTooltip(matrices, BlockFace.TOP, mX, mY);
+            }
+            if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16)) {
+                this.renderFaceTooltip(matrices, BlockFace.LEFT, mX, mY);
+            }
+            if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16)) {
+                this.renderFaceTooltip(matrices, BlockFace.FRONT, mX, mY);
+            }
+            if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16)) {
+                this.renderFaceTooltip(matrices, BlockFace.RIGHT, mX, mY);
+            }
+            if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16)) {
+                this.renderFaceTooltip(matrices, BlockFace.BACK, mX, mY);
+            }
+            if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16)) {
+                this.renderFaceTooltip(matrices, BlockFace.BOTTOM, mX, mY);
+            }
+        } else {
+            mouseX += TAB_WIDTH;
+            if (Tab.REDSTONE.isOpen()) {
+                mouseY -= PANEL_HEIGHT + SPACING;
+            } else {
+                mouseY -= TAB_HEIGHT + SPACING;
+            }
+            if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.configuration").setStyle(Constant.Text.BLUE_STYLE), mX, mY);
+            }
+        }
+        mouseX = mX - this.x;
+        mouseY = mY - this.y;
+        mouseX -= this.backgroundWidth;
+        mouseY -= SPACING;
+        if (Tab.STATS.isOpen()) {
+            if (this.check(mouseX, mouseY, OWNER_FACE_X, OWNER_FACE_Y, OWNER_FACE_WIDTH, OWNER_FACE_HEIGHT)) {
+                assert machine.getSecurity().getOwner() != null;
+                this.renderTooltip(matrices, new LiteralText(machine.getSecurity().getOwner().getName()), mX, mY);
+            }
+        } else {
+            if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.stats").setStyle(Constant.Text.YELLOW_STYLE), mX, mY);
+            }
+        }
+        mouseX = mX - this.x;
+        mouseY = mY - this.y;
+        if (Tab.SECURITY.isOpen()) {
+            mouseX -= this.backgroundWidth;
+            mouseY -= TAB_HEIGHT + SPACING + SPACING;
+
+            if (machine.getSecurity().isOwner(this.playerInventory.player)) {
+                if (this.check(mouseX, mouseY, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                    this.renderTooltip(matrices, SecurityInfo.Accessibility.PRIVATE.getName(), mX, mY);
+                }
+                if (this.check(mouseX, mouseY, REDSTONE_LOW_X, REDSTONE_LOW_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                    this.renderTooltip(matrices, SecurityInfo.Accessibility.TEAM.getName(), mX, mY);
+                }
+                if (this.check(mouseX, mouseY, REDSTONE_HIGH_X, REDSTONE_HIGH_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                    this.renderTooltip(matrices, SecurityInfo.Accessibility.PUBLIC.getName(), mX, mY);
                 }
             } else {
-                if (mouseX >= this.x - TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 26 && mouseY <= this.y + (TAB_HEIGHT + 26)) {
-                    this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.side_config").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
+                if (this.check(mouseX, mouseY, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)
+                    || check(mouseX, mouseY, REDSTONE_LOW_X, REDSTONE_LOW_Y, BUTTON_WIDTH, BUTTON_HEIGHT)
+                    || check(mouseX, mouseY, REDSTONE_HIGH_X, REDSTONE_HIGH_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                    this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.security.access_denied"), mX, mY);
                 }
             }
         } else {
-            if (mouseX >= this.x - PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft.tabs.side_config.north").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.FRONT).getFormattedName().asOrderedText()}), mouseX, mouseY);
+            mouseX -= this.backgroundWidth;
+            if (Tab.STATS.isOpen()) {
+                mouseY -= PANEL_HEIGHT + SPACING + SPACING;
+            } else {
+                mouseY -= TAB_HEIGHT + SPACING + SPACING;
             }
-
-            if (mouseX >= this.x - PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {//Front, Back, Right, Left, Up, Down
-                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft.tabs.side_config.south").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.BACK).getFormattedName().asOrderedText()}), mouseX, mouseY);
-            }
-
-            if (mouseX >= this.x - PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft.tabs.side_config.west").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.RIGHT).getFormattedName().asOrderedText()}), mouseX, mouseY);
-            }
-
-            if (mouseX >= this.x - PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft.tabs.side_config.east").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.LEFT).getFormattedName().asOrderedText()}), mouseX, mouseY);
-            }
-
-            if (mouseX >= this.x - PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 && mouseY <= this.y + 68) {
-                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft.tabs.side_config.up").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.TOP).getFormattedName().asOrderedText()}), mouseX, mouseY);
-            }
-
-            if (mouseX >= this.x - PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 + 18 && mouseY <= this.y + 68 + 18 + 18) {
-                this.renderOrderedTooltip(matrices, Lists.asList(new TranslatableText("ui.galacticraft.tabs.side_config.down").setStyle(Constants.Styles.GRAY_STYLE).asOrderedText(), new OrderedText[]{this.config.get(BlockFace.BOTTOM).getFormattedName().asOrderedText()}), mouseX, mouseY);
+            if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
+                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.security").setStyle(Constant.Text.BLUE_STYLE), mX, mY);
             }
         }
-        if (!securityOpen) {
-            if (mouseX >= this.x - TAB_WIDTH + 176 + 21 && mouseX <= this.x + 176 + 21 && mouseY >= this.y + 3 && mouseY <= this.y + (TAB_HEIGHT + 3)) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.security_config").setStyle(Constants.Styles.GRAY_STYLE), mouseX, mouseY);
-            }
-        } else {
-            if (mouseX >= (this.x - 78) + 273 && mouseX <= (this.x - 78) + 19 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.security_config.private").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
-            }
-            if (mouseX >= (this.x - 78) + 22 + 273 && mouseX <= (this.x - 78) + 41 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderOrderedTooltip(matrices, this.textRenderer.wrapLines(new TranslatableText("ui.galacticraft.tabs.security_config.space_race", "[TEAM NAME]\u00a7r").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), 150), mouseX, mouseY);
-            }
-            if (mouseX >= (this.x - 78) + 44 + 273 && mouseX <= (this.x - 78) + 63 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.tabs.security_config.public").setStyle(Style.EMPTY.withColor(Formatting.WHITE)), mouseX, mouseY);
+    }
+
+    protected void renderFaceTooltip(MatrixStack matrices, BlockFace face, int mouseX, int mouseY) {
+        tooltipCache.add(face.getName());
+        ConfiguredMachineFace configuredFace = this.handler.machine.getConfiguration().getSideConfiguration().get(face);
+        if (configuredFace.getAutomationType() != AutomationType.NONE) {
+            tooltipCache.add(configuredFace.getAutomationType().getFormattedName());
+        }
+        if (configuredFace.getMatching() != null) {
+            if (configuredFace.getMatching().left().isPresent()) {
+                tooltipCache.add(new TranslatableText("ui.galacticraft.machine.configuration.matches", new LiteralText(String.valueOf(configuredFace.getMatching().left().get())).setStyle(Constant.Text.AQUA_STYLE)).setStyle(Constant.Text.GRAY_STYLE));
+            } else {
+                tooltipCache.add(new TranslatableText("ui.galacticraft.machine.configuration.matches", configuredFace.getMatching().right().get().getName()).setStyle(Constant.Text.GRAY_STYLE));
             }
         }
+        this.renderTooltip(matrices, tooltipCache, mouseX, mouseY);
+
+        tooltipCache.clear();
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         assert this.client != null;
-        if (this.handler.machine != null) {
-            ConfigurableMachineBlockEntity.SecurityInfo security = this.handler.machine.getSecurity();
-            switch (security.getPublicity()) {
-                case PRIVATE:
-                    if (!this.playerInventory.player.getUuid().equals(security.getOwner())) {
-                        DrawableUtils.drawCenteredString(matrices, this.textRenderer, "\u00A7l" + new TranslatableText("ui.galacticraft.tabs.security_config.not_your_machine").asString(), (this.width / 2), this.y + 50, Formatting.DARK_RED.getColorValue());
-                        return;
-                    }
-                case SPACE_RACE:
-                    if (!this.playerInventory.player.getUuid().equals(security.getOwner())) {
-                        DrawableUtils.drawCenteredString(matrices, this.textRenderer, "\u00A7l" + new TranslatableText("Space race system WIP").asString(), (this.width / 2), this.y + 50, Formatting.DARK_RED.getColorValue());
-                        return;
-                    }
-                default:
-                    break;
-            }
+        if (this.handler.machine == null || !this.handler.machine.getSecurity().hasAccess(handler.player)) {
+            this.onClose();
+            return;
         }
 
         super.render(matrices, mouseX, mouseY, delta);
-        this.drawConfigTabs(matrices, mouseX, mouseY);
+
         matrices.push();
         matrices.translate(this.x, this.y, 0);
         for (AbstractWidget widget : this.widgets) {
@@ -584,12 +684,247 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     @Override
+    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        this.drawConfigTabs(matrices, mouseX, mouseY, delta);
+        this.drawTanks(matrices, mouseX, mouseY, delta);
+        this.handleSlotHighlight(matrices, mouseX, mouseY, delta);
+    }
+
+    protected void drawTanks(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        assert this.client != null;
+        Int2IntArrayMap color = getTankColor(matrices, mouseX, mouseY);
+        color.defaultReturnValue(-1);
+        matrices.push();
+        matrices.translate(this.x, this.y, 0);
+        this.focusedTank = null;
+        for (Tank tank : this.handler.tanks) {
+            tank.render(matrices, this.client, this.world, this.pos, mouseX - this.x, mouseY - this.y, color.get(tank.index) != -1, color);
+            if (tank.isHoveredOverTank(mouseX - this.x, mouseY - this.y)) {
+                this.focusedTank = tank;
+                tank.renderHighlight(matrices, this.client, this.world, this.pos, mouseX - this.x, mouseY - this.y);
+            }
+        }
+        for (Tank tank : this.handler.tanks) {
+            tank.drawTooltip(matrices, this.client, this.world, this.pos, mouseX - this.x, mouseY - this.y);
+        }
+        matrices.pop();
+
+        color = getItemColor(matrices, mouseX, mouseY);;
+        color.defaultReturnValue(-1);
+        for (Slot slot : this.handler.slots) {
+            if (slot.inventory instanceof InventoryFixedWrapper && ((InventoryFixedWrapper) slot.inventory).getWrapped() == this.handler.machine.getInventory()) {
+                if (color.get(slot.index) != -1) {
+                    RenderSystem.disableDepthTest();
+                    int c = color.get(slot.index);
+                    int r = (c >> 16 & 255);
+                    int g = (c >> 8 & 255);
+                    int b = (c & 255);
+                    c = 80; c <<= 8; c += r; c <<= 8; c += g; c <<= 8; c += b;
+                    RenderSystem.colorMask(true, true, true, false);
+                    fillGradient(matrices, this.x + slot.x, this.y + slot.y, this.x + slot.x + 16, this.y + slot.y + 16, c, c);
+                    RenderSystem.colorMask(true, true, true, true);
+                    RenderSystem.enableDepthTest();
+                }
+            }
+        }
+    }
+
+    protected Int2IntArrayMap getTankColor(MatrixStack matrices, int mouseX, int mouseY) {
+        if (Tab.CONFIGURATION.isOpen()) {
+            mouseX -= this.x - PANEL_WIDTH;
+            mouseY -= this.y + TAB_HEIGHT + SPACING;
+            Int2IntArrayMap out = new Int2IntArrayMap();
+            if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.getFluidInv()));
+                groupFluid(out, list);
+            }
+            if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.handler.machine.getFluidInv()));
+                groupFluid(out, list);
+            }
+            if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.handler.machine.getFluidInv()));
+                groupFluid(out, list);
+            }
+            if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.handler.machine.getFluidInv()));
+                groupFluid(out, list);
+            }
+            if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.handler.machine.getFluidInv()));
+                groupFluid(out, list);
+            }
+            if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getFluidInv()));
+                groupFluid(out, list);
+            }
+            return out;
+        }
+        return new Int2IntArrayMap();
+    }
+
+    protected Int2IntArrayMap getItemColor(MatrixStack matrices, int mouseX, int mouseY) {
+        if (Tab.CONFIGURATION.isOpen()) {
+            mouseX -= this.x - PANEL_WIDTH;
+            mouseY -= this.y + TAB_HEIGHT + SPACING;
+            Int2IntArrayMap out = new Int2IntArrayMap();
+            if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.getInventory()));
+                groupItem(out, list);
+            }
+            if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.handler.machine.getInventory()));
+                groupItem(out, list);
+            }
+            if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.handler.machine.getInventory()));
+                groupItem(out, list);
+            }
+            if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.handler.machine.getInventory()));
+                groupItem(out, list);
+            }
+            if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.handler.machine.getInventory()));
+                groupItem(out, list);
+            }
+            if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching() != null) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getInventory()));
+                groupItem(out, list);
+            }
+            return out;
+        }
+        return new Int2IntArrayMap();
+    }
+
+    private void groupFluid(Int2IntMap out, IntList list) {
+        for (Tank tank : this.handler.tanks) {
+            if (list.contains(tank.index)) {
+                out.put(tank.index, this.handler.machine.getFluidInv().getTypes()[tank.index].getColor().getRgb());
+            }
+        }
+    }
+
+    private void groupItem(Int2IntMap out, IntList list) {
+        for (Slot slot : this.handler.slots) {
+            if (list.contains(slot.index)) {
+                out.put(slot.index, this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
+            }
+        }
+    }
+
+    protected void handleSlotHighlight(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if (Tab.CONFIGURATION.isOpen()) {
+            mouseX -= PANEL_WIDTH + this.x;
+            mouseY -= this.y + TAB_HEIGHT + SPACING;
+            if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.getInventory()));
+                groupStack(matrices, list);
+            }
+            if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.handler.machine.getInventory()));
+                groupStack(matrices, list);
+            }
+            if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.handler.machine.getInventory()));
+                groupStack(matrices, list);
+            }
+            if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.handler.machine.getInventory()));
+                groupStack(matrices, list);
+            }
+            if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.handler.machine.getInventory()));
+                groupStack(matrices, list);
+            }
+            if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getInventory()));
+                groupStack(matrices, list);
+            }
+        }
+    }
+
+    private void groupStack(MatrixStack matrices, IntList list) {
+        for (Slot slot : this.handler.slots) {
+            if (list.contains(slot.index)) {
+                drawSlotOverlay(matrices, slot);
+            }
+        }
+    }
+
+    private void drawSlotOverlay(MatrixStack matrices, Slot slot) {
+        RenderSystem.disableTexture();
+        RenderSystem.enableBlend();
+        RenderSystem.disableAlphaTest();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.shadeModel(7425);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+        fillGradient(matrices.peek().getModel(), bufferBuilder,
+                slot.x - 1, slot.y - 1,
+                slot.x - 1, slot.y + 17,
+                this.getZOffset(),
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
+        tessellator.draw();
+        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+        fillGradient(matrices.peek().getModel(), bufferBuilder,
+                slot.x - 1, slot.y + 17,
+                slot.x + 17, slot.y - 1,
+                this.getZOffset(),
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
+        tessellator.draw();
+        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+        fillGradient(matrices.peek().getModel(), bufferBuilder,
+                slot.x + 17, slot.y + 17,
+                slot.x + 17, slot.y - 1,
+                this.getZOffset(),
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
+        tessellator.draw();
+        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+        fillGradient(matrices.peek().getModel(), bufferBuilder,
+                slot.x + 17, slot.y - 1,
+                slot.x - 1, slot.y - 1,
+                this.getZOffset(),
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
+                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
+        tessellator.draw();
+        RenderSystem.shadeModel(7424);
+        RenderSystem.disableBlend();
+        RenderSystem.enableAlphaTest();
+        RenderSystem.enableTexture();
+    }
+
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (isAllowed()) {
             for (AbstractWidget widget : widgets) {
                 widget.mouseClicked(mouseX - this.x, mouseY - this.y, button);
             }
-            return this.checkTabsClick(new MatrixStack(), mouseX, mouseY, button) | super.mouseClicked(mouseX, mouseY, button);
+            boolean tankMod = false;
+            if (this.focusedTank != null && button == 0) {
+                tankMod = this.focusedTank.acceptStack(new Reference<ItemStack>() {
+                    @Override
+                    public ItemStack get() {
+                        return MachineHandledScreen.this.playerInventory.getCursorStack();
+                    }
+
+                    @Override
+                    public boolean set(ItemStack value) {
+                        MachineHandledScreen.this.playerInventory.setCursorStack(value);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean isValid(ItemStack value) {
+                        return true;
+                    }
+                }, new FixedInventoryVanillaWrapper(this.playerInventory).getInsertable());
+            }
+            return this.checkTabsClick(mouseX, mouseY, button) | super.mouseClicked(mouseX, mouseY, button) | tankMod;
         } else {
             return false;
         }
@@ -609,10 +944,6 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         }
     }
 
-    public static boolean check(double mouseX, double mouseY, int x, int y, int width, int height) {
-        return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
-    }
-
     public boolean isAllowed() {
         if (this.handler.machine != null) {
             return handler.machine.getSecurity().hasAccess(playerInventory.player);
@@ -620,95 +951,9 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         return false;
     }
 
-    private void updateSides(int btn, BlockFace face) {
-        if (!Screen.hasShiftDown()) {
-            SideOption next;
-            if (btn == 1) {
-                next = handler.machine.getSideConfiguration().get(face).getOption().prevValidOption(handler.machine);
-            } else {
-                next = handler.machine.getSideConfiguration().get(face).getOption().nextValidOption(handler.machine);
-            }
-            handler.machine.getSideConfiguration().set(face, next);
-            sendSideConfigUpdate(face, true, next, false);
-            config.replace(face, next);
-        } else {
-            if (btn != 1) {
-                handler.machine.getSideConfiguration().increment(face);
-                sendSideConfigUpdate(face, false, null, true);
-            } else {
-                handler.machine.getSideConfiguration().decrement(face);
-                sendSideConfigUpdate(face, false ,null, false);
-            }
-        }
-        playButtonSound();
-    }
-
-    private void sendRedstoneUpdate(ConfigurableMachineBlockEntity entity) {
-        ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "redstone"),
-                new PacketByteBuf(Unpooled.buffer())
-                        .writeBlockPos(pos)
-                        .writeEnumConstant(entity.getRedstone())
-        );
-    }
-
     private void playButtonSound() {
+        assert this.client != null;
         this.client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-    }
-
-    @Contract("_, true, null, _ -> fail;")
-    private void sendSideConfigUpdate(@NotNull BlockFace face, boolean optionChange, @Nullable SideOption option, boolean positive) {
-        if (handler.machine.getSecurity().hasAccess(playerInventory.player)) {
-            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-            buf.writeBlockPos(handler.machine.getPos());
-            buf.writeBoolean(optionChange);
-            if (optionChange) {
-                buf.writeEnumConstant(face);
-                buf.writeEnumConstant(option);
-            } else {
-                buf.writeBoolean(positive);
-                buf.writeEnumConstant(face);
-            }
-            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
-        } else {
-            Galacticraft.logger.error("Tried to send side update when not trusted!");
-        }
-    }
-
-    private int getX(SideOption option, boolean side) {
-        if (option == SideOption.DEFAULT) {
-            return !side ? 224 : 240;
-        }
-        if (option.isEnergy()) {
-            return 206;
-        }
-        if (option.isItem()) {
-            return 240;
-        }
-        if (option.isFluid()) {
-            return 223;
-        }
-        return 0;
-    }
-
-    private int getY(SideOption option) {
-        switch (option) {
-            case DEFAULT:
-                return 240; //224
-            case POWER_INPUT:
-                return 0; //206
-            case POWER_OUTPUT:
-                return 17; //206
-            case FLUID_INPUT:
-                return 0; //223
-            case FLUID_OUTPUT:
-                return 17; //223
-            case ITEM_OUTPUT:
-                return 68;
-            case ITEM_INPUT:
-                return 51;
-            default:
-                return 0;
-        }
     }
 
     @Override
@@ -776,8 +1021,199 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         return super.keyPressed(keyCode, scanCode, modifiers) || b;
     }
 
-    public <T extends AbstractWidget> T addWidget(T widget) {
+    @Nullable
+    @Contract("null -> null")
+    public <T extends AbstractWidget> T addWidget(@Nullable T widget) {
+        if (widget == null) return null;
         this.widgets.add(widget);
         return widget;
+    }
+
+    public static void drawTextureColor(MatrixStack matrices, int x, int y, int z, float u, float v, int width, int height, int textureHeight, int textureWidth, int red, int green, int blue, int alpha) {
+        drawTextureColor(matrices, x, x + width, y, y + height, z, width, height, u, v, textureWidth, textureHeight, red, green, blue, alpha);
+    }
+
+    private static void drawTextureColor(MatrixStack matrices, int x0, int x1, int y0, int y1, int z, int regionWidth, int regionHeight, float u, float v, int textureWidth, int textureHeight, int red, int green, int blue, int alpha) {
+        drawTexturedQuadColor(matrices.peek().getModel(), x0, x1, y0, y1, z, (u + 0.0F) / (float)textureWidth, (u + (float)regionWidth) / (float)textureWidth, (v + 0.0F) / (float)textureHeight, (v + (float)regionHeight) / (float)textureHeight, red, green, blue, alpha);
+    }
+
+    private static void drawTexturedQuadColor(Matrix4f matrices, int x0, int x1, int y0, int y1, int z, float u0, float u1, float v0, float v1, int red, int green, int blue, int alwha) {
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR_TEXTURE);
+        bufferBuilder.vertex(matrices, (float)x0, (float)y1, (float)z).color(red, green, blue, 255).texture(u0, v1).next();
+        bufferBuilder.vertex(matrices, (float)x1, (float)y1, (float)z).color(red, green, blue, 255).texture(u1, v1).next();
+        bufferBuilder.vertex(matrices, (float)x1, (float)y0, (float)z).color(red, green, blue, 255).texture(u1, v0).next();
+        bufferBuilder.vertex(matrices, (float)x0, (float)y0, (float)z).color(red, green, blue, 255).texture(u0, v0).next();
+        bufferBuilder.end();
+        RenderSystem.enableAlphaTest();
+        BufferRenderer.draw(bufferBuilder);
+    }
+
+    public enum Tab {
+        REDSTONE(TAB_REDSTONE_U, TAB_REDSTONE_V, PANEL_REDSTONE_U, PANEL_REDSTONE_V, true),
+        CONFIGURATION(TAB_CONFIG_U, TAB_CONFIG_V, PANEL_CONFIG_U, PANEL_CONFIG_V, true),
+        STATS(TAB_STATS_U, TAB_STATS_V, PANEL_STATS_U, PANEL_STATS_V, false),
+        SECURITY(TAB_SECURITY_U, TAB_SECURITY_V, PANEL_SECURITY_U, PANEL_SECURITY_V, false);
+
+        private final int tabU;
+        private final int tabV;
+        private final int panelU;
+        private final int panelV;
+        private final boolean left;
+        private boolean open = false;
+
+        Tab(int tabU, int tabV, int panelU, int panelV, boolean left) {
+            this.tabU = tabU;
+            this.tabV = tabV;
+            this.panelU = panelU;
+            this.panelV = panelV;
+            this.left = left;
+        }
+
+        public int getU() {
+            return open ? this.panelU : this.tabU;
+        }
+
+        public boolean isLeft() {
+            return left;
+        }
+
+        public int getV() {
+            return open ? this.panelV : this.tabV;
+        }
+
+        public boolean isOpen() {
+            return open;
+        }
+
+        public void click() {
+            this.open = !this.open;
+            if (this.open) {
+                Tab.values()[this.ordinal() + 1 - this.ordinal() % 2 * 2].open = false;
+            }
+        }
+    }
+
+    private enum SideConfigurationAction {
+        CHANGE_TYPE((player, machine, face, back, reset) -> {
+            ConfiguredMachineFace sideOption = machine.getIOConfig().get(face);
+            if (reset) {
+                sideOption.setOption(AutomationType.NONE);
+                return;
+            }
+            List<AutomationType> types = ConfiguredMachineFace.getValidTypes(machine);
+            int i = types.indexOf(sideOption.getAutomationType());
+            if (!back) {
+                if (++i == types.size()) i = 0;
+            } else {
+                if (i == 0) i = types.size();
+                i--;
+            }
+            sideOption.setOption(types.get(i));
+            sideOption.setMatching(null);
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+            buf.writeByte(face.ordinal()).writeBoolean(false).writeByte(sideOption.getAutomationType().ordinal());
+            ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "side_config"), buf);
+
+        }), //LEFT
+        CHANGE_MATCH((player, machine, face, back, reset) -> {
+            ConfiguredMachineFace sideOption = machine.getIOConfig().get(face);
+            if (sideOption.getAutomationType().isEnergy() || sideOption.getAutomationType() == AutomationType.NONE) return;
+            if (reset) {
+                sideOption.setMatching(null);
+                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                buf.writeByte(face.ordinal()).writeBoolean(true).writeBoolean(false).writeInt(-1);
+                ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "side_config"), buf);
+                return;
+            }
+            SlotType[] slotTypes = sideOption.getAutomationType().getAutomatable(machine).getTypes();
+            slotTypes = Arrays.copyOf(slotTypes, slotTypes.length);
+            int s = 0;
+            for (int i = 0; i < slotTypes.length; i++) {
+                if (!slotTypes[i].getType().canPassAs(sideOption.getAutomationType())) {
+                    slotTypes[i] = null;
+                    s++;
+                }
+            }
+            if (s > 0) {
+                SlotType[] tmp = new SlotType[slotTypes.length - s];
+                s = 0;
+                for (int i = 0; i < slotTypes.length; i++) {
+                    if (slotTypes[i] == null) {
+                        s++;
+                    } else {
+                        tmp[i - s] = slotTypes[i];
+                    }
+                }
+                slotTypes = tmp;
+            }
+            int i = 0;
+            if (sideOption.getMatching() != null && sideOption.getMatching().right().isPresent()) {
+                SlotType slotType = sideOption.getMatching().right().get();
+                for (; i < slotTypes.length; i++) {
+                    if (slotTypes[i] == slotType) break;
+                }
+                if (back) i--;
+                else i++;
+            }
+
+            if (i == slotTypes.length) i = 0;
+            if (i == -1) i = slotTypes.length - 1;
+            sideOption.setMatching(Either.right(slotTypes[i]));
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+            buf.writeByte(face.ordinal()).writeBoolean(true).writeBoolean(false).writeInt(SlotType.SLOT_TYPES.getRawId(slotTypes[i]));
+            ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "side_config"), buf);
+        }), //RIGHT
+        CHANGE_MATCH_SLOT((player, machine, face, back, reset) -> {
+            ConfiguredMachineFace sideOption = machine.getIOConfig().get(face);
+            if (sideOption.getAutomationType().isEnergy() || sideOption.getAutomationType() == AutomationType.NONE) return;
+            if (reset) {
+                sideOption.setMatching(null);
+                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                buf.writeByte(face.ordinal()).writeBoolean(true).writeBoolean(true).writeInt(-1);
+                ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "side_config"), buf);
+                return;
+            }
+            int i = 0;
+            IntList list = null;
+            if (sideOption.getMatching() != null && sideOption.getMatching().left().isPresent()) {
+                i = sideOption.getMatching().left().get();
+                sideOption.setMatching(null);
+                list = new IntArrayList(sideOption.getMatching(sideOption.getAutomationType().getAutomatable(machine)));
+                i = list.indexOf(i);
+            }
+            if (list == null)
+                list = new IntArrayList(sideOption.getMatching(sideOption.getAutomationType().getAutomatable(machine)));
+
+            if (!back) {
+                if (++i == list.size()) i = 0;
+            } else {
+                if (i == 0) i = list.size();
+                i--;
+            }
+            sideOption.setMatching(Either.left(list.getInt(i)));
+
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+            buf.writeByte(face.ordinal());
+            buf.writeBoolean(true).writeBoolean(true);
+            buf.writeInt(i);
+            ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "side_config"), buf);
+        }); //MID
+
+        static final SideConfigurationAction[] VALUES = SideConfigurationAction.values();
+        private final SecurityUpdater updater;
+
+        SideConfigurationAction(SecurityUpdater updater) {
+            this.updater = updater;
+        }
+
+        void update(ClientPlayerEntity player, MachineBlockEntity machine, BlockFace face, boolean back, boolean reset) {
+            updater.update(player, machine, face, back, reset);
+        }
+
+        @FunctionalInterface
+        interface SecurityUpdater {
+            void update(ClientPlayerEntity player, MachineBlockEntity machine, BlockFace face, boolean back, boolean reset);
+        }
     }
 }

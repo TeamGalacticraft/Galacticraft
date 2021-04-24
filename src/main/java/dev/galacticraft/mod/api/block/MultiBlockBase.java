@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.api.block;
 
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.SolarPanelPartBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -50,7 +50,7 @@ public interface MultiBlockBase {
     List<BlockPos> getOtherParts(BlockState state, BlockPos pos);
 
     default void onMultiblockPlaced(World world, BlockPos basePos, BlockState state) {
-        BlockState defaultState = GalacticraftBlocks.SOLAR_PANEL_PART.getDefaultState();
+        BlockState defaultState = GalacticraftBlock.SOLAR_PANEL_PART.getDefaultState();
         for (BlockPos otherPart : this.getOtherParts(state, basePos)) {
             world.setBlockState(otherPart, defaultState);
 

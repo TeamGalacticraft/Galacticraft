@@ -22,11 +22,10 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.EnergyStorageModuleScreenHandler;
-import dev.galacticraft.mod.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
@@ -34,15 +33,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorageModuleScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ENERGY_STORAGE_MODULE_SCREEN));
-
     public EnergyStorageModuleScreen(EnergyStorageModuleScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 54, 20, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
@@ -51,15 +47,16 @@ public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorag
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ENERGY_STORAGE_MODULE_SCREEN);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, this.textRenderer, I18n.translate("block.galacticraft.energy_storage_module"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, this.textRenderer, I18n.translate("block.galacticraft.energy_storage_module"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

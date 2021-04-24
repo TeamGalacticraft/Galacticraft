@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.render.block.entity;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.AdvancedSolarPanelBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -46,7 +46,7 @@ import net.minecraft.world.World;
 @Environment(EnvType.CLIENT)
 public class AdvancedSolarPanelBlockEntityRenderer extends BlockEntityRenderer<AdvancedSolarPanelBlockEntity> {
 
-    private static final Identifier solarPanelTexture = new Identifier(Constants.MOD_ID, "textures/model/solar_panel_basic.png");
+    private static final Identifier solarPanelTexture = new Identifier(Constant.MOD_ID, "textures/model/solar_panel_basic.png");
 
     private final ModelPart panelMain;
     private final ModelPart sideHorizontal0;
@@ -126,7 +126,6 @@ public class AdvancedSolarPanelBlockEntityRenderer extends BlockEntityRenderer<A
         this.render(blockEntity.getWorld(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(solarPanelTexture)), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
         matrices.pop();
     }
-
 
     public void renderPanel(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         this.panelMain.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);

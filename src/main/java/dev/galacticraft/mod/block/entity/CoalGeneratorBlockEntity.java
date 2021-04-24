@@ -23,14 +23,14 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.SideOption;
-import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.util.EnergyUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.entity.player.PlayerEntity;
@@ -48,12 +48,10 @@ import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tickable {
     private static final Object2IntMap<Item> FUEL_MAP = Util.make(new Object2IntArrayMap<>(3), (map) -> {
         map.put(Items.COAL_BLOCK, 320 * 10);
         map.put(Items.COAL, 320);
@@ -64,18 +62,25 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
     public static final int FUEL_SLOT = 1;
 
     public Status status = Status.FULL;
-    public int fuelLength;
-    public int fuelTime;
+    public int fuelLength = 0;
+    public int fuelTime = 0;
     private double heat = 0.0d;
 
     /*
      * Energy stats:
      * T1 machine: uses 30gj/t
-     * Coal Generator: generates 120gj/t
+     * Coal Generator: generates 120gj/t (max heat)
      */
 
     public CoalGeneratorBlockEntity() {
-        super(GalacticraftBlockEntities.COAL_GENERATOR_TYPE);
+        super(GalacticraftBlockEntityType.COAL_GENERATOR);
+    }
+
+    @Override
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 8);
+        builder.addSlot(FUEL_SLOT, SlotType.COAL, stack -> FUEL_MAP.containsKey(stack.getItem()), 8, 74);
+        return builder;
     }
 
     @Override
@@ -86,21 +91,6 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
-    }
-
-    @Override
-    public int getInventorySize() {
-        return 2;
-    }
-
-    @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.ITEM_INPUT);
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        return slot == CHARGE_SLOT ? EnergyUtils.IS_INSERTABLE : stack -> FUEL_MAP.containsKey(stack.getItem());
     }
 
     @Override
@@ -120,7 +110,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
 
     @Override
     public int getBaseEnergyGenerated() {
-        return Galacticraft.configManager.get().coalGeneratorEnergyProductionRate();
+        return Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate();
     }
 
     @Override
@@ -146,14 +136,10 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
             }
 
             if (this.heat < 1) {
-                this.heat = Math.min(1, this.heat + 0.02d);
+                this.heat = Math.min(1, this.heat + 0.004);
             }
         }
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return slot == FUEL_SLOT;
+        this.world.setBlockState(this.pos, this.getCachedState().with(Constant.Property.ACTIVE, this.getHeat() > 0));
     }
 
     @Nullable
@@ -163,6 +149,10 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
         return null;
     }
 
+    public double getHeat() {
+        return this.heat;
+    }
+
     /**
      * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
      */
@@ -170,27 +160,27 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
         /**
          * The generator is active and is generating energy.
          */
-        ACTIVE(new TranslatableText("ui.galacticraft.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
+        ACTIVE(new TranslatableText("ui.galacticraft.machine.status.active"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * The generator is warming up.
          */
-        WARMING(new TranslatableText("ui.galacticraft.machinestatus.warming"), Formatting.GOLD, StatusType.PARTIALLY_WORKING),
+        WARMING(new TranslatableText("ui.galacticraft.machine.status.warming"), Formatting.GOLD, StatusType.PARTIALLY_WORKING),
 
         /**
          * The generator is cooling down.
          */
-        COOLING(new TranslatableText("ui.galacticraft.machinestatus.cooling"), Formatting.AQUA, StatusType.PARTIALLY_WORKING),
+        COOLING(new TranslatableText("ui.galacticraft.machine.status.cooling"), Formatting.AQUA, StatusType.PARTIALLY_WORKING),
 
         /**
          * The generator is full.
          */
-        FULL(new TranslatableText("ui.galacticraft.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableText("ui.galacticraft.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * The generator is out of fuel.
          */
-        NOT_ENOUGH_FUEL(new TranslatableText("ui.galacticraft.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS);
+        NOT_ENOUGH_FUEL(new TranslatableText("ui.galacticraft.machine.status.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS);
 
         private final Text text;
         private final StatusType type;

@@ -22,27 +22,20 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.ElectricArcFurnaceScreenHandler;
-import dev.galacticraft.mod.util.DrawableUtils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
 public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFurnaceScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ELECTRIC_ARC_FURNACE_SCREEN));
-
     private static final int ARROW_X = 78;
     private static final int ARROW_Y = 24;
 
@@ -60,7 +53,7 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         if (handler.machine.cookLength != 0 && handler.machine.cookTime != 0) {
             double scale = ((double)handler.machine.cookTime) / ((double)handler.machine.cookLength);
@@ -68,7 +61,8 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
             this.drawTexture(matrices, this.x + ARROW_X, this.y + ARROW_Y, LIT_ARROW_X, LIT_ARROW_Y, (int) (((double)ARROW_WIDTH) * scale), ARROW_HEIGHT);
         }
 
-        DrawableUtils.drawCenteredString(matrices, textRenderer, new TranslatableText("block.galacticraft.electric_arc_furnace"), this.width / 2, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft.electric_arc_furnace"), this.width / 2, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override

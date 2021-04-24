@@ -25,14 +25,14 @@ package dev.galacticraft.mod.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
-import dev.galacticraft.mod.api.block.SideOption;
-import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
-import dev.galacticraft.mod.recipe.GalacticraftRecipes;
+import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
+import dev.galacticraft.mod.screen.slot.SlotType;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,13 +50,12 @@ import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CompressorBlockEntity extends ConfigurableMachineBlockEntity {
+public class CompressorBlockEntity extends MachineBlockEntity {
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
 
@@ -67,36 +66,35 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity {
     public int progress;
 
     public CompressorBlockEntity() {
-        super(GalacticraftBlockEntities.COMPRESSOR_TYPE);
-        this.craftingInv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
+        super(GalacticraftBlockEntityType.COMPRESSOR);
+        this.craftingInv = new InventoryFixedWrapper(this.getInventory().getSubInv(1, 10)) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
                 return getWrappedInventory().canPlayerUse(player);
             }
         };
+
+    }
+
+    @Override
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 3; x++) {
+                builder.addSlot(y * 3 + x, SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 19, y * 18 + 18);
+            }
+        }
+
+        // Fuel slot
+        builder.addSlot(FUEL_INPUT_SLOT, SlotType.FUEL_OUT, stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null, 3 * 18 + 1, 75);
+
+        // Output slot
+        builder.addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 38));
+        return builder;
     }
 
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
-    }
-
-    @Override
-    public int getInventorySize() {
-        return 11;
-    }
-
-    @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        if (slot == FUEL_INPUT_SLOT) {
-            return stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null;
-        }
-        return ConstantItemFilter.ANYTHING;
     }
 
     @Override
@@ -153,7 +151,7 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity {
 
     private Optional<CompressingRecipe> getRecipe(Inventory input) {
         if (this.world == null) return Optional.empty();
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, input, this.world);
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipe.COMPRESSING_TYPE, input, this.world);
     }
 
     public int getProgress() {
@@ -166,26 +164,16 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity {
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        tag.putInt("Progress", this.progress);
-        tag.putInt("FuelTime", this.fuelTime);
+        tag.putInt(Constant.Nbt.PROGRESS, this.progress);
+        tag.putInt(Constant.Nbt.FUEL_TIME, this.fuelTime);
         return super.toTag(tag);
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        this.progress = tag.getInt("Progress");
-        this.fuelTime = tag.getInt("FuelTime");
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return slot == OUTPUT_SLOT;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return slot < 9;
+        this.progress = tag.getInt(Constant.Nbt.PROGRESS);
+        this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
     }
 
     @Nullable
@@ -202,22 +190,22 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity {
         /**
          * Compressor is compressing items.
          */
-        PROCESSING(new TranslatableText("ui.galacticraft.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
+        PROCESSING(new TranslatableText("ui.galacticraft.machine.status.active"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Compressor has no valid recipe.
          */
-        INVALID_RECIPE(new TranslatableText("ui.galacticraft.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
+        INVALID_RECIPE(new TranslatableText("ui.galacticraft.machine.status.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
 
         /**
          * Compressor has no valid recipe.
          */
-        OUTPUT_FULL(new TranslatableText("ui.galacticraft.machinestatus.output_full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        OUTPUT_FULL(new TranslatableText("ui.galacticraft.machine.status.output_full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Compressor has no fuel.
          */
-        MISSING_FUEL(new TranslatableText("ui.galacticraft.machinestatus.missing_fuel"), Formatting.RED, StatusType.MISSING_ENERGY);
+        MISSING_FUEL(new TranslatableText("ui.galacticraft.machine.status.missing_fuel"), Formatting.RED, StatusType.MISSING_ENERGY);
 
         private final Text text;
         private final StatusType type;

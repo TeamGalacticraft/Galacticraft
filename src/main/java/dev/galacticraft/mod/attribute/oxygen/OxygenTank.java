@@ -22,7 +22,8 @@
 
 package dev.galacticraft.mod.attribute.oxygen;
 
-import java.util.function.Consumer;
+import alexiil.mc.lib.attributes.ListenerToken;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -34,7 +35,12 @@ public interface OxygenTank {
 
     int getAmount();
 
-    OxygenTank listen(Consumer<OxygenTank> consumer);
+    @Nullable ListenerToken listen(OxygenTankChangedListener listener);
 
     void removeListeners();
+
+    @FunctionalInterface
+    interface OxygenTankChangedListener {
+        void onChanged(OxygenTank tank, int previous);
+    }
 }

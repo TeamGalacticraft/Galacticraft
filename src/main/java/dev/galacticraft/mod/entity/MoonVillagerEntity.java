@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.entity;
 
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.attribute.GalacticraftEntityAttributes;
+import dev.galacticraft.mod.api.entity.attribute.GalacticraftEntityAttribute;
 import dev.galacticraft.mod.village.MoonVillagerType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -113,19 +113,19 @@ public class MoonVillagerEntity extends VillagerEntity {
         double d = this.random.nextDouble();
         VillagerType villagerType3;
         if (d < 0.5D) {
-            villagerType3 = VillagerType.forBiome(serverWorld.method_31081(this.getBlockPos()));
+            villagerType3 = VillagerType.forBiome(serverWorld.getBiomeKey(this.getBlockPos()));
         } else if (d < 0.75D) {
             villagerType3 = this.getVillagerData().getType();
         } else {
             villagerType3 = ((VillagerEntity) passiveEntity).getVillagerData().getType();
         }
 
-        MoonVillagerEntity moonVillager = new MoonVillagerEntity(GalacticraftEntityTypes.MOON_VILLAGER, serverWorld, villagerType3);
+        MoonVillagerEntity moonVillager = new MoonVillagerEntity(GalacticraftEntityType.MOON_VILLAGER, serverWorld, villagerType3);
         moonVillager.initialize(serverWorld, serverWorld.getLocalDifficulty(moonVillager.getBlockPos()), SpawnReason.BREEDING, null, null);
         return moonVillager;
     }
 
     public static DefaultAttributeContainer.Builder createMoonVillagerAttributes() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5D).add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48.0D).add(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D);
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5D).add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48.0D).add(GalacticraftEntityAttribute.CAN_BREATHE_IN_SPACE, 1.0D);
     }
 }

@@ -22,37 +22,39 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.screen.property.CapacitorProperty;
 import dev.galacticraft.mod.screen.property.FluidTankPropertyDelegate;
 import dev.galacticraft.mod.screen.property.StatusProperty;
+import dev.galacticraft.mod.screen.tank.Tank;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.Property;
-import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEntity> extends ScreenHandler {
+public abstract class MachineScreenHandler<T extends MachineBlockEntity> extends ScreenHandler {
     public final PlayerEntity player;
     public final T machine;
+
+    public final List<Tank> tanks = new ArrayList<>();
 
     protected MachineScreenHandler(int syncId, PlayerEntity player, T machine, ScreenHandlerType<? extends MachineScreenHandler<T>> handlerType) {
         super(handlerType, syncId);
         this.player = player;
         this.machine = machine;
+        this.machine.getInventory().createSlots(this);
+        this.machine.getFluidInv().createTanks(this);
+        this.addProperties(new FluidTankPropertyDelegate(machine.getFluidInv()));
 
         this.addProperty(new StatusProperty(machine));
         this.addProperty(new CapacitorProperty(machine.getCapacitor()));
-
-        PropertyDelegate tankDelegate = new FluidTankPropertyDelegate(machine.getFluidTank());
-        for (int i = 0; i < machine.getFluidTankSize() * 2; i++) {
-            this.addProperty(Property.create(tankDelegate, i));
-        }
     }
 
     @Override
@@ -87,28 +89,28 @@ public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEnt
     protected void addPlayerInventorySlots(int x, int y) {
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(player.inventory, j + i * 9 + 9, x + 8 + j * 18, y + i * 18));
+                super.addSlot(new Slot(player.inventory, j + i * 9 + 9, x + 8 + j * 18, y + i * 18));
             }
         }
 
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(player.inventory, i, x + 8 + i * 18, y + 58));
+            super.addSlot(new Slot(player.inventory, i, x + 8 + i * 18, y + 58));
         }
     }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
-        return machine.getSecurity().getPublicity() == ConfigurableMachineBlockEntity.SecurityInfo.Publicity.PUBLIC
-                || !machine.getSecurity().hasOwner()
-                || machine.getSecurity().getOwner().equals(player.getUuid())
-                // TODO: there's a big "false" here making this ⬇ always false
-                || (machine.getSecurity().hasTeam() && machine.getSecurity().getPublicity() == ConfigurableMachineBlockEntity.SecurityInfo.Publicity.SPACE_RACE && false
-            //&& blockEntity.getSecurity().getTeam() == player
-        );
+    public Slot addSlot(Slot slot) {
+        return super.addSlot(slot);
     }
 
     @Override
-    public Property addProperty(Property property) {
-        return super.addProperty(property);
+    public boolean canUse(PlayerEntity player) {
+        return machine.getSecurity().hasAccess(player);
+    }
+
+    public Tank addTank(Tank tank) {
+        tank.id = this.tanks.size();
+        this.tanks.add(tank);
+        return tank;
     }
 }

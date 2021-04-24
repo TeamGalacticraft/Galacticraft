@@ -53,7 +53,7 @@ public abstract class ClientPlayerEntityMixin {
 
                 if (this.input.jumping && ((RocketEntity) player.getVehicle()).getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
                     ((RocketEntity) player.getVehicle()).onJump();
-                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "rocket_jump"), new PacketByteBuf(Unpooled.buffer())));
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_jump"), new PacketByteBuf(Unpooled.buffer())));
                 }
 
                 if (((RocketEntity) player.getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
@@ -61,24 +61,24 @@ public abstract class ClientPlayerEntityMixin {
                         player.getVehicle().prevPitch = player.getVehicle().pitch;
                         player.getVehicle().pitch -= 2.0F;
                         player.getVehicle().pitch %= 360.0F;
-                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "rocket_pitch"), new PacketByteBuf(Unpooled.buffer().writeBoolean(false))));
+                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_pitch"), new PacketByteBuf(Unpooled.buffer().writeBoolean(false))));
                     } else if (this.input.pressingBack) {
                         player.getVehicle().prevPitch = player.getVehicle().pitch;
                         player.getVehicle().pitch += 2.0F;
                         player.getVehicle().pitch %= 360.0F;
-                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "rocket_pitch"), new PacketByteBuf(Unpooled.buffer().writeBoolean(true))));
+                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_pitch"), new PacketByteBuf(Unpooled.buffer().writeBoolean(true))));
                     }
 
                     if (this.input.pressingLeft) {
                         player.getVehicle().prevYaw = player.getVehicle().yaw;
                         player.getVehicle().yaw -= 2.0F;
                         player.getVehicle().yaw %= 360.0F;
-                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "rocket_yaw"), new PacketByteBuf(Unpooled.buffer().writeBoolean(false))));
+                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_yaw"), new PacketByteBuf(Unpooled.buffer().writeBoolean(false))));
                     } else if (this.input.pressingRight) {
                         player.getVehicle().prevYaw = player.getVehicle().yaw;
                         player.getVehicle().yaw += 2.0F;
                         player.getVehicle().yaw %= 360.0F;
-                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "rocket_yaw"), new PacketByteBuf(Unpooled.buffer().writeBoolean(true))));
+                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_yaw"), new PacketByteBuf(Unpooled.buffer().writeBoolean(true))));
 
                     }
                 }

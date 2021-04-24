@@ -22,12 +22,15 @@
 
 package dev.galacticraft.mod.attribute.oxygen;
 
-import java.util.function.Consumer;
+import alexiil.mc.lib.attributes.ListenerToken;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class InfiniteOxygenTank implements OxygenTank {
+public enum InfiniteOxygenTank implements OxygenTank {
+    INSTANCE;
+
     @Override
     public int getCapacity() {
         return 1620 * 64;
@@ -43,8 +46,8 @@ public class InfiniteOxygenTank implements OxygenTank {
     }
 
     @Override
-    public OxygenTank listen(Consumer<OxygenTank> consumer) {
-        return this;
+    public @Nullable ListenerToken listen(OxygenTankChangedListener listener) {
+        return null;
     }
 
     @Override

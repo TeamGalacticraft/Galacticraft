@@ -90,8 +90,8 @@ public class PlanetSelectScreen extends Screen {
     protected static final int RED = ColorUtils.to32BitColor(255, 255, 0, 0);
     protected static final int RED3 = ColorUtils.to32BitColor(255, 255, 100, 100);
     protected static final int CYAN = ColorUtils.to32BitColor(255, 150, 200, 255);
-    protected static Identifier guiMain0 = new Identifier(Constants.MOD_ID, "textures/gui/celestialselection.png");
-    protected static Identifier guiMain1 = new Identifier(Constants.MOD_ID, "textures/gui/celestialselection1.png");
+    protected static Identifier guiMain0 = new Identifier(Constant.MOD_ID, "textures/gui/celestialselection.png");
+    protected static Identifier guiMain1 = new Identifier(Constant.MOD_ID, "textures/gui/celestialselection1.png");
     protected static int BORDER_SIZE = 0;
     protected static int BORDER_EDGE_SIZE = 0;
     protected final boolean mapMode;
@@ -382,7 +382,7 @@ public class PlanetSelectScreen extends Screen {
 
     @Override
     public boolean charTyped(char character, int modifiers) {
-        if (renamingSpaceStation && SharedConstants.isValidChar(character)) {
+        if (renamingSpaceStation && SharedConstant.isValidChar(character)) {
             this.renamingString = this.renamingString + character;
             this.renamingString = this.renamingString.substring(0, Math.min(this.renamingString.length(), MAX_SPACE_STATION_NAME_LENGTH));
 
@@ -393,7 +393,7 @@ public class PlanetSelectScreen extends Screen {
     }
 
     public boolean isValid(String string) {
-        return string.length() > 0 && SharedConstants.isValidChar(string.charAt(string.length() - 1));
+        return string.length() > 0 && SharedConstant.isValidChar(string.charAt(string.length() - 1));
 
     }
 
@@ -464,7 +464,7 @@ public class PlanetSelectScreen extends Screen {
         if (this.selectedBody != null && this.selectedBody.getWorld() != null) {
             if (this.selectedBody.getAccessWeight() <= this.tier) {
                 try {
-                    client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "planet_tp"), new PacketByteBuf(Unpooled.buffer()).writeIdentifier(this.selectedBody.getId())));
+                    client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "planet_tp"), new PacketByteBuf(Unpooled.buffer()).writeIdentifier(this.selectedBody.getId())));
                     client.openScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite) this.selectedBody).getName() : this.selectedBody.getTranslationKey(), this.selectedBody.getWorld()));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -543,7 +543,7 @@ public class PlanetSelectScreen extends Screen {
                         if (recipe.test(this.client.player.inventory) || this.client.player.abilities.creativeMode)
                         {
 //                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BIND_SPACE_STATION_ID, GCCoreUtil.getWorld(this.client.world), new Object[]{this.selectedBody.getWorld()}));
-                            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "create_satellite"), new PacketByteBuf(Unpooled.buffer()).writeIdentifier(this.selectedBody.getId()));
+                            ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "create_satellite"), new PacketByteBuf(Unpooled.buffer()).writeIdentifier(this.selectedBody.getId()));
                             //Zoom in on planet to show the new SpaceStation if not already zoomed
                             if (!this.isZoomed())
                             {

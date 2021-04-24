@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.client.gui.widget;
 
-import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen;
 import dev.galacticraft.mod.util.DrawableUtils;
 import io.netty.buffer.ByteBufAllocator;
@@ -38,11 +37,11 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
+import net.minecraft.text.LiteralText;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
 public class SpaceRaceButtonWidget extends ButtonWidget {
     private final TextRenderer textRenderer;
     private final int screenWidth;
@@ -75,7 +74,7 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
         this.drawHorizontalLine(matrices, x, screenWidth, y, 0xFF000000);
         this.drawVerticalLine(matrices, x, screenHeight, y, 0xFF000000);
 
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.space_race_manager.button"), x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.space_race_manager.button_2"), x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
+        drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.space_race_manager.button"), x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
+        drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.space_race_manager.button_2"), x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
     }
 }

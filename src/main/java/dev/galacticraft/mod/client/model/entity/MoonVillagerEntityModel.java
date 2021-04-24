@@ -24,8 +24,6 @@ package dev.galacticraft.mod.client.model.entity;
 
 import com.google.common.collect.Iterables;
 import dev.galacticraft.mod.entity.MoonVillagerEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.VillagerResemblingModel;
 
@@ -34,7 +32,6 @@ import java.util.Collections;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
 public class MoonVillagerEntityModel extends VillagerResemblingModel<MoonVillagerEntity> {
     private final ModelPart brain;
 

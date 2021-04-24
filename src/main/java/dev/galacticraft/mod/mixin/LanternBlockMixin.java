@@ -22,6 +22,9 @@
 
 package dev.galacticraft.mod.mixin;
 
+import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.api.atmosphere.AtmosphericGas;
 import dev.galacticraft.api.celestialbodies.CelestialBodyType;
 import dev.galacticraft.mod.block.GalacticraftBlocks;
@@ -51,7 +54,7 @@ public abstract class LanternBlockMixin extends Block {
         super.onBlockAdded(state, world, pos, oldState, moved);
         if (CelestialBodyType.getByDimType(world.getRegistryManager(), world.getRegistryKey()).isPresent() && !CelestialBodyType.getByDimType(world.getRegistryManager(), world.getRegistryKey()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
             if (state.getBlock() == Blocks.LANTERN) {
-                world.setBlockState(pos, GalacticraftBlocks.UNLIT_LANTERN.getDefaultState().with(LanternBlock.HANGING, state.get(LanternBlock.HANGING)).with(LanternBlock.field_26441, state.get(LanternBlock.field_26441)));
+                world.setBlockState(pos, GalacticraftBlock.UNLIT_LANTERN.getDefaultState().with(LanternBlock.HANGING, state.get(LanternBlock.HANGING)).with(LanternBlock.field_26441, state.get(LanternBlock.field_26441)));
             }
             world.addParticle(ParticleTypes.SMOKE, pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D);
             world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 1.0F, 0.9F, false);

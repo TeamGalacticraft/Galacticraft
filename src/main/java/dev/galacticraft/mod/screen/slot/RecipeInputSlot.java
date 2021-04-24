@@ -35,6 +35,7 @@ import net.minecraft.world.World;
  */
 public class RecipeInputSlot<I extends Inventory, T extends Recipe<I>> extends Slot {
 
+    private final Inventory inventory = new SimpleInventory(1);
     private final RecipeType<T> type;
     private final World world;
 
@@ -42,10 +43,15 @@ public class RecipeInputSlot<I extends Inventory, T extends Recipe<I>> extends S
         super(inventory, slotId, x, y);
         this.type = type;
         this.world = world;
+        if (!inventory.getClass().isInstance(this.inventory)) {
+            throw new AssertionError();
+        }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean canInsert(ItemStack stack) {
-        return world.getRecipeManager().getFirstMatch(this.type, (I)new SimpleInventory(stack), world).isPresent();
+        this.inventory.setStack(0, stack);
+        return this.world.getRecipeManager().getFirstMatch(this.type, (I)inventory, world).isPresent();
     }
 }

@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.world.gen.chunk;
 
-import dev.galacticraft.mod.block.GalacticraftBlocks;
-import dev.galacticraft.mod.structure.GalacticraftStructures;
-import dev.galacticraft.mod.world.biome.source.MoonBiomeSource;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.structure.GalacticraftStructure;
+import dev.galacticraft.mod.world.biome.source.MoonBiomeSource;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
@@ -100,7 +100,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
                         new SlideConfig(-10, 3, 0), new SlideConfig(-30, 2, -1),
                         1, 2, 1.0D, -0.46875D, true,
                         false, false, false),
-                GalacticraftBlocks.MOON_ROCKS[0].getDefaultState(), AIR, -10, 0, 63, false));
+                GalacticraftBlock.MOON_ROCKS[0].getDefaultState(), AIR, -10, 0, 63, false));
     }
 
     private MoonChunkGenerator(BiomeSource biomeSource, long seed, @NotNull Supplier<ChunkGeneratorSettings> settingsSupplier) {
@@ -534,12 +534,12 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     @Override
     public List<SpawnSettings.SpawnEntry> getEntitySpawnList(Biome biome, StructureAccessor accessor, SpawnGroup group, BlockPos pos) {
         if (group == SpawnGroup.MONSTER) {
-            if (accessor.getStructureAt(pos, false, GalacticraftStructures.MOON_PILLAGER_BASE_FEATURE).hasChildren()) {
-                return GalacticraftStructures.MOON_PILLAGER_BASE_FEATURE.getMonsterSpawns();
+            if (accessor.getStructureAt(pos, false, GalacticraftStructure.MOON_PILLAGER_BASE_FEATURE).hasChildren()) {
+                return GalacticraftStructure.MOON_PILLAGER_BASE_FEATURE.getMonsterSpawns();
             }
 
-            if (accessor.getStructureAt(pos, false, GalacticraftStructures.MOON_RUINS).hasChildren()) {
-                return GalacticraftStructures.MOON_RUINS.getMonsterSpawns();
+            if (accessor.getStructureAt(pos, false, GalacticraftStructure.MOON_RUINS).hasChildren()) {
+                return GalacticraftStructure.MOON_RUINS.getMonsterSpawns();
             }
         }
 

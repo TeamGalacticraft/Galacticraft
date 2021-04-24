@@ -28,7 +28,7 @@ import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
 import dev.galacticraft.mod.block.entity.RocketDesignerBlockEntity;
-import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
+import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.entity.RocketEntity;
 import dev.galacticraft.mod.screen.RocketDesignerScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtils;
@@ -59,7 +59,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHandler> {
 
-    protected final Identifier TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ROCKET_DESIGNER_SCREEN));
+    protected final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.ScreenTextures.getRaw(Constant.ScreenTextures.ROCKET_DESIGNER_SCREEN));
     protected RocketDesignerBlockEntity blockEntity;
 
     private static final int WHITE_BOX_X = 192;
@@ -147,7 +147,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         this.backgroundWidth = 323;
         this.backgroundHeight = 164;
         this.blockEntity = screenHandler.blockEntity;
-        this.entity = new RocketEntity(GalacticraftEntityTypes.ROCKET, inv.player.world);
+        this.entity = new RocketEntity(GalacticraftEntityType.ROCKET, inv.player.world);
         this.validParts.addAll(GalacticraftRocketParts.getUnlockedParts(inv.player, currentType));
     }
 

@@ -25,7 +25,7 @@ package dev.galacticraft.mod.mixin;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.impl.EmptyFixedItemInv;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
-import dev.galacticraft.mod.world.dimension.GalacticraftDimensions;
+import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
@@ -60,7 +60,7 @@ public abstract class EntityMixin implements GearInventoryProvider {
 
     @Inject(method = "getTeleportTarget", at = @At("HEAD"), cancellable = true)
     private void getTeleportTargetGC(ServerWorld destination, CallbackInfoReturnable<TeleportTarget> cir) {
-        if (destination.getRegistryKey().equals(GalacticraftDimensions.MOON) || this.world.getRegistryKey().equals(GalacticraftDimensions.MOON)) { //TODO lander/parachute stuff
+        if (destination.getRegistryKey().equals(GalacticraftDimension.MOON) || this.world.getRegistryKey().equals(GalacticraftDimension.MOON)) { //TODO lander/parachute stuff
             BlockPos pos = destination.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, destination.getSpawnPos());
             cir.setReturnValue(new TeleportTarget(new Vec3d((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getVelocity(), this.yaw, this.pitch));
         }

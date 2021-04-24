@@ -27,21 +27,19 @@ import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.SideOption;
-import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
+import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.entity.BubbleEntity;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
-import dev.galacticraft.mod.entity.GalacticraftEntityTypes;
-import dev.galacticraft.mod.fluids.GalacticraftFluids;
+import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
-import dev.galacticraft.mod.util.EnergyUtils;
-import dev.galacticraft.mod.util.FluidUtils;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.util.EnergyUtil;
+import dev.galacticraft.mod.util.FluidUtil;
+import dev.galacticraft.mod.util.OxygenTankUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
@@ -62,15 +60,14 @@ import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class BubbleDistributorBlockEntity extends MachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int BATTERY_SLOT = 0;
     public static final int OXYGEN_TANK_SLOT = 1;
+    public static final int OXYGEN_TANK = 0;
     public boolean bubbleVisible = true;
     private double size = 0;
     private byte targetSize = 1;
@@ -79,27 +76,25 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     private double prevSize;
 
     public BubbleDistributorBlockEntity() {
-        super(GalacticraftBlockEntities.BUBBLE_DISTRIBUTOR_TYPE);
+        super(GalacticraftBlockEntityType.BUBBLE_DISTRIBUTOR);
     }
 
     @Override
-    public int getInventorySize() {
-        return 2;
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(BATTERY_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
+        builder.addSlot(OXYGEN_TANK_SLOT, SlotType.OXYGEN_TANK, OxygenTankUtil.OXYGEN_TANK_EXTRACTABLE, 31, 62);
+        return builder;
     }
 
     @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT);
+    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_IN, 31, 8);
+        return builder;
     }
 
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
-    }
-
-    @Override
-    public int getFluidTankSize() {
-        return 1;
     }
 
     @Override
@@ -113,16 +108,6 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        if (slot == BATTERY_SLOT) {
-            return EnergyUtils.IS_EXTRACTABLE;
-        } else if (slot == OXYGEN_TANK_SLOT) {
-            return stack -> FluidUtils.canExtractFluids(stack, GalacticraftFluids.LIQUID_OXYGEN);
-        }
-        return ConstantItemFilter.NOTHING;
-    }
-
-    @Override
     public void updateComponents() {
         super.updateComponents();
         this.attemptChargeFromStack(BATTERY_SLOT);
@@ -133,7 +118,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         FluidAmount oxygenRequired = FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D) + 1);
-        if (!this.getFluidTank().extractFluid(0, null, FluidVolumeUtil.EMPTY, oxygenRequired, Simulation.SIMULATE).getAmount_F().equals(oxygenRequired)) return Status.NOT_ENOUGH_OXYGEN;
+        if (!this.getFluidInv().extractFluid(OXYGEN_TANK, null, FluidVolumeUtil.EMPTY, oxygenRequired, Simulation.SIMULATE).amount().equals(oxygenRequired)) return Status.NOT_ENOUGH_OXYGEN;
         return Status.DISTRIBUTING;
     }
 
@@ -146,7 +131,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
             this.setSize(Math.max(size - 0.1F, targetSize));
         }
         if (size > 0.0D && bubbleVisible && bubbleId == -1 && (world instanceof ServerWorld)) {
-            BubbleEntity entity = new BubbleEntity(GalacticraftEntityTypes.BUBBLE, world);
+            BubbleEntity entity = new BubbleEntity(GalacticraftEntityType.BUBBLE, world);
             entity.setPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
             entity.prevX = this.getPos().getX();
             entity.prevY = this.getPos().getY();
@@ -158,7 +143,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
             }
         }
         if (this.getStatus().getType().isActive()) {
-            this.getFluidTank().extractFluid(0, null, FluidVolumeUtil.EMPTY, FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), Simulation.ACTION);
+            this.getFluidInv().extractFluid(OXYGEN_TANK, null, FluidVolumeUtil.EMPTY, FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), Simulation.ACTION);
             if (!world.isClient()) {
                 if (size < targetSize) {
                     setSize(size + 0.05D);
@@ -180,7 +165,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
         }
         if (prevSize != size || players != world.getPlayers().size()) {
             for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
-                ServerPlayNetworking.send(player, new Identifier(Constants.MOD_ID, "bubble_size"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(this.pos).writeDouble(this.size)));
+                ServerPlayNetworking.send(player, new Identifier(Constant.MOD_ID, "bubble_size"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(this.pos).writeDouble(this.size)));
             }
         }
     }
@@ -196,28 +181,23 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putByte("MaxSize", targetSize);
-        tag.putDouble("Size", size);
+        tag.putByte(Constant.Nbt.MAX_SIZE, targetSize);
+        tag.putDouble(Constant.Nbt.SIZE, size);
         return tag;
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        this.size = tag.getDouble("Size");
+        this.size = tag.getDouble(Constant.Nbt.SIZE);
         if (size < 0) size = 0;
-        this.targetSize = tag.getByte("MaxSize");
+        this.targetSize = tag.getByte(Constant.Nbt.MAX_SIZE);
         if (targetSize < 1) targetSize = 1;
     }
 
     @Override
     public int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().oxygenCollectorEnergyConsumptionRate();
-    }
-
-    @Override
-    public boolean canPipeInsertFluid(int tank) {
-        return true;
+        return Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate();
     }
 
     public double getSize() {
@@ -228,18 +208,13 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
         this.size = size;
     }
 
-    @Override
-    public FluidFilter getFilterForTank(int tank) {
-        return Constants.Misc.LOX_ONLY;
-    }
-
     protected void drainOxygenFromStack(int slot) {
-        if (this.getFluidTank().getInvFluid(0).getAmount_F().compareTo(this.getFluidTank().getMaxAmount_F(0)) >= 0) {
+        if (this.getFluidInv().getInvFluid(0).amount().compareTo(this.getFluidInv().getMaxAmount_F(0)) >= 0) {
             return;
         }
-        if (FluidUtils.canExtractFluids(this.getInventory().getSlot(slot))) {
+        if (FluidUtil.canExtractFluids(this.getInventory().getSlot(slot))) {
             FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(this.getInventory().getSlot(slot));
-            this.getFluidTank().insertFluid(0, extractable.attemptExtraction(Constants.Misc.LOX_ONLY, this.getFluidTank().getMaxAmount_F(0).sub(this.getFluidTank().getInvFluid(0).getAmount_F()), Simulation.ACTION), Simulation.ACTION);
+            this.getFluidInv().insertFluid(OXYGEN_TANK, extractable.attemptExtraction(Constant.Filter.LOX_ONLY, this.getFluidInv().getMaxAmount_F(0).sub(this.getFluidInv().getInvFluid(0).amount()), Simulation.ACTION), Simulation.ACTION);
         }
     }
 
@@ -254,9 +229,9 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
      * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
      */
     private enum Status implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        DISTRIBUTING(new TranslatableText("ui.galacticraft.machinestatus.distributing"), Formatting.GREEN, StatusType.WORKING),
-        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft.machinestatus.not_enough_oxygen"), Formatting.AQUA, StatusType.MISSING_FLUIDS);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        DISTRIBUTING(new TranslatableText("ui.galacticraft.machine.status.distributing"), Formatting.GREEN, StatusType.WORKING),
+        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft.machine.status.not_enough_oxygen"), Formatting.AQUA, StatusType.MISSING_FLUIDS);
 
         private final Text text;
         private final StatusType type;

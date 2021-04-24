@@ -30,7 +30,7 @@
     "client.ClientChunkSectionMixin",
     "client.ClientPlayerEntityMixin",
     "client.ClientWorldMixin",
-    "client.HandledScreenHooks",
+    "client.HandledScreenAccessor",
     "client.InGameHudMixin",
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",

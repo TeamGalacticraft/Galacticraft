@@ -24,8 +24,16 @@ package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
+import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
+import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.Constants;
@@ -37,7 +45,8 @@ import dev.galacticraft.api.celestialbodies.CelestialBodyType;
 import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
 import dev.galacticraft.mod.fluids.GalacticraftFluids;
 import dev.galacticraft.mod.screen.OxygenCollectorScreenHandler;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
@@ -53,40 +62,37 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int CHARGE_SLOT = 0;
+    public static final int OXYGEN_TANK = 0;
 
     public int collectionAmount = 0;
 
     public OxygenCollectorBlockEntity() {
-        super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);
+        super(GalacticraftBlockEntityType.OXYGEN_COLLECTOR);
     }
 
     @Override
-    public int getInventorySize() {
-        return 1;
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 13, 69);
+        return builder;
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 1;
+    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_OUT, 36, 13);
+        return builder;
     }
 
     @Override
     public FluidAmount getFluidTankCapacity() {
         return MAX_OXYGEN;
-    }
-
-    @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_OUTPUT);
     }
 
     @Override
@@ -97,11 +103,6 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     @Override
     public boolean canInsertEnergy() {
         return true;
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        return EnergyUtils.IS_EXTRACTABLE;
     }
 
     private int collectOxygen() {
@@ -180,7 +181,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.isTankFull(0)) return Status.FULL;
+        if (this.isTankFull(OXYGEN_TANK)) return Status.FULL;
         if (!canCollectOxygen()) return Status.NOT_ENOUGH_LEAVES;
         return Status.COLLECTING;
     }
@@ -190,33 +191,13 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
         this.collectionAmount = 0;
         if (this.getStatus().getType().isActive()) {
             this.collectionAmount = collectOxygen();
-            this.getFluidTank().insertFluid(0, FluidKeys.get(GalacticraftFluids.LIQUID_OXYGEN).withAmount(FluidAmount.of(collectionAmount, 100)), Simulation.ACTION);
+            this.getFluidInv().insertFluid(OXYGEN_TANK, FluidKeys.get(GalacticraftFluid.LIQUID_OXYGEN).withAmount(FluidAmount.of(collectionAmount, 100)), Simulation.ACTION);
         }
     }
 
     @Override
     public int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().oxygenCollectorEnergyConsumptionRate();
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return true;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return true;
-    }
-
-    @Override
-    public boolean canPipeExtractFluid(int tank) {
-        return true;
-    }
-
-    @Override
-    public FluidFilter getFilterForTank(int tank) {
-        return Constants.Misc.LOX_ONLY;
+        return Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate();
     }
 
     @Nullable
@@ -230,10 +211,10 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
      * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
      */
     private enum Status implements MachineStatus {
-        COLLECTING(new TranslatableText("ui.galacticraft.machinestatus.collecting"), Formatting.GREEN, StatusType.WORKING),
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        NOT_ENOUGH_LEAVES(new TranslatableText("ui.galacticraft.machinestatus.not_enough_leaves"), Formatting.RED, StatusType.MISSING_RESOURCE),
-        FULL(new TranslatableText("ui.galacticraft.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL);
+        COLLECTING(new TranslatableText("ui.galacticraft.machine.status.collecting"), Formatting.GREEN, StatusType.WORKING),
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_LEAVES(new TranslatableText("ui.galacticraft.machine.status.not_enough_leaves"), Formatting.RED, StatusType.MISSING_RESOURCE),
+        FULL(new TranslatableText("ui.galacticraft.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL);
 
         private final Text text;
         private final StatusType type;

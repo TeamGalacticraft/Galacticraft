@@ -34,7 +34,7 @@ import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.api.block.SideOption;
 import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
@@ -153,7 +153,7 @@ public class FuelLoaderBlockEntity extends ConfigurableMachineBlockEntity {
     public void tickWork() {
         if (check != null) {
             BlockPos launchPad = this.pos.offset(check);
-            if (world.getBlockState(launchPad).getBlock() == GalacticraftBlocks.ROCKET_LAUNCH_PAD) {
+            if (world.getBlockState(launchPad).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
                 launchPad = launchPad.add(RocketLaunchPadBlock.partToCenterPos(world.getBlockState(launchPad).get(RocketLaunchPadBlock.PART)));
                 if (world.getBlockState(launchPad).getBlock() instanceof RocketLaunchPadBlock
                         && world.getBlockState(launchPad).get(RocketLaunchPadBlock.PART) == RocketLaunchPadBlock.Part.CENTER

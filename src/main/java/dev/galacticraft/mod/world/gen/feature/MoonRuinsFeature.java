@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.world.gen.feature;
 
-import dev.galacticraft.mod.structure.MoonRuinsGenerator;
 import com.mojang.serialization.Codec;
+import dev.galacticraft.mod.structure.MoonRuinsGenerator;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.util.BlockRotation;

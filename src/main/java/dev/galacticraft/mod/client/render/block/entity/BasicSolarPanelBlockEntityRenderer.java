@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.render.block.entity;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.BasicSolarPanelBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -44,7 +44,7 @@ import net.minecraft.util.math.Direction;
  */
 @Environment(EnvType.CLIENT)
 public class BasicSolarPanelBlockEntityRenderer extends BlockEntityRenderer<BasicSolarPanelBlockEntity> {
-    private static final Identifier solarPanelTexture = new Identifier(Constants.MOD_ID, "textures/model/solar_panel_basic.png");
+    private static final Identifier solarPanelTexture = new Identifier(Constant.MOD_ID, "textures/model/solar_panel_basic.png");
 
     private final ModelPart panelMain;
     private final ModelPart sideHorizontal0;

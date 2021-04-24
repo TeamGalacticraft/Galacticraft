@@ -39,60 +39,60 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GalacticraftRocketParts {
-    public static final RocketPart DEFAULT_CONE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_cone"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "default_cone"))
+    public static final RocketPart DEFAULT_CONE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constant.MOD_ID, "default_cone"), RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "default_cone"))
             .name(new TranslatableText("rocket_part.galacticraft.default_cone"))
             .type(RocketPartType.CONE)
             .build());
 
-    public static final RocketPart DEFAULT_BODY = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_body"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "default_body"))
+    public static final RocketPart DEFAULT_BODY = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constant.MOD_ID, "default_body"), RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "default_body"))
             .name(new TranslatableText("rocket_part.galacticraft.default_body"))
             .type(RocketPartType.BODY)
             .build());
 
-    public static final RocketPart DEFAULT_FIN = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_fin"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "default_fin"))
+    public static final RocketPart DEFAULT_FIN = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constant.MOD_ID, "default_fin"), RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "default_fin"))
             .name(new TranslatableText("rocket_part.galacticraft.default_fin"))
             .type(RocketPartType.FIN)
             .build());
 
-    public static final RocketPart NO_BOOSTER = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_booster"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "default_booster"))
+    public static final RocketPart NO_BOOSTER = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constant.MOD_ID, "default_booster"), RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "default_booster"))
             .name(new TranslatableText("rocket_part.galacticraft.default_booster"))
             .type(RocketPartType.BOOSTER)
             .recipe(false)
             .build());
 
-    public static final RocketPart DEFAULT_BOTTOM = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_bottom"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "default_bottom"))
+    public static final RocketPart DEFAULT_BOTTOM = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constant.MOD_ID, "default_bottom"), RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "default_bottom"))
             .name(new TranslatableText("rocket_part.galacticraft.default_bottom"))
             .type(RocketPartType.BOTTOM)
             .build());
 
-    public static final RocketPart ADVANCED_CONE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "advanced_cone"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "advanced_cone"))
+    public static final RocketPart ADVANCED_CONE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constant.MOD_ID, "advanced_cone"), RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "advanced_cone"))
             .name(new TranslatableText("rocket_part.galacticraft.advanced_cone"))
             .type(RocketPartType.CONE)
             .build());
 
-    public static final RocketPart SLOPED_CONE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "sloped_cone"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "sloped_cone"))
+    public static final RocketPart SLOPED_CONE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constant.MOD_ID, "sloped_cone"), RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "sloped_cone"))
             .name(new TranslatableText("rocket_part.galacticraft.cone_sloped"))
             .type(RocketPartType.CONE)
             .build());
 
-    public static final RocketPart BOOSTER_TIER_1 = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "booster_1"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "booster_1"))
+    public static final RocketPart BOOSTER_TIER_1 = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constant.MOD_ID, "booster_1"), RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "booster_1"))
             .name(new TranslatableText("rocket_part.galacticraft.booster_1"))
             .type(RocketPartType.BOOSTER)
             .tier(1)
             .build());
 
-    public static final RocketPart BOOSTER_TIER_2 = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "booster_2"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "booster_2"))
+    public static final RocketPart BOOSTER_TIER_2 = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constant.MOD_ID, "booster_2"), RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "booster_2"))
             .name(new TranslatableText("rocket_part.galacticraft.booster_2"))
             .type(RocketPartType.BOOSTER)
             .tier(2)
             .build());
 
-    public static final RocketPart NO_UPGRADE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_upgrade"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "default_upgrade"))
+    public static final RocketPart NO_UPGRADE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constant.MOD_ID, "default_upgrade"), RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "default_upgrade"))
             .name(new TranslatableText("rocket_part.galacticraft.default_upgrade"))
             .type(RocketPartType.UPGRADE)
             .build());
 
-    public static final RocketPart STORAGE_UPGRADE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "storage_upgrade"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "storage_upgrade"))
+    public static final RocketPart STORAGE_UPGRADE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constant.MOD_ID, "storage_upgrade"), RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "storage_upgrade"))
             .name(new TranslatableText("rocket_part.galacticraft.storage_upgrade"))
             .type(RocketPartType.UPGRADE)
             .build());

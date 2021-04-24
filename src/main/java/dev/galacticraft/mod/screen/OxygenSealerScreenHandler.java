@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
-import dev.galacticraft.mod.screen.slot.ChargeSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -34,8 +33,7 @@ import net.minecraft.network.PacketByteBuf;
 public class OxygenSealerScreenHandler extends MachineScreenHandler<OxygenSealerBlockEntity> {
 
     public OxygenSealerScreenHandler(int syncId, PlayerEntity player, OxygenSealerBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.OXYGEN_SEALER_HANDLER);
-        this.addSlot(new ChargeSlot(machine.getWrappedInventory(), 0, 8, 62));
+        super(syncId, player, machine, GalacticraftScreenHandlerType.OXYGEN_SEALER_HANDLER);
 
         this.addPlayerInventorySlots(0, 84);
     }

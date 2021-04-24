@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.block.special;
 
 import dev.galacticraft.mod.api.block.MultiBlockBase;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.SolarPanelPartBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -62,7 +62,7 @@ public class SolarPanelPartBlock extends BlockWithEntity {
         Block down = blockView.getBlockState(pos.down()).getBlock();
         if (down instanceof MultiBlockBase) {
             return POLE_SHAPE;
-        } else if (blockView.getBlockState(pos.down().down()).getBlock() == GalacticraftBlocks.BASIC_SOLAR_PANEL) {
+        } else if (blockView.getBlockState(pos.down().down()).getBlock() == GalacticraftBlock.BASIC_SOLAR_PANEL) {
             return TOP_MID_SHAPE;
         }
         return TOP_SHAPE;
@@ -97,7 +97,7 @@ public class SolarPanelPartBlock extends BlockWithEntity {
 
     @Override
     public ItemStack getPickStack(BlockView blockView, BlockPos pos, BlockState state) {
-        return new ItemStack(GalacticraftBlocks.BASIC_SOLAR_PANEL);
+        return new ItemStack(GalacticraftBlock.BASIC_SOLAR_PANEL);
     }
 
     @Override

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.decoration;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -49,7 +49,7 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
 
     public GratingBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.getStateManager().getDefaultState().with(FLUID, Constants.Misc.EMPTY)
+        this.setDefaultState(this.getStateManager().getDefaultState().with(FLUID, Constant.Misc.EMPTY)
                 .with(FlowableFluid.LEVEL, 8).with(GRATING_STATE, GratingState.UPPER));
     }
 
@@ -74,7 +74,7 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState blockState, Direction direction, BlockState neighborBlockState, WorldAccess world, BlockPos blockPos, BlockPos neighborBlockPos) {
-        if (!blockState.get(FLUID).equals(Constants.Misc.EMPTY)) {
+        if (!blockState.get(FLUID).equals(Constant.Misc.EMPTY)) {
             world.getFluidTickScheduler().schedule(blockPos, Registry.FLUID.get(blockState.get(FLUID)), Registry.FLUID.get(blockState.get(FLUID)).getTickRate(world));
         }
 

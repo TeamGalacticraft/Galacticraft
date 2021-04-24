@@ -39,7 +39,7 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 
 public class SpaceTravelScreen extends Screen {
-    private static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, "textures/block/tin_decoration.png");
+    private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/block/tin_decoration.png");
     private static final String[] POSSIBLE_TEXTS = new String[]{
             I18n.translate("ui.galacticraft.small_step"),
             I18n.translate("ui.galacticraft.giant_leap"),

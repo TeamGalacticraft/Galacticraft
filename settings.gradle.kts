@@ -5,6 +5,7 @@ pluginManagement {
             setUrl("https://maven.fabricmc.net/")
             content {
                 includeGroup("net.fabricmc")
+                includeGroup("net.fabricmc.fabric-api")
                 includeGroup("fabric-loom")
             }
         }

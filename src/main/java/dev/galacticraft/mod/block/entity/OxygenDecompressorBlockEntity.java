@@ -24,19 +24,18 @@ package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.SideOption;
-import dev.galacticraft.mod.api.block.entity.ConfigurableMachineBlockEntity;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
+import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.attribute.oxygen.EmptyOxygenTank;
 import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.screen.OxygenDecompressorScreenHandler;
-import dev.galacticraft.mod.tag.GalacticraftTags;
-import dev.galacticraft.mod.util.EnergyUtils;
-import dev.galacticraft.mod.util.OxygenTankUtils;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.util.EnergyUtil;
+import dev.galacticraft.mod.util.OxygenTankUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
@@ -48,23 +47,30 @@ import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class OxygenDecompressorBlockEntity extends MachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int CHARGE_SLOT = 0;
     public static final int TANK_SLOT = 1;
+    public static final int OXYGEN_TANK = 0;
 
     public OxygenDecompressorBlockEntity() {
-        super(GalacticraftBlockEntities.OXYGEN_DECOMPRESSOR_TYPE);
+        super(GalacticraftBlockEntityType.OXYGEN_DECOMPRESSOR);
     }
 
     @Override
-    public int getInventorySize() {
-        return 2;
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
+        builder.addSlot(TANK_SLOT, SlotType.OXYGEN_TANK, OxygenTankUtil::isOxygenTank, 80, 27);
+        return builder;
+    }
+
+    @Override
+    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_OUT, 30, 8);
+        return builder;
     }
 
     @Override
@@ -73,27 +79,8 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 1;
-    }
-
-    @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.FLUID_OUTPUT, SideOption.POWER_INPUT);
-    }
-
-    @Override
     public boolean canInsertEnergy() {
         return true;
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        if (slot == CHARGE_SLOT) {
-            return EnergyUtils.IS_EXTRACTABLE;
-        } else {
-            return OxygenTankUtils::isOxygenTank;
-        }
     }
 
     @Override
@@ -111,7 +98,7 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        OxygenTank tank = OxygenTankUtils.getOxygenTank(this.getInventory().getSlot(TANK_SLOT));
+        OxygenTank tank = OxygenTankUtil.getOxygenTank(this.getInventory().getSlot(TANK_SLOT));
         if (tank == EmptyOxygenTank.NULL) return Status.NOT_ENOUGH_ITEMS;
         if (tank.getAmount() <= 0) return Status.EMPTY_CANISTER;
         if (this.isTankFull(0)) return Status.FULL;
@@ -121,34 +108,14 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     @Override
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
-            OxygenTank tank = OxygenTankUtils.getOxygenTank(this.getInventory().getSlot(TANK_SLOT));
-            OxygenTankUtils.insertLiquidOxygen(tank, this.getFluidTank().insertFluid(0, OxygenTankUtils.extractLiquidOxygen(tank, 1620 / (20 * 5)), Simulation.ACTION));
+            OxygenTank tank = OxygenTankUtil.getOxygenTank(this.getInventory().getSlot(TANK_SLOT));
+            OxygenTankUtil.insertLiquidOxygen(tank, this.getFluidInv().insertFluid(0, OxygenTankUtil.extractLiquidOxygen(tank, 1620 / (20 * 5)), Simulation.ACTION));
         }
     }
 
     @Override
     public int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().oxygenDecompressorEnergyConsumptionRate();
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return true;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return true;
-    }
-
-    @Override
-    public boolean canPipeExtractFluid(int tank) {
-        return true;
-    }
-
-    @Override
-    public FluidFilter getFilterForTank(int tank) {
-        return key -> GalacticraftTags.OXYGEN.contains(key.getRawFluid());
+        return Galacticraft.CONFIG_MANAGER.get().oxygenDecompressorEnergyConsumptionRate();
     }
 
     @Nullable
@@ -162,12 +129,12 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
      * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
      */
     private enum Status implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft.machinestatus.not_enough_items"), Formatting.RED, StatusType.MISSING_FLUIDS),
-        EMPTY_CANISTER(new TranslatableText("ui.galacticraft.machinestatus.empty_canister"), Formatting.RED, StatusType.MISSING_FLUIDS),
-        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft.machinestatus.empty_canister"), Formatting.RED, StatusType.MISSING_ITEMS),
-        FULL(new TranslatableText("ui.galacticraft.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-        DECOMPRESSING(new TranslatableText("ui.galacticraft.machinestatus.decompressing"), Formatting.GREEN, StatusType.WORKING);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft.machine.status.not_enough_items"), Formatting.RED, StatusType.MISSING_FLUIDS),
+        EMPTY_CANISTER(new TranslatableText("ui.galacticraft.machine.status.empty_canister"), Formatting.RED, StatusType.MISSING_FLUIDS),
+        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft.machine.status.empty_canister"), Formatting.RED, StatusType.MISSING_ITEMS),
+        FULL(new TranslatableText("ui.galacticraft.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        DECOMPRESSING(new TranslatableText("ui.galacticraft.machine.status.decompressing"), Formatting.GREEN, StatusType.WORKING);
 
         private final Text text;
         private final StatusType type;

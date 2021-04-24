@@ -23,15 +23,12 @@
 package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.client.render.entity.feature.SpaceGearFeatureRenderer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.SkeletonEntityRenderer;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
 public class EvolvedSkeletonEntityRenderer extends SkeletonEntityRenderer {
     public EvolvedSkeletonEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher);

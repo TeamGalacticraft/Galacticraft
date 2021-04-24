@@ -30,9 +30,9 @@ import dev.galacticraft.api.regisry.AddonRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
-import dev.galacticraft.mod.items.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItems;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -136,7 +136,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
     @Override
     public void fromClientTag(CompoundTag compoundTag) {
-        this.fromTag(GalacticraftBlocks.ROCKET_DESIGNER.getDefaultState(), compoundTag);
+        this.fromTag(GalacticraftBlock.ROCKET_DESIGNER.getDefaultState(), compoundTag);
     }
 
     @Override
@@ -216,7 +216,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
     @Environment(EnvType.CLIENT)
     private void sendDesignerPartUpdate(RocketPart part) {
-        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_part"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeIdentifier(Objects.requireNonNull(AddonRegistry.ROCKET_PARTS.getId(part)))));
+        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "designer_part"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeIdentifier(Objects.requireNonNull(AddonRegistry.ROCKET_PARTS.getId(part)))));
     }
 
 
@@ -258,26 +258,26 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
     @Environment(EnvType.CLIENT)
     public void setRedClient(int red) {
-        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_red"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(red - 128))));
+        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "designer_red"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(red - 128))));
         this.red = red;
     }
 
     @Environment(EnvType.CLIENT)
     public void setGreenClient(int green) {
-        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_green"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(green - 128))));
+        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "designer_green"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(green - 128))));
         this.green = green;
     }
 
 
     @Environment(EnvType.CLIENT)
     public void setBlueClient(int blue) {
-        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_blue"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(blue - 128))));
+        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "designer_blue"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(blue - 128))));
         this.blue = blue;
     }
 
     @Environment(EnvType.CLIENT)
     public void setAlphaClient(int alpha) {
-        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_alpha"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(alpha - 128))));
+        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "designer_alpha"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(alpha - 128))));
         this.alpha = alpha;
     }
 

@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.client.gui.screen.ingame.PlayerInventoryGCScreen;
-import dev.galacticraft.mod.items.GalacticraftItems;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.gui.screen.ingame.GalacticraftPlayerInventoryScreen;
+import dev.galacticraft.mod.item.GalacticraftItems;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -51,23 +51,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(InventoryScreen.class)
 @Environment(EnvType.CLIENT)
 public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen<PlayerScreenHandler> {
-    private static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS));
-
     public PlayerInventoryScreenMixin(PlayerScreenHandler screenHandler, PlayerInventory playerInventory, Text textComponent) {
         super(screenHandler, playerInventory, textComponent);
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
-        if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), x + 30, x + 59)
-                && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), y - 26, y)) {
-            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "open_gc_inv"), new PacketByteBuf(Unpooled.buffer(0)));
+        if (GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseX), x + 30, x + 59)
+                && GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseY), y - 26, y)) {
+            ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "open_gc_inv"), new PacketByteBuf(Unpooled.buffer(0)));
         }
     }
 
     @Inject(method = "drawBackground", at = @At("TAIL"))
     public void drawBackground(MatrixStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
-        this.client.getTextureManager().bindTexture(TABS_TEXTURE);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.PLAYER_INVENTORY_TABS);
         this.drawTexture(matrices, this.x, this.y - 28, 0, 0, 57, 32);
     }
 

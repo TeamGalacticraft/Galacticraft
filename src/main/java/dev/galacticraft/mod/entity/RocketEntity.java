@@ -32,7 +32,7 @@ import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.tag.GalacticraftTags;
@@ -419,7 +419,7 @@ public class RocketEntity extends Entity implements dev.galacticraft.api.entity.
 
         buf.writeCompoundTag(tag);
 
-        return new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "rocket_spawn"),
+        return new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "rocket_spawn"),
                 new PacketByteBuf(buf));
 
     }
@@ -472,7 +472,7 @@ public class RocketEntity extends Entity implements dev.galacticraft.api.entity.
                     if (!(new BlockPos(0, 0, 0)).equals(this.getLinkedPad())) {
                         for (int x = -1; x <= 1; x++) {
                             for (int z = -1; z <= 1; z++) {
-                                if (world.getBlockState(getLinkedPad().add(x, 0, z)).getBlock() == GalacticraftBlocks.ROCKET_LAUNCH_PAD
+                                if (world.getBlockState(getLinkedPad().add(x, 0, z)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
                                         && world.getBlockState(getLinkedPad().add(x, 0, z)).get(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
                                     world.setBlockState(getLinkedPad().add(x, 0, z), Blocks.AIR.getDefaultState(), 4);
                                 }
@@ -519,7 +519,7 @@ public class RocketEntity extends Entity implements dev.galacticraft.api.entity.
                     for (Entity entity : getPassengerList()) {
                         if (entity instanceof ServerPlayerEntity) {
                             ((ServerPlayerEntityAccessor) entity).setCelestialScreenState(getTier());
-                            ServerPlayNetworking.send(((ServerPlayerEntity) entity), new Identifier(Constants.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer().writeInt(this.getTier())));
+                            ServerPlayNetworking.send(((ServerPlayerEntity) entity), new Identifier(Constant.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer().writeInt(this.getTier())));
                             break;
                         }
                     }

@@ -34,14 +34,14 @@ import net.minecraft.util.Identifier;
 import java.util.Objects;
 
 public class GalacticraftRocketPartRenderers {
-    private static final Identifier DEFAULT_CONE = new Identifier(Constants.MOD_ID, "models/misc/rocket_cone_basic");
-    private static final Identifier ADVANCED_CONE = new Identifier(Constants.MOD_ID, "models/misc/rocket_cone_advanced");
-    private static final Identifier SLOPED_CONE = new Identifier(Constants.MOD_ID, "models/misc/rocket_cone_sloped");
-    private static final Identifier DEFAULT_BODY= new Identifier(Constants.MOD_ID, "models/misc/rocket_body");
-    private static final Identifier DEFAULT_FIN = new Identifier(Constants.MOD_ID, "models/misc/rocket_fins");
-    private static final Identifier DEFAULT_BOTTOM = new Identifier(Constants.MOD_ID, "models/misc/rocket_bottom");
-    private static final Identifier BOOSTER_TIER_1 = new Identifier(Constants.MOD_ID, "models/misc/rocket_thruster_tier_1");
-    private static final Identifier BOOSTER_TIER_2 = new Identifier(Constants.MOD_ID, "models/misc/rocket_thruster_tier_2");
+    private static final Identifier DEFAULT_CONE = new Identifier(Constant.MOD_ID, "models/misc/rocket_cone_basic");
+    private static final Identifier ADVANCED_CONE = new Identifier(Constant.MOD_ID, "models/misc/rocket_cone_advanced");
+    private static final Identifier SLOPED_CONE = new Identifier(Constant.MOD_ID, "models/misc/rocket_cone_sloped");
+    private static final Identifier DEFAULT_BODY= new Identifier(Constant.MOD_ID, "models/misc/rocket_body");
+    private static final Identifier DEFAULT_FIN = new Identifier(Constant.MOD_ID, "models/misc/rocket_fins");
+    private static final Identifier DEFAULT_BOTTOM = new Identifier(Constant.MOD_ID, "models/misc/rocket_bottom");
+    private static final Identifier BOOSTER_TIER_1 = new Identifier(Constant.MOD_ID, "models/misc/rocket_thruster_tier_1");
+    private static final Identifier BOOSTER_TIER_2 = new Identifier(Constant.MOD_ID, "models/misc/rocket_thruster_tier_2");
 
     public static void register() {
         RocketPartRendererRegistry.register(GalacticraftRocketParts.DEFAULT_CONE, new BakedModelRocketPartRenderer(Objects.requireNonNull(Myron.getModel(DEFAULT_CONE))));

@@ -24,7 +24,7 @@ package dev.galacticraft.mod.config;
 
 import com.google.gson.annotations.Expose;
 import dev.galacticraft.mod.api.config.Config;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -41,17 +41,17 @@ public class ConfigImpl implements Config {
     @Expose
     private int solarPanelEnergyProductionRate = 44;
     @Expose
-    private int circuitFabricatorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
+    private int circuitFabricatorEnergyConsumptionRate = EnergyUtil.Values.T1_MACHINE_ENERGY_USAGE;
     @Expose
-    private int electricCompressorEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
+    private int electricCompressorEnergyConsumptionRate = EnergyUtil.Values.T2_MACHINE_ENERGY_USAGE;
     @Expose
-    private int electricArcFurnaceEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
+    private int electricArcFurnaceEnergyConsumptionRate = EnergyUtil.Values.T2_MACHINE_ENERGY_USAGE;
     @Expose
-    private int oxygenCollectorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
+    private int oxygenCollectorEnergyConsumptionRate = EnergyUtil.Values.T1_MACHINE_ENERGY_USAGE;
     @Expose
-    private int refineryEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
+    private int refineryEnergyConsumptionRate = EnergyUtil.Values.T2_MACHINE_ENERGY_USAGE;
     @Expose
-    private int electricFurnaceEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
+    private int electricFurnaceEnergyConsumptionRate = EnergyUtil.Values.T2_MACHINE_ENERGY_USAGE;
     @Expose
     private int energyStorageModuleStorageSize = 300_000;
     @Expose
@@ -59,9 +59,9 @@ public class ConfigImpl implements Config {
     @Expose
     private int machineEnergyStorageSize = 30_000;
     @Expose
-    private int oxygenCompressorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
+    private int oxygenCompressorEnergyConsumptionRate = EnergyUtil.Values.T1_MACHINE_ENERGY_USAGE;
     @Expose
-    private int oxygenDecompressorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
+    private int oxygenDecompressorEnergyConsumptionRate = EnergyUtil.Values.T1_MACHINE_ENERGY_USAGE;
     @Expose
     private int rocketAssemblerProcessTime = 30_000;
 

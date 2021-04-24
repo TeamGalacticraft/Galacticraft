@@ -48,5 +48,4 @@ public class ScorchedRockBlock extends Block {
 
         world.addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, 0.0D, 0.0D, 0.0D);
     }
-
 }

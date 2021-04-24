@@ -29,10 +29,10 @@ import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.RocketAssemblerBlockEntity;
 import dev.galacticraft.mod.entity.RocketEntity;
-import dev.galacticraft.mod.items.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItems;
 import dev.galacticraft.mod.recipe.RocketAssemblerRecipe;
 import dev.galacticraft.mod.screen.RocketAssemblerScreenHandler;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -126,7 +126,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
     public static final int PROGRESS_ARROW_X = 364;
     public static final int PROGRESS_ARROW_Y = 8;
 
-    protected final Identifier TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ROCKET_ASSEMBLER_SCREEN));
+    protected final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.ScreenTextures.getRaw(Constant.ScreenTextures.ROCKET_ASSEMBLER_SCREEN));
     private final RocketAssemblerBlockEntity blockEntity;
     private Tab tab = Tab.ROCKET;
 
@@ -160,7 +160,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             drawTexture(matrices, this.x - 27, this.y + 30, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
 
             itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftItems.ROCKET_SCHEMATIC), this.x - 20, this.y + 8);
-            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlocks.MOON_TURF), this.x - 20, this.y + 35);
+            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlock.MOON_TURF), this.x - 20, this.y + 35);
 
             if (!this.blockEntity.data.isEmpty()) {
                 drawEntity(this.x + 186 + 17, this.y + 73, this.blockEntity.fakeEntity);
@@ -170,7 +170,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             drawTexture(matrices, this.x - 29, this.y + 30, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
 
             itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftItems.ROCKET_SCHEMATIC), this.x - 20, this.y + 8);
-            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlocks.MOON_TURF), this.x - 20, this.y + 35);
+            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlock.MOON_TURF), this.x - 20, this.y + 35);
         }
 
         if (blockEntity.building()) {
@@ -379,7 +379,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
 
                                 if (success) {
                                     PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer().writeInt(slot)).writeBlockPos(this.blockEntity.getPos());
-                                    this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "assembler_wc"), buf));
+                                    this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "assembler_wc"), buf));
                                     return true;
                                 }
                             }
@@ -398,7 +398,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
         if (button == 0) {
             if (check(mouseX, mouseY, this.x + 257, this.y + 18, BUILD_WIDTH, BUILD_HEIGHT)) {
                 blockEntity.startBuilding();
-                client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "assembler_build"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(blockEntity.getPos())));
+                client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "assembler_build"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(blockEntity.getPos())));
             }
         }
         return false;

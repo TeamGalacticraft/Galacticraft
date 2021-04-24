@@ -22,10 +22,7 @@
 
 package dev.galacticraft.mod.client.render.block.entity;
 
-import dev.galacticraft.mod.api.pipe.Pipe;
-import dev.galacticraft.mod.block.special.fluidpipe.FluidPipeBlockEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -34,16 +31,12 @@ import net.minecraft.client.util.math.MatrixStack;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
-public class FluidPipeBlockEntityRenderer extends BlockEntityRenderer<FluidPipeBlockEntity> {
+public class FluidPipeBlockEntityRenderer extends BlockEntityRenderer<PipeBlockEntity> {
     public FluidPipeBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
         super(dispatcher);
     }
 
     @Override
-    public void render(FluidPipeBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (entity.getFluidData() != Pipe.FluidData.EMPTY) {
-            //entity.getData().getPath().pLast(); //todo
-        }
+    public void render(PipeBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
     }
 }

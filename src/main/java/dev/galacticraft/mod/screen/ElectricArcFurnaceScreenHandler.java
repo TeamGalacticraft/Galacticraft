@@ -23,13 +23,9 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.mod.block.entity.ElectricArcFurnaceBlockEntity;
-import dev.galacticraft.mod.screen.slot.ChargeSlot;
-import dev.galacticraft.mod.screen.slot.OutputSlot;
-import dev.galacticraft.mod.screen.slot.RecipeInputSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.Property;
 
 /**
@@ -37,7 +33,7 @@ import net.minecraft.screen.Property;
  */
 public class ElectricArcFurnaceScreenHandler extends MachineScreenHandler<ElectricArcFurnaceBlockEntity> {
     public ElectricArcFurnaceScreenHandler(int syncId, PlayerEntity player, ElectricArcFurnaceBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.ELECTRIC_ARC_FURNACE_HANDLER);
+        super(syncId, player, machine, GalacticraftScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER);
         this.addProperty(new Property() {
             @Override
             public int get() {
@@ -60,10 +56,6 @@ public class ElectricArcFurnaceScreenHandler extends MachineScreenHandler<Electr
                 machine.cookLength = value;
             }
         });
-        this.addSlot(new ChargeSlot(machine.getWrappedInventory(), ElectricArcFurnaceBlockEntity.CHARGE_SLOT, 8, 7));
-        this.addSlot(new RecipeInputSlot<>(machine.getWrappedInventory(), ElectricArcFurnaceBlockEntity.INPUT_SLOT, 56, 25, machine.getWorld(), RecipeType.SMELTING));
-        this.addSlot(new OutputSlot(machine.getWrappedInventory(), ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1, 109, 25));
-        this.addSlot(new OutputSlot(machine.getWrappedInventory(), ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_2, 127, 25));
         this.addPlayerInventorySlots(0, 84);
     }
 

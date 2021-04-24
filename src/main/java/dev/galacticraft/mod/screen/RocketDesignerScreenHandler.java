@@ -24,7 +24,7 @@ package dev.galacticraft.mod.screen;
 
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import dev.galacticraft.mod.block.entity.RocketDesignerBlockEntity;
-import dev.galacticraft.mod.items.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItems;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;

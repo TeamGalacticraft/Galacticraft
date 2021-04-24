@@ -57,7 +57,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandler> {
 
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.FUEL_LOADER_SCREEN));
+    private static final Identifier BACKGROUND = new Identifier(Constant.MOD_ID, Constant.ScreenTextures.getRaw(Constant.ScreenTextures.FUEL_LOADER_SCREEN));
 
     public static final int X_X = 176;
     public static final int X_Y = 40;

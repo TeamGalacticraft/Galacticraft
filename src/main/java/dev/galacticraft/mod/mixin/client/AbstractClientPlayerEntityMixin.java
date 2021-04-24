@@ -45,9 +45,9 @@ public abstract class AbstractClientPlayerEntityMixin {
 
     @Inject(method = "getCapeTexture", at = @At("RETURN"), cancellable = true)
     private void getCapeTexture(CallbackInfoReturnable<Identifier> info) {
-        if (GalacticraftClient.jsonCapes.areCapesLoaded()) {
-            if (GalacticraftClient.jsonCapes.getCapePlayers().containsKey(this.getPlayerListEntry().getProfile().getId())) {
-                info.setReturnValue(GalacticraftClient.jsonCapes.getCapePlayers()
+        if (GalacticraftClient.JSON_CAPES.areCapesLoaded()) {
+            if (GalacticraftClient.JSON_CAPES.getCapePlayers().containsKey(this.getPlayerListEntry().getProfile().getId())) {
+                info.setReturnValue(GalacticraftClient.JSON_CAPES.getCapePlayers()
                         .get(this.getPlayerListEntry().getProfile().getId()).getCape().getTexture());
             }
         }

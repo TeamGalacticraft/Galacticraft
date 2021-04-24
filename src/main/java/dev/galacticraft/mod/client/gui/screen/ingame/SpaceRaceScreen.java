@@ -22,17 +22,15 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -41,14 +39,13 @@ import net.minecraft.util.math.Matrix4f;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
 public class SpaceRaceScreen extends Screen {
     private int widthSize = 0;
     private int heightSize = 0;
     private Menu menu = Menu.MAIN;
 
     public SpaceRaceScreen() {
-        super(new TranslatableText("ui." + Constants.MOD_ID + ".space_race_manager"));
+        super(new TranslatableText("ui." + Constant.MOD_ID + ".space_race_manager"));
     }
 
     @Override
@@ -327,6 +324,37 @@ public class SpaceRaceScreen extends Screen {
 
     private int getPosYToFit(int y) {
         return Math.max(y, this.getTop() + 25);
+    }
+
+    private int getTexPosXToFit(int x, int texPosX, int texWidth) {
+        if (x >= this.getLeft() + 10) return texPosX;
+        return Math.min(texWidth, texPosX + ((this.getLeft() + 10) - x));
+    }
+
+    private int getTexPosYToFit(int y, int texPosY, int texHeight) {
+        if (y >= this.getTop() + 25) return texPosY;
+        return Math.min(texHeight, texPosY + ((this.getTop() + 25) - y));
+    }
+
+    private int getWidthToFit(int x, int width) {
+        if (x > this.getRight() - 10) {
+            return 0;
+        }
+
+        if (x + width > this.getRight() - 10) {
+            return Math.min(0, width - (x + width) - (this.getRight() - 10));
+        }
+        return width;
+    }
+
+    private int getHeightToFit(int y, int height) {
+        if (y > this.getBottom() - 10) {
+            return 0;
+        }
+        if (y + height > this.getBottom() - 10) {
+            return Math.min(0, height - (y + height) - (this.getBottom() - 10));
+        }
+        return height;
     }
 
     private boolean isAnimationComplete() {

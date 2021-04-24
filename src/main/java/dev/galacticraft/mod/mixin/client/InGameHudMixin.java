@@ -23,6 +23,14 @@
 package dev.galacticraft.mod.mixin.client;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
+import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.accessor.GearInventoryProvider;
+import dev.galacticraft.mod.attribute.GalacticraftAttribute;
+import dev.galacticraft.mod.attribute.oxygen.InfiniteOxygenTank;
+import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
+import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.Constants;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.api.atmosphere.AtmosphericGas;
@@ -34,7 +42,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -47,41 +54,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(InGameHud.class)
 @Environment(EnvType.CLIENT)
-public abstract class InGameHudMixin extends DrawableHelper {
+public abstract class InGameHudMixin extends DrawableHelper implements DrawableUtil {
 
-    private static final int OXYGEN_X = 0;
-    private static final int OXYGEN_Y = 40;
-    private static final int OXYGEN_WIDTH = 12;
-    private static final int OXYGEN_HEIGHT = 40;
-    private static final int OXYGEN_OVERLAY_X = 24;
-    private static final int OXYGEN_OVERLAY_Y = 80;
-    @Shadow private int scaledWidth;
-    @Shadow @Final private MinecraftClient client;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
-    @Inject(method = "render", at = @At(value = "TAIL"))
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;color4f(FFFF)V", shift = At.Shift.AFTER, ordinal = 0))
     private void draw(MatrixStack matrices, float delta, CallbackInfo ci) {
         if (CelestialBodyType.getByDimType(client.world.getRegistryManager(), client.world.getRegistryKey()).isPresent() && !CelestialBodyType.getByDimType(client.world.getRegistryManager(), client.world.getRegistryKey()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
-            client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY)));
+            fill(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * 2) - 11, 4, this.client.getWindow().getScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 9, 6 + Constant.TextureCoordinate.OVERLAY_HEIGHT, 0);
+            fill(matrices, this.client.getWindow().getScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 6, 4, this.client.getWindow().getScaledWidth() - 4, 6 + Constant.TextureCoordinate.OVERLAY_HEIGHT, 0);
 
-            this.drawTexture(matrices, this.scaledWidth - 17, 5, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
-            this.drawTexture(matrices, this.scaledWidth - 34, 5, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
-
-            if (!client.player.isCreative()) {
-                FixedItemInv inv = ((GearInventoryProvider)client.player).getGearInv();
-                if (inv.getInvStack(6).getItem() instanceof OxygenTankItem) {
-                    this.drawTexture(matrices, this.scaledWidth - 17 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) inv.getInvStack(6).getMaxDamage() - (double) inv.getInvStack(6).getDamage()) / (double) inv.getInvStack(6).getMaxDamage()))));
-                } else if (client.player.isCreative()) {
-                    this.drawTexture(matrices, this.scaledWidth - 17 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
-                }
-                if (inv.getInvStack(7).getItem() instanceof OxygenTankItem) {
-                    this.drawTexture(matrices, this.scaledWidth - 34 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) inv.getInvStack(7).getMaxDamage() - (double) inv.getInvStack(7).getDamage()) / (double) inv.getInvStack(7).getMaxDamage()))));
-                } else if (client.player.isCreative()) {
-                    this.drawTexture(matrices, this.scaledWidth - 34 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
-                }
-            } else {
-                this.drawTexture(matrices, this.scaledWidth - 17, 5, 12, 40, OXYGEN_WIDTH, OXYGEN_HEIGHT);
-                this.drawTexture(matrices, this.scaledWidth - 34, 5, 12, 40, OXYGEN_WIDTH, OXYGEN_HEIGHT);
-            }
+            client.getTextureManager().bindTexture(Constant.ScreenTexture.OVERLAY);
+            FixedItemInv inv = ((GearInventoryProvider) client.player).getGearInv();
+            OxygenTank tank = GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(inv.getSlot(7));
+            if (client.player.isCreative() && tank.getCapacity() == 0) tank = InfiniteOxygenTank.INSTANCE;
+            this.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 5, 5, this.getZOffset(), tank.getAmount(), tank.getCapacity());
+            tank = GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(inv.getSlot(6));
+            if (client.player.isCreative() && tank.getCapacity() == 0) tank = InfiniteOxygenTank.INSTANCE;
+            this.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * 2) - 10, 5, this.getZOffset(), tank.getAmount(), tank.getCapacity());
         }
     }
 }

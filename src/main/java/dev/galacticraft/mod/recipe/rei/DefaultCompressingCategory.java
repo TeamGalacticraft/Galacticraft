@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.recipe.rei;
 
 import com.google.common.collect.Lists;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.EntryStack;
@@ -60,7 +60,7 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
 
     @Override
     public @NotNull EntryStack getLogo() {
-        return EntryStack.create(new ItemStack(GalacticraftBlocks.COMPRESSOR));
+        return EntryStack.create(new ItemStack(GalacticraftBlock.COMPRESSOR));
     }
 
     @Environment(EnvType.CLIENT)

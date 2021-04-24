@@ -24,15 +24,12 @@ package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.client.render.entity.feature.SpaceGearFeatureRenderer;
 import dev.galacticraft.mod.entity.EvolvedEvokerEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EvokerEntityRenderer;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
 public class EvolvedEvokerEntityRenderer extends EvokerEntityRenderer<EvolvedEvokerEntity> {
     public EvolvedEvokerEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher);
@@ -45,5 +42,4 @@ public class EvolvedEvokerEntityRenderer extends EvokerEntityRenderer<EvolvedEvo
                 )
         );
     }
-
 }
