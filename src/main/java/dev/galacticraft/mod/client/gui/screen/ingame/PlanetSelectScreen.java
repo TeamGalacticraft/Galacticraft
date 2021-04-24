@@ -23,7 +23,8 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.google.common.collect.Lists;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.api.registry.AddonRegistry;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.api.celestialbodies.CelestialBodyType;
 import dev.galacticraft.api.celestialbodies.CelestialObjectType;
 import dev.galacticraft.api.celestialbodies.SolarSystemType;
@@ -32,8 +33,7 @@ import dev.galacticraft.api.celestialbodies.satellite.SatelliteRecipe;
 import dev.galacticraft.api.internal.accessor.ClientSatelliteAccessor;
 import dev.galacticraft.api.internal.accessor.SatelliteAccessor;
 import dev.galacticraft.mod.api.math.Matrix4;
-import dev.galacticraft.api.regisry.AddonRegistry;
-import dev.galacticraft.mod.util.ColorUtils;
+import dev.galacticraft.mod.util.ColorUtil;
 import com.ibm.icu.text.ArabicShaping;
 import com.ibm.icu.text.ArabicShapingException;
 import com.ibm.icu.text.Bidi;
@@ -79,17 +79,17 @@ import java.util.stream.Collectors;
 public class PlanetSelectScreen extends Screen {
     protected static final int MAX_SPACE_STATION_NAME_LENGTH = 32;
     // String colours
-    protected static final int WHITE = ColorUtils.to32BitColor(255, 255, 255, 255);
-    protected static final int GREY5 = ColorUtils.to32BitColor(255, 150, 150, 150);
-    protected static final int GREY4 = ColorUtils.to32BitColor(255, 140, 140, 140);
-    protected static final int GREY3 = ColorUtils.to32BitColor(255, 120, 120, 120);
-    protected static final int GREY2 = ColorUtils.to32BitColor(255, 100, 100, 100);
-    protected static final int GREY1 = ColorUtils.to32BitColor(255, 80, 80, 80);
-    protected static final int GREY0 = ColorUtils.to32BitColor(255, 40, 40, 40);
-    protected static final int GREEN = ColorUtils.to32BitColor(255, 0, 255, 0);
-    protected static final int RED = ColorUtils.to32BitColor(255, 255, 0, 0);
-    protected static final int RED3 = ColorUtils.to32BitColor(255, 255, 100, 100);
-    protected static final int CYAN = ColorUtils.to32BitColor(255, 150, 200, 255);
+    protected static final int WHITE = ColorUtil.to32BitColor(255, 255, 255, 255);
+    protected static final int GREY5 = ColorUtil.to32BitColor(255, 150, 150, 150);
+    protected static final int GREY4 = ColorUtil.to32BitColor(255, 140, 140, 140);
+    protected static final int GREY3 = ColorUtil.to32BitColor(255, 120, 120, 120);
+    protected static final int GREY2 = ColorUtil.to32BitColor(255, 100, 100, 100);
+    protected static final int GREY1 = ColorUtil.to32BitColor(255, 80, 80, 80);
+    protected static final int GREY0 = ColorUtil.to32BitColor(255, 40, 40, 40);
+    protected static final int GREEN = ColorUtil.to32BitColor(255, 0, 255, 0);
+    protected static final int RED = ColorUtil.to32BitColor(255, 255, 0, 0);
+    protected static final int RED3 = ColorUtil.to32BitColor(255, 255, 100, 100);
+    protected static final int CYAN = ColorUtil.to32BitColor(255, 150, 200, 255);
     protected static Identifier guiMain0 = new Identifier(Constant.MOD_ID, "textures/gui/celestialselection.png");
     protected static Identifier guiMain1 = new Identifier(Constant.MOD_ID, "textures/gui/celestialselection1.png");
     protected static int BORDER_SIZE = 0;
@@ -382,7 +382,7 @@ public class PlanetSelectScreen extends Screen {
 
     @Override
     public boolean charTyped(char character, int modifiers) {
-        if (renamingSpaceStation && SharedConstant.isValidChar(character)) {
+        if (renamingSpaceStation && SharedConstants.isValidChar(character)) {
             this.renamingString = this.renamingString + character;
             this.renamingString = this.renamingString.substring(0, Math.min(this.renamingString.length(), MAX_SPACE_STATION_NAME_LENGTH));
 
@@ -393,8 +393,7 @@ public class PlanetSelectScreen extends Screen {
     }
 
     public boolean isValid(String string) {
-        return string.length() > 0 && SharedConstant.isValidChar(string.charAt(string.length() - 1));
-
+        return string.length() > 0 && SharedConstants.isValidChar(string.charAt(string.length() - 1));
     }
 
     protected boolean canCreateSpaceStation(CelestialBodyType atBody) {
@@ -1446,13 +1445,13 @@ public class PlanetSelectScreen extends Screen {
                                     k2 = this.height - i1 - 6;
                                 }
 
-                                int j1 = ColorUtils.to32BitColor(190, 0, 153, 255);
+                                int j1 = ColorUtil.to32BitColor(190, 0, 153, 255);
                                 this.fillGradient(matrices, j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j1, j1);
                                 this.fillGradient(matrices, j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j1, j1);
                                 this.fillGradient(matrices, j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j1, j1);
                                 this.fillGradient(matrices, j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j1, j1);
                                 this.fillGradient(matrices, j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j1, j1);
-                                int k1 = ColorUtils.to32BitColor(170, 0, 153, 255);
+                                int k1 = ColorUtil.to32BitColor(170, 0, 153, 255);
                                 int l1 = (k1 & 16711422) >> 1 | k1 & -16777216;
                                 this.fillGradient(matrices, j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + i1 + 3 - 1, k1, l1);
                                 this.fillGradient(matrices, j2 + k + 2, k2 - 3 + 1, j2 + k + 3, k2 + i1 + 3 - 1, k1, l1);
@@ -1497,7 +1496,7 @@ public class PlanetSelectScreen extends Screen {
                         this.blit(RHS - 95, TOP + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
 
                         int color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
-                        this.drawSplitString(matrices, I18n.translate("gui.message.can_create_space_station"), RHS - 48, TOP + 137, 91, ColorUtils.to32BitColor(255, color, 255, color), true, false);
+                        this.drawSplitString(matrices, I18n.translate("gui.message.can_create_space_station"), RHS - 48, TOP + 137, 91, ColorUtil.to32BitColor(255, color, 255, color), true, false);
 
                         if (!mapMode)
                         {

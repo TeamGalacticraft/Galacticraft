@@ -26,16 +26,16 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
-import dev.galacticraft.api.regisry.AddonRegistry;
+import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
-import dev.galacticraft.mod.tag.GalacticraftTags;
+import dev.galacticraft.mod.tag.GalacticraftTag;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -466,7 +466,7 @@ public class RocketEntity extends Entity implements dev.galacticraft.api.entity.
                     }
                     return;
                 }
-                this.getTank().extractFluid(0, key -> GalacticraftTags.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 100), Simulation.ACTION); //todo find balanced values
+                this.getTank().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 100), Simulation.ACTION); //todo find balanced values
                 if (timeAsState >= 400) {
                     this.setStage(LaunchStage.LAUNCHED);
                     if (!(new BlockPos(0, 0, 0)).equals(this.getLinkedPad())) {
@@ -482,10 +482,10 @@ public class RocketEntity extends Entity implements dev.galacticraft.api.entity.
                     this.setSpeed(0.0D);
                 }
             } else if (getStage() == LaunchStage.LAUNCHED) {
-                if (!debugMode && (this.getTank().getInvFluid(0).isEmpty() || !GalacticraftTags.FUEL.contains(this.getTank().getInvFluid(0).getRawFluid())) && FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                if (!debugMode && (this.getTank().getInvFluid(0).isEmpty() || !GalacticraftTag.FUEL.contains(this.getTank().getInvFluid(0).getRawFluid())) && FabricLoader.getInstance().isDevelopmentEnvironment()) {
                     this.setStage(LaunchStage.FAILED);
                 } else {
-                    this.getTank().extractFluid(0, key -> GalacticraftTags.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 100), Simulation.ACTION); //todo find balanced values
+                    this.getTank().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 100), Simulation.ACTION); //todo find balanced values
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);

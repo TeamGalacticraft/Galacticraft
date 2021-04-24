@@ -24,8 +24,8 @@ package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.api.atmosphere.AtmosphericGas;
+import dev.galacticraft.api.celestialbodies.CelestialBodyType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
@@ -95,7 +95,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
     public void setLocation(World world, BlockPos pos) {
         super.setLocation(world, pos);
         this.sealCheckTime = SEAL_CHECK_TIME;
-        this.type = CelestialBodyType.getByDimType(world.getRegistryKey()).orElse(null);
+        this.type = CelestialBodyType.getByDimType(world.getRegistryManager(), world.getRegistryKey()).orElse(null);
     }
 
     @Override

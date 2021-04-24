@@ -27,7 +27,6 @@ import dev.galacticraft.api.atmosphere.AtmosphericGas;
 import dev.galacticraft.api.celestialbodies.CelestialBodyType;
 import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
-import dev.galacticraft.mod.world.dimension.GalacticraftDimensions;
 import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.server.MinecraftServer;

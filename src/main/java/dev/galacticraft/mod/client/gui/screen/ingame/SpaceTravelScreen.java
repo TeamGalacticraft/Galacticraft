@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;

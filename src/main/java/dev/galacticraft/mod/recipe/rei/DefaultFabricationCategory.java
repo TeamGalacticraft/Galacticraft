@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.recipe.rei;
 
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.EntryStack;
@@ -107,8 +107,8 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
         widgets.add(Widgets.createSlot(new Point(startPoint.x + 1, startPoint.y + 1)).entry(EntryStack.create(new ItemStack(Items.DIAMOND))));
         widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 7) + 1, startPoint.y + 1)).entries(recipeDisplay.getInput().get(0)));
 
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 3) + 1, startPoint.y + 47)).entry(EntryStack.create(new ItemStack(GalacticraftItems.RAW_SILICON))));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 3) + 1, startPoint.y + 47 + 18)).entry(EntryStack.create(new ItemStack(GalacticraftItems.RAW_SILICON))));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 3) + 1, startPoint.y + 47)).entry(EntryStack.create(new ItemStack(GalacticraftItem.RAW_SILICON))));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 3) + 1, startPoint.y + 47 + 18)).entry(EntryStack.create(new ItemStack(GalacticraftItem.RAW_SILICON))));
         widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 6) + 1, startPoint.y + 47)).entry(EntryStack.create(new ItemStack(Items.REDSTONE))));
 
         widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 8) + 1, startPoint.y + 47 + 18)).entries(recipeDisplay.getOutputEntries()));

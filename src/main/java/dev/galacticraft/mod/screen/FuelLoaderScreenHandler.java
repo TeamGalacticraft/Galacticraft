@@ -25,7 +25,7 @@ package dev.galacticraft.mod.screen;
 import dev.galacticraft.mod.block.entity.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.screen.property.BlockPosPropertyDelegate;
 import dev.galacticraft.mod.screen.slot.ChargeSlot;
-import dev.galacticraft.mod.util.FluidUtils;
+import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -37,13 +37,13 @@ import net.minecraft.screen.slot.Slot;
  */
 public class FuelLoaderScreenHandler extends MachineScreenHandler<FuelLoaderBlockEntity> {
     public FuelLoaderScreenHandler(int syncId, PlayerEntity player, FuelLoaderBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerTypes.FUEL_LOADER_HANDLER);
+        super(syncId, player, machine, GalacticraftScreenHandlerType.FUEL_LOADER_HANDLER);
 
         this.addSlot(new ChargeSlot(machine.getWrappedInventory(), 0, 8, 53));
         this.addSlot(new Slot(machine.getWrappedInventory(), 1, 80, 53) {
             @Override
             public boolean canInsert(ItemStack stack) {
-                return FluidUtils.isExtractable(stack);
+                return FluidUtil.isExtractable(stack);
             }
         });
 

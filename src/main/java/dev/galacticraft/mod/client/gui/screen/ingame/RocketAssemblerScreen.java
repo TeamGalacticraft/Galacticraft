@@ -23,19 +23,19 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import alexiil.mc.lib.attributes.Simulation;
-import dev.galacticraft.api.part.RocketPartRendererRegistry;
-import dev.galacticraft.api.regisry.AddonRegistry;
+import com.mojang.blaze3d.systems.RenderSystem;
+import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.part.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPartType;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.RocketAssemblerBlockEntity;
 import dev.galacticraft.mod.entity.RocketEntity;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.recipe.RocketAssemblerRecipe;
 import dev.galacticraft.mod.screen.RocketAssemblerScreenHandler;
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -126,7 +126,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
     public static final int PROGRESS_ARROW_X = 364;
     public static final int PROGRESS_ARROW_Y = 8;
 
-    protected final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.ScreenTextures.getRaw(Constant.ScreenTextures.ROCKET_ASSEMBLER_SCREEN));
+    protected final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.ScreenTexture.getRaw(Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN));
     private final RocketAssemblerBlockEntity blockEntity;
     private Tab tab = Tab.ROCKET;
 
@@ -159,7 +159,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             drawTexture(matrices, this.x - 29, this.y + 3, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
             drawTexture(matrices, this.x - 27, this.y + 30, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
 
-            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftItems.ROCKET_SCHEMATIC), this.x - 20, this.y + 8);
+            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftItem.ROCKET_SCHEMATIC), this.x - 20, this.y + 8);
             itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlock.MOON_TURF), this.x - 20, this.y + 35);
 
             if (!this.blockEntity.data.isEmpty()) {
@@ -169,14 +169,14 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             drawTexture(matrices, this.x - 27, this.y + 3, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
             drawTexture(matrices, this.x - 29, this.y + 30, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
 
-            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftItems.ROCKET_SCHEMATIC), this.x - 20, this.y + 8);
+            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftItem.ROCKET_SCHEMATIC), this.x - 20, this.y + 8);
             itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlock.MOON_TURF), this.x - 20, this.y + 35);
         }
 
         if (blockEntity.building()) {
             float progress = blockEntity.getProgress();
             this.client.getTextureManager().bindTexture(TEXTURE);//OUT OF 600 //133 / 140
-            final float maxProgress = Galacticraft.configManager.get().rocketAssemblerProcessTime();
+            final float maxProgress = Galacticraft.CONFIG_MANAGER.get().rocketAssemblerProcessTime();
             if (progress < ((maxProgress / 140F) * 133F)) {
                 drawTexture(matrices, this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, (int) (((float) PROGRESS_ARROW_WIDTH) * (progress / ((maxProgress / 140F) * 133F))), PROGRESS_ARROW_HEIGHT);
             } else {

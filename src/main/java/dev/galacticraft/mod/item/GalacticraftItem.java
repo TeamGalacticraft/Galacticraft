@@ -23,9 +23,9 @@
 package dev.galacticraft.mod.item;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
-import dev.galacticraft.mod.item.GalacticraftToolMaterial;
 import dev.galacticraft.mod.sound.GalacticraftSound;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.BlockState;
@@ -45,15 +45,15 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @SuppressWarnings("unused")
-public class GalacticraftItems {
-    public static final List<Item> HIDDEN_ITEMS = new LinkedList<>();
+public class GalacticraftItem {
+    public static final List<ItemConvertible> HIDDEN_ITEMS = new LinkedList<>();
 
     public static final Item GLOWSTONE_TORCH = registerItem(Constant.Block.GLOWSTONE_TORCH, new WallStandingBlockItem(GalacticraftBlock.GLOWSTONE_TORCH, GalacticraftBlock.GLOWSTONE_WALL_TORCH, (new Item.Settings())/*.group(GalacticraftBlock.BLOCKS_GROUP)*/));
     public static final Item UNLIT_TORCH = registerItem(Constant.Block.UNLIT_TORCH, new WallStandingBlockItem(GalacticraftBlock.UNLIT_TORCH, GalacticraftBlock.UNLIT_WALL_TORCH, (new Item.Settings())/*.group(GalacticraftBlock.BLOCKS_GROUP)*/));
 
     public static final ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constant.MOD_ID, Constant.Item.ITEM_GROUP))
-            .icon(() -> new ItemStack(GalacticraftItems.CANVAS))
+            .icon(() -> new ItemStack(GalacticraftItem.CANVAS))
             .build();
 
     // MATERIALS

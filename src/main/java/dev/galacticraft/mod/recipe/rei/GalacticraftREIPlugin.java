@@ -26,7 +26,7 @@ import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.mixin.client.HandledScreenAccessor;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
@@ -36,7 +36,6 @@ import me.shedaniel.rei.api.*;
 import me.shedaniel.rei.api.plugins.REIPluginV0;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.item.Item;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.util.Identifier;
 
@@ -98,7 +97,7 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
 
     @Override
     public void registerEntries(EntryRegistry entryRegistry) {
-        for (EntryStack entry : EntryStack.ofItems(GalacticraftItems.HIDDEN_ITEMS)) {
+        for (EntryStack entry : EntryStack.ofItems(GalacticraftItem.HIDDEN_ITEMS)) {
             entryRegistry.removeEntry(entry);
         }
     }

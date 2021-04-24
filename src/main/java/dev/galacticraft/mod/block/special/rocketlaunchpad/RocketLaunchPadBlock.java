@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.special.rocketlaunchpad;
 
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.entity.RocketEntity;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import io.netty.buffer.Unpooled;

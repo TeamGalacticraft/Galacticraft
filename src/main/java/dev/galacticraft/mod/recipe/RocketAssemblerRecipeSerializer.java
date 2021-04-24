@@ -51,8 +51,8 @@ public class RocketAssemblerRecipeSerializer<T extends RocketAssemblerRecipe> im
         for (int i = 0; i < json.size(); ++i) {
             JsonObject object = json.get(i).getAsJsonObject();
             ItemStack stack = new ItemStack(Registry.ITEM.getOrEmpty(new Identifier(object.get("item").getAsString())).orElseGet(() -> {
-                Galacticraft.logger.fatal("Missing item for recipe!!");
-                Galacticraft.logger.fatal(object.get("item").getAsString());
+                Galacticraft.LOGGER.fatal("Missing item for recipe!!");
+                Galacticraft.LOGGER.fatal(object.get("item").getAsString());
                 return Items.AIR;
             }));
             int count = (object.get("count") != null ? object.get("count").getAsInt() : 1);

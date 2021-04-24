@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.render.rocket;
 
 import dev.galacticraft.api.entity.RocketEntity;
-import dev.galacticraft.api.part.RocketPartRendererRegistry;
+import dev.galacticraft.api.rocket.part.RocketPartRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;

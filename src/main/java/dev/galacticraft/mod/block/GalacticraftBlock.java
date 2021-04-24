@@ -42,6 +42,7 @@ import dev.galacticraft.mod.block.special.walkway.PipeWalkway;
 import dev.galacticraft.mod.block.special.walkway.Walkway;
 import dev.galacticraft.mod.block.special.walkway.WireWalkway;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
@@ -135,7 +136,7 @@ public class GalacticraftBlock {
     public static final Block GRATING = registerBlock(new GratingBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.STONE).strength(2.5f, 6.0f).sounds(BlockSoundGroup.METAL)), Constant.Block.GRATING);
 
     // SPECIAL
-    public static final Block ROCKET_LAUNCH_PAD = registerBlock(new RocketLaunchPadBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F)), Constants.Blocks.ROCKET_LAUNCH_PAD);
+    public static final Block ROCKET_LAUNCH_PAD = registerBlock(new RocketLaunchPadBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F)), Constant.Block.ROCKET_LAUNCH_PAD);
     public static final Block ALUMINUM_WIRE = registerBlock(new AluminumWireBlock(FabricBlockSettings.copy(Blocks.WHITE_WOOL)), Constant.Block.ALUMINUM_WIRE);
     public static final Block SEALABLE_ALUMINUM_WIRE = registerBlock(new SealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATIONS[0])), Constant.Block.SEALABLE_ALUMINUM_WIRE);
     public static final Block GLASS_FLUID_PIPE = registerBlock(new GlassFluidPipeBlock(FabricBlockSettings.of(Material.GLASS).breakByHand(true).sounds(BlockSoundGroup.GLASS)), Constant.Block.GLASS_FLUID_PIPE);
@@ -216,9 +217,9 @@ public class GalacticraftBlock {
     public static final Block OXYGEN_STORAGE_MODULE = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new OxygenStorageModuleBlockEntity(),
             new TranslatableText("tooltip.galacticraft.oxygen_storage_module").setStyle(Constant.Text.DARK_GRAY_STYLE)), Constant.Block.OXYGEN_STORAGE_MODULE);
 
-    public static final Block ROCKET_DESIGNER = registerMachine(new RocketDesignerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ROCKET_DESIGNER);
-    public static final Block ROCKET_ASSEMBLER = registerMachine(new RocketAssemblerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ROCKET_ASSEMBLER);
-    public static final Block FUEL_LOADER = registerMachine(new FuelLoaderBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.FUEL_LOADER);
+    public static final Block ROCKET_DESIGNER = registerMachine(new RocketDesignerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constant.Block.ROCKET_DESIGNER);
+    public static final Block ROCKET_ASSEMBLER = registerMachine(new RocketAssemblerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constant.Block.ROCKET_ASSEMBLER);
+    public static final Block FUEL_LOADER = registerMachine(new FuelLoaderBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constant.Block.FUEL_LOADER);
 
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);

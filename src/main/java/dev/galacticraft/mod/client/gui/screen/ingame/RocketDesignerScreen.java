@@ -22,17 +22,17 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.api.part.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.rocket.part.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPartType;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
 import dev.galacticraft.mod.block.entity.RocketDesignerBlockEntity;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.entity.RocketEntity;
 import dev.galacticraft.mod.screen.RocketDesignerScreenHandler;
-import dev.galacticraft.mod.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -59,7 +59,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHandler> {
 
-    protected final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.ScreenTextures.getRaw(Constant.ScreenTextures.ROCKET_DESIGNER_SCREEN));
+    protected final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.ScreenTexture.getRaw(Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN));
     protected RocketDesignerBlockEntity blockEntity;
 
     private static final int WHITE_BOX_X = 192;
@@ -328,7 +328,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
         drawEntity(this.x + 172 + 24, this.y + 64, entity);
 
-        DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, new TranslatableText("ui.galacticraft.rocket_designer.name").asString(), (this.width / 2), this.y + 6 - 15, Formatting.WHITE.getColorValue());
+        DrawableUtil.drawCenteredString(matrices, this.client.textRenderer, new TranslatableText("ui.galacticraft.rocket_designer.name").asString(), (this.width / 2), this.y + 6 - 15, Formatting.WHITE.getColorValue());
 
         client.textRenderer.draw(matrices, "R", this.x + 245 + 3, this.y + 8, Formatting.RED.getColorValue());
         client.textRenderer.draw(matrices, "G", this.x + 245 + 3, this.y + 18, Formatting.GREEN.getColorValue());

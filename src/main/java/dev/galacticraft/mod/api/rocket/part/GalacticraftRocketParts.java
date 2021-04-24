@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.api.rocket.part;
 
-import dev.galacticraft.api.part.RocketPartRendererRegistry;
+import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.rocket.part.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPartType;
-import dev.galacticraft.mod.Constants;
-import dev.galacticraft.api.regisry.AddonRegistry;
+import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.block.environment;
 
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -67,7 +67,7 @@ public class MoonBerryBushBlock extends PlantBlock {
 
     @Environment(EnvType.CLIENT)
     public ItemStack getPickStack(BlockView view, BlockPos pos, BlockState state) {
-        return new ItemStack(GalacticraftItems.MOON_BERRIES);
+        return new ItemStack(GalacticraftItem.MOON_BERRIES);
     }
 
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
@@ -99,7 +99,7 @@ public class MoonBerryBushBlock extends PlantBlock {
 
         if (mature) {
             int amount = 1 + world.random.nextInt(3);
-            dropStack(world, blockPos, new ItemStack(GalacticraftItems.MOON_BERRIES, amount));
+            dropStack(world, blockPos, new ItemStack(GalacticraftItem.MOON_BERRIES, amount));
             world.playSound(null, blockPos, SoundEvents.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
             world.setBlockState(blockPos, blockState.with(AGE, 1), 2);
             return ActionResult.SUCCESS;

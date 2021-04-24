@@ -25,8 +25,8 @@ package dev.galacticraft.mod.screen;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.block.entity.RocketAssemblerBlockEntity;
-import dev.galacticraft.mod.item.GalacticraftItems;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.item.GalacticraftItem;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -45,7 +45,7 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
     public final RocketAssemblerBlockEntity assembler;
 
     public RocketAssemblerScreenHandler(int syncId, PlayerEntity playerEntity, RocketAssemblerBlockEntity assembler) {
-        super(GalacticraftScreenHandlerTypes.ROCKET_ASSEMBLER_HANDLER, syncId);
+        super(GalacticraftScreenHandlerType.ROCKET_ASSEMBLER_HANDLER, syncId);
         this.assembler = assembler;
         this.inventory = new InventoryFixedWrapper(assembler.getInventory()) {
             @Override
@@ -61,7 +61,7 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
             @Override
             public boolean canInsert(ItemStack stack) {
                 RocketData data = RocketData.fromItem(stack);
-                return this.getStack().isEmpty() || (stack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC
+                return this.getStack().isEmpty() || (stack.getItem() == GalacticraftItem.ROCKET_SCHEMATIC
                         && data.getCone().isUnlocked(playerEntity)
                         && data.getBody().isUnlocked(playerEntity)
                         && data.getBooster().isUnlocked(playerEntity)
@@ -93,7 +93,7 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.ENERGY_INPUT_SLOT, 156, 72) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
-                return EnergyUtils.isEnergyExtractable(itemStack_1) && this.getStack().isEmpty();
+                return EnergyUtil.isEnergyExtractable(itemStack_1) && this.getStack().isEmpty();
             }
 
             @Override
@@ -122,7 +122,7 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
     @Override
     public ItemStack onSlotClick(int i, int j, SlotActionType actionType, PlayerEntity playerEntity) {
         if (actionType == SlotActionType.QUICK_MOVE) {
-            if (slots.get(i).getStack().getItem() != GalacticraftItems.ROCKET_SCHEMATIC) {
+            if (slots.get(i).getStack().getItem() != GalacticraftItem.ROCKET_SCHEMATIC) {
                 return ItemStack.EMPTY;
             } else {
                 if(inventory.getStack(0).isEmpty()) {

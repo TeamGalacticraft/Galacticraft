@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.client.render.rocket;
 
-import dev.galacticraft.api.part.BakedModelRocketPartRenderer;
-import dev.galacticraft.api.part.RocketPartRendererRegistry;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.api.rocket.part.BakedModelRocketPartRenderer;
+import dev.galacticraft.api.rocket.part.RocketPartRendererRegistry;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
 import dev.monarkhes.myron.api.Myron;
 import net.minecraft.item.ItemStack;

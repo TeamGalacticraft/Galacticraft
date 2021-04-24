@@ -43,7 +43,7 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
             0,
             SoundEvents.ITEM_ARMOR_EQUIP_IRON,
             0.0f,
-            () -> Ingredient.ofItems(GalacticraftItems.METEORIC_IRON_INGOT),
+            () -> Ingredient.ofItems(GalacticraftItem.METEORIC_IRON_INGOT),
             0.0f
     ), // TODO: add actual functionality
     HEAVY_DUTY(
@@ -53,7 +53,7 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
             9,
             SoundEvents.ITEM_ARMOR_EQUIP_IRON,
             1.0f,
-            () -> Ingredient.ofItems(GalacticraftItems.COMPRESSED_STEEL),
+            () -> Ingredient.ofItems(GalacticraftItem.COMPRESSED_STEEL),
             1.0f
     ),
     DESH("desh", 42,
@@ -61,7 +61,7 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
             12,
             SoundEvents.ITEM_ARMOR_EQUIP_IRON,
             3.0f,
-            () -> Ingredient.ofItems(GalacticraftItems.DESH_INGOT),
+            () -> Ingredient.ofItems(GalacticraftItem.DESH_INGOT),
             2.0f
     ),
     TITANIUM(
@@ -70,7 +70,7 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
             20,
             SoundEvents.ITEM_ARMOR_EQUIP_IRON,
             1.0f,
-            () -> Ingredient.ofItems(GalacticraftItems.COMPRESSED_TITANIUM),
+            () -> Ingredient.ofItems(GalacticraftItem.COMPRESSED_TITANIUM),
             0.0f
     );
 

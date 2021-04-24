@@ -73,8 +73,7 @@ public class GalacticraftClient implements ClientModInitializer {
         CAPE_LOADER.register(JSON_CAPES);
         CAPE_LOADER.load();
 
-        //Particles because yes
-        GalacticraftParticles.register();
+        GalacticraftParticle.register();
 
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) -> {
             for (int i = 0; i <= 8; i++) {

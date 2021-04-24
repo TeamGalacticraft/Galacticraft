@@ -26,8 +26,8 @@ import dev.galacticraft.api.celestialbodies.CelestialBodyDisplayInfo;
 import dev.galacticraft.api.celestialbodies.CelestialBodyType;
 import dev.galacticraft.api.celestialbodies.CelestialObjectType;
 import dev.galacticraft.api.celestialbodies.satellite.SatelliteRecipe;
-import dev.galacticraft.api.regisry.AddonRegistry;
-import dev.galacticraft.mod.items.GalacticraftItems;
+import dev.galacticraft.api.registry.AddonRegistry;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -52,10 +52,10 @@ public class GalacticraftCelestialBodyType {
                             .time(648000) // 27 mc days in ticks
                             .build()
             )
-            .recipe(new SatelliteRecipe(new ItemStack(GalacticraftItems.BASIC_WAFER, 100)))
+            .recipe(new SatelliteRecipe(new ItemStack(GalacticraftItem.BASIC_WAFER, 100)))
             .build();
 
     public static void register() {
-        Registry.register(AddonRegistry.CELESTIAL_BODIES, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON);
+        Registry.register(AddonRegistry.CELESTIAL_BODIES, GalacticraftCelestialBodyType.THE_MOON.getId(), GalacticraftCelestialBodyType.THE_MOON);
     }
 }

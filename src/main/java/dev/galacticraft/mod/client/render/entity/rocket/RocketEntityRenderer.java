@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.client.render.entity.rocket;
 
-import dev.galacticraft.api.part.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.rocket.part.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.entity.RocketEntity;
 import net.minecraft.client.MinecraftClient;
@@ -43,8 +43,8 @@ import net.minecraft.util.math.MathHelper;
  */
 public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
 
-    public RocketEntityRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
-        super(entityRenderDispatcher_1);
+    public RocketEntityRenderer(EntityRenderDispatcher dispatcher) {
+        super(dispatcher);
     }
 
     @Override

@@ -23,19 +23,14 @@
 package dev.galacticraft.mod.mixin.client;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
-import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.api.atmosphere.AtmosphericGas;
+import dev.galacticraft.api.celestialbodies.CelestialBodyType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.attribute.GalacticraftAttribute;
 import dev.galacticraft.mod.attribute.oxygen.InfiniteOxygenTank;
 import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
 import dev.galacticraft.mod.util.DrawableUtil;
-import dev.galacticraft.mod.Constants;
-import dev.galacticraft.mod.accessor.GearInventoryProvider;
-import dev.galacticraft.api.atmosphere.AtmosphericGas;
-import dev.galacticraft.api.celestialbodies.CelestialBodyType;
-import dev.galacticraft.mod.items.OxygenTankItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

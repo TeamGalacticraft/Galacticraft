@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.api.machine;
 
-import com.hrznstudio.galacticraft.api.internal.data.ClientWorldTeamsGetter;
-import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
-import com.hrznstudio.galacticraft.api.teams.Teams;
-import com.hrznstudio.galacticraft.api.teams.data.Team;
 import com.mojang.authlib.GameProfile;
+import dev.galacticraft.api.internal.data.ClientWorldTeamsGetter;
+import dev.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
+import dev.galacticraft.api.teams.Teams;
+import dev.galacticraft.api.teams.data.Team;
 import dev.galacticraft.mod.Constant;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

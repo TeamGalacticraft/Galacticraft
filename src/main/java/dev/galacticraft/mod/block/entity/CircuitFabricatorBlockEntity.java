@@ -31,7 +31,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.CircuitFabricatorScreenHandler;
@@ -88,8 +88,8 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
         builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 70);
         builder.addSlot(INPUT_SLOT_DIAMOND, SlotType.INPUT, ExactItemFilter.createFilter(Items.DIAMOND), 31, 15);
-        builder.addSlot(INPUT_SLOT_SILICON, SlotType.INPUT, ExactItemFilter.createFilter(GalacticraftItems.RAW_SILICON), 62, 45);
-        builder.addSlot(INPUT_SLOT_SILICON_2, SlotType.INPUT, ExactItemFilter.createFilter(GalacticraftItems.RAW_SILICON), 62, 63);
+        builder.addSlot(INPUT_SLOT_SILICON, SlotType.INPUT, ExactItemFilter.createFilter(GalacticraftItem.RAW_SILICON), 62, 45);
+        builder.addSlot(INPUT_SLOT_SILICON_2, SlotType.INPUT, ExactItemFilter.createFilter(GalacticraftItem.RAW_SILICON), 62, 63);
         builder.addSlot(INPUT_SLOT_REDSTONE, SlotType.INPUT, ExactItemFilter.createFilter(Items.REDSTONE), 107, 70);
         builder.addSlot(INPUT_SLOT, SlotType.INPUT, stack -> this.getRecipe(new SimpleInventory(stack)).isPresent(), 134, 15);
         builder.addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(152, 70));

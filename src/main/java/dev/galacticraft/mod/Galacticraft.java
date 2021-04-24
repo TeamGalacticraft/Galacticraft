@@ -22,20 +22,16 @@
 
 package dev.galacticraft.mod;
 
-import dev.galacticraft.mod.api.config.ConfigManager;
-import dev.galacticraft.api.regisry.AddonRegistry;
-import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
-import dev.galacticraft.mod.block.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.mojang.serialization.Lifecycle;
 import dev.galacticraft.mod.api.config.ConfigManager;
+import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
 import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.command.GalacticraftCommand;
 import dev.galacticraft.mod.config.ConfigManagerImpl;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.log.GalacticraftPrependingMessageFactory;
 import dev.galacticraft.mod.loot.GalacticraftLootTable;
 import dev.galacticraft.mod.misc.banner.GalacticraftBannerPattern;
@@ -50,9 +46,7 @@ import dev.galacticraft.mod.village.GalacticraftVillagerProfession;
 import dev.galacticraft.mod.village.MoonVillagerType;
 import dev.galacticraft.mod.world.biome.GalacticraftBiome;
 import dev.galacticraft.mod.world.biome.source.GalacticraftBiomeSource;
-import dev.galacticraft.mod.world.dimension.GalacticraftCelestialBodyType;
 import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
-import dev.galacticraft.mod.world.dimension.GalacticraftGas;
 import dev.galacticraft.mod.world.gen.carver.GalacticraftCarver;
 import dev.galacticraft.mod.world.gen.feature.GalacticraftFeature;
 import dev.galacticraft.mod.world.gen.surfacebuilder.GalacticraftSurfaceBuilder;
@@ -83,7 +77,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftFluid.register();
         GalacticraftBlock.register();
         GalacticraftBlockEntityType.register();
-        GalacticraftItems.register();
+        GalacticraftItem.register();
         GalacticraftTag.register();
         GalacticraftRecipe.register();
         GalacticraftEntityType.register();

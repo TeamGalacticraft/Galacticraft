@@ -38,7 +38,7 @@ import dev.galacticraft.mod.api.machine.SecurityInfo;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.client.gui.widget.machine.AbstractWidget;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.screen.MachineScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.screen.tank.Tank;
@@ -91,9 +91,9 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public abstract class MachineHandledScreen<C extends MachineScreenHandler<? extends MachineBlockEntity>> extends HandledScreen<C> implements DrawableUtil {
     private static final ItemStack REDSTONE = new ItemStack(Items.REDSTONE);
-    private static final ItemStack UNLIT_TORCH = new ItemStack(GalacticraftItems.UNLIT_TORCH);
+    private static final ItemStack UNLIT_TORCH = new ItemStack(GalacticraftItem.UNLIT_TORCH);
     private static final ItemStack REDSTONE_TORCH = new ItemStack(Items.REDSTONE_TORCH);
-    private static final ItemStack WRENCH = new ItemStack(GalacticraftItems.STANDARD_WRENCH);
+    private static final ItemStack WRENCH = new ItemStack(GalacticraftItem.STANDARD_WRENCH);
     private static final ItemStack ALUMINUM_WIRE = new ItemStack(GalacticraftBlock.ALUMINUM_WIRE);
 
     public static final int PANEL_WIDTH = 100;
@@ -303,9 +303,9 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     offsetY += this.textRenderer.fontHeight + 2;
                 }
 //                this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.machine.stats.gjt", "N/A")
-//                        .setStyle(Constant.Text.GRAY_STYLE), 11, 54, ColorUtils.WHITE);
+//                        .setStyle(Constant.Text.GRAY_STYLE), 11, 54, ColorUtil.WHITE);
                 //                this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.machine.stats.todo", "N/A")
-//                        .setStyle(Constant.Text.GRAY_STYLE), 11, 54, ColorUtils.WHITE);
+//                        .setStyle(Constant.Text.GRAY_STYLE), 11, 54, ColorUtil.WHITE);
                 matrices.pop();
             }
 
@@ -328,7 +328,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                         machine.getSecurity().getAccessibility().getName()).setStyle(Constant.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y, ColorUtil.WHITE);
 //                assert machine.getSecurity().getOwner() != null;
 //                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.security.owned_by", machine.getSecurity().getOwner().getName())
-//                        .setStyle(Constant.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y + this.textRenderer.fontHeight + 4, ColorUtils.WHITE);
+//                        .setStyle(Constant.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y + this.textRenderer.fontHeight + 4, ColorUtil.WHITE);
 
                 matrices.pop();
             }

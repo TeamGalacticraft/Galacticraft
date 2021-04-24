@@ -24,7 +24,7 @@ package dev.galacticraft.mod.screen;
 
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import dev.galacticraft.mod.block.entity.RocketDesignerBlockEntity;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -43,7 +43,7 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
     public RocketDesignerBlockEntity blockEntity;
 
     public RocketDesignerScreenHandler(int syncId, PlayerEntity player, RocketDesignerBlockEntity machine) {
-        super(GalacticraftScreenHandlerTypes.ROCKET_DESIGNER_HANDLER, syncId);
+        super(GalacticraftScreenHandlerType.ROCKET_DESIGNER_HANDLER, syncId);
         this.blockEntity = machine;
         this.inventory = new InventoryFixedWrapper(machine.getInventory()) {
             @Override
@@ -59,7 +59,7 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
         this.addSlot(new Slot(this.inventory, RocketDesignerBlockEntity.SCHEMATIC_OUTPUT_SLOT, 8 + (8 * 18) + playerInvXOffset + 3 - 1, (playerInvYOffset - 21) - 6) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
-                return itemStack_1.getItem() == GalacticraftItems.ROCKET_SCHEMATIC;
+                return itemStack_1.getItem() == GalacticraftItem.ROCKET_SCHEMATIC;
             }
 
             @Override
@@ -118,7 +118,7 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
     @Override
     public ItemStack onSlotClick(int i, int j, SlotActionType actionType, PlayerEntity playerEntity) {
         if (actionType == SlotActionType.QUICK_MOVE) {
-            if (slots.get(i).getStack().getItem() != GalacticraftItems.ROCKET_SCHEMATIC) {
+            if (slots.get(i).getStack().getItem() != GalacticraftItem.ROCKET_SCHEMATIC) {
                 return ItemStack.EMPTY;
             } else {
                 if(inventory.getStack(0).isEmpty()) {

@@ -35,15 +35,15 @@ import java.util.function.Supplier;
  */
 public enum GalacticraftToolMaterial implements ToolMaterial {
     STEEL(ToolMaterials.IRON.getMiningLevel(), 768, ToolMaterials.IRON.getMiningSpeedMultiplier(), ToolMaterials.IRON.getAttackDamage(), ToolMaterials.IRON.getEnchantability(), () -> {
-        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.COMPRESSED_STEEL));
+        return Ingredient.ofStacks(new ItemStack(GalacticraftItem.COMPRESSED_STEEL));
     }),
 
     DESH(3, 1024, 5.0F, 2.5F, 10, () -> {
-        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.DESH_INGOT));
+        return Ingredient.ofStacks(new ItemStack(GalacticraftItem.DESH_INGOT));
     }),
 
     TITANIUM(4, 760, 14.0F, 4.0F, 16, () -> {
-        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.TITANIUM_INGOT));
+        return Ingredient.ofStacks(new ItemStack(GalacticraftItem.TITANIUM_INGOT));
     });
 
     private final int miningLevel;

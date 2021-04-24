@@ -22,13 +22,11 @@
 
 package dev.galacticraft.mod.command;
 
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
-import dev.galacticraft.mod.Constants;
-import dev.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import dev.galacticraft.api.celestialbodies.CelestialBodyType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
 import io.netty.buffer.Unpooled;
@@ -77,7 +75,7 @@ public class GalacticraftCommand {
                     CommandManager.literal("dimensiontp")
                             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                             .executes(context -> {
-                                context.getSource().getPlayer().networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer().writeInt(Integer.MAX_VALUE))));
+                                context.getSource().getPlayer().networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer().writeInt(Integer.MAX_VALUE))));
                                 ((ServerPlayerEntityAccessor) context.getSource().getPlayer()).setCelestialScreenState(Integer.MAX_VALUE);
                                 return 1;
                             })
@@ -116,7 +114,7 @@ public class GalacticraftCommand {
         context.getSource().getMinecraftServer().execute(() -> {
             try {
                 if (!CelestialBodyType.getByDimType(context.getSource().getRegistryManager(), context.getSource().getWorld().getRegistryKey()).isPresent()) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.gcrhouston.cannot_detect_signal").setStyle(Constants.Styles.RED_STYLE));
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft.gcrhouston.cannot_detect_signal").setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
                     return;
                 }
@@ -199,11 +197,11 @@ public class GalacticraftCommand {
             try {
                 ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
                 if (serverWorld == null) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constants.Misc.RED_STYLE));
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Misc.RED_STYLE));
                     retval[0] = -1;
                     return;
                 } else if (context.getSource().getWorld().equals(serverWorld)) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.already_in_dimension", serverWorld.getRegistryKey().getValue()).setStyle(Constants.Misc.RED_STYLE));
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.already_in_dimension", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Misc.RED_STYLE));
                     retval[0] = -1;
                     return;
                 }
@@ -215,7 +213,7 @@ public class GalacticraftCommand {
                 });
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.dimensiontp.success.multiple", entities.size(), serverWorld.getRegistryKey().getValue()), true);
             } catch (CommandSyntaxException e) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constants.Misc.RED_STYLE));
+                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constant.Misc.RED_STYLE));
                 retval[0] = -1;
             }
         });

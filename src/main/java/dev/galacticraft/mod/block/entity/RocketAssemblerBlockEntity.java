@@ -25,7 +25,7 @@ package dev.galacticraft.mod.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
-import dev.galacticraft.api.regisry.AddonRegistry;
+import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
@@ -33,13 +33,12 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
 import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.entity.RocketEntity;
-import dev.galacticraft.mod.item.GalacticraftItems;
-import dev.galacticraft.mod.recipe.GalacticraftRecipes;
+import dev.galacticraft.mod.item.GalacticraftItem;
+import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.recipe.RocketAssemblerRecipe;
-import dev.galacticraft.mod.util.EnergyUtils;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -66,11 +65,11 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     private final FullFixedItemInv inventory = new FullFixedItemInv(3) {
         public ItemFilter getFilterForSlot(int slot) {
             if (slot == SCHEMATIC_INPUT_SLOT) {
-                return (itemStack -> itemStack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC);
+                return (itemStack -> itemStack.getItem() == GalacticraftItem.ROCKET_SCHEMATIC);
             } else if (slot == ENERGY_INPUT_SLOT) {
-                return (EnergyUtils::isEnergyExtractable);
+                return (EnergyUtil::isEnergyExtractable);
             } else {
-                return (stack) -> stack.getItem() == GalacticraftItems.ROCKET;
+                return (stack) -> stack.getItem() == GalacticraftItem.ROCKET;
             }
         }
 
@@ -81,7 +80,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     };
     public RocketData data = RocketData.EMPTY;
     public Map<Identifier, RocketAssemblerRecipe> recipes = new HashMap<>();
-    private final SimpleCapacitor energy = new SimpleCapacitor(DefaultEnergyType.INSTANCE, Galacticraft.configManager.get().machineEnergyStorageSize());
+    private final SimpleCapacitor energy = new SimpleCapacitor(DefaultEnergyType.INSTANCE, Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize());
     private FullFixedItemInv extendedInv = EMPTY_INV;
     private float progress = 0.0F;
     public RocketEntity fakeEntity;
@@ -90,7 +89,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     private boolean queuedUpdate = false;
 
     public RocketAssemblerBlockEntity() {
-        super(GalacticraftBlockEntities.ROCKET_ASSEMBLER_TYPE);
+        super(GalacticraftBlockEntityType.ROCKET_ASSEMBLER_TYPE);
         inventory.addListener((view, i, previous, current) -> {
             if (!world.isClient && i == SCHEMATIC_INPUT_SLOT) {
                 schematicUpdate(previous, current);
@@ -106,7 +105,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     private void schematicUpdate(ItemStack prev, ItemStack current) {
         try {
             recipes.clear();
-            for (Recipe<Inventory> recipe : world.getRecipeManager().getAllOfType(GalacticraftRecipes.ROCKET_ASSEMBLER_TYPE).values()) {
+            for (Recipe<Inventory> recipe : world.getRecipeManager().getAllOfType(GalacticraftRecipe.ROCKET_ASSEMBLER_TYPE).values()) {
                 if (recipe instanceof RocketAssemblerRecipe) {
                     recipes.put(((RocketAssemblerRecipe) recipe).getPartOutput(), ((RocketAssemblerRecipe) recipe));
                 }
@@ -120,7 +119,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             return;
         }
 
-        if (!current.isEmpty() && current.getItem() == GalacticraftItems.ROCKET_SCHEMATIC) {
+        if (!current.isEmpty() && current.getItem() == GalacticraftItem.ROCKET_SCHEMATIC) {
             if (this.data.equals(RocketData.fromItem(current))) {
                 return;
             }
@@ -216,7 +215,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
 
     private void schematicUpdateFromTag() {
         recipes.clear();
-        for (Recipe<Inventory> recipe : world.getRecipeManager().getAllOfType(GalacticraftRecipes.ROCKET_ASSEMBLER_TYPE).values()) {
+        for (Recipe<Inventory> recipe : world.getRecipeManager().getAllOfType(GalacticraftRecipe.ROCKET_ASSEMBLER_TYPE).values()) {
             if (recipe instanceof RocketAssemblerRecipe) {
                 recipes.put(((RocketAssemblerRecipe) recipe).getPartOutput(), ((RocketAssemblerRecipe) recipe));
             }
@@ -230,9 +229,9 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             throw new RuntimeException("Error loading schematic!");
         }
 
-        if (inventory.getInvStack(SCHEMATIC_INPUT_SLOT).getItem() == GalacticraftItems.ROCKET_SCHEMATIC) {
+        if (inventory.getInvStack(SCHEMATIC_INPUT_SLOT).getItem() == GalacticraftItem.ROCKET_SCHEMATIC) {
             if (!this.data.equals(RocketData.fromItem(inventory.getInvStack(SCHEMATIC_INPUT_SLOT)))) {
-                schematicUpdate(data.toSchematic(new ItemStack(GalacticraftItems.ROCKET_SCHEMATIC)), inventory.getInvStack(SCHEMATIC_INPUT_SLOT));
+                schematicUpdate(data.toSchematic(new ItemStack(GalacticraftItem.ROCKET_SCHEMATIC)), inventory.getInvStack(SCHEMATIC_INPUT_SLOT));
                 return;
             }
         }
@@ -365,25 +364,25 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             return;
         }
         int neededEnergy = Math.min(50, getEnergyAttribute().getMaxCapacity() - getEnergyAttribute().getEnergy());
-        if (EnergyUtils.isEnergyExtractable(this.getInventory().getSlot(ENERGY_INPUT_SLOT))) {
-            int amountFailedToExtract = EnergyUtils.extractEnergy(this.getInventory().getSlot(ENERGY_INPUT_SLOT), neededEnergy, Simulation.ACTION);
+        if (EnergyUtil.isEnergyExtractable(this.getInventory().getSlot(ENERGY_INPUT_SLOT))) {
+            int amountFailedToExtract = EnergyUtil.extractEnergy(this.getInventory().getSlot(ENERGY_INPUT_SLOT), neededEnergy, Simulation.ACTION);
             this.getEnergyAttribute().insert(DefaultEnergyType.INSTANCE, neededEnergy - amountFailedToExtract, Simulation.ACTION);
         }
 
         if (this.building) { //out of 600 ticks
             if (this.energy.getEnergy() >= 20) {
-                this.energy.extract(DefaultEnergyType.INSTANCE, Galacticraft.configManager.get().rocketAssemblerEnergyConsumptionRate(), Simulation.ACTION);
+                this.energy.extract(DefaultEnergyType.INSTANCE, Galacticraft.CONFIG_MANAGER.get().rocketAssemblerEnergyConsumptionRate(), Simulation.ACTION);
             } else {
                 this.building = false;
             }
 
-            if (progress++ >= Galacticraft.configManager.get().rocketAssemblerProcessTime()) {
+            if (progress++ >= Galacticraft.CONFIG_MANAGER.get().rocketAssemblerProcessTime()) {
                 this.building = false;
                 this.progress = 0;
                 for (int i = 0; i < extendedInv.getSlotCount(); i++) {
                     extendedInv.setInvStack(i, ItemStack.EMPTY, Simulation.ACTION);
                 }
-                ItemStack stack1 = new ItemStack(GalacticraftItems.ROCKET);
+                ItemStack stack1 = new ItemStack(GalacticraftItem.ROCKET);
                 stack1.setTag(data.toTag());
                 this.inventory.setInvStack(ROCKET_OUTPUT_SLOT, stack1, Simulation.ACTION);
             }

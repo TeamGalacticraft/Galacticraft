@@ -26,13 +26,12 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.google.common.collect.Lists;
-import dev.galacticraft.api.regisry.AddonRegistry;
+import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.entity.GalacticraftBlockEntities;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -77,14 +76,14 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
         @Override
         public ItemFilter getFilterForSlot(int slot) {
-            return stack -> stack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC;
+            return stack -> stack.getItem() == GalacticraftItem.ROCKET_SCHEMATIC;
         }
     };
 
     private ItemStack previous = ItemStack.EMPTY;
 
     public RocketDesignerBlockEntity() {
-        super(GalacticraftBlockEntities.ROCKET_DESIGNER_TYPE);
+        super(GalacticraftBlockEntityType.ROCKET_DESIGNER_TYPE);
 
         this.inventory.addListener((view, slot, prev, cur) -> {
             if (!previous.getOrCreateTag().equals(inventory.getInvStack(0).getTag())) {
@@ -283,7 +282,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
     public void updateSchematic() {
         if (this.world != null && !this.world.isClient) {
-            if (this.inventory.getInvStack(0).getItem() == GalacticraftItems.ROCKET_SCHEMATIC) {
+            if (this.inventory.getInvStack(0).getItem() == GalacticraftItem.ROCKET_SCHEMATIC) {
                 ItemStack stack = this.inventory.getInvStack(0).copy();
                 CompoundTag tag = new CompoundTag();
                 tag.putInt("red", red);

@@ -24,7 +24,7 @@ package dev.galacticraft.mod.mixin.client;
 
 import dev.galacticraft.api.entity.RocketEntity;
 import dev.galacticraft.api.rocket.LaunchStage;
-import dev.galacticraft.mod.Constants;
+import dev.galacticraft.mod.Constant;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

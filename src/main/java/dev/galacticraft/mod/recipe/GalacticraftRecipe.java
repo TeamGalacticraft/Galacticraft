@@ -38,8 +38,8 @@ public class GalacticraftRecipe {
     static FabricationRecipeSerializer<FabricationRecipe> FABRICATION_SERIALIZER;
     static ShapelessCompressingRecipeSerializer<ShapelessCompressingRecipe> SHAPELESS_COMPRESSING_SERIALIZER;
     static ShapedCompressingRecipeSerializer<ShapedCompressingRecipe> SHAPED_COMPRESSING_SERIALIZER;
-    public static final RecipeType<RocketAssemblerRecipe> ROCKET_ASSEMBLER_TYPE = Registry.register(Registry.RECIPE_TYPE, new Identifier(Constants.MOD_ID, "rocket_assembler"), new RecipeType<RocketAssemblerRecipe>(){});
-    public static final RocketAssemblerRecipeSerializer<RocketAssemblerRecipe> ROCKET_ASSEMBLER_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constants.MOD_ID, "rocket_assembler"), new RocketAssemblerRecipeSerializer<>(RocketAssemblerRecipe::new));
+    public static final RecipeType<RocketAssemblerRecipe> ROCKET_ASSEMBLER_TYPE = Registry.register(Registry.RECIPE_TYPE, new Identifier(Constant.MOD_ID, "rocket_assembler"), new RecipeType<RocketAssemblerRecipe>(){});
+    public static final RocketAssemblerRecipeSerializer<RocketAssemblerRecipe> ROCKET_ASSEMBLER_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, "rocket_assembler"), new RocketAssemblerRecipeSerializer<>(RocketAssemblerRecipe::new));
 
     public static void register() {
         // Circuit fabricator recipe stuff

@@ -25,6 +25,8 @@ package dev.galacticraft.mod;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.RawFluidTagFilter;
 import dev.galacticraft.mod.api.block.util.BlockFace;
+import dev.galacticraft.mod.tag.GalacticraftTag;
+import dev.galacticraft.mod.util.ColorUtil;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
@@ -160,13 +162,10 @@ public interface Constant {
         String WATER_ELECTROLYZER = "water_electrolyzer";
         String METHANE_SYNTHESIZIER = "methane_synthesizer";
         String GAS_LIQUEFIER = "gas_liquefier";
-        String ROCKET_DESIGNER = "rocket_designer";
-        String ROCKET_ASSEMBLER = "rocket_assembler";
 
         // Pad Blocks
         String BUGGY_FUELING_PAD = "buggy_fueling";
         String ROCKET_LAUNCH_PAD = "rocket_launch_pad";
-        String ROCKET_LAUNCH_PAD_CENTER = "launch_pad_center";
         String FUEL_LOADER = "fuel_loader";
         String CARGO_LOADER = "cargo_loader";
         String CARGO_UNLOADER = "cargo_unloader";
@@ -189,16 +188,6 @@ public interface Constant {
         String ASTRO_MINER_BASE = "astro_miner_base";
         String SHORT_RANGE_TELEPAD = "short_range_telepad";
 
-        // Dummy render blocks
-        String ROCKET_BODY = "rocket_body";
-        String ROCKET_BOTTOM = "rocket_bottom";
-        String ROCKET_FINS = "rocket_fins";
-        String ROCKET_BOOSTER_TIER_1 = "rocket_thruster_tier_1";
-        String ROCKET_BOOSTER_TIER_2 = "rocket_thruster_tier_2";
-        String ROCKET_CONE_BASIC = "rocket_cone_basic";
-        String ROCKET_CONE_ADVANCED = "rocket_cone_advanced";
-        String ROCKET_CONE_SLOPED = "rocket_cone_sloped";
-
         // Power
         String BASIC_SOLAR_PANEL = "basic_solar_panel";
         String SOLAR_PANEL_PART = "solar_panel_part";
@@ -220,6 +209,8 @@ public interface Constant {
         String CRACKED_MOON_BASALT_BRICK = "cracked_moon_basalt_brick";
         String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
         String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
+        String ROCKET_DESIGNER = "rocket_designer";
+        String ROCKET_ASSEMBLER = "rocket_assembler";
     }
 
     interface Fluid {
@@ -386,6 +377,9 @@ public interface Constant {
         String ISOTHERMAL_PADDING_LEGGINGS = "isothermal_padding_leggings";
         String ISOTHERMAL_PADDING_BOOTS = "isothermal_padding_boots";
 
+        String TIER_2_ROCKET_SCHEMATIC = "tier_2_rocket_schematic";
+        String TIER_3_ROCKET_SCHEMATIC = "tier_3_rocket_schematic";
+        String CARGO_ROCKET_SCHEMATIC = "cargo_rocket_schematic";
         String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
         String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";
 
@@ -402,10 +396,6 @@ public interface Constant {
         String LEGACY_MUSIC_DISC_MIMAS = "legacy_music_disc_mimas";
         String LEGACY_MUSIC_DISC_ORBIT = "legacy_music_disc_orbit";
         String LEGACY_MUSIC_DISC_SPACERACE = "legacy_music_disc_spacerace";
-
-        String ROCKET_SCHEMATIC = "rocket_schematic";
-        String ROCKET = "rocket";
-        String FLUID_CANISTER = "fluid_canister";
     }
 
     interface Particle {
@@ -438,11 +428,6 @@ public interface Constant {
         String ENERGY_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_size";
         String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_compressor_energy_consumption_rate";
         String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
-        String ROCKET_ASSEMBLER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.rocket_assembler_energy_consumption_rate";
-
-        String MISC = "config.galacticraft.misc";
-        String MISC_MACHINES = "config.galacticraft.misc.machines";
-        String ROCKET_ASSEMBLER_PROCESS_TIME = "config.galacticraft.misc.machines.rocket_assembler_process_time";
     }
 
     interface ScreenTexture {
@@ -469,41 +454,6 @@ public interface Constant {
         Identifier OXYGEN_STORAGE_MODULE_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_storage_module_screen.png");
         Identifier OXYGEN_SEALER_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_sealer_screen.png");
 
-<<<<<<< HEAD:src/main/java/dev/galacticraft/mod/Constant.java
-    interface ScreenTextures {
-        String COAL_GENERATOR_SCREEN = "gui/coal_generator_screen";
-        String SOLAR_PANEL_SCREEN = "gui/solar_panel_screen";
-        String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
-        String REFINERY_SCREEN = "gui/refinery_screen";
-        String ELECTRIC_FURNACE_SCREEN = "gui/electric_furnace_screen";
-        String ELECTRIC_ARC_FURNACE_SCREEN = "gui/electric_arc_furnace_screen";
-        String COMPRESSOR_SCREEN = "gui/compressor_screen";
-        String ELECTRIC_COMPRESSOR_SCREEN = "gui/electric_compressor_screen";
-        String ENERGY_STORAGE_MODULE_SCREEN = "gui/energy_storage_module_screen";
-        String OXYGEN_COLLECTOR_SCREEN = "gui/oxygen_collector_screen";
-        String ROCKET_DESIGNER_SCREEN = "gui/rocket_designer_screen";
-        String ROCKET_ASSEMBLER_SCREEN = "gui/rocket_assembler_screen";
-
-        String MACHINE_CONFIG_TABS = "gui/machine_config_tabs";
-        String MACHINE_CONFIG_PANELS = "gui/machine_config_panels";
-        String PLAYER_INVENTORY_SCREEN = "gui/player_inventory_screen";
-        String PLAYER_INVENTORY_TABS = "gui/player_inventory_switch_tabs";
-        String OVERLAY = "gui/overlay";
-
-        String MAP_SCREEN = "gui/map";
-        String PLANET_ICONS = "gui/planet_icons";
-        String BUBBLE_DISTRIBUTOR_SCREEN = "gui/oxygen_bubble_distributor_screen";
-        String OXYGEN_COMPRESSOR_SCREEN = "gui/oxygen_compressor_screen";
-        String OXYGEN_STORAGE_MODULE_SCREEN = "gui/oxygen_storage_module_screen";
-        String OXYGEN_SEALER_SCREEN = "gui/oxygen_sealer_screen";
-        String RESEARCH_PANELS = "gui/research_panels";
-        String FUEL_LOADER_SCREEN = "gui/fuel_loader_screen";
-
-        static String getRaw(String path) {
-            return "textures/" + path + ".png";
-        }
-=======
->>>>>>> main:src/main/java/dev/galacticraft/mod/Constant.java
     }
 
     interface SlotSprite {
@@ -720,9 +670,5 @@ public interface Constant {
         BlockFace[] BLOCK_FACES = BlockFace.values();
         String LOGGER_PREFIX = "[Galacticraft] ";
         boolean DEBUG = false;
-    }
-
-    public static class Compatibility {
-        public static final String COMMON_MOD_ID = "c";
     }
 }

@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.api.block;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
-import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
 import com.mojang.authlib.GameProfile;
+import dev.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;

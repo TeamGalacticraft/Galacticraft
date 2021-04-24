@@ -56,12 +56,12 @@ public class RocketAssemblerRecipe implements Recipe<Inventory> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return GalacticraftRecipes.ROCKET_ASSEMBLER_SERIALIZER;
+        return GalacticraftRecipe.ROCKET_ASSEMBLER_SERIALIZER;
     }
 
     @Override
     public RecipeType<?> getType() {
-        return GalacticraftRecipes.ROCKET_ASSEMBLER_TYPE;
+        return GalacticraftRecipe.ROCKET_ASSEMBLER_TYPE;
     }
 
     @Override

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.village;
 
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
@@ -61,7 +61,7 @@ public class GalacticraftTradeOffer {
 
         public TradeOffer create(Entity entity, Random random) {
             ItemStack itemStack = new ItemStack(this.buy, this.price);
-            return new TradeOffer(itemStack, new ItemStack(GalacticraftItems.LUNAR_SAPPHIRE), this.maxUses, this.experience, this.multiplier);
+            return new TradeOffer(itemStack, new ItemStack(GalacticraftItem.LUNAR_SAPPHIRE), this.maxUses, this.experience, this.multiplier);
         }
     }
 
@@ -92,7 +92,7 @@ public class GalacticraftTradeOffer {
                     FilledMapItem.fillExplorationMap(serverWorld, itemStack);
                     MapState.addDecorationsTag(itemStack, blockPos, "+", this.iconType);
                     itemStack.setCustomName(new TranslatableText("filled_map." + this.structure.getName().toLowerCase(Locale.ROOT)));
-                    return new TradeOffer(new ItemStack(GalacticraftItems.LUNAR_SAPPHIRE, this.price), new ItemStack(Items.COMPASS), itemStack, this.maxUses, this.experience, 0.2F);
+                    return new TradeOffer(new ItemStack(GalacticraftItem.LUNAR_SAPPHIRE, this.price), new ItemStack(Items.COMPASS), itemStack, this.maxUses, this.experience, 0.2F);
                 } else {
                     return null;
                 }
@@ -134,7 +134,7 @@ public class GalacticraftTradeOffer {
         }
 
         public TradeOffer create(Entity entity, Random random) {
-            return new TradeOffer(new ItemStack(GalacticraftItems.LUNAR_SAPPHIRE, this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
+            return new TradeOffer(new ItemStack(GalacticraftItem.LUNAR_SAPPHIRE, this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
         }
     }
 }

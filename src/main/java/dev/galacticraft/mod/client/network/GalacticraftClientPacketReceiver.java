@@ -22,17 +22,16 @@
 
 package dev.galacticraft.mod.client.network;
 
+import com.mojang.authlib.GameProfile;
+import dev.galacticraft.api.internal.data.ClientWorldTeamsGetter;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
-import com.hrznstudio.galacticraft.api.internal.data.ClientWorldTeamsGetter;
-import com.mojang.authlib.GameProfile;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
-import dev.galacticraft.mod.client.gui.screen.ingame.PlanetSelectScreen;
 import dev.galacticraft.mod.entity.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -40,6 +39,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -48,8 +48,6 @@ import net.minecraft.util.registry.Registry;
 
 import java.util.Objects;
 import java.util.UUID;
-
-import net.minecraft.entity.EntityType;
 
 /**
  * Handles client-bound (S2C) packets
@@ -129,7 +127,7 @@ public class GalacticraftClientPacketReceiver {
 
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "rocket_spawn"), ((client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "rocket_spawn"), ((client, handler, buf, responseSender) -> {
             EntityType<? extends RocketEntity> type = (EntityType<? extends RocketEntity>) Registry.ENTITY_TYPE.get(buf.readVarInt());
 
             int entityID = buf.readVarInt();

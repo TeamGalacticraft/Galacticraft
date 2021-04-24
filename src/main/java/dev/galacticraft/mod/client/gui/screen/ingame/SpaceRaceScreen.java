@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.BufferBuilder;
@@ -114,7 +115,7 @@ public class SpaceRaceScreen extends Screen {
     }
 
     private void renderForeground(MatrixStack matrices, int mouseX, int mouseY) {
-        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("ui.galacticraft.space_race_manager"), this.width / 2, getTop() - 20, 0xFFFFFF);
+        drawCenteredString(matrices, this.textRenderer, I18n.translate("ui.galacticraft.space_race_manager"), this.width / 2, getTop() - 20, 0xFFFFFF);
 
         if (menu == Menu.MAIN) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
