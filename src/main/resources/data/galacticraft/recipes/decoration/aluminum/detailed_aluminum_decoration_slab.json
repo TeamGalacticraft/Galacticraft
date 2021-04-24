@@ -5,11 +5,11 @@
   ],
   "key": {
     "T": {
-      "item": "galacticraft:dark_decoration"
+      "item": "galacticraft:detailed_aluminum_decoration"
     }
   },
   "result": {
-    "item": "galacticraft:dark_decoration_slab",
+    "item": "galacticraft:detailed_aluminum_decoration_slab",
     "count": 6
   }
 }

@@ -2,7 +2,7 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft:solid_meteoric_iron"
+      "item": "galacticraft:meteoric_iron_block"
     }
   ],
   "result": {
