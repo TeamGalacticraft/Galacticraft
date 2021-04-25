@@ -1,0 +1,13 @@
+{
+  "type": "smithing",
+  "base": {
+    "item": "galacticraft:desh_leggings"
+  },
+  "addition": {
+    "item": "galacticraft:compressed_titanium"
+  },
+  "result": {
+    "item": "galacticraft:titanium_leggings",
+    "count": 1
+  }
+}
