@@ -35,6 +35,7 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
 public class BakedModelItemRocketPartRenderer implements RocketPartRendererRegistry.RocketPartRenderer {
@@ -53,8 +54,8 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRendererRegis
     }
 
     @Override
-    public void renderGUI(ClientWorld world, MatrixStack matrices, VertexConsumerProvider vertices, float delta) {
-        MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformation.Mode.GUI, false, matrices, vertices, 15728880, OverlayTexture.DEFAULT_UV, model);
+    public void renderGUI(ClientWorld world, MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        MinecraftClient.getInstance().getItemRenderer().renderInGui(stack, 0, 0);
     }
 
     @Override

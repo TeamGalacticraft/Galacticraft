@@ -108,10 +108,7 @@ public class RocketItem extends Item {
             ItemStack stack = new ItemStack(this);
             CompoundTag tag = new CompoundTag();
             tag.putInt("tier", 1);
-            tag.putInt("red", 255);
-            tag.putInt("green", 255);
-            tag.putInt("blue", 255);
-            tag.putInt("alpha", 255);
+            tag.putInt("color", 0xFFFFFFFF);
             for (RocketPartType type : RocketPartType.values()) {
                 tag.putString(type.asString(), AddonRegistry.ROCKET_PARTS.getId(GalacticraftRocketParts.getDefaultPartForType(type)).toString());
             }
@@ -127,13 +124,13 @@ public class RocketItem extends Item {
 
         CompoundTag tag = stack.getOrCreateTag();
         if (Screen.hasShiftDown()) {
-            if (tag.contains("red") && tag.contains("cone") && tag.contains("tier")) {
+            if (tag.contains("color") && tag.contains("cone") && tag.contains("tier")) {
                 tooltip.add(new TranslatableText("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));
                 tooltip.add(new TranslatableText("tooltip.galacticraft.color"));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.red", tag.getInt("red")).setStyle(Style.EMPTY.withColor(Formatting.RED)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.green", tag.getInt("green")).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.blue", tag.getInt("blue")).setStyle(Style.EMPTY.withColor(Formatting.BLUE)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.alpha", tag.getInt("alpha")).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft.red", tag.getInt("color") >> 16 & 0xFF).setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft.green", tag.getInt("color") >> 8 & 0xFF).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft.blue", tag.getInt("color") & 0xFF).setStyle(Style.EMPTY.withColor(Formatting.BLUE)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft.alpha", tag.getInt("color") >> 24 & 0xFF).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
                 tooltip.add(new LiteralText("-----").setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
                 for (RocketPartType type : RocketPartType.values()) {
                     String s = new Identifier(tag.getString(type.asString())).getPath();

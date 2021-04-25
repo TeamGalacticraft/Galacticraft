@@ -237,7 +237,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                         }
                         matrices.push();
                         matrices.translate(this.x + 13, this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * baOY), 0);
-                        RocketPartRendererRegistry.getRenderer(blockEntity.data.getPartForType(RocketPartType.values()[i])).renderGUI(client.world, matrices, VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer()), delta);
+                        RocketPartRendererRegistry.getRenderer(blockEntity.data.getPartForType(RocketPartType.values()[i])).renderGUI(client.world, matrices, mouseX, mouseY, delta);
                         matrices.pop();
                     }
                 }

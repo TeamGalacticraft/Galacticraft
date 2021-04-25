@@ -30,6 +30,7 @@ import dev.monarkhes.myron.api.Myron;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Lazy;
 
 import java.util.Objects;
 
@@ -44,16 +45,16 @@ public class GalacticraftRocketPartRenderers {
     private static final Identifier BOOSTER_TIER_2 = new Identifier(Constant.MOD_ID, "models/misc/rocket_thruster_tier_2");
 
     public static void register() {
-        RocketPartRendererRegistry.register(GalacticraftRocketParts.DEFAULT_CONE, new BakedModelRocketPartRenderer(Objects.requireNonNull(Myron.getModel(DEFAULT_CONE))));
-        RocketPartRendererRegistry.register(GalacticraftRocketParts.ADVANCED_CONE, new BakedModelRocketPartRenderer(Objects.requireNonNull(Myron.getModel(ADVANCED_CONE))));
-        RocketPartRendererRegistry.register(GalacticraftRocketParts.SLOPED_CONE, new BakedModelRocketPartRenderer(Objects.requireNonNull(Myron.getModel(SLOPED_CONE))));
-        RocketPartRendererRegistry.register(GalacticraftRocketParts.DEFAULT_BODY, new BakedModelRocketPartRenderer(Objects.requireNonNull(Myron.getModel(DEFAULT_BODY))));
-        RocketPartRendererRegistry.register(GalacticraftRocketParts.DEFAULT_FIN, new BakedModelRocketPartRenderer(Objects.requireNonNull(Myron.getModel(DEFAULT_FIN))));
+        RocketPartRendererRegistry.register(GalacticraftRocketParts.DEFAULT_CONE, new BakedModelRocketPartRenderer(new Lazy<>(() -> Objects.requireNonNull(Myron.getModel(DEFAULT_CONE)))));
+        RocketPartRendererRegistry.register(GalacticraftRocketParts.ADVANCED_CONE, new BakedModelRocketPartRenderer(new Lazy<>(() -> Objects.requireNonNull(Myron.getModel(ADVANCED_CONE)))));
+        RocketPartRendererRegistry.register(GalacticraftRocketParts.SLOPED_CONE, new BakedModelRocketPartRenderer(new Lazy<>(() -> Objects.requireNonNull(Myron.getModel(SLOPED_CONE)))));
+        RocketPartRendererRegistry.register(GalacticraftRocketParts.DEFAULT_BODY, new BakedModelRocketPartRenderer(new Lazy<>(() -> Objects.requireNonNull(Myron.getModel(DEFAULT_BODY)))));
+        RocketPartRendererRegistry.register(GalacticraftRocketParts.DEFAULT_FIN, new BakedModelRocketPartRenderer(new Lazy<>(() -> Objects.requireNonNull(Myron.getModel(DEFAULT_FIN)))));
         RocketPartRendererRegistry.register(GalacticraftRocketParts.NO_BOOSTER, new BakedModelItemRocketPartRenderer(new ItemStack(Items.BARRIER), null));
-        RocketPartRendererRegistry.register(GalacticraftRocketParts.DEFAULT_BOTTOM, new BakedModelRocketPartRenderer(Objects.requireNonNull(Myron.getModel(DEFAULT_BOTTOM))));
+        RocketPartRendererRegistry.register(GalacticraftRocketParts.DEFAULT_BOTTOM, new BakedModelRocketPartRenderer(new Lazy<>(() -> Objects.requireNonNull(Myron.getModel(DEFAULT_BOTTOM)))));
         RocketPartRendererRegistry.register(GalacticraftRocketParts.NO_UPGRADE, new BakedModelItemRocketPartRenderer(new ItemStack(Items.BARRIER), null));
         RocketPartRendererRegistry.register(GalacticraftRocketParts.STORAGE_UPGRADE, new BakedModelItemRocketPartRenderer(new ItemStack(Items.CHEST), null));
-        RocketPartRendererRegistry.register(GalacticraftRocketParts.BOOSTER_TIER_1, new BakedModelRocketPartRenderer(Objects.requireNonNull(Myron.getModel(BOOSTER_TIER_1))));
-        RocketPartRendererRegistry.register(GalacticraftRocketParts.BOOSTER_TIER_2, new BakedModelRocketPartRenderer(Objects.requireNonNull(Myron.getModel(BOOSTER_TIER_2))));
+        RocketPartRendererRegistry.register(GalacticraftRocketParts.BOOSTER_TIER_1, new BakedModelRocketPartRenderer(new Lazy<>(() -> Objects.requireNonNull(Myron.getModel(BOOSTER_TIER_1)))));
+        RocketPartRendererRegistry.register(GalacticraftRocketParts.BOOSTER_TIER_2, new BakedModelRocketPartRenderer(new Lazy<>(() -> Objects.requireNonNull(Myron.getModel(BOOSTER_TIER_2)))));
     }
 }

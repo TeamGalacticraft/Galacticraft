@@ -31,6 +31,7 @@ import dev.galacticraft.mod.client.render.MoonSkyProperties;
 import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.entity.*;
 import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
+import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resource.GalacticraftResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.misc.cape.CapeLoader;
@@ -132,6 +133,7 @@ public class GalacticraftClient implements ClientModInitializer {
         GalacticraftBlockEntityRenderer.register();
         GalacticraftClientPacketReceiver.register();
         MachineBakedModel.registerDefaults();
+        GalacticraftRocketPartRenderers.register();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.TIN_LADDER, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLASS_FLUID_PIPE, RenderLayer.getTranslucent());
