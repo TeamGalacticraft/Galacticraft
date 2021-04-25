@@ -396,6 +396,10 @@ public interface Constant {
         String LEGACY_MUSIC_DISC_MIMAS = "legacy_music_disc_mimas";
         String LEGACY_MUSIC_DISC_ORBIT = "legacy_music_disc_orbit";
         String LEGACY_MUSIC_DISC_SPACERACE = "legacy_music_disc_spacerace";
+
+        String ROCKET_SCHEMATIC = "rocket_schematic";
+        String ROCKET = "rocket";
+        String FLUID_CANISTER = "fluid_canister";
     }
 
     interface Particle {
@@ -428,6 +432,11 @@ public interface Constant {
         String ENERGY_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_size";
         String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_compressor_energy_consumption_rate";
         String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
+        String ROCKET_ASSEMBLER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.rocket_assembler_energy_consumption_rate";
+        String ROCKET_ASSEMBLER_PROCESS_TIME = "config.galacticraft.misc.machines.rocket_assembler_process_time";
+
+        String MISC = "config.galacticraft.misc";
+        String MISC_MACHINES = "config.galacticraft.misc.machines";
     }
 
     interface ScreenTexture {
@@ -453,7 +462,10 @@ public interface Constant {
         Identifier OXYGEN_COMPRESSOR_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_compressor_screen.png");
         Identifier OXYGEN_STORAGE_MODULE_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_storage_module_screen.png");
         Identifier OXYGEN_SEALER_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_sealer_screen.png");
-
+        Identifier ROCKET_DESIGNER_SCREEN = new Identifier(MOD_ID, "textures/gui/rocket_designer_screen.png");
+        Identifier ROCKET_ASSEMBLER_SCREEN = new Identifier(MOD_ID, "textures/gui/rocket_assembler_screen.png");
+        Identifier RESEARCH_PANELS = new Identifier(MOD_ID, "textures/gui/research_panels.png");
+        Identifier FUEL_LOADER_SCREEN = new Identifier(MOD_ID, "textures/gui/fuel_loader_screen");
     }
 
     interface SlotSprite {

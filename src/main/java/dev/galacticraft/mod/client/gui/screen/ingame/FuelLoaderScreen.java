@@ -57,9 +57,6 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandler> {
-
-    private static final Identifier BACKGROUND = new Identifier(Constant.MOD_ID, Constant.ScreenTexture.getRaw(Constant.ScreenTexture.FUEL_LOADER_SCREEN));
-
     public static final int X_X = 176;
     public static final int X_Y = 40;
     public static final int X_WIDTH = 11;
@@ -86,7 +83,7 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
     @Override
     protected void drawBackground(MatrixStack stack, float v, int mouseX, int mouseY) {
         this.renderBackground(stack);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.FUEL_LOADER_SCREEN);
 
         int leftPos = this.x;
         int topPos = this.y;
@@ -100,12 +97,12 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
             this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
             drawSprite(stack, x + 106, y + 46, getZOffset(), -TANK_OVERLAY_WIDTH, (int)-(((double)TANK_OVERLAY_HEIGHT) * (fuelLoader.getFluidInv().getInvFluid(0).getAmount_F().asInexactDouble() / fuelLoader.getFluidInv().getMaxAmount_F(0).asInexactDouble())), sprite);
             stack.pop();
-            this.client.getTextureManager().bindTexture(BACKGROUND);
+            this.client.getTextureManager().bindTexture(Constant.ScreenTexture.FUEL_LOADER_SCREEN);
             drawTexture(stack, x + 68, y + 8, TANK_OVERLAY_X, TANK_OVERLAY_Y, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
         }
 
         if (fuelLoader.getStatus().getType() == MachineStatus.StatusType.MISSING_RESOURCE) {
-            this.client.getTextureManager().bindTexture(BACKGROUND);
+            this.client.getTextureManager().bindTexture(Constant.ScreenTexture.FUEL_LOADER_SCREEN);
             drawTexture(stack, x + 116, y + 45, X_X, X_Y, X_WIDTH, X_HEIGHT);
         }
 
@@ -130,7 +127,7 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
                 }
             }
         } else {
-            this.client.getTextureManager().bindTexture(BACKGROUND);
+            this.client.getTextureManager().bindTexture(Constant.ScreenTexture.FUEL_LOADER_SCREEN);
             drawTexture(stack, x + 145, y + 29, ROCKET_FACE_X, ROCKET_FACE_Y, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT);
         }
         // 115 44

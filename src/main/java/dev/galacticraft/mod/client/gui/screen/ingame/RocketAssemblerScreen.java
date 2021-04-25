@@ -126,7 +126,6 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
     public static final int PROGRESS_ARROW_X = 364;
     public static final int PROGRESS_ARROW_Y = 8;
 
-    protected final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.ScreenTexture.getRaw(Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN));
     private final RocketAssemblerBlockEntity blockEntity;
     private Tab tab = Tab.ROCKET;
 
@@ -146,7 +145,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
         DiffuseLighting.enableGuiDepthLighting();
-        this.client.getTextureManager().bindTexture(TEXTURE);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
         drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         drawTexture(matrices, this.x + ENERGY_OVERLAY_RENDER_X, this.y + ENERGY_OVERLAY_RENDER_Y, ENERGY_OVERLAY_X, ENERGY_OVERLAY_Y, ENERGY_OVERLAY_WIDTH, (int) (((float) ENERGY_OVERLAY_HEIGHT) * (((float) this.blockEntity.getEnergyAttribute().getEnergy() / (float) this.blockEntity.getEnergyAttribute().getMaxCapacity()))));
@@ -175,7 +174,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
 
         if (blockEntity.building()) {
             float progress = blockEntity.getProgress();
-            this.client.getTextureManager().bindTexture(TEXTURE);//OUT OF 600 //133 / 140
+            this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);//OUT OF 600 //133 / 140
             final float maxProgress = Galacticraft.CONFIG_MANAGER.get().rocketAssemblerProcessTime();
             if (progress < ((maxProgress / 140F) * 133F)) {
                 drawTexture(matrices, this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, (int) (((float) PROGRESS_ARROW_WIDTH) * (progress / ((maxProgress / 140F) * 133F))), PROGRESS_ARROW_HEIGHT);
@@ -195,14 +194,14 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                             offsetY++;
                             offsetX = 0;
                         }
-                        this.client.getTextureManager().bindTexture(TEXTURE);
+                        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
                         final int baOY = offsetY;
                         boolean aG = true;
                         offsetX++;
 
                         RocketAssemblerRecipe recipe = blockEntity.recipes.get(AddonRegistry.ROCKET_PARTS.getId(blockEntity.data.getPartForType(RocketPartType.values()[i])));
                         for (ItemStack stack : recipe.getInput()) {
-                            this.client.getTextureManager().bindTexture(TEXTURE);
+                            this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
 
                             if (this.blockEntity.getExtendedInv().getInvStack(slot).getCount() == stack.getCount()) {
                                 drawTexture(matrices, this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
@@ -230,7 +229,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                             slot++;
                         }
 
-                        this.client.getTextureManager().bindTexture(TEXTURE);
+                        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
                         if (aG) {
                             drawTexture(matrices, this.x + 9, this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * baOY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
                         } else {

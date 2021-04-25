@@ -23,23 +23,27 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
+import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.entity.RocketEntity;
 import dev.galacticraft.mod.screen.FuelLoaderScreenHandler;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.screen.tank.Tank;
 import dev.galacticraft.mod.tag.GalacticraftTag;
+import dev.galacticraft.mod.util.EnergyUtil;
+import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -58,14 +62,13 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class FuelLoaderBlockEntity extends MachineBlockEntity {
     private static final int CHARGE_SLOT = 0;
     private static final int FUEL_INPUT_SLOT = 1;
+    private static final int FUEL = 1;
     private BlockPos connectionPos = null;
     private Direction check = null;
 
@@ -79,13 +82,16 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public int getInventorySize() {
-        return 2;
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 53);
+        builder.addSlot(FUEL_INPUT_SLOT, SlotType.FLUID_TANK_IO, FluidUtil::isExtractable, 80, 53);
+        return builder;
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 1;
+    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+        builder.addTank(FUEL, SlotType.FUEL_OUT, Constant.Filter.FUEL, 0, 0, 0);
+        return builder;
     }
 
     @Override

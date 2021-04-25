@@ -41,6 +41,7 @@ import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerInventory;
@@ -58,8 +59,6 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHandler> {
-
-    protected final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.ScreenTexture.getRaw(Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN));
     protected RocketDesignerBlockEntity blockEntity;
 
     private static final int WHITE_BOX_X = 192;
@@ -180,12 +179,12 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
         DiffuseLighting.enableGuiDepthLighting();
 
-        this.client.getTextureManager().bindTexture(TEXTURE);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
 
         drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         for (int i = 0; i < ROCKET_PART_TYPES.length; i++) {
-            this.client.getTextureManager().bindTexture(TEXTURE);
+            this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
             if (ROCKET_PART_TYPES[i] != currentType) {
                 drawTexture(matrices, this.x - 27, this.y + 3 + (27 * i), DEFAULT_TAB_X, DEFAULT_TAB_Y, DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT);
             } else {
@@ -205,14 +204,14 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         DiffuseLighting.enableGuiDepthLighting();
         RenderSystem.disableDepthTest();
 
-        this.client.getTextureManager().bindTexture(TEXTURE);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
 
         int x = 0;
         int y = 0;
         for (int i = page * 25; i < validParts.size(); i++) {
             RocketPart part = validParts.get(i);
 
-            this.client.getTextureManager().bindTexture(TEXTURE);
+            this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
             drawTexture(matrices, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), WHITE_BOX_X, WHITE_BOX_Y, BOX_WIDTH, BOX_HEIGHT);
 
             if (part != null) {
@@ -287,7 +286,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
             RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer()), delta);
             matrices.pop();
         }
-        this.client.getTextureManager().bindTexture(TEXTURE);
+        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
 
         int red = (int) (56.0F * (this.blockEntity.getRed() / 255.0F));
         if (red >= 3 && red != 255) {
@@ -328,7 +327,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
         drawEntity(this.x + 172 + 24, this.y + 64, entity);
 
-        DrawableUtil.drawCenteredString(matrices, this.client.textRenderer, new TranslatableText("ui.galacticraft.rocket_designer.name").asString(), (this.width / 2), this.y + 6 - 15, Formatting.WHITE.getColorValue());
+        drawCenteredString(matrices, this.client.textRenderer, I18n.translate("ui.galacticraft.rocket_designer.name"), (this.width / 2), this.y + 6 - 15, Formatting.WHITE.getColorValue());
 
         client.textRenderer.draw(matrices, "R", this.x + 245 + 3, this.y + 8, Formatting.RED.getColorValue());
         client.textRenderer.draw(matrices, "G", this.x + 245 + 3, this.y + 18, Formatting.GREEN.getColorValue());

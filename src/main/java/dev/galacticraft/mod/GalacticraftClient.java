@@ -80,10 +80,6 @@ public class GalacticraftClient implements ClientModInitializer {
                 registry.register(new Identifier(Constant.MOD_ID, "block/energy_storage_module_" + i));
                 registry.register(new Identifier(Constant.MOD_ID, "block/oxygen_storage_module_" + i));
             }
-            registry.register(new Identifier(Constant.MOD_ID, Constant.ScreenTexture.RESEARCH_PANELS));
-            registry.register(new Identifier(Constant.MOD_ID, Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN));
-            registry.register(new Identifier(Constant.MOD_ID, Constant.ScreenTexture.PLAYER_INVENTORY_SCREEN));
-            registry.register(new Identifier(Constant.MOD_ID, Constant.ScreenTexture.MAP_SCREEN));
 
             registry.register(new Identifier(Constant.MOD_ID, "block/oxygen_sealer_top"));
             registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_HEAD));

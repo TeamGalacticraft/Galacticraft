@@ -183,6 +183,7 @@ public class Tank {
     }
 
     public void drawTooltip(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY) {
+        if (this.scale == 0) return;
         matrices.translate(0, 0, 1);
         if (SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.FLUID_TANK_WIDTH, this.getPositionData()[2])) {
             List<Text> lines = new ArrayList<>(2);
@@ -214,11 +215,13 @@ public class Tank {
     }
 
     public boolean isHoveredOverTank(int mouseX, int mouseY) {
+        if (this.scale == 0) return false;
         int[] data = getPositionData();
         return SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.FLUID_TANK_WIDTH, data[2]);
     }
 
     public void renderHighlight(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY) {
+        if (this.scale == 0) return;
         int[] data = getPositionData();
         RenderSystem.disableDepthTest();
         RenderSystem.colorMask(true, true, true, false);

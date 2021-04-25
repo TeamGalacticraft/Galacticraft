@@ -57,7 +57,8 @@ public class SlotType implements StringIdentifiable {
     public static final SlotType OXYGEN_IN = new SlotType(new Identifier(Constant.MOD_ID, "oxygen_in"), TextColor.fromRgb(ColorUtil.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft.io_config.oxygen_in"), AutomationType.FLUID_INPUT);
     public static final SlotType OXYGEN_OUT = new SlotType(new Identifier(Constant.MOD_ID, "oxygen_out"), TextColor.fromRgb(ColorUtil.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft.io_config.oxygen_out"), AutomationType.FLUID_OUTPUT);
     public static final SlotType OXYGEN = new SlotType(new Identifier(Constant.MOD_ID, "oxygen"), TextColor.fromRgb(ColorUtil.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft.io_config.oxygen"), AutomationType.FLUID_IO);
-    public static final SlotType FUEL_OUT = new SlotType(new Identifier(Constant.MOD_ID, "fuel"), TextColor.fromRgb(ColorUtil.rgb(70, 65, 11)), new TranslatableText("ui.galacticraft.io_config.fuel"), AutomationType.FLUID_OUTPUT);
+    public static final SlotType FUEL_OUT = new SlotType(new Identifier(Constant.MOD_ID, "fuel_out"), TextColor.fromRgb(ColorUtil.rgb(70, 65, 11)), new TranslatableText("ui.galacticraft.io_config.fuel_out"), AutomationType.FLUID_OUTPUT);
+    public static final SlotType FUEL_IN = new SlotType(new Identifier(Constant.MOD_ID, "fuel_in"), TextColor.fromRgb(ColorUtil.rgb(70, 65, 11)), new TranslatableText("ui.galacticraft.io_config.fuel_in"), AutomationType.FLUID_OUTPUT);
     public static final SlotType COAL = new SlotType(new Identifier(Constant.MOD_ID, "coal"), TextColor.fromRgb(ColorUtil.rgb(30, 30, 30)), new TranslatableText("ui.galacticraft.io_config.coal"), AutomationType.ITEM_INPUT);
     public static final SlotType NONE = new SlotType(new Identifier(Constant.MOD_ID, "none"), TextColor.fromRgb(ColorUtil.rgb(0, 0, 0)), new TranslatableText("ui.galacticraft.io_config.none"), AutomationType.NONE);
 
