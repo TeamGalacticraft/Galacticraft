@@ -17,7 +17,7 @@
     "water_color": 4013374,
     "water_fog_color": 4802890
   },
-  "surface_builder": "galacticraft:moon_highlands_rocks",
+  "surface_builder": "galacticraft:moon_highlands_edge",
   "carvers": {
     "air": [
       "galacticraft:moon_highlands_cave",
