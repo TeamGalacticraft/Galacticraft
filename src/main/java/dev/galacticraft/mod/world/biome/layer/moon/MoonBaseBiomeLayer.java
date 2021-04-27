@@ -29,15 +29,14 @@ import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public enum MoonHighlandsBiomeLayer implements InitLayer {
+public enum MoonBaseBiomeLayer implements InitLayer {
     INSTANCE;
 
     public int sample(LayerRandomnessSource context, int x, int y) {
-        int i = context.nextInt(10);
-        if (i <= 9) {
-            return MoonBiomeLayer.MOON_HIGHLANDS_PLAINS_ID;
+        if (context.getNoiseSampler().sample((double)x / 8.0D, (double)y / 8.0D, 0.0D, 0.0D, 0.0D) <= -0.2D) {
+            return MoonBiomeLayer.MOON_MARE_ID;
         } else {
-            return MoonBiomeLayer.MOON_HIGHLANDS_ROCKS_ID;
+            return MoonBiomeLayer.MOON_HIGHLANDS_ID;
         }
     }
 }

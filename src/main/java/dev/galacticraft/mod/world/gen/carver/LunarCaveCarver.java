@@ -86,7 +86,7 @@ public class LunarCaveCarver extends CaveCarver {
                 return false;
             } else {
                 if (y < 11) {
-                    chunk.setBlockState(mutable, LAVA.getBlockState(), false); //todo what block (preferably fluid) should cover up the bedrock floor?
+//                    chunk.setBlockState(mutable, LAVA.getBlockState(), false); //todo put something to make it not flat
                 } else {
                     chunk.setBlockState(mutable, CAVE_AIR, false);
                     if (mutableBoolean.isTrue()) {
