@@ -1,0 +1,38 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "DMG",
+    "OSO",
+    "PXY"
+  ],
+  "key": {
+    "D": {
+      "item": "galacticraft:heavy_duty_pickaxe"
+    },
+    "M": {
+      "item": "galacticraft:oxygen_mask"
+    },
+    "G": {
+      "item": "galacticraft:oxygen_gear"
+    },
+    "O": {
+       "item": "galacticraft:small_oxygen_tank"
+    },
+    "S": {
+       "item": "galacticraft:red_parachute"
+    },
+    "P": {
+        "item": "galacticraft:canned_dehydrated_potato"
+    },
+    "X": {
+       "item": "minecraft:potion"
+    },
+    "Y": {
+       "item": "minecraft:potion"
+    }
+  },
+  "result": {
+    "item": "galacticraft:emergency_kit",
+    "count": 1
+  }
+}

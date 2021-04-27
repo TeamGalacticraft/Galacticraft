@@ -359,6 +359,7 @@ public interface Constant {
 
         String SHIELD_CONTROLLER = "shield_controller";
         String FREQUENCY_MODULE = "frequency_module";
+        String EMERGENCY_KIT = "emergency_kit";
 
         String SMALL_OXYGEN_TANK = "small_oxygen_tank";
         String MEDIUM_OXYGEN_TANK = "medium_oxygen_tank";

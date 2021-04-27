@@ -35,9 +35,11 @@ import net.minecraft.util.registry.Registry;
 public class GalacticraftRecipe {
     public static RecipeType<FabricationRecipe> FABRICATION_TYPE;
     public static RecipeType<CompressingRecipe> COMPRESSING_TYPE;
+    public static RecipeType<PotionRecipe> POTION_TYPE; // can have some added functionality later I guess aside from potions
     static FabricationRecipeSerializer<FabricationRecipe> FABRICATION_SERIALIZER;
     static ShapelessCompressingRecipeSerializer<ShapelessCompressingRecipe> SHAPELESS_COMPRESSING_SERIALIZER;
     static ShapedCompressingRecipeSerializer<ShapedCompressingRecipe> SHAPED_COMPRESSING_SERIALIZER;
+    static PotionRecipeSerializer<PotionRecipe> POTION_RECIPE_SERIALIZER;
 
     public static void register() {
         // Circuit fabricator recipe stuff
@@ -47,6 +49,8 @@ public class GalacticraftRecipe {
         COMPRESSING_TYPE = registerType("compressing");
         SHAPELESS_COMPRESSING_SERIALIZER = registerSerializer("compressing_shapeless", new ShapelessCompressingRecipeSerializer<>(ShapelessCompressingRecipe::new));
         SHAPED_COMPRESSING_SERIALIZER = registerSerializer("compressing_shaped", new ShapedCompressingRecipeSerializer<>(ShapedCompressingRecipe::new));
+
+        POTION_RECIPE_SERIALIZER = registerSerializer("potion_recipe", new PotionRecipeSerializer<>(PotionRecipe::new));
     }
 
     private static <T extends Recipe<?>> RecipeType<T> registerType(String id) {
