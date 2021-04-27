@@ -61,7 +61,7 @@ public class PotionRecipe implements CraftingRecipe {
 
 
     // borrowed from vanilla... SharedCompressingRecipe does something similar
-    // it's work making a util class later
+    // it'd be ideal making a util class later
     private static String[] getPattern(JsonArray json) {
         String[] strings = new String[json.size()];
         if (strings.length > 3) {
