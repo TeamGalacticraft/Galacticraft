@@ -73,26 +73,24 @@ import java.util.stream.IntStream;
  */
 public final class MoonChunkGenerator extends NoiseChunkGenerator {
     public static final Codec<MoonChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(MoonBiomeSource.CODEC.fieldOf("biome_source").forGetter((moonChunkGenerator) -> (MoonBiomeSource) moonChunkGenerator.biomeSource), Codec.LONG.fieldOf("seed").stable().forGetter((moonChunkGenerator) -> moonChunkGenerator.seed)).apply(instance, instance.stable(MoonChunkGenerator::new)));
+    private static final ChunkGeneratorSettings SETTINGS = new ChunkGeneratorSettings(
+            new StructuresConfig(false),
+            new GenerationShapeConfig(
+                    256, new NoiseSamplingConfig(0.8239043235D, 0.826137924865D, 120.0D, 140.0D),
+                    new SlideConfig(-10, 3, 0), new SlideConfig(-30, 2, -1),
+                    4, 2, 1.0D, -0.46875D, true,
+                    true, false, false),
+            GalacticraftBlock.MOON_ROCKS[0].getDefaultState(), Blocks.AIR.getDefaultState(), -10, 0, 1, false);
 
-    private static final BlockState AIR = Blocks.AIR.getDefaultState();
-    private final OctavePerlinNoiseSampler depthNoise;
     private final long seed;
 
     public MoonChunkGenerator(MoonBiomeSource biomeSource, long seed) {
-        this(biomeSource, seed, () -> new ChunkGeneratorSettings(
-                new StructuresConfig(false),
-                new GenerationShapeConfig(
-                        256, new NoiseSamplingConfig(0.8239043235D, 0.826137924865D, 120.0D, 140.0D),
-                        new SlideConfig(-10, 3, 0), new SlideConfig(-30, 2, -1),
-                        4, 2, 1.0D, -0.46875D, true,
-                        true, false, false),
-                GalacticraftBlock.MOON_ROCKS[0].getDefaultState(), AIR, -10, 0, 1, false));
+        this(biomeSource, seed, () -> SETTINGS);
     }
 
     private MoonChunkGenerator(BiomeSource biomeSource, long seed, @NotNull Supplier<ChunkGeneratorSettings> settingsSupplier) {
         super(biomeSource, seed, settingsSupplier);
-        this.random.consume(2222);
-        this.depthNoise = new OctavePerlinNoiseSampler(this.random, IntStream.range(0, 22));
+        this.random.consume(1823);
         this.seed = seed;
     }
 
@@ -125,94 +123,5 @@ public final class MoonChunkGenerator extends NoiseChunkGenerator {
         }
 
         return super.getEntitySpawnList(biome, accessor, group, pos);
-    }
-
-    @Override
-    public void carve(long seed, BiomeAccess access, Chunk chunk, GenerationStep.Carver carver) {
-        super.carve(seed, access, chunk, carver);
-        this.addCraters(chunk);
-    }
-
-    private void addCraters(Chunk chunk) {
-        for (int cx = chunk.getPos().x - 2; cx <= chunk.getPos().x + 2; cx++) {
-            for (int cz = chunk.getPos().z - 2; cz <= chunk.getPos().z + 2; cz++) {
-                for (int x = 0; x < 16; x++) {
-                    for (int z = 0; z < 16; z++) {
-                        if (Math.abs(this.randFromPoint((cx << 4) + x, (cz << 4) + z)) < this.getSpecialDepth(x << 4 + x, cz << 4 + z) / 32.0D) {
-                            Random random = new Random((((long) cx << 4) + x + ((long) cz << 4) + z) * 102L);
-                            int size;
-
-                            int i = random.nextInt(100);
-                            if (i < 5) {
-                                size = random.nextInt(16 - 14) + 14;
-                            } else if (i < 45) {
-                                size = random.nextInt(14 - 11) + 11;
-                            } else if (i < 60) {
-                                size = random.nextInt(12 - 8) + 8;
-                            } else {
-                                size = random.nextInt(13 - 9) + 9;
-                            }
-
-                            this.makeCrater((cx << 4) + x, (cz << 4) + z, chunk.getPos().x, chunk.getPos().z, size, chunk);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private double getSpecialDepth(int x, int z)
-    {
-        double sDepth = this.depthNoise.sample(x * 200, 10.0D, z * 200, 1.0D, 0.0D, true) * 65535.0D / 8000.0D;
-        if (sDepth < 0.0D)
-        {
-            sDepth = -sDepth * 0.3D;
-        }
-
-        sDepth = sDepth * 3.0D - 2.0D;
-        if (sDepth < 0.0D)
-        {
-            sDepth /= 28.0D;
-        }
-        else
-        {
-            if (sDepth > 1.0D)
-            {
-                sDepth = 1.0D;
-            }
-
-            sDepth /= 40.0D;
-        }
-
-        return sDepth;
-    }
-
-    private double randFromPoint(int x, int z) {
-        int n;
-        n = x + z * 57;
-        n = n << 13 ^ n;
-        return 1.0D - (n * (n * n * 15731 + 789221) + 1376312589 & 0x7fffffff) / 1073741824.0;
-    }
-
-    private void makeCrater(int craterX, int craterZ, int chunkX, int chunkZ, int size, Chunk chunk) {
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                double xDev = craterX - ((chunkX << 4) + x);
-                double zDev = craterZ - ((chunkZ << 4) + z);
-                if (xDev * xDev + zDev * zDev < size * size) {
-                    xDev /= size;
-                    zDev /= size;
-                    final double sqrtY = (xDev * xDev + zDev * zDev) * 2.5;
-                    double maxDepth = 5 - (sqrtY * sqrtY * 6);
-                    double depth = 0;
-                    for (int y = 90; y > 0 && depth <= maxDepth; y--) {
-                        if (depth != 0 || !chunk.getBlockState(new BlockPos(x, y, z)).isAir()) {
-                            chunk.setBlockState(new BlockPos(x, y, z), AIR, false);
-                            depth += 2.5d;
-                        }
-                    }
-                }
-            }
-        }
     }
 }
