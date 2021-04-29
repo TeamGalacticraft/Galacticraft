@@ -32,6 +32,7 @@ accessible      field    net/minecraft/village/VillagerType                     
 accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator                    NOISE_WEIGHT_TABLE [F
 accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator                    BIOME_WEIGHT_TABLE [F
 accessible      field    net/minecraft/screen/slot/Slot                                       index              I
+extendable      class    net/minecraft/world/gen/chunk/NoiseChunkGenerator
 
 accessible      field    net/minecraft/util/math/Matrix4f                                     a00                F
 accessible      field    net/minecraft/util/math/Matrix4f                                     a01                F
@@ -50,5 +51,7 @@ accessible      field    net/minecraft/util/math/Matrix4f                       
 accessible      field    net/minecraft/util/math/Matrix4f                                     a32                F
 accessible      field    net/minecraft/util/math/Matrix4f                                     a33                F
 
-accessible      method   net/minecraft/item/MusicDiscItem                                     <init>             (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V
-accessible      method   net/minecraft/recipe/RecipeManager                                   getAllOfType       (Lnet/minecraft/recipe/RecipeType;)Ljava/util/Map;
+accessible      method  net/minecraft/item/MusicDiscItem                                      <init>            (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V
+accessible      method  net/minecraft/world/gen/chunk/NoiseChunkGenerator                     sampleNoiseColumn ([DII)V
+extendable      method  net/minecraft/world/gen/chunk/NoiseChunkGenerator                     sampleNoiseColumn ([DII)V
+accessible      method  net/minecraft/recipe/RecipeManager                                    getAllOfType      (Lnet/minecraft/recipe/RecipeType;)Ljava/util/Map;

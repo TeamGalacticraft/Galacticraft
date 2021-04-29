@@ -601,11 +601,9 @@ public interface Constant {
 
     interface Biome {
         interface Moon {
-            String HIGHLANDS_PLAINS = "moon_highlands_plains";
-            String HIGHLANDS_ROCKS = "moon_highlands_rocks";
-            String HIGHLANDS_VALLEY = "moon_highlands_valley";
-            String MARE_PLAINS = "moon_mare_plains";
-            String MARE_ROCKS = "moon_mare_rocks";
+            String HIGHLANDS = "moon_highlands";
+            String HIGHLANDS_EDGE = "moon_highlands_edge";
+            String MARE = "moon_mare";
             String MARE_EDGE = "moon_mare_edge";
         }
 
