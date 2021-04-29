@@ -22,7 +22,9 @@
 
 package dev.galacticraft.mod.accessor;
 
+import dev.galacticraft.api.rocket.RocketData;
+
 public interface ServerPlayerEntityAccessor {
-    int getCelestialScreenState();
-    void setCelestialScreenState(int tier);
+    RocketData getCelestialScreenState();
+    void setCelestialScreenState(RocketData data);
 }

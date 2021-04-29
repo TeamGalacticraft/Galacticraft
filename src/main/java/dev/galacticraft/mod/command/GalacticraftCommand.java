@@ -26,7 +26,8 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import dev.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.api.celestialbody.CelestialBodyType;
+import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
 import io.netty.buffer.Unpooled;
@@ -76,7 +77,7 @@ public class GalacticraftCommand {
                             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                             .executes(context -> {
                                 context.getSource().getPlayer().networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer().writeInt(Integer.MAX_VALUE))));
-                                ((ServerPlayerEntityAccessor) context.getSource().getPlayer()).setCelestialScreenState(Integer.MAX_VALUE);
+                                ((ServerPlayerEntityAccessor) context.getSource().getPlayer()).setCelestialScreenState(RocketData.EMPTY);
                                 return 1;
                             })
             );

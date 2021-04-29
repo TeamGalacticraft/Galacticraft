@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.api.atmosphere.AtmosphericGas;
-import dev.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.api.celestialbody.CelestialBodyType;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

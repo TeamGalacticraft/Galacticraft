@@ -38,6 +38,7 @@ import dev.galacticraft.mod.misc.banner.GalacticraftBannerPattern;
 import dev.galacticraft.mod.network.GalacticraftServerPacketReceiver;
 import dev.galacticraft.mod.particle.GalacticraftParticle;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
+import dev.galacticraft.mod.rocket.travel.GalacticraftConfiguredTravelPredicates;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.sound.GalacticraftSound;
 import dev.galacticraft.mod.structure.GalacticraftStructure;
@@ -97,6 +98,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftBannerPattern.register();
         GalacticraftPointOfInterestType.register();
         MoonVillagerType.register();
+        GalacticraftConfiguredTravelPredicates.register();
         GalacticraftRocketParts.register();
         GalacticraftVillagerProfession.register();
 

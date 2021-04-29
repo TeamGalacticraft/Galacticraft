@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.world.dimension;
 
 import dev.galacticraft.api.atmosphere.AtmosphericGas;
+import dev.galacticraft.api.event.RegistrationEvent;
 import dev.galacticraft.api.registry.AddonRegistry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -48,7 +49,9 @@ public class GalacticraftGas {
             );
 
     public static void register() {
-        Registry.register(AddonRegistry.ATMOSPHERIC_GASES, GalacticraftGas.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGas.HYDROGEN_DEUTERIUM_OXYGEN);
-        Registry.register(AddonRegistry.ATMOSPHERIC_GASES, GalacticraftGas.NITROGEN_OXIDE.getId(), GalacticraftGas.NITROGEN_OXIDE);
+        RegistrationEvent.ATMOSPHERIC_GAS.register(registry -> {
+            Registry.register(registry, GalacticraftGas.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGas.HYDROGEN_DEUTERIUM_OXYGEN);
+            Registry.register(registry, GalacticraftGas.NITROGEN_OXIDE.getId(), GalacticraftGas.NITROGEN_OXIDE);
+        });
     }
 }

@@ -85,6 +85,6 @@ public enum ColorUtil {
         g = g << 16;
         b = b << 8;
 
-        return a | r | g | b;
+        return  r | g | b | a;
     }
 }

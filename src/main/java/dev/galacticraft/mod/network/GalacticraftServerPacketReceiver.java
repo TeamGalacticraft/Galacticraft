@@ -33,14 +33,14 @@ import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.datafixers.util.Either;
-import dev.galacticraft.api.celestialbodies.CelestialBodyType;
-import dev.galacticraft.api.celestialbodies.CelestialObjectType;
-import dev.galacticraft.api.celestialbodies.satellite.Satellite;
-import dev.galacticraft.api.celestialbodies.satellite.SatelliteRecipe;
-import dev.galacticraft.api.entity.RocketEntity;
+import dev.galacticraft.api.celestialbody.CelestialBodyType;
+import dev.galacticraft.api.celestialbody.CelestialObjectType;
+import dev.galacticraft.api.celestialbody.satellite.Satellite;
+import dev.galacticraft.api.celestialbody.satellite.SatelliteRecipe;
+import dev.galacticraft.api.entity.Rocket;
 import dev.galacticraft.api.internal.accessor.SatelliteAccessor;
-import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
+import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
@@ -287,7 +287,7 @@ public class GalacticraftServerPacketReceiver {
                     if (player.world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity) {
                         RocketDesignerBlockEntity blockEntity = (RocketDesignerBlockEntity) player.world.getBlockEntity(pos);
                         assert blockEntity != null;
-                        RocketPart part = AddonRegistry.ROCKET_PARTS.get(buffer.readIdentifier());
+                        RocketPart part = RocketPart.getById(server.getRegistryManager(), buffer.readIdentifier());
                         if (part == null) player.networkHandler.disconnect(new LiteralText("Invalid rocket designer packet received."));
                         if (part.isUnlocked(player)) {
                             blockEntity.setPartServer(part);
@@ -301,8 +301,8 @@ public class GalacticraftServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "rocket_jump"), ((server, player, handler, buf, responseSender) -> {
             server.execute(() -> {
                 if (player.hasVehicle()) {
-                    if (player.getVehicle() instanceof RocketEntity && ((RocketEntity) player.getVehicle()).getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
-                        ((RocketEntity) player.getVehicle()).onJump();
+                    if (player.getVehicle() instanceof Rocket && ((Rocket) player.getVehicle()).getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
+                        ((Rocket) player.getVehicle()).onJump();
                     }
                 }
             });
@@ -311,7 +311,7 @@ public class GalacticraftServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "rocket_yaw_press"), ((server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             server.execute(() -> {
-                if (player.getVehicle() instanceof RocketEntity && ((RocketEntity) player.getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
+                if (player.getVehicle() instanceof Rocket && ((Rocket) player.getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
                     player.getVehicle().prevYaw = player.getVehicle().yaw;
                     player.getVehicle().yaw += buffer.readBoolean() ? 2.0F : -2.0F;
                     player.getVehicle().yaw %= 360.0F;
@@ -322,7 +322,7 @@ public class GalacticraftServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "rocket_pitch_press"), ((server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             server.execute(() -> {
-                if (player.getVehicle() instanceof RocketEntity && ((RocketEntity) player.getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
+                if (player.getVehicle() instanceof Rocket && ((Rocket) player.getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
                     player.getVehicle().prevPitch = player.getVehicle().pitch;
                     player.getVehicle().pitch += buffer.readBoolean() ? 2.0F : -2.0F;
                     player.getVehicle().pitch %= 360.0F;
@@ -400,12 +400,12 @@ public class GalacticraftServerPacketReceiver {
         }));
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "create_satellite"), ((server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
-            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() >= 0) {
+            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() != RocketData.EMPTY) {
                 server.execute(() -> {
                     CelestialBodyType parent = CelestialBodyType.getById(server.getRegistryManager(), buffer.readIdentifier());
                     if (parent != null) {
                         if (parent.getType() != CelestialObjectType.SATELLITE) {
-                            if (parent.getAccessWeight() <= ((ServerPlayerEntityAccessor) player).getCelestialScreenState()) {
+                            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState().canTravelTo(parent)) {
                                 if (parent.getSatelliteRecipe() != null) {
                                     SatelliteRecipe recipe = parent.getSatelliteRecipe();
                                     if (recipe.test(player.inventory) || player.isCreative()) {
@@ -428,16 +428,16 @@ public class GalacticraftServerPacketReceiver {
         }));
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "planet_tp"), ((server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
-            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() >= 0) {
+            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() != RocketData.EMPTY) {
                 server.execute(() -> {
                     Identifier id = buffer.readIdentifier();
                     CelestialBodyType body = ((SatelliteAccessor) server).getSatellites().stream().filter(satellite -> satellite.getId().equals(id)).findFirst().orElse(null);
-                    if (body == null) body = AddonRegistry.CELESTIAL_BODIES.get(id);
+                    if (body == null) body = CelestialBodyType.getById(server.getRegistryManager(), id);
 
-                    if (body != null && body.getAccessWeight() <= ((ServerPlayerEntityAccessor) player).getCelestialScreenState()) {
+                    if (body != null && ((ServerPlayerEntityAccessor) player).getCelestialScreenState().canTravelTo(body)) {
                         if (body.getWorld() != null) {
                             player.teleport(server.getWorld(body.getWorld()), player.getX(), 500, player.getZ(), player.yaw, player.pitch);
-                            ((ServerPlayerEntityAccessor) player).setCelestialScreenState(-1);
+                            ((ServerPlayerEntityAccessor) player).setCelestialScreenState(RocketData.EMPTY);
                         }
                     } else {
                         player.networkHandler.disconnect(new LiteralText("Invalid planet teleport packet received."));

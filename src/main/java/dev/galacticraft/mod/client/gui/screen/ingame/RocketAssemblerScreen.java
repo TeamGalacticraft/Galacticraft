@@ -26,6 +26,7 @@ import alexiil.mc.lib.attributes.Simulation;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Constant;
@@ -199,7 +200,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                         boolean aG = true;
                         offsetX++;
 
-                        RocketAssemblerRecipe recipe = blockEntity.recipes.get(AddonRegistry.ROCKET_PARTS.getId(blockEntity.data.getPartForType(RocketPartType.values()[i])));
+                        RocketAssemblerRecipe recipe = blockEntity.recipes.get(RocketPart.getId(blockEntity.getWorld().getRegistryManager(), blockEntity.data.getPartForType(RocketPartType.values()[i])));
                         for (ItemStack stack : recipe.getInput()) {
                             this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
 
@@ -255,7 +256,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
 
         if (blockEntity.data != null && blockEntity.data != RocketData.EMPTY) {
             client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.rocket_info").asString(), this.x + 234, this.y + 41, 11184810);
-            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.tier", blockEntity.data.getTier()).asString(), this.x + 234, this.y + 41 + 11, 11184810);
+//            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.tier", blockEntity.data.getTier()).asString(), this.x + 234, this.y + 41 + 11, 11184810);
             client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.assembler_status").asString(), this.x + 234, this.y + 41 + 22, 11184810);
             client.textRenderer.draw(stack, getStatus(), this.x + 234, this.y + 41 + 33, 11184810);
         } else {
@@ -332,7 +333,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                             offsetY++;
                         }
                         offsetX = 1;
-                        RocketAssemblerRecipe recipe = blockEntity.recipes.get(AddonRegistry.ROCKET_PARTS.getId(blockEntity.data.getPartForType(RocketPartType.values()[i])));
+                        RocketAssemblerRecipe recipe = blockEntity.recipes.get(RocketPart.getId(blockEntity.getWorld().getRegistryManager(), blockEntity.data.getPartForType(RocketPartType.values()[i])));
                         DefaultedList<ItemStack> input = recipe.getInput();
                         for (int i1 = 0; i1 < input.size(); i1++) {
                             if (check(mouseX, mouseY, this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT)) {

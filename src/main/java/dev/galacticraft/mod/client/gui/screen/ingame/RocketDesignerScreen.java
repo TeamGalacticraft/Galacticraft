@@ -324,7 +324,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         for (RocketPartType type : ROCKET_PART_TYPES) {
             if (this.blockEntity.getPart(type) != null) this.entity.setPart(this.blockEntity.getPart(type));
         }
-        this.entity.setColor(this.blockEntity.getRed(), this.blockEntity.getGreen(), this.blockEntity.getBlue(), this.blockEntity.getAlpha());
+        this.entity.setColor(this.blockEntity.getAlpha() << 24 | this.blockEntity.getRed() << 16 | this.blockEntity.getGreen() << 8 | this.blockEntity.getBlue());
 
         drawEntity(this.x + 172 + 24, this.y + 64, entity);
 
@@ -336,7 +336,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         client.textRenderer.draw(matrices, "A", this.x + 245 + 3, this.y + 38, Formatting.WHITE.getColorValue());
 
         client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.rocket_designer.rocket_info").asString(), this.x + 245, this.y + 62 - 9, Formatting.DARK_GRAY.getColorValue());
-        client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.rocket_designer.tier", this.entity.getTier()).asString(), this.x + 245, this.y + 62, Formatting.DARK_GRAY.getColorValue());
+//        client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.rocket_designer.tier", this.entity.getTier()).asString(), this.x + 245, this.y + 62, Formatting.DARK_GRAY.getColorValue());
 
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }

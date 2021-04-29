@@ -22,9 +22,7 @@
 
 package dev.galacticraft.mod.item;
 
-import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
 import dev.galacticraft.mod.block.GalacticraftBlock;
@@ -81,9 +79,9 @@ public class RocketItem extends Item {
 
             if (context.getWorld() instanceof ServerWorld) {
                 RocketEntity rocket = new RocketEntity(GalacticraftEntityType.ROCKET, context.getWorld());
-                RocketData data = RocketData.fromItem(context.getPlayer().getStackInHand(context.getHand()));
-                rocket.setParts(data.getParts().toArray(new RocketPart[0]));
-                rocket.setColor(data.getRed(), data.getGreen(), data.getBlue(), data.getAlpha());
+                RocketData data = RocketData.fromTag(context.getPlayer().getStackInHand(context.getHand()).getTag(), context.getWorld().getRegistryManager());
+                rocket.setParts(data.getParts());
+                rocket.setColor(data.getColor());
                 rocket.setLinkedPad(pos);
                 rocket.resetPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
                 rocket.updatePosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
@@ -107,10 +105,10 @@ public class RocketItem extends Item {
         if (isIn(group)) {
             ItemStack stack = new ItemStack(this);
             CompoundTag tag = new CompoundTag();
-            tag.putInt("tier", 1);
+//            tag.putInt("tier", 1);
             tag.putInt("color", 0xFFFFFFFF);
             for (RocketPartType type : RocketPartType.values()) {
-                tag.putString(type.asString(), AddonRegistry.ROCKET_PARTS.getId(GalacticraftRocketParts.getDefaultPartForType(type)).toString());
+                tag.putString(type.asString(), GalacticraftRocketParts.getDefaultPartForType(type).getId().toString());
             }
             stack.setTag(tag);
             stacks.add(stack);
@@ -124,8 +122,8 @@ public class RocketItem extends Item {
 
         CompoundTag tag = stack.getOrCreateTag();
         if (Screen.hasShiftDown()) {
-            if (tag.contains("color") && tag.contains("cone") && tag.contains("tier")) {
-                tooltip.add(new TranslatableText("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));
+            if (tag.contains("color") && tag.contains("cone")) {
+//                tooltip.add(new TranslatableText("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));
                 tooltip.add(new TranslatableText("tooltip.galacticraft.color"));
                 tooltip.add(new TranslatableText("tooltip.galacticraft.red", tag.getInt("color") >> 16 & 0xFF).setStyle(Style.EMPTY.withColor(Formatting.RED)));
                 tooltip.add(new TranslatableText("tooltip.galacticraft.green", tag.getInt("color") >> 8 & 0xFF).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));

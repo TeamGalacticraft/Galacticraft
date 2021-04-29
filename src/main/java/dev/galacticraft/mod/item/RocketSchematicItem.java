@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.item;
 
 import dev.galacticraft.api.registry.AddonRegistry;
+import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.api.item.SchematicItem;
 import net.fabricmc.api.EnvType;
@@ -64,8 +65,8 @@ public class RocketSchematicItem extends Item implements SchematicItem {
 
         CompoundTag tag = stack.getOrCreateTag();
         if (Screen.hasShiftDown()) {
-            if (tag.contains("red") && tag.contains("cone") && tag.contains("tier")) {
-                tooltip.add(new TranslatableText("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));
+            if (tag.contains("red") && tag.contains("cone")) {
+//                tooltip.add(new TranslatableText("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));
                 tooltip.add(new TranslatableText("tooltip.galacticraft.color"));
                 tooltip.add(new TranslatableText("tooltip.galacticraft.red", tag.getInt("red")).setStyle(Style.EMPTY.withColor(Formatting.RED)));
                 tooltip.add(new TranslatableText("tooltip.galacticraft.green", tag.getInt("green")).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
@@ -73,7 +74,7 @@ public class RocketSchematicItem extends Item implements SchematicItem {
                 tooltip.add(new TranslatableText("tooltip.galacticraft.alpha", tag.getInt("alpha")).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
                 tooltip.add(new LiteralText("-----").setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
                 for (RocketPartType type : RocketPartType.values()) {
-                    tooltip.add(new TranslatableText("tooltip.galacticraft.part_type." + type.asString()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(AddonRegistry.ROCKET_PARTS.get(new Identifier(tag.getString(type.asString()))).getName()));
+                    tooltip.add(new TranslatableText("tooltip.galacticraft.part_type." + type.asString()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(RocketPart.getById(world.getRegistryManager(), new Identifier(tag.getString(type.asString()))).getName()));
                 }
             } else {
                 tooltip.add(new TranslatableText("tooltip.galacticraft.blank").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.render.rocket;
 
-import dev.galacticraft.api.entity.RocketEntity;
+import dev.galacticraft.api.entity.Rocket;
 import dev.galacticraft.api.rocket.part.RocketPartRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
@@ -59,12 +59,15 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRendererRegis
     }
 
     @Override
-    public void render(ClientWorld world, MatrixStack matrices, RocketEntity rocket, VertexConsumerProvider vertices, float delta, int light) {
+    public void render(ClientWorld world, MatrixStack matrices, Rocket rocket, VertexConsumerProvider vertices, float delta, int light) {
         if (this.model != null) {
             MatrixStack.Entry entry = matrices.peek();
             VertexConsumer consumer = vertices.getBuffer(layer);
             for (BakedQuad quad : model.getQuads(null, null, world.random)) {
-                consumer.quad(entry, quad, rocket.getColor()[0] * rocket.getColor()[3], rocket.getColor()[1] * rocket.getColor()[3], rocket.getColor()[2] * rocket.getColor()[3], light, OverlayTexture.DEFAULT_UV);
+                consumer.quad(entry, quad, (((rocket.getColor() << 16) & 0xFF) / 255f) * (((rocket.getColor() << 24) & 0xFF) / 255f),
+                        (((rocket.getColor() << 8) & 0xFF) / 255f) * (((rocket.getColor() << 24) & 0xFF) / 255f),
+                        ((rocket.getColor() & 0xFF) / 255f) * (((rocket.getColor() << 24) & 0xFF) / 255f),
+                        light, OverlayTexture.DEFAULT_UV);
             }
         }
     }

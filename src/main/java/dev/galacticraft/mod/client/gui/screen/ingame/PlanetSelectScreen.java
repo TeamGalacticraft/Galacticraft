@@ -23,13 +23,13 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.google.common.collect.Lists;
-import dev.galacticraft.api.registry.AddonRegistry;
+import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.api.celestialbodies.CelestialBodyType;
-import dev.galacticraft.api.celestialbodies.CelestialObjectType;
-import dev.galacticraft.api.celestialbodies.SolarSystemType;
-import dev.galacticraft.api.celestialbodies.satellite.Satellite;
-import dev.galacticraft.api.celestialbodies.satellite.SatelliteRecipe;
+import dev.galacticraft.api.celestialbody.CelestialBodyType;
+import dev.galacticraft.api.celestialbody.CelestialObjectType;
+import dev.galacticraft.api.celestialbody.SolarSystemType;
+import dev.galacticraft.api.celestialbody.satellite.Satellite;
+import dev.galacticraft.api.celestialbody.satellite.SatelliteRecipe;
 import dev.galacticraft.api.internal.accessor.ClientSatelliteAccessor;
 import dev.galacticraft.api.internal.accessor.SatelliteAccessor;
 import dev.galacticraft.mod.api.math.Matrix4;
@@ -95,7 +95,7 @@ public class PlanetSelectScreen extends Screen {
     protected static int BORDER_SIZE = 0;
     protected static int BORDER_EDGE_SIZE = 0;
     protected final boolean mapMode;
-    private final int tier;
+    private final RocketData data;
     public boolean canCreateStations;
     protected float zoom = 0.0F;
     protected float planetZoom = 0.0F;
@@ -138,10 +138,10 @@ public class PlanetSelectScreen extends Screen {
         }
     };
 
-    public PlanetSelectScreen(boolean mapMode, int tier, boolean canCreateStations) {
+    public PlanetSelectScreen(boolean mapMode, RocketData data, boolean canCreateStations) {
         super(LiteralText.EMPTY);
         this.mapMode = mapMode;
-        this.tier = tier;
+        this.data = data;
         this.canCreateStations = canCreateStations;
         ((ClientSatelliteAccessor) MinecraftClient.getInstance().getNetworkHandler()).addListener(this.listener);
     }
@@ -219,7 +219,7 @@ public class PlanetSelectScreen extends Screen {
         if (isPlanet(celestialBody)) {
             SolarSystemType system = celestialBody.getParentSystem();
 
-            for (CelestialBodyType planet : AddonRegistry.CELESTIAL_BODIES) {
+            for (CelestialBodyType planet : CelestialBodyType.getAll(this.client.world.getRegistryManager())) {
                 if (isPlanet(planet)) {
                     SolarSystemType system1 = planet.getParentSystem();
 
@@ -231,7 +231,7 @@ public class PlanetSelectScreen extends Screen {
         } else if (isChildBody(celestialBody)) {
             CelestialBodyType planet = celestialBody.getParent();
 
-            for (CelestialBodyType moon : AddonRegistry.CELESTIAL_BODIES) {
+            for (CelestialBodyType moon : CelestialBodyType.getAll(this.client.world.getRegistryManager())) {
                 if (planet.equals(moon.getParent())) {
                     bodyList.add(moon);
                 }
@@ -402,7 +402,7 @@ public class PlanetSelectScreen extends Screen {
             return false;
         }
 
-        if (atBody.getAccessWeight() > this.tier) {
+        if (!this.data.canTravelTo(atBody)) {
             // If parent body is unreachable, the satellite is also unreachable
             return false;
         }
@@ -461,7 +461,7 @@ public class PlanetSelectScreen extends Screen {
 
     protected void teleportToSelectedBody() {
         if (this.selectedBody != null && this.selectedBody.getWorld() != null) {
-            if (this.selectedBody.getAccessWeight() <= this.tier) {
+            if (this.data.canTravelTo(this.selectedBody)) {
                 try {
                     client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "planet_tp"), new PacketByteBuf(Unpooled.buffer()).writeIdentifier(this.selectedBody.getId())));
                     client.openScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite) this.selectedBody).getName() : this.selectedBody.getTranslationKey(), this.selectedBody.getWorld()));
@@ -1531,7 +1531,7 @@ public class PlanetSelectScreen extends Screen {
                 }
                 if (this.selectedBody.getAccessWeight() >= 0 && (!(isSatellite(this.selectedBody)))) {
                     boolean canReach;
-                    if (!(this.selectedBody.getAccessWeight() <= this.tier) || this.selectedBody.getWorld() == null) {
+                    if (!this.data.canTravelTo(this.selectedBody) || this.selectedBody.getWorld() == null) {
                         canReach = false;
                         RenderSystem.color4f(1.0F, 0.0F, 0.0F, 1);
                     } else {
@@ -1558,7 +1558,7 @@ public class PlanetSelectScreen extends Screen {
                 this.blit(LHS + 4, TOP, 83, 12, 0, 477, 83, 12, false, false);
 
                 if (!this.mapMode) {
-                    if (!(this.selectedBody.getAccessWeight() <= this.tier) || this.selectedBody.getWorld() == null || (isSatellite(this.selectedBody) && !((Satellite) this.selectedBody).getOwnershipData().canAccess(this.client.player)))
+                    if (!this.data.canTravelTo(this.selectedBody) || this.selectedBody.getWorld() == null || (isSatellite(this.selectedBody) && !((Satellite) this.selectedBody).getOwnershipData().canAccess(this.client.player)))
                     {
                         RenderSystem.color4f(1.0F, 0.0F, 0.0F, 1);
                     } else {
@@ -1675,7 +1675,7 @@ public class PlanetSelectScreen extends Screen {
 
             this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
             float brightness = child.equals(this.selectedBody) ? 0.2F : 0.0F;
-            if (child.getAccessWeight() <= this.tier && child.getWorld() != null) {
+            if (this.data.canTravelTo(child) && child.getWorld() != null) {
                 RenderSystem.color4f(0.0F, 0.6F + brightness, 0.0F, scale / 95.0F);
             } else {
                 RenderSystem.color4f(0.6F + brightness, 0.0F, 0.0F, scale / 95.0F);

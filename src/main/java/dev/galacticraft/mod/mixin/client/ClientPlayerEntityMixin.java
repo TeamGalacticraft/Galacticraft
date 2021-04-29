@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.api.entity.RocketEntity;
+import dev.galacticraft.api.entity.Rocket;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.mod.Constant;
 import io.netty.buffer.Unpooled;
@@ -49,14 +49,14 @@ public abstract class ClientPlayerEntityMixin {
     private void gcRocketJumpCheck(CallbackInfo ci) {
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
         if (player.hasVehicle()) {
-            if (player.getVehicle() instanceof RocketEntity) {
+            if (player.getVehicle() instanceof Rocket) {
 
-                if (this.input.jumping && ((RocketEntity) player.getVehicle()).getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
-                    ((RocketEntity) player.getVehicle()).onJump();
+                if (this.input.jumping && ((Rocket) player.getVehicle()).getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
+                    ((Rocket) player.getVehicle()).onJump();
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_jump"), new PacketByteBuf(Unpooled.buffer())));
                 }
 
-                if (((RocketEntity) player.getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
+                if (((Rocket) player.getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
                     if (this.input.pressingForward) {
                         player.getVehicle().prevPitch = player.getVehicle().pitch;
                         player.getVehicle().pitch -= 2.0F;
