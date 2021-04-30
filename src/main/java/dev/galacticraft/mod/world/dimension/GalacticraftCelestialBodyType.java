@@ -26,7 +26,6 @@ import dev.galacticraft.api.celestialbody.CelestialBodyDisplayInfo;
 import dev.galacticraft.api.celestialbody.CelestialBodyType;
 import dev.galacticraft.api.celestialbody.CelestialObjectType;
 import dev.galacticraft.api.celestialbody.satellite.SatelliteRecipe;
-import dev.galacticraft.api.event.RegistrationEvent;
 import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import net.minecraft.item.ItemStack;
@@ -57,6 +56,6 @@ public class GalacticraftCelestialBodyType {
             .build();
 
     public static void register() {
-        RegistrationEvent.CELESTIAL_BODY_TYPE.register(registry -> Registry.register(registry, GalacticraftCelestialBodyType.THE_MOON.getId(), GalacticraftCelestialBodyType.THE_MOON));
+        Registry.register(AddonRegistry.CELESTIAL_BODY_TYPE, GalacticraftCelestialBodyType.THE_MOON.getId(), GalacticraftCelestialBodyType.THE_MOON);
     }
 }

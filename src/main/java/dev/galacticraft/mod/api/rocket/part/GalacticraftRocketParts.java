@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.api.rocket.part;
 
-import dev.galacticraft.api.event.RegistrationEvent;
 import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartRendererRegistry;
@@ -45,7 +44,7 @@ public class GalacticraftRocketParts {
     public static final RocketPart DEFAULT_CONE = RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "default_cone"))
             .name(new TranslatableText("rocket_part.galacticraft.default_cone"))
             .travelPredicate(GalacticraftConfiguredTravelPredicates.TIER_ONE)
-            .type(RocketPartType.CONE) //todo: predicates
+            .type(RocketPartType.CONE)
             .build();
 
     public static final RocketPart DEFAULT_BODY = RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "default_body"))
@@ -110,19 +109,17 @@ public class GalacticraftRocketParts {
             .build();
 
     public static void register() {
-        RegistrationEvent.ROCKET_PART.register(registry -> {
-            Registry.register(registry, DEFAULT_CONE.getId(), DEFAULT_CONE);
-            Registry.register(registry, DEFAULT_BODY.getId(), DEFAULT_BODY);
-            Registry.register(registry, DEFAULT_FIN.getId(), DEFAULT_FIN);
-            Registry.register(registry, NO_BOOSTER.getId(), NO_BOOSTER);
-            Registry.register(registry, DEFAULT_BOTTOM.getId(), DEFAULT_BOTTOM);
-            Registry.register(registry, ADVANCED_CONE.getId(), ADVANCED_CONE);
-            Registry.register(registry, SLOPED_CONE.getId(), SLOPED_CONE);
-            Registry.register(registry, BOOSTER_TIER_1.getId(), BOOSTER_TIER_1);
-            Registry.register(registry, BOOSTER_TIER_2.getId(), BOOSTER_TIER_2);
-            Registry.register(registry, NO_UPGRADE.getId(), NO_UPGRADE);
-            Registry.register(registry, STORAGE_UPGRADE.getId(), STORAGE_UPGRADE);
-        });
+        Registry.register(AddonRegistry.ROCKET_PART, DEFAULT_CONE.getId(), DEFAULT_CONE);
+        Registry.register(AddonRegistry.ROCKET_PART, DEFAULT_BODY.getId(), DEFAULT_BODY);
+        Registry.register(AddonRegistry.ROCKET_PART, DEFAULT_FIN.getId(), DEFAULT_FIN);
+        Registry.register(AddonRegistry.ROCKET_PART, NO_BOOSTER.getId(), NO_BOOSTER);
+        Registry.register(AddonRegistry.ROCKET_PART, DEFAULT_BOTTOM.getId(), DEFAULT_BOTTOM);
+        Registry.register(AddonRegistry.ROCKET_PART, ADVANCED_CONE.getId(), ADVANCED_CONE);
+        Registry.register(AddonRegistry.ROCKET_PART, SLOPED_CONE.getId(), SLOPED_CONE);
+        Registry.register(AddonRegistry.ROCKET_PART, BOOSTER_TIER_1.getId(), BOOSTER_TIER_1);
+        Registry.register(AddonRegistry.ROCKET_PART, BOOSTER_TIER_2.getId(), BOOSTER_TIER_2);
+        Registry.register(AddonRegistry.ROCKET_PART, NO_UPGRADE.getId(), NO_UPGRADE);
+        Registry.register(AddonRegistry.ROCKET_PART, STORAGE_UPGRADE.getId(), STORAGE_UPGRADE);
     }
 
     @NotNull
