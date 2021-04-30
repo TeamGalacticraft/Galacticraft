@@ -383,34 +383,16 @@ public class RocketEntity extends Entity implements Rocket {
     @Override
     public Packet<?> createSpawnPacket() {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        buf.writeVarInt(Registry.ENTITY_TYPE.getRawId(this.getType())).writeVarInt(this.getEntityId())
-                .writeUuid(this.uuid).writeDouble(getX()).writeDouble(getY()).writeDouble(getZ()).writeByte((int) (pitch / 360F * 256F)).writeByte((int) (yaw / 360F * 256F));
-
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("color", getColor());
-        RocketPart part = this.getPartForType(RocketPartType.CONE);
-        if (part != null) tag.putString("cone", RocketPart.getId(this.world.getRegistryManager(), part).toString());
-
-        part = this.getPartForType(RocketPartType.BODY);
-        if (part != null) tag.putString("body", RocketPart.getId(this.world.getRegistryManager(), part).toString());
-
-        part = this.getPartForType(RocketPartType.FIN);
-        if (part != null) tag.putString("fin", RocketPart.getId(this.world.getRegistryManager(), part).toString());
-
-        part = this.getPartForType(RocketPartType.BOOSTER);
-        if (part != null) tag.putString("booster", RocketPart.getId(this.world.getRegistryManager(), part).toString());
-
-        part = this.getPartForType(RocketPartType.BOTTOM);
-        if (part != null) tag.putString("bottom", RocketPart.getId(this.world.getRegistryManager(), part).toString());
-
-        part = this.getPartForType(RocketPartType.UPGRADE);
-        if (part != null) tag.putString("upgrade", RocketPart.getId(this.world.getRegistryManager(), part).toString());
-
-        buf.writeCompoundTag(tag);
-
-        return new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "rocket_spawn"),
-                new PacketByteBuf(buf));
-
+        buf.writeVarInt(Registry.ENTITY_TYPE.getRawId(this.getType()));
+        buf.writeVarInt(this.getEntityId());
+        buf.writeUuid(this.uuid);
+        buf.writeDouble(getX());
+        buf.writeDouble(getY());
+        buf.writeDouble(getZ());
+        buf.writeByte((int) (pitch / 360F * 256F));
+        buf.writeByte((int) (yaw / 360F * 256F));
+        buf.writeCompoundTag(new RocketData(this.getColor(), this.getParts()).toTag(this.world.getRegistryManager(), new CompoundTag()));
+        return new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "rocket_spawn"), buf);
     }
 
     @Override
