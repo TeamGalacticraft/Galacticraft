@@ -663,5 +663,15 @@ public interface Constant {
         BlockFace[] BLOCK_FACES = BlockFace.values();
         String LOGGER_PREFIX = "[Galacticraft] ";
         boolean DEBUG = false;
+        int MAX_STRING_READ = 32767;
+    }
+
+    interface Recipe {
+        String FABRICATION = "fabrication";
+        String COMPRESSING = "compressing";
+        interface Serializer {
+            String COMPRESSING_SHAPELESS = "compressing_shapeless";
+            String COMPRESSING_SHAPED = "compressing_shaped";
+        }
     }
 }

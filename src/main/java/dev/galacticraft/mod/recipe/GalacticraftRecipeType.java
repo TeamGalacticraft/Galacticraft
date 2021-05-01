@@ -22,7 +22,8 @@
 
 package dev.galacticraft.mod.recipe;
 
-import dev.galacticraft.mod.Constant;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -30,14 +31,10 @@ import net.minecraft.util.registry.Registry;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftRecipe {
-    public static final RecipeType<FabricationRecipe> FABRICATION_TYPE = Registry.register(Registry.RECIPE_TYPE, new Identifier(Constant.MOD_ID, Constant.Recipe.FABRICATION), new GalacticraftRecipeType<>());
-    public static final RecipeType<CompressingRecipe> COMPRESSING_TYPE = Registry.register(Registry.RECIPE_TYPE, new Identifier(Constant.MOD_ID, Constant.Recipe.COMPRESSING), new GalacticraftRecipeType<>());
-
-    public static final FabricationRecipe.Serializer FABRICATION_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.FABRICATION), FabricationRecipe.Serializer.INSTANCE);
-    public static final ShapelessCompressingRecipe.Serializer SHAPELESS_COMPRESSING_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPELESS), ShapelessCompressingRecipe.Serializer.INSTANCE);
-    public static final ShapedCompressingRecipe.Serializer SHAPED_COMPRESSING_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPED), ShapedCompressingRecipe.Serializer.INSTANCE);
-
-    public static void register() {
+public class GalacticraftRecipeType<C extends Inventory, T extends Recipe<C>> implements RecipeType<T> {
+    @Override
+    public String toString() {
+        Identifier id = Registry.RECIPE_TYPE.getId(this);
+        return id == null ? "Unregistered RecipeType" : id.toString();
     }
 }
