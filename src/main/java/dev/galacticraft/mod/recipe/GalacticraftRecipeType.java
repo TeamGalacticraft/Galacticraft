@@ -28,6 +28,9 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class GalacticraftRecipeType<C extends Inventory, T extends Recipe<C>> implements RecipeType<T> {
     @Override
     public String toString() {

@@ -40,6 +40,9 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class ShapelessCompressingRecipe implements CompressingRecipe {
    private final Identifier id;
    private final String group;
