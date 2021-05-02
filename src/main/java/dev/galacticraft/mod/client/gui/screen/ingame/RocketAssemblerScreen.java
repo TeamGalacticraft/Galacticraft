@@ -38,6 +38,7 @@ import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.recipe.RocketAssemblerRecipe;
 import dev.galacticraft.mod.screen.RocketAssemblerScreenHandler;
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -53,6 +54,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -201,18 +203,19 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                         offsetX++;
 
                         RocketAssemblerRecipe recipe = blockEntity.recipes.get(RocketPart.getId(blockEntity.getWorld().getRegistryManager(), blockEntity.data.getPartForType(RocketPartType.values()[i])));
-                        for (ItemStack stack : recipe.getInput()) {
+                        for (Object2IntMap.Entry<Ingredient> stack : recipe.getInput().object2IntEntrySet()) {
                             this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
 
-                            if (this.blockEntity.getExtendedInv().getInvStack(slot).getCount() == stack.getCount()) {
+                            if (this.blockEntity.getExtendedInv().getInvStack(slot).getCount() == stack.getIntValue()) {
                                 drawTexture(matrices, this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
                             } else {
                                 drawTexture(matrices, this.x + 9 + ((RED_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((RED_BOX_HEIGHT + 2) * offsetY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
                                 aG = false;
                             }
-
-                            itemRenderer.renderGuiItemIcon(stack, this.x + 13 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * offsetY));
-                            itemRenderer.renderGuiItemOverlay(client.textRenderer, stack, this.x + 13 + (GREEN_BOX_WIDTH + 2) * offsetX, this.y + 13 + (GREEN_BOX_HEIGHT + 2) * offsetY, this.blockEntity.getExtendedInv().getInvStack(slot).getCount() + "/" + stack.getCount());
+                            int time = (int) (System.currentTimeMillis() % 50000) / 1000;
+                            ItemStack[] msc = stack.getKey().getMatchingStacksClient();
+                            itemRenderer.renderGuiItemIcon(msc[time % msc.length], this.x + 13 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * offsetY));
+                            itemRenderer.renderGuiItemOverlay(client.textRenderer, msc[time % msc.length], this.x + 13 + (GREEN_BOX_WIDTH + 2) * offsetX, this.y + 13 + (GREEN_BOX_HEIGHT + 2) * offsetY, this.blockEntity.getExtendedInv().getInvStack(slot).getCount() + "/" + stack.getIntValue());
 
                             if (check(mouseX, mouseY, (this.x + 9 + ((GREEN_BOX_WIDTH) + 2) * offsetX) + 2, (this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY)) + 2, GREEN_BOX_WIDTH - 4, GREEN_BOX_HEIGHT - 4)) {
                                 RenderSystem.disableDepthTest();
@@ -334,7 +337,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                         }
                         offsetX = 1;
                         RocketAssemblerRecipe recipe = blockEntity.recipes.get(RocketPart.getId(blockEntity.getWorld().getRegistryManager(), blockEntity.data.getPartForType(RocketPartType.values()[i])));
-                        DefaultedList<ItemStack> input = recipe.getInput();
+                        Object2IntMap<Ingredient> input = recipe.getInput();
                         for (int i1 = 0; i1 < input.size(); i1++) {
                             if (check(mouseX, mouseY, this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT)) {
                                 boolean success = false;

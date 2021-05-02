@@ -39,6 +39,7 @@ import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.recipe.RocketAssemblerRecipe;
 import dev.galacticraft.mod.util.EnergyUtil;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -46,6 +47,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
@@ -145,8 +147,8 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         for (RocketPartType type : values) {
             if (this.data.getPartForType(type).hasRecipe()) {
                 Identifier id = RocketPart.getId(this.world.getRegistryManager(), this.data.getPartForType(type));
-                for (ItemStack stack : this.recipes.get(id).getInput()) {
-                    filters.put(slots++, stack::isItemEqual); //damage matters
+                for (Ingredient ingredient : this.recipes.get(id).getInput().keySet()) {
+                    filters.put(slots++, ingredient::test); //damage matters
                 }
             }
         }
@@ -170,9 +172,9 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
                         if (data.getPartForType(RocketPartType.values()[i]).hasRecipe()) {
                             Identifier id = RocketPart.getId(world.getRegistryManager(), data.getPartForType(RocketPartType.values()[i]));
                             if (a + recipes.get(id).getInput().size() > slot) {
-                                for (ItemStack ingredient : recipes.get(id).getInput()) {
+                                for (int amount : recipes.get(id).getInput().values()) {
                                     if (a == slot) {
-                                        return ingredient.getCount();
+                                        return amount;
                                     }
                                     a++;
                                 }
@@ -244,8 +246,8 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         for (RocketPartType type : values) {
             if (this.data.getPartForType(type).hasRecipe()) {
                 Identifier id = RocketPart.getId(world.getRegistryManager(), this.data.getPartForType(type));
-                for (ItemStack stack : this.recipes.get(id).getInput()) {
-                    filters.put(slots++, stack1 -> stack.getItem().equals(stack1.getItem()));
+                for (Ingredient ingredient : this.recipes.get(id).getInput().keySet()) {
+                    filters.put(slots++, ingredient::test);
                 }
             }
         }
@@ -269,9 +271,9 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
                         if (data.getPartForType(RocketPartType.values()[i]).hasRecipe()) {
                             Identifier id = RocketPart.getId(world.getRegistryManager(), data.getPartForType(RocketPartType.values()[i]));
                             if (a + recipes.get(id).getInput().size() > slot) {
-                                for (ItemStack ingredient : recipes.get(id).getInput()) {
+                                for (int amount : recipes.get(id).getInput().values()) {
                                     if (a == slot) {
-                                        return ingredient.getCount();
+                                        return amount;
                                     }
                                     a++;
                                 }

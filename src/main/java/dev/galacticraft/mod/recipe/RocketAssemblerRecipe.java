@@ -22,28 +22,36 @@
 
 package dev.galacticraft.mod.recipe;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import dev.galacticraft.mod.Galacticraft;
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeFinder;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
+import net.minecraft.item.Items;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.recipe.*;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+
+import java.util.Map;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RocketAssemblerRecipe implements Recipe<Inventory> {
     private final Identifier id;
-
     private final Identifier output;
-    private final DefaultedList<ItemStack> input;
+    private final Object2IntMap<Ingredient> input;
 
-    public RocketAssemblerRecipe(Identifier id, Identifier output, DefaultedList<ItemStack> input) {
+    public RocketAssemblerRecipe(Identifier id, Identifier output, Object2IntMap<Ingredient> input) {
         this.id = id;
         this.output = output;
         this.input = input;
@@ -60,7 +68,7 @@ public class RocketAssemblerRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<RocketAssemblerRecipe> getType() {
         return GalacticraftRecipe.ROCKET_ASSEMBLER_TYPE;
     }
 
@@ -94,12 +102,62 @@ public class RocketAssemblerRecipe implements Recipe<Inventory> {
         return ItemStack.EMPTY;
     }
 
+    @Override
     @Environment(EnvType.CLIENT)
-    public boolean fits(int int_1, int int_2) {
+    public boolean fits(int width, int height) {
         return false;
     }
 
-    public DefaultedList<ItemStack> getInput() {
+    public Object2IntMap<Ingredient> getInput() {
         return this.input;
+    }
+
+    public enum Serializer implements RecipeSerializer<RocketAssemblerRecipe> {
+        INSTANCE;
+
+        private static Object2IntMap<Ingredient> getItemStacks(JsonArray json) {
+            Object2IntMap<Ingredient> ingredients = new Object2IntArrayMap<>(json.size());
+            for (int i = 0; i < json.size(); ++i) {
+                JsonObject object = json.get(i).getAsJsonObject();
+                ingredients.put(Ingredient.fromJson(object), object.get("count") == null ? 1 : object.get("count").getAsInt());
+            }
+            return ingredients;
+        }
+
+        @Override
+        public RocketAssemblerRecipe read(Identifier id, PacketByteBuf buf) {
+            int size = buf.readVarInt();
+            Object2IntMap<Ingredient> ingredients = new Object2IntArrayMap<>(size);
+
+            for (int i = 0; i < ingredients.size(); ++i) {
+                ingredients.put(Ingredient.fromPacket(buf), buf.readInt());
+            }
+
+            Identifier result = buf.readIdentifier();
+            return new RocketAssemblerRecipe(id, result, ingredients);
+        }
+
+        @Override
+        public void write(PacketByteBuf buf, RocketAssemblerRecipe recipe) {
+            buf.writeVarInt(recipe.getInput().size());
+
+            for (Object2IntMap.Entry<Ingredient> ingredientEntry : recipe.getInput().object2IntEntrySet()) {
+                ingredientEntry.getKey().write(buf);
+                buf.writeInt(ingredientEntry.getIntValue());
+            }
+
+            buf.writeIdentifier(recipe.getPartOutput());
+        }
+
+        @Override
+        public RocketAssemblerRecipe read(Identifier id, JsonObject json) {
+            Object2IntMap<Ingredient> ingredients = getItemStacks(JsonHelper.getArray(json, "ingredients"));
+            if (ingredients.isEmpty()) {
+                throw new JsonParseException("No ingredients for rocket assembler recipe");
+            } else {
+                Identifier result = new Identifier(JsonHelper.getString(json, "result"));
+                return new RocketAssemblerRecipe(id, result, ingredients);
+            }
+        }
     }
 }
