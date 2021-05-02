@@ -21,6 +21,7 @@
   "carvers": {
     "air": [
       "galacticraft:moon_mare_cave",
+      "galacticraft:moon_crater",
       "galacticraft:canyon"
     ]
   },
