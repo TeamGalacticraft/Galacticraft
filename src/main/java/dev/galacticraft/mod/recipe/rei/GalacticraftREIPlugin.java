@@ -49,6 +49,7 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
     public static final Identifier CIRCUIT_FABRICATION = new Identifier(Constant.MOD_ID, "plugins/circuit_fabricator");
     public static final Identifier COMPRESSING = new Identifier(Constant.MOD_ID, "plugins/compressing");
 
+    @Override
     public void registerPluginCategories(RecipeHelper recipeHelper) {
         recipeHelper.registerCategory(new DefaultFabricationCategory());
         recipeHelper.registerCategory(new DefaultCompressingCategory());
@@ -67,15 +68,9 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
 
     @Override
     public void registerRecipeDisplays(RecipeHelper recipeHelper) {
-        for (Recipe<?> value : recipeHelper.getRecipeManager().values()) {
-            if (value instanceof FabricationRecipe) {
-                recipeHelper.registerDisplay(new DefaultFabricationDisplay((FabricationRecipe) value));
-            } else if (value instanceof ShapelessCompressingRecipe) {
-                recipeHelper.registerDisplay(new DefaultShapelessCompressingDisplay((ShapelessCompressingRecipe) value));
-            } else if (value instanceof ShapedCompressingRecipe) {
-                recipeHelper.registerDisplay(new DefaultShapedCompressingDisplay((ShapedCompressingRecipe) value));
-            }
-        }
+        recipeHelper.registerRecipes(CIRCUIT_FABRICATION, FabricationRecipe.class, DefaultFabricationDisplay::new);
+        recipeHelper.registerRecipes(COMPRESSING, ShapedCompressingRecipe.class, DefaultShapedCompressingDisplay::new);
+        recipeHelper.registerRecipes(COMPRESSING, ShapelessCompressingRecipe.class, DefaultShapelessCompressingDisplay::new);
     }
 
     @Override
@@ -85,7 +80,7 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
             HandledScreenAccessor screenHooks = (HandledScreenAccessor) machineScreen;
             List<Rectangle> l = Lists.newArrayList();
 
-            if (MachineHandledScreen.Tab.SECURITY.isOpen()) {
+            if (MachineHandledScreen.Tab.STATS.isOpen()) {
                 l.add(new Rectangle(screenHooks.gc_getX() + screenHooks.gc_getBackgroundWidth(), screenHooks.gc_getY(), MachineHandledScreen.PANEL_WIDTH, MachineHandledScreen.PANEL_HEIGHT));
             } else {
                 l.add(new Rectangle(screenHooks.gc_getX() + screenHooks.gc_getBackgroundWidth(), screenHooks.gc_getY(), MachineHandledScreen.TAB_WIDTH, MachineHandledScreen.TAB_HEIGHT));

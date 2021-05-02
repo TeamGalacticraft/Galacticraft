@@ -20,21 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.carver;
+package dev.galacticraft.mod.recipe;
 
-import dev.galacticraft.mod.Constant;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.ProbabilityConfig;
-import net.minecraft.world.gen.carver.Carver;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftCarver {
-    public static final Carver<ProbabilityConfig> LUNAR_CAVE = Registry.register(Registry.CARVER, new Identifier(Constant.MOD_ID, "lunar_cave"), new LunarCaveCarver(ProbabilityConfig.CODEC, 128));
-    public static final Carver<ProbabilityConfig> CRATER = Registry.register(Registry.CARVER, new Identifier(Constant.MOD_ID, "crater"), new CraterCarver(128));
-
-    public static void register() {
+public class GalacticraftRecipeType<C extends Inventory, T extends Recipe<C>> implements RecipeType<T> {
+    @Override
+    public String toString() {
+        Identifier id = Registry.RECIPE_TYPE.getId(this);
+        return id == null ? "Unregistered RecipeType" : id.toString();
     }
 }

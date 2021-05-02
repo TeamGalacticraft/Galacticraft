@@ -38,9 +38,10 @@ import net.minecraft.item.ItemStack;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public enum OxygenTankUtil {
-    ;
-    public static final ItemFilter OXYGEN_TANK_EXTRACTABLE = stack -> canExtractLOX(stack);
+public class OxygenTankUtil {
+    private OxygenTankUtil() {}
+
+    public static final ItemFilter OXYGEN_TANK_EXTRACTABLE = OxygenTankUtil::canExtractLOX;
 
     private static boolean canExtractLOX(ItemStack stack) {
         return isOxygenTank(stack) && getOxygenTank(stack).getCapacity() > 0;

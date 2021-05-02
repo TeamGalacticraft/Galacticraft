@@ -166,7 +166,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        progress = tag.getInt(Constant.Nbt.PROGRESS);
+        this.progress = tag.getInt(Constant.Nbt.PROGRESS);
     }
 
     @Override

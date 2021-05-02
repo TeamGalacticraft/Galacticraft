@@ -41,6 +41,8 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EnergyUtil {
+    private EnergyUtil() {}
+
     public static final ItemFilter IS_EXTRACTABLE = EnergyUtil::isEnergyExtractable;
     public static final ItemFilter IS_INSERTABLE = EnergyUtil::isEnergyInsertable;
 
