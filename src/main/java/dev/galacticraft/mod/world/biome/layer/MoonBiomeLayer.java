@@ -23,10 +23,8 @@
 package dev.galacticraft.mod.world.biome.layer;
 
 import dev.galacticraft.mod.world.biome.GalacticraftBiome;
-import dev.galacticraft.mod.world.biome.layer.moon.MoonHighlandsBiomeLayer;
-import dev.galacticraft.mod.world.biome.layer.moon.MoonMareBiomeLayer;
-import dev.galacticraft.mod.world.biome.layer.moon.MoonMergeLayer;
-import dev.galacticraft.mod.world.biome.layer.moon.ValleyCrossSamplingLayer;
+import dev.galacticraft.mod.world.biome.layer.moon.MoonBaseBiomeLayer;
+import dev.galacticraft.mod.world.biome.layer.moon.MoonEdgeBiomeLayer;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.layer.ScaleLayer;
@@ -40,51 +38,42 @@ import java.util.function.LongFunction;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonBiomeLayer {
-    public static int MOON_HIGHLANDS_PLAINS_ID = -1;
-    public static int MOON_HIGHLANDS_ROCKS_ID = -1;
-    public static int MOON_HIGHLANDS_VALLEY_ID = -1;
+    public static int MOON_HIGHLANDS_ID = -1;
+    public static int MOON_HIGHLANDS_EDGE_ID = -1;
 
-    public static int MOON_MARE_PLAINS_ID = -1;
-    public static int MOON_MARE_ROCKS_ID = -1;
+    public static int MOON_MARE_ID = -1;
     public static int MOON_MARE_EDGE_ID = -1;
 
     public static Registry<Biome> registry;
 
     private static <T extends LayerSampler, C extends LayerSampleContext<T>> LayerFactory<T> build(int biomeSize, LongFunction<C> contextProvider, Registry<Biome> registry) {
-        LayerFactory<T> baseLayer = MoonHighlandsBiomeLayer.INSTANCE.create(contextProvider.apply(4415L));
+        LayerFactory<T> moon = MoonBaseBiomeLayer.INSTANCE.create(contextProvider.apply(4415L));
 
-        baseLayer = MoonMergeLayer.INSTANCE.create(contextProvider.apply(1703L), baseLayer, MoonMareBiomeLayer.INSTANCE.create(contextProvider.apply(6521L))); //layer merge
-
-        for (int i = 1; i < biomeSize - 1; ++i) {
-            baseLayer = ScaleLayer.NORMAL.create(contextProvider.apply(3891L + i * 3L), baseLayer);
-        }
-        baseLayer = ValleyCrossSamplingLayer.INSTANCE.create(contextProvider.apply(9241L), baseLayer); //add valleys (separators, like rivers)
-        baseLayer = ScaleLayer.FUZZY.create(contextProvider.apply(6214L), baseLayer);
-        baseLayer = ScaleLayer.NORMAL.create(contextProvider.apply(7834L), baseLayer);
-
-        return baseLayer;
-    }
-
-    private static <T extends LayerSampler, C extends LayerSampleContext<T>> LayerFactory<T> stack(long seed, ParentedLayer layer, LayerFactory<T> parent, int count, LongFunction<C> contextProvider) {
-        LayerFactory<T> layerFactory = parent;
-
-        for (int i = 0; i < count; ++i) {
-            layerFactory = layer.create(contextProvider.apply(seed + (long) i), layerFactory);
+        for (int i = 0; i < (biomeSize / 2) - 1; i++) {
+            moon = ScaleLayer.NORMAL.create(contextProvider.apply(1946L + i * 24L), moon);
         }
 
-        return layerFactory;
+        moon = ScaleLayer.FUZZY.create(contextProvider.apply(1283L), moon);
+        moon = MoonEdgeBiomeLayer.INSTANCE.create(contextProvider.apply(2378L), moon);
+
+        for (int i = (biomeSize / 2); i < biomeSize - 1; i++) {
+            moon = ScaleLayer.NORMAL.create(contextProvider.apply(1472L + i * 37L), moon);
+        }
+        moon = MoonEdgeBiomeLayer.INSTANCE.create(contextProvider.apply(3782L), moon);
+        moon = ScaleLayer.NORMAL.create(contextProvider.apply(2783L), moon);
+        moon = ScaleLayer.FUZZY.create(contextProvider.apply(4729L), moon);
+
+        return moon;
     }
 
     public static BiomeLayerSampler build(long seed, int biomeSize, Registry<Biome> registry) {
-        if (MOON_HIGHLANDS_PLAINS_ID == -1 || MOON_HIGHLANDS_PLAINS_ID != registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_PLAINS))) {
-            MOON_HIGHLANDS_PLAINS_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_PLAINS));
-            MOON_HIGHLANDS_ROCKS_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_ROCKS));
-            MOON_HIGHLANDS_VALLEY_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_VALLEY));
-            MOON_MARE_PLAINS_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_PLAINS));
-            MOON_MARE_ROCKS_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_ROCKS));
+        if (MOON_HIGHLANDS_ID != registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_PLAINS))) {
+            MOON_HIGHLANDS_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_PLAINS));
+            MOON_HIGHLANDS_EDGE_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_EDGE));
+            MOON_MARE_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_PLAINS));
             MOON_MARE_EDGE_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_EDGE));
         }
-        LayerFactory<CachingLayerSampler> layerFactory = build(biomeSize, (salt) -> new CachingLayerContext(25, seed, salt), registry);
+        LayerFactory<CachingLayerSampler> layerFactory = build(biomeSize, (salt) -> new CachingLayerContext(25, seed, salt + 1), registry);
         MoonBiomeLayer.registry = registry;
         return new BiomeLayerSampler(layerFactory);
     }

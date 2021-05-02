@@ -24,252 +24,308 @@ package dev.galacticraft.mod.recipe;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
+import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ShapedCompressingRecipe implements CompressingRecipe {
-    final String group;
-    private final int width;
-    private final int height;
-    private final DefaultedList<Ingredient> ingredients;
-    private final ItemStack output;
-    private final Identifier id;
+   private final int width;
+   private final int height;
+   private final DefaultedList<Ingredient> inputs;
+   private final ItemStack output;
+   private final Identifier id;
+   private final String group;
 
-    public ShapedCompressingRecipe(Identifier id, String group, int width, int height, DefaultedList<Ingredient> ingredients, ItemStack output) {
-        this.id = id;
-        this.group = group;
-        this.width = width;
-        this.height = height;
-        this.ingredients = ingredients;
-        this.output = output;
-    }
+   public ShapedCompressingRecipe(Identifier id, String group, int width, int height, DefaultedList<Ingredient> ingredients, ItemStack output) {
+      this.id = id;
+      this.group = group;
+      this.width = width;
+      this.height = height;
+      this.inputs = ingredients;
+      this.output = output;
+   }
 
-    static DefaultedList<Ingredient> getIngredients(String[] strings_1, Map<String, Ingredient> map_1, int int_1, int int_2) {
-        DefaultedList<Ingredient> defaultedList_1 = DefaultedList.ofSize(int_1 * int_2, Ingredient.EMPTY);
-        Set<String> set_1 = Sets.newHashSet(map_1.keySet());
-        set_1.remove(" ");
+   @Override
+   public Identifier getId() {
+      return this.id;
+   }
 
-        for (int int_3 = 0; int_3 < strings_1.length; ++int_3) {
-            for (int int_4 = 0; int_4 < strings_1[int_3].length(); ++int_4) {
-                String string_1 = strings_1[int_3].substring(int_4, int_4 + 1);
-                Ingredient ingredient_1 = map_1.get(string_1);
-                if (ingredient_1 == null) {
-                    throw new JsonSyntaxException("Pattern references symbol '" + string_1 + "' but it's not defined in the key");
-                }
+   @Override
+   public RecipeSerializer<?> getSerializer() {
+      return GalacticraftRecipe.SHAPED_COMPRESSING_SERIALIZER;
+   }
 
-                set_1.remove(string_1);
-                defaultedList_1.set(int_4 + int_1 * int_3, ingredient_1);
-            }
-        }
+   @Override
+   @Environment(EnvType.CLIENT)
+   public String getGroup() {
+      return this.group;
+   }
 
-        if (!set_1.isEmpty()) {
-            throw new JsonSyntaxException("Key defines symbols that aren't used in pattern: " + set_1);
-        } else {
-            return defaultedList_1;
-        }
-    }
+   @Override
+   public ItemStack getOutput() {
+      return this.output;
+   }
 
-    @VisibleForTesting
-    static String[] combinePattern(String... s) {
-        int j = Integer.MAX_VALUE;
-        int k = 0;
-        int l = 0;
-        int m = 0;
+   @Override
+   public DefaultedList<Ingredient> getPreviewInputs() {
+      return this.inputs;
+   }
 
-        for (int i = 0; i < s.length; ++i) {
-            String string_1 = s[i];
-            j = Math.min(j, findNextIngredient(string_1));
-            int int_6 = findNextIngredientReverse(string_1);
-            k = Math.max(k, int_6);
-            if (int_6 < 0) {
-                if (l == i) {
-                    ++l;
-                }
+   @Override
+   @Environment(EnvType.CLIENT)
+   public boolean fits(int width, int height) {
+      return width >= this.width && height >= this.height;
+   }
 
-                ++m;
-            } else {
-                m = 0;
-            }
-        }
-
-        if (s.length == m) {
-            return new String[0];
-        } else {
-            String[] st = new String[s.length - m - l];
-
-            for (int n = 0; n < st.length; ++n) {
-                st[n] = s[n + l].substring(j, k + 1);
+   @Override
+   public boolean matches(Inventory inv, World world) {
+      if (inv.size() != 9) throw new AssertionError();
+      for(int i = 0; i <= 3 - this.width; ++i) {
+         for(int j = 0; j <= 3 - this.height; ++j) {
+            if (this.matchesSmall(inv, i, j, true)) {
+               return true;
             }
 
-            return st;
-        }
-    }
+            if (this.matchesSmall(inv, i, j, false)) {
+               return true;
+            }
+         }
+      }
 
-    private static int findNextIngredient(String string_1) {
-        int i;
-        i = 0;
-        while (i < string_1.length() && string_1.charAt(i) == ' ') {
-            ++i;
-        }
-        return i;
-    }
+      return false;
+   }
 
-    private static int findNextIngredientReverse(String string_1) {
-        int i;
-        i = string_1.length() - 1;
-        while (i >= 0 && string_1.charAt(i) == ' ') {
-            --i;
-        }
-        return i;
-    }
-
-    static String[] getPattern(JsonArray jsonArray_1) {
-        String[] strings_1 = new String[jsonArray_1.size()];
-        if (strings_1.length > 3) {
-            throw new JsonSyntaxException("Invalid pattern: too many rows, 3 is maximum");
-        } else if (strings_1.length == 0) {
-            throw new JsonSyntaxException("Invalid pattern: empty pattern not allowed");
-        } else {
-            for (int int_1 = 0; int_1 < strings_1.length; ++int_1) {
-                String string_1 = JsonHelper.asString(jsonArray_1.get(int_1), "pattern[" + int_1 + "]");
-                if (string_1.length() > 3) {
-                    throw new JsonSyntaxException("Invalid pattern: too many columns, 3 is maximum");
-                }
-
-                if (int_1 > 0 && strings_1[0].length() != string_1.length()) {
-                    throw new JsonSyntaxException("Invalid pattern: each row must be the same width");
-                }
-
-                strings_1[int_1] = string_1;
+   private boolean matchesSmall(Inventory inv, int offsetX, int offsetY, boolean bl) {
+      if (inv.size() != 9) throw new AssertionError();
+      for(int x = 0; x < 3; ++x) {
+         for(int y = 0; y < 3; ++y) {
+            int k = x - offsetX;
+            int l = y - offsetY;
+            Ingredient ingredient = Ingredient.EMPTY;
+            if (k >= 0 && l >= 0 && k < this.width && l < this.height) {
+               if (bl) {
+                  ingredient = this.inputs.get(this.width - k - 1 + l * this.width);
+               } else {
+                  ingredient = this.inputs.get(k + l * this.width);
+               }
             }
 
-            return strings_1;
-        }
-    }
+            if (!ingredient.test(inv.getStack(x + y * 3))) {
+               return false;
+            }
+         }
+      }
 
-    static Map<String, Ingredient> getComponents(JsonObject jsonObject_1) {
-        Map<String, Ingredient> map_1 = Maps.newHashMap();
+      return true;
+   }
 
-        for (Map.Entry<String, JsonElement> entry : jsonObject_1.entrySet()) {
-            if (entry.getKey().length() != 1) {
-                throw new JsonSyntaxException("Invalid key entry: '" + entry.getKey() + "' is an invalid symbol (must be 1 character only).");
+   @Override
+   public ItemStack craft(Inventory Inventory) {
+      return this.getOutput().copy();
+   }
+
+   public int getWidth() {
+      return this.width;
+   }
+
+   public int getHeight() {
+      return this.height;
+   }
+
+   private static DefaultedList<Ingredient> getIngredients(String[] pattern, Map<String, Ingredient> key, int width, int height) {
+      DefaultedList<Ingredient> defaultedList = DefaultedList.ofSize(width * height, Ingredient.EMPTY);
+      Set<String> set = new HashSet<>(key.keySet());
+      set.remove(" ");
+
+      for(int i = 0; i < pattern.length; ++i) {
+         for(int j = 0; j < pattern[i].length(); ++j) {
+            String string = pattern[i].substring(j, j + 1);
+            Ingredient ingredient = key.get(string);
+            if (ingredient == null) {
+               throw new JsonSyntaxException("Pattern references symbol '" + string + "' but it's not defined in the key");
             }
 
-            if (" ".equals(entry.getKey())) {
-                throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
+            set.remove(string);
+            defaultedList.set(j + width * i, ingredient);
+         }
+      }
+
+      if (!set.isEmpty()) {
+         throw new JsonSyntaxException("Key defines symbols that aren't used in pattern: " + set);
+      } else {
+         return defaultedList;
+      }
+   }
+
+   @VisibleForTesting
+   static String[] combinePattern(String... lines) {
+      int i = Integer.MAX_VALUE;
+      int j = 0;
+      int k = 0;
+      int l = 0;
+
+      for(int m = 0; m < lines.length; ++m) {
+         String string = lines[m];
+         i = Math.min(i, findNextIngredient(string));
+         int n = findNextIngredientReverse(string);
+         j = Math.max(j, n);
+         if (n < 0) {
+            if (k == m) {
+               ++k;
             }
 
-            map_1.put(entry.getKey(), Ingredient.fromJson(entry.getValue()));
-        }
+            ++l;
+         } else {
+            l = 0;
+         }
+      }
 
-        map_1.put(" ", Ingredient.EMPTY);
-        return map_1;
-    }
+      if (lines.length == l) {
+         return new String[0];
+      } else {
+         String[] strings = new String[lines.length - l - k];
 
-    public DefaultedList<Ingredient> getIngredients() {
-        return ingredients;
-    }
+         for(int o = 0; o < strings.length; ++o) {
+            strings[o] = lines[o + k].substring(i, j + 1);
+         }
 
-    public Identifier getId() {
-        return this.id;
-    }
+         return strings;
+      }
+   }
 
-    public RecipeSerializer<?> getSerializer() {
-        return GalacticraftRecipe.SHAPED_COMPRESSING_SERIALIZER;
-    }
+   private static int findNextIngredient(String pattern) {
+      int i = 0;
+      while (i < pattern.length() && pattern.charAt(i) == ' ') {
+         ++i;
+      }
 
-    @Environment(EnvType.CLIENT)
-    public String getGroup() {
-        return this.group;
-    }
+      return i;
+   }
 
-    public ItemStack getOutput() {
-        return this.output;
-    }
+   private static int findNextIngredientReverse(String pattern) {
+      int i = pattern.length() - 1;
+      while (i >= 0 && pattern.charAt(i) == ' ') {
+         --i;
+      }
 
-    public DefaultedList<Ingredient> getPreviewInputs() {
-        return this.ingredients;
-    }
+      return i;
+   }
 
-    @Environment(EnvType.CLIENT)
-    public boolean fits(int int_1, int int_2) {
-        return int_1 >= this.width && int_2 >= this.height;
-    }
-
-    @Override
-    public boolean matches(Inventory inv, World world) {
-        int invWidth = 3;
-        int invHeight = 3;
-
-        for (int x = 0; x <= invWidth - this.width; ++x) {
-            for (int y = 0; y <= invHeight - this.height; ++y) {
-                if (this.matchesSmall(inv, x, y, true)) {
-                    return true;
-                }
-
-                if (this.matchesSmall(inv, x, y, false)) {
-                    return true;
-                }
+   private static String[] getPattern(JsonArray json) {
+      String[] strings = new String[json.size()];
+      if (strings.length > 3) {
+         throw new JsonSyntaxException("Invalid pattern: too many rows, 3 is maximum");
+      } else if (strings.length == 0) {
+         throw new JsonSyntaxException("Invalid pattern: empty pattern not allowed");
+      } else {
+         for(int i = 0; i < strings.length; ++i) {
+            String string = JsonHelper.asString(json.get(i), "pattern[" + i + "]");
+            if (string.length() > 3) {
+               throw new JsonSyntaxException("Invalid pattern: too many columns, 3 is maximum");
             }
-        }
 
-        return false;
-    }
-
-    private boolean matchesSmall(Inventory inv, int int_1, int int_2, boolean boolean_1) {
-        int invWidth = 3;
-        int invHeight = 3;
-
-        for (int int_3 = 0; int_3 < invWidth; ++int_3) {
-            for (int int_4 = 0; int_4 < invHeight; ++int_4) {
-                int int_5 = int_3 - int_1;
-                int int_6 = int_4 - int_2;
-                Ingredient ingredient_1 = Ingredient.EMPTY;
-                if (int_5 >= 0 && int_6 >= 0 && int_5 < this.width && int_6 < this.height) {
-                    if (boolean_1) {
-                        ingredient_1 = this.ingredients.get(this.width - int_5 - 1 + int_6 * this.width);
-                    } else {
-                        ingredient_1 = this.ingredients.get(int_5 + int_6 * this.width);
-                    }
-                }
-
-                if (!ingredient_1.test(inv.getStack(int_3 + int_4 * invWidth))) {
-                    return false;
-                }
+            if (i > 0 && strings[0].length() != string.length()) {
+               throw new JsonSyntaxException("Invalid pattern: each row must be the same width");
             }
-        }
-        return true;
-    }
 
-    @Override
-    public ItemStack craft(Inventory inv) {
-        return this.getOutput().copy();
-    }
+            strings[i] = string;
+         }
 
-    int getWidth() {
-        return this.width;
-    }
+         return strings;
+      }
+   }
 
-    int getHeight() {
-        return this.height;
-    }
+   private static Map<String, Ingredient> getComponents(JsonObject json) {
+      Map<String, Ingredient> map = Maps.newHashMap();
+
+      for (Entry<String, JsonElement> entry : json.entrySet()) {
+         if (entry.getKey().length() != 1) {
+            throw new JsonSyntaxException("Invalid key entry: '" + entry.getKey() + "' is an invalid symbol (must be 1 character only).");
+         }
+
+         if (" ".equals(entry.getKey())) {
+            throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
+         }
+
+         map.put(entry.getKey(), Ingredient.fromJson(entry.getValue()));
+      }
+
+      map.put(" ", Ingredient.EMPTY);
+      return map;
+   }
+
+   public static ItemStack getItemStack(JsonObject json) {
+      String string = JsonHelper.getString(json, "item");
+      Item item = Registry.ITEM.getOrEmpty(new Identifier(string)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + string + "'"));
+      if (json.has("data")) {
+         throw new JsonParseException("Disallowed data tag found");
+      } else {
+         int i = JsonHelper.getInt(json, "count", 1);
+         return new ItemStack(item, i);
+      }
+   }
+
+   public enum Serializer implements RecipeSerializer<ShapedCompressingRecipe> {
+      INSTANCE;
+
+      @Override
+      public ShapedCompressingRecipe read(Identifier id, JsonObject object) {
+         String string = JsonHelper.getString(object, "group", "");
+         Map<String, Ingredient> map = ShapedCompressingRecipe.getComponents(JsonHelper.getObject(object, "key"));
+         String[] pattern = ShapedCompressingRecipe.combinePattern(ShapedCompressingRecipe.getPattern(JsonHelper.getArray(object, "pattern")));
+         int width = pattern[0].length();
+         int height = pattern.length;
+         DefaultedList<Ingredient> defaultedList = ShapedCompressingRecipe.getIngredients(pattern, map, width, height);
+         ItemStack itemStack = ShapedCompressingRecipe.getItemStack(JsonHelper.getObject(object, "result"));
+         return new ShapedCompressingRecipe(id, string, width, height, defaultedList, itemStack);
+      }
+
+      @Override
+      public ShapedCompressingRecipe read(Identifier id, PacketByteBuf buf) {
+         int width = buf.readVarInt();
+         int height = buf.readVarInt();
+         String string = buf.readString(Constant.Misc.MAX_STRING_READ);
+         DefaultedList<Ingredient> ingredients = DefaultedList.ofSize(width * height, Ingredient.EMPTY);
+
+         for(int k = 0; k < ingredients.size(); ++k) {
+            ingredients.set(k, Ingredient.fromPacket(buf));
+         }
+
+         ItemStack output = buf.readItemStack();
+         return new ShapedCompressingRecipe(id, string, width, height, ingredients, output);
+      }
+
+      @Override
+      public void write(PacketByteBuf buf, ShapedCompressingRecipe recipe) {
+         buf.writeVarInt(recipe.width);
+         buf.writeVarInt(recipe.height);
+         buf.writeString(recipe.group);
+
+         for (Ingredient ingredient : recipe.inputs) {
+            ingredient.write(buf);
+         }
+
+         buf.writeItemStack(recipe.output);
+      }
+   }
 }
