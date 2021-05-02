@@ -96,7 +96,7 @@ public final class MoonChunkGenerator extends NoiseChunkGenerator {
                 if (random1.nextDouble() < 0.15f) {
                     BlockPos craterCenter = new BlockPos(cX * 16 + random1.nextInt(15), 75, cZ * 16 + random1.nextInt(15));
                     BlockPos.Mutable mutable = craterCenter.mutableCopy();
-                    double radius = skewRandom(4, 31, random1.nextGaussian(), 1.6, -0.6);
+                    double radius = skewRandom(4, 31, random1.nextGaussian(), 1.8, -0.8);
                     double depthMultiplier = skewRandom(0.3, 1.2, random1.nextGaussian(), 2, 0);
                     boolean fresh = random1.nextInt(15) == 1;
                     for (int innerChunkX = 0; innerChunkX < 16; innerChunkX++) { //iterate through positions in chunk
@@ -129,7 +129,7 @@ public final class MoonChunkGenerator extends NoiseChunkGenerator {
                                     if (!chunk.getBlockState(mutable).isAir() || dug > 0) {
                                         chunk.setBlockState(mutable, CAVE_AIR, false);
                                         if (!fresh && dug + 1 >= toDig)
-                                            chunk.setBlockState(mutable.move(Direction.DOWN), access.getBiome(mutable).getGenerationSettings().getSurfaceConfig().getTopMaterial(), false);
+                                            chunk.setBlockState(mutable.move(Direction.DOWN), GalacticraftBlock.MOON_TURF.getDefaultState(), false);
                                     } else {
                                         dug--;
                                     }

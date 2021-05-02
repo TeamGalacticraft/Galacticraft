@@ -1,7 +1,7 @@
 {
   "depth": -0.5,
-  "scale": 0.03,
-  "downfall": 0.05,
+  "scale": 0.6,
+  "downfall": 0.0,
   "temperature": -100,
   "precipitation": "none",
   "category": "none",
