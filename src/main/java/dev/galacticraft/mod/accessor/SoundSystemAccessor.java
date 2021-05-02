@@ -22,10 +22,11 @@
 
 package dev.galacticraft.mod.accessor;
 
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 @ApiStatus.Internal
 public interface SoundSystemAccessor {
     void gc_updateAtmosphericMultiplier(float multiplier);

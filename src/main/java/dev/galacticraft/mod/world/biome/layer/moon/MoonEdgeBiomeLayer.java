@@ -26,6 +26,9 @@ import dev.galacticraft.mod.world.biome.layer.MoonBiomeLayer;
 import net.minecraft.world.biome.layer.type.CrossSamplingLayer;
 import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public enum MoonEdgeBiomeLayer implements CrossSamplingLayer {
     INSTANCE;
 
