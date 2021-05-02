@@ -20,16 +20,31 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.item;
+package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.api.item.Accessory;
-import net.minecraft.item.Item;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import dev.galacticraft.mod.accessor.GearInventoryProvider;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.network.ServerPlayerEntity;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class AccessoryItem extends Item implements Accessory {
-    public AccessoryItem(Settings settings) {
-        super(settings.maxCount(1));
+@Mixin(ServerPlayerEntity.class)
+public abstract class ServerPlayerEntityMixin implements GearInventoryProvider {
+    private final @Unique FullFixedItemInv gearInv = new FullFixedItemInv(12);
+
+    @Override
+    public FullFixedItemInv getGearInv() {
+        return gearInv;
+    }
+
+    @Override
+    public CompoundTag writeGearToNbt(CompoundTag tag) {
+        return getGearInv().toTag(tag);
+    }
+
+    @Override
+    public void readGearFromNbt(CompoundTag tag) {
+        getGearInv().fromTag(tag);
     }
 }

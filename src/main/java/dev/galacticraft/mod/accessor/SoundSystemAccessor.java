@@ -20,34 +20,13 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.mod.accessor;
 
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
-import dev.galacticraft.mod.accessor.GearInventoryProvider;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.ApiStatus;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-@Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin implements GearInventoryProvider {
-    private final @Unique FullFixedItemInv gearInv = new FullFixedItemInv(12);
-
-    @Override
-    public FullFixedItemInv getGearInv() {
-        return gearInv;
-    }
-
-    @Override
-    public CompoundTag writeGearToNbt(CompoundTag tag) {
-        return getGearInv().toTag(tag);
-    }
-
-    @Override
-    public void readGearFromNbt(CompoundTag tag) {
-        getGearInv().fromTag(tag);
-    }
+@ApiStatus.Internal
+public interface SoundSystemAccessor {
+    void gc_updateAtmosphericMultiplier(float multiplier);
 }
