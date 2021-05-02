@@ -23,28 +23,45 @@
 package dev.galacticraft.mod.mixin;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin implements GearInventoryProvider {
-    private final @Unique FullFixedItemInv gearInv = new FullFixedItemInv(12);
+    private final @Unique FullFixedItemInv gearInv = createGearInv();
+
+    private FullFixedItemInv createGearInv() {
+        FullFixedItemInv inv = new FullFixedItemInv(12);
+        inv.setOwnerListener((invView, slot, prev, cur) -> {
+            ServerPlayNetworking.send(((ServerPlayerEntity) (Object) this), new Identifier(Constant.MOD_ID, "gear_inv_sync"), new PacketByteBuf(Unpooled.buffer().writeInt(((ServerPlayerEntity) (Object) this).getEntityId()).writeByte(slot)).writeItemStack(cur));
+            for (ServerPlayerEntity player : PlayerLookup.tracking(((ServerPlayerEntity) (Object) this))) {
+                ServerPlayNetworking.send(player, new Identifier(Constant.MOD_ID, "gear_inv_sync"), new PacketByteBuf(Unpooled.buffer().writeInt(((ServerPlayerEntity) (Object) this).getEntityId()).writeByte(slot)).writeItemStack(cur));
+            }
+        });
+        return inv;
+    }
 
     @Override
     public FullFixedItemInv getGearInv() {
-        return gearInv;
+        return this.gearInv;
     }
 
     @Override
     public CompoundTag writeGearToNbt(CompoundTag tag) {
-        return getGearInv().toTag(tag);
+        return this.getGearInv().toTag(tag);
     }
 
     @Override
     public void readGearFromNbt(CompoundTag tag) {
-        getGearInv().fromTag(tag);
+        this.getGearInv().fromTag(tag);
     }
 }

@@ -15,6 +15,7 @@
     "LanternBlockMixin",
     "LivingEntityMixin",
     "LootTablesAccessor",
+    "PlayerManagerMixin",
     "ProtoChunkMixin",
     "ServerPlayerEntityMixin",
     "ServerWorldMixin",
