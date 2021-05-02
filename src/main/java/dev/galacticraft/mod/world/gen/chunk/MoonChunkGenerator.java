@@ -27,46 +27,26 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.structure.GalacticraftStructure;
 import dev.galacticraft.mod.world.biome.source.MoonBiomeSource;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
-import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.JigsawJunction;
-import net.minecraft.structure.PoolStructurePiece;
-import net.minecraft.structure.StructurePiece;
-import net.minecraft.structure.pool.StructurePool;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.noise.NoiseSampler;
-import net.minecraft.util.math.noise.OctavePerlinNoiseSampler;
-import net.minecraft.util.math.noise.OctaveSimplexNoiseSampler;
-import net.minecraft.util.math.noise.PerlinNoiseSampler;
-import net.minecraft.world.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
-import net.minecraft.world.chunk.ProtoChunk;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.*;
-import net.minecraft.world.gen.feature.StructureFeature;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.IntStream;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -81,6 +61,7 @@ public final class MoonChunkGenerator extends NoiseChunkGenerator {
                     4, 2, 1.0D, -0.46875D, true,
                     true, false, false),
             GalacticraftBlock.MOON_ROCKS[0].getDefaultState(), Blocks.AIR.getDefaultState(), -10, 0, 1, false);
+    private static final BlockState CAVE_AIR = Blocks.CAVE_AIR.getDefaultState();
 
     private final long seed;
 
@@ -106,6 +87,62 @@ public final class MoonChunkGenerator extends NoiseChunkGenerator {
     }
 
     @Override
+    public void carve(long seed, BiomeAccess access, Chunk chunk, GenerationStep.Carver carver) {
+        super.carve(seed, access, chunk, carver);
+        for (int cX = -2; cX < 3; cX++) {
+            for (int cZ = -2; cZ < 3; cZ++) {
+                ChunkRandom random1 = new ChunkRandom();
+                random1.setCarverSeed(seed, chunk.getPos().x + cX, chunk.getPos().z + cZ);
+                if (random1.nextDouble() < 0.15f) {
+                    BlockPos craterCenter = new BlockPos(cX * 16 + random1.nextInt(15), 75, cZ * 16 + random1.nextInt(15));
+                    BlockPos.Mutable mutable = craterCenter.mutableCopy();
+                    double radius = skewRandom(4, 31, random1.nextGaussian(), 1.6, -0.6);
+                    double depthMultiplier = skewRandom(0.3, 1.2, random1.nextGaussian(), 2, 0);
+                    boolean fresh = random1.nextInt(15) == 1;
+                    for (int innerChunkX = 0; innerChunkX < 16; innerChunkX++) { //iterate through positions in chunk
+                        for (int innerChunkZ = 0; innerChunkZ < 16; innerChunkZ++) {
+                            double toDig = 0;
+
+                            double xDev = Math.abs(innerChunkX - craterCenter.getX());
+                            double zDev = Math.abs(innerChunkZ - craterCenter.getZ());
+                            if (xDev >= 0 && xDev < 32 && zDev >= 0 && zDev < 32) {
+                                if (xDev * xDev + zDev * zDev < radius * radius) { //distance to crater and depth
+                                    xDev /= radius;
+                                    zDev /= radius;
+                                    final double sqrtY = xDev * xDev + zDev * zDev;
+                                    double yDev = sqrtY * sqrtY * 6;
+                                    double craterDepth = 5 - yDev;
+                                    craterDepth *= depthMultiplier;
+                                    if (craterDepth > 0.0) {
+                                        toDig = craterDepth;
+                                    }
+                                }
+
+                                if (toDig >= 1) {
+                                    toDig++; // Increase crater depth, but for sum, not each crater
+                                    if (fresh) toDig++; // Dig one more block, because we're not replacing the top with turf
+                                }
+
+                                mutable.set(innerChunkX, 128, innerChunkZ);
+                                for (int dug = 0; dug < toDig; dug++) {
+                                    mutable.move(Direction.DOWN);
+                                    if (!chunk.getBlockState(mutable).isAir() || dug > 0) {
+                                        chunk.setBlockState(mutable, CAVE_AIR, false);
+                                        if (!fresh && dug + 1 >= toDig)
+                                            chunk.setBlockState(mutable.move(Direction.DOWN), access.getBiome(mutable).getGenerationSettings().getSurfaceConfig().getTopMaterial(), false);
+                                    } else {
+                                        dug--;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     public int getSpawnHeight() {
         return 80;
     }
@@ -123,5 +160,11 @@ public final class MoonChunkGenerator extends NoiseChunkGenerator {
         }
 
         return super.getEntitySpawnList(biome, accessor, group, pos);
+    }
+
+    private static double skewRandom(double min, double max, double gaussian, double skew, double bias) {
+        double range = max - min;
+        double biasFactor = Math.exp(bias);
+        return (min + range / 2.0) + (range * (biasFactor / (biasFactor + Math.exp(-gaussian / skew)) - 0.5));
     }
 }
