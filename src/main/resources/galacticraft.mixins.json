@@ -26,6 +26,7 @@
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",
+    "client.AlphaWarningTitleScreenMixin",
     "client.ClientChunkSectionMixin",
     "client.HandledScreenAccessor",
     "client.InGameHudMixin",
