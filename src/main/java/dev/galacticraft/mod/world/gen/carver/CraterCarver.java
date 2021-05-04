@@ -42,6 +42,9 @@ import java.util.BitSet;
 import java.util.Random;
 import java.util.function.Function;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class CraterCarver extends Carver<ProbabilityConfig> {
     public CraterCarver(int heightLimit) {
         this(ProbabilityConfig.CODEC, heightLimit);

@@ -20,16 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.item;
+package dev.galacticraft.mod.accessor;
 
-import dev.galacticraft.mod.api.item.Accessory;
-import net.minecraft.item.Item;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class AccessoryItem extends Item implements Accessory {
-    public AccessoryItem(Settings settings) {
-        super(settings.maxCount(1));
-    }
+@ApiStatus.Internal
+public interface SoundSystemAccessor {
+    void gc_updateAtmosphericMultiplier(float multiplier);
 }

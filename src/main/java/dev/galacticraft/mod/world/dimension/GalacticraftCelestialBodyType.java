@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.world.dimension;
 
+import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericInfo;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyDisplayInfo;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
@@ -37,13 +38,17 @@ public class GalacticraftCelestialBodyType {
             .world(GalacticraftDimension.MOON)
             .parent(CelestialBodyType.EARTH)
             .weight(1)
-            .gravity(0.16f)
+            .gravity(0.165f)
             .display(
                     new CelestialBodyDisplayInfo.Builder()
                             .texture(new Identifier("galacticraft", "planet_icons"))
                             .distance(5)
                             .time(46656000d) // 27 mc days in ticks
                             .build()
+            ).atmosphere(
+                    new AtmosphericInfo.Builder()
+                            .pressure(3.0E-15f)
+                            .temperature(25.0f).build()
             )
             .build();
 

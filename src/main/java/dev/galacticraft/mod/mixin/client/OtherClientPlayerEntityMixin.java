@@ -20,44 +20,42 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.biome.layer.moon;
+package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.world.biome.layer.MoonBiomeLayer;
-import net.minecraft.world.biome.layer.type.CrossSamplingLayer;
-import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.mod.accessor.GearInventoryProvider;
+import dev.galacticraft.mod.accessor.SoundSystemAccessor;
+import dev.galacticraft.mod.item.GalacticraftItems;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.network.OtherClientPlayerEntity;
+import net.minecraft.nbt.CompoundTag;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public enum MoonEdgeBiomeLayer implements CrossSamplingLayer {
-    INSTANCE;
+@Environment(EnvType.CLIENT)
+@Mixin(OtherClientPlayerEntity.class)
+public abstract class OtherClientPlayerEntityMixin implements GearInventoryProvider {
+    private final @Unique FullFixedItemInv gearInv = new FullFixedItemInv(12);
 
     @Override
-    public int sample(LayerRandomnessSource context, int n, int e, int s, int w, int center) {
-        int mare = 0;
-        int highland = 0;
-        if (isMare(n)) mare++;
-        else if (isHighland(n)) highland++;
-        if (isMare(s)) mare++;
-        else if (isHighland(n)) highland++;
-        if (isMare(e)) mare++;
-        else if (isHighland(n)) highland++;
-        if (isMare(w)) mare++;
-        else if (isHighland(n)) highland++;
-        if (mare > 0 && mare < 4 && highland > 0) {
-            if (isMare(center)) {
-                return MoonBiomeLayer.MOON_MARE_EDGE_ID;
-            }
-            return MoonBiomeLayer.MOON_HIGHLANDS_EDGE_ID;
-        }
-        return center;
+    public FullFixedItemInv getGearInv() {
+        return this.gearInv;
     }
 
-    private static boolean isMare(int id) {
-        return id == MoonBiomeLayer.MOON_MARE_ID;
+    @Override
+    public CompoundTag writeGearToNbt(CompoundTag tag) {
+        return this.getGearInv().toTag(tag);
     }
 
-    private static boolean isHighland(int id) {
-        return id == MoonBiomeLayer.MOON_HIGHLANDS_ID;
+    @Override
+    public void readGearFromNbt(CompoundTag tag) {
+        this.getGearInv().fromTag(tag);
     }
 }
