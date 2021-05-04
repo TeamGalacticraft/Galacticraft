@@ -1,5 +1,5 @@
 {
-  "type": "galacticraft:circuit_fabricator",
+  "type": "galacticraft:fabrication",
   "ingredient": {
     "item": "minecraft:lapis_lazuli"
   },

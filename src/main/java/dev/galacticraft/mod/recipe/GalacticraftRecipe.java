@@ -23,8 +23,6 @@
 package dev.galacticraft.mod.recipe;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -33,31 +31,13 @@ import net.minecraft.util.registry.Registry;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftRecipe {
-    public static RecipeType<FabricationRecipe> FABRICATION_TYPE;
-    public static RecipeType<CompressingRecipe> COMPRESSING_TYPE;
-    static FabricationRecipeSerializer<FabricationRecipe> FABRICATION_SERIALIZER;
-    static ShapelessCompressingRecipeSerializer<ShapelessCompressingRecipe> SHAPELESS_COMPRESSING_SERIALIZER;
-    static ShapedCompressingRecipeSerializer<ShapedCompressingRecipe> SHAPED_COMPRESSING_SERIALIZER;
+    public static final RecipeType<FabricationRecipe> FABRICATION_TYPE = Registry.register(Registry.RECIPE_TYPE, new Identifier(Constant.MOD_ID, Constant.Recipe.FABRICATION), new GalacticraftRecipeType<>());
+    public static final RecipeType<CompressingRecipe> COMPRESSING_TYPE = Registry.register(Registry.RECIPE_TYPE, new Identifier(Constant.MOD_ID, Constant.Recipe.COMPRESSING), new GalacticraftRecipeType<>());
+
+    public static final FabricationRecipe.Serializer FABRICATION_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.FABRICATION), FabricationRecipe.Serializer.INSTANCE);
+    public static final ShapelessCompressingRecipe.Serializer SHAPELESS_COMPRESSING_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPELESS), ShapelessCompressingRecipe.Serializer.INSTANCE);
+    public static final ShapedCompressingRecipe.Serializer SHAPED_COMPRESSING_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPED), ShapedCompressingRecipe.Serializer.INSTANCE);
 
     public static void register() {
-        // Circuit fabricator recipe stuff
-        FABRICATION_TYPE = registerType("circuit_fabricator");
-        FABRICATION_SERIALIZER = registerSerializer("circuit_fabricator", new FabricationRecipeSerializer<>(FabricationRecipe::new));
-
-        COMPRESSING_TYPE = registerType("compressing");
-        SHAPELESS_COMPRESSING_SERIALIZER = registerSerializer("compressing_shapeless", new ShapelessCompressingRecipeSerializer<>(ShapelessCompressingRecipe::new));
-        SHAPED_COMPRESSING_SERIALIZER = registerSerializer("compressing_shaped", new ShapedCompressingRecipeSerializer<>(ShapedCompressingRecipe::new));
-    }
-
-    private static <T extends Recipe<?>> RecipeType<T> registerType(String id) {
-        return Registry.register(Registry.RECIPE_TYPE, new Identifier(Constant.MOD_ID, id), new RecipeType<T>() {
-            public String toString() {
-                return id;
-            }
-        });
-    }
-
-    private static <S extends RecipeSerializer<T>, T extends Recipe<?>> S registerSerializer(String id, S serializer) {
-        return Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, id), serializer);
     }
 }

@@ -33,6 +33,7 @@ import net.minecraft.world.gen.carver.Carver;
  */
 public class GalacticraftCarver {
     public static final Carver<ProbabilityConfig> LUNAR_CAVE = Registry.register(Registry.CARVER, new Identifier(Constant.MOD_ID, "lunar_cave"), new LunarCaveCarver(ProbabilityConfig.CODEC, 128));
+    public static final Carver<ProbabilityConfig> CRATER = Registry.register(Registry.CARVER, new Identifier(Constant.MOD_ID, "crater"), new CraterCarver(128));
 
     public static void register() {
     }

@@ -22,22 +22,21 @@
 
 package dev.galacticraft.mod.world.biome.layer.moon;
 
-import net.minecraft.world.biome.layer.type.MergingLayer;
-import net.minecraft.world.biome.layer.util.IdentityCoordinateTransformer;
+import dev.galacticraft.mod.world.biome.layer.MoonBiomeLayer;
+import net.minecraft.world.biome.layer.type.InitLayer;
 import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
-import net.minecraft.world.biome.layer.util.LayerSampler;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public enum MoonMergeLayer implements MergingLayer, IdentityCoordinateTransformer {
+public enum MoonBaseBiomeLayer implements InitLayer {
     INSTANCE;
 
-    @Override
-    public int sample(LayerRandomnessSource context, LayerSampler sampler1, LayerSampler sampler2, int x, int z) {
-        int id1 = sampler1.sample(this.transformX(x), this.transformZ(z));
-        int id2 = sampler2.sample(this.transformX(x), this.transformZ(z));
-
-        return context.nextInt(10) <= 3 ? id2 : id1;
+    public int sample(LayerRandomnessSource context, int x, int y) {
+        if (context.getNoiseSampler().sample((double)x / 8.0D, (double)y / 8.0D, 0.0D, 0.0D, 0.0D) <= -0.2D) {
+            return MoonBiomeLayer.MOON_MARE_ID;
+        } else {
+            return MoonBiomeLayer.MOON_HIGHLANDS_ID;
+        }
     }
 }

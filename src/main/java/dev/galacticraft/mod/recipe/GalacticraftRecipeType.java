@@ -20,24 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.biome.layer.moon;
+package dev.galacticraft.mod.recipe;
 
-import dev.galacticraft.mod.world.biome.layer.MoonBiomeLayer;
-import net.minecraft.world.biome.layer.type.InitLayer;
-import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeType;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public enum MoonHighlandsBiomeLayer implements InitLayer {
-    INSTANCE;
-
-    public int sample(LayerRandomnessSource context, int x, int y) {
-        int i = context.nextInt(10);
-        if (i <= 9) {
-            return MoonBiomeLayer.MOON_HIGHLANDS_PLAINS_ID;
-        } else {
-            return MoonBiomeLayer.MOON_HIGHLANDS_ROCKS_ID;
-        }
+public class GalacticraftRecipeType<C extends Inventory, T extends Recipe<C>> implements RecipeType<T> {
+    @Override
+    public String toString() {
+        Identifier id = Registry.RECIPE_TYPE.getId(this);
+        return id == null ? "Unregistered RecipeType" : id.toString();
     }
 }
