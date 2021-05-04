@@ -25,7 +25,7 @@ public class CapesLoader {
             try {
                 PLAYERS = gson.fromJson(
                         IOUtils.toString(
-                                new URL("https://raw.githubusercontent.com/StellarHorizons/Galacticraft-Rewoven/main/capes.json"),
+                                new URL("https://raw.githubusercontent.com/TeamGalacticraft/Galacticraft/main/capes.json"),
                                 Charset.defaultCharset()
                         ),
                         Map.class
