@@ -21,7 +21,7 @@ public class CapesLoader {
         Util.getMainWorkerExecutor().execute(() -> {
             long startLoad = System.currentTimeMillis();
             Gson gson = new GsonBuilder().create();
-            Galacticraft.LOGGER.info("[Galacticraft] Loading capes data...");
+            Galacticraft.LOGGER.info("Loading capes data...");
             try {
                 PLAYERS = gson.fromJson(
                         IOUtils.toString(
@@ -31,9 +31,9 @@ public class CapesLoader {
                         Map.class
                 );
             } catch (IOException e) {
-                Galacticraft.LOGGER.warn("[Galacticraft] Failed to load capes.", e);
+                Galacticraft.LOGGER.warn("Failed to load capes.", e);
             }
-            Galacticraft.LOGGER.info("[Galacticraft] Loaded capes for {} players. (Took {}ms)", PLAYERS.size(), System.currentTimeMillis()-startLoad);
+            Galacticraft.LOGGER.info("Loaded capes for {} players. (Took {}ms)", PLAYERS.size(), System.currentTimeMillis()-startLoad);
         });
     }
 }
