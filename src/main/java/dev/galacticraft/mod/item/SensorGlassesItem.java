@@ -30,6 +30,6 @@ import net.minecraft.item.Item;
 public class SensorGlassesItem extends AccessoryItem {
     // note: this exists to make rendering on a head easier
     public SensorGlassesItem(Item.Settings settings) {
-        super(settings);
+        super(settings.maxCount(1));
     }
 }

@@ -1,0 +1,15 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraft:oxygen_mask"
+    },
+    {
+      "item": "minecraft:purple_dye"
+    }
+  ],
+  "result": {
+    "item": "galacticraft:purple_oxygen_mask",
+    "count": 1
+  }
+}
