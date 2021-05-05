@@ -24,53 +24,38 @@ package dev.galacticraft.mod.misc.cape;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dev.galacticraft.mod.api.cape.CapeListener;
-import dev.galacticraft.mod.api.cape.model.CapeModel;
+import dev.galacticraft.mod.Galacticraft;
+import net.minecraft.util.Util;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CapeLoader {
+public class CapesLoader {
+    public static Map PLAYERS;
 
-    private final List<CapeListener> listeners;
-    private final Gson gson = new GsonBuilder().create();
-
-    public CapeLoader() {
-        this.listeners = new ArrayList<>();
-    }
-
-    public boolean register(CapeListener listener) {
-        if (!this.listeners.contains(listener)) {
-            this.listeners.add(listener);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void load() {
-        new Thread(() -> {
-            CapeModel capeModel = null;
+    public static void load() {
+        Util.getMainWorkerExecutor().execute(() -> {
+            long startLoad = System.currentTimeMillis();
+            Gson gson = new GsonBuilder().create();
+            Galacticraft.LOGGER.info("Loading capes data...");
             try {
-                capeModel = this.gson.fromJson(IOUtils.toString(new URL("https://raw.githubusercontent.com/StellarHorizons/Galacticraft/master/capes.json"), Charset.defaultCharset()), CapeModel.class);
+                PLAYERS = gson.fromJson(
+                        IOUtils.toString(
+                                new URL("https://raw.githubusercontent.com/TeamGalacticraft/Galacticraft/main/capes.json"),
+                                Charset.defaultCharset()
+                        ),
+                        Map.class
+                );
             } catch (IOException e) {
-                Thread.currentThread().interrupt();
+                Galacticraft.LOGGER.warn("Failed to load capes.", e);
             }
-
-            while (!Thread.currentThread().isInterrupted()) {
-                if (capeModel != null) {
-                    CapeModel finalCapeModel = capeModel;
-                    this.listeners.forEach(l -> l.loadCapes(finalCapeModel));
-                    Thread.currentThread().interrupt();
-                }
-            }
-        }, "capeLoader").start();
+            Galacticraft.LOGGER.info("Loaded capes for {} players. (Took {}ms)", PLAYERS.size(), System.currentTimeMillis()-startLoad);
+        });
     }
 }
