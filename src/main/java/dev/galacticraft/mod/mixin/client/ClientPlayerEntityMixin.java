@@ -23,36 +23,29 @@
 package dev.galacticraft.mod.mixin.client;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.api.celestialbody.CelestialBodyType;
 import dev.galacticraft.api.entity.Rocket;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.GalacticraftClient;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.accessor.SoundSystemAccessor;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.input.Input;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -66,13 +59,13 @@ public abstract class ClientPlayerEntityMixin implements GearInventoryProvider {
     private FullFixedItemInv createInv() {
         FullFixedItemInv inv = new FullFixedItemInv(12);
         inv.setOwnerListener((invView, slot, prev, current) -> {
-            if (current.getItem() == GalacticraftItems.FREQUENCY_MODULE) {
+            if (current.getItem() == GalacticraftItem.FREQUENCY_MODULE) {
                 ((SoundSystemAccessor) MinecraftClient.getInstance().getSoundManager().soundSystem).gc_updateAtmosphericMultiplier(1.0f);
-            } else if (prev.getItem() == GalacticraftItems.FREQUENCY_MODULE) {
+            } else if (prev.getItem() == GalacticraftItem.FREQUENCY_MODULE) {
                 boolean hasFreqModule = false;
                 for (int i = 0; i < invView.getSlotCount(); i++) {
                     if (i == slot) continue;
-                    if (invView.getInvStack(i).getItem() == GalacticraftItems.FREQUENCY_MODULE) {
+                    if (invView.getInvStack(i).getItem() == GalacticraftItem.FREQUENCY_MODULE) {
                         ((SoundSystemAccessor) MinecraftClient.getInstance().getSoundManager().soundSystem).gc_updateAtmosphericMultiplier(1.0f);
                         hasFreqModule = true;
                         break;
@@ -80,7 +73,7 @@ public abstract class ClientPlayerEntityMixin implements GearInventoryProvider {
                 }
                 if (!hasFreqModule) {
                     ((SoundSystemAccessor) MinecraftClient.getInstance().getSoundManager().soundSystem)
-                            .gc_updateAtmosphericMultiplier(CelestialBodyType.getByDimType(MinecraftClient.getInstance().world.getRegistryKey())
+                            .gc_updateAtmosphericMultiplier(CelestialBodyType.getByDimType(MinecraftClient.getInstance().world.getRegistryManager(), MinecraftClient.getInstance().world.getRegistryKey())
                                     .map(body -> body.getAtmosphere().getPressure()).orElse(1.0f));
                 }
             }
