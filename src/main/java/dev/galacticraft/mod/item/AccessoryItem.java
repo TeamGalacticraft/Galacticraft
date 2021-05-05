@@ -30,6 +30,6 @@ import net.minecraft.item.Item;
  */
 public class AccessoryItem extends Item implements Accessory {
     public AccessoryItem(Settings settings) {
-        super(settings);
+        super(settings.maxCount(1));
     }
 }

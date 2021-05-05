@@ -57,28 +57,28 @@ public class GalacticraftSound {
     public static final SoundEvent MUSIC_LEGACY_SPACERACE = new SoundEvent(new Identifier(Constant.MOD_ID, "music.legacy.spacerace"));
 
     public static void register() {
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "music.music_moon"), MUSIC_MOON);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "music.music_credits"), MUSIC_CREDITS);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "music.music_orbit"), MUSIC_ORBIT);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "music.music_mars"), MUSIC_MARS);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "player.unlockchest"), PLAYER_UNLOCKCHEST);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "player.parachute"), PLAYER_PARACHUTE);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "player.openairlock"), PLAYER_OPENAIRLOCK);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "player.closeairlock"), PLAYER_CLOSEAIRLOCK);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "entity.slime_death"), ENTITY_SLIME_DEATH);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "entity.ooh"), ENTITY_OOH);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "entity.ouch"), ENTITY_OUCH);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "entity.bosslaugh"), ENTITY_BOSSLAUGH);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "entity.bossdeath"), ENTITY_BOSSDEATH);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "entity.astrominer"), ENTITY_ASTROMINER);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "ambience.singledrip"), AMBIENCE_SINGLEDRIP);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "ambience.scaryscape"), AMBIENCE_SCARYSCAPE);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "shuttle.shuttle"), SHUTTLE_SHUTTLE);
+        Registry.register(Registry.SOUND_EVENT, MUSIC_MOON.getId(), MUSIC_MOON);
+        Registry.register(Registry.SOUND_EVENT, MUSIC_CREDITS.getId(), MUSIC_CREDITS);
+        Registry.register(Registry.SOUND_EVENT, MUSIC_ORBIT.getId(), MUSIC_ORBIT);
+        Registry.register(Registry.SOUND_EVENT, MUSIC_MARS.getId(), MUSIC_MARS);
+        Registry.register(Registry.SOUND_EVENT, PLAYER_UNLOCKCHEST.getId(), PLAYER_UNLOCKCHEST);
+        Registry.register(Registry.SOUND_EVENT, PLAYER_PARACHUTE.getId(), PLAYER_PARACHUTE);
+        Registry.register(Registry.SOUND_EVENT, PLAYER_OPENAIRLOCK.getId(), PLAYER_OPENAIRLOCK);
+        Registry.register(Registry.SOUND_EVENT, PLAYER_CLOSEAIRLOCK.getId(), PLAYER_CLOSEAIRLOCK);
+        Registry.register(Registry.SOUND_EVENT, ENTITY_SLIME_DEATH.getId(), ENTITY_SLIME_DEATH);
+        Registry.register(Registry.SOUND_EVENT, ENTITY_OOH.getId(), ENTITY_OOH);
+        Registry.register(Registry.SOUND_EVENT, ENTITY_OUCH.getId(), ENTITY_OUCH);
+        Registry.register(Registry.SOUND_EVENT, ENTITY_BOSSLAUGH.getId(), ENTITY_BOSSLAUGH);
+        Registry.register(Registry.SOUND_EVENT, ENTITY_BOSSDEATH.getId(), ENTITY_BOSSDEATH);
+        Registry.register(Registry.SOUND_EVENT, ENTITY_ASTROMINER.getId(), ENTITY_ASTROMINER);
+        Registry.register(Registry.SOUND_EVENT, AMBIENCE_SINGLEDRIP.getId(), AMBIENCE_SINGLEDRIP);
+        Registry.register(Registry.SOUND_EVENT, AMBIENCE_SCARYSCAPE.getId(), AMBIENCE_SCARYSCAPE);
+        Registry.register(Registry.SOUND_EVENT, SHUTTLE_SHUTTLE.getId(), SHUTTLE_SHUTTLE);
 
         // Legacy Discs
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "music.legacy.mars"), MUSIC_LEGACY_MARS);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "music.legacy.mimas"), MUSIC_LEGACY_MIMAS);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "music.legacy.orbit"), MUSIC_LEGACY_ORBIT);
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constant.MOD_ID, "music.legacy.spacerace"), MUSIC_LEGACY_SPACERACE);
+        Registry.register(Registry.SOUND_EVENT, MUSIC_LEGACY_MARS.getId(), MUSIC_LEGACY_MARS);
+        Registry.register(Registry.SOUND_EVENT, MUSIC_LEGACY_MIMAS.getId(), MUSIC_LEGACY_MIMAS);
+        Registry.register(Registry.SOUND_EVENT, MUSIC_LEGACY_ORBIT.getId(), MUSIC_LEGACY_ORBIT);
+        Registry.register(Registry.SOUND_EVENT, MUSIC_LEGACY_SPACERACE.getId(), MUSIC_LEGACY_SPACERACE);
     }
 }

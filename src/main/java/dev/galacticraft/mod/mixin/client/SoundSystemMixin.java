@@ -22,36 +22,53 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.misc.cape.CapesLoader;
+import dev.galacticraft.mod.accessor.SoundSystemAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.client.sound.SoundInstance;
+import net.minecraft.client.sound.SoundListener;
+import net.minecraft.client.sound.SoundSystem;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.math.MathHelper;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
+@Mixin(SoundSystem.class)
 @Environment(EnvType.CLIENT)
-@Mixin(AbstractClientPlayerEntity.class)
-public abstract class AbstractClientPlayerEntityMixin {
-    @Shadow @Nullable protected abstract PlayerListEntry getPlayerListEntry();
+public abstract class SoundSystemMixin implements SoundSystemAccessor {
+    @Shadow public abstract void updateSoundVolume(SoundCategory soundCategory, float volume);
 
-    @Inject(method = "getCapeTexture", at = @At("RETURN"), cancellable = true)
-    private void getCapeTexture(CallbackInfoReturnable<Identifier> info) {
-        if(CapesLoader.PLAYERS != null) {
-            if(CapesLoader.PLAYERS.containsKey(this.getPlayerListEntry().getProfile().getId().toString())) {
-                info.setReturnValue(new Identifier(
-                        Constant.MOD_ID,
-                        "textures/cape/cape_" + CapesLoader.PLAYERS.get(this.getPlayerListEntry().getProfile().getId()) + ".png"));
-            }
+    @Shadow @Final private SoundListener listener;
+    @Unique
+    private float multiplier = 1.0f;
+
+    @Inject(method = "getAdjustedVolume", at = @At("RETURN"), cancellable = true)
+    private void adjustVolumeToAtmosphereGC(SoundInstance soundInstance, CallbackInfoReturnable<Float> cir) {
+        if (multiplier != 1.0f) {
+            cir.setReturnValue(MathHelper.clamp(cir.getReturnValueF() * this.multiplier, 0.0f, 2.0f));
         }
+    }
+
+    @Redirect(method = "play(Lnet/minecraft/client/sound/SoundInstance;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sound/SoundInstance;shouldAlwaysPlay()Z", ordinal = 0))
+    private boolean gc_shouldAlwaysPlay(SoundInstance soundInstance) {
+        if (this.multiplier != 1.0f) {
+            return true;
+        }
+        return soundInstance.shouldAlwaysPlay();
+    }
+
+    @Override
+    public void gc_updateAtmosphericMultiplier(float multiplier) {
+        this.multiplier = multiplier;
+        this.updateSoundVolume(null, this.listener.getVolume());
     }
 }

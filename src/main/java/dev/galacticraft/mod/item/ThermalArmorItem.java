@@ -41,7 +41,7 @@ public class ThermalArmorItem extends Item {
     private final EquipmentSlot slotType;
 
     public ThermalArmorItem(Settings settings, EquipmentSlot slotType) {
-        super(settings);
+        super(settings.maxCount(1));
         this.slotType = slotType;
     }
 

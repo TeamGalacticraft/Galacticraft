@@ -20,21 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.cape.model;
+package dev.galacticraft.mod.accessor;
 
-import java.util.List;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CapeModel {
-    private final List<CapePlayer> players;
-
-    public CapeModel(List<CapePlayer> players) {
-        this.players = players;
-    }
-
-    public List<CapePlayer> getPlayers() {
-        return this.players;
-    }
+@ApiStatus.Internal
+public interface SoundSystemAccessor {
+    void gc_updateAtmosphericMultiplier(float multiplier);
 }
