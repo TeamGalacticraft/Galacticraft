@@ -45,7 +45,7 @@ import net.minecraft.util.math.Quaternion;
  */
 @Environment(EnvType.CLIENT)
 public class FrequencyModuleFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
-    private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.GEAR);
+    private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.FREQUENCY_MODULE);
     public final ModelTransformer<T> freqModuleTransforms;
     public final ModelPart freqModule;
 
@@ -53,7 +53,7 @@ public class FrequencyModuleFeatureRenderer<T extends Entity, M extends EntityMo
         super(context);
         this.freqModuleTransforms = freqModuleTransforms;
 
-        this.freqModule = new ModelPart(Constant.FeatureRendererTexture.GEAR_WIDTH, Constant.FeatureRendererTexture.GEAR_HEIGHT, 40, 0);
+        this.freqModule = new ModelPart(Constant.FeatureRendererTexture.FREQUENCY_MODULE_WIDTH, Constant.FeatureRendererTexture.FREQUENCY_MODULE_HEIGHT, 0, 0);
         this.freqModule.setPivot(0.0F, 0.0F, 0.0F);
         this.freqModule.addCuboid(-8.0F, -16.0F, 0.0F, 1, 9, 1, extra);
     }

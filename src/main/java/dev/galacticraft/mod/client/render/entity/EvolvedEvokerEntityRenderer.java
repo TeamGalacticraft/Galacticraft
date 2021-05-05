@@ -37,7 +37,7 @@ public class EvolvedEvokerEntityRenderer extends EvokerEntityRenderer<EvolvedEvo
     public EvolvedEvokerEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher);
         this.addFeature(new OxygenMaskFeatureRenderer<>(this, 1.0F,
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.translate(0.0F, -0.1F, 0.0F)));
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> stack.translate(0.0F, -0.1F, 0.0F), null));
         this.addFeature(new LeftOxygenTankFeatureRenderer<>(this, 0.0F,
                 (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}, OxygenTankTextureOffset.HEAVY_TANK));
         this.addFeature(new RightOxygenTankFeatureRenderer<>(this, 0.0F,

@@ -39,7 +39,7 @@ public class EvolvedSkeletonEntityRenderer extends SkeletonEntityRenderer {
                 (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
                     stack.translate(0.0F, -0.4F, 0.0F);
                     stack.scale(0.9F, 0.9F, 0.9F);
-                }));
+                }, null));
         this.addFeature(new LeftOxygenTankFeatureRenderer<>(this, 0.0F,
                 (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}, OxygenTankTextureOffset.HEAVY_TANK));
         this.addFeature(new RightOxygenTankFeatureRenderer<>(this, 0.0F,

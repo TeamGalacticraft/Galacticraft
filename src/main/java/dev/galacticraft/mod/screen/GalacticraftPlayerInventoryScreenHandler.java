@@ -98,7 +98,24 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
             });
         }
 
-        this.addSlot(new ItemSpecificSlot(inventory, 4, 80, 8, GalacticraftItems.OXYGEN_MASK) {
+        this.addSlot(new ItemSpecificSlot(inventory, 4, 80, 8,
+                GalacticraftItems.OXYGEN_MASK,
+                GalacticraftItems.WHITE_OXYGEN_MASK,
+                GalacticraftItems.GREY_OXYGEN_MASK,
+                GalacticraftItems.BLACK_OXYGEN_MASK,
+                GalacticraftItems.ORANGE_OXYGEN_MASK,
+                GalacticraftItems.MAGENTA_OXYGEN_MASK,
+                GalacticraftItems.LIGHT_BLUE_OXYGEN_MASK,
+                GalacticraftItems.YELLOW_OXYGEN_MASK,
+                GalacticraftItems.LIME_OXYGEN_MASK,
+                GalacticraftItems.PINK_OXYGEN_MASK,
+                GalacticraftItems.LIGHT_GREY_OXYGEN_MASK,
+                GalacticraftItems.CYAN_OXYGEN_MASK,
+                GalacticraftItems.PURPLE_OXYGEN_MASK,
+                GalacticraftItems.BLUE_OXYGEN_MASK,
+                GalacticraftItems.BROWN_OXYGEN_MASK,
+                GalacticraftItems.GREEN_OXYGEN_MASK,
+                GalacticraftItems.RED_OXYGEN_MASK) {
             @Override
             public Pair<Identifier, Identifier> getBackgroundSprite() {
                 return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_MASK));

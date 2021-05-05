@@ -355,6 +355,23 @@ public interface Constant {
         String BLACK_PARACHUTE = "black_parachute";
 
         String OXYGEN_MASK = "oxygen_mask";
+        String WHITE_OXYGEN_MASK = "white_oxygen_mask";
+        String GREY_OXYGEN_MASK = "grey_oxygen_mask";
+        String BLACK_OXYGEN_MASK = "black_oxygen_mask";
+        String ORANGE_OXYGEN_MASK = "orange_oxygen_mask";
+        String MAGENTA_OXYGEN_MASK = "magenta_oxygen_mask";
+        String LIGHT_BLUE_OXYGEN_MASK = "light_blue_oxygen_mask";
+        String YELLOW_OXYGEN_MASK = "yellow_oxygen_mask";
+        String LIME_OXYGEN_MASK = "lime_oxygen_mask";
+        String PINK_OXYGEN_MASK = "pink_oxygen_mask";
+        String LIGHT_GREY_OXYGEN_MASK = "light_grey_oxygen_mask";
+        String CYAN_OXYGEN_MASK = "cyan_oxygen_mask";
+        String PURPLE_OXYGEN_MASK = "purple_oxygen_mask";
+        String BLUE_OXYGEN_MASK = "blue_oxygen_mask";
+        String BROWN_OXYGEN_MASK = "brown_oxygen_mask";
+        String GREEN_OXYGEN_MASK = "green_oxygen_mask";
+        String RED_OXYGEN_MASK = "red_oxygen_mask";
+
         String OXYGEN_GEAR = "oxygen_gear";
 
         String SHIELD_CONTROLLER = "shield_controller";
@@ -567,9 +584,21 @@ public interface Constant {
         String EVOLVED_CREEPER_CHARGE = "textures/entity/creeper/creeper_armor.png";
         String EVOLVED_SPIDER_EYES = "textures/entity/evolved/spider_eyes.png";
 
-        String GEAR = "textures/entity/galacticraft_gear.png";
+        String GEAR = "textures/entity/gear/galacticraft_gear.png";
         int GEAR_WIDTH = 128;
         int GEAR_HEIGHT = 32;
+
+        String OXYGEN_MASK = "textures/entity/gear/oxygen_mask.png";
+        int OXYGEN_MASK_WIDTH = 128;
+        int OXYGEN_MASK_HEIGHT = 128;
+
+        String OXYGEN_TANK = "textures/entity/gear/oxygen_tank.png";
+        int OXYGEN_TANK_WIDTH = 128;
+        int OXYGEN_TANK_HEIGHT = 128;
+
+        String FREQUENCY_MODULE = "textures/entity/gear/frequency_module.png";
+        int FREQUENCY_MODULE_WIDTH = 16;
+        int FREQUENCY_MODULE_HEIGHT = 16;
     }
 
     interface ScreenHandler {

@@ -38,7 +38,7 @@ import net.minecraft.world.World;
  */
 public class OxygenGearItem extends Item {
     public OxygenGearItem(Settings settings) {
-        super(settings);
+        super(settings.maxCount(1));
     }
 
     @Override

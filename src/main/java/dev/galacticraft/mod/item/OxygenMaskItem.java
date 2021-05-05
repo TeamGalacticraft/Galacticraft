@@ -29,6 +29,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -38,7 +39,7 @@ import net.minecraft.world.World;
  */
 public class OxygenMaskItem extends Item {
     public OxygenMaskItem(Settings settings) {
-        super(settings);
+        super(settings.maxCount(1));
     }
 
     @Override
@@ -49,5 +50,170 @@ public class OxygenMaskItem extends Item {
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world, player, hand);
+    }
+
+    public DyeColor getColor() {
+        return null;
+    }
+
+
+    public static class WhiteOxygenMaskItem extends OxygenMaskItem {
+        public WhiteOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.WHITE;
+        }
+    }
+
+    public static class GreyOxygenMaskItem extends OxygenMaskItem {
+        public GreyOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.GRAY;
+        }
+    }
+
+    public static class BlackOxygenMaskItem extends OxygenMaskItem {
+        public BlackOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.BLACK;
+        }
+    }
+
+    public static class OrangeOxygenMaskItem extends OxygenMaskItem {
+        public OrangeOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.ORANGE;
+        }
+    }
+
+    public static class MagentaOxygenMaskItem extends OxygenMaskItem {
+        public MagentaOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.MAGENTA;
+        }
+    }
+
+    public static class LightBlueOxygenMaskItem extends OxygenMaskItem {
+        public LightBlueOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.LIGHT_BLUE;
+        }
+    }
+
+    public static class YellowOxygenMaskItem extends OxygenMaskItem {
+        public YellowOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.YELLOW;
+        }
+    }
+
+    public static class LimeOxygenMaskItem extends OxygenMaskItem {
+        public LimeOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.LIME;
+        }
+    }
+
+    public static class PinkOxygenMaskItem extends OxygenMaskItem {
+        public PinkOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.PINK;
+        }
+    }
+
+    public static class LightGreyOxygenMaskItem extends OxygenMaskItem {
+        public LightGreyOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.LIGHT_GRAY;
+        }
+    }
+
+    public static class CyanOxygenMaskItem extends OxygenMaskItem {
+        public CyanOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.CYAN;
+        }
+    }
+
+    public static class PurpleOxygenMaskItem extends OxygenMaskItem {
+        public PurpleOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.PURPLE;
+        }
+    }
+
+    public static class BlueOxygenMaskItem extends OxygenMaskItem {
+        public BlueOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.PURPLE;
+        }
+    }
+
+    public static class BrownOxygenMaskItem extends OxygenMaskItem {
+        public BrownOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.BROWN;
+        }
+    }
+
+    public static class GreenOxygenMaskItem extends OxygenMaskItem {
+        public GreenOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.GREEN;
+        }
+    }
+
+    public static class RedOxygenMaskItem extends OxygenMaskItem {
+        public RedOxygenMaskItem(Settings settings) {
+            super(settings);
+        }
+        @Override
+        public DyeColor getColor() {
+            return DyeColor.RED;
+        }
     }
 }
