@@ -34,7 +34,7 @@ import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CapesLoader {
     public static Map PLAYERS;
