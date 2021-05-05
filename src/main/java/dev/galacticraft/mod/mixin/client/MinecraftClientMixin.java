@@ -22,36 +22,33 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.misc.cape.CapesLoader;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.mod.accessor.SoundSystemAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.SoundManager;
+import net.minecraft.client.world.ClientWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
+@Mixin(MinecraftClient.class)
 @Environment(EnvType.CLIENT)
-@Mixin(AbstractClientPlayerEntity.class)
-public abstract class AbstractClientPlayerEntityMixin {
-    @Shadow @Nullable protected abstract PlayerListEntry getPlayerListEntry();
+public abstract class MinecraftClientMixin {
+    @Shadow public abstract SoundManager getSoundManager();
 
-    @Inject(method = "getCapeTexture", at = @At("RETURN"), cancellable = true)
-    private void getCapeTexture(CallbackInfoReturnable<Identifier> info) {
-        if(CapesLoader.PLAYERS != null) {
-            if(CapesLoader.PLAYERS.containsKey(this.getPlayerListEntry().getProfile().getId().toString())) {
-                info.setReturnValue(new Identifier(
-                        Constant.MOD_ID,
-                        "textures/cape/cape_" + CapesLoader.PLAYERS.get(this.getPlayerListEntry().getProfile().getId()) + ".png"));
-            }
+    @Inject(method = "setWorld", at = @At("RETURN"))
+    private void gc_updateSoundMultiplier(ClientWorld world, CallbackInfo ci) {
+        if (world != null) {
+            ((SoundSystemAccessor) this.getSoundManager().soundSystem).gc_updateAtmosphericMultiplier(CelestialBodyType.getByDimType(world.getRegistryKey()).map(body -> body.getAtmosphere().getPressure()).orElse(1.0f));
+        } else {
+            ((SoundSystemAccessor) this.getSoundManager().soundSystem).gc_updateAtmosphericMultiplier(1.0f);
         }
     }
 }

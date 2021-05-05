@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.world.dimension;
 
+import dev.galacticraft.api.atmosphere.AtmosphericInfo;
 import dev.galacticraft.api.celestialbody.CelestialBodyDisplayInfo;
 import dev.galacticraft.api.celestialbody.CelestialBodyType;
 import dev.galacticraft.api.celestialbody.CelestialObjectType;
@@ -42,7 +43,7 @@ public class GalacticraftCelestialBodyType {
             .type(CelestialObjectType.MOON)
             .parent(CelestialBodyType.EARTH)
             .weight(1)
-            .gravity(0.16f)
+            .gravity(0.165f)
             .display(
                     new CelestialBodyDisplayInfo.Builder()
                             .texture(new Identifier("galacticraft", "gui/celestialbodies/moon"))
@@ -51,6 +52,10 @@ public class GalacticraftCelestialBodyType {
                             .scale(0.5F)
                             .time(648000) // 27 mc days in ticks
                             .build()
+            ).atmosphere(
+                    new AtmosphericInfo.Builder()
+                            .pressure(3.0E-15f)
+                            .temperature(25.0f).build()
             )
             .recipe(new SatelliteRecipe(new ItemStack(GalacticraftItem.BASIC_WAFER, 100)))
             .build();

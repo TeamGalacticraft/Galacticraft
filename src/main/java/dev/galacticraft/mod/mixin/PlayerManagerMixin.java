@@ -20,38 +20,34 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin.client;
+package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.misc.cape.CapesLoader;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.PlayerListEntry;
+import dev.galacticraft.mod.accessor.GearInventoryProvider;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.ClientConnection;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.PlayerManager;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
-@Mixin(AbstractClientPlayerEntity.class)
-public abstract class AbstractClientPlayerEntityMixin {
-    @Shadow @Nullable protected abstract PlayerListEntry getPlayerListEntry();
-
-    @Inject(method = "getCapeTexture", at = @At("RETURN"), cancellable = true)
-    private void getCapeTexture(CallbackInfoReturnable<Identifier> info) {
-        if(CapesLoader.PLAYERS != null) {
-            if(CapesLoader.PLAYERS.containsKey(this.getPlayerListEntry().getProfile().getId().toString())) {
-                info.setReturnValue(new Identifier(
-                        Constant.MOD_ID,
-                        "textures/cape/cape_" + CapesLoader.PLAYERS.get(this.getPlayerListEntry().getProfile().getId()) + ".png"));
-            }
+@Mixin(PlayerManager.class)
+public abstract class PlayerManagerMixin {
+    @Inject(method = "onPlayerConnect", at = @At("RETURN"))
+    private void gc_syncInv(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
+        CompoundTag tag = ((GearInventoryProvider) player).writeGearToNbt(new CompoundTag());
+        for (ServerPlayerEntity player1 : PlayerLookup.tracking(player)) {
+            ServerPlayNetworking.send(player1, new Identifier(Constant.MOD_ID, "gear_inv_sync_full"), new PacketByteBuf(Unpooled.buffer().writeInt(player.getEntityId())).writeCompoundTag(tag));
         }
     }
 }

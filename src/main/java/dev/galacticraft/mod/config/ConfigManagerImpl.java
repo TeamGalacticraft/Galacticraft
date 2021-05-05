@@ -96,11 +96,21 @@ public class ConfigManagerImpl implements ConfigManager {
                 .setSavingRunnable(this::save);
 
         SubCategoryBuilder dB = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constant.Config.DEBUG));
+
         dB.add(new BooleanToggleBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.DEBUG_LOGGING),
                 this.config.isDebugLogEnabled())
                 .setSaveConsumer(flag -> this.config.setDebugLog(flag))
+                .setDefaultValue(false)
+                .build()
+        );
+
+        dB.add(new BooleanToggleBuilder(
+                new TranslatableText(Constant.Config.RESET),
+                new TranslatableText(Constant.Config.HIDE_ALPHA_WARNING),
+                this.config.isAlphaWarningHidden())
+                .setSaveConsumer(flag -> this.config.setAlphaWarningHidden(flag))
                 .setDefaultValue(false)
                 .build()
         );

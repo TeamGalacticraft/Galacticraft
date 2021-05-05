@@ -32,6 +32,7 @@ accessible      field    net/minecraft/village/VillagerType                     
 accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator                    NOISE_WEIGHT_TABLE [F
 accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator                    BIOME_WEIGHT_TABLE [F
 accessible      field    net/minecraft/screen/slot/Slot                                       index              I
+accessible      field    net/minecraft/client/sound/SoundManager                              soundSystem        Lnet/minecraft/client/sound/SoundSystem;
 extendable      class    net/minecraft/world/gen/chunk/NoiseChunkGenerator
 
 accessible      field    net/minecraft/util/math/Matrix4f                                     a00                F

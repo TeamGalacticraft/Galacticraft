@@ -34,8 +34,7 @@ import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
 import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resource.GalacticraftResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
-import dev.galacticraft.mod.misc.cape.CapeLoader;
-import dev.galacticraft.mod.misc.cape.JsonCape;
+import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.mixin.SkyPropertiesAccessor;
 import dev.galacticraft.mod.particle.GalacticraftParticle;
 import dev.galacticraft.mod.particle.fluid.DrippingCrudeOilParticle;
@@ -64,15 +63,11 @@ import java.util.Collections;
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
 
-    public static final JsonCape JSON_CAPES = new JsonCape();
-    public static final CapeLoader CAPE_LOADER = new CapeLoader();
-
     @Override
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();
         Galacticraft.LOGGER.info("Starting client initialization.");
-        CAPE_LOADER.register(JSON_CAPES);
-        CAPE_LOADER.load();
+        CapesLoader.load();
 
         GalacticraftParticle.register();
 

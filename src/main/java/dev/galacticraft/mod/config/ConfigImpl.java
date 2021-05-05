@@ -64,6 +64,18 @@ public class ConfigImpl implements Config {
     private int oxygenDecompressorEnergyConsumptionRate = EnergyUtil.Values.T1_MACHINE_ENERGY_USAGE;
     @Expose
     private int rocketAssemblerProcessTime = 30_000;
+    @Expose
+    private boolean hide_alpha_warning = false;
+
+    @Override
+    public boolean isAlphaWarningHidden() {
+        return this.hide_alpha_warning;
+    }
+
+    @Override
+    public void setAlphaWarningHidden(boolean flag) {
+        this.hide_alpha_warning = flag;
+    }
 
     @Override
     public boolean isDebugLogEnabled() {
