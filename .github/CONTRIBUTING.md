@@ -17,3 +17,5 @@ Contributing
     * Commits
         * Use the [Conventional Commits](https://www.conventionalcommits.org/) specification when creating commits.
 * Name all variables correctly
+* All PRs require at least one successful review from a team member to merge
+    * Please do not submit simple PRs like minor readme changes or spelling fixes, unless they are a part of larger changes such as a new feature or bugfix.
