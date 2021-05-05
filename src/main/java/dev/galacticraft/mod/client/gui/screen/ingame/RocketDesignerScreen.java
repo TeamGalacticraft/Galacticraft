@@ -218,7 +218,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
             if (part != null) {
                 matrices.push();
                 matrices.translate(this.x + 13 + ((BOX_WIDTH + 2) * x), this.y + 13 + ((BOX_HEIGHT + 2) * y), 0);
-                RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+                RocketPartRendererRegistry.getRenderer(part.getId()).renderGUI(client.world, matrices, mouseX, mouseY, delta);
                 matrices.pop();
             }
             if (++x == 5) {
@@ -249,42 +249,42 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 8, 0);
-            RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.getRenderer(part.getId()).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.BODY);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 24, 0);
-            RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.getRenderer(part.getId()).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.FIN);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 40, 0);
-            RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.getRenderer(part.getId()).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.UPGRADE);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 26, 0);
-            RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.getRenderer(part.getId()).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.BOOSTER);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 44, 0);
-            RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.getRenderer(part.getId()).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.BOTTOM);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 60, 0);
-            RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.getRenderer(part.getId()).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);

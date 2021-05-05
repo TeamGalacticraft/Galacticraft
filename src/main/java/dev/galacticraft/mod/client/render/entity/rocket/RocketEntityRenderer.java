@@ -76,7 +76,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         RocketPart part = entity.getPartForType(RocketPartType.BOTTOM);
         if (part != null) {
             matrices.push();
-            RocketPartRendererRegistry.getRenderer(part).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.getRenderer(part.getId()).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.pop();
         }
 
@@ -85,14 +85,14 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.getPartForType(RocketPartType.BOOSTER);
         if (part != null) {
             matrices.push();
-            RocketPartRendererRegistry.getRenderer(part).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.getRenderer(part.getId()).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.pop();
         }
 
         part = entity.getPartForType(RocketPartType.FIN);
         if (part != null) {
             matrices.push();
-            RocketPartRendererRegistry.getRenderer(part).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.getRenderer(part.getId()).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.pop();
         }
 
@@ -101,7 +101,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.getPartForType(RocketPartType.BODY);
         if (part != null) {
             matrices.push();
-            RocketPartRendererRegistry.getRenderer(part).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.getRenderer(part.getId()).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.pop();
         }
 
@@ -110,7 +110,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.getPartForType(RocketPartType.CONE);
         if (part != null) {
             matrices.push();
-            RocketPartRendererRegistry.getRenderer(part).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.getRenderer(part.getId()).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.pop();
         }
 

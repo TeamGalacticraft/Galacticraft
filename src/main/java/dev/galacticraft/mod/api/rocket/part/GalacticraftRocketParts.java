@@ -147,17 +147,17 @@ public class GalacticraftRocketParts {
     public static RocketPartRendererRegistry.RocketPartRenderer getPartToRenderForType(@NotNull RocketPartType type) {
         switch (type) {
             case BODY:
-                return RocketPartRendererRegistry.getRenderer(DEFAULT_BODY);
+                return RocketPartRendererRegistry.getRenderer(DEFAULT_BODY.getId());
             case CONE:
-                return RocketPartRendererRegistry.getRenderer(DEFAULT_CONE);
+                return RocketPartRendererRegistry.getRenderer(DEFAULT_CONE.getId());
             case FIN:
-                return RocketPartRendererRegistry.getRenderer(DEFAULT_FIN);
+                return RocketPartRendererRegistry.getRenderer(DEFAULT_FIN.getId());
             case BOTTOM:
-                return RocketPartRendererRegistry.getRenderer(DEFAULT_BOTTOM);
+                return RocketPartRendererRegistry.getRenderer(DEFAULT_BOTTOM.getId());
             case BOOSTER:
-                return RocketPartRendererRegistry.getRenderer(BOOSTER_TIER_1);
+                return RocketPartRendererRegistry.getRenderer(BOOSTER_TIER_1.getId());
             case UPGRADE:
-                return RocketPartRendererRegistry.getRenderer(STORAGE_UPGRADE);
+                return RocketPartRendererRegistry.getRenderer(STORAGE_UPGRADE.getId());
         }
         throw new AssertionError();
     }
