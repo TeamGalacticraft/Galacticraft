@@ -32,8 +32,8 @@ import net.fabricmc.api.Environment;
 public enum OxygenTankTextureOffset {
     SMALL_TANK(0, 0, 20, 10),
     MEDIUM_TANK(20, 0, 20, 10),
-    HEAVY_TANK(0, 20, 20, 10),
-    INFINITE_TANK(20, 20, 20, 10);
+    HEAVY_TANK(0, 10, 20, 10),
+    INFINITE_TANK(20, 10, 20, 10);
 
     public final int X;
     public final int Y;
