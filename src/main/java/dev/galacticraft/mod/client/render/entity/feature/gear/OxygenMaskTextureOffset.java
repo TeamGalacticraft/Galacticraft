@@ -99,12 +99,4 @@ public enum OxygenMaskTextureOffset {
     public static int getHeight() {
         return 20;
     }
-
-    public static ModelPart createModelPart(DyeColor color) {
-        return new ModelPart(
-                Constant.FeatureRendererTexture.OXYGEN_MASK_WIDTH,
-                Constant.FeatureRendererTexture.OXYGEN_MASK_HEIGHT,
-                OxygenMaskTextureOffset.getX(color),
-                OxygenMaskTextureOffset.getY(color));
-    }
 }
