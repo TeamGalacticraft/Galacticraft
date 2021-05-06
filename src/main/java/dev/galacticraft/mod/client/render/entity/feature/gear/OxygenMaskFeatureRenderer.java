@@ -72,23 +72,23 @@ public class OxygenMaskFeatureRenderer<T extends Entity, M extends EntityModel<T
         this.maskTransforms = maskTransforms;
         this.color = color;
 
-        this.oxygenMaskNormal = OxygenMaskTextureOffset.createModelPart(null);
-        this.oxygenMaskWhite = OxygenMaskTextureOffset.createModelPart(DyeColor.WHITE);
-        this.oxygenMaskGrey = OxygenMaskTextureOffset.createModelPart(DyeColor.GRAY);
-        this.oxygenMaskBlack = OxygenMaskTextureOffset.createModelPart(DyeColor.BLACK);
-        this.oxygenMaskOrange = OxygenMaskTextureOffset.createModelPart(DyeColor.ORANGE);
-        this.oxygenMaskMagenta = OxygenMaskTextureOffset.createModelPart(DyeColor.MAGENTA);
-        this.oxygenMaskLightBlue = OxygenMaskTextureOffset.createModelPart(DyeColor.LIGHT_BLUE);
-        this.oxygenMaskYellow = OxygenMaskTextureOffset.createModelPart(DyeColor.YELLOW);
-        this.oxygenMaskLime = OxygenMaskTextureOffset.createModelPart(DyeColor.LIME);
-        this.oxygenMaskPink = OxygenMaskTextureOffset.createModelPart(DyeColor.PINK);
-        this.oxygenMaskLightGrey = OxygenMaskTextureOffset.createModelPart(DyeColor.LIGHT_GRAY);
-        this.oxygenMaskCyan = OxygenMaskTextureOffset.createModelPart(DyeColor.CYAN);
-        this.oxygenMaskPurple = OxygenMaskTextureOffset.createModelPart(DyeColor.PURPLE);
-        this.oxygenMaskBlue = OxygenMaskTextureOffset.createModelPart(DyeColor.BLUE);
-        this.oxygenMaskBrown = OxygenMaskTextureOffset.createModelPart(DyeColor.BROWN);
-        this.oxygenMaskGreen = OxygenMaskTextureOffset.createModelPart(DyeColor.GREEN);
-        this.oxygenMaskRed = OxygenMaskTextureOffset.createModelPart(DyeColor.RED);
+        this.oxygenMaskNormal    = createModelPart(null);
+        this.oxygenMaskWhite     = createModelPart(DyeColor.WHITE);
+        this.oxygenMaskGrey      = createModelPart(DyeColor.GRAY);
+        this.oxygenMaskBlack     = createModelPart(DyeColor.BLACK);
+        this.oxygenMaskOrange    = createModelPart(DyeColor.ORANGE);
+        this.oxygenMaskMagenta   = createModelPart(DyeColor.MAGENTA);
+        this.oxygenMaskLightBlue = createModelPart(DyeColor.LIGHT_BLUE);
+        this.oxygenMaskYellow    = createModelPart(DyeColor.YELLOW);
+        this.oxygenMaskLime      = createModelPart(DyeColor.LIME);
+        this.oxygenMaskPink      = createModelPart(DyeColor.PINK);
+        this.oxygenMaskLightGrey = createModelPart(DyeColor.LIGHT_GRAY);
+        this.oxygenMaskCyan      = createModelPart(DyeColor.CYAN);
+        this.oxygenMaskPurple    = createModelPart(DyeColor.PURPLE);
+        this.oxygenMaskBlue      = createModelPart(DyeColor.BLUE);
+        this.oxygenMaskBrown     = createModelPart(DyeColor.BROWN);
+        this.oxygenMaskGreen     = createModelPart(DyeColor.GREEN);
+        this.oxygenMaskRed       = createModelPart(DyeColor.RED);
 
         float pivotX = 0.0F, pivotY = 0.0F, pivotZ = 0.0F;
         float x = -5.0F, y = -9.0F, z = -5.0F;
@@ -186,6 +186,14 @@ public class OxygenMaskFeatureRenderer<T extends Entity, M extends EntityModel<T
                 this.oxygenMaskNormal.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
                 break;
         }
+    }
+
+    private static ModelPart createModelPart(DyeColor color) {
+        return new ModelPart(
+                Constant.FeatureRendererTexture.OXYGEN_MASK_WIDTH,
+                Constant.FeatureRendererTexture.OXYGEN_MASK_HEIGHT,
+                OxygenMaskTextureOffset.getX(color),
+                OxygenMaskTextureOffset.getY(color));
     }
 
     @Override
