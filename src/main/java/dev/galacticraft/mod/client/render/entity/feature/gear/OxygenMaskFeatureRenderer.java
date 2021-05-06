@@ -41,6 +41,8 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
 
+import java.util.HashMap;
+
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
@@ -49,71 +51,26 @@ public class OxygenMaskFeatureRenderer<T extends Entity, M extends EntityModel<T
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.OXYGEN_MASK);
     public final ModelTransformer<T> maskTransforms;
     public final DyeColor color;
+
+    private final HashMap<DyeColor,ModelPart> oxygenMaskColors;
     public final ModelPart oxygenMaskNormal;
-    public final ModelPart oxygenMaskWhite;
-    public final ModelPart oxygenMaskGrey;
-    public final ModelPart oxygenMaskBlack;
-    public final ModelPart oxygenMaskOrange;
-    public final ModelPart oxygenMaskMagenta;
-    public final ModelPart oxygenMaskLightBlue;
-    public final ModelPart oxygenMaskYellow;
-    public final ModelPart oxygenMaskLime;
-    public final ModelPart oxygenMaskPink;
-    public final ModelPart oxygenMaskLightGrey;
-    public final ModelPart oxygenMaskCyan;
-    public final ModelPart oxygenMaskPurple;
-    public final ModelPart oxygenMaskBlue;
-    public final ModelPart oxygenMaskBrown;
-    public final ModelPart oxygenMaskGreen;
-    public final ModelPart oxygenMaskRed;
 
     public OxygenMaskFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms, DyeColor color) {
         super(context);
         this.maskTransforms = maskTransforms;
         this.color = color;
 
-        this.oxygenMaskNormal    = createModelPart(null);
-        this.oxygenMaskWhite     = createModelPart(DyeColor.WHITE);
-        this.oxygenMaskGrey      = createModelPart(DyeColor.GRAY);
-        this.oxygenMaskBlack     = createModelPart(DyeColor.BLACK);
-        this.oxygenMaskOrange    = createModelPart(DyeColor.ORANGE);
-        this.oxygenMaskMagenta   = createModelPart(DyeColor.MAGENTA);
-        this.oxygenMaskLightBlue = createModelPart(DyeColor.LIGHT_BLUE);
-        this.oxygenMaskYellow    = createModelPart(DyeColor.YELLOW);
-        this.oxygenMaskLime      = createModelPart(DyeColor.LIME);
-        this.oxygenMaskPink      = createModelPart(DyeColor.PINK);
-        this.oxygenMaskLightGrey = createModelPart(DyeColor.LIGHT_GRAY);
-        this.oxygenMaskCyan      = createModelPart(DyeColor.CYAN);
-        this.oxygenMaskPurple    = createModelPart(DyeColor.PURPLE);
-        this.oxygenMaskBlue      = createModelPart(DyeColor.BLUE);
-        this.oxygenMaskBrown     = createModelPart(DyeColor.BROWN);
-        this.oxygenMaskGreen     = createModelPart(DyeColor.GREEN);
-        this.oxygenMaskRed       = createModelPart(DyeColor.RED);
+        this.oxygenMaskNormal = createModelPart(null);
+        this.oxygenMaskColors = new HashMap<>();
 
         float pivotX = 0.0F, pivotY = 0.0F, pivotZ = 0.0F;
         float x = -5.0F, y = -9.0F, z = -5.0F;
         int sizeX = 10, sizeY = 10, sizeZ = 10;
-        for (ModelPart part : new ModelPart[]{
-                this.oxygenMaskNormal,
-                this.oxygenMaskWhite,
-                this.oxygenMaskGrey,
-                this.oxygenMaskBlack,
-                this.oxygenMaskOrange,
-                this.oxygenMaskMagenta,
-                this.oxygenMaskLightBlue,
-                this.oxygenMaskYellow,
-                this.oxygenMaskLime,
-                this.oxygenMaskPink,
-                this.oxygenMaskLightGrey,
-                this.oxygenMaskCyan,
-                this.oxygenMaskPurple,
-                this.oxygenMaskBlue,
-                this.oxygenMaskBrown,
-                this.oxygenMaskGreen,
-                this.oxygenMaskRed
-        }) {
-            part.setPivot(pivotX, pivotY, pivotZ);
-            part.addCuboid(x, y, z, sizeX, sizeY, sizeZ, extra);
+
+        for (DyeColor dye : DyeColor.values()) {
+            this.oxygenMaskColors.put(dye, createModelPart(dye));
+            this.oxygenMaskColors.get(dye).setPivot(pivotX, pivotY, pivotZ);
+            this.oxygenMaskColors.get(dye).addCuboid(x, y, z, sizeX, sizeY, sizeZ, extra);
         }
     }
 
@@ -133,59 +90,7 @@ public class OxygenMaskFeatureRenderer<T extends Entity, M extends EntityModel<T
             this.oxygenMaskNormal.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
             return;
         }
-        switch (color) {
-            case WHITE:
-                this.oxygenMaskWhite.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case GRAY:
-                this.oxygenMaskGrey.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case BLACK:
-                this.oxygenMaskBlack.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case ORANGE:
-                this.oxygenMaskOrange.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case MAGENTA:
-                this.oxygenMaskMagenta.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case LIGHT_BLUE:
-                this.oxygenMaskLightBlue.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case YELLOW:
-                this.oxygenMaskYellow.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case LIME:
-                this.oxygenMaskLime.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case PINK:
-                this.oxygenMaskPink.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case LIGHT_GRAY:
-                this.oxygenMaskLightGrey.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case CYAN:
-                this.oxygenMaskCyan.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case PURPLE:
-                this.oxygenMaskPurple.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case BLUE:
-                this.oxygenMaskBlue.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case BROWN:
-                this.oxygenMaskBrown.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case GREEN:
-                this.oxygenMaskGreen.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            case RED:
-                this.oxygenMaskRed.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-            default:
-                this.oxygenMaskNormal.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-                break;
-        }
+        this.oxygenMaskColors.get(color).render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
     }
 
     private static ModelPart createModelPart(DyeColor color) {
