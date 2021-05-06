@@ -1,13 +1,17 @@
 package dev.galacticraft.mod.recipe;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 public class PotionRecipe implements CraftingRecipe {
@@ -61,7 +65,7 @@ public class PotionRecipe implements CraftingRecipe {
 
 
     // borrowed from vanilla... SharedCompressingRecipe does something similar
-    // it'd be ideal making a util class later
+    // it'd be ideal making a util class later maybe but this should hopefully work???
     private static String[] getPattern(JsonArray json) {
         String[] strings = new String[json.size()];
         if (strings.length > 3) {
@@ -85,5 +89,19 @@ public class PotionRecipe implements CraftingRecipe {
             return strings;
         }
     }
+
+    public static ItemStack getItemStack(JsonObject json) {
+        String string = JsonHelper.getString(json, "item");
+        Item item = (Item) Registry.ITEM.getOrEmpty(new Identifier(string)).orElseThrow(() -> {
+            return new JsonSyntaxException("Unknown item '" + string + "'");
+        });
+        if (json.has("data")) {
+            throw new JsonParseException("Disallowed data tag found");
+        } else {
+            int i = JsonHelper.getInt(json, "count", 1);
+            return new ItemStack(item, i);
+        }
+    }
+
 
 }
