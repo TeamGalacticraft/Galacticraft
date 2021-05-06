@@ -34,11 +34,9 @@ import net.minecraft.world.biome.Biome;
 public class GalacticraftBiome {
 
     public static class Moon {
-        public static final RegistryKey<Biome> HIGHLANDS_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.HIGHLANDS_PLAINS));
-        public static final RegistryKey<Biome> HIGHLANDS_ROCKS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.HIGHLANDS_ROCKS));
-        public static final RegistryKey<Biome> HIGHLANDS_VALLEY = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.HIGHLANDS_VALLEY));
-        public static final RegistryKey<Biome> MARE_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.MARE_PLAINS));
-        public static final RegistryKey<Biome> MARE_ROCKS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.MARE_ROCKS));
+        public static final RegistryKey<Biome> HIGHLANDS_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.HIGHLANDS));
+        public static final RegistryKey<Biome> HIGHLANDS_EDGE = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.HIGHLANDS_EDGE));
+        public static final RegistryKey<Biome> MARE_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.MARE));
         public static final RegistryKey<Biome> MARE_EDGE = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.MARE_EDGE));
 
         private static void init() {

@@ -22,13 +22,16 @@
 
 package dev.galacticraft.mod.recipe;
 
+import com.google.gson.JsonObject;
+import dev.galacticraft.mod.Constant;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.recipe.*;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
@@ -36,15 +39,15 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class FabricationRecipe implements Recipe<Inventory> {
-    final String group;
     private final Identifier id;
-    private final Ingredient input;
+    private final String group;
     private final ItemStack output;
+    private final DefaultedList<Ingredient> input = DefaultedList.ofSize(1, Ingredient.EMPTY);
 
     public FabricationRecipe(Identifier id, String group, Ingredient input, ItemStack output) {
         this.id = id;
         this.group = group;
-        this.input = input;
+        this.input.set(0, input);
         this.output = output;
     }
 
@@ -54,20 +57,18 @@ public class FabricationRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public boolean fits(int var1, int var2) {
-        return true;
+    public boolean fits(int width, int height) {
+        return width * height > 0;
     }
 
     @Override
     public DefaultedList<Ingredient> getPreviewInputs() {
-        DefaultedList<Ingredient> list = DefaultedList.of();
-        list.add(this.input);
-        return list;
+        return this.input;
     }
 
     @Override
     public boolean matches(Inventory inventory, World world) {
-        return this.input.test(inventory.getStack(0));
+        return this.input.get(0).test(inventory.getStack(0));
     }
 
     @Override
@@ -77,7 +78,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
 
     @Override
     public Identifier getId() {
-        return id;
+        return this.id;
     }
 
     @Override
@@ -85,17 +86,38 @@ public class FabricationRecipe implements Recipe<Inventory> {
         return GalacticraftRecipe.FABRICATION_SERIALIZER;
     }
 
-    public Ingredient getInput() {
-        return input;
-    }
-
     @Override
     public ItemStack getOutput() {
-        return output;
+        return this.output;
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public String getGroup() {
-        return group;
+        return this.group;
+    }
+
+    public enum Serializer implements RecipeSerializer<FabricationRecipe> {
+        INSTANCE;
+
+        @Override
+        public FabricationRecipe read(Identifier id, JsonObject json) {
+            String group = JsonHelper.getString(json, "group", "");
+            Ingredient ingredient = Ingredient.fromJson(JsonHelper.getObject(json, "ingredient"));
+            ItemStack result = ShapedRecipe.getItemStack(JsonHelper.getObject(json, "result"));
+            return new FabricationRecipe(id, group, ingredient, result);
+        }
+
+        @Override
+        public FabricationRecipe read(Identifier id, PacketByteBuf buf) {
+            return new FabricationRecipe(id, buf.readString(Constant.Misc.MAX_STRING_READ), Ingredient.fromPacket(buf), buf.readItemStack());
+        }
+
+        @Override
+        public void write(PacketByteBuf buf, FabricationRecipe recipe) {
+            buf.writeString(recipe.group);
+            recipe.input.get(0).write(buf);
+            buf.writeItemStack(recipe.output);
+        }
     }
 }
