@@ -36,10 +36,17 @@ public class GalacticraftRecipe {
     public static RecipeType<PotionRecipe> POTION_TYPE; // can have some added functionality later I guess aside from potions
 
 
-    public static final FabricationRecipe.Serializer FABRICATION_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.FABRICATION), FabricationRecipe.Serializer.INSTANCE);
-    public static final ShapelessCompressingRecipe.Serializer SHAPELESS_COMPRESSING_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPELESS), ShapelessCompressingRecipe.Serializer.INSTANCE);
-    public static final ShapedCompressingRecipe.Serializer SHAPED_COMPRESSING_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPED), ShapedCompressingRecipe.Serializer.INSTANCE);
-    public static PotionRecipeSerializer<PotionRecipe> POTION_RECIPE_SERIALIZER;
+    public static final FabricationRecipe.Serializer FABRICATION_SERIALIZER =
+            Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.FABRICATION), FabricationRecipe.Serializer.INSTANCE);
+
+    public static final ShapelessCompressingRecipe.Serializer SHAPELESS_COMPRESSING_SERIALIZER =
+            Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPELESS), ShapelessCompressingRecipe.Serializer.INSTANCE);
+
+    public static final ShapedCompressingRecipe.Serializer SHAPED_COMPRESSING_SERIALIZER =
+            Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPED), ShapedCompressingRecipe.Serializer.INSTANCE);
+
+    public static final PotionRecipe.Serializer POTION_RECIPE_SERIALIZER =
+            Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.Serializer.POTION_RECIPE), PotionRecipe.Serializer.INSTANCE);
 
 
     public static void register() {

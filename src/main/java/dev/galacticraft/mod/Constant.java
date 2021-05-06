@@ -673,6 +673,7 @@ public interface Constant {
         interface Serializer {
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
+            String POTION_RECIPE = "potion_recipe";
         }
     }
 }
