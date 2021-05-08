@@ -1,5 +1,4 @@
 {
-  "parent": "minecraft:block/block",
   "model": "galacticraft:block/rocket_assembler",
   "gui_light": "side",
   "display": {

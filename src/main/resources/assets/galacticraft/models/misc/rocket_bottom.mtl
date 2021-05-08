@@ -2,6 +2,8 @@
 # Material Count: 1
 
 newmtl RocketTexture
+ambient_occlusion true
+blend_mode CUTOUT
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
