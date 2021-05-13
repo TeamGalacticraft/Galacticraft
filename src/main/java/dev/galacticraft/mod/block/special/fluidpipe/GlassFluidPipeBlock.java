@@ -50,6 +50,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -91,8 +93,10 @@ public class GlassFluidPipeBlock extends FluidPipe {
                 ItemStack stack = player.getStackInHand(hand).copy();
                 DyeColor color = ((DyeItem) stack.getItem()).getColor();
                 if (color != state.get(COLOR)) {
-                    stack.decrement(1);
-                    player.setStackInHand(hand, stack);
+                    if (!player.abilities.creativeMode) {
+                        stack.decrement(1);
+                        player.setStackInHand(hand, stack);
+                    }
                     world.setBlockState(pos, state.with(COLOR, color));
                     return ActionResult.SUCCESS;
                 } else {
@@ -101,8 +105,10 @@ public class GlassFluidPipeBlock extends FluidPipe {
             }
             if (player.getStackInHand(hand).getItem() instanceof StandardWrenchItem) {
                 ItemStack stack = player.getStackInHand(hand).copy();
-                stack.damage(1, world.random, player instanceof ServerPlayerEntity ? ((ServerPlayerEntity) player) : null);
-                player.setStackInHand(hand, stack);
+                if (!player.abilities.creativeMode) {
+                    stack.damage(1, world.random, player instanceof ServerPlayerEntity ? ((ServerPlayerEntity) player) : null);
+                    player.setStackInHand(hand, stack);
+                }
                 world.setBlockState(pos, state.with(PULL, !state.get(PULL)));
                 return ActionResult.SUCCESS;
             }
@@ -111,14 +117,9 @@ public class GlassFluidPipeBlock extends FluidPipe {
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborUpdate(state, world, pos, block, fromPos, notify);
-        BlockState neighbor = world.getBlockState(fromPos);
-        Direction dir = Direction.fromVector(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
-        assert dir != null;
-        world.setBlockState(pos, state.with(getPropForDirection(dir), !neighbor.isAir() && (block instanceof FluidPipe
-                || FluidUtil.isExtractableOrInsertable(world, fromPos, dir))
-        ));
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
+        Direction dir = Direction.fromVector(posFrom.getX() - pos.getX(), posFrom.getY() - pos.getY(), posFrom.getZ() - pos.getZ());
+        return dir != null ? state.with(getPropForDirection(dir), !newState.isAir() && newState.getBlock() instanceof FluidPipe || FluidUtil.isExtractableOrInsertable((World)world, posFrom, dir)) : super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
     }
 
     @Override
@@ -152,7 +153,6 @@ public class GlassFluidPipeBlock extends FluidPipe {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
         builder.add(PULL, COLOR, ConnectingBlockUtil.ATTACHED_NORTH, ConnectingBlockUtil.ATTACHED_EAST, ConnectingBlockUtil.ATTACHED_SOUTH, ConnectingBlockUtil.ATTACHED_WEST, ConnectingBlockUtil.ATTACHED_UP, ConnectingBlockUtil.ATTACHED_DOWN);
     }
 }
