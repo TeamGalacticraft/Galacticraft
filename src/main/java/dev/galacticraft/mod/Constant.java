@@ -70,6 +70,7 @@ public interface Constant {
         String ASTEROID_ALUMINUM_ORE = "asteroid_aluminum_ore";
         String MOON_CHEESE_ORE = "moon_cheese_ore";
         String MOON_COPPER_ORE = "moon_copper_ore";
+        String MOON_BASALT_COPPER_ORE = "moon_basalt_copper_ore";
         String MARS_COPPER_ORE = "mars_copper_ore";
         String DESH_ORE = "desh_ore";
         String ILMENITE_ORE = "ilmenite_ore";
