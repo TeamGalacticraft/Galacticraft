@@ -136,6 +136,8 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.UNLIT_WALL_TORCH, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLOWSTONE_LANTERN, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.UNLIT_LANTERN, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.CAVERNOUS_VINE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.POISONOUS_CAVERNOUS_VINE, RenderLayer.getCutout());
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new GalacticraftResourceReloadListener());
 
