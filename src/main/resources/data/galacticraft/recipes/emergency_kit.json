@@ -1,5 +1,5 @@
 {
-  "type": "crafting_shaped",
+  "type": "galacticraft:potion_recipe",
   "pattern": [
     "DMG",
     "OSO",

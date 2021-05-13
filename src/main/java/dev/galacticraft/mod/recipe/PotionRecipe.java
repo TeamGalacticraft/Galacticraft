@@ -49,7 +49,7 @@ public class PotionRecipe implements CraftingRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return GalacticraftRecipe.SHAPED_COMPRESSING_SERIALIZER;
+        return GalacticraftRecipe.POTION_RECIPE_SERIALIZER;
     }
 
     @Override
@@ -256,20 +256,6 @@ public class PotionRecipe implements CraftingRecipe {
     }
 
     public static ItemStack getItemStack(JsonObject json) {
-        if (json.has("potion")) {
-            Identifier identifier = new Identifier(JsonHelper.getString(json, "potion"));
-            if (!Registry.POTION.getOrEmpty(identifier).isPresent())
-                throw new JsonParseException("The given resulting potion does not exist!");
-            JsonObject dataObject;
-            if (!json.has("data")) {
-                dataObject = new JsonObject();
-                json.add("data", dataObject);
-            } else
-                dataObject = JsonHelper.getObject(json, "data");
-            dataObject.addProperty("Potion", identifier.toString());
-            json.addProperty("item", "minecraft:potion");
-        }
-        // here begins vanilla code
         String string = JsonHelper.getString(json, "item");
         Item item = (Item) Registry.ITEM.getOrEmpty(new Identifier(string)).orElseThrow(() -> {
             return new JsonSyntaxException("Unknown item '" + string + "'");
@@ -293,7 +279,7 @@ public class PotionRecipe implements CraftingRecipe {
             int width = pattern[0].length();
             int height = pattern.length;
             DefaultedList<Ingredient> defaultedList = PotionRecipe.getIngredients(pattern, map, width, height);
-            ItemStack itemStack = ShapedCompressingRecipe.getItemStack(JsonHelper.getObject(object, "result"));
+            ItemStack itemStack = PotionRecipe.getItemStack(JsonHelper.getObject(object, "result"));
             return new PotionRecipe(id, string, width, height, defaultedList, itemStack);
         }
 
