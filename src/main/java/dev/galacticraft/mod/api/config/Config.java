@@ -31,6 +31,10 @@ public interface Config {
         return ConfigManager.getInstance().get();
     }
 
+    boolean isAlphaWarningHidden();
+
+    void setAlphaWarningHidden(boolean flag);
+
     boolean isDebugLogEnabled();
 
     void setDebugLog(boolean flag);
