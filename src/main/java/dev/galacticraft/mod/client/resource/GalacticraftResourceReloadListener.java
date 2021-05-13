@@ -64,6 +64,7 @@ public class GalacticraftResourceReloadListener implements SimpleSynchronousReso
         MachineBakedModel.setSpriteAtlas(atlas);
         FluidRenderHandler oil = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constant.MOD_ID, "block/crude_oil_still")), atlas.apply(new Identifier(Constant.MOD_ID, "block/crude_oil_flowing"))};
         FluidRenderHandler fuel = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constant.MOD_ID, "block/fuel_still")), atlas.apply(new Identifier(Constant.MOD_ID, "block/fuel_flowing"))};
+        FluidRenderHandler bacterialSludge = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constant.MOD_ID, "block/bacterial_sludge_still")), atlas.apply(new Identifier(Constant.MOD_ID, "block/bacterial_sludge_flowing"))};
         FluidRenderHandler oxygen = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constant.MOD_ID, "block/oxygen")), atlas.apply(new Identifier(Constant.MOD_ID, "block/oxygen"))};
 
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.CRUDE_OIL, oil);
@@ -71,6 +72,8 @@ public class GalacticraftResourceReloadListener implements SimpleSynchronousReso
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.FUEL, fuel);
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.FLOWING_FUEL, fuel);
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.LIQUID_OXYGEN, oxygen);
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.BACTERIAL_SLUDGE, bacterialSludge);
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.FLOWING_BACTERIAL_SLUDGE, bacterialSludge);
         BubbleEntityRenderer.bubbleModel = null;
     }
 }

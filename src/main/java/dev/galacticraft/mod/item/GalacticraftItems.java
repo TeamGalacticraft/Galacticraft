@@ -171,6 +171,7 @@ public class GalacticraftItems {
     //Fluid buckets
     public static final BucketItem CRUDE_OIL_BUCKET = registerItem(Constant.Item.CRUDE_OIL_BUCKET, new BucketItem(GalacticraftFluid.CRUDE_OIL, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(ITEMS_GROUP)));
     public static final BucketItem FUEL_BUCKET = registerItem(Constant.Item.FUEL_BUCKET, new BucketItem(GalacticraftFluid.FUEL, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(ITEMS_GROUP)));
+    public static final BucketItem BACTERIAL_SLUDGE_BUCKET = registerItem(Constant.Item.BACTERIAL_SLUDGE_BUCKET, new BucketItem(GalacticraftFluid.BACTERIAL_SLUDGE, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(ITEMS_GROUP)));
     //GC INVENTORY
     private static final Item.Settings PARACHUTE_SETTINGS = new Item.Settings().group(ITEMS_GROUP).maxCount(1);
     public static final Item PARACHUTE = registerItem(Constant.Item.PARACHUTE, new Item(PARACHUTE_SETTINGS));

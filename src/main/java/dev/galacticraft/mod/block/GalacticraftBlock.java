@@ -86,6 +86,10 @@ public class GalacticraftBlock {
             .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
             .strength(50.0F, 50.0F).dropsNothing()), Constant.Block.FUEL);
 
+    public static final dev.galacticraft.mod.api.block.FluidBlock BACTERIAL_SLUDGE = registerBlockWithoutItem(new BacterialSludgeBlock(GalacticraftFluid.BACTERIAL_SLUDGE, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.GREEN)
+            .allowsMovement().destroyedByPiston().lightPassesThrough().notSolid().replaceable().liquid().build())
+            .strength(100.0F, 1000.0F).dropsNothing()), Constant.Block.BACTERIAL_SLUDGE);
+
     // DECORATION BLOCKS
     public static final Block[] ALUMINUM_DECORATIONS = createDecorationBlocks(Constant.Block.ALUMINUM_DECORATION, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F), true);
     public static final Block[] BRONZE_DECORATIONS = createDecorationBlocks(Constant.Block.BRONZE_DECORATION, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F), true);

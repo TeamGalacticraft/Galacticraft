@@ -142,6 +142,7 @@ public interface Constant {
         // Liquids
         String FUEL = "fuel";
         String CRUDE_OIL = "crude_oil";
+        String BACTERIAL_SLUDGE = "bacterial_sludge";
 
         // Machines
         String CIRCUIT_FABRICATOR = "circuit_fabricator";
@@ -217,8 +218,8 @@ public interface Constant {
         String CRUDE_OIL_STILL = "crude_oil_still";
         String FUEL_FLOWING = "fuel_flowing";
         String FUEL_STILL = "fuel_still";
-        String BACTERIAL_ACID_FLOWING = "bacterial_acid_flowing";
-        String BACTERIAL_ACID_STILL = "bacterial_acid_still";
+        String BACTERIAL_SLUDGE_FLOWING = "bacterial_sludge_flowing";
+        String BACTERIAL_SLUDGE_STILL = "bacterial_sludge_still";
         String SULFURIC_ACID_FLOWING = "sulfuric_acid_flowing";
         String SULFURIC_ACID_STILL = "sulfuric_acid_still";
         String OXYGEN_GAS = "oxygen_gas";
@@ -336,6 +337,7 @@ public interface Constant {
         //Fluid buckets
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";
         String FUEL_BUCKET = "fuel_bucket";
+        String BACTERIAL_SLUDGE_BUCKET = "bacterial_sludge_bucket";
 
         //GC INVENTORY
         String PARACHUTE = "parachute";
@@ -400,6 +402,7 @@ public interface Constant {
     interface Particle {
         String DRIPPING_FUEL_PARTICLE = "dripping_fuel_particle";
         String DRIPPING_CRUDE_OIL_PARTICLE = "dripping_crude_oil_particle";
+        String DRIPPING_BACTERIAL_SLUDGE_PARTICLE = "dripping_bacterial_sludge_particle";
     }
 
     interface Config {

@@ -35,6 +35,7 @@ import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.mixin.SkyPropertiesAccessor;
 import dev.galacticraft.mod.particle.GalacticraftParticle;
+import dev.galacticraft.mod.particle.fluid.DrippingBacterialSludgeParticle;
 import dev.galacticraft.mod.particle.fluid.DrippingCrudeOilParticle;
 import dev.galacticraft.mod.particle.fluid.DrippingFuelParticle;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
@@ -87,6 +88,8 @@ public class GalacticraftClient implements ClientModInitializer {
             registry.register(Constant.Fluid.getIdentifier(Constant.Fluid.CRUDE_OIL_FLOWING));
             registry.register(Constant.Fluid.getIdentifier(Constant.Fluid.FUEL_STILL));
             registry.register(Constant.Fluid.getIdentifier(Constant.Fluid.FUEL_FLOWING));
+            registry.register(Constant.Fluid.getIdentifier(Constant.Fluid.BACTERIAL_SLUDGE_STILL));
+            registry.register(Constant.Fluid.getIdentifier(Constant.Fluid.BACTERIAL_SLUDGE_FLOWING));
         });
 
         ScreenRegistry.register(GalacticraftScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER, BasicSolarPanelScreen::new);
@@ -138,6 +141,7 @@ public class GalacticraftClient implements ClientModInitializer {
 
         ParticleFactoryRegistry.getInstance().register(GalacticraftParticle.DRIPPING_FUEL_PARTICLE, (type, world, x, y, z, velX, velY, velZ) -> new DrippingFuelParticle(world, x, y, z, velX, velY, velZ));
         ParticleFactoryRegistry.getInstance().register(GalacticraftParticle.DRIPPING_CRUDE_OIL_PARTICLE, (type, world, x, y, z, velX, velY, velZ) -> new DrippingCrudeOilParticle(world, x, y, z, velX, velY, velZ));
+        ParticleFactoryRegistry.getInstance().register(GalacticraftParticle.DRIPPING_BACTERIAL_SLUDGE_PARTICLE, (type, world, x, y, z, velX, velY, velZ) -> new DrippingBacterialSludgeParticle(world, x, y, z, velX, velY, velZ));
 
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(resourceManager -> (resourceId, context) -> {
             if (MachineBakedModel.MACHINE_MARKER.equals(resourceId)) {
