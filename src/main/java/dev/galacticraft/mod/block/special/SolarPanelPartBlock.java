@@ -48,9 +48,9 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SolarPanelPartBlock extends BlockWithEntity {
-    private static final VoxelShape POLE_SHAPE = createCuboidShape(8 - 2, 0, 8 - 2, 8 + 2, 16, 8 + 2);
-    private static final VoxelShape TOP_POLE_SHAPE = createCuboidShape(8 - 2, 0, 8 - 2, 8 + 2, 8, 8 + 2);
-    private static final VoxelShape TOP_SHAPE = createCuboidShape(0, 6, 0, 16, 10, 16);
+    private static final VoxelShape POLE_SHAPE = createCuboidShape(6, 0, 6, 10, 16, 10);
+    private static final VoxelShape TOP_POLE_SHAPE = createCuboidShape(6, 0, 6, 10, 7, 10);
+    private static final VoxelShape TOP_SHAPE = createCuboidShape(0, 7, 0, 16, 10, 16);
     private static final VoxelShape TOP_MID_SHAPE = VoxelShapes.union(TOP_POLE_SHAPE, TOP_SHAPE);
 
     public SolarPanelPartBlock(Settings settings) {
@@ -62,7 +62,7 @@ public class SolarPanelPartBlock extends BlockWithEntity {
         Block down = blockView.getBlockState(pos.down()).getBlock();
         if (down instanceof MultiBlockBase) {
             return POLE_SHAPE;
-        } else if (blockView.getBlockState(pos.down().down()).getBlock() == GalacticraftBlock.BASIC_SOLAR_PANEL) {
+        } else if (blockView.getBlockState(pos.down().down()).getBlock() == GalacticraftBlock.BASIC_SOLAR_PANEL || blockView.getBlockState(pos.down().down()).getBlock() == GalacticraftBlock.ADVANCED_SOLAR_PANEL) {
             return TOP_MID_SHAPE;
         }
         return TOP_SHAPE;
