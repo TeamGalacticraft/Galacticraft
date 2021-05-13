@@ -40,6 +40,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
 import java.util.ArrayList;
 
@@ -133,19 +134,13 @@ public class AluminumWireBlock extends WireBlock {
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborUpdate(state, world, pos, block, fromPos, notify);
-        BlockState neighbor = world.getBlockState(fromPos);
-        Direction dir = Direction.fromVector(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
-        assert dir != null;
-        world.setBlockState(pos, state.with(getPropForDirection(dir), !neighbor.isAir() && block instanceof WireBlock
-                || EnergyUtil.canAccessEnergy(world, fromPos, dir)
-        ));
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
+        Direction dir = Direction.fromVector(posFrom.getX() - pos.getX(), posFrom.getY() - pos.getY(), posFrom.getZ() - pos.getZ());
+        return dir != null ? state.with(getPropForDirection(dir), !newState.isAir() && newState.getBlock() instanceof WireBlock || EnergyUtil.canAccessEnergy((World)world, posFrom, dir)) : super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
         builder.add(ATTACHED_NORTH, ATTACHED_EAST, ATTACHED_SOUTH, ATTACHED_WEST, ATTACHED_UP, ATTACHED_DOWN);
     }
 
