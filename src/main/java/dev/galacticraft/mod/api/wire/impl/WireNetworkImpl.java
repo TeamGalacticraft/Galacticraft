@@ -161,7 +161,7 @@ public class WireNetworkImpl implements WireNetwork {
                 for (Direction direction1 : Constant.Misc.DIRECTIONS) {
                     if (direction1 == direction.getOpposite()) continue;
                     if (this.wires.contains(pos1.offset(direction1))) {
-                        if (((Wire) this.world.getBlockEntity(pos1)).canConnect(direction1.getOpposite())) {
+                        if (this.world.getBlockEntity(pos1) instanceof Wire && ((Wire) this.world.getBlockEntity(pos1)).canConnect(direction1.getOpposite())) {
                             T value = function.apply(pos1, direction1);
                             if (value != null) {
                                 optionalList.add(pos1);
