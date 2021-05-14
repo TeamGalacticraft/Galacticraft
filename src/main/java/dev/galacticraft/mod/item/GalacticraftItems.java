@@ -100,6 +100,7 @@ public class GalacticraftItems {
     public static final Item ISOTHERMAL_FABRIC = registerItem(Constant.Item.ISOTHERMAL_FABRIC, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item ORION_DRIVE = registerItem(Constant.Item.ORION_DRIVE, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item ATMOSPHERIC_VALVE = registerItem(Constant.Item.ATMOSPHERIC_VALVE, new Item(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item AMBIENT_THERMAL_CONTROLLER = registerItem(Constant.Item.AMBIENT_THERMAL_CONTROLLER, new Item(new Item.Settings().group(ITEMS_GROUP)));
     //FOOD
     public static final Item MOON_BERRIES = registerItem(Constant.Item.MOON_BERRIES, new Item(new Item.Settings().food(GalacticraftFoodComponent.MOON_BERRIES).group(ITEMS_GROUP)));
     public static final Item CHEESE_CURD = registerItem(Constant.Item.CHEESE_CURD, new Item(new Item.Settings().food(GalacticraftFoodComponent.CHEESE_CURD).group(ITEMS_GROUP)));

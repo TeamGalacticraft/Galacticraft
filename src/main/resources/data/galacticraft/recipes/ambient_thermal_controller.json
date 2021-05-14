@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WVW",
+    "YXY",
+    "YZY"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraft:compressed_steel"
+    },
+    "Y": {
+      "item": "galacticraft:compressed_bronze"
+    },
+    "Z": {
+      "item": "galacticraft:basic_wafer"
+    },
+    "W": {
+      "item": "minecraft:redstone"
+    },
+    "V": {
+      "item": "galacticraft:oxygen_vent"
+    }
+  },
+  "result": {
+    "item": "galacticraft:ambient_thermal_controller"
+  }
+}

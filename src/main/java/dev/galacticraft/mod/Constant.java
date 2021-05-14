@@ -275,6 +275,7 @@ public interface Constant {
         String ISOTHERMAL_FABRIC = "isothermal_fabric";
         String ORION_DRIVE = "orion_drive";
         String ATMOSPHERIC_VALVE = "atmospheric_valve";
+        String AMBIENT_THERMAL_CONTROLLER = "ambient_thermal_controller";
         String LIQUID_CANISTER = "liquid_canister";
         //FOOD
         String MOON_BERRIES = "moon_berries";
