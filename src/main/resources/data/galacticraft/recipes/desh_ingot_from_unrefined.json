@@ -1,7 +1,7 @@
 {
   "type": "smelting",
   "ingredient": {
-    "item": "galacticraft:raw_desh"
+    "item": "galacticraft:unrefined_desh"
   },
   "result": "galacticraft:desh_ingot",
   "experience": 0.1,

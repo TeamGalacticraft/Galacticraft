@@ -237,7 +237,7 @@ public interface Constant {
         String RAW_METEORIC_IRON = "raw_meteoric_iron";
         String METEORIC_IRON_INGOT = "meteoric_iron_ingot";
         String LUNAR_SAPPHIRE = "lunar_sapphire";
-        String UNREFINED_DESH = "raw_desh";
+        String UNREFINED_DESH = "unrefined_desh";
         String DESH_INGOT = "desh_ingot";
         String DESH_STICK = "desh_stick";
         String CARBON_FRAGMENTS = "carbon_fragments";
@@ -272,7 +272,7 @@ public interface Constant {
         String COPPER_CANISTER = "copper_canister";
         String TIN_CANISTER = "tin_canister";
         String THERMAL_CLOTH = "thermal_cloth";
-        String ISOTHERMAL_FABRIC = "thermal_cloth_t2";
+        String ISOTHERMAL_FABRIC = "isothermal_fabric";
         String ORION_DRIVE = "orion_drive";
         String ATMOSPHERIC_VALVE = "atmospheric_valve";
         String LIQUID_CANISTER = "liquid_canister";
