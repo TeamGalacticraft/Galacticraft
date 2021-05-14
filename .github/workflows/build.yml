@@ -13,7 +13,7 @@ jobs:
         os: [ubuntu-20.04]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout repositoriy
+      - name: Checkout repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
