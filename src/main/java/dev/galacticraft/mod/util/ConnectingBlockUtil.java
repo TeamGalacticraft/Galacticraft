@@ -24,6 +24,7 @@ package dev.galacticraft.mod.util;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -35,27 +36,20 @@ import net.minecraft.util.shape.VoxelShapes;
 public class ConnectingBlockUtil {
     private ConnectingBlockUtil() {}
 
-    public static final BooleanProperty ATTACHED_NORTH = BooleanProperty.of("attached_north");
-    public static final BooleanProperty ATTACHED_EAST = BooleanProperty.of("attached_east");
-    public static final BooleanProperty ATTACHED_SOUTH = BooleanProperty.of("attached_south");
-    public static final BooleanProperty ATTACHED_WEST = BooleanProperty.of("attached_west");
-    public static final BooleanProperty ATTACHED_UP = BooleanProperty.of("attached_up");
-    public static final BooleanProperty ATTACHED_DOWN = BooleanProperty.of("attached_down");
-
     public static BooleanProperty getBooleanProperty(Direction dir) {
         switch (dir) {
             case SOUTH:
-                return ATTACHED_SOUTH;
+                return Properties.SOUTH;
             case EAST:
-                return ATTACHED_EAST;
+                return Properties.EAST;
             case WEST:
-                return ATTACHED_WEST;
+                return Properties.WEST;
             case NORTH:
-                return ATTACHED_NORTH;
+                return Properties.NORTH;
             case UP:
-                return ATTACHED_UP;
+                return Properties.UP;
             case DOWN:
-                return ATTACHED_DOWN;
+                return Properties.DOWN;
             default:
                 throw new IllegalArgumentException("cannot be null");
         }
@@ -64,22 +58,22 @@ public class ConnectingBlockUtil {
     public static VoxelShape getVoxelShape(BlockState blockState, VoxelShape north, VoxelShape south, VoxelShape east, VoxelShape west, VoxelShape up, VoxelShape down, VoxelShape none) {
         VoxelShape shape = none;
 
-        if (blockState.get(ATTACHED_NORTH)) {
+        if (blockState.get(Properties.NORTH)) {
             shape = VoxelShapes.combineAndSimplify(shape, north, BooleanBiFunction.OR);
         }
-        if (blockState.get(ATTACHED_SOUTH)) {
+        if (blockState.get(Properties.SOUTH)) {
             shape = VoxelShapes.combineAndSimplify(shape, south, BooleanBiFunction.OR);
         }
-        if (blockState.get(ATTACHED_EAST)) {
+        if (blockState.get(Properties.EAST)) {
             shape = VoxelShapes.combineAndSimplify(shape, east, BooleanBiFunction.OR);
         }
-        if (blockState.get(ATTACHED_WEST)) {
+        if (blockState.get(Properties.WEST)) {
             shape = VoxelShapes.combineAndSimplify(shape, west, BooleanBiFunction.OR);
         }
-        if (blockState.get(ATTACHED_UP)) {
+        if (blockState.get(Properties.UP)) {
             shape = VoxelShapes.combineAndSimplify(shape, up, BooleanBiFunction.OR);
         }
-        if (blockState.get(ATTACHED_DOWN)) {
+        if (blockState.get(Properties.DOWN)) {
             shape = VoxelShapes.combineAndSimplify(shape, down, BooleanBiFunction.OR);
         }
         return shape;

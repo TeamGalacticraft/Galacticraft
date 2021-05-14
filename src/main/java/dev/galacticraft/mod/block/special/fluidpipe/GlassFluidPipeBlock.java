@@ -41,6 +41,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
@@ -58,21 +59,22 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GlassFluidPipeBlock extends FluidPipe {
-
-    private static final VoxelShape NORTH = createCuboidShape(8 - 2, 8 - 2, 0, 8 + 2, 8 + 2, 8 + 2);
-    private static final VoxelShape EAST = createCuboidShape(8 - 2, 8 - 2, 8 - 2, 16, 8 + 2, 8 + 2);
-    private static final VoxelShape SOUTH = createCuboidShape(8 - 2, 8 - 2, 8 - 2, 8 + 2, 8 + 2, 16);
-    private static final VoxelShape WEST = createCuboidShape(0, 8 - 2, 8 - 2, 8 + 2, 8 + 2, 8 + 2);
-    private static final VoxelShape UP = createCuboidShape(8 - 2, 8 - 2, 8 - 2, 8 + 2, 16, 8 + 2);
-    private static final VoxelShape DOWN = createCuboidShape(8 - 2, 0, 8 - 2, 8 + 2, 8 + 2, 8 + 2);
-    private static final VoxelShape NONE = createCuboidShape(8 - 2, 8 - 2, 8 - 2, 8 + 2, 8 + 2, 8 + 2);
+    // If we start at 8,8,8 and subtract/add to/from 8, we do operations starting from the centre.
+    private static final int OFFSET = 2;
+    private static final VoxelShape NORTH_SHAPE = createCuboidShape(8 - OFFSET, 8 - OFFSET, 0, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape EAST_SHAPE = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 16, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape SOUTH_SHAPE = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 16);
+    private static final VoxelShape WEST_SHAPE = createCuboidShape(0, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape UP_SHAPE = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 16, 8 + OFFSET);
+    private static final VoxelShape DOWN_SHAPE = createCuboidShape(8 - OFFSET, 0, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape NONE = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);    // 6x6x6 box in the center.
 
     public static final BooleanProperty PULL = BooleanProperty.of("pull"); //todo pull state (what would that mean for conf. sides that are different?)
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.of("color", DyeColor.class);
 
     public GlassFluidPipeBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.getStateManager().getDefaultState().with(PULL, false).with(COLOR, DyeColor.WHITE).with(ConnectingBlockUtil.ATTACHED_NORTH, false).with(ConnectingBlockUtil.ATTACHED_EAST, false).with(ConnectingBlockUtil.ATTACHED_SOUTH, false).with(ConnectingBlockUtil.ATTACHED_WEST, false).with(ConnectingBlockUtil.ATTACHED_UP, false).with(ConnectingBlockUtil.ATTACHED_DOWN, false));
+        this.setDefaultState(this.getStateManager().getDefaultState().with(PULL, false).with(COLOR, DyeColor.WHITE).with(Properties.NORTH, false).with(Properties.EAST, false).with(Properties.SOUTH, false).with(Properties.WEST, false).with(Properties.UP, false).with(Properties.DOWN, false));
     }
 
     @Override
@@ -119,16 +121,12 @@ public class GlassFluidPipeBlock extends FluidPipe {
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
         Direction dir = Direction.fromVector(posFrom.getX() - pos.getX(), posFrom.getY() - pos.getY(), posFrom.getZ() - pos.getZ());
-        return dir != null ? state.with(getPropForDirection(dir), !newState.isAir() && newState.getBlock() instanceof FluidPipe || FluidUtil.isExtractableOrInsertable((World)world, posFrom, dir)) : super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+        return dir != null ? state.with(ConnectingBlockUtil.getBooleanProperty(dir), !newState.isAir() && newState.getBlock() instanceof FluidPipe || FluidUtil.isExtractableOrInsertable((World)world, posFrom, dir)) : super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
-        return ConnectingBlockUtil.getVoxelShape(blockState, NORTH, SOUTH, EAST, WEST, UP, DOWN, NONE);
-    }
-
-    private BooleanProperty getPropForDirection(Direction dir) {
-        return ConnectingBlockUtil.getBooleanProperty(dir);
+        return ConnectingBlockUtil.getVoxelShape(blockState, NORTH_SHAPE, SOUTH_SHAPE, EAST_SHAPE, WEST_SHAPE, UP_SHAPE, DOWN_SHAPE, NONE);
     }
 
     @Override
@@ -153,6 +151,6 @@ public class GlassFluidPipeBlock extends FluidPipe {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(PULL, COLOR, ConnectingBlockUtil.ATTACHED_NORTH, ConnectingBlockUtil.ATTACHED_EAST, ConnectingBlockUtil.ATTACHED_SOUTH, ConnectingBlockUtil.ATTACHED_WEST, ConnectingBlockUtil.ATTACHED_UP, ConnectingBlockUtil.ATTACHED_DOWN);
+        builder.add(PULL, COLOR, Properties.NORTH, Properties.EAST, Properties.SOUTH, Properties.WEST, Properties.UP, Properties.DOWN);
     }
 }
