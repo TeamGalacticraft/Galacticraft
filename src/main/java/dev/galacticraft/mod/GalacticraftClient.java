@@ -33,6 +33,7 @@ import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRe
 import dev.galacticraft.mod.client.render.entity.*;
 import dev.galacticraft.mod.client.resource.GalacticraftResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
+import dev.galacticraft.mod.item.GalacticraftItems;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.mixin.SkyPropertiesAccessor;
 import dev.galacticraft.mod.particle.GalacticraftParticle;
@@ -47,6 +48,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
@@ -164,6 +166,11 @@ public class GalacticraftClient implements ClientModInitializer {
         SkyPropertiesAccessor.getBY_IDENTIFIER().put(new Identifier(Constant.MOD_ID, "moon"), new MoonSkyProperties());
 
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> FallenMeteorBlock.colorMultiplier(world, pos), GalacticraftBlock.FALLEN_METEOR);
+
+        ArmorRenderingRegistry.registerSimpleTexture(new Identifier(Constant.MOD_ID, "desh"), GalacticraftItems.DESH_HELMET, GalacticraftItems.DESH_CHESTPLATE, GalacticraftItems.DESH_LEGGINGS, GalacticraftItems.DESH_BOOTS);
+        ArmorRenderingRegistry.registerSimpleTexture(new Identifier(Constant.MOD_ID, "heavy_duty"), GalacticraftItems.HEAVY_DUTY_HELMET, GalacticraftItems.HEAVY_DUTY_CHESTPLATE, GalacticraftItems.HEAVY_DUTY_LEGGINGS, GalacticraftItems.HEAVY_DUTY_BOOTS);
+        ArmorRenderingRegistry.registerSimpleTexture(new Identifier(Constant.MOD_ID, "titanium"), GalacticraftItems.TITANIUM_HELMET, GalacticraftItems.TITANIUM_CHESTPLATE, GalacticraftItems.TITANIUM_LEGGINGS, GalacticraftItems.TITANIUM_BOOTS);
+        ArmorRenderingRegistry.registerSimpleTexture(new Identifier(Constant.MOD_ID, "sensor_glasses"), GalacticraftItems.SENSOR_GLASSES);
 
         Galacticraft.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
