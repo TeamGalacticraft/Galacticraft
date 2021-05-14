@@ -3,6 +3,8 @@
   "ingredient": {
     "item": "minecraft:redstone_torch"
   },
-  "result": "galacticraft:basic_wafer",
-  "count": 3
+  "result": {
+    "item": "galacticraft:basic_wafer",
+    "count": 3
+  }
 }
