@@ -333,6 +333,7 @@ public interface Constant {
         String STANDARD_WRENCH = "standard_wrench";
         String BATTERY = "battery";
         String INFINITE_BATTERY = "infinite_battery";
+        String ATOMIC_BATTERY = "atomic_battery";
 
         //Fluid buckets
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";
