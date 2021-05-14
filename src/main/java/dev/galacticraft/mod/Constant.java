@@ -207,8 +207,8 @@ public interface Constant {
         String BEAM_RECEIVER = "beam_receiver";
         String SOLAR_ARRAY_MODULE = "solar_array_module";
         String OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK = "oxygen_distributor_bubble_dummy_block";
-        String MOON_BASALT_BRICK = "moon_basalt_brick";
-        String CRACKED_MOON_BASALT_BRICK = "cracked_moon_basalt_brick";
+        String MOON_BASALT_BRICKS = "moon_basalt_bricks";
+        String CRACKED_MOON_BASALT_BRICKS = "cracked_moon_basalt_bricks";
         String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
         String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
     }

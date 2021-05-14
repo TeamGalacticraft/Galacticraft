@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/template_wall_side_tall",
   "textures": {
-    "wall": "galacticraft:block/cracked_moon_basalt_brick"
+    "wall": "galacticraft:block/cracked_moon_basalt_bricks"
   }
 }

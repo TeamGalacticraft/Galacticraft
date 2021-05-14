@@ -1,8 +1,8 @@
 {
   "parent": "block/slab",
   "textures": {
-    "bottom": "galacticraft:block/cracked_moon_basalt_brick",
-    "top": "galacticraft:block/cracked_moon_basalt_brick",
-    "side": "galacticraft:block/cracked_moon_basalt_brick"
+    "bottom": "galacticraft:block/cracked_moon_basalt_bricks",
+    "top": "galacticraft:block/cracked_moon_basalt_bricks",
+    "side": "galacticraft:block/cracked_moon_basalt_bricks"
   }
 }

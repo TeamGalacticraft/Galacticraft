@@ -27,12 +27,14 @@ import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 /**
@@ -104,7 +106,11 @@ public class FabricationRecipe implements Recipe<Inventory> {
         public FabricationRecipe read(Identifier id, JsonObject json) {
             String group = JsonHelper.getString(json, "group", "");
             Ingredient ingredient = Ingredient.fromJson(JsonHelper.getObject(json, "ingredient"));
-            ItemStack result = ShapedRecipe.getItemStack(JsonHelper.getObject(json, "result"));
+            String string2 = JsonHelper.getString(json, "result");
+            Identifier identifier2 = new Identifier(string2);
+            ItemStack result = new ItemStack((ItemConvertible)Registry.ITEM.getOrEmpty(identifier2).orElseThrow(() -> {
+               return new IllegalStateException("Item: " + string2 + " does not exist");
+            }));
             return new FabricationRecipe(id, group, ingredient, result);
         }
 

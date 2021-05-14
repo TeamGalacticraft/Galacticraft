@@ -108,8 +108,8 @@ public class GalacticraftBlock {
     public static final Block[] MOON_ROCKS = createDecorationBlocks(Constant.Block.MOON_ROCK, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).requiresTool().strength(2.0F, 5.0F), false);
     public static final Block[] COBBLED_MOON_ROCKS = createDecorationBlocks(Constant.Block.COBBLED_MOON_ROCK, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).requiresTool().strength(2.0F, 5.0F), false);
     public static final Block[] MOON_BASALTS = createDecorationBlocks(Constant.Block.MOON_BASALT, FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK_TERRACOTTA).strength(2.0F, 6.0F), false);
-    public static final Block[] MOON_BASALT_BRICKS = createDecorationBlocks(Constant.Block.MOON_BASALT_BRICK, FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK_TERRACOTTA).strength(2.0F, 6.0F), false);
-    public static final Block[] CRACKED_MOON_BASALT_BRICKS = createDecorationBlocks(Constant.Block.CRACKED_MOON_BASALT_BRICK, FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK_TERRACOTTA).strength(2.0F, 6.0F), false);
+    public static final Block[] MOON_BASALT_BRICKS = createDecorationBlocks(Constant.Block.MOON_BASALT_BRICKS, FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK_TERRACOTTA).strength(2.0F, 6.0F), false);
+    public static final Block[] CRACKED_MOON_BASALT_BRICKS = createDecorationBlocks(Constant.Block.CRACKED_MOON_BASALT_BRICKS, FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK_TERRACOTTA).strength(2.0F, 6.0F), false);
 
     // MARS NATURAL
     public static final Block MARS_SURFACE_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.DIRT).hardness(2.2F)), Constant.Block.MARS_SURFACE_ROCK);
@@ -239,17 +239,21 @@ public class GalacticraftBlock {
     private static Block[] createDecorationBlocks(String baseId, Block baseBlock, boolean hasDetailed) {
         Block[] blocks = new Block[hasDetailed ? 8 : 4];
         blocks[0] = registerBlock(baseBlock, baseId);
-        blocks[1] = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(baseBlock)), baseId + "_slab");
-        blocks[2] = registerBlock(new StairsBlock(baseBlock.getDefaultState(), FabricBlockSettings.copyOf(baseBlock)), baseId + "_stairs");
-        blocks[3] = registerBlock(new WallBlock(FabricBlockSettings.copyOf(baseBlock)), baseId + "_wall");
+        blocks[1] = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(baseBlock)), correctBrickName(baseId) + "_slab");
+        blocks[2] = registerBlock(new StairsBlock(baseBlock.getDefaultState(), FabricBlockSettings.copyOf(baseBlock)), correctBrickName(baseId) + "_stairs");
+        blocks[3] = registerBlock(new WallBlock(FabricBlockSettings.copyOf(baseBlock)), correctBrickName(baseId) + "_wall");
 
         if (hasDetailed) {
             blocks[4] = registerBlock(new Block(FabricBlockSettings.copyOf(baseBlock)), "detailed_" + baseId);
-            blocks[5] = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(baseBlock)), "detailed_" + baseId + "_slab");
-            blocks[6] = registerBlock(new StairsBlock(baseBlock.getDefaultState(), FabricBlockSettings.copyOf(baseBlock)), "detailed_" + baseId + "_stairs");
-            blocks[7] = registerBlock(new WallBlock(FabricBlockSettings.copyOf(baseBlock)), "detailed_" + baseId + "_wall");
+            blocks[5] = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(baseBlock)), "detailed_" + correctBrickName(baseId) + "_slab");
+            blocks[6] = registerBlock(new StairsBlock(baseBlock.getDefaultState(), FabricBlockSettings.copyOf(baseBlock)), "detailed_" + correctBrickName(baseId) + "_stairs");
+            blocks[7] = registerBlock(new WallBlock(FabricBlockSettings.copyOf(baseBlock)), "detailed_" + correctBrickName(baseId) + "_wall");
         }
         return blocks;
+    }
+
+    private static String correctBrickName(String baseId) {
+        return baseId.replace("bricks", "brick");
     }
 
     private static <T extends Block> T registerBlock(T block, String id) {

@@ -1,7 +1,7 @@
 {
   "type": "smelting",
   "ingredient": {
-    "tag": "c:lead_ore"
+    "tag": "c:lead_ores"
   },
   "result": "galacticraft:lead_ingot",
   "experience": 0.1,

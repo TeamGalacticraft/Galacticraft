@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft:solid_meteoric_iron"
+          "name": "galacticraft:meteoric_iron_block"
         }
       ],
       "conditions": [
