@@ -62,6 +62,7 @@ public class GalacticraftBlockEntityType {
     public static final BlockEntityType<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.OXYGEN_COMPRESSOR), BlockEntityType.Builder.create(OxygenCompressorBlockEntity::new, GalacticraftBlock.OXYGEN_COMPRESSOR).build(null));
     public static final BlockEntityType<OxygenDecompressorBlockEntity> OXYGEN_DECOMPRESSOR = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.OXYGEN_DECOMPRESSOR), BlockEntityType.Builder.create(OxygenDecompressorBlockEntity::new, GalacticraftBlock.OXYGEN_DECOMPRESSOR).build(null));
     public static final BlockEntityType<OxygenStorageModuleBlockEntity> OXYGEN_STORAGE_MODULE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.OXYGEN_STORAGE_MODULE), BlockEntityType.Builder.create(OxygenStorageModuleBlockEntity::new, GalacticraftBlock.OXYGEN_STORAGE_MODULE).build(null));
+    public static final BlockEntityType<FallenMeteorBlockEntity> FALLEN_METEOR = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.FALLEN_METEOR), BlockEntityType.Builder.create(FallenMeteorBlockEntity::new, GalacticraftBlock.FALLEN_METEOR).build(null));
 
     public static void register() {
     }
