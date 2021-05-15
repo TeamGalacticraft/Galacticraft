@@ -37,7 +37,6 @@ import me.shedaniel.rei.api.plugins.REIPluginV0;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
-import net.minecraft.recipe.Recipe;
 import net.minecraft.util.Identifier;
 
 import java.util.List;

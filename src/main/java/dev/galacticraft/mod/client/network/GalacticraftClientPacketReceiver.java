@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.client.network;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.api.internal.data.ClientWorldTeamsGetter;
 import com.mojang.authlib.GameProfile;
 import dev.galacticraft.mod.Constant;

@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.mod.api.block.MultiBlockBase;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
