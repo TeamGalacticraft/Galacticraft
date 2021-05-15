@@ -49,7 +49,6 @@ import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
@@ -168,17 +167,15 @@ public class FallenMeteorBlock extends FallingBlock implements Waterloggable, Bl
         }
     }
 
-    //TODO Fix meteor color doesn't update dynamically and falling block entity don't render block color
+    //TODO Fix falling block entity don't render block color
     public static int colorMultiplier(BlockRenderView blockView, BlockPos pos) {
         if (blockView != null && pos != null) {
             BlockEntity blockEntity = blockView.getBlockEntity(pos);
 
             if (blockEntity instanceof FallenMeteorBlockEntity) {
                 FallenMeteorBlockEntity meteor = (FallenMeteorBlockEntity) blockEntity;
-                Vec3d col = new Vec3d(198, 108, 58);
                 float scale = 200 - meteor.getScaledHeatLevel() * 200;
-                col.add(scale, scale, scale);
-                return ColorUtil.rgb((int)Math.min(255, col.x), (int)Math.min(255, col.y), (int)Math.min(255, col.z));
+                return ColorUtil.rgb(Math.min(255, 198 + (int)scale), Math.min(255, 108 + (int)scale), Math.min(255, 58 + (int)scale));
             }
         }
         return 16777215;

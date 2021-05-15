@@ -22,11 +22,13 @@
 
 package dev.galacticraft.mod.block.entity;
 
+import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 
@@ -45,6 +47,7 @@ public class FallenMeteorBlockEntity extends BlockEntity implements Tickable, Bl
     public void tick() {
         if (!this.world.isClient && this.heatLevel > 0) {
             this.heatLevel--;
+            this.sync();
         }
     }
 
@@ -64,12 +67,14 @@ public class FallenMeteorBlockEntity extends BlockEntity implements Tickable, Bl
     @Override
     @Environment(EnvType.CLIENT)
     public void fromClientTag(CompoundTag tag) {
-        this.fromTag(this.getCachedState(), tag);
+        this.heatLevel = tag.getInt("HeatLevel");
+        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
     }
 
     @Override
     public CompoundTag toClientTag(CompoundTag tag) {
-        return this.toTag(tag);
+        tag.putInt("HeatLevel", this.heatLevel);
+        return tag;
     }
 
     public int getHeatLevel() {
