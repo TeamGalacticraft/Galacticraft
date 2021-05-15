@@ -41,4 +41,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Galacticraft
-          path: build/libs
+          path: |
+            build/libs/
+            !build/libs/*-sources.jar
+            !build/libs/*-dev.jar
