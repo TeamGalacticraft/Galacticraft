@@ -78,7 +78,7 @@ public class AtomicBatteryItem extends Item implements AttributeProviderItem {
 
             @Override
             public int extract(int amount, Simulation simulation) {
-                return 100;
+                return 50;
             }
         });
     }
