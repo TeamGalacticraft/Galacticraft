@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.block;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.FluidBlock;
 import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.block.decoration.GratingBlock;
 import dev.galacticraft.mod.block.decoration.LightPanelBlock;
@@ -78,15 +77,15 @@ public class GalacticraftBlock {
     public static final Block UNLIT_LANTERN = registerBlockWithoutItem(new UnlitLanternBlock(FabricBlockSettings.copy(Blocks.LANTERN).luminance(state -> 0)), Constant.Block.UNLIT_LANTERN);
 
     // LIQUIDS
-    public static final dev.galacticraft.mod.api.block.FluidBlock CRUDE_OIL = registerBlockWithoutItem(new CrudeOilBlock(GalacticraftFluid.CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.BLACK)
+    public static final FluidBlock CRUDE_OIL = registerBlockWithoutItem(new CrudeOilBlock(GalacticraftFluid.CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.BLACK)
             .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
             .strength(100.0F, 1000.0F).dropsNothing()), Constant.Block.CRUDE_OIL);
 
-    public static final dev.galacticraft.mod.api.block.FluidBlock FUEL = registerBlockWithoutItem(new FluidBlock(GalacticraftFluid.FUEL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.YELLOW)
+    public static final FluidBlock FUEL = registerBlockWithoutItem(new FluidBlock(GalacticraftFluid.FUEL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.YELLOW)
             .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
             .strength(50.0F, 50.0F).dropsNothing()), Constant.Block.FUEL);
 
-    public static final dev.galacticraft.mod.api.block.FluidBlock BACTERIAL_SLUDGE = registerBlockWithoutItem(new BacterialSludgeBlock(GalacticraftFluid.BACTERIAL_SLUDGE, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.GREEN)
+    public static final FluidBlock BACTERIAL_SLUDGE = registerBlockWithoutItem(new BacterialSludgeBlock(GalacticraftFluid.BACTERIAL_SLUDGE, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.GREEN)
             .allowsMovement().destroyedByPiston().lightPassesThrough().notSolid().replaceable().liquid().build())
             .strength(100.0F, 1000.0F).dropsNothing()), Constant.Block.BACTERIAL_SLUDGE);
 

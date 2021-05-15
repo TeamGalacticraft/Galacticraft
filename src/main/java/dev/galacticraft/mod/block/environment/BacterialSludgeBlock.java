@@ -24,8 +24,8 @@ package dev.galacticraft.mod.block.environment;
 
 import java.util.List;
 
-import dev.galacticraft.mod.api.block.FluidBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
