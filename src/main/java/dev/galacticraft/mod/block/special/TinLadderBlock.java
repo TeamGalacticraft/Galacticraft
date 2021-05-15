@@ -33,6 +33,8 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -76,8 +78,10 @@ public class TinLadderBlock extends Block {
         if (world.getBlockState(checkPos).isAir()) {
             BlockState newState = this.getDefaultState().with(FACING, state.get(FACING));
             world.setBlockState(checkPos, newState);
+            BlockSoundGroup blockSoundGroup = newState.getSoundGroup();
+            world.playSound(null, checkPos, blockSoundGroup.getPlaceSound(), SoundCategory.BLOCKS, (blockSoundGroup.getVolume() + 1.0F) / 2.0F, blockSoundGroup.getPitch() * 0.8F);
             return ActionResult.SUCCESS;
-        } else if (!(world.getBlockState(checkPos).getBlock() instanceof TinLadderBlock)) {
+        } else if (world.getBlockState(checkPos).getBlock() != this) {
             return ActionResult.PASS;
         }
         return null;
@@ -85,21 +89,27 @@ public class TinLadderBlock extends Block {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack item = player.inventory.getStack(player.inventory.selectedSlot);
-        if (Block.getBlockFromItem(item.getItem()) instanceof TinLadderBlock) {
-            if (!player.isCreative())
-                item.decrement(1);
+        ItemStack itemStack = player.getStackInHand(hand);
+        if (itemStack.getItem() == this.asItem()) {
             if (player.pitch < 0f) {
-                for (BlockPos checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() < world.getDimensionHeight(); checkPos = checkPos.add(0, 1, 0)) {
+                for (BlockPos checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()); World.isInBuildLimit(checkPos); checkPos = checkPos.add(0, 1, 0)) {
                     ActionResult result = this.checkCanTinLadderBePlaced(world, checkPos, state);
-                    if (result != null)
+                    if (result != null) {
+                        if (!player.isCreative() && result == ActionResult.SUCCESS) {
+                            itemStack.decrement(1);
+                        }
                         return result;
+                    }
                 }
             } else {
-                for (BlockPos checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() > 0; checkPos = checkPos.add(0, -1, 0)) {
+                for (BlockPos checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()); World.isInBuildLimit(checkPos); checkPos = checkPos.add(0, -1, 0)) {
                     ActionResult result = this.checkCanTinLadderBePlaced(world, checkPos, state);
-                    if (result != null)
+                    if (result != null) {
+                        if (!player.isCreative() && result == ActionResult.SUCCESS) {
+                            itemStack.decrement(1);
+                        }
                         return result;
+                    }
                 }
             }
         }
