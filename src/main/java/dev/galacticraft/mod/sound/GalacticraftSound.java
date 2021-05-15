@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.sound;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.mixin.SoundEventAccessor;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -84,6 +83,6 @@ public class GalacticraftSound {
     }
 
     private static void registerSound(SoundEvent soundEvent) {
-        Registry.register(Registry.SOUND_EVENT, ((SoundEventAccessor)soundEvent).getSId(), soundEvent);
+        Registry.register(Registry.SOUND_EVENT, soundEvent.id, soundEvent);
     }
 }

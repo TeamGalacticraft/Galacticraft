@@ -32,6 +32,7 @@ accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator      
 accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator                    BIOME_WEIGHT_TABLE [F
 accessible      field    net/minecraft/screen/slot/Slot                                       index              I
 accessible      field    net/minecraft/client/sound/SoundManager                              soundSystem        Lnet/minecraft/client/sound/SoundSystem;
+accessible      field    net/minecraft/sound/SoundEvent                                       id                 Lnet/minecraft/util/Identifier;
 extendable      class    net/minecraft/world/gen/chunk/NoiseChunkGenerator
 
 accessible      method  net/minecraft/item/MusicDiscItem                                      <init>            (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V

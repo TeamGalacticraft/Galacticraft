@@ -20,7 +20,6 @@
     "ServerPlayerEntityMixin",
     "ServerWorldMixin",
     "SkyPropertiesAccessor",
-    "SoundEventAccessor",
     "StructurePoolGeneratorMixin",
     "TorchBlockMixin",
     "WorldChunkMixin",
