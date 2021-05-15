@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.sound;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.mixin.SoundEventAccessor;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -57,28 +58,32 @@ public class GalacticraftSound {
     public static final SoundEvent MUSIC_LEGACY_SPACERACE = new SoundEvent(new Identifier(Constant.MOD_ID, "music.legacy.spacerace"));
 
     public static void register() {
-        Registry.register(Registry.SOUND_EVENT, MUSIC_MOON.getId(), MUSIC_MOON);
-        Registry.register(Registry.SOUND_EVENT, MUSIC_CREDITS.getId(), MUSIC_CREDITS);
-        Registry.register(Registry.SOUND_EVENT, MUSIC_ORBIT.getId(), MUSIC_ORBIT);
-        Registry.register(Registry.SOUND_EVENT, MUSIC_MARS.getId(), MUSIC_MARS);
-        Registry.register(Registry.SOUND_EVENT, PLAYER_UNLOCKCHEST.getId(), PLAYER_UNLOCKCHEST);
-        Registry.register(Registry.SOUND_EVENT, PLAYER_PARACHUTE.getId(), PLAYER_PARACHUTE);
-        Registry.register(Registry.SOUND_EVENT, PLAYER_OPENAIRLOCK.getId(), PLAYER_OPENAIRLOCK);
-        Registry.register(Registry.SOUND_EVENT, PLAYER_CLOSEAIRLOCK.getId(), PLAYER_CLOSEAIRLOCK);
-        Registry.register(Registry.SOUND_EVENT, ENTITY_SLIME_DEATH.getId(), ENTITY_SLIME_DEATH);
-        Registry.register(Registry.SOUND_EVENT, ENTITY_OOH.getId(), ENTITY_OOH);
-        Registry.register(Registry.SOUND_EVENT, ENTITY_OUCH.getId(), ENTITY_OUCH);
-        Registry.register(Registry.SOUND_EVENT, ENTITY_BOSSLAUGH.getId(), ENTITY_BOSSLAUGH);
-        Registry.register(Registry.SOUND_EVENT, ENTITY_BOSSDEATH.getId(), ENTITY_BOSSDEATH);
-        Registry.register(Registry.SOUND_EVENT, ENTITY_ASTROMINER.getId(), ENTITY_ASTROMINER);
-        Registry.register(Registry.SOUND_EVENT, AMBIENCE_SINGLEDRIP.getId(), AMBIENCE_SINGLEDRIP);
-        Registry.register(Registry.SOUND_EVENT, AMBIENCE_SCARYSCAPE.getId(), AMBIENCE_SCARYSCAPE);
-        Registry.register(Registry.SOUND_EVENT, SHUTTLE_SHUTTLE.getId(), SHUTTLE_SHUTTLE);
+        registerSound(MUSIC_MOON);
+        registerSound(MUSIC_CREDITS);
+        registerSound(MUSIC_ORBIT);
+        registerSound(MUSIC_MARS);
+        registerSound(PLAYER_UNLOCKCHEST);
+        registerSound(PLAYER_PARACHUTE);
+        registerSound(PLAYER_OPENAIRLOCK);
+        registerSound(PLAYER_CLOSEAIRLOCK);
+        registerSound(ENTITY_SLIME_DEATH);
+        registerSound(ENTITY_OOH);
+        registerSound(ENTITY_OUCH);
+        registerSound(ENTITY_BOSSLAUGH);
+        registerSound(ENTITY_BOSSDEATH);
+        registerSound(ENTITY_ASTROMINER);
+        registerSound(AMBIENCE_SINGLEDRIP);
+        registerSound(AMBIENCE_SCARYSCAPE);
+        registerSound(SHUTTLE_SHUTTLE);
 
         // Legacy Discs
-        Registry.register(Registry.SOUND_EVENT, MUSIC_LEGACY_MARS.getId(), MUSIC_LEGACY_MARS);
-        Registry.register(Registry.SOUND_EVENT, MUSIC_LEGACY_MIMAS.getId(), MUSIC_LEGACY_MIMAS);
-        Registry.register(Registry.SOUND_EVENT, MUSIC_LEGACY_ORBIT.getId(), MUSIC_LEGACY_ORBIT);
-        Registry.register(Registry.SOUND_EVENT, MUSIC_LEGACY_SPACERACE.getId(), MUSIC_LEGACY_SPACERACE);
+        registerSound(MUSIC_LEGACY_MARS);
+        registerSound(MUSIC_LEGACY_MIMAS);
+        registerSound(MUSIC_LEGACY_ORBIT);
+        registerSound(MUSIC_LEGACY_SPACERACE);
+    }
+
+    private static void registerSound(SoundEvent soundEvent) {
+        Registry.register(Registry.SOUND_EVENT, ((SoundEventAccessor)soundEvent).getSId(), soundEvent);
     }
 }
