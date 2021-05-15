@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         java: [
-            1.8, # Minimum
+            8, # Minimum
             11,  # LTS
             16,  # Latest
         ]
