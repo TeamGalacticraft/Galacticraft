@@ -40,5 +40,5 @@ jobs:
         if: ${{ runner.os == 'Linux' && matrix.java == '8' }}
         uses: actions/upload-artifact@v2
         with:
-          name: Artifacts
+          name: Galacticraft
           path: build/libs
