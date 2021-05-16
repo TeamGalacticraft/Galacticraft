@@ -1,8 +1,8 @@
 [![](https://img.shields.io/github/workflow/status/TeamGalacticraft/Galacticraft/build/main?style=flat-square&logo=github)](https://github.com/TeamGalacticraft/Galacticraft/actions/workflows/build.yml?query=branch%3Amain)
 [![](https://img.shields.io/github/issues/TeamGalacticraft/Galacticraft?style=flat-square&logo=github)](https://github.com/TeamGalacticraft/Galacticraft/issues)
 [![](https://img.shields.io/github/issues-pr/TeamGalacticraft/Galacticraft?logo=github&style=flat-square)](https://github.com/TeamGalacticraft/Galacticraft/pulls)
-[![](https://img.shields.io/discord/775251052517523467.svg?colorB=7289DA&label=discord&style=flat-square&logo=discord)](https://discord.gg/n3QqhMYyFK)
-[![](https://img.shields.io/twitch/status/galacticraftdev.svg?style=flat-square&logo=twitch)](https://twitch.tv/galacticraftdev)
+[![](https://img.shields.io/discord/775251052517523467.svg?colorB=5865F2&label=discord&style=flat-square&logo=discord&logoColor=azure)](https://discord.gg/n3QqhMYyFK)
+[![](https://img.shields.io/twitch/status/galacticraftdev.svg?style=flat-square&logo=twitch&logoColor=azure)](https://twitch.tv/galacticraftdev)
 
 # Galacticraft 5
 The classic Minecraft space mod, rewritten from the ground up for modern versions of the game.
