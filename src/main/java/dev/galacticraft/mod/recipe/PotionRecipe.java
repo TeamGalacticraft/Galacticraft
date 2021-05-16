@@ -97,7 +97,7 @@ public class PotionRecipe implements CraftingRecipe {
         return this.getOutput().copy();
     }
 
-    private boolean matchesSmall(Inventory inv, int offsetX, int offsetY, boolean bl) {
+    private boolean matchesSmall(CraftingInventory inv, int offsetX, int offsetY, boolean bl) {
         if (inv.size() != 9) throw new AssertionError();
         for(int x = 0; x < 3; ++x) {
             for(int y = 0; y < 3; ++y) {

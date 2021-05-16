@@ -6,8 +6,8 @@ import net.minecraft.recipe.RecipeType;
 
 public interface CraftingRecipe extends Recipe<CraftingInventory> {
 
-    default RecipeType<? extends CraftingRecipe> getType() {
-        return GalacticraftRecipe.POTION_TYPE;
+    default RecipeType<? extends Recipe<?>> getType() {
+        return RecipeType.CRAFTING;
     }
 
 }
