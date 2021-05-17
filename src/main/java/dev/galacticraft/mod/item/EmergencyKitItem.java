@@ -45,7 +45,7 @@ public class EmergencyKitItem extends Item {
     private void giveItems(PlayerEntity user) {
         user.giveItemStack(new ItemStack(GalacticraftItems.OXYGEN_MASK));
         user.giveItemStack(new ItemStack(GalacticraftItems.OXYGEN_GEAR));
-        user.giveItemStack(new ItemStack(GalacticraftItems.SMALL_OXYGEN_TANK, 2));
+        user.giveItemStack(new ItemStack(GalacticraftItems.SMALL_OXYGEN_TANK, 2)); // TODO: Make this return the filled can
         user.giveItemStack(new ItemStack(GalacticraftItems.RED_PARACHUTE));
         user.giveItemStack(new ItemStack(GalacticraftItems.CANNED_DEHYDRATED_POTATO));
         user.giveItemStack(PotionUtil.setPotion(new ItemStack(Items.POTION), Potions.HEALING));
