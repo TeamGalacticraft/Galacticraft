@@ -1,5 +1,6 @@
 package dev.galacticraft.mod.recipe.rei;
 
+import dev.galacticraft.mod.recipe.PotionRecipe;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import me.shedaniel.rei.api.EntryStack;
 import me.shedaniel.rei.api.RecipeDisplay;
@@ -16,7 +17,7 @@ public class GCDefaultShapedDisplay implements GCDefaultCraftingDisplay {
     private final List<List<EntryStack>> input;
     private final List<EntryStack> output;
 
-    public GCDefaultShapedDisplay(ShapedCompressingRecipe recipe) {
+    public GCDefaultShapedDisplay(PotionRecipe recipe) {
         this.input = new ArrayList<>();
         recipe.getPreviewInputs().forEach((ingredient) -> {
             List<EntryStack> stacks = new ArrayList<>();
@@ -31,8 +32,16 @@ public class GCDefaultShapedDisplay implements GCDefaultCraftingDisplay {
 
     @Override
     public @NotNull List<List<EntryStack>> getInputEntries() {
-        return null;
+        return this.input;
     }
 
+    @Override
+    public @NotNull List<EntryStack> getOutputEntries() {
+        return this.output;
+    }
+
+    public List<List<EntryStack>> getInput() {
+        return this.input;
+    }
 
 }

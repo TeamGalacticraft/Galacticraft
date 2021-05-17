@@ -42,11 +42,15 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -55,7 +59,7 @@ import java.util.List;
 public class GalacticraftREIPlugin implements REIPluginV0 {
     public static final Identifier CIRCUIT_FABRICATION = new Identifier(Constant.MOD_ID, "plugins/circuit_fabricator");
     public static final Identifier COMPRESSING = new Identifier(Constant.MOD_ID, "plugins/compressing");
-    public static final Identifier CRAFTING = new Identifier("minecraft", "plugins/crafting"); // for thing
+    public static final Identifier CRAFTING = new Identifier(Constant.MOD_ID, "plugins/crafting"); // for thing
 
 
 
@@ -64,14 +68,14 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
     public void registerPluginCategories(RecipeHelper recipeHelper) {
         recipeHelper.registerCategory(new DefaultFabricationCategory());
         recipeHelper.registerCategory(new DefaultCompressingCategory());
-        recipeHelper.registerCategory(new DefaultCraftingCategory()); // register cat for potion compat. Let's see if this works...
+        recipeHelper.registerCategory(new GCDefaultCraftingCategory()); // register cat for potion compat. Let's see if this works...
     }
 
     @Override
     public void registerOthers(RecipeHelper recipeHelper) {
         recipeHelper.registerWorkingStations(CIRCUIT_FABRICATION, EntryStack.create(GalacticraftBlock.CIRCUIT_FABRICATOR));
         recipeHelper.registerWorkingStations(COMPRESSING, EntryStack.create(GalacticraftBlock.COMPRESSOR), EntryStack.create(GalacticraftBlock.ELECTRIC_COMPRESSOR));
-        recipeHelper.registerWorkingStations(CRAFTING, EntryStack.create(Blocks.CRAFTING_TABLE));
+        // recipeHelper.registerWorkingStations(CRAFTING, EntryStack.create(Blocks.CRAFTING_TABLE));
     }
 
     @Override
@@ -85,7 +89,8 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
         recipeHelper.registerRecipes(COMPRESSING, ShapedCompressingRecipe.class, DefaultShapedCompressingDisplay::new);
         recipeHelper.registerRecipes(COMPRESSING, ShapelessCompressingRecipe.class, DefaultShapelessCompressingDisplay::new);
         // blah register potion recipe type here
-        recipeHelper.registerRecipes(CRAFTING, PotionRecipe.class, GCDefaultShapedDisplay::new);
+
+        recipeHelper.registerRecipes(/*BuiltinPlugin.*/CRAFTING, PotionRecipe.class, GCDefaultShapedDisplay::new);
 
     }
 
@@ -112,4 +117,5 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
             entryRegistry.removeEntry(EntryStack.create(item));
         }
     }
+
 }
