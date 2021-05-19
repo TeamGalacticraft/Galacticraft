@@ -60,13 +60,15 @@ public class OxygenMaskFeatureRenderer<T extends Entity, M extends EntityModel<T
         this.maskTransforms = maskTransforms;
         this.color = color;
 
-        this.oxygenMaskNormal = createModelPart(null);
-        this.oxygenMaskColors = new HashMap<>();
-
         float pivotX = 0.0F, pivotY = 0.0F, pivotZ = 0.0F;
-        float x = -5.0F, y = -9.0F, z = -5.0F;
+        float x = -5.0F, y = -10.0F, z = -5.0F;
         int sizeX = 10, sizeY = 10, sizeZ = 10;
 
+        this.oxygenMaskNormal = createModelPart(null);
+        this.oxygenMaskNormal.setPivot(pivotX, pivotY, pivotZ);
+        this.oxygenMaskNormal.addCuboid(x, y, z, sizeX, sizeY, sizeZ, extra);
+
+        this.oxygenMaskColors = new HashMap<>();
         for (DyeColor dye : DyeColor.values()) {
             this.oxygenMaskColors.put(dye, createModelPart(dye));
             this.oxygenMaskColors.get(dye).setPivot(pivotX, pivotY, pivotZ);
