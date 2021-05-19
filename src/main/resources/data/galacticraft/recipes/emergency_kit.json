@@ -16,7 +16,8 @@
       "item": "galacticraft:oxygen_gear"
     },
     "O": {
-       "item": "galacticraft:small_oxygen_tank"
+       "oxygen": "galacticraft:small_oxygen_tank",
+       "o2level": 100
     },
     "S": {
        "item": "galacticraft:red_parachute"
@@ -25,10 +26,10 @@
         "item": "galacticraft:canned_dehydrated_potato"
     },
     "X": {
-       "item": "minecraft:potion"
+       "potion": "minecraft:healing"
     },
     "Y": {
-       "item": "minecraft:potion"
+       "potion": "minecraft:long_night_vision"
     }
   },
   "result": {

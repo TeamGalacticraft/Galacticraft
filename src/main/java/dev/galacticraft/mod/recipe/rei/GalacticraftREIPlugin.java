@@ -35,22 +35,12 @@ import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.*;
 import me.shedaniel.rei.api.plugins.REIPluginV0;
-import me.shedaniel.rei.plugin.crafting.DefaultCraftingCategory;
-import me.shedaniel.rei.plugin.crafting.DefaultCraftingDisplay;
-import me.shedaniel.rei.plugin.crafting.DefaultShapedDisplay;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
-import java.util.function.UnaryOperator;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -68,14 +58,13 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
     public void registerPluginCategories(RecipeHelper recipeHelper) {
         recipeHelper.registerCategory(new DefaultFabricationCategory());
         recipeHelper.registerCategory(new DefaultCompressingCategory());
-        recipeHelper.registerCategory(new GCDefaultCraftingCategory()); // register cat for potion compat. Let's see if this works...
+        recipeHelper.registerCategory(new GCDefaultCraftingCategory());
     }
 
     @Override
     public void registerOthers(RecipeHelper recipeHelper) {
         recipeHelper.registerWorkingStations(CIRCUIT_FABRICATION, EntryStack.create(GalacticraftBlock.CIRCUIT_FABRICATOR));
         recipeHelper.registerWorkingStations(COMPRESSING, EntryStack.create(GalacticraftBlock.COMPRESSOR), EntryStack.create(GalacticraftBlock.ELECTRIC_COMPRESSOR));
-        // recipeHelper.registerWorkingStations(CRAFTING, EntryStack.create(Blocks.CRAFTING_TABLE));
     }
 
     @Override
@@ -88,9 +77,7 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
         recipeHelper.registerRecipes(CIRCUIT_FABRICATION, FabricationRecipe.class, DefaultFabricationDisplay::new);
         recipeHelper.registerRecipes(COMPRESSING, ShapedCompressingRecipe.class, DefaultShapedCompressingDisplay::new);
         recipeHelper.registerRecipes(COMPRESSING, ShapelessCompressingRecipe.class, DefaultShapelessCompressingDisplay::new);
-        // blah register potion recipe type here
-
-        recipeHelper.registerRecipes(/*BuiltinPlugin.*/CRAFTING, PotionRecipe.class, GCDefaultShapedDisplay::new);
+        recipeHelper.registerRecipes(CRAFTING, PotionRecipe.class, GCDefaultShapedDisplay::new);
 
     }
 

@@ -10,8 +10,6 @@ import me.shedaniel.rei.api.TransferRecipeCategory;
 import me.shedaniel.rei.api.widgets.Slot;
 import me.shedaniel.rei.api.widgets.Widgets;
 import me.shedaniel.rei.gui.widget.Widget;
-import me.shedaniel.rei.plugin.DefaultPlugin;
-import me.shedaniel.rei.plugin.crafting.DefaultCraftingDisplay;
 import me.shedaniel.rei.plugin.crafting.DefaultShapedDisplay;
 import me.shedaniel.rei.server.ContainerInfo;
 import me.shedaniel.rei.server.ContainerInfoHandler;
@@ -26,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+// class taken from REI DefaultCraftingCategory.java
 public class GCDefaultCraftingCategory implements TransferRecipeCategory<GCDefaultCraftingDisplay> {
 
     public static int getSlotWithSize(GCDefaultCraftingDisplay recipeDisplay, int num, int craftingGridWidth) {

@@ -4,24 +4,33 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.gson.*;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.attribute.GalacticraftAttribute;
+import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
+import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.OxygenTankItem;
+import dev.galacticraft.mod.util.OxygenTankUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionUtil;
 import net.minecraft.recipe.*;
-import net.minecraft.recipe.CraftingRecipe;
+import net.minecraft.tag.ServerTagManagerHolder;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class PotionRecipe implements GCraftingRecipe {
 
@@ -112,13 +121,11 @@ public class PotionRecipe implements GCraftingRecipe {
                         ingredient = this.inputs.get(k + l * this.width);
                     }
                 }
-
                 if (!ingredient.test(inv.getStack(x + y * 3))) {
                     return false;
                 }
             }
         }
-
         return true;
     }
 
@@ -222,7 +229,7 @@ public class PotionRecipe implements GCraftingRecipe {
                 throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
             }
 
-            map.put(entry.getKey(), Ingredient.fromJson(entry.getValue()));
+            map.put(entry.getKey(), GCIngredient.fromJson(entry.getValue()));
         }
 
         map.put(" ", Ingredient.EMPTY);
@@ -257,17 +264,35 @@ public class PotionRecipe implements GCraftingRecipe {
     }
 
     public static ItemStack getItemStack(JsonObject json) {
-        String string = JsonHelper.getString(json, "item");
-        Item item = (Item) Registry.ITEM.getOrEmpty(new Identifier(string)).orElseThrow(() -> {
-            return new JsonSyntaxException("Unknown item '" + string + "'");
-        });
+
+        Item item;
+        ItemStack itemStack = null;
+        if (json.has("potion")) {
+            String identifier = JsonHelper.getString(json, "potion");
+            Potion potion = (Potion) Registry.POTION.getOrEmpty(new Identifier(identifier)).orElseThrow(() -> {
+                return new JsonSyntaxException("Unknown potion '" + identifier + "'");
+            });
+            // item = potion
+            itemStack = PotionUtil.setPotion(new ItemStack(Items.POTION), potion);
+
+        } else if (json.has("item")) {
+            String identifier = JsonHelper.getString(json, "item");
+            item = (Item) Registry.ITEM.getOrEmpty(new Identifier(identifier)).orElseThrow(() -> {
+                return new JsonSyntaxException("Unknown item '" + identifier + "'");
+            });
+            itemStack = new ItemStack(item);
+
+        }
         if (json.has("data")) {
             throw new JsonParseException("Disallowed data tag found");
         } else {
             int i = JsonHelper.getInt(json, "count", 1);
-            return new ItemStack(item, i);
+            itemStack.setCount(i);
+            return itemStack;
         }
     }
+
+
 
     public enum Serializer implements RecipeSerializer<PotionRecipe> {
         INSTANCE;
@@ -312,4 +337,85 @@ public class PotionRecipe implements GCraftingRecipe {
             buf.writeItemStack(recipe.output);
         }
     }
+
+    // I took this from vanilla :trolley:
+    public static class GCIngredient extends Ingredient {
+
+        public GCIngredient(Stream<? extends Ingredient.Entry> entries) {
+            super(entries);
+        }
+
+        private static Ingredient.Entry entryFromJson(JsonObject json) {
+            if (json.has("item") && json.has("tag")) {
+                throw new JsonParseException("An ingredient entry is either a tag or an item, not both");
+            } else {
+                Identifier identifier;
+                if (json.has("item")) {
+                    identifier = new Identifier(JsonHelper.getString(json, "item"));
+                    Item item = (Item)Registry.ITEM.getOrEmpty(identifier).orElseThrow(() -> {
+                        return new JsonSyntaxException("Unknown item '" + identifier + "'");
+                    });
+                    return new Ingredient.StackEntry(new ItemStack(item));
+                } else if (json.has("potion")) {
+                    identifier = new Identifier(JsonHelper.getString(json, "potion"));
+                    Potion potion = (Potion) Registry.POTION.getOrEmpty(identifier).orElseThrow(() -> {
+                        return new JsonSyntaxException("Unknown potion '" + identifier + "'");
+                    });
+
+                    return new Ingredient.StackEntry(PotionUtil.setPotion(new ItemStack(Items.POTION), potion));
+                } else if (json.has("oxygen")) {
+                    identifier = new Identifier(JsonHelper.getString(json, "oxygen"));
+                    Item item = (Item)Registry.ITEM.getOrEmpty(identifier).orElseThrow(() -> {
+                        return new JsonSyntaxException("Unknown item '" + identifier + "'");
+                    });
+                    ItemStack tankItemstack = new ItemStack(item);
+                    if (!OxygenTankUtil.isOxygenTank(tankItemstack)) {
+                        throw new JsonSyntaxException("Item '" + identifier + "' is not a oxygen tank");
+                    }
+                    if (json.has("o2level")) {
+                        OxygenTank oxygenTank = OxygenTankUtil.getOxygenTank(tankItemstack);
+                        int o2level = JsonHelper.getInt(json, "o2level", oxygenTank.getCapacity());
+                        oxygenTank.setAmount(o2level);
+                    }
+                    return new Ingredient.StackEntry(tankItemstack);
+                }
+
+                else if (json.has("tag")) {
+                    identifier = new Identifier(JsonHelper.getString(json, "tag"));
+                    Tag<Item> tag = ServerTagManagerHolder.getTagManager().getItems().getTag(identifier);
+                    if (tag == null) {
+                        throw new JsonSyntaxException("Unknown item tag '" + identifier + "'");
+                    } else {
+                        return new Ingredient.TagEntry(tag);
+                    }
+                } else {
+                    throw new JsonParseException("An ingredient entry needs either a tag or an item");
+                }
+            }
+
+        }
+
+        public static Ingredient fromJson(@Nullable JsonElement json) {
+            if (json != null && !json.isJsonNull()) {
+                if (json.isJsonObject()) {
+                    return ofEntries(Stream.of(entryFromJson(json.getAsJsonObject())));
+                } else if (json.isJsonArray()) {
+                    JsonArray jsonArray = json.getAsJsonArray();
+                    if (jsonArray.size() == 0) {
+                        throw new JsonSyntaxException("Item array cannot be empty, at least one item must be defined");
+                    } else {
+                        return ofEntries(StreamSupport.stream(jsonArray.spliterator(), false).map((jsonElement) -> {
+                            return entryFromJson(JsonHelper.asObject(jsonElement, "item"));
+                        }));
+                    }
+                } else {
+                    throw new JsonSyntaxException("Expected item to be object or array of objects");
+                }
+            } else {
+                throw new JsonSyntaxException("Item cannot be null");
+            }
+        }
+
+    }
+
 }

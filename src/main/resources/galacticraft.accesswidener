@@ -37,3 +37,11 @@ extendable      class    net/minecraft/world/gen/chunk/NoiseChunkGenerator
 accessible      method  net/minecraft/item/MusicDiscItem                                      <init>            (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V
 accessible      method  net/minecraft/world/gen/chunk/NoiseChunkGenerator                     sampleNoiseColumn ([DII)V
 extendable      method  net/minecraft/world/gen/chunk/NoiseChunkGenerator                     sampleNoiseColumn ([DII)V
+
+extendable      class   net/minecraft/recipe/Ingredient
+accessible      method  net/minecraft/recipe/Ingredient                                       <init>            (Ljava/util/stream/Stream;)V
+accessible      class   net/minecraft/recipe/Ingredient$Entry
+accessible      method  net/minecraft/recipe/Ingredient$StackEntry                            <init>            (Lnet/minecraft/item/ItemStack;)V
+accessible      method  net/minecraft/recipe/Ingredient$TagEntry                              <init>            (Lnet/minecraft/tag/Tag;)V
+# this one doesn't work
+accessible      method  net/minecraft/recipe/Ingredient                                       ofEntries         (Ljava/util/stream/Stream;)Lnet/minecraft/recipe/Ingredient;
