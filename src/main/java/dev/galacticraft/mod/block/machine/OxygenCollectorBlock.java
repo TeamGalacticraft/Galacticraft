@@ -23,17 +23,13 @@
 package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.MachineBlock;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -65,13 +61,10 @@ public class OxygenCollectorBlock extends SimpleMachineBlock<OxygenCollectorBloc
                     mY = (random.nextFloat() - 0.5D) * 0.5D;
                     mZ = (random.nextFloat() - 0.5D) * 0.5D;
 
-                    if (random.nextBoolean())
-                    {
+                    if (random.nextBoolean()) {
                         x2 = pos.getX() + 0.5D + 0.25D * dir;
                         mX = random.nextFloat() * 2.0F * dir;
-                    }
-                    else
-                    {
+                    } else {
                         z2 = pos.getZ() + 0.5D + 0.25D * dir;
                         mZ = random.nextFloat() * 2.0F * dir;
                     }

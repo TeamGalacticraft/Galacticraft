@@ -29,8 +29,8 @@ public class SimpleMultiBlockMachineBlock<T extends MachineBlockEntity, P extend
     /**
      * Note: BlockEntity of the partBlock must implement {@link MultiBlockPart}
      */
-    public static <T extends MachineBlockEntity, P extends BlockWithEntity> SimpleMultiBlockMachineBlock<T, P> create(BlockEntityType<T> type, List<BlockPos> parts, P partBlock, String key) {
-        return new SimpleMultiBlockMachineBlock<>(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS), parts, type::instantiate, partBlock, new TranslatableText(key).setStyle(Constant.Text.DARK_GRAY_STYLE));
+    public static <T extends MachineBlockEntity, P extends BlockWithEntity> SimpleMultiBlockMachineBlock<T, P> create(Supplier<BlockEntityType<T>> type, List<BlockPos> parts, P partBlock, String key) {
+        return new SimpleMultiBlockMachineBlock<>(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS), parts, () -> type.get().instantiate(), partBlock, new TranslatableText(key).setStyle(Constant.Text.DARK_GRAY_STYLE));
     }
 
     protected SimpleMultiBlockMachineBlock(Settings settings, List<BlockPos> parts, Supplier<T> supplier, P partBlock, Text information) {

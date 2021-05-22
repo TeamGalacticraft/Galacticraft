@@ -40,7 +40,7 @@ public interface MultiBlockBase {
 
         for (BlockPos otherPart : this.getOtherParts(state)) {
             otherPart = otherPart.toImmutable().add(pos);
-            if (!world.getBlockState(otherPart.add(pos)).isAir()) {
+            if (!world.getBlockState(otherPart).isAir()) {
                 world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
             }
         }

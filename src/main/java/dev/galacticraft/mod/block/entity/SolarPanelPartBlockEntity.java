@@ -22,9 +22,7 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
@@ -59,10 +57,9 @@ public class SolarPanelPartBlockEntity extends BlockEntity implements MultiBlock
         }
     }
 
+    @Override
     public void setBasePos(BlockPos basePos) {
-        if (this.getCachedState().getBlock() instanceof MultiBlockBase) {
-            this.basePos = basePos;
-            this.markDirty();
-        }
+        this.basePos = basePos;
+        this.markDirty();
     }
 }

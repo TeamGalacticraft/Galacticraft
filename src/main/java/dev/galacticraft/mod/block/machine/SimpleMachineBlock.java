@@ -21,8 +21,8 @@ public class SimpleMachineBlock<T extends MachineBlockEntity> extends MachineBlo
     private final Supplier<T> supplier;
     private final Text information;
 
-    public static <T extends MachineBlockEntity> SimpleMachineBlock<T> create(BlockEntityType<T> type, String key) {
-        return new SimpleMachineBlock<>(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS), type::instantiate, new TranslatableText(key).setStyle(Constant.Text.DARK_GRAY_STYLE));
+    public static <T extends MachineBlockEntity> SimpleMachineBlock<T> create(Supplier<BlockEntityType<T>> type, String key) {
+        return new SimpleMachineBlock<>(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS), () -> type.get().instantiate(), new TranslatableText(key).setStyle(Constant.Text.DARK_GRAY_STYLE));
     }
 
     protected SimpleMachineBlock(Settings settings, Supplier<T> supplier, Text information) {
