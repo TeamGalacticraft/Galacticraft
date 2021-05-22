@@ -49,12 +49,12 @@ import java.util.Random;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CoalGeneratorBlock extends MachineBlock {
+public class CoalGeneratorBlock extends SimpleMachineBlock<CoalGeneratorBlockEntity> {
     private static final Text TOOLTIP_INFO = new TranslatableText("tooltip.galacticraft.coal_generator")
             .setStyle(Constant.Text.DARK_GRAY_STYLE);
 
     public CoalGeneratorBlock(Settings settings) {
-        super(settings);
+        super(settings, CoalGeneratorBlockEntity::new, TOOLTIP_INFO);
 
         this.setDefaultState(this.getDefaultState().with(Constant.Property.ACTIVE, false));
     }
@@ -89,7 +89,7 @@ public class CoalGeneratorBlock extends MachineBlock {
     }
 
     @Override
-    public MachineBlockEntity createBlockEntity(BlockView view) {
+    public CoalGeneratorBlockEntity createBlockEntity(BlockView view) {
         return new CoalGeneratorBlockEntity();
     }
 

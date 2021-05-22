@@ -75,7 +75,7 @@ import java.util.function.Supplier;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public abstract class MachineBlock extends BlockWithEntity {
+public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWithEntity {
     public static final BooleanProperty ARBITRARY_BOOLEAN_PROPERTY = BooleanProperty.of("update");
 
     protected MachineBlock(Settings settings) {
@@ -89,7 +89,7 @@ public abstract class MachineBlock extends BlockWithEntity {
     }
 
     @Override
-    public abstract MachineBlockEntity createBlockEntity(BlockView view);
+    public abstract T createBlockEntity(BlockView view);
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
@@ -99,9 +99,6 @@ public abstract class MachineBlock extends BlockWithEntity {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
-        if (this instanceof MultiBlockBase) {
-            ((MultiBlockBase) this).onMultiblockPlaced(world, pos, state);
-        }
         if (!world.isClient && placer instanceof PlayerEntity) {
             ((MachineBlockEntity) world.getBlockEntity(pos)).getSecurity().setOwner(((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), ((PlayerEntity) placer));
         }
@@ -199,12 +196,6 @@ public abstract class MachineBlock extends BlockWithEntity {
                 }
             }
         }
-
-        if (this instanceof MultiBlockBase) {
-            for (BlockPos otherPart : ((MultiBlockBase) this).getOtherParts(state, pos)) {
-                world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
-            }
-        }
     }
 
     @Override
@@ -212,18 +203,6 @@ public abstract class MachineBlock extends BlockWithEntity {
         BlockEntity entity = builder.get(LootContextParameters.BLOCK_ENTITY);
         if (entity.toTag(new CompoundTag()).getBoolean(Constant.Nbt.NO_DROP)) return Collections.emptyList();
         return super.getDroppedStacks(state, builder);
-    }
-
-    @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        if (this instanceof MultiBlockBase) {
-            for (BlockPos otherPart : (((MultiBlockBase) this).getOtherParts(state, pos))) {
-                if (!world.getBlockState(otherPart).getMaterial().isReplaceable()) {
-                    return false;
-                }
-            }
-        }
-        return super.canPlaceAt(state, world, pos);
     }
 
     @Override

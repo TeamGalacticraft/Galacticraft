@@ -41,22 +41,12 @@ import java.util.Random;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenCollectorBlock extends MachineBlock {
+public class OxygenCollectorBlock extends SimpleMachineBlock<OxygenCollectorBlockEntity> {
     private static final Text TOOLTIP_INFO = new TranslatableText("tooltip.galacticraft.oxygen_collector")
             .setStyle(Constant.Text.DARK_GRAY_STYLE);
 
     public OxygenCollectorBlock(Settings settings) {
-        super(settings);
-    }
-
-    @Override
-    public MachineBlockEntity createBlockEntity(BlockView view) {
-        return new OxygenCollectorBlockEntity();
-    }
-
-    @Override
-    public Text machineInfo(ItemStack stack, BlockView view, boolean advanced) {
-        return TOOLTIP_INFO;
+        super(settings, OxygenCollectorBlockEntity::new, TOOLTIP_INFO);
     }
 
     @Override

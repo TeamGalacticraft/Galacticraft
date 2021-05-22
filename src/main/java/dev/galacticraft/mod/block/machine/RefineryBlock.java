@@ -41,16 +41,16 @@ import java.util.Random;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class RefineryBlock extends MachineBlock {
+public class RefineryBlock extends SimpleMachineBlock<RefineryBlockEntity> {
     private static final Text TOOLTIP_TEXT = new TranslatableText("tooltip.galacticraft.refinery")
             .setStyle(Constant.Text.DARK_GRAY_STYLE);
 
     public RefineryBlock(Settings settings) {
-        super(settings);
+        super(settings, RefineryBlockEntity::new, TOOLTIP_TEXT);
     }
 
     @Override
-    public MachineBlockEntity createBlockEntity(BlockView view) {
+    public RefineryBlockEntity createBlockEntity(BlockView view) {
         return new RefineryBlockEntity();
     }
 
