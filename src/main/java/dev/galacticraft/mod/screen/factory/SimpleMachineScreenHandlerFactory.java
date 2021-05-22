@@ -1,4 +1,4 @@
-package dev.galacticraft.mod.screen.type;
+package dev.galacticraft.mod.screen.factory;
 
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.screen.MachineScreenHandler;
