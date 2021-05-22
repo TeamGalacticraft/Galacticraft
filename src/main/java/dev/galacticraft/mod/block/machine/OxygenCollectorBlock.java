@@ -24,12 +24,16 @@ package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.MachineBlock;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -38,10 +42,21 @@ import java.util.Random;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenCollectorBlock extends MachineBlock {
+    private static final Text TOOLTIP_INFO = new TranslatableText("tooltip.galacticraft.oxygen_collector")
+            .setStyle(Constant.Text.DARK_GRAY_STYLE);
+
     public OxygenCollectorBlock(Settings settings) {
-        super(settings, OxygenCollectorBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft.oxygen_collector")
-                        .setStyle(Constant.Text.DARK_GRAY_STYLE));
+        super(settings);
+    }
+
+    @Override
+    public MachineBlockEntity createBlockEntity(BlockView view) {
+        return new OxygenCollectorBlockEntity();
+    }
+
+    @Override
+    public Text machineInfo(ItemStack stack, BlockView view, boolean advanced) {
+        return TOOLTIP_INFO;
     }
 
     @Override

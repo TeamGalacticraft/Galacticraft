@@ -75,32 +75,11 @@ import java.util.function.Supplier;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class MachineBlock extends BlockWithEntity {
+public abstract class MachineBlock extends BlockWithEntity {
     public static final BooleanProperty ARBITRARY_BOOLEAN_PROPERTY = BooleanProperty.of("update");
 
-    private final Function<BlockView, ? extends MachineBlockEntity> blockEntityFunc;
-    private final TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo;
-
     protected MachineBlock(Settings settings) {
-        this(settings, (view) -> null, LiteralText.EMPTY);
-    }
-
-    public MachineBlock(Settings settings, Function<BlockView, ? extends MachineBlockEntity> blockEntityFunc, TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo) {
         super(settings);
-        this.blockEntityFunc = blockEntityFunc;
-        this.machineInfo = machineInfo;
-    }
-
-    public MachineBlock(Settings settings, Function<BlockView, ? extends MachineBlockEntity> blockEntityFunc, Text machineInfo) {
-        this(settings, blockEntityFunc, (itemStack, blockView, tooltipContext) -> machineInfo);
-    }
-
-    public MachineBlock(Settings settings, Supplier<? extends MachineBlockEntity> blockEntitySupplier, TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo) {
-        this(settings, (view) -> blockEntitySupplier.get(), machineInfo);
-    }
-
-    public MachineBlock(Settings settings, Supplier<? extends MachineBlockEntity> blockEntitySupplier, Text machineInfo) {
-        this(settings, blockEntitySupplier, (itemStack, blockView, tooltipContext) -> machineInfo);
     }
 
     @Override
@@ -110,9 +89,7 @@ public class MachineBlock extends BlockWithEntity {
     }
 
     @Override
-    public MachineBlockEntity createBlockEntity(BlockView view) {
-        return blockEntityFunc.apply(view);
-    }
+    public abstract MachineBlockEntity createBlockEntity(BlockView view);
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
@@ -262,7 +239,5 @@ public class MachineBlock extends BlockWithEntity {
         return stack;
     }
 
-    public Text machineInfo(ItemStack stack, BlockView view, boolean context) {
-        return machineInfo.apply(stack, view, context);
-    }
+    public abstract Text machineInfo(ItemStack stack, BlockView view, boolean advanced);
 }

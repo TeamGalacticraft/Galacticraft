@@ -25,10 +25,14 @@ package dev.galacticraft.mod.block.machine;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.api.block.MultiBlockBase;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.block.entity.AdvancedSolarPanelBlockEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 
 import java.util.List;
 
@@ -36,11 +40,21 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class AdvancedSolarPanelBlock extends MachineBlock implements MultiBlockBase {
+    private static final Text TOOLTIP_INFO = new TranslatableText("tooltip.galacticraft.advanced_solar_panel")
+            .setStyle(Constant.Text.DARK_GRAY_STYLE);
+
     public AdvancedSolarPanelBlock(Settings settings) {
-        super(settings,
-                AdvancedSolarPanelBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft.advanced_solar_panel")
-                        .setStyle(Constant.Text.DARK_GRAY_STYLE));
+        super(settings);
+    }
+
+    @Override
+    public MachineBlockEntity createBlockEntity(BlockView view) {
+        return new AdvancedSolarPanelBlockEntity();
+    }
+
+    @Override
+    public Text machineInfo(ItemStack stack, BlockView view, boolean advanced) {
+        return TOOLTIP_INFO;
     }
 
     @Override
