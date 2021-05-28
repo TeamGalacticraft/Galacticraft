@@ -23,9 +23,10 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.screen.MachineHandledScreen;
+import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.mod.block.entity.EnergyStorageModuleBlockEntity;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
-import dev.galacticraft.mod.screen.EnergyStorageModuleScreenHandler;
+import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
@@ -38,8 +39,8 @@ import net.minecraft.util.Formatting;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorageModuleScreenHandler> {
-    public EnergyStorageModuleScreen(EnergyStorageModuleScreenHandler handler, PlayerInventory inv, Text title) {
+public class EnergyStorageModuleScreen extends MachineHandledScreen<SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity>> {
+    public EnergyStorageModuleScreen(SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 54, 20, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }

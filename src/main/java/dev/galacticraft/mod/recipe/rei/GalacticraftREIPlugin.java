@@ -24,7 +24,7 @@ package dev.galacticraft.mod.recipe.rei;
 
 import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.screen.MachineHandledScreen;
+import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.item.GalacticraftItems;
 import dev.galacticraft.mod.mixin.client.HandledScreenAccessor;
@@ -37,7 +37,6 @@ import me.shedaniel.rei.api.plugins.REIPluginV0;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
-import net.minecraft.recipe.Recipe;
 import net.minecraft.util.Identifier;
 
 import java.util.List;

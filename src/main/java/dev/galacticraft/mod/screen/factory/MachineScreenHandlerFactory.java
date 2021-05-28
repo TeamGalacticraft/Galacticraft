@@ -20,26 +20,38 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen;
+package dev.galacticraft.mod.screen.factory;
 
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.screen.MachineScreenHandler;
-import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.math.BlockPos;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleDistributorBlockEntity> {
+public class MachineScreenHandlerFactory<B extends MachineBlockEntity, T extends MachineScreenHandler<B>> implements ScreenHandlerRegistry.ExtendedClientHandlerFactory<T> {
+    private final MachineScreenHandlerSupplier<B, T> supplier;
 
-    public BubbleDistributorScreenHandler(int syncId, PlayerEntity player, BubbleDistributorBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerType.BUBBLE_DISTRIBUTOR_HANDLER);
-
-        this.addPlayerInventorySlots(0, 84);
+    public MachineScreenHandlerFactory(MachineScreenHandlerSupplier<B, T> supplier) {
+        this.supplier = supplier;
     }
 
-    public BubbleDistributorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (BubbleDistributorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    @Override
+    public T create(int syncId, PlayerInventory inventory, PacketByteBuf buf) {
+        return this.create(syncId, inventory, buf.readBlockPos());
+    }
+
+    public T create(int syncId, PlayerInventory inventory, B machine) {
+        return this.supplier.create(syncId, inventory.player, machine);
+    }
+
+    public T create(int syncId, PlayerInventory inventory, BlockPos pos) {
+        return this.create(syncId, inventory, (B)inventory.player.world.getBlockEntity(pos));
+    }
+
+    @FunctionalInterface
+    public interface MachineScreenHandlerSupplier<B extends MachineBlockEntity, T extends MachineScreenHandler<B>> {
+        T create(int syncId, PlayerEntity player, B machine);
     }
 }

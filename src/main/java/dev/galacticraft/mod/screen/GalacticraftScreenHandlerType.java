@@ -23,27 +23,45 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.screen.MachineScreenHandler;
+import dev.galacticraft.mod.block.entity.*;
+import dev.galacticraft.mod.mixin.ExtendedScreenHandlerTypeAccessor;
+import dev.galacticraft.mod.screen.factory.MachineScreenHandlerFactory;
+import dev.galacticraft.mod.screen.factory.SimpleMachineScreenHandlerFactory;
+import io.netty.buffer.ByteBufAllocator;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftScreenHandlerType {
 
-    public static final Identifier BASIC_SOLAR_PANEL_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.BASIC_SOLAR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<BasicSolarPanelScreenHandler> BASIC_SOLAR_PANEL_HANDLER =
-            ScreenHandlerRegistry.registerExtended(
-                    BASIC_SOLAR_PANEL_HANDLER_ID,
-                    BasicSolarPanelScreenHandler::new
+    public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<BasicSolarPanelBlockEntity>> BASIC_SOLAR_PANEL_HANDLER =
+            Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.BASIC_SOLAR_PANEL_SCREEN_HANDLER),
+                    new ExtendedScreenHandlerType<>(
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER)
+                    )
             );
 
-    public static final Identifier ADVANCED_SOLAR_PANEL_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ADVANCED_SOLAR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<AdvancedSolarPanelScreenHandler> ADVANCED_SOLAR_PANEL_HANDLER =
-            ScreenHandlerRegistry.registerExtended(
-                    ADVANCED_SOLAR_PANEL_HANDLER_ID,
-                    AdvancedSolarPanelScreenHandler::new
+    public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity>> ADVANCED_SOLAR_PANEL_HANDLER =
+            Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ADVANCED_SOLAR_PANEL_SCREEN_HANDLER),
+                    new ExtendedScreenHandlerType<>(
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.ADVANCED_SOLAR_PANEL_HANDLER)
+                    )
+            );
+
+    public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<CoalGeneratorBlockEntity>> COAL_GENERATOR_HANDLER =
+            Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.COAL_GENERATOR_SCREEN_HANDLER),
+                    new ExtendedScreenHandlerType<>(
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.COAL_GENERATOR_HANDLER, 94)
+                    )
             );
 
     public static final Identifier CIRCUIT_FABRICATOR_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.CIRCUIT_FABRICATOR_SCREEN_HANDLER);
@@ -53,12 +71,6 @@ public class GalacticraftScreenHandlerType {
                     CircuitFabricatorScreenHandler::new
             );
 
-    public static final Identifier COAL_GENERATOR_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.COAL_GENERATOR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<CoalGeneratorScreenHandler> COAL_GENERATOR_HANDLER =
-            ScreenHandlerRegistry.registerExtended(
-                    COAL_GENERATOR_HANDLER_ID,
-                    CoalGeneratorScreenHandler::new
-            );
 
     public static final Identifier COMPRESSOR_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.COMPRESSOR_SCREEN_HANDLER);
     public static final ScreenHandlerType<CompressorScreenHandler> COMPRESSOR_HANDLER =
@@ -74,11 +86,11 @@ public class GalacticraftScreenHandlerType {
                     ElectricCompressorScreenHandler::new
             );
 
-    public static final Identifier ENERGY_STORAGE_MODULE_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ENERGY_STORAGE_MODULE_SCREEN_HANDLER);
-    public static final ScreenHandlerType<EnergyStorageModuleScreenHandler> ENERGY_STORAGE_MODULE_HANDLER =
-            ScreenHandlerRegistry.registerExtended(
-                    ENERGY_STORAGE_MODULE_HANDLER_ID,
-                    EnergyStorageModuleScreenHandler::new
+    public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity>> ENERGY_STORAGE_MODULE_HANDLER =
+            Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ENERGY_STORAGE_MODULE_SCREEN_HANDLER),
+                    new ExtendedScreenHandlerType<>(
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER, 94)
+                    )
             );
 
     public static final Identifier OXYGEN_COLLECTOR_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_COLLECTOR_SCREEN_HANDLER);
@@ -88,25 +100,25 @@ public class GalacticraftScreenHandlerType {
                     OxygenCollectorScreenHandler::new
             );
 
-    public static final Identifier OXYGEN_COMPRESSOR_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_COMPRESSOR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<OxygenCompressorScreenHandler> OXYGEN_COMPRESSOR_HANDLER =
-            ScreenHandlerRegistry.registerExtended(
-                    OXYGEN_COMPRESSOR_HANDLER_ID,
-                    OxygenCompressorScreenHandler::new
+    public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<OxygenCompressorBlockEntity>> OXYGEN_COMPRESSOR_HANDLER =
+            Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_COMPRESSOR_SCREEN_HANDLER),
+                    new ExtendedScreenHandlerType<>(
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER, 84)
+                    )
             );
 
-    public static final Identifier OXYGEN_SEALER_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_SEALER_SCREEN_HANDLER);
-    public static final ScreenHandlerType<OxygenSealerScreenHandler> OXYGEN_SEALER_HANDLER =
-            ScreenHandlerRegistry.registerExtended(
-                    OXYGEN_SEALER_HANDLER_ID,
-                    OxygenSealerScreenHandler::new
+    public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<OxygenSealerBlockEntity>> OXYGEN_SEALER_HANDLER =
+            Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_SEALER_SCREEN_HANDLER),
+                    new ExtendedScreenHandlerType<>(
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.OXYGEN_SEALER_HANDLER, 84)
+                    )
             );
 
-    public static final Identifier OXYGEN_DECOMPRESSOR_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_DECOMPRESSOR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<OxygenDecompressorScreenHandler> OXYGEN_DECOMPRESSOR_HANDLER =
-            ScreenHandlerRegistry.registerExtended(
-                    OXYGEN_DECOMPRESSOR_HANDLER_ID,
-                    OxygenDecompressorScreenHandler::new
+    public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<OxygenDecompressorBlockEntity>> OXYGEN_DECOMPRESSOR_HANDLER =
+            Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_DECOMPRESSOR_SCREEN_HANDLER),
+                    new ExtendedScreenHandlerType<>(
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER, 84)
+                    )
             );
 
     public static final Identifier PLAYER_INVENTORY_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.PLAYER_INVENTORY_SCREEN_HANDLER);
@@ -116,11 +128,11 @@ public class GalacticraftScreenHandlerType {
                     GalacticraftPlayerInventoryScreenHandler::new
             );
 
-    public static final Identifier REFINERY_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.REFINERY_SCREEN_HANDLER);
-    public static final ScreenHandlerType<RefineryScreenHandler> REFINERY_HANDLER =
-            ScreenHandlerRegistry.registerExtended(
-                    REFINERY_HANDLER_ID,
-                    RefineryScreenHandler::new
+    public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<RefineryBlockEntity>> REFINERY_HANDLER =
+            Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.REFINERY_SCREEN_HANDLER),
+                    new ExtendedScreenHandlerType<>(
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.REFINERY_HANDLER, 84)
+                    )
             );
 
     public static final Identifier ELECTRIC_FURNACE_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ELECTRIC_FURNACE_SCREEN_HANDLER);
@@ -144,12 +156,26 @@ public class GalacticraftScreenHandlerType {
                     BubbleDistributorScreenHandler::new
             );
 
-    public static final Identifier OXYGEN_STORAGE_MODULE_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_STORAGE_MODULE_SCREEN_HANDLER);
-    public static final ScreenHandlerType<OxygenStorageModuleScreenHandler> OXYGEN_STORAGE_MODULE_HANDLER =
-            ScreenHandlerRegistry.registerExtended(
-                    OXYGEN_STORAGE_MODULE_HANDLER_ID,
-                    OxygenStorageModuleScreenHandler::new
+    public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<OxygenStorageModuleBlockEntity>> OXYGEN_STORAGE_MODULE_HANDLER =
+            Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_STORAGE_MODULE_SCREEN_HANDLER),
+                    new ExtendedScreenHandlerType<>(
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER, 84)
+                    )
             );
+
+    private static final ThreadLocal<PacketByteBuf> BUFFER = ThreadLocal.withInitial(() -> new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer(Long.BYTES, Long.BYTES)));
+
+    @SuppressWarnings({"ConstantConditions", "unchecked"}) // class will extend accessor
+    public static <B extends MachineBlockEntity, T extends MachineScreenHandler<B>> T create(ExtendedScreenHandlerType<T> type, int syncId, PlayerInventory inventory, B machine) {
+        ScreenHandlerRegistry.ExtendedClientHandlerFactory<T> factory = ((ExtendedScreenHandlerTypeAccessor<T>)(Object) type).getFactory();
+        if (factory instanceof MachineScreenHandlerFactory) {
+            return ((MachineScreenHandlerFactory<B, T>) factory).create(syncId, inventory, machine);
+        } else {
+            PacketByteBuf buf = BUFFER.get();
+            buf.clear();
+            return factory.create(syncId, inventory, buf.writeBlockPos(machine.getPos()));
+        }
+    }
 
     public static void register() {
     }

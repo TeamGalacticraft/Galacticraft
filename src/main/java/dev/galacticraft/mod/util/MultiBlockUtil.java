@@ -20,34 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.block.machine;
+package dev.galacticraft.mod.util;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.MachineBlock;
-import dev.galacticraft.mod.api.block.MultiBlockBase;
-import dev.galacticraft.mod.block.entity.BasicSolarPanelBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.text.TranslatableText;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class BasicSolarPanelBlock extends MachineBlock implements MultiBlockBase {
-    public BasicSolarPanelBlock(Settings settings) {
-        super(settings, BasicSolarPanelBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft.basic_solar_panel")
-                        .setStyle(Constant.Text.DARK_GRAY_STYLE));
-    }
+public class MultiBlockUtil {
+    private MultiBlockUtil() {}
 
     @NotNull
-    protected static List<BlockPos> genPartList(BlockPos pos) {
-        List<BlockPos> parts = new LinkedList<>();
-        BlockPos rod = pos.up();
+    public static List<BlockPos> generateSolarPanelParts() {
+        ImmutableList.Builder<BlockPos> parts = ImmutableList.builder();
+        BlockPos rod = new BlockPos(0, 1, 0);
         BlockPos mid = rod.up();
         BlockPos front = mid.north();
         BlockPos back = mid.south();
@@ -73,11 +60,7 @@ public class BasicSolarPanelBlock extends MachineBlock implements MultiBlockBase
         parts.add(backLeft);
         parts.add(backRight);
 
-        return parts;
+        return parts.build();
     }
 
-    @Override
-    public List<BlockPos> getOtherParts(BlockState state, BlockPos pos) {
-        return genPartList(pos);
-    }
 }

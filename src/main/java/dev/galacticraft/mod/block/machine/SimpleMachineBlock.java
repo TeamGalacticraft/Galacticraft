@@ -25,46 +25,41 @@ package dev.galacticraft.mod.block.machine;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.block.entity.RefineryBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.minecraft.block.Material;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 
-import java.util.Random;
+import java.util.function.Supplier;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class RefineryBlock extends SimpleMachineBlock<RefineryBlockEntity> {
-    private static final Text TOOLTIP_TEXT = new TranslatableText("tooltip.galacticraft.refinery")
-            .setStyle(Constant.Text.DARK_GRAY_STYLE);
+public class SimpleMachineBlock<T extends MachineBlockEntity> extends MachineBlock<T> {
+    public static final Settings MACHINE_DEFAULT_SETTINGS = FabricBlockSettings.of(Material.METAL)
+            .strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL);
 
-    public RefineryBlock(Settings settings) {
-        super(settings, RefineryBlockEntity::new, TOOLTIP_TEXT);
+    private final Supplier<T> supplier;
+    private final Text information;
+
+    public static <T extends MachineBlockEntity> SimpleMachineBlock<T> create(Supplier<BlockEntityType<T>> type, String key) {
+        return new SimpleMachineBlock<>(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS), () -> type.get().instantiate(), new TranslatableText(key).setStyle(Constant.Text.DARK_GRAY_STYLE));
+    }
+
+    protected SimpleMachineBlock(Settings settings, Supplier<T> supplier, Text information) {
+        super(settings);
+        this.supplier = supplier;
+        this.information = information;
     }
 
     @Override
-    public RefineryBlockEntity createBlockEntity(BlockView view) {
-        return new RefineryBlockEntity();
+    public T createBlockEntity(BlockView view) {
+        return this.supplier.get();
     }
 
     @Override
     public Text machineInfo(ItemStack stack, BlockView view, boolean advanced) {
-        return TOOLTIP_TEXT;
-    }
-
-    @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        super.randomDisplayTick(state, world, pos, random);
-        BlockEntity entity = world.getBlockEntity(pos);
-        if (entity instanceof MachineBlockEntity && ((MachineBlockEntity) entity).getStatus().getType().isActive()) {
-            world.addParticle(ParticleTypes.SMOKE, pos.getX() + random.nextDouble(), pos.getY() + 1, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
-        }
+        return this.information;
     }
 }
