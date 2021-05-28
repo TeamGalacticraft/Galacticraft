@@ -23,16 +23,11 @@
 package dev.galacticraft.mod.mixin.client;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
-import dev.galacticraft.mod.accessor.SoundSystemAccessor;
-import dev.galacticraft.mod.item.GalacticraftItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.OtherClientPlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -50,12 +45,12 @@ public abstract class OtherClientPlayerEntityMixin implements GearInventoryProvi
     }
 
     @Override
-    public CompoundTag writeGearToNbt(CompoundTag tag) {
+    public NbtCompound writeGearToNbt(NbtCompound tag) {
         return this.getGearInv().toTag(tag);
     }
 
     @Override
-    public void readGearFromNbt(CompoundTag tag) {
+    public void readGearFromNbt(NbtCompound tag) {
         this.getGearInv().fromTag(tag);
     }
 }

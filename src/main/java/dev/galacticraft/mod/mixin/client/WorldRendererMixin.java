@@ -31,13 +31,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.chunk.ChunkBuilder;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec3f;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,7 +47,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
-import java.util.Set;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -102,9 +100,9 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
 //            this.skyVertexFormat.endDrawing();
 
             matrices.push();
-            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngleRadians(delta) * 360.0F));
-            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-19.0F));
+            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngleRadians(delta) * 360.0F));
+            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-19.0F));
             RenderSystem.color4f(1.0F, 0.95F, 0.9F, starBrightness); //browner stars?
 
             this.starBufferMoon.bind();
@@ -116,8 +114,8 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
             matrices.pop();
             matrices.push();
 
-            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngleRadians(delta) * 360.0F));
+            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngleRadians(delta) * 360.0F));
 
             RenderSystem.disableTexture();
 
@@ -143,8 +141,8 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
             assert client.player != null;
             float earthRotation = (float) (this.world.getSpawnPos().getZ() - client.player.getZ()) * 0.01F;
             matrices.scale(0.6F, 0.6F, 0.6F);
-            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((this.world.getSkyAngleRadians(delta) * 360.0F) * 0.001F));
-            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(earthRotation + 200.0F));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion((this.world.getSkyAngleRadians(delta) * 360.0F) * 0.001F));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(earthRotation + 200.0F));
 
             client.getTextureManager().bindTexture(EARTH_TEXTURE);
 

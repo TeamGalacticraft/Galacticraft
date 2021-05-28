@@ -33,7 +33,7 @@ import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.structure.*;
 import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
 import net.minecraft.structure.processor.BlockRotStructureProcessor;
@@ -136,7 +136,7 @@ public class MoonRuinsGenerator {
          this.initialize(structureManager);
       }
 
-      public Piece(StructureManager manager, CompoundTag tag) {
+      public Piece(StructureManager manager, NbtCompound tag) {
          super(GalacticraftStructure.MOON_RUINS_PIECE, tag);
          this.template = new Identifier(tag.getString("Template"));
          this.rotation = BlockRotation.valueOf(tag.getString("Rot"));
@@ -151,8 +151,8 @@ public class MoonRuinsGenerator {
       }
 
       @Override
-      protected void toNbt(CompoundTag tag) {
-         super.toNbt(tag);
+      protected void writeNbt(NbtCompound tag) {
+         super.writeNbt(tag);
          tag.putString("Template", this.template.toString());
          tag.putString("Rot", this.rotation.name());
          tag.putFloat("Integrity", this.integrity);

@@ -62,7 +62,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public DefaultedList<Ingredient> getPreviewInputs() {
+    public DefaultedList<Ingredient> getIngredients() {
         return this.input;
     }
 

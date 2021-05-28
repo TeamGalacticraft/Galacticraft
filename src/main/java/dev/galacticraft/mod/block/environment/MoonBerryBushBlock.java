@@ -100,7 +100,7 @@ public class MoonBerryBushBlock extends PlantBlock {
         if (mature) {
             int amount = 1 + world.random.nextInt(3);
             dropStack(world, blockPos, new ItemStack(GalacticraftItems.MOON_BERRIES, amount));
-            world.playSound(null, blockPos, SoundEvents.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
+            world.playSound(null, blockPos, SoundEvents.BLOCK_SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
             world.setBlockState(blockPos, blockState.with(AGE, 1), 2);
             return ActionResult.SUCCESS;
         } else {

@@ -48,15 +48,15 @@ import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.render.model.json.Transformation;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.ApiStatus;
@@ -146,7 +146,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
                 } else {
                     if (stack.getTag() != null && stack.getTag().contains(Constant.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
                         if (stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).contains("tanks", NbtType.LIST)) {
-                            ListTag tag1 = stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).getList("tanks", NbtType.COMPOUND);
+                            NbtList tag1 = stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).getList("tanks", NbtType.COMPOUND);
                             if (tag1.size() > 0) {
                                 volume = FluidVolume.fromTag(tag1.getCompound(0));
                             } else {
@@ -242,14 +242,14 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     @Override
     public ModelTransformation getTransformation() {
         return new ModelTransformation(
-                new Transformation(new Vector3f(75, 45, 0), new Vector3f(0, 0.25f, 0), new Vector3f(0.375f, 0.375f, 0.375f)),
-                new Transformation(new Vector3f(75, 45, 0), new Vector3f(0, 0.25f, 0), new Vector3f(0.375f, 0.375f, 0.375f)),
-                new Transformation(new Vector3f(0, 225, 0), new Vector3f(0, 0, 0), new Vector3f(0.40f, 0.40f, 0.40f)),
-                new Transformation(new Vector3f(0, 45, 0), new Vector3f(0, 0, 0), new Vector3f(0.40f, 0.40f, 0.40f)),
+                new Transformation(new Vec3f(75, 45, 0), new Vec3f(0, 0.25f, 0), new Vec3f(0.375f, 0.375f, 0.375f)),
+                new Transformation(new Vec3f(75, 45, 0), new Vec3f(0, 0.25f, 0), new Vec3f(0.375f, 0.375f, 0.375f)),
+                new Transformation(new Vec3f(0, 225, 0), new Vec3f(0, 0, 0), new Vec3f(0.40f, 0.40f, 0.40f)),
+                new Transformation(new Vec3f(0, 45, 0), new Vec3f(0, 0, 0), new Vec3f(0.40f, 0.40f, 0.40f)),
                 Transformation.IDENTITY,
-                new Transformation(new Vector3f(30, 225, 0), new Vector3f(0, 0, 0), new Vector3f(0.625f, 0.625f, 0.625f)),
-                new Transformation(new Vector3f(0, 0, 0), new Vector3f(0, 0.2f, 0), new Vector3f(0.25f, 0.25f, 0.25f)),
-                new Transformation(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(0.5f, 0.5f, 0.5f))
+                new Transformation(new Vec3f(30, 225, 0), new Vec3f(0, 0, 0), new Vec3f(0.625f, 0.625f, 0.625f)),
+                new Transformation(new Vec3f(0, 0, 0), new Vec3f(0, 0.2f, 0), new Vec3f(0.25f, 0.25f, 0.25f)),
+                new Transformation(new Vec3f(0, 0, 0), new Vec3f(0, 0, 0), new Vec3f(0.5f, 0.5f, 0.5f))
         );
     }
 
@@ -292,7 +292,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     }
 
     public static boolean transformItem(ItemStack stack, MutableQuadView quad) {
-        CompoundTag tag = stack.getTag();
+        NbtCompound tag = stack.getTag();
         if (tag != null && tag.contains(Constant.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
             CONFIGURATION.fromTag(tag.getCompound(Constant.Nbt.BLOCK_ENTITY_TAG));
             quad.spriteBake(0,

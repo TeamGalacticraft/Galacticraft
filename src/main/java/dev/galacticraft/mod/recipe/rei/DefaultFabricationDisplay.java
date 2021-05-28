@@ -46,7 +46,7 @@ public class DefaultFabricationDisplay implements RecipeDisplay {
 
     public DefaultFabricationDisplay(FabricationRecipe recipe) {
         this.input = Lists.newArrayList();
-        recipe.getPreviewInputs().forEach((ingredient) -> {
+        recipe.getIngredients().forEach((ingredient) -> {
             List<EntryStack> stacks = new ArrayList<>();
             for (ItemStack stack : ingredient.getMatchingStacksClient()) {
                 stacks.add(EntryStack.create(stack));

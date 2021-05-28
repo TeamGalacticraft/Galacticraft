@@ -59,7 +59,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_collector"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredText(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_collector"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         String statusText = I18n.translate("ui.galacticraft.machine.status");
 
         int statusX = this.x + 38;
@@ -69,7 +69,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
 
         this.textRenderer.draw(matrices, handler.machine.getStatus().getName(), statusX + this.textRenderer.getWidth(statusText), statusY, 0);
 
-        drawCenteredString(matrices, this.textRenderer, new TranslatableText("ui.galacticraft.machine.collecting", this.handler.machine.collectionAmount).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredText(matrices, this.textRenderer, new TranslatableText("ui.galacticraft.machine.collecting", this.handler.machine.collectionAmount).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

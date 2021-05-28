@@ -32,7 +32,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
@@ -57,11 +57,11 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    protected void readCustomDataFromTag(CompoundTag tag) {
+    protected void readCustomDataFromNbt(NbtCompound tag) {
     }
 
     @Override
-    protected void writeCustomDataToTag(CompoundTag tag) {
+    protected void writeCustomDataToNbt(NbtCompound tag) {
     }
 
     @Override
@@ -85,7 +85,7 @@ public class BubbleEntity extends Entity {
         this.prevYaw = 0;
 
         if (this.getY() < -64.0D) {
-            this.destroy();
+            this.tickInVoid();
         }
     }
 
@@ -139,7 +139,7 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public boolean canFly() {
+    public boolean isPushedByFluids() {
         return false;
     }
 
@@ -262,7 +262,7 @@ public class BubbleEntity extends Entity {
     @Override
     public Packet<ClientPlayPacketListener> createSpawnPacket() {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        buf.writeVarInt(this.getEntityId());
+        buf.writeVarInt(this.getId());
         buf.writeUuid(this.getUuid());
         buf.writeVarInt(Registry.ENTITY_TYPE.getRawId(this.getType()));
         buf.writeDouble(this.getX());

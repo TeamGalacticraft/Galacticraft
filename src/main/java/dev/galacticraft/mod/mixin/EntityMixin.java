@@ -27,7 +27,7 @@ import alexiil.mc.lib.attributes.item.impl.EmptyFixedItemInv;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -72,21 +72,21 @@ public abstract class EntityMixin implements GearInventoryProvider {
     }
 
     @Inject(method = "toTag", at = @At("HEAD"))
-    private void writeGear_gc(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir) {
+    private void writeGear_gc(NbtCompound tag, CallbackInfoReturnable<NbtCompound> cir) {
         this.writeGearToNbt(tag);
     }
 
     @Inject(method = "fromTag", at = @At("HEAD"))
-    private void readGear_gc(CompoundTag tag, CallbackInfo ci) {
+    private void readGear_gc(NbtCompound tag, CallbackInfo ci) {
         this.readGearFromNbt(tag);
     }
 
     @Override
-    public CompoundTag writeGearToNbt(CompoundTag tag) {
+    public NbtCompound writeGearToNbt(NbtCompound tag) {
         return tag;
     }
 
     @Override
-    public void readGearFromNbt(CompoundTag tag) {
+    public void readGearFromNbt(NbtCompound tag) {
     }
 }

@@ -47,7 +47,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -162,11 +162,11 @@ public class MachineBlock extends BlockWithEntity {
         }
 
         if (stack != null && stack.getTag() != null && stack.getTag().contains(Constant.Nbt.BLOCK_ENTITY_TAG)) {
-            CompoundTag tag = stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG);
+            NbtCompound tag = stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG);
             tooltip.add(LiteralText.EMPTY);
             if (tag.contains(Constant.Nbt.ENERGY, NbtType.INT)) tooltip.add(new TranslatableText("ui.galacticraft.machine.current_energy", new LiteralText(String.valueOf(tag.getInt(Constant.Nbt.ENERGY))).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.GOLD_STYLE));
             if (tag.contains(Constant.Nbt.SECURITY, NbtType.COMPOUND)) {
-                CompoundTag security = tag.getCompound(Constant.Nbt.SECURITY);
+                NbtCompound security = tag.getCompound(Constant.Nbt.SECURITY);
                 if (security.contains(Constant.Nbt.OWNER, NbtType.COMPOUND)) {
                     GameProfile profile = NbtHelper.toGameProfile(security.getCompound(Constant.Nbt.OWNER));
                     MutableText text1 = new TranslatableText("ui.galacticraft.machine.security.owner", new LiteralText(profile.getName()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE)).setStyle(Constant.Text.GRAY_STYLE);
@@ -233,7 +233,7 @@ public class MachineBlock extends BlockWithEntity {
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
         BlockEntity entity = builder.get(LootContextParameters.BLOCK_ENTITY);
-        if (entity.toTag(new CompoundTag()).getBoolean(Constant.Nbt.NO_DROP)) return Collections.emptyList();
+        if (entity.writeNbt(new NbtCompound()).getBoolean(Constant.Nbt.NO_DROP)) return Collections.emptyList();
         return super.getDroppedStacks(state, builder);
     }
 
@@ -253,9 +253,9 @@ public class MachineBlock extends BlockWithEntity {
     @Environment(EnvType.CLIENT)
     public ItemStack getPickStack(BlockView view, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(view, pos, state);
-        CompoundTag tag = (stack.getTag() != null ? stack.getTag() : new CompoundTag());
+        NbtCompound tag = (stack.getTag() != null ? stack.getTag() : new NbtCompound());
         if (view.getBlockEntity(pos) != null) {
-            tag.put(Constant.Nbt.BLOCK_ENTITY_TAG, view.getBlockEntity(pos).toTag(new CompoundTag()));
+            tag.put(Constant.Nbt.BLOCK_ENTITY_TAG, view.getBlockEntity(pos).writeNbt(new NbtCompound()));
         }
 
         stack.setTag(tag);

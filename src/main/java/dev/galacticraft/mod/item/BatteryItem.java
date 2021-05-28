@@ -38,7 +38,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
@@ -85,7 +85,7 @@ public class BatteryItem extends Item implements AttributeProviderItem {
 
     @Override
     public void onCraft(@NotNull ItemStack battery, World world, PlayerEntity player) {
-        CompoundTag batteryTag = battery.getOrCreateTag();
+        NbtCompound batteryTag = battery.getOrCreateTag();
         battery.setDamage(getMaxCapacity());
         battery.setTag(batteryTag);
     }

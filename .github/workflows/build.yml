@@ -8,11 +8,7 @@ jobs:
   build:
     strategy:
       matrix:
-        java: [
-          8, # Minimum
-          11,  # LTS
-          16,  # Latest
-        ]
+        java: [16]
         os: [ubuntu-20.04]
     runs-on: ${{ matrix.os }}
     steps:

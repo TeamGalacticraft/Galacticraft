@@ -64,7 +64,7 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_compressor"), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredText(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_compressor"), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

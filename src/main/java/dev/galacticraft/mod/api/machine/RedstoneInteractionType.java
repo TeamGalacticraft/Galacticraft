@@ -25,7 +25,7 @@ package dev.galacticraft.mod.api.machine;
 import dev.galacticraft.mod.Constant;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
@@ -83,11 +83,11 @@ public enum RedstoneInteractionType implements StringIdentifiable {
         return this.name().toLowerCase(Locale.ROOT);
     }
 
-    public void toTag(CompoundTag tag) {
+    public void toTag(NbtCompound tag) {
         tag.putString(Constant.Nbt.REDSTONE_INTERACTION_TYPE, this.asString());
     }
 
-    public static RedstoneInteractionType fromTag(CompoundTag tag) {
+    public static RedstoneInteractionType fromTag(NbtCompound tag) {
         return fromString(tag.getString(Constant.Nbt.REDSTONE_INTERACTION_TYPE));
     }
 }

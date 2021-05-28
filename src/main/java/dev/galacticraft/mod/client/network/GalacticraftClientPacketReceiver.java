@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.client.network;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.api.internal.data.ClientWorldTeamsGetter;
 import com.mojang.authlib.GameProfile;
 import dev.galacticraft.mod.Constant;
@@ -40,7 +38,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -60,7 +58,7 @@ public class GalacticraftClientPacketReceiver {
         ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "security_update"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
             BlockPos pos = buf.readBlockPos();
             SecurityInfo.Accessibility accessibility = SecurityInfo.Accessibility.values()[buf.readByte()];
-            GameProfile profile = NbtHelper.toGameProfile(Objects.requireNonNull(buf.readCompoundTag()));
+            GameProfile profile = NbtHelper.toGameProfile(Objects.requireNonNull(buf.readNbt()));
 
             client.execute(() -> {
                 assert client.world != null;
@@ -137,7 +135,7 @@ public class GalacticraftClientPacketReceiver {
 
         ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "gear_inv_sync_full"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
             int entity = packetByteBuf.readInt();
-            CompoundTag tag = packetByteBuf.readCompoundTag();
+            NbtCompound tag = packetByteBuf.readNbt();
             minecraftClient.execute(() -> ((GearInventoryProvider) minecraftClient.world.getEntityById(entity)).readGearFromNbt(tag));
         });
     }

@@ -23,10 +23,9 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.mod.api.block.MultiBlockBase;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -40,8 +39,8 @@ public class SolarPanelPartBlockEntity extends BlockEntity {
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         if (this.basePos != BlockPos.ORIGIN) {
             tag.putInt("baseX", this.basePos.getX());
             tag.putInt("baseY", this.basePos.getY());
@@ -51,8 +50,8 @@ public class SolarPanelPartBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(BlockState state, NbtCompound tag) {
+        super.readNbt(state, tag);
         if (tag.contains("baseX")) {
             this.basePos = new BlockPos(tag.getInt("baseX"), tag.getInt("baseY"), tag.getInt("baseZ"));
         }

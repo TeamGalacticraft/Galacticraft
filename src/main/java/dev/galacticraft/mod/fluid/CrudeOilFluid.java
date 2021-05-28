@@ -131,7 +131,7 @@ public class CrudeOilFluid extends FlowableFluid {
 
     @Override
     public BlockState toBlockState(FluidState fluidState) {
-        return GalacticraftBlock.CRUDE_OIL.getDefaultState().with(FluidBlock.LEVEL, method_15741(fluidState));
+        return GalacticraftBlock.CRUDE_OIL.getDefaultState().with(FluidBlock.LEVEL, getBlockStateLevel(fluidState));
     }
 
     @Override

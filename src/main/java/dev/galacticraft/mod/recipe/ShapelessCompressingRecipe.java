@@ -32,7 +32,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeFinder;
+import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.util.Identifier;
@@ -78,24 +78,24 @@ public class ShapelessCompressingRecipe implements CompressingRecipe {
    }
 
    @Override
-   public DefaultedList<Ingredient> getPreviewInputs() {
+   public DefaultedList<Ingredient> getIngredients() {
       return this.input;
    }
 
    @Override
    public boolean matches(Inventory inv, World world) {
-      RecipeFinder recipeFinder = new RecipeFinder();
+      RecipeMatcher recipeFinder = new RecipeMatcher();
       int i = 0;
 
       for(int j = 0; j < inv.size(); ++j) {
          ItemStack itemStack = inv.getStack(j);
          if (!itemStack.isEmpty()) {
             ++i;
-            recipeFinder.method_20478(itemStack, 1);
+            recipeFinder.addInput(itemStack, 1);
          }
       }
 
-      return i == this.input.size() && recipeFinder.findRecipe(this, null);
+      return i == this.input.size() && recipeFinder.match(this, null);
    }
 
    @Override

@@ -65,7 +65,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
@@ -449,8 +449,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         if (this.getEnergyCapacity() > 0) this.getCapacitor().toTag(tag);
         if (this.getInventory().getSlotCount()> 0) this.getInventory().toTag(tag);
         if (this.getFluidInv().getTankCount() > 0) this.getFluidInv().toTag(tag);
@@ -460,8 +460,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(BlockState state, NbtCompound tag) {
+        super.readNbt(state, tag);
         if (this.getEnergyCapacity() > 0) this.getCapacitor().fromTag(tag);
         if (this.getInventory().getSlotCount() > 0) this.getInventory().fromTag(tag);
         if (this.getFluidInv().getTankCount() > 0) this.getFluidInv().fromTag(tag);
@@ -476,13 +476,13 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void fromClientTag(CompoundTag tag) {
+    public void fromClientTag(NbtCompound tag) {
         this.getIOConfig().fromTag(tag);
         ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(pos);
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
+    public NbtCompound toClientTag(NbtCompound tag) {
         this.getIOConfig().toTag(tag);
         return tag;
     }

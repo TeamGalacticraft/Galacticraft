@@ -133,8 +133,8 @@
     }
   },
   "depends": {
-    "minecraft": ">=1.16.2",
-    "fabricloader": ">=0.9.0",
+    "minecraft": "1.17-pre1",
+    "fabricloader": ">=0.11.3",
     "galacticraft-api": ">=0.2.9-alpha+1.16.1",
     "libblockattributes_core": ">=0.8",
     "libblockattributes_items": ">=0.8",

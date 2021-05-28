@@ -43,7 +43,7 @@ public class DefaultShapedCompressingDisplay implements DefaultCompressingDispla
 
     public DefaultShapedCompressingDisplay(ShapedCompressingRecipe recipe) {
         this.input = new ArrayList<>();
-        recipe.getPreviewInputs().forEach((ingredient) -> {
+        recipe.getIngredients().forEach((ingredient) -> {
             List<EntryStack> stacks = new ArrayList<>();
             for (ItemStack stack : ingredient.getMatchingStacksClient()) {
                 stacks.add(EntryStack.create(stack));

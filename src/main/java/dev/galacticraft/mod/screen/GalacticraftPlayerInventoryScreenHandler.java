@@ -211,7 +211,7 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
                 }
             }
 
-            slotFrom.onStackChanged(stackFrom, stack);
+            slotFrom.onQuickTransfer(stackFrom, stack);
 
             if (stackFrom.isEmpty()) {
                 slotFrom.setStack(ItemStack.EMPTY);

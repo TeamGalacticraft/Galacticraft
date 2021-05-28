@@ -49,13 +49,13 @@ val wthitVersion           = project.property("wthit.version").toString()
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("0.7-SNAPSHOT")
+    id("fabric-loom") version("0.8-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.5.1")
 }
 
 configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
 }
 
 group = modGroup
@@ -265,6 +265,11 @@ license {
         set("year", Year.now().value)
         set("company", "Team Galacticraft")
     }
+}
+
+tasks.withType(JavaCompile::class) {
+    options.encoding = "UTF-8"
+    options.release.set(16)
 }
 
 // inspired by https://github.com/TerraformersMC/GradleScripts/blob/2.0/ferry.gradle

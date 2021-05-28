@@ -29,7 +29,7 @@ import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -123,7 +123,7 @@ public class ConfiguredMachineFace {
         return intList.toIntArray();
     }
 
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound toTag(NbtCompound tag) {
         tag.putString(Constant.Nbt.AUTOMATION_TYPE, automationType.name());
         tag.putBoolean(Constant.Nbt.MATCH, this.matching != null);
         if (this.matching != null) {
@@ -137,7 +137,7 @@ public class ConfiguredMachineFace {
         return tag;
     }
 
-    public void fromTag(CompoundTag tag) {
+    public void fromTag(NbtCompound tag) {
         this.automationType = AutomationType.valueOf(tag.getString(Constant.Nbt.AUTOMATION_TYPE));
         if (tag.getBoolean(Constant.Nbt.MATCH)) {
             if (tag.getBoolean(Constant.Nbt.INTEGER)) {

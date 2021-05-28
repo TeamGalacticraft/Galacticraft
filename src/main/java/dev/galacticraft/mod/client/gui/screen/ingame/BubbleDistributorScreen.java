@@ -107,7 +107,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
         textField.setText(String.valueOf(handler.machine.getTargetSize()));
-        drawCenteredString(matrices, this.textRenderer, new TranslatableText("block.galacticraft.oxygen_bubble_distributor").asString(), (this.width / 2) + 28, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredText(matrices, this.textRenderer, new TranslatableText("block.galacticraft.oxygen_bubble_distributor").asString(), (this.width / 2) + 28, this.y + 5, Formatting.DARK_GRAY.getColorValue());
 
         this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.machine.status").append(handler.machine.getStatus().getName()), this.x + 60, this.y + 30, Formatting.DARK_GRAY.getColorValue());
 

@@ -32,10 +32,10 @@ import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3f;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -87,8 +87,8 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
         matrices.push();
         maskTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
         matrices.push();
-        matrices.multiply(new Quaternion(Vector3f.POSITIVE_Y, headYaw, true));
-        matrices.multiply(new Quaternion(Vector3f.POSITIVE_X, headPitch, true));
+        matrices.multiply(new Quaternion(Vec3f.POSITIVE_Y, headYaw, true));
+        matrices.multiply(new Quaternion(Vec3f.POSITIVE_X, headPitch, true));
         oxygenMask.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
         matrices.pop();
         tankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);

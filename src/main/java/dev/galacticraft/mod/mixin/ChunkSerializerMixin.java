@@ -24,8 +24,8 @@ package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ChunkSectionOxygenAccessor;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.util.math.ChunkPos;
@@ -49,8 +49,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(ChunkSerializer.class)
 public abstract class ChunkSerializerMixin {
     @Inject(method = "serialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/PalettedContainer;write(Lnet/minecraft/nbt/CompoundTag;Ljava/lang/String;Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void serializeGCR(ServerWorld world, Chunk chunk, CallbackInfoReturnable<CompoundTag> cir, ChunkPos chunkPos, CompoundTag compoundTag, CompoundTag compoundTag2, ChunkSection[] chunkSections, ListTag listTag, LightingProvider lightingProvider, boolean bl, int i, int j, ChunkSection chunkSection, ChunkNibbleArray chunkNibbleArray, ChunkNibbleArray chunkNibbleArray2, CompoundTag compoundTag3) {
-        CompoundTag tag = new CompoundTag();
+    private static void serializeGCR(ServerWorld world, Chunk chunk, CallbackInfoReturnable<NbtCompound> cir, ChunkPos chunkPos, NbtCompound compoundTag, NbtCompound compoundTag2, ChunkSection[] chunkSections, NbtList listTag, LightingProvider lightingProvider, boolean bl, int i, int j, ChunkSection chunkSection, ChunkNibbleArray chunkNibbleArray, ChunkNibbleArray chunkNibbleArray2, NbtCompound compoundTag3) {
+        NbtCompound tag = new NbtCompound();
         tag.putShort(Constant.Nbt.TOTAL_OXYGEN, ((ChunkSectionOxygenAccessor) chunkSection).getTotalOxygen());
         if (((ChunkSectionOxygenAccessor) chunkSection).getTotalOxygen() > 0) {
             byte[] array = new byte[(16 * 16 * 16) / 8];
@@ -73,8 +73,8 @@ public abstract class ChunkSerializerMixin {
     }
 
     @Inject(method = "deserialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/ChunkSection;calculateCounts()V"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void deserializeGCR(ServerWorld world, StructureManager structureManager, PointOfInterestStorage poiStorage, ChunkPos pos, CompoundTag tag, CallbackInfoReturnable<ProtoChunk> cir, ChunkGenerator chunkGenerator, BiomeSource biomeSource, CompoundTag compoundTag, BiomeArray biomeArray, UpgradeData upgradeData, ChunkTickScheduler chunkTickScheduler, ChunkTickScheduler chunkTickScheduler2, boolean bl, ListTag listTag, int i, ChunkSection[] chunkSections, boolean bl2, ChunkManager chunkManager, LightingProvider lightingProvider, int j, CompoundTag compoundTag2, int k, ChunkSection chunkSection) {
-        CompoundTag compound = compoundTag2.getCompound(Constant.Nbt.GC_DATA);
+    private static void deserializeGCR(ServerWorld world, StructureManager structureManager, PointOfInterestStorage poiStorage, ChunkPos pos, NbtCompound tag, CallbackInfoReturnable<ProtoChunk> cir, ChunkGenerator chunkGenerator, BiomeSource biomeSource, NbtCompound compoundTag, BiomeArray biomeArray, UpgradeData upgradeData, ChunkTickScheduler chunkTickScheduler, ChunkTickScheduler chunkTickScheduler2, boolean bl, NbtList listTag, int i, ChunkSection[] chunkSections, boolean bl2, ChunkManager chunkManager, LightingProvider lightingProvider, int j, NbtCompound compoundTag2, int k, ChunkSection chunkSection) {
+        NbtCompound compound = compoundTag2.getCompound(Constant.Nbt.GC_DATA);
         ((ChunkSectionOxygenAccessor) chunkSection).setTotalOxygen(compound.getShort(Constant.Nbt.TOTAL_OXYGEN));
         if (compound.getShort(Constant.Nbt.TOTAL_OXYGEN) > 0) {
             boolean[] oxygen = ((ChunkSectionOxygenAccessor) chunkSection).getArray();

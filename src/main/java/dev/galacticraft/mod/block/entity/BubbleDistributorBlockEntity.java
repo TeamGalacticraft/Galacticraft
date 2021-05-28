@@ -45,7 +45,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -137,7 +137,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
             entity.prevY = this.getPos().getY();
             entity.prevZ = this.getPos().getZ();
             world.spawnEntity(entity);
-            bubbleId = entity.getEntityId();
+            bubbleId = entity.getId();
             for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
                 player.networkHandler.sendPacket(entity.createSpawnPacket());
             }
@@ -179,16 +179,16 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.putByte(Constant.Nbt.MAX_SIZE, targetSize);
         tag.putDouble(Constant.Nbt.SIZE, size);
         return tag;
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(BlockState state, NbtCompound tag) {
+        super.readNbt(state, tag);
         this.size = tag.getDouble(Constant.Nbt.SIZE);
         if (size < 0) size = 0;
         this.targetSize = tag.getByte(Constant.Nbt.MAX_SIZE);

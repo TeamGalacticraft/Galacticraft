@@ -25,7 +25,7 @@ package dev.galacticraft.mod.api.machine;
 import dev.galacticraft.mod.api.block.AutomationType;
 import dev.galacticraft.mod.api.block.ConfiguredMachineFace;
 import dev.galacticraft.mod.api.block.util.BlockFace;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -48,17 +48,17 @@ public class MachineIOConfig {
         this.bottom = new ConfiguredMachineFace(AutomationType.NONE);
     }
 
-    public CompoundTag toTag(CompoundTag tag) {
-        tag.put("Front", this.front.toTag(new CompoundTag()));
-        tag.put("Back", this.back.toTag(new CompoundTag()));
-        tag.put("Left", this.left.toTag(new CompoundTag()));
-        tag.put("Right", this.right.toTag(new CompoundTag()));
-        tag.put("Top", this.top.toTag(new CompoundTag()));
-        tag.put("Bottom", this.bottom.toTag(new CompoundTag()));
+    public NbtCompound toTag(NbtCompound tag) {
+        tag.put("Front", this.front.toTag(new NbtCompound()));
+        tag.put("Back", this.back.toTag(new NbtCompound()));
+        tag.put("Left", this.left.toTag(new NbtCompound()));
+        tag.put("Right", this.right.toTag(new NbtCompound()));
+        tag.put("Top", this.top.toTag(new NbtCompound()));
+        tag.put("Bottom", this.bottom.toTag(new NbtCompound()));
         return tag;
     }
 
-    public void fromTag(CompoundTag tag) {
+    public void fromTag(NbtCompound tag) {
         this.front.fromTag(tag.getCompound("Front"));
         this.back.fromTag(tag.getCompound("Back"));
         this.left.fromTag(tag.getCompound("Left"));

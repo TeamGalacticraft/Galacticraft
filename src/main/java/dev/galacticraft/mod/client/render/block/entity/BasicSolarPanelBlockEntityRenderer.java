@@ -35,9 +35,9 @@ import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3f;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -144,8 +144,8 @@ public class BasicSolarPanelBlockEntityRenderer extends BlockEntityRenderer<Basi
         this.pole.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.translate(0.0F, 1.5F, 0.0F);
 
-        matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180.0F));
-        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
+        matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F));
+        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
 
         this.renderPanel(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
