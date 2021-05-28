@@ -43,12 +43,4 @@ public abstract class AbstractWidget extends DrawableHelper implements Drawable,
     protected static boolean check(double mouseX, double mouseY, int x, int y, int width, int height) {
         return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
     }
-
-    @Override
-    public boolean isMouseOver(double mouseX, double mouseY) {
-        return this.getBounds().isWithinBounds(mouseX, mouseY);
-    }
-
-    protected abstract Rectangle getBounds();
-
 }

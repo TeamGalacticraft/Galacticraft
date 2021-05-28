@@ -96,8 +96,4 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
             entryRegistry.removeEntry(EntryStack.create(item));
         }
     }
-
-    private static Rectangle convertRectangleToClothMath(dev.galacticraft.mod.client.gui.widget.machine.Rectangle rectangle, int x, int y) {
-        return new Rectangle(x, y, rectangle.getWidth(), rectangle.getWidth());
-    }
 }
