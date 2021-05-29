@@ -48,14 +48,15 @@ import java.util.function.Supplier;
  */
 @Mixin(World.class)
 public abstract class WorldMixin implements WorldOxygenAccessor {
-    @Shadow
-    public static boolean isOutOfBuildLimitVertically(BlockPos pos) {
-        throw new UnsupportedOperationException("Shadowed method was not transformed!");
-    }
 
     @Shadow public abstract WorldChunk getWorldChunk(BlockPos pos);
 
     @Shadow @Final private RegistryKey<World> registryKey;
+
+    @Shadow
+    public static boolean isValid(BlockPos pos) {
+        return false;
+    }
 
     private @Unique boolean breathable = true;
 
@@ -67,13 +68,13 @@ public abstract class WorldMixin implements WorldOxygenAccessor {
     @Override
     public boolean isBreathable(BlockPos pos) {
         if (breathable) return true;
-        if (isOutOfBuildLimitVertically(pos)) return false;
+        if (isValid(pos)) return false;
         return ((ChunkOxygenAccessor) this.getWorldChunk(pos)).isBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
     }
 
     @Override
     public void setBreathable(BlockPos pos, boolean value) {
-        if (isOutOfBuildLimitVertically(pos) || breathable) return;
+        if (isValid(pos) || breathable) return;
         ((ChunkOxygenAccessor) this.getWorldChunk(pos)).setBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15, value);
     }
 }

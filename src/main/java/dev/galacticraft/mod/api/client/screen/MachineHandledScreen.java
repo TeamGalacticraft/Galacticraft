@@ -234,7 +234,6 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     public void drawConfigTabs(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        DiffuseLighting.disable();
         assert this.client != null;
         if (this.handler.machine != null) {
             final MachineBlockEntity machine = this.handler.machine;
@@ -853,11 +852,9 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     private void drawSlotOverlay(MatrixStack matrices, Slot slot) {
+        RenderSystem.disableDepthTest();
+        RenderSystem.colorMask(true, true, true, false);
         RenderSystem.disableTexture();
-        RenderSystem.enableBlend();
-        RenderSystem.disableAlphaTest();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.shadeModel(7425);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
@@ -892,9 +889,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
                 this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
         tessellator.draw();
-        RenderSystem.shadeModel(7424);
-        RenderSystem.disableBlend();
-        RenderSystem.enableAlphaTest();
+        RenderSystem.colorMask(true, true, true, true);
+        RenderSystem.enableDepthTest();
         RenderSystem.enableTexture();
     }
 
@@ -1045,7 +1041,6 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         bufferBuilder.vertex(matrices, (float)x1, (float)y0, (float)z).color(red, green, blue, 255).texture(u1, v0).next();
         bufferBuilder.vertex(matrices, (float)x0, (float)y0, (float)z).color(red, green, blue, 255).texture(u0, v0).next();
         bufferBuilder.end();
-        RenderSystem.enableAlphaTest();
         BufferRenderer.draw(bufferBuilder);
     }
 

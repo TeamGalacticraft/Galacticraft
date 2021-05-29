@@ -27,6 +27,8 @@ import alexiil.mc.lib.attributes.fluid.filter.RawFluidTagFilter;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import dev.galacticraft.mod.util.ColorUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
@@ -674,5 +676,12 @@ public interface Constant {
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
         }
+    }
+
+    @Environment(EnvType.CLIENT)
+    interface ModelPart {
+        String OXYGEN_MASK = "oxygen_mask";
+        String OXYGEN_TANK = "oxygen_tank";
+        String OXYGEN_PIPE = "oxygen_pipe";
     }
 }

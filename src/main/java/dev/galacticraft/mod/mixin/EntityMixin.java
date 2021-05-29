@@ -71,12 +71,12 @@ public abstract class EntityMixin implements GearInventoryProvider {
         return EmptyFixedItemInv.INSTANCE;
     }
 
-    @Inject(method = "toTag", at = @At("HEAD"))
+    @Inject(method = "writeNbt", at = @At("HEAD"))
     private void writeGear_gc(NbtCompound tag, CallbackInfoReturnable<NbtCompound> cir) {
         this.writeGearToNbt(tag);
     }
 
-    @Inject(method = "fromTag", at = @At("HEAD"))
+    @Inject(method = "readNbt", at = @At("HEAD"))
     private void readGear_gc(NbtCompound tag, CallbackInfo ci) {
         this.readGearFromNbt(tag);
     }
