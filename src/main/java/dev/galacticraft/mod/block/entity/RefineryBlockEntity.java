@@ -34,7 +34,7 @@ import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
-import dev.galacticraft.mod.screen.RefineryScreenHandler;
+import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import dev.galacticraft.mod.util.EnergyUtil;
@@ -129,7 +129,7 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new RefineryScreenHandler(syncId, player, this);
+        if (this.getSecurity().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.REFINERY_HANDLER, syncId, inv, this);
         return null;
     }
 

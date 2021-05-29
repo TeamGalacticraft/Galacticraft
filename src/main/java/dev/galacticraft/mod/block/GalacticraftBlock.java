@@ -24,12 +24,11 @@ package dev.galacticraft.mod.block;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidBlock;
-import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.block.decoration.GratingBlock;
 import dev.galacticraft.mod.block.decoration.LightPanelBlock;
 import dev.galacticraft.mod.block.decoration.LunarCartographyTableBlock;
 import dev.galacticraft.mod.block.decoration.VacuumGlassBlock;
-import dev.galacticraft.mod.block.entity.*;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.block.environment.*;
 import dev.galacticraft.mod.block.machine.*;
 import dev.galacticraft.mod.block.special.SolarPanelPartBlock;
@@ -41,6 +40,7 @@ import dev.galacticraft.mod.block.special.walkway.PipeWalkway;
 import dev.galacticraft.mod.block.special.walkway.Walkway;
 import dev.galacticraft.mod.block.special.walkway.WireWalkway;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
+import dev.galacticraft.mod.util.MultiBlockUtil;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
@@ -51,7 +51,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -184,35 +183,25 @@ public class GalacticraftBlock {
     public static final Block MOON_CHEESE_LOG = registerBlock(new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MaterialColor.YELLOW).strength(2.0F).sounds(BlockSoundGroup.WOOD)), Constant.Block.MOON_CHEESE_LOG);
 
     // DUMMY
-    public static final Block SOLAR_PANEL_PART = registerBlockWithoutItem(new SolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL)), Constant.Block.SOLAR_PANEL_PART);
+    public static final BlockWithEntity SOLAR_PANEL_PART = registerBlockWithoutItem(new SolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL)), Constant.Block.SOLAR_PANEL_PART);
 
     // MACHINES
-    public static final Block CIRCUIT_FABRICATOR = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new CircuitFabricatorBlockEntity(),
-            new TranslatableText("tooltip.galacticraft.circuit_fabricator").setStyle(Constant.Text.DARK_GRAY_STYLE)), Constant.Block.CIRCUIT_FABRICATOR);
-    public static final Block COMPRESSOR = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new CompressorBlockEntity(),
-            new TranslatableText("tooltip.galacticraft.compressor").setStyle(Constant.Text.DARK_GRAY_STYLE)), Constant.Block.COMPRESSOR);
-    public static final Block ELECTRIC_COMPRESSOR = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new ElectricCompressorBlockEntity(),
-            new TranslatableText("tooltip.galacticraft.electric_compressor").setStyle(Constant.Text.DARK_GRAY_STYLE)), Constant.Block.ELECTRIC_COMPRESSOR);
-    public static final Block COAL_GENERATOR = registerMachine(new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).luminance(state -> state.get(Constant.Property.ACTIVE) ? 13 : 0)), Constant.Block.COAL_GENERATOR);
-    public static final Block BASIC_SOLAR_PANEL = registerMachine(new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constant.Block.BASIC_SOLAR_PANEL);
-    public static final Block ADVANCED_SOLAR_PANEL = registerMachine(new AdvancedSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constant.Block.ADVANCED_SOLAR_PANEL);
-    public static final Block ENERGY_STORAGE_MODULE = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new EnergyStorageModuleBlockEntity(),
-            new TranslatableText("tooltip.galacticraft.energy_storage_module").setStyle(Constant.Text.DARK_GRAY_STYLE)), Constant.Block.ENERGY_STORAGE_MODULE);
-    public static final Block ELECTRIC_FURNACE = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new ElectricFurnaceBlockEntity(),
-            new TranslatableText("tooltip.galacticraft.electric_furnace").setStyle(Constant.Text.DARK_GRAY_STYLE)), Constant.Block.ELECTRIC_FURNACE);
-    public static final Block ELECTRIC_ARC_FURNACE = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new ElectricArcFurnaceBlockEntity(),
-            new TranslatableText("tooltip.galacticraft.electric_arc_furnace").setStyle(Constant.Text.DARK_GRAY_STYLE)), Constant.Block.ELECTRIC_ARC_FURNACE);
-    public static final Block OXYGEN_COLLECTOR = registerMachine(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constant.Block.OXYGEN_COLLECTOR);
-    public static final Block OXYGEN_SEALER = registerMachine(new OxygenSealerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constant.Block.OXYGEN_SEALER);
-    public static final Block REFINERY = registerMachine(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constant.Block.REFINERY);
-    public static final Block BUBBLE_DISTRIBUTOR = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new BubbleDistributorBlockEntity(),
-            new TranslatableText("tooltip.galacticraft.oxygen_bubble_distributor").setStyle(Constant.Text.DARK_GRAY_STYLE)), Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR);
-    public static final Block OXYGEN_DECOMPRESSOR = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new OxygenDecompressorBlockEntity(),
-            new TranslatableText("tooltip.galacticraft.oxygen_decompressor").setStyle(Constant.Text.DARK_GRAY_STYLE)), Constant.Block.OXYGEN_DECOMPRESSOR);
-    public static final Block OXYGEN_COMPRESSOR = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new OxygenCompressorBlockEntity(),
-            new TranslatableText("tooltip.galacticraft.oxygen_compressor").setStyle(Constant.Text.DARK_GRAY_STYLE)), Constant.Block.OXYGEN_COMPRESSOR);
-    public static final Block OXYGEN_STORAGE_MODULE = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new OxygenStorageModuleBlockEntity(),
-            new TranslatableText("tooltip.galacticraft.oxygen_storage_module").setStyle(Constant.Text.DARK_GRAY_STYLE)), Constant.Block.OXYGEN_STORAGE_MODULE);
+    public static final Block CIRCUIT_FABRICATOR = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.CIRCUIT_FABRICATOR, "tooltip.galacticraft.circuit_fabricator"), Constant.Block.CIRCUIT_FABRICATOR);
+    public static final Block COMPRESSOR = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.COMPRESSOR, "tooltip.galacticraft.compressor"), Constant.Block.COMPRESSOR);
+    public static final Block ELECTRIC_COMPRESSOR = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR,"tooltip.galacticraft.electric_compressor"), Constant.Block.ELECTRIC_COMPRESSOR);
+    public static final Block COAL_GENERATOR = registerMachine(new CoalGeneratorBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS).luminance(state -> state.get(Constant.Property.ACTIVE) ? 13 : 0)), Constant.Block.COAL_GENERATOR);
+    public static final Block BASIC_SOLAR_PANEL = registerMachine(SimpleMultiBlockMachineBlock.create(() -> GalacticraftBlockEntityType.BASIC_SOLAR_PANEL, MultiBlockUtil.generateSolarPanelParts(), GalacticraftBlock.SOLAR_PANEL_PART, "tooltip.galacticraft.basic_solar_panel"), Constant.Block.BASIC_SOLAR_PANEL);
+    public static final Block ADVANCED_SOLAR_PANEL = registerMachine(SimpleMultiBlockMachineBlock.create(() -> GalacticraftBlockEntityType.ADVANCED_SOLAR_PANEL, MultiBlockUtil.generateSolarPanelParts(), GalacticraftBlock.SOLAR_PANEL_PART, "tooltip.galacticraft.advanced_solar_panel"), Constant.Block.ADVANCED_SOLAR_PANEL);
+    public static final Block ENERGY_STORAGE_MODULE = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE, "tooltip.galacticraft.energy_storage_module"), Constant.Block.ENERGY_STORAGE_MODULE);
+    public static final Block ELECTRIC_FURNACE = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.ELECTRIC_FURNACE, "tooltip.galacticraft.electric_furnace"), Constant.Block.ELECTRIC_FURNACE);
+    public static final Block ELECTRIC_ARC_FURNACE = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE, "tooltip.galacticraft.electric_arc_furnace"), Constant.Block.ELECTRIC_ARC_FURNACE);
+    public static final Block OXYGEN_COLLECTOR = registerMachine(new OxygenCollectorBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS)), Constant.Block.OXYGEN_COLLECTOR);
+    public static final Block OXYGEN_SEALER = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.OXYGEN_SEALER, "tooltip.galacticraft.oxygen_sealer"), Constant.Block.OXYGEN_SEALER);
+    public static final Block REFINERY = registerMachine(new RefineryBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS)), Constant.Block.REFINERY);
+    public static final Block BUBBLE_DISTRIBUTOR = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.BUBBLE_DISTRIBUTOR, "tooltip.galacticraft.oxygen_bubble_distributor"), Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR);
+    public static final Block OXYGEN_DECOMPRESSOR = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.OXYGEN_DECOMPRESSOR, "tooltip.galacticraft.oxygen_decompressor"), Constant.Block.OXYGEN_DECOMPRESSOR);
+    public static final Block OXYGEN_COMPRESSOR = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.OXYGEN_COMPRESSOR, "tooltip.galacticraft.oxygen_compressor"), Constant.Block.OXYGEN_COMPRESSOR);
+    public static final Block OXYGEN_STORAGE_MODULE = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.OXYGEN_STORAGE_MODULE, "tooltip.galacticraft.oxygen_storage_module"), Constant.Block.OXYGEN_STORAGE_MODULE);
 
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);

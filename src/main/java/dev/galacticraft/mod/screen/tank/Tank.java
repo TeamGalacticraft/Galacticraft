@@ -30,7 +30,7 @@ import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.screen.MachineHandledScreen;
+import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen;
 import io.netty.buffer.Unpooled;

@@ -23,11 +23,11 @@
 package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -37,11 +37,12 @@ import java.util.Random;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenCollectorBlock extends MachineBlock {
+public class OxygenCollectorBlock extends SimpleMachineBlock<OxygenCollectorBlockEntity> {
+    private static final Text TOOLTIP_INFO = new TranslatableText("tooltip.galacticraft.oxygen_collector")
+            .setStyle(Constant.Text.DARK_GRAY_STYLE);
+
     public OxygenCollectorBlock(Settings settings) {
-        super(settings, OxygenCollectorBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft.oxygen_collector")
-                        .setStyle(Constant.Text.DARK_GRAY_STYLE));
+        super(settings, OxygenCollectorBlockEntity::new, TOOLTIP_INFO);
     }
 
     @Override
@@ -60,13 +61,10 @@ public class OxygenCollectorBlock extends MachineBlock {
                     mY = (random.nextFloat() - 0.5D) * 0.5D;
                     mZ = (random.nextFloat() - 0.5D) * 0.5D;
 
-                    if (random.nextBoolean())
-                    {
+                    if (random.nextBoolean()) {
                         x2 = pos.getX() + 0.5D + 0.25D * dir;
                         mX = random.nextFloat() * 2.0F * dir;
-                    }
-                    else
-                    {
+                    } else {
                         z2 = pos.getZ() + 0.5D + 0.25D * dir;
                         mZ = random.nextFloat() * 2.0F * dir;
                     }
