@@ -28,7 +28,7 @@ import dev.galacticraft.mod.block.decoration.GratingBlock;
 import dev.galacticraft.mod.block.decoration.LightPanelBlock;
 import dev.galacticraft.mod.block.decoration.LunarCartographyTableBlock;
 import dev.galacticraft.mod.block.decoration.VacuumGlassBlock;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.block.entity.*;
 import dev.galacticraft.mod.block.environment.*;
 import dev.galacticraft.mod.block.machine.*;
 import dev.galacticraft.mod.block.special.SolarPanelPartBlock;
@@ -186,22 +186,22 @@ public class GalacticraftBlock {
     public static final BlockWithEntity SOLAR_PANEL_PART = registerBlockWithoutItem(new SolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL)), Constant.Block.SOLAR_PANEL_PART);
 
     // MACHINES
-    public static final Block CIRCUIT_FABRICATOR = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.CIRCUIT_FABRICATOR, "tooltip.galacticraft.circuit_fabricator"), Constant.Block.CIRCUIT_FABRICATOR);
-    public static final Block COMPRESSOR = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.COMPRESSOR, "tooltip.galacticraft.compressor"), Constant.Block.COMPRESSOR);
-    public static final Block ELECTRIC_COMPRESSOR = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR,"tooltip.galacticraft.electric_compressor"), Constant.Block.ELECTRIC_COMPRESSOR);
+    public static final Block CIRCUIT_FABRICATOR = registerMachine(SimpleMachineBlock.create(CircuitFabricatorBlockEntity::new, "tooltip.galacticraft.circuit_fabricator"), Constant.Block.CIRCUIT_FABRICATOR);
+    public static final Block COMPRESSOR = registerMachine(SimpleMachineBlock.create(CompressorBlockEntity::new, "tooltip.galacticraft.compressor"), Constant.Block.COMPRESSOR);
+    public static final Block ELECTRIC_COMPRESSOR = registerMachine(SimpleMachineBlock.create(ElectricCompressorBlockEntity::new,"tooltip.galacticraft.electric_compressor"), Constant.Block.ELECTRIC_COMPRESSOR);
     public static final Block COAL_GENERATOR = registerMachine(new CoalGeneratorBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS).luminance(state -> state.get(Constant.Property.ACTIVE) ? 13 : 0)), Constant.Block.COAL_GENERATOR);
-    public static final Block BASIC_SOLAR_PANEL = registerMachine(SimpleMultiBlockMachineBlock.create(() -> GalacticraftBlockEntityType.BASIC_SOLAR_PANEL, MultiBlockUtil.generateSolarPanelParts(), GalacticraftBlock.SOLAR_PANEL_PART, "tooltip.galacticraft.basic_solar_panel"), Constant.Block.BASIC_SOLAR_PANEL);
-    public static final Block ADVANCED_SOLAR_PANEL = registerMachine(SimpleMultiBlockMachineBlock.create(() -> GalacticraftBlockEntityType.ADVANCED_SOLAR_PANEL, MultiBlockUtil.generateSolarPanelParts(), GalacticraftBlock.SOLAR_PANEL_PART, "tooltip.galacticraft.advanced_solar_panel"), Constant.Block.ADVANCED_SOLAR_PANEL);
-    public static final Block ENERGY_STORAGE_MODULE = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE, "tooltip.galacticraft.energy_storage_module"), Constant.Block.ENERGY_STORAGE_MODULE);
-    public static final Block ELECTRIC_FURNACE = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.ELECTRIC_FURNACE, "tooltip.galacticraft.electric_furnace"), Constant.Block.ELECTRIC_FURNACE);
-    public static final Block ELECTRIC_ARC_FURNACE = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE, "tooltip.galacticraft.electric_arc_furnace"), Constant.Block.ELECTRIC_ARC_FURNACE);
+    public static final Block BASIC_SOLAR_PANEL = registerMachine(SimpleMultiBlockMachineBlock.create(BasicSolarPanelBlockEntity::new, MultiBlockUtil.generateSolarPanelParts(), GalacticraftBlock.SOLAR_PANEL_PART, "tooltip.galacticraft.basic_solar_panel"), Constant.Block.BASIC_SOLAR_PANEL);
+    public static final Block ADVANCED_SOLAR_PANEL = registerMachine(SimpleMultiBlockMachineBlock.create(AdvancedSolarPanelBlockEntity::new, MultiBlockUtil.generateSolarPanelParts(), GalacticraftBlock.SOLAR_PANEL_PART, "tooltip.galacticraft.advanced_solar_panel"), Constant.Block.ADVANCED_SOLAR_PANEL);
+    public static final Block ENERGY_STORAGE_MODULE = registerMachine(SimpleMachineBlock.create(EnergyStorageModuleBlockEntity::new, "tooltip.galacticraft.energy_storage_module"), Constant.Block.ENERGY_STORAGE_MODULE);
+    public static final Block ELECTRIC_FURNACE = registerMachine(SimpleMachineBlock.create(ElectricFurnaceBlockEntity::new, "tooltip.galacticraft.electric_furnace"), Constant.Block.ELECTRIC_FURNACE);
+    public static final Block ELECTRIC_ARC_FURNACE = registerMachine(SimpleMachineBlock.create(ElectricArcFurnaceBlockEntity::new, "tooltip.galacticraft.electric_arc_furnace"), Constant.Block.ELECTRIC_ARC_FURNACE);
     public static final Block OXYGEN_COLLECTOR = registerMachine(new OxygenCollectorBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS)), Constant.Block.OXYGEN_COLLECTOR);
-    public static final Block OXYGEN_SEALER = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.OXYGEN_SEALER, "tooltip.galacticraft.oxygen_sealer"), Constant.Block.OXYGEN_SEALER);
+    public static final Block OXYGEN_SEALER = registerMachine(SimpleMachineBlock.create(OxygenSealerBlockEntity::new, "tooltip.galacticraft.oxygen_sealer"), Constant.Block.OXYGEN_SEALER);
     public static final Block REFINERY = registerMachine(new RefineryBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS)), Constant.Block.REFINERY);
-    public static final Block BUBBLE_DISTRIBUTOR = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.BUBBLE_DISTRIBUTOR, "tooltip.galacticraft.oxygen_bubble_distributor"), Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR);
-    public static final Block OXYGEN_DECOMPRESSOR = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.OXYGEN_DECOMPRESSOR, "tooltip.galacticraft.oxygen_decompressor"), Constant.Block.OXYGEN_DECOMPRESSOR);
-    public static final Block OXYGEN_COMPRESSOR = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.OXYGEN_COMPRESSOR, "tooltip.galacticraft.oxygen_compressor"), Constant.Block.OXYGEN_COMPRESSOR);
-    public static final Block OXYGEN_STORAGE_MODULE = registerMachine(SimpleMachineBlock.create(() -> GalacticraftBlockEntityType.OXYGEN_STORAGE_MODULE, "tooltip.galacticraft.oxygen_storage_module"), Constant.Block.OXYGEN_STORAGE_MODULE);
+    public static final Block BUBBLE_DISTRIBUTOR = registerMachine(SimpleMachineBlock.create(BubbleDistributorBlockEntity::new, "tooltip.galacticraft.oxygen_bubble_distributor"), Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR);
+    public static final Block OXYGEN_DECOMPRESSOR = registerMachine(SimpleMachineBlock.create(OxygenDecompressorBlockEntity::new, "tooltip.galacticraft.oxygen_decompressor"), Constant.Block.OXYGEN_DECOMPRESSOR);
+    public static final Block OXYGEN_COMPRESSOR = registerMachine(SimpleMachineBlock.create(OxygenCompressorBlockEntity::new, "tooltip.galacticraft.oxygen_compressor"), Constant.Block.OXYGEN_COMPRESSOR);
+    public static final Block OXYGEN_STORAGE_MODULE = registerMachine(SimpleMachineBlock.create(OxygenStorageModuleBlockEntity::new, "tooltip.galacticraft.oxygen_storage_module"), Constant.Block.OXYGEN_STORAGE_MODULE);
 
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);

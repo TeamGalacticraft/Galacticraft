@@ -33,6 +33,7 @@ import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
@@ -43,15 +44,15 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tickable {
+public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     private static final Object2IntMap<Item> FUEL_MAP = Util.make(new Object2IntArrayMap<>(3), (map) -> {
         map.put(Items.COAL_BLOCK, 320 * 10);
         map.put(Items.COAL, 320);
@@ -72,8 +73,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
      * Coal Generator: generates 120gj/t (max heat)
      */
 
-    public CoalGeneratorBlockEntity() {
-        super(GalacticraftBlockEntityType.COAL_GENERATOR);
+    public CoalGeneratorBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.COAL_GENERATOR, pos, state);
     }
 
     @Override

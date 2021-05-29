@@ -89,12 +89,12 @@ public abstract class MachineScreenHandler<T extends MachineBlockEntity> extends
     protected void addPlayerInventorySlots(int x, int y) {
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                super.addSlot(new Slot(player.inventory, j + i * 9 + 9, x + 8 + j * 18, y + i * 18));
+                super.addSlot(new Slot(this.player.getInventory(), j + i * 9 + 9, x + 8 + j * 18, y + i * 18));
             }
         }
 
         for (int i = 0; i < 9; ++i) {
-            super.addSlot(new Slot(player.inventory, i, x + 8 + i * 18, y + 58));
+            super.addSlot(new Slot(this.player.getInventory(), i, x + 8 + i * 18, y + 58));
         }
     }
 

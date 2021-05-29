@@ -74,7 +74,7 @@ public class CavernousVineBlock extends Block implements Waterloggable {
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (!(entity instanceof LivingEntity) || (entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.flying)) {
+        if (!(entity instanceof LivingEntity) || (entity instanceof PlayerEntity && ((PlayerEntity) entity).getAbilities().flying)) {
             return;
         }
 
@@ -82,10 +82,10 @@ public class CavernousVineBlock extends Block implements Waterloggable {
     }
 
     public void onCollided(LivingEntity entity) {
-        dragEntityUp(entity);
+        this.dragEntityUp(entity);
     }
 
-    void dragEntityUp(LivingEntity entity) {
+    private void dragEntityUp(LivingEntity entity) {
         entity.setVelocity(entity.getVelocity().x, 0.1D, entity.getVelocity().z);
     }
 

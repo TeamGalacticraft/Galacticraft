@@ -23,8 +23,6 @@
 package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.MachineBlock;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.block.entity.CoalGeneratorBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -89,8 +87,8 @@ public class CoalGeneratorBlock extends SimpleMachineBlock<CoalGeneratorBlockEnt
     }
 
     @Override
-    public CoalGeneratorBlockEntity createBlockEntity(BlockView view) {
-        return new CoalGeneratorBlockEntity();
+    public CoalGeneratorBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new CoalGeneratorBlockEntity(pos, state);
     }
 
     @Override

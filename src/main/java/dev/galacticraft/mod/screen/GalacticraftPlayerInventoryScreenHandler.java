@@ -58,7 +58,7 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
 
     public final FixedItemInv inventory;
 
-    private final PlayerEntity player;
+    public final PlayerEntity player;
 
     public GalacticraftPlayerInventoryScreenHandler(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         super(GalacticraftScreenHandlerType.PLAYER_INV_GC_HANDLER, syncId);
@@ -223,9 +223,9 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
                 return ItemStack.EMPTY;
             }
 
-            ItemStack itemStack3 = slotFrom.onTakeItem(player, stackFrom);
+            slotFrom.onTakeItem(player, stackFrom);
             if (index == 0) {
-                player.dropItem(itemStack3, false);
+                player.dropItem(stackFrom, false);
             }
         }
 

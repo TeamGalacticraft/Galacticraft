@@ -34,6 +34,7 @@ import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.ElectricCompressorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -45,6 +46,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,8 +70,8 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
 
     public int progress;
 
-    public ElectricCompressorBlockEntity() {
-        super(GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR);
+    public ElectricCompressorBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR, pos, state);
     }
 
     @Override

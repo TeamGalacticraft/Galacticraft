@@ -35,8 +35,10 @@ import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.attribute.energy.WireEnergyInsertable;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.util.EnergyUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,8 +51,8 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     private @Nullable WireEnergyInsertable insertable = null;
     private static final int MAX_TRANSFER_RATE = 240;
 
-    public WireBlockEntity() {
-        super(GalacticraftBlockEntityType.WIRE);
+    public WireBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.WIRE, pos, state);
     }
 
     @Override

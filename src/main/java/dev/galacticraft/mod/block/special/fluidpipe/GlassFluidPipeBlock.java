@@ -146,8 +146,8 @@ public class GlassFluidPipeBlock extends FluidPipe {
     }
 
     @Override
-    public @Nullable PipeBlockEntity createBlockEntity(BlockView world) {
-        return new PipeBlockEntity(GalacticraftBlockEntityType.GLASS_FLUID_PIPE);
+    public @Nullable PipeBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new PipeBlockEntity(GalacticraftBlockEntityType.GLASS_FLUID_PIPE, pos, state);
     }
 
     @Override

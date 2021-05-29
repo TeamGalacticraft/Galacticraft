@@ -22,16 +22,12 @@
 
 package dev.galacticraft.mod.util;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Matrix4f;
@@ -64,13 +60,13 @@ public interface DrawableUtil {
         float u1 = (u + width) / 128f;
         float v1 = (v + height) / 128f;
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE);
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
         bufferBuilder.vertex(matrices, x, y1, z).texture(u0, v1).next();
         bufferBuilder.vertex(matrices, x1, y1, z).texture(u1, v1).next();
         bufferBuilder.vertex(matrices, x1, y, z).texture(u1, v0).next();
         bufferBuilder.vertex(matrices, x, y, z).texture(u0, v0).next();
         bufferBuilder.end();
-        RenderSystem.enableAlphaTest();
+//        RenderSystem.enableAlphaTest(); //todo(render17) look into shaders + custom renderlayers
         BufferRenderer.draw(bufferBuilder);
     }
 

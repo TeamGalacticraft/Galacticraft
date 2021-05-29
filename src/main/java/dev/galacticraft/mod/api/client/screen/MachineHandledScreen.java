@@ -315,9 +315,9 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.client.getTextureManager().bindTexture(Constant.ScreenTexture.MACHINE_CONFIG_PANELS);
                 this.drawTexture(matrices, PANEL_ICON_X, PANEL_ICON_Y, ICON_LOCK_PRIVATE_U, ICON_LOCK_PRIVATE_V, ICON_WIDTH, ICON_HEIGHT);
 
-                this.drawButton(matrices, SECURITY_PUBLIC_X, SECURITY_PUBLIC_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PUBLIC || !machine.getSecurity().isOwner(playerInventory.player));
-                this.drawButton(matrices, SECURITY_TEAM_X, SECURITY_TEAM_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.TEAM || !machine.getSecurity().isOwner(playerInventory.player));
-                this.drawButton(matrices, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PRIVATE || !machine.getSecurity().isOwner(playerInventory.player));
+                this.drawButton(matrices, SECURITY_PUBLIC_X, SECURITY_PUBLIC_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PUBLIC || !machine.getSecurity().isOwner(this.handler.player));
+                this.drawButton(matrices, SECURITY_TEAM_X, SECURITY_TEAM_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.TEAM || !machine.getSecurity().isOwner(this.handler.player));
+                this.drawButton(matrices, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PRIVATE || !machine.getSecurity().isOwner(this.handler.player));
                 this.drawTexture(matrices, SECURITY_PUBLIC_X, SECURITY_PUBLIC_Y, ICON_LOCK_PRIVATE_U, ICON_LOCK_PRIVATE_V, ICON_WIDTH, ICON_HEIGHT);
                 this.drawTexture(matrices, SECURITY_TEAM_X, SECURITY_TEAM_Y, ICON_LOCK_PARTY_U, ICON_LOCK_PARTY_V, ICON_WIDTH, ICON_HEIGHT);
                 this.drawTexture(matrices, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, ICON_LOCK_PUBLIC_U, ICON_LOCK_PUBLIC_V, ICON_WIDTH, ICON_HEIGHT);
@@ -342,7 +342,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     private void renderItemIcon(MatrixStack matrices, int x, int y, ItemStack stack) {
         assert this.client != null;
-        BakedModel model = this.itemRenderer.getHeldItemModel(stack, this.world, this.playerInventory.player);
+        BakedModel model = this.itemRenderer.getHeldItemModel(stack, this.world, this.handler.player, 8910823);
         matrices.push();
         AbstractTexture blockAtlasTexture = this.client.getTextureManager().getTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
         assert blockAtlasTexture != null;
@@ -499,7 +499,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 return true;
             }
 
-            if (machine.getSecurity().isOwner(this.playerInventory.player)) {
+            if (machine.getSecurity().isOwner(this.handler.player)) {
                 if (this.check(mouseX, mouseY, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                     this.setAccessibility(SecurityInfo.Accessibility.PRIVATE);
                     this.playButtonSound();
@@ -617,7 +617,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             mouseX -= this.backgroundWidth;
             mouseY -= TAB_HEIGHT + SPACING + SPACING;
 
-            if (machine.getSecurity().isOwner(this.playerInventory.player)) {
+            if (machine.getSecurity().isOwner(this.handler.player)) {
                 if (this.check(mouseX, mouseY, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                     this.renderTooltip(matrices, SecurityInfo.Accessibility.PRIVATE.getName(), mX, mY);
                 }
@@ -860,7 +860,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         RenderSystem.shadeModel(7425);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
-        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getModel(), bufferBuilder,
                 slot.x - 1, slot.y - 1,
                 slot.x - 1, slot.y + 17,
@@ -868,7 +868,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
                 this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
         tessellator.draw();
-        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getModel(), bufferBuilder,
                 slot.x - 1, slot.y + 17,
                 slot.x + 17, slot.y - 1,
@@ -876,7 +876,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
                 this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
         tessellator.draw();
-        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getModel(), bufferBuilder,
                 slot.x + 17, slot.y + 17,
                 slot.x + 17, slot.y - 1,
@@ -884,7 +884,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
                 this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
         tessellator.draw();
-        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getModel(), bufferBuilder,
                 slot.x + 17, slot.y - 1,
                 slot.x - 1, slot.y - 1,
@@ -906,15 +906,15 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             }
             boolean tankMod = false;
             if (this.focusedTank != null && button == 0) {
-                tankMod = this.focusedTank.acceptStack(new Reference<ItemStack>() {
+                tankMod = this.focusedTank.acceptStack(new Reference<>() {
                     @Override
                     public ItemStack get() {
-                        return MachineHandledScreen.this.playerInventory.getCursorStack();
+                        return MachineHandledScreen.this.handler.getCursorStack();
                     }
 
                     @Override
                     public boolean set(ItemStack value) {
-                        MachineHandledScreen.this.playerInventory.setCursorStack(value);
+                        MachineHandledScreen.this.handler.setCursorStack(value);
                         return true;
                     }
 
@@ -922,7 +922,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     public boolean isValid(ItemStack value) {
                         return true;
                     }
-                }, new FixedInventoryVanillaWrapper(this.playerInventory).getInsertable());
+                }, new FixedInventoryVanillaWrapper(this.handler.player.getInventory()).getInsertable());
             }
             return this.checkTabsClick(mouseX, mouseY, button) | super.mouseClicked(mouseX, mouseY, button) | tankMod;
         } else {
@@ -946,7 +946,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     public boolean isAllowed() {
         if (this.handler.machine != null) {
-            return handler.machine.getSecurity().hasAccess(playerInventory.player);
+            return handler.machine.getSecurity().hasAccess(handler.player);
         }
         return false;
     }
@@ -1039,7 +1039,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     private static void drawTexturedQuadColor(Matrix4f matrices, int x0, int x1, int y0, int y1, int z, float u0, float u1, float v0, float v1, int red, int green, int blue, int alwha) {
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR_TEXTURE);
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
         bufferBuilder.vertex(matrices, (float)x0, (float)y1, (float)z).color(red, green, blue, 255).texture(u0, v1).next();
         bufferBuilder.vertex(matrices, (float)x1, (float)y1, (float)z).color(red, green, blue, 255).texture(u1, v1).next();
         bufferBuilder.vertex(matrices, (float)x1, (float)y0, (float)z).color(red, green, blue, 255).texture(u1, v0).next();

@@ -80,7 +80,7 @@ public class OxygenTank extends Tank {
         if (colorize) {
             RenderSystem.disableTexture();
             BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-            bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE);
+            bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
             bufferBuilder.vertex(matrices, x - 1, y + Constant.TextureCoordinate.OVERLAY_HEIGHT + 1, (float) 0).texture(0, 0).next();
             bufferBuilder.vertex(matrices, x + Constant.TextureCoordinate.OVERLAY_WIDTH + 1, y + Constant.TextureCoordinate.OVERLAY_HEIGHT + 1, (float) 0).texture(0, 0).next();
             bufferBuilder.vertex(matrices, x + Constant.TextureCoordinate.OVERLAY_WIDTH + 1, y - 1, (float) 0).texture(0, 0).next();
@@ -118,7 +118,7 @@ public class OxygenTank extends Tank {
         float u1 = (u + (float) Constant.TextureCoordinate.OVERLAY_WIDTH) / 128f;
         float v1 = (v + height) / 128f;
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE);
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
         bufferBuilder.vertex(matrices, x, y1, (float) 0).texture(u0, v1).next();
         bufferBuilder.vertex(matrices, x1, y1, (float) 0).texture(u1, v1).next();
         bufferBuilder.vertex(matrices, x1, y, (float) 0).texture(u1, v0).next();

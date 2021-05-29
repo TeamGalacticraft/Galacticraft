@@ -85,12 +85,12 @@ public class TinLadderBlock extends Block {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack item = player.inventory.getStack(player.inventory.selectedSlot);
+        ItemStack item = player.getInventory().getStack(player.getInventory().selectedSlot);
         if (Block.getBlockFromItem(item.getItem()) instanceof TinLadderBlock) {
             if (!player.isCreative())
                 item.decrement(1);
-            if (player.pitch < 0f) {
-                for (BlockPos checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() < world.getDimensionHeight(); checkPos = checkPos.add(0, 1, 0)) {
+            if (player.getPitch() < 0f) {
+                for (BlockPos checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() < world.getHeight(); checkPos = checkPos.add(0, 1, 0)) {
                     ActionResult result = this.checkCanTinLadderBePlaced(world, checkPos, state);
                     if (result != null)
                         return result;

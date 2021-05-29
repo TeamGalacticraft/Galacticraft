@@ -30,6 +30,7 @@ import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
@@ -37,7 +38,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,11 +48,11 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements Tickable {
+public class BasicSolarPanelBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
 
-    public BasicSolarPanelBlockEntity() {
-        super(GalacticraftBlockEntityType.BASIC_SOLAR_PANEL);
+    public BasicSolarPanelBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.BASIC_SOLAR_PANEL, pos, state);
     }
 
     @Override

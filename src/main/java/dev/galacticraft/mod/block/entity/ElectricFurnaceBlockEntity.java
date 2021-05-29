@@ -29,11 +29,10 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.screen.ElectricFurnaceScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -47,6 +46,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,10 +69,6 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntity {
         }
     };
 
-    public ElectricFurnaceBlockEntity(BlockEntityType<? extends ElectricFurnaceBlockEntity> blockEntityType) {
-        super(blockEntityType);
-    }
-
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
         builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 7);
@@ -81,8 +77,8 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntity {
         return builder;
     }
 
-    public ElectricFurnaceBlockEntity() {
-        this(GalacticraftBlockEntityType.ELECTRIC_FURNACE);
+    public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.ELECTRIC_FURNACE, pos, state);
     }
 
     @Override

@@ -47,7 +47,6 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Pair;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -59,7 +58,7 @@ import java.util.*;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenSealerBlockEntity extends MachineBlockEntity implements Tickable {
+public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int BATTERY_SLOT = 0;
     public static final int LOX_INPUT = 1;
@@ -69,8 +68,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
     private byte sealCheckTime;
     private CelestialBodyType type = null;
 
-    public OxygenSealerBlockEntity() {
-        super(GalacticraftBlockEntityType.OXYGEN_SEALER);
+    public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.OXYGEN_SEALER, pos, state);
     }
 
     @Override
@@ -92,8 +91,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
     }
 
     @Override
-    public void setLocation(World world, BlockPos pos) {
-        super.setLocation(world, pos);
+    public void setWorld(World world) {
+        super.setWorld(world);
         this.sealCheckTime = SEAL_CHECK_TIME;
         this.type = CelestialBodyType.getByDimType(world.getRegistryKey()).orElse(null);
     }

@@ -30,6 +30,7 @@ import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -70,7 +71,7 @@ public class OxygenCollectorBlock extends SimpleMachineBlock<OxygenCollectorBloc
                     }
 
                     world.addParticle(
-                            new DustParticleEffect(0.8f, 0.8f, 1.0f, 1.0F),
+                            new DustParticleEffect(new Vec3f(0.8f, 0.8f, 1.0f), 1.0F),
                             x2, y2, z2,
                             mX, mY, mZ);
                 }

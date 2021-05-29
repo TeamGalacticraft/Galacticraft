@@ -32,8 +32,8 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -43,7 +43,7 @@ import net.minecraft.util.math.Vec3f;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class BasicSolarPanelBlockEntityRenderer extends BlockEntityRenderer<BasicSolarPanelBlockEntity> {
+public class BasicSolarPanelBlockEntityRenderer implements BlockEntityRenderer<BasicSolarPanelBlockEntity> {
     private static final Identifier solarPanelTexture = new Identifier(Constant.MOD_ID, "textures/model/solar_panel_basic.png");
 
     private final ModelPart panelMain;
@@ -56,8 +56,7 @@ public class BasicSolarPanelBlockEntityRenderer extends BlockEntityRenderer<Basi
     private final ModelPart sideHorizontal2;
     private final ModelPart pole;
 
-    public BasicSolarPanelBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
-        super(dispatcher);
+    public BasicSolarPanelBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
         this.panelMain = new ModelPart(256, 128, 0, 0);
         this.panelMain.addCuboid(-23F, -0.5F, -23F, 46, 1, 46);
         this.panelMain.setPivot(0F, 0F, 0F);

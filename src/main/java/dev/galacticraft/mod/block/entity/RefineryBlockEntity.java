@@ -39,6 +39,7 @@ import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import dev.galacticraft.mod.util.EnergyUtil;
 import dev.galacticraft.mod.util.FluidUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
@@ -46,14 +47,14 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class RefineryBlockEntity extends MachineBlockEntity implements Tickable {
+public class RefineryBlockEntity extends MachineBlockEntity {
     private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(8);
     public static final int OIL_TANK = 0;
     public static final int FUEL_TANK = 1;
@@ -61,8 +62,8 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
     public static final int FLUID_INPUT_SLOT = 1;
     public static final int FLUID_OUTPUT_SLOT = 2;
 
-    public RefineryBlockEntity() {
-        super(GalacticraftBlockEntityType.REFINERY);
+    public RefineryBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.REFINERY, pos, state);
     }
 
     @Override

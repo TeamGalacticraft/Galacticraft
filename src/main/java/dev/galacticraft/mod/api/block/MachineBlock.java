@@ -29,12 +29,17 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
-import dev.galacticraft.mod.misc.TriFunction;
+import dev.galacticraft.mod.block.entity.MachineBlockEntityTicker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -64,13 +69,10 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -89,7 +91,7 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
     }
 
     @Override
-    public abstract T createBlockEntity(BlockView view);
+    public abstract T createBlockEntity(BlockPos pos, BlockState state);
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
@@ -216,6 +218,12 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
 
         stack.setTag(tag);
         return stack;
+    }
+
+    @Nullable
+    @Override
+    public <B extends BlockEntity> BlockEntityTicker<B> getTicker(World world, BlockState state, BlockEntityType<B> type) {
+        return MachineBlockEntityTicker.getInstance();
     }
 
     public abstract Text machineInfo(ItemStack stack, BlockView view, boolean advanced);

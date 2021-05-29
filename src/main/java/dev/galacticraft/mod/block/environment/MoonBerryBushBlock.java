@@ -45,6 +45,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -129,7 +130,7 @@ public class MoonBerryBushBlock extends PlantBlock {
             int times = random.nextInt(4);
 
             for (int i = 0; i < times; i++) {
-                world.addParticle(new DustParticleEffect(0.5f, 0.5f, 1.0f, 0.6f), x, y, z, 0.0D, 0.0D, 0.0D);
+                world.addParticle(new DustParticleEffect(new Vec3f(0.5f, 0.5f, 1.0f), 0.6f), x, y, z, 0.0D, 0.0D, 0.0D);
             }
         }
     }

@@ -29,9 +29,11 @@ import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.screen.tank.NullTank;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,8 +44,8 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     private static final int OXYGEN_TANK = 0;
     public static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(50);
 
-    public OxygenStorageModuleBlockEntity() {
-        super(GalacticraftBlockEntityType.OXYGEN_STORAGE_MODULE);
+    public OxygenStorageModuleBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.OXYGEN_STORAGE_MODULE, pos, state);
     }
 
     @Override

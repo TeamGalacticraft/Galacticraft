@@ -37,7 +37,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
-import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -69,17 +68,15 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
         this.generateStarBufferMoon();
     }
 
-    @Inject(method = "renderClouds(Lnet/minecraft/client/util/math/MatrixStack;FDDD)V", at = @At("HEAD"), cancellable = true)
-    private void renderClouds(MatrixStack matrices, float tickDelta, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
+    @Inject(method = "renderClouds(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/util/math/Matrix4f;FDDD)V", at = @At("HEAD"), cancellable = true)
+    private void renderClouds(MatrixStack matrices, Matrix4f matrix4f, float f, double d, double e, double g, CallbackInfo ci) {
         if (this.world.getRegistryKey() == GalacticraftDimension.MOON) {
             ci.cancel();
-            //noinspection UnnecessaryReturnStatement
-            return;
         }
     }
 
     @Inject(at = @At("HEAD"), method = "renderSky", cancellable = true)
-    private void renderSkyGC(MatrixStack matrices, float delta, CallbackInfo ci) {
+    private void renderSkyGC(MatrixStack matrices, Matrix4f matrix4f, float delta, CallbackInfo ci) {
         if (this.world.getRegistryKey() == GalacticraftDimension.MOON) {
             this.client.getProfiler().push("moon_sky_render");
             RenderSystem.disableTexture();
@@ -124,7 +121,7 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             float size = 15.0F;
             client.getTextureManager().bindTexture(SUN_TEXTURE);
-            buffer.begin(7, VertexFormats.POSITION_TEXTURE);
+            buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
             buffer.vertex(matrix, -size, 100.0F, -size).texture(0.0F, 0.0F).next();
             buffer.vertex(matrix, size, 100.0F, -size).texture(1.0F, 0.0F).next();
             buffer.vertex(matrix, size, 100.0F, size).texture(1.0F, 1.0F).next();
@@ -146,7 +143,7 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
 
             client.getTextureManager().bindTexture(EARTH_TEXTURE);
 
-            buffer.begin(7, VertexFormats.POSITION_TEXTURE);
+            buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
             buffer.vertex(matrix, -size, -100.0F, size).texture(0.0F, 1.0F).next();
             buffer.vertex(matrix, size, -100.0F, size).texture(1.0F, 1.0F).next();
             buffer.vertex(matrix, size, -100.0F, -size).texture(1.0F, 0.0F).next();
@@ -190,7 +187,7 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
 
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
-        buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION);
+        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
         for (int i = 0; i < 12000; ++i) {
             double j = random.nextFloat() * 2.0F - 1.0F;
             double k = random.nextFloat() * 2.0F - 1.0F;

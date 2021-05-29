@@ -47,10 +47,9 @@ public class PoisonousCavernousVineBlock extends CavernousVineBlock {
 
     @Override
     public void onCollided(LivingEntity entity) {
-        // Override the one from CavernousVineBlock and only bring them up. Apply damage and rotate player.
-        dragEntityUp(entity);
+        super.onCollided(entity);
         entity.damage(GalacticraftDamageSource.VINE_POISON, 5.0f);
-        entity.yaw += 0.4F; // Spin the player
+        entity.setYaw(entity.getYaw() + 0.4F); // Spin the player
     }
 
     @Override

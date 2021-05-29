@@ -43,6 +43,7 @@ import dev.galacticraft.mod.util.OxygenTankUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.NbtCompound;
@@ -56,14 +57,14 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BubbleDistributorBlockEntity extends MachineBlockEntity implements Tickable {
+public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int BATTERY_SLOT = 0;
     public static final int OXYGEN_TANK_SLOT = 1;
@@ -75,8 +76,8 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     private int bubbleId = -1;
     private double prevSize;
 
-    public BubbleDistributorBlockEntity() {
-        super(GalacticraftBlockEntityType.BUBBLE_DISTRIBUTOR);
+    public BubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.BUBBLE_DISTRIBUTOR, pos, state);
     }
 
     @Override
@@ -151,7 +152,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
             }
         } else {
             if (this.bubbleId != -1 && size <= 0) {
-                world.getEntityById(bubbleId).remove();
+                world.getEntityById(bubbleId).remove(Entity.RemovalReason.DISCARDED);
                 this.bubbleId = -1;
             }
 
@@ -187,8 +188,8 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     }
 
     @Override
-    public void readNbt(BlockState state, NbtCompound tag) {
-        super.readNbt(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         this.size = tag.getDouble(Constant.Nbt.SIZE);
         if (size < 0) size = 0;
         this.targetSize = tag.getByte(Constant.Nbt.MAX_SIZE);

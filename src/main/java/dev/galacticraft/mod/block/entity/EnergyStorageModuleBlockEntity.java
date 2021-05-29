@@ -29,22 +29,23 @@ import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implements Tickable {
+public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_BATTERY_SLOT = 0;
     public static final int DRAIN_BATTERY_SLOT = 1;
 
-    public EnergyStorageModuleBlockEntity() {
-        super(GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE);
+    public EnergyStorageModuleBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE, pos, state);
         this.setStatus(MachineStatus.NULL);
     }
 

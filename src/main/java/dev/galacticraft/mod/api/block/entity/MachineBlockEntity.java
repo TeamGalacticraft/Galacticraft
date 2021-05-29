@@ -73,8 +73,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -86,7 +87,7 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Tickable, ExtendedScreenHandlerFactory, AttributeProviderBlockEntity {
+public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, ExtendedScreenHandlerFactory, AttributeProviderBlockEntity {
     private final MachineConfiguration configuration = new MachineConfiguration();
 
     private boolean noDrop = false;
@@ -129,8 +130,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         }
     };
 
-    public MachineBlockEntity(BlockEntityType<? extends MachineBlockEntity> type) {
-        super(type);
+    public MachineBlockEntity(BlockEntityType<? extends MachineBlockEntity> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     /**
@@ -371,10 +372,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         }
     }
 
-    @Override
-    public final void tick() {
-        assert this.world != null;
-        if (!this.world.isClient) {
+    public void tick(World world, BlockPos pos, BlockState state) {
+        if (!world.isClient) {
             this.updateComponents();
             if (disabled()) {
                 idleEnergyDecrement(true);
@@ -383,10 +382,11 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             this.setStatus(this.updateStatus());
             this.tickWork();
             if (this.getStatus().getType().isActive()) {
-                if (getBaseEnergyConsumption() > 0)
+                if (this.getBaseEnergyConsumption() > 0) {
                     this.getCapacitor().extract(getEnergyConsumption());
-                if (getBaseEnergyGenerated() > 0)
+                } else if (this.getBaseEnergyGenerated() > 0) {
                     this.getCapacitor().insert(getEnergyGenerated());
+                }
             }
 
         }
@@ -460,8 +460,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     }
 
     @Override
-    public void readNbt(BlockState state, NbtCompound tag) {
-        super.readNbt(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         if (this.getEnergyCapacity() > 0) this.getCapacitor().fromTag(tag);
         if (this.getInventory().getSlotCount() > 0) this.getInventory().fromTag(tag);
         if (this.getFluidInv().getTankCount() > 0) this.getFluidInv().fromTag(tag);

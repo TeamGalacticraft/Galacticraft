@@ -47,6 +47,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,8 +66,8 @@ public class CompressorBlockEntity extends MachineBlockEntity {
     public int fuelLength;
     public int progress;
 
-    public CompressorBlockEntity() {
-        super(GalacticraftBlockEntityType.COMPRESSOR);
+    public CompressorBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.COMPRESSOR, pos, state);
         this.craftingInv = new InventoryFixedWrapper(this.getInventory().getSubInv(1, 10)) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
@@ -170,8 +171,8 @@ public class CompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void readNbt(BlockState state, NbtCompound tag) {
-        super.readNbt(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         this.progress = tag.getInt(Constant.Nbt.PROGRESS);
         this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
     }

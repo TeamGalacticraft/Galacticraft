@@ -50,6 +50,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,8 +75,8 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     public Status status = Status.NOT_ENOUGH_RESOURCES;
     public int progress;
 
-    public CircuitFabricatorBlockEntity() {
-        super(GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
+    public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.CIRCUIT_FABRICATOR, pos, state);
         this.recipeSlotInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
@@ -164,8 +165,8 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void readNbt(BlockState state, NbtCompound tag) {
-        super.readNbt(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         this.progress = tag.getInt(Constant.Nbt.PROGRESS);
     }
 

@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.block.entity.RefineryBlockEntity;
 import net.minecraft.block.BlockState;
@@ -50,8 +49,8 @@ public class RefineryBlock extends SimpleMachineBlock<RefineryBlockEntity> {
     }
 
     @Override
-    public RefineryBlockEntity createBlockEntity(BlockView view) {
-        return new RefineryBlockEntity();
+    public RefineryBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new RefineryBlockEntity(pos, state);
     }
 
     @Override
