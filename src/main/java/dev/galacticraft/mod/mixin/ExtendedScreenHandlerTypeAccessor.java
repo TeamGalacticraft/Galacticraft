@@ -20,23 +20,16 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen;
+package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.block.entity.OxygenStorageModuleBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType;
+import net.minecraft.screen.ScreenHandler;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class OxygenStorageModuleScreenHandler extends MachineScreenHandler<OxygenStorageModuleBlockEntity> {
-    public OxygenStorageModuleScreenHandler(int syncId, PlayerEntity player, OxygenStorageModuleBlockEntity blockEntity) {
-        super(syncId, player, blockEntity, GalacticraftScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER);
-        this.addPlayerInventorySlots(0, 84);
-    }
-
-    public OxygenStorageModuleScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (OxygenStorageModuleBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
+@Mixin(value = ExtendedScreenHandlerType.class, remap = false)
+public interface ExtendedScreenHandlerTypeAccessor<T extends ScreenHandler> {
+    @Accessor(value = "factory", remap = false)
+    ScreenHandlerRegistry.ExtendedClientHandlerFactory<T> getFactory();
 }

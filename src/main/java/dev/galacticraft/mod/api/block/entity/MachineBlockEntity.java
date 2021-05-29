@@ -600,13 +600,13 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         MachineBlockEntity machine = (MachineBlockEntity) world.getBlockEntity(pos);
         assert machine != null;
         if (direction == null) {
-            to.offer(machine.getFluidInv());
-            to.offer(machine.getInventory()); //expose everything if not given a direction
-            to.offer(machine.getCapacitor());
+            if (this.getFluidInv().getTankCount() != 0) to.offer(machine.getFluidInv());
+            if (this.getInventory().getSlotCount() != 0) to.offer(machine.getInventory()); //expose everything if not given a direction
+            if (this.getEnergyCapacity() > 0) to.offer(machine.getCapacitor());
         } else {
-            to.offer(machine.getFluidInvView());
-            to.offer(machine.getInvView());
-            to.offer(machine.getCapacitorView());
+            if (this.getFluidInv().getTankCount() != 0) to.offer(machine.getFluidInvView());
+            if (this.getInventory().getSlotCount() != 0) to.offer(machine.getInvView());
+            if (this.getEnergyCapacity() > 0) to.offer(machine.getCapacitorView());
             to.offer(machine.getItemInsertable(state, direction));
             to.offer(machine.getItemExtractable(state, direction));
             to.offer(machine.getFluidInsertable(state, direction));

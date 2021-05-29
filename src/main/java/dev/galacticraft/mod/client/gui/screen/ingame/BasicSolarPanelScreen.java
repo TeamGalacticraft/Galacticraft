@@ -23,9 +23,10 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.screen.MachineHandledScreen;
+import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.mod.block.entity.BasicSolarPanelBlockEntity;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
-import dev.galacticraft.mod.screen.BasicSolarPanelScreenHandler;
+import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
@@ -44,8 +45,8 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelScreenHandler> {
-    public BasicSolarPanelScreen(BasicSolarPanelScreenHandler handler, PlayerInventory inv, Text title) {
+public class BasicSolarPanelScreen extends MachineHandledScreen<SimpleMachineScreenHandler<BasicSolarPanelBlockEntity>> {
+    public BasicSolarPanelScreen(SimpleMachineScreenHandler<BasicSolarPanelBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
 
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));

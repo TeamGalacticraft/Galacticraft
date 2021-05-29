@@ -20,23 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen;
+package dev.galacticraft.mod.api.block;
 
-import dev.galacticraft.mod.block.entity.OxygenDecompressorBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.math.BlockPos;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class OxygenDecompressorScreenHandler extends MachineScreenHandler<OxygenDecompressorBlockEntity> {
-    public OxygenDecompressorScreenHandler(int syncId, PlayerEntity player, OxygenDecompressorBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER);
-        this.addPlayerInventorySlots(0, 84);
-    }
-
-    public OxygenDecompressorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (OxygenDecompressorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
+public interface MultiBlockPart {
+    void setBasePos(BlockPos pos);
 }

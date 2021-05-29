@@ -23,9 +23,10 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.screen.MachineHandledScreen;
+import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.mod.block.entity.OxygenCompressorBlockEntity;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
-import dev.galacticraft.mod.screen.OxygenCompressorScreenHandler;
+import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
@@ -38,8 +39,8 @@ import net.minecraft.util.Formatting;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompressorScreenHandler> {
-    public OxygenCompressorScreen(OxygenCompressorScreenHandler handler, PlayerInventory inv, Text title) {
+public class OxygenCompressorScreen extends MachineHandledScreen<SimpleMachineScreenHandler<OxygenCompressorBlockEntity>> {
+    public OxygenCompressorScreen(SimpleMachineScreenHandler<OxygenCompressorBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;

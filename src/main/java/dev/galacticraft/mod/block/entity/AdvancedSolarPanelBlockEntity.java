@@ -27,8 +27,7 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
-import dev.galacticraft.mod.screen.AdvancedSolarPanelScreenHandler;
+import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -145,7 +144,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new AdvancedSolarPanelScreenHandler(syncId, player, this);
+        if (this.getSecurity().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.ADVANCED_SOLAR_PANEL_HANDLER, syncId, inv, this);
         return null;
     }
 

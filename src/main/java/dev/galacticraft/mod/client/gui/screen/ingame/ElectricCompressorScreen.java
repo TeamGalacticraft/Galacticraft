@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.screen.MachineHandledScreen;
+import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.screen.ElectricCompressorScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
