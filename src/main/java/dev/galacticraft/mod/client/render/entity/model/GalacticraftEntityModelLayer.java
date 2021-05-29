@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 
 public class GalacticraftEntityModelLayer {
     public static final EntityModelLayer EVOLVED_CREEPER = new EntityModelLayer(new Identifier(Constant.MOD_ID, "evolved_creeper"), "main");
-    public static final EntityModelLayer EVOLVED_CREEPER_ARMOR = new EntityModelLayer(new Identifier(Constant.MOD_ID, "evolved_creeper_armor"), "main");
+    public static final EntityModelLayer EVOLVED_CREEPER_ARMOR = new EntityModelLayer(new Identifier(Constant.MOD_ID, "evolved_creeper_armor"), "armor");
 
     public static void register() {
         EntityModelLayerRegistry.registerModelLayer(EVOLVED_CREEPER, () -> EvolvedCreeperEntityModel.getTexturedModelData(Dilation.NONE));

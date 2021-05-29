@@ -38,3 +38,5 @@ accessible      class    net/minecraft/block/entity/BlockEntityType$BlockEntityF
 accessible      method  net/minecraft/item/MusicDiscItem                                      <init>            (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V
 accessible      method  net/minecraft/world/gen/chunk/NoiseChunkGenerator                     sampleNoiseColumn ([DII)V
 extendable      method  net/minecraft/world/gen/chunk/NoiseChunkGenerator                     sampleNoiseColumn ([DII)V
+accessible      method  net/minecraft/client/render/entity/model/AnimalModel                  getHeadParts      ()Ljava/lang/Iterable;
+accessible      method  net/minecraft/client/render/entity/model/AnimalModel                  getBodyParts      ()Ljava/lang/Iterable;

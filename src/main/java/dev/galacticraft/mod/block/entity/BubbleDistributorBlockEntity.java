@@ -153,6 +153,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
         } else {
             if (this.bubbleId != -1 && size <= 0) {
                 world.getEntityById(bubbleId).remove(Entity.RemovalReason.DISCARDED);
+                world.getEntityById(bubbleId).onRemoved();
                 this.bubbleId = -1;
             }
 

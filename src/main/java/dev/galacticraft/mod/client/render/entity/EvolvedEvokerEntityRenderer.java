@@ -24,22 +24,15 @@ package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.client.render.entity.feature.SpaceGearFeatureRenderer;
 import dev.galacticraft.mod.entity.EvolvedEvokerEntity;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.EvokerEntityRenderer;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EvolvedEvokerEntityRenderer extends EvokerEntityRenderer<EvolvedEvokerEntity> {
-    public EvolvedEvokerEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
-        super(entityRenderDispatcher);
-        this.addFeature(new SpaceGearFeatureRenderer<>(this, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F,
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
-                    stack.translate(0.0F, -0.1F, 0.0F);
-//                    stack.scale(0.0F, 1.1F, 0.0F);
-                },
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}
-                )
-        );
+    public EvolvedEvokerEntityRenderer(EntityRendererFactory.Context context) {
+        super(context);
+        this.addFeature(new SpaceGearFeatureRenderer<>(this));
     }
 }

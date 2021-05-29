@@ -77,7 +77,7 @@ public class EvolvedCreeperEntityModel extends EntityModel<EvolvedCreeperEntity>
             modelPartData.addChild(Constant.ModelPart.OXYGEN_TANK, ModelPartBuilder.create().uv(0, 34).cuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, dilation), ModelTransform.pivot(0.0F, 6.0F, 0.0F));
             modelPartData.addChild(Constant.ModelPart.OXYGEN_PIPE, ModelPartBuilder.create().uv(40, 51).cuboid(-2.0F, -3.0F, 0.0F, 4, 5, 8, dilation), ModelTransform.pivot(0.0F, 2.0F, 0.0F));
         }
-        return TexturedModelData.of(modelData, 64, 32);
+        return TexturedModelData.of(modelData, 64, 64);
     }
 
     @Override
