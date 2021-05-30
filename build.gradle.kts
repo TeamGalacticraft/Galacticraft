@@ -45,6 +45,7 @@ val cottonResourcesVersion = project.property("cotton.resources.version").toStri
 val myronVersion           = project.property("myron.version").toString()
 val bannerppVersion        = project.property("bannerpp.version").toString()
 val wthitVersion           = project.property("wthit.version").toString()
+val runtimeOptional        = project.property("optional_dependencies.enabled") == "true"
 
 plugins {
     java
@@ -128,7 +129,7 @@ fun getFabricApiModule(moduleName: String, fabricApiVersion: String): String {
 
 fun optionalImplementation(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
     project.dependencies.modCompileOnly(dependencyNotation, dependencyConfiguration)
-    project.dependencies.modRuntime(dependencyNotation, dependencyConfiguration)
+    if (!net.fabricmc.loom.util.OperatingSystem.isCIBuild() && runtimeOptional) project.dependencies.modRuntime(dependencyNotation, dependencyConfiguration)
 }
 
 dependencies {
@@ -178,7 +179,6 @@ dependencies {
         exclude(group = "net.fabricmc.fabric-api")
     })
     include(modApi("com.hrznstudio:GalacticraftAPI:$galacticraftApiVersion") { isTransitive = false })
-    include(modImplementation("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false })
     include(modApi("io.github.cottonmc:cotton-resources:$cottonResourcesVersion") { isTransitive = false })
     include(modApi("alexiil.mc.lib:libblockattributes-core:$lbaVersion") { isTransitive = false })
     include(modApi("alexiil.mc.lib:libblockattributes-items:$lbaVersion") { isTransitive = false })
@@ -187,6 +187,7 @@ dependencies {
     // Optional Dependencies
     optionalImplementation("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
     optionalImplementation("mcp.mobius.waila:wthit-fabric:$wthitVersion") { isTransitive = false }
+    optionalImplementation("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false }
     optionalImplementation("me.shedaniel:RoughlyEnoughItems:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
         exclude(group = "net.fabricmc")

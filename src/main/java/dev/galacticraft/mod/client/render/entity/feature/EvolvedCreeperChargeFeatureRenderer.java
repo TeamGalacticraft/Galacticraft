@@ -40,7 +40,7 @@ public class EvolvedCreeperChargeFeatureRenderer extends EnergySwirlOverlayFeatu
 
     public EvolvedCreeperChargeFeatureRenderer(FeatureRendererContext<EvolvedCreeperEntity, EvolvedCreeperEntityModel> context, EntityModelLoader loader) {
         super(context);
-        this.model = new EvolvedCreeperEntityModel(loader.getModelPart(GalacticraftEntityModelLayer.EVOLVED_CREEPER_ARMOR));
+        this.model = new EvolvedCreeperEntityModel(loader.getModelPart(GalacticraftEntityModelLayer.EVOLVED_CREEPER_ARMOR), false);
     }
 
     @Override

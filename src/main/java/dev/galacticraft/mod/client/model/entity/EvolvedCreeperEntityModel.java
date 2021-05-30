@@ -49,7 +49,7 @@ public class EvolvedCreeperEntityModel extends EntityModel<EvolvedCreeperEntity>
     private final ModelPart tank;
     private final ModelPart pipe;
 
-    public EvolvedCreeperEntityModel(ModelPart root) {
+    public EvolvedCreeperEntityModel(ModelPart root, boolean gear) {
         this.root = root;
         this.head = root.getChild(EntityModelPartNames.HEAD);
         this.body = root.getChild(EntityModelPartNames.BODY);
@@ -57,9 +57,15 @@ public class EvolvedCreeperEntityModel extends EntityModel<EvolvedCreeperEntity>
         this.rightHindLeg = root.getChild(EntityModelPartNames.RIGHT_HIND_LEG);
         this.leftFrontLeg = root.getChild(EntityModelPartNames.LEFT_FRONT_LEG);
         this.rightFrontLeg = root.getChild(EntityModelPartNames.RIGHT_FRONT_LEG);
-        this.mask = root.getChild(Constant.ModelPartName.OXYGEN_MASK);
-        this.tank = root.getChild(Constant.ModelPartName.OXYGEN_TANK);
-        this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
+        if (gear) {
+            this.mask = root.getChild(Constant.ModelPartName.OXYGEN_MASK);
+            this.tank = root.getChild(Constant.ModelPartName.OXYGEN_TANK);
+            this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
+        } else {
+            this.mask = null;
+            this.tank = null;
+            this.pipe = null;
+        }
     }
 
     public static TexturedModelData getTexturedModelData(Dilation dilation) {
@@ -82,8 +88,10 @@ public class EvolvedCreeperEntityModel extends EntityModel<EvolvedCreeperEntity>
 
     @Override
     public void setAngles(EvolvedCreeperEntity entity, float limbAngle, float limbDistance, float customAngle, float headYaw, float headPitch) {
-        this.mask.yaw = (float) (headYaw / (180.0F / Math.PI));
-        this.mask.pitch = (float) (headPitch / (180.0F / Math.PI));
+        if (this.mask != null) {
+            this.mask.yaw = (float) (headYaw / (180.0F / Math.PI));
+            this.mask.pitch = (float) (headPitch / (180.0F / Math.PI));
+        }
         this.head.yaw = (float) (headYaw / (180.0F / Math.PI));
         this.head.pitch = (float) (headPitch / (180.0F / Math.PI));
 
@@ -102,14 +110,14 @@ public class EvolvedCreeperEntityModel extends EntityModel<EvolvedCreeperEntity>
             matrices.scale(0.75f, 0.75f, 0.75f);
             matrices.translate(0.0F, 1.0F, 0.0F);
             this.head.render(matrices, vertexConsumer, light, overlay);
-            this.mask.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            if (this.mask != null) this.mask.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
             matrices.pop();
             matrices.push();
             matrices.scale(0.5f, 0.5f, 0.5f);
             matrices.translate(0.0F, 1.52083F, 0.0F);
             this.body.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-            this.tank.render(matrices, vertexConsumer, light, overlay);
-            this.pipe.render(matrices, vertexConsumer, light, overlay);
+            if (this.tank != null) this.tank.render(matrices, vertexConsumer, light, overlay);
+            if (this.pipe != null) this.pipe.render(matrices, vertexConsumer, light, overlay);
             this.leftHindLeg.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
             this.leftFrontLeg.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
             this.rightFrontLeg.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);

@@ -133,7 +133,7 @@
     }
   },
   "depends": {
-    "minecraft": "1.17-pre1",
+    "minecraft": "1.17-beta.1",
     "fabricloader": ">=0.11.3",
     "galacticraft-api": ">=0.2.9-alpha+1.16.1",
     "libblockattributes_core": ">=0.8",

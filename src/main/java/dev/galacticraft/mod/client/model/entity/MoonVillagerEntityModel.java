@@ -38,13 +38,12 @@ public class MoonVillagerEntityModel extends VillagerResemblingModel<MoonVillage
     public MoonVillagerEntityModel(ModelPart root) {
         super(root);
         this.head = root.getChild(EntityModelPartNames.HEAD);
-        this.brain = root.getChild(Constant.ModelPartName.MOON_VILLAGER_BRAIN);
+        this.brain = head.getChild(Constant.ModelPartName.MOON_VILLAGER_BRAIN);
     }
 
     public static ModelData getModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
-        float f = 0.5F;
         ModelPartData modelPartData2 = modelPartData.addChild(EntityModelPartNames.HEAD, ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F), ModelTransform.NONE);
         ModelPartData modelPartData3 = modelPartData2.addChild(EntityModelPartNames.HAT, ModelPartBuilder.create().uv(32, 0).cuboid(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new Dilation(0.5F)), ModelTransform.NONE);
         modelPartData3.addChild(EntityModelPartNames.HAT_RIM, ModelPartBuilder.create().uv(30, 47).cuboid(-8.0F, -8.0F, -6.0F, 16.0F, 16.0F, 1.0F), ModelTransform.rotation(-1.5707964F, 0.0F, 0.0F));

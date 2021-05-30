@@ -6,22 +6,33 @@
           "config": {
             "feature": {
               "config": {
-                "target": {
-                  "tag": "galacticraft:moon_stone",
-                  "predicate_type": "minecraft:tag_match"
-                },
-                "state": {
-                  "Name": "galacticraft:moon_tin_ore"
-                },
-                "size": 8
+                "targets": [
+                  {
+                    "target": {
+                      "tag": "galacticraft:moon_stone",
+                      "predicate_type": "minecraft:tag_match"
+                    },
+                    "state": {
+                      "Name": "galacticraft:moon_tin_ore"
+                    }
+                  }
+                ],
+                "size": 10,
+                "discard_chance_on_air_exposure": 0.0
               },
               "type": "minecraft:ore"
             },
             "decorator": {
               "config": {
-                "bottom_offset": 0,
-                "top_offset": 0,
-                "maximum": 60
+                "height": {
+                  "min_inclusive": {
+                    "absolute": 0
+                  },
+                  "max_inclusive": {
+                    "absolute": 96
+                  },
+                  "type": "minecraft:trapezoid"
+                }
               },
               "type": "minecraft:range"
             }
@@ -37,7 +48,7 @@
     },
     "decorator": {
       "config": {
-        "count": 26
+        "count": 6
       },
       "type": "minecraft:count"
     }

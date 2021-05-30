@@ -54,6 +54,7 @@ import dev.galacticraft.mod.world.gen.feature.GalacticraftFeature;
 import dev.galacticraft.mod.world.gen.surfacebuilder.GalacticraftSurfaceBuilder;
 import dev.galacticraft.mod.world.poi.GalacticraftPointOfInterestType;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -96,7 +97,6 @@ public class Galacticraft implements ModInitializer {
         GalacticraftCommand.register();
         GalacticraftServerPacketReceiver.register();
         GalacticraftSound.register();
-        GalacticraftBannerPattern.register();
         GalacticraftPointOfInterestType.register();
         MoonVillagerType.register();
         GalacticraftVillagerProfession.register();
@@ -109,6 +109,9 @@ public class Galacticraft implements ModInitializer {
 //        CelestialBodyRegistryCallback.EVENT.register(registry -> {
             Registry.register(AddonRegistry.CELESTIAL_BODIES, GalacticraftCelestialBodyType.THE_MOON.getId(), GalacticraftCelestialBodyType.THE_MOON);
 //        });
+        if (FabricLoader.getInstance().isModLoaded("bannerpp")) {
+            GalacticraftBannerPattern.register();
+        }
         LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }
