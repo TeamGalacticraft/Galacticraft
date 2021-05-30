@@ -133,8 +133,8 @@ public class GalacticraftCommand {
                             pos.getX(),
                             pos.getY(),
                             pos.getZ(),
-                            player.yaw,
-                            player.pitch);
+                            player.getYaw(),
+                            player.getPitch());
                     context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.gchouston.success", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.GREEN_STYLE), true);
                 }
             } catch (CommandSyntaxException e) {
@@ -173,8 +173,8 @@ public class GalacticraftCommand {
                         pos.getX(),
                         pos.getY(),
                         pos.getZ(),
-                        player.yaw,
-                        player.pitch);
+                        player.getYaw(),
+                        player.getPitch());
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.dimensiontp.success.single", serverWorld.getRegistryKey().getValue()), true);
             } catch (CommandSyntaxException e) {
                 context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.RED_STYLE));
@@ -239,10 +239,10 @@ public class GalacticraftCommand {
                 ServerPlayerEntity player = context.getSource().getPlayer();
                 player.teleport(serverWorld,
                         MathHelper.clamp(pos.getX(), -30000000, 30000000),
-                        MathHelper.clamp(pos.getY(), 0, serverWorld.getDimensionHeight() - 1),
+                        MathHelper.clamp(pos.getY(), 0, serverWorld.getHeight() - 1),
                         MathHelper.clamp(pos.getZ(), -30000000, 30000000),
-                        player.yaw,
-                        player.pitch);
+                        player.getYaw(),
+                        player.getPitch());
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.dimensiontp.success.pos", serverWorld.getRegistryKey().getValue(), pos.getX(), pos.getY(), pos.getZ()), true);
             } catch (CommandSyntaxException e) {
                 context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constant.Text.RED_STYLE));

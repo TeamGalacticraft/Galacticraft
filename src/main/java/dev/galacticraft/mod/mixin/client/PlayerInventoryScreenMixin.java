@@ -71,9 +71,9 @@ public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen
 
     @Inject(method = "render", at = @At("TAIL"))
     public void render(MatrixStack matrices, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
-        DiffuseLighting.enable();
+        DiffuseLighting.enableGuiDepthLighting();
         this.itemRenderer.renderInGuiWithOverrides(Items.CRAFTING_TABLE.getDefaultStack(), this.x + 6, this.y - 20);
         this.itemRenderer.renderInGuiWithOverrides(GalacticraftItems.OXYGEN_MASK.getDefaultStack(), this.x + 35, this.y - 20);
-        DiffuseLighting.disable();
+        DiffuseLighting.disableGuiDepthLighting();
     }
 }

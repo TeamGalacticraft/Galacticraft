@@ -27,13 +27,12 @@ import dev.galacticraft.mod.client.model.entity.MoonVillagerEntityModel;
 import dev.galacticraft.mod.entity.MoonVillagerEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.feature.HeadFeatureRenderer;
 import net.minecraft.client.render.entity.feature.VillagerClothingFeatureRenderer;
 import net.minecraft.client.render.entity.feature.VillagerHeldItemFeatureRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.util.Identifier;
 
 /**
@@ -43,10 +42,10 @@ import net.minecraft.util.Identifier;
 public class MoonVillagerEntityRenderer extends MobEntityRenderer<MoonVillagerEntity, MoonVillagerEntityModel> {
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/moon_villager/moon_villager.png");
 
-    public MoonVillagerEntityRenderer(EntityRenderDispatcher dispatcher, ReloadableResourceManager reloadableResourceManager) {
-        super(dispatcher, new MoonVillagerEntityModel(0.0F), 0.5F);
+    public MoonVillagerEntityRenderer(EntityRendererFactory.Context context) {
+        super(context, new MoonVillagerEntityModel(0.0F), 0.5F);
         this.addFeature(new HeadFeatureRenderer<>(this));
-        this.addFeature(new VillagerClothingFeatureRenderer<>(this, reloadableResourceManager, "villager"));
+        this.addFeature(new VillagerClothingFeatureRenderer<>(this, context.getResourceManager(), "villager"));
         this.addFeature(new VillagerHeldItemFeatureRenderer<>(this));
     }
 

@@ -79,8 +79,8 @@ public class BubbleEntity extends Entity {
         if (this.hasVehicle()) {
             this.stopRiding();
         }
-        this.yaw = 0;
-        this.pitch = 0;
+        this.setYaw(0);
+        this.setPitch(0);
         this.prevPitch = 0;
         this.prevYaw = 0;
 
@@ -92,7 +92,7 @@ public class BubbleEntity extends Entity {
     @Override
     public boolean damage(DamageSource source, float amount) {
         if (source == DamageSource.OUT_OF_WORLD) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
             return true;
         } else {
             return false;
@@ -124,11 +124,6 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    protected boolean canClimb() {
-        return false;
-    }
-
-    @Override
     public boolean canBeSpectated(ServerPlayerEntity spectator) {
         return false;
     }
@@ -149,7 +144,7 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    protected void setOnFireFromLava() {
+    public void setOnFireFromLava() {
     }
 
     @Override
@@ -203,11 +198,6 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public boolean isAlive() {
-        return !removed;
-    }
-
-    @Override
     public boolean isOnFire() {
         return false;
     }
@@ -250,7 +240,6 @@ public class BubbleEntity extends Entity {
             d *= 64.0D * getRenderDistanceMultiplier();
             return distance < d * d;
         }
-        this.remove();
         return false;
     }
 
@@ -268,8 +257,8 @@ public class BubbleEntity extends Entity {
         buf.writeDouble(this.getX());
         buf.writeDouble(this.getY());
         buf.writeDouble(this.getZ());
-        buf.writeByte((byte) ((int) (this.yaw * 256.0F / 360.0F)));
-        buf.writeByte((byte) ((int) (this.pitch * 256.0F / 360.0F)));
+        buf.writeByte((byte) ((int) (this.getYaw() * 256.0F / 360.0F)));
+        buf.writeByte((byte) ((int) (this.getPitch() * 256.0F / 360.0F)));
         Vec3d vec3d = this.getVelocity();
         double e = MathHelper.clamp(vec3d.x, -3.9D, 3.9D);
         double f = MathHelper.clamp(vec3d.y, -3.9D, 3.9D);

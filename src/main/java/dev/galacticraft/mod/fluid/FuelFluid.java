@@ -103,9 +103,9 @@ public class FuelFluid extends FlowableFluid {
     }
 
     @Override
-    public void beforeBreakingBlock(WorldAccess iWorld, BlockPos blockPos, BlockState blockState) {
-        BlockEntity blockEntity = blockState.getBlock().hasBlockEntity() ? iWorld.getBlockEntity(blockPos) : null;
-        Block.dropStacks(blockState, iWorld, blockPos, blockEntity);
+    public void beforeBreakingBlock(WorldAccess world, BlockPos pos, BlockState state) {
+        BlockEntity blockEntity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
+        Block.dropStacks(state, world, pos, blockEntity);
     }
 
     @Override

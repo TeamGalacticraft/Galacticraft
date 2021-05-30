@@ -150,16 +150,16 @@ public class GalacticraftServerPacketReceiver {
             int index = buf.readInt();
             server.execute(() -> {
                 MachineFluidInv inv = ((MachineScreenHandler<?>) player.currentScreenHandler).machine.getFluidInv();
-                ItemInsertable excess = new FixedInventoryVanillaWrapper(player.inventory).getInsertable();
-                Reference<ItemStack> reference = new Reference<ItemStack>() {
+                ItemInsertable excess = new FixedInventoryVanillaWrapper(player.getInventory()).getInsertable();
+                Reference<ItemStack> reference = new Reference<>() {
                     @Override
                     public ItemStack get() {
-                        return player.inventory.getCursorStack();
+                        return player.currentScreenHandler.getCursorStack();
                     }
 
                     @Override
                     public boolean set(ItemStack value) {
-                        player.inventory.setCursorStack(value);
+                        player.currentScreenHandler.setCursorStack(value);
                         return true;
                     }
 

@@ -96,8 +96,8 @@ public class GalacticraftClientPacketReceiver {
                 entity.setEntityId(id);
                 entity.setUuid(uuid);
                 entity.setPos(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-                entity.yaw = (float) (buffer.readByte() * 360) / 256.0F;
-                entity.pitch = (float) (buffer.readByte() * 360) / 256.0F;
+                entity.setYaw((float) (buffer.readByte() * 360) / 256.0F);
+                entity.setPitch((float) (buffer.readByte() * 360) / 256.0F);
                 entity.setVelocity(buffer.readShort(), buffer.readShort(), buffer.readShort());
                 MinecraftClient.getInstance().world.addEntity(id, entity);
             });
