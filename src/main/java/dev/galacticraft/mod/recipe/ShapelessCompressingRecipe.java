@@ -121,7 +121,7 @@ public class ShapelessCompressingRecipe implements CompressingRecipe {
          } else if (defaultedList.size() > 9) {
             throw new JsonParseException("Too many ingredients for shapeless recipe");
          } else {
-            ItemStack itemStack = ShapedRecipe.getItem(JsonHelper.getObject(jsonObject, "result"));
+            ItemStack itemStack = new ItemStack(ShapedRecipe.getItem(JsonHelper.getObject(jsonObject, "result")));
             return new ShapelessCompressingRecipe(identifier, string, itemStack, defaultedList);
          }
       }

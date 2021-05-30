@@ -83,7 +83,6 @@ public class OxygenTank extends Tank {
             bufferBuilder.vertex(matrices, x + Constant.TextureCoordinate.OVERLAY_WIDTH + 1, y - 1, (float) 0).texture(0, 0).next();
             bufferBuilder.vertex(matrices, x - 1, y - 1, (float) 0).texture(0, 0).next();
             bufferBuilder.end();
-            RenderSystem.enableAlphaTest();
             BufferRenderer.draw(bufferBuilder);
             RenderSystem.enableTexture();
         }

@@ -40,3 +40,4 @@ accessible      method  net/minecraft/world/gen/chunk/NoiseChunkGenerator       
 extendable      method  net/minecraft/world/gen/chunk/NoiseChunkGenerator                     sampleNoiseColumn ([DII)V
 accessible      method  net/minecraft/client/render/entity/model/AnimalModel                  getHeadParts      ()Ljava/lang/Iterable;
 accessible      method  net/minecraft/client/render/entity/model/AnimalModel                  getBodyParts      ()Ljava/lang/Iterable;
+accessible      method  net/minecraft/world/gen/chunk/ChunkGeneratorSettings                  <init>            (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;IIIIZZZZZZ)V

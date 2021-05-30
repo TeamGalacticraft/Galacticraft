@@ -78,8 +78,7 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
             }
 
             public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-                //super.render(matrices, mouseX, mouseY, delta);
-                DiffuseLighting.disable();
+                DiffuseLighting.disableGuiDepthLighting();
                 MinecraftClient.getInstance().getTextureManager().bindTexture(DefaultFabricationCategory.DISPLAY_TEXTURE);
                 this.drawTexture(matrices, startPoint.x, startPoint.y, 0, 0, 162, 82);
 

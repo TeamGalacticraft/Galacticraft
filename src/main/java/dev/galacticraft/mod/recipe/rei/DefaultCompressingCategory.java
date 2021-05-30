@@ -76,8 +76,7 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
             }
 
             public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-                //super.render(matrices, mouseX, mouseY, delta);
-                DiffuseLighting.disable();
+                DiffuseLighting.disableGuiDepthLighting();
                 MinecraftClient.getInstance().getTextureManager().bindTexture(DefaultCompressingCategory.DISPLAY_TEXTURE);
                 this.drawTexture(matrices, startPoint.x, startPoint.y, 0, 83, 137, 157);
 

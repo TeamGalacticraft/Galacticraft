@@ -22,21 +22,17 @@
 
 package dev.galacticraft.mod.world.gen.carver;
 
-import com.mojang.serialization.Codec;
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
-import net.minecraft.world.gen.ProbabilityConfig;
 import net.minecraft.world.gen.carver.Carver;
+import net.minecraft.world.gen.carver.CarverConfig;
+import net.minecraft.world.gen.carver.CarverContext;
+import net.minecraft.world.gen.chunk.AquiferSampler;
 
 import java.util.BitSet;
 import java.util.Random;
@@ -45,23 +41,25 @@ import java.util.function.Function;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CraterCarver extends Carver<ProbabilityConfig> {
-    public CraterCarver(int heightLimit) {
-        this(ProbabilityConfig.CODEC, heightLimit);
+public class CraterCarver extends Carver<CarverConfig> {
+    public CraterCarver() {
+        super(CarverConfig.CONFIG_CODEC.codec());
     }
 
-    public CraterCarver(Codec<ProbabilityConfig> codec, int heightLimit) {
-        super(codec, heightLimit);
+    private static double skewRandom(double min, double max, double gaussian, double skew, double bias) {
+        double range = max - min;
+        double biasFactor = Math.exp(bias);
+        return (min + range / 2.0) + (range * (biasFactor / (biasFactor + Math.exp(-gaussian / skew)) - 0.5));
     }
 
     @Override
-    public boolean carve(Chunk chunk, Function<BlockPos, Biome> posToBiome, Random random, int seaLevel, int chunkX, int chunkZ, int mainChunkX, int mainChunkZ, BitSet carvingMask, ProbabilityConfig carverConfig) {
+    public boolean carve(CarverContext context, CarverConfig config, Chunk chunk, Function<BlockPos, Biome> posToBiome, Random random, AquiferSampler aquiferSampler, ChunkPos pos, BitSet carvingMask) {
         boolean carved = false;
         for (int cX = -1; cX < 2; cX++) {
             for (int cZ = -1; cZ < 2; cZ++) {
                 if (carvingMask.get((cX + 1) | (cZ + 1) << 4)) continue;
                 Random random1 = new ChunkRandom(ChunkPos.toLong(chunk.getPos().x + cX, chunk.getPos().z + cZ));
-                if (random1.nextFloat() < carverConfig.probability) {
+                if (random1.nextFloat() < config.probability) {
 //                    BlockState block = Registry.BLOCK.get(random1.nextInt(10)).getDefaultState();
                     BlockPos craterCenter = new BlockPos(cX * 16 + random1.nextInt(15), 75, cZ * 16 + random1.nextInt(15));
                     BlockPos.Mutable mutable = craterCenter.mutableCopy();
@@ -94,7 +92,7 @@ public class CraterCarver extends Carver<ProbabilityConfig> {
                                 if (toDig > 0) toDig++; // Increase crater depth, but for sum, not each crater
                                 if (fresh) toDig++; // Dig one more block, because we're not replacing the top with turf
 
-                                mutable.set(innerChunkX, this.heightLimit, innerChunkZ);
+                                mutable.set(innerChunkX, context.getMaxY(), innerChunkZ);
                                 carvingMask.set((cX + 1) | (cZ + 1) << 4);
                                 for (int dug = 0; dug < toDig; dug++) {
                                     mutable.move(Direction.DOWN);
@@ -117,18 +115,7 @@ public class CraterCarver extends Carver<ProbabilityConfig> {
     }
 
     @Override
-    public boolean shouldCarve(Random random, int chunkX, int chunkZ, ProbabilityConfig config) {
-        return true;// random.nextFloat() < config.probability && random.nextBoolean() && random.nextBoolean() && random.nextBoolean() && random.nextBoolean();
-    }
-
-    @Override
-    protected boolean isPositionExcluded(double scaledRelativeX, double scaledRelativeY, double scaledRelativeZ, int y) {
-        return false;
-    }
-
-    private static double skewRandom(double min, double max, double gaussian, double skew, double bias) {
-        double range = max - min;
-        double biasFactor = Math.exp(bias);
-        return (min + range / 2.0) + (range * (biasFactor / (biasFactor + Math.exp(-gaussian / skew)) - 0.5));
+    public boolean shouldCarve(CarverConfig config, Random random) {
+        return true;
     }
 }

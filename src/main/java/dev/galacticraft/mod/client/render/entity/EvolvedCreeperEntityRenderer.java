@@ -42,7 +42,7 @@ public class EvolvedCreeperEntityRenderer extends MobEntityRenderer<EvolvedCreep
 
     public EvolvedCreeperEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new EvolvedCreeperEntityModel(context.getPart(GalacticraftEntityModelLayer.EVOLVED_CREEPER)), 0.5F);
-        this.addFeature(new EvolvedCreeperChargeFeatureRenderer(this));
+        this.addFeature(new EvolvedCreeperChargeFeatureRenderer(this, context.getModelLoader()));
     }
 
     @Override
