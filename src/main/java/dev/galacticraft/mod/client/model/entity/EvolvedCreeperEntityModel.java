@@ -57,9 +57,9 @@ public class EvolvedCreeperEntityModel extends EntityModel<EvolvedCreeperEntity>
         this.rightHindLeg = root.getChild(EntityModelPartNames.RIGHT_HIND_LEG);
         this.leftFrontLeg = root.getChild(EntityModelPartNames.LEFT_FRONT_LEG);
         this.rightFrontLeg = root.getChild(EntityModelPartNames.RIGHT_FRONT_LEG);
-        this.mask = root.getChild(Constant.ModelPart.OXYGEN_MASK);
-        this.tank = root.getChild(Constant.ModelPart.OXYGEN_TANK);
-        this.pipe = root.getChild(Constant.ModelPart.OXYGEN_PIPE);
+        this.mask = root.getChild(Constant.ModelPartName.OXYGEN_MASK);
+        this.tank = root.getChild(Constant.ModelPartName.OXYGEN_TANK);
+        this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
     }
 
     public static TexturedModelData getTexturedModelData(Dilation dilation) {
@@ -73,9 +73,9 @@ public class EvolvedCreeperEntityModel extends EntityModel<EvolvedCreeperEntity>
         modelPartData.addChild(EntityModelPartNames.RIGHT_FRONT_LEG, modelPartBuilder, ModelTransform.pivot(-2.0F, 18.0F, -4.0F));
         modelPartData.addChild(EntityModelPartNames.LEFT_FRONT_LEG, modelPartBuilder, ModelTransform.pivot(2.0F, 18.0F, -4.0F));
         if (dilation == Dilation.NONE) {
-            modelPartData.addChild(Constant.ModelPart.OXYGEN_MASK, ModelPartBuilder.create().uv(0, 44).cuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, dilation), ModelTransform.pivot(0.0F, 6.0F, 0.0F));
-            modelPartData.addChild(Constant.ModelPart.OXYGEN_TANK, ModelPartBuilder.create().uv(0, 34).cuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, dilation), ModelTransform.pivot(0.0F, 6.0F, 0.0F));
-            modelPartData.addChild(Constant.ModelPart.OXYGEN_PIPE, ModelPartBuilder.create().uv(40, 51).cuboid(-2.0F, -3.0F, 0.0F, 4, 5, 8, dilation), ModelTransform.pivot(0.0F, 2.0F, 0.0F));
+            modelPartData.addChild(Constant.ModelPartName.OXYGEN_MASK, ModelPartBuilder.create().uv(0, 44).cuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, dilation), ModelTransform.pivot(0.0F, 6.0F, 0.0F));
+            modelPartData.addChild(Constant.ModelPartName.OXYGEN_TANK, ModelPartBuilder.create().uv(0, 34).cuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, dilation), ModelTransform.pivot(0.0F, 6.0F, 0.0F));
+            modelPartData.addChild(Constant.ModelPartName.OXYGEN_PIPE, ModelPartBuilder.create().uv(40, 51).cuboid(-2.0F, -3.0F, 0.0F, 4, 5, 8, dilation), ModelTransform.pivot(0.0F, 2.0F, 0.0F));
         }
         return TexturedModelData.of(modelData, 64, 64);
     }

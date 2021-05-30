@@ -104,7 +104,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
         public FabricationRecipe read(Identifier id, JsonObject json) {
             String group = JsonHelper.getString(json, "group", "");
             Ingredient ingredient = Ingredient.fromJson(JsonHelper.getObject(json, "ingredient"));
-            ItemStack result = new ItemStack(ShapedRecipe.getItemStack(JsonHelper.getObject(json, "result")));
+            ItemStack result = new ItemStack(ShapedRecipe.getItem(JsonHelper.getObject(json, "result")));
             return new FabricationRecipe(id, group, ingredient, result);
         }
 

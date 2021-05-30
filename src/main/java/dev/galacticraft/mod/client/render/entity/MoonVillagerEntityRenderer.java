@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.MoonVillagerEntityModel;
+import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLayer;
 import dev.galacticraft.mod.entity.MoonVillagerEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,8 +44,8 @@ public class MoonVillagerEntityRenderer extends MobEntityRenderer<MoonVillagerEn
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/moon_villager/moon_villager.png");
 
     public MoonVillagerEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new MoonVillagerEntityModel(0.0F), 0.5F);
-        this.addFeature(new HeadFeatureRenderer<>(this));
+        super(context, new MoonVillagerEntityModel(context.getPart(GalacticraftEntityModelLayer.MOON_VILLAGER)), 0.5F);
+        this.addFeature(new HeadFeatureRenderer<>(this, context.getModelLoader()));
         this.addFeature(new VillagerClothingFeatureRenderer<>(this, context.getResourceManager(), "villager"));
         this.addFeature(new VillagerHeldItemFeatureRenderer<>(this));
     }

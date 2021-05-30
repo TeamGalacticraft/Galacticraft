@@ -679,9 +679,19 @@ public interface Constant {
     }
 
     @Environment(EnvType.CLIENT)
-    interface ModelPart {
+    interface ModelPartName {
         String OXYGEN_MASK = "oxygen_mask";
         String OXYGEN_TANK = "oxygen_tank";
         String OXYGEN_PIPE = "oxygen_pipe";
+        String MOON_VILLAGER_BRAIN = "moon_villager_brain";
+        String SOLAR_PANEL_POLE = "solar_panel_pole";
+        String SOLAR_PANEL_PANEL = "solar_panel_panel";
+        String SOLAR_PANEL_PANEL_HORIZONTAL_1 = "solar_panel_panel_horizontal_1";
+        String SOLAR_PANEL_PANEL_HORIZONTAL_2 = "solar_panel_panel_horizontal_2";
+        String SOLAR_PANEL_PANEL_HORIZONTAL_3 = "solar_panel_panel_horizontal_3";
+        String SOLAR_PANEL_PANEL_HORIZONTAL_4 = "solar_panel_panel_horizontal_4";
+        String SOLAR_PANEL_PANEL_VERTICAL_1 = "solar_panel_panel_vertical_1";
+        String SOLAR_PANEL_PANEL_VERTICAL_2 = "solar_panel_panel_vertical_2";
+        String SOLAR_PANEL_PANEL_VERTICAL_3 = "solar_panel_panel_vertical_3";
     }
 }

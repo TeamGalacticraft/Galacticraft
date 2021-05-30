@@ -67,25 +67,25 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
         if (head != null) {
-            modelPartData.addChild(Constant.ModelPart.OXYGEN_MASK, ModelPartBuilder.create().uv(0, 10).cuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, Dilation.NONE), ModelTransform.pivot(head.pivotX, head.pivotY, head.pivotZ));
+            modelPartData.addChild(Constant.ModelPartName.OXYGEN_MASK, ModelPartBuilder.create().uv(0, 10).cuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, Dilation.NONE), ModelTransform.pivot(head.pivotX, head.pivotY, head.pivotZ));
         }
 
         if (body != null) {
-            modelPartData.addChild(Constant.ModelPart.OXYGEN_TANK, ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, Dilation.NONE), ModelTransform.pivot(body.pivotX, body.pivotY, body.pivotZ));
-            modelPartData.addChild(Constant.ModelPart.OXYGEN_PIPE, ModelPartBuilder.create().uv(40, 17).cuboid(-2.0F, -3.0F, 0.0F, 4, 5, 8, Dilation.NONE), ModelTransform.pivot(body.pivotX, body.pivotY, body.pivotZ));
+            modelPartData.addChild(Constant.ModelPartName.OXYGEN_TANK, ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, Dilation.NONE), ModelTransform.pivot(body.pivotX, body.pivotY, body.pivotZ));
+            modelPartData.addChild(Constant.ModelPartName.OXYGEN_PIPE, ModelPartBuilder.create().uv(40, 17).cuboid(-2.0F, -3.0F, 0.0F, 4, 5, 8, Dilation.NONE), ModelTransform.pivot(body.pivotX, body.pivotY, body.pivotZ));
         }
 
         root = modelPartData.createPart(64, 32);
 
         if (head != null) {
-            this.mask = root.getChild(Constant.ModelPart.OXYGEN_MASK);
+            this.mask = root.getChild(Constant.ModelPartName.OXYGEN_MASK);
         } else {
             this.mask = null;
         }
 
         if (body != null) {
-            this.tank = root.getChild(Constant.ModelPart.OXYGEN_TANK);
-            this.pipe = root.getChild(Constant.ModelPart.OXYGEN_PIPE);
+            this.tank = root.getChild(Constant.ModelPartName.OXYGEN_TANK);
+            this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
         } else {
             this.tank = null;
             this.pipe = null;
