@@ -43,18 +43,9 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ShapelessCompressingRecipe implements CompressingRecipe {
-   private final Identifier id;
-   private final String group;
-   private final ItemStack output;
-   private final DefaultedList<Ingredient> input;
-
-   public ShapelessCompressingRecipe(Identifier id, String group, ItemStack output, DefaultedList<Ingredient> input) {
-      this.id = id;
-      this.group = group;
-      this.output = output;
-      this.input = input;
-   }
+public record ShapelessCompressingRecipe(Identifier id, String group,
+                                         ItemStack output,
+                                         DefaultedList<Ingredient> input) implements CompressingRecipe {
 
    @Override
    public Identifier getId() {
@@ -87,7 +78,7 @@ public class ShapelessCompressingRecipe implements CompressingRecipe {
       RecipeMatcher recipeFinder = new RecipeMatcher();
       int i = 0;
 
-      for(int j = 0; j < inv.size(); ++j) {
+      for (int j = 0; j < inv.size(); ++j) {
          ItemStack itemStack = inv.getStack(j);
          if (!itemStack.isEmpty()) {
             ++i;
@@ -129,7 +120,7 @@ public class ShapelessCompressingRecipe implements CompressingRecipe {
       private static DefaultedList<Ingredient> getIngredients(JsonArray json) {
          DefaultedList<Ingredient> defaultedList = DefaultedList.of();
 
-         for(int i = 0; i < json.size(); ++i) {
+         for (int i = 0; i < json.size(); ++i) {
             Ingredient ingredient = Ingredient.fromJson(json.get(i));
             if (!ingredient.isEmpty()) {
                defaultedList.add(ingredient);
@@ -145,7 +136,7 @@ public class ShapelessCompressingRecipe implements CompressingRecipe {
          int size = buf.readVarInt();
          DefaultedList<Ingredient> ingredients = DefaultedList.ofSize(size, Ingredient.EMPTY);
 
-         for(int i = 0; i < ingredients.size(); ++i) {
+         for (int i = 0; i < ingredients.size(); ++i) {
             ingredients.set(i, Ingredient.fromPacket(buf));
          }
 

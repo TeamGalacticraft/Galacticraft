@@ -329,32 +329,30 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
         }
     }
 
-    public static class FrontFaceSpriteProvider implements SpriteProvider {
-        private final Identifier sprite;
-
+    public record FrontFaceSpriteProvider(Identifier sprite) implements SpriteProvider {
         public FrontFaceSpriteProvider(Identifier sprite) {
             this.sprite = sprite;
             TEXTURE_DEPENDENCIES.add(sprite);
         }
 
         @Override
-        public @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos) {
+        public @NotNull
+        Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos) {
             if (face == BlockFace.FRONT) return atlas.apply(sprite);
             if (face.isHorizontal()) return atlas.apply(MACHINE_SIDE);
             return atlas.apply(MACHINE);
         }
     }
 
-    public static class SingleSpriteProvider implements SpriteProvider {
-        private final Identifier sprite;
-
+    public record SingleSpriteProvider(Identifier sprite) implements SpriteProvider {
         public SingleSpriteProvider(Identifier sprite) {
             this.sprite = sprite;
             TEXTURE_DEPENDENCIES.add(sprite);
         }
 
         @Override
-        public @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos) {
+        public @NotNull
+        Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos) {
             return atlas.apply(sprite);
         }
     }
