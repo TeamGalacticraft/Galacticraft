@@ -35,6 +35,9 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class SimpleMachineBlock<T extends MachineBlockEntity> extends MachineBlock<T> {
     public static final Settings MACHINE_DEFAULT_SETTINGS = FabricBlockSettings.of(Material.METAL)
             .strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL);

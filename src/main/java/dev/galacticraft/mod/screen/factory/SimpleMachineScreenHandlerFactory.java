@@ -29,6 +29,9 @@ import net.minecraft.screen.ScreenHandlerType;
 
 import java.util.function.Supplier;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class SimpleMachineScreenHandlerFactory<B extends MachineBlockEntity, T extends MachineScreenHandler<B>> extends MachineScreenHandlerFactory<B, T> {
     protected SimpleMachineScreenHandlerFactory(Supplier<ScreenHandlerType<T>> type, int invX, int invY) {
         super((syncId, player, machine) -> (T) SimpleMachineScreenHandler.create(syncId, player, machine, () -> (ScreenHandlerType<MachineScreenHandler<B>>) type.get(), invX, invY));

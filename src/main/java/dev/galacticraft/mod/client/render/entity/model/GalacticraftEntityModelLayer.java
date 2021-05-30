@@ -32,6 +32,9 @@ import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class GalacticraftEntityModelLayer {
     public static final EntityModelLayer EVOLVED_CREEPER = new EntityModelLayer(new Identifier(Constant.MOD_ID, "evolved_creeper"), "main");
     public static final EntityModelLayer EVOLVED_CREEPER_ARMOR = new EntityModelLayer(new Identifier(Constant.MOD_ID, "evolved_creeper_armor"), "armor");
