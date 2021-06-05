@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.command;
 
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import dev.galacticraft.api.registry.RegistryUtil;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.block.Block;
@@ -37,7 +37,6 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -89,10 +88,6 @@ public class GalacticraftCommand {
             commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimensiontp_root));
             //commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimensiontp_entities));
             commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimensiontp_pos));
-
-            commandDispatcher.register(
-                    CommandManager.literal("gclistbodies")
-                    .executes(GalacticraftCommand::listBodies));
         });
     }
 
@@ -106,7 +101,7 @@ public class GalacticraftCommand {
         }
         context.getSource().getMinecraftServer().execute(() -> {
             try {
-                if (!CelestialBodyType.getByDimType(context.getSource().getWorld().getRegistryKey()).isPresent()) {
+                if (!RegistryUtil.getCelestialBodyByDimension(context.getSource().getRegistryManager(), context.getSource().getWorld().getRegistryKey()).isPresent()) {
                     context.getSource().sendError(new TranslatableText("commands.galacticraft.gchouston.cannot_detect_signal").setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
                     return;
@@ -250,13 +245,6 @@ public class GalacticraftCommand {
             }
         });
         return retval[0];
-    }
-
-    private static int listBodies(CommandContext<ServerCommandSource> context) {
-        StringBuilder builder = new StringBuilder();
-        CelestialBodyType.getAll().forEach(celestialBodyType -> builder.append(celestialBodyType.getTranslationKey()).append("\n"));
-        context.getSource().sendFeedback(new LiteralText(builder.toString()), true);
-        return Command.SINGLE_SUCCESS;
     }
 
     /**

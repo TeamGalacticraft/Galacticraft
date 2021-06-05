@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.api.block;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
-import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
 import com.mojang.authlib.GameProfile;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
@@ -102,7 +101,7 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
         if (!world.isClient && placer instanceof PlayerEntity) {
-            ((MachineBlockEntity) world.getBlockEntity(pos)).getSecurity().setOwner(((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), ((PlayerEntity) placer));
+            ((MachineBlockEntity) world.getBlockEntity(pos)).getSecurity().setOwner(/*((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), */((PlayerEntity) placer)); //todo: teams
         }
     }
 
@@ -168,7 +167,7 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
             BlockEntity machine = world.getBlockEntity(pos);
             if (machine instanceof MachineBlockEntity) {
                 SecurityInfo security = ((MachineBlockEntity) machine).getSecurity();
-                if (security.getOwner() == null) security.setOwner(((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), player);
+                if (security.getOwner() == null) security.setOwner(/*((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), */player); //todo: teams
                 if (security.isOwner(player.getGameProfile())) {
                     security.sendPacket(pos, (ServerPlayerEntity) player);
                     ((MachineBlockEntity) machine).getRedstoneInteraction().sendPacket(pos, (ServerPlayerEntity) player);

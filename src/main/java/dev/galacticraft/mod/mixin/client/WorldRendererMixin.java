@@ -75,8 +75,9 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
     }
 
     @Inject(at = @At("HEAD"), method = "renderSky", cancellable = true)
-    private void renderSkyGC(MatrixStack matrices, Matrix4f matrix4f, float delta, CallbackInfo ci) {
+    private void renderSkyGC(MatrixStack matrices, Matrix4f matrix4f, float delta, Runnable runnable, CallbackInfo ci) {
         if (this.world.getRegistryKey() == GalacticraftDimension.MOON) {
+            runnable.run(); // fog?
             this.client.getProfiler().push("moon_sky_render");
             RenderSystem.disableTexture();
             RenderSystem.disableBlend();

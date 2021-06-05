@@ -22,10 +22,6 @@
 
 package dev.galacticraft.mod.api.machine;
 
-import com.hrznstudio.galacticraft.api.internal.data.ClientWorldTeamsGetter;
-import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
-import com.hrznstudio.galacticraft.api.teams.Teams;
-import com.hrznstudio.galacticraft.api.teams.data.Team;
 import com.mojang.authlib.GameProfile;
 import dev.galacticraft.mod.Constant;
 import io.netty.buffer.Unpooled;
@@ -74,14 +70,7 @@ public class SecurityInfo {
             return true;
         } else if (accessibility == Accessibility.TEAM) {
             if (this.isOwner(player)) return true;
-            Team team;
-            if (!player.world.isClient()) {
-                team = ((MinecraftServerTeamsGetter) player.world.getServer()).getSpaceRaceTeams().getTeam(this.owner.getId());
-            } else {
-                team = ((ClientWorldTeamsGetter) player.world).getSpaceRaceTeams().getTeam(this.owner.getId());
-            }
-            if (team == null) return false;
-            return team.players.containsKey(player.getUuid());
+            return false; //todo: teams
         } else if (accessibility == Accessibility.PRIVATE) {
             return this.isOwner(player);
         }
@@ -100,14 +89,14 @@ public class SecurityInfo {
         return this.owner;
     }
 
-    public void setOwner(@NotNull Teams teams, @NotNull PlayerEntity owner) {
-        this.setOwner(teams, owner.getGameProfile());
+    public void setOwner(/*@NotNull Teams teams, */@NotNull PlayerEntity owner) { //todo: teams
+        this.setOwner(/*teams, */owner.getGameProfile());
     }
 
-    public void setOwner(@NotNull Teams teams, @NotNull GameProfile owner) {
+    public void setOwner(/*@NotNull Teams teams, */@NotNull GameProfile owner) {
         if (this.getOwner() == null) {
             this.owner = owner;
-            if (teams.getTeam(owner.getId()) != null) this.team = teams.getTeam(owner.getId()).id;
+//            if (teams.getTeam(owner.getId()) != null) this.team = teams.getTeam(owner.getId()).id;  //todo: teams
         }
     }
 

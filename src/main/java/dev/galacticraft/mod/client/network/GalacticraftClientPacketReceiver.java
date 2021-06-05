@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.client.network;
 
-import com.hrznstudio.galacticraft.api.internal.data.ClientWorldTeamsGetter;
 import com.mojang.authlib.GameProfile;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
@@ -66,7 +65,7 @@ public class GalacticraftClientPacketReceiver {
                 if (entity instanceof MachineBlockEntity) {
                     assert profile != null;
                     assert accessibility != null;
-                    ((MachineBlockEntity) entity).getConfiguration().getSecurity().setOwner(((ClientWorldTeamsGetter) client.world).getSpaceRaceTeams(), profile);
+                    ((MachineBlockEntity) entity).getConfiguration().getSecurity().setOwner(/*((ClientWorldTeamsGetter) client.world).getSpaceRaceTeams(), */profile); //todo teams
                     ((MachineBlockEntity) entity).getConfiguration().getSecurity().setAccessibility(accessibility);
 
                 }

@@ -25,8 +25,10 @@ package dev.galacticraft.mod.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.api.atmosphere.AtmosphericGas;
+import dev.galacticraft.api.registry.RegistryUtil;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
@@ -47,6 +49,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,9 +64,17 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     public static final int OXYGEN_TANK = 0;
 
     public int collectionAmount = 0;
+    private boolean oxygenWorld = false;
 
     public OxygenCollectorBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.OXYGEN_COLLECTOR, pos, state);
+    }
+
+    @Override
+    public void setWorld(World world) {
+        super.setWorld(world);
+        Optional<CelestialBody<?, ?>> optional = RegistryUtil.getCelestialBodyByDimension(world.getRegistryManager(), world.getRegistryKey());
+        this.oxygenWorld = optional.isEmpty() || ((Landable) optional.get().type()).atmosphere(optional.get().config()).composition().containsKey(AtmosphericGas.OXYGEN_ID);
     }
 
     @Override
@@ -94,67 +105,59 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     private int collectOxygen() {
-        Optional<CelestialBodyType> celestialBodyType = CelestialBodyType.getByDimType(world.getRegistryKey());
+        if (!this.oxygenWorld) {
+            int minX = this.pos.getX() - 5;
+            int minY = this.pos.getY() - 5;
+            int minZ = this.pos.getZ() - 5;
+            int maxX = this.pos.getX() + 5;
+            int maxY = this.pos.getY() + 5;
+            int maxZ = this.pos.getZ() + 5;
 
-        if (celestialBodyType.isPresent()) {
-            if (!celestialBodyType.get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
-                int minX = this.pos.getX() - 5;
-                int minY = this.pos.getY() - 5;
-                int minZ = this.pos.getZ() - 5;
-                int maxX = this.pos.getX() + 5;
-                int maxY = this.pos.getY() + 5;
-                int maxZ = this.pos.getZ() + 5;
+            float leafBlocks = 0;
 
-                float leafBlocks = 0;
-
-                for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
-                    BlockState blockState = world.getBlockState(pos);
-                    if (blockState.isAir()) {
-                        continue;
-                    }
-                    if (blockState.getBlock() instanceof LeavesBlock && !blockState.get(LeavesBlock.PERSISTENT)) {
-                        leafBlocks++;
-                    } else if (blockState.getBlock() instanceof CropBlock) {
-                        leafBlocks += 0.75F;
-                    }
+            for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
+                BlockState blockState = world.getBlockState(pos);
+                if (blockState.isAir()) {
+                    continue;
                 }
-
-                if (leafBlocks < 2) return 0;
-
-                double oxyCount = 20 * (leafBlocks / 14.0F);
-                return (int) Math.ceil(oxyCount) / 20; //every tick
+                if (blockState.getBlock() instanceof LeavesBlock && !blockState.get(LeavesBlock.PERSISTENT)) {
+                    leafBlocks++;
+                } else if (blockState.getBlock() instanceof CropBlock) {
+                    leafBlocks += 0.75F;
+                }
             }
+
+            if (leafBlocks < 2) return 0;
+
+            double oxyCount = 20 * (leafBlocks / 14.0F);
+            return (int) Math.ceil(oxyCount) / 20; //every tick
         }
         return 183 / 20;
     }
 
     private boolean canCollectOxygen() {
-        Optional<CelestialBodyType> celestialBodyType = CelestialBodyType.getByDimType(world.getRegistryKey());
+        if (!oxygenWorld) {
+            int minX = this.pos.getX() - 5;
+            int minY = this.pos.getY() - 5;
+            int minZ = this.pos.getZ() - 5;
+            int maxX = this.pos.getX() + 5;
+            int maxY = this.pos.getY() + 5;
+            int maxZ = this.pos.getZ() + 5;
 
-        if (celestialBodyType.isPresent()) {
-            if (!celestialBodyType.get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
-                int minX = this.pos.getX() - 5;
-                int minY = this.pos.getY() - 5;
-                int minZ = this.pos.getZ() - 5;
-                int maxX = this.pos.getX() + 5;
-                int maxY = this.pos.getY() + 5;
-                int maxZ = this.pos.getZ() + 5;
+            float leafBlocks = 0;
 
-                float leafBlocks = 0;
-
-                for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
-                    BlockState blockState = world.getBlockState(pos);
-                    if (blockState.isAir()) {
-                        continue;
-                    }
-                    if (blockState.getBlock() instanceof LeavesBlock && !blockState.get(LeavesBlock.PERSISTENT)) {
-                        if (++leafBlocks >= 2) break;
-                    } else if (blockState.getBlock() instanceof CropBlock) {
-                        if ((leafBlocks += 0.75) >= 2) break;
-                    }
+            for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
+                BlockState blockState = world.getBlockState(pos);
+                if (blockState.isAir()) {
+                    continue;
                 }
-                return leafBlocks >= 2;
+                if (blockState.getBlock() instanceof LeavesBlock && !blockState.get(LeavesBlock.PERSISTENT)) {
+                    if (++leafBlocks >= 2) break;
+                } else if (blockState.getBlock() instanceof CropBlock) {
+                    if ((leafBlocks += 0.75) >= 2) break;
+                }
             }
+            return leafBlocks >= 2;
         }
         return true;
     }

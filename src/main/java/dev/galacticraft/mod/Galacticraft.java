@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod;
 
-import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.mojang.serialization.Lifecycle;
+import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.mod.api.config.ConfigManager;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
@@ -46,7 +46,6 @@ import dev.galacticraft.mod.village.GalacticraftVillagerProfession;
 import dev.galacticraft.mod.village.MoonVillagerType;
 import dev.galacticraft.mod.world.biome.GalacticraftBiome;
 import dev.galacticraft.mod.world.biome.source.GalacticraftBiomeSource;
-import dev.galacticraft.mod.world.dimension.GalacticraftCelestialBodyType;
 import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
 import dev.galacticraft.mod.world.dimension.GalacticraftGas;
 import dev.galacticraft.mod.world.gen.carver.GalacticraftCarver;
@@ -101,14 +100,9 @@ public class Galacticraft implements ModInitializer {
         MoonVillagerType.register();
         GalacticraftVillagerProfession.register();
 
-//        AtmosphericGasRegistryCallback.EVENT.register(registry -> {
-            Registry.register(AddonRegistry.ATMOSPHERIC_GASES, GalacticraftGas.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGas.HYDROGEN_DEUTERIUM_OXYGEN);
-            Registry.register(AddonRegistry.ATMOSPHERIC_GASES, GalacticraftGas.NITROGEN_OXIDE.getId(), GalacticraftGas.NITROGEN_OXIDE);
-//        });
+        Registry.register(AddonRegistry.ATMOSPHERIC_GAS, new Identifier(Constant.MOD_ID, "hydrogen_deuterium_oxygen"), GalacticraftGas.HYDROGEN_DEUTERIUM_OXYGEN);
+        Registry.register(AddonRegistry.ATMOSPHERIC_GAS, new Identifier(Constant.MOD_ID, "nitrogen_oxide"), GalacticraftGas.NITROGEN_OXIDE);
 
-//        CelestialBodyRegistryCallback.EVENT.register(registry -> {
-            Registry.register(AddonRegistry.CELESTIAL_BODIES, GalacticraftCelestialBodyType.THE_MOON.getId(), GalacticraftCelestialBodyType.THE_MOON);
-//        });
         if (FabricLoader.getInstance().isModLoaded("bannerpp")) {
             GalacticraftBannerPattern.register();
         }

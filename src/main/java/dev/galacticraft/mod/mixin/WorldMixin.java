@@ -22,26 +22,19 @@
 
 package dev.galacticraft.mod.mixin;
 
-import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.api.atmosphere.AtmosphericGas;
+import dev.galacticraft.api.registry.RegistryUtil;
+import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.MutableWorldProperties;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.WorldChunk;
-import net.minecraft.world.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.function.Supplier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -59,14 +52,14 @@ public abstract class WorldMixin implements WorldOxygenAccessor {
     }
 
     private @Unique boolean breathable = true;
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void init(MutableWorldProperties properties, RegistryKey<World> registryRef, DimensionType dimensionType, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed, CallbackInfo ci) {
-        CelestialBodyType.getByDimType(this.registryKey).ifPresent(celestialBodyType -> this.breathable = celestialBodyType.getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN));
-    }
+    private @Unique boolean init = false;
 
     @Override
     public boolean isBreathable(BlockPos pos) {
+        if (!this.init) {
+            this.init = true;
+            RegistryUtil.getCelestialBodyByDimension(((World)(Object)this).getRegistryManager(), this.registryKey).ifPresent(celestialBodyType -> this.breathable = ((Landable) celestialBodyType.type()).atmosphere(celestialBodyType.config()).composition().containsKey(AtmosphericGas.OXYGEN_ID));
+        }
         if (breathable) return true;
         if (isValid(pos)) return false;
         return ((ChunkOxygenAccessor) this.getWorldChunk(pos)).isBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
@@ -74,6 +67,10 @@ public abstract class WorldMixin implements WorldOxygenAccessor {
 
     @Override
     public void setBreathable(BlockPos pos, boolean value) {
+        if (!this.init) {
+            this.init = true;
+            RegistryUtil.getCelestialBodyByDimension(((World)(Object)this).getRegistryManager(), this.registryKey).ifPresent(celestialBodyType -> this.breathable = ((Landable) celestialBodyType.type()).atmosphere(celestialBodyType.config()).composition().containsKey(AtmosphericGas.OXYGEN_ID));
+        }
         if (isValid(pos) || breathable) return;
         ((ChunkOxygenAccessor) this.getWorldChunk(pos)).setBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15, value);
     }

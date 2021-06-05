@@ -175,11 +175,11 @@ dependencies {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     })
-    include(modImplementation("com.hrznstudio:Galacticraft-Energy:$energyVersion") {
+    include(modImplementation("com.hrznstudio:Galacticraft-Energy:$energyVersion") { //todo fix publishing energy
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     })
-    include(modApi("com.hrznstudio:GalacticraftAPI:$galacticraftApiVersion") { isTransitive = false })
+    include(modApi("dev.galacticraft:GalacticraftAPI:$galacticraftApiVersion") { isTransitive = false })
     include(modApi("io.github.cottonmc:cotton-resources:$cottonResourcesVersion") { isTransitive = false })
     include(modApi("alexiil.mc.lib:libblockattributes-core:$lbaVersion") { isTransitive = false })
     include(modApi("alexiil.mc.lib:libblockattributes-items:$lbaVersion") { isTransitive = false })
@@ -188,7 +188,7 @@ dependencies {
     // Optional Dependencies
     optionalImplementation("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
     optionalImplementation("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
-    optionalImplementation("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false }
+    modCompileOnly("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false } //todo update when this mod updates to 1.17
     optionalImplementation("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
         exclude(group = "net.fabricmc")

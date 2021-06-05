@@ -52,7 +52,7 @@
 // */
 //@Environment(EnvType.CLIENT)
 //public class DefaultFabricationCategory implements RecipeCategory<DefaultFabricationDisplay> {
-//    private static final Identifier DISPLAY_TEXTURE = new Identifier("galacticraft", "textures/gui/rei_display.png");
+//    private static final Identifier DISPLAY_TEXTURE = new Identifier(Constant.MOD_ID, "textures/gui/rei_display.png");
 //
 //    public @NotNull Identifier getIdentifier() {
 //        return GalacticraftREIPlugin.CIRCUIT_FABRICATION;

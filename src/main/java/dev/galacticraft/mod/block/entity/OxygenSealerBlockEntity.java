@@ -24,8 +24,10 @@ package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.api.atmosphere.AtmosphericGas;
+import dev.galacticraft.api.registry.RegistryUtil;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
@@ -66,7 +68,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     private final Set<BlockPos> set = new HashSet<>();
     public static final byte SEAL_CHECK_TIME = 5 * 20;
     private byte sealCheckTime;
-    private CelestialBodyType type = null;
+    private boolean oxygenWorld = false;
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.OXYGEN_SEALER, pos, state);
@@ -94,7 +96,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public void setWorld(World world) {
         super.setWorld(world);
         this.sealCheckTime = SEAL_CHECK_TIME;
-        this.type = CelestialBodyType.getByDimType(world.getRegistryKey()).orElse(null);
+        Optional<CelestialBody<?, ?>> optional = RegistryUtil.getCelestialBodyByDimension(world.getRegistryManager(), world.getRegistryKey());
+        this.oxygenWorld = !optional.isPresent() || ((Landable) optional.get().type()).atmosphere(optional.get().config()).composition().containsKey(AtmosphericGas.OXYGEN_ID);
     }
 
     @Override
@@ -130,10 +133,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
             if (sealCheckTime == 0) {
                 sealCheckTime = SEAL_CHECK_TIME;
                 BlockPos pos = this.getPos();
-                if (this.type == null
-                        || this.type.getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)
-                        || (set.isEmpty()
-                        && ((WorldOxygenAccessor) world).isBreathable(pos.up()))) {
+                if (this.oxygenWorld || (set.isEmpty() && ((WorldOxygenAccessor) world).isBreathable(pos.up()))) {
                     this.setStatus(Status.ALREADY_SEALED);
                     return;
                 }

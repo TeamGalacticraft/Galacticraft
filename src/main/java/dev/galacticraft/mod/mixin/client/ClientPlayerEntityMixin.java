@@ -23,7 +23,8 @@
 package dev.galacticraft.mod.mixin.client;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import dev.galacticraft.api.registry.RegistryUtil;
+import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.accessor.SoundSystemAccessor;
 import dev.galacticraft.mod.item.GalacticraftItems;
@@ -32,7 +33,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 /**
@@ -41,6 +44,7 @@ import org.spongepowered.asm.mixin.Unique;
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin implements GearInventoryProvider {
+    @Shadow @Final protected MinecraftClient client;
     private final @Unique FullFixedItemInv gearInv = createInv();
 
     private FullFixedItemInv createInv() {
@@ -60,8 +64,8 @@ public abstract class ClientPlayerEntityMixin implements GearInventoryProvider {
                 }
                 if (!hasFreqModule) {
                     ((SoundSystemAccessor) MinecraftClient.getInstance().getSoundManager().soundSystem)
-                            .gc_updateAtmosphericMultiplier(CelestialBodyType.getByDimType(MinecraftClient.getInstance().world.getRegistryKey())
-                                    .map(body -> body.getAtmosphere().getPressure()).orElse(1.0f));
+                            .gc_updateAtmosphericMultiplier(RegistryUtil.getCelestialBodyByDimension(client.world.getRegistryManager(), client.world.getRegistryKey())
+                                    .map(body -> ((Landable) body.type()).atmosphere(body.config()).pressure()).orElse(1.0f));
                 }
             }
         });
