@@ -78,6 +78,7 @@ repositories {
             includeGroup("me.shedaniel.cloth.api")
             includeGroup("me.shedaniel.cloth")
             includeGroup("me.shedaniel")
+            includeGroup("dev.architectury")
         }
     }
     maven("https://server.bbkr.space/artifactory/libs-release/") {
@@ -186,9 +187,9 @@ dependencies {
 
     // Optional Dependencies
     optionalImplementation("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
-    optionalImplementation("mcp.mobius.waila:wthit-fabric:$wthitVersion") { isTransitive = false }
+    optionalImplementation("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
     optionalImplementation("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false }
-    optionalImplementation("me.shedaniel:RoughlyEnoughItems:$reiVersion") {
+    optionalImplementation("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
