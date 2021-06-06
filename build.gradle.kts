@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+import java.io.ByteArrayOutputStream
 import java.time.Year
 import java.time.format.DateTimeFormatter
 
@@ -274,26 +275,47 @@ fun getVersionDecoration(): String {
     if(project.hasProperty("release")) return ""
 
     var version = "+build"
-    val branch = "git branch --show-current".execute()
-    if(branch.isNotEmpty() && branch != "main") {
-        version += ".${branch}"
-    }
-    val commitHashLines = "git rev-parse --short HEAD".execute()
-    if(commitHashLines.isNotEmpty()) {
-        version += ".${commitHashLines}"
+    if (System.getenv("GITHUB_RUN_NUMBER") != null) {
+        version += ".${System.getenv("GITHUB_RUN_NUMBER")}"
+    } else {
+        if ("git".exitValue() != 0) {
+            version += ".unknown"
+        } else {
+            val branch = "git branch --show-current".execute()
+            if (branch.isNotEmpty() && branch != "main") {
+                version += ".${branch}"
+            }
+            val commitHashLines = "git rev-parse --short HEAD".execute()
+            if (commitHashLines.isNotEmpty()) {
+                version += ".${commitHashLines}"
+            }
+            val dirty = "git diff-index --quiet HEAD".exitValue()
+            if (dirty != 0) {
+                version += "-modified"
+            }
+        }
     }
     return version
 }
 
-// from https://discuss.gradle.org/t/how-to-run-execute-string-as-a-shell-command-in-kotlin-dsl/32235/5
-fun String.execute(workingDir: File = project.file("./")): String {
-    val parts = this.split("\\s".toRegex())
-    val proc = ProcessBuilder(*parts.toTypedArray())
-        .directory(workingDir)
-        .redirectOutput(ProcessBuilder.Redirect.PIPE)
-        .redirectError(ProcessBuilder.Redirect.PIPE)
-        .start()
+// from https://discuss.gradle.org/t/how-to-run-execute-string-as-a-shell-command-in-kotlin-dsl/32235/9
+fun String.execute(): String {
+    print(this)
+    val output = ByteArrayOutputStream()
+    rootProject.exec() {
+        commandLine(split("\\s".toRegex()))
+        workingDir = rootProject.projectDir
+        isIgnoreExitValue = true
+        standardOutput = output
+    }
 
-    proc.waitFor(1, TimeUnit.MINUTES)
-    return proc.inputStream.bufferedReader().readText().trim()
+    return String(output.toByteArray()).trim()
+}
+
+fun String.exitValue(): Int {
+    return rootProject.exec() {
+        commandLine(split("\\s".toRegex()))
+        workingDir = rootProject.projectDir
+        isIgnoreExitValue = true
+    }.exitValue
 }
