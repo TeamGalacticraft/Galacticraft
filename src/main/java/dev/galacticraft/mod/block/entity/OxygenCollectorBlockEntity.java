@@ -116,13 +116,13 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
             float leafBlocks = 0;
 
             for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
-                BlockState blockState = world.getBlockState(pos);
-                if (blockState.isAir()) {
+                BlockState state = world.getBlockState(pos);
+                if (state.isAir()) {
                     continue;
                 }
-                if (blockState.getBlock() instanceof LeavesBlock && !blockState.get(LeavesBlock.PERSISTENT)) {
+                if (state.getBlock() instanceof LeavesBlock && !state.get(LeavesBlock.PERSISTENT)) {
                     leafBlocks++;
-                } else if (blockState.getBlock() instanceof CropBlock) {
+                } else if (state.getBlock() instanceof CropBlock) {
                     leafBlocks += 0.75F;
                 }
             }
@@ -147,13 +147,13 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
             float leafBlocks = 0;
 
             for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
-                BlockState blockState = world.getBlockState(pos);
-                if (blockState.isAir()) {
+                BlockState state = world.getBlockState(pos);
+                if (state.isAir()) {
                     continue;
                 }
-                if (blockState.getBlock() instanceof LeavesBlock && !blockState.get(LeavesBlock.PERSISTENT)) {
+                if (state.getBlock() instanceof LeavesBlock && !state.get(LeavesBlock.PERSISTENT)) {
                     if (++leafBlocks >= 2) break;
-                } else if (blockState.getBlock() instanceof CropBlock) {
+                } else if (state.getBlock() instanceof CropBlock) {
                     if ((leafBlocks += 0.75) >= 2) break;
                 }
             }

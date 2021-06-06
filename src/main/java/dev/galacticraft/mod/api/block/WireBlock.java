@@ -52,8 +52,8 @@ public class WireBlock extends Block implements BlockEntityProvider {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof Wire) {
-                Galacticraft.LOGGER.info(((Wire) entity).getNetworkNullable());
+            if (entity instanceof Wire wire) {
+                Galacticraft.LOGGER.info(wire.getNetworkNullable());
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);

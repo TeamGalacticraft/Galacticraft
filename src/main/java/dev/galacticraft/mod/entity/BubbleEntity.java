@@ -231,8 +231,8 @@ public class BubbleEntity extends Entity {
     @Environment(EnvType.CLIENT)
     public boolean shouldRender(double distance) {
         BlockEntity entity = world.getBlockEntity(getBlockPos());
-        if (entity instanceof BubbleDistributorBlockEntity) {
-            double d = Math.abs(((BubbleDistributorBlockEntity) entity).getSize() * 2D + 1D);
+        if (entity instanceof BubbleDistributorBlockEntity machine) {
+            double d = Math.abs(machine.getSize() * 2D + 1D);
             if (Double.isNaN(d)) {
                 d = 1.0D;
             }

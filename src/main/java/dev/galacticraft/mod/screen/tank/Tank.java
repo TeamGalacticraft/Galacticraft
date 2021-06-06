@@ -225,10 +225,10 @@ public class Tank {
     }
 
     public boolean acceptStack(Reference<ItemStack> stack, LimitedConsumer<ItemStack> excess) {
-        if (this.inv instanceof Automatable) {
+        if (this.inv instanceof Automatable automatable) {
             FluidExtractable extractable = FluidAttributes.EXTRACTABLE.getFirstOrNull(stack, excess);
             if (extractable != null && !extractable.attemptExtraction(this.inv.getFilterForTank(this.index), FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty()) {
-                if (((Automatable) this.inv).getTypes()[this.index].getType().isInput()) {
+                if (automatable.getTypes()[this.index].getType().isInput()) {
                     FluidVolumeUtil.move(extractable, this.inv.getTank(this.index));
                     ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(this.index)));
                     return true;
@@ -236,7 +236,7 @@ public class Tank {
             } else {
                 FluidInsertable insertable = FluidAttributes.INSERTABLE.getFirstOrNull(stack, excess);
                 if (insertable != null) {
-                    if (((Automatable) this.inv).getTypes()[this.index].getType().isOutput()) {
+                    if (automatable.getTypes()[this.index].getType().isOutput()) {
                         FluidVolumeUtil.move(this.inv.getTank(this.index), insertable);
                         ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(this.index)));
                         return true;

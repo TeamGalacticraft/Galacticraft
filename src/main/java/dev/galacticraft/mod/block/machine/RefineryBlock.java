@@ -62,7 +62,7 @@ public class RefineryBlock extends SimpleMachineBlock<RefineryBlockEntity> {
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         super.randomDisplayTick(state, world, pos, random);
         BlockEntity entity = world.getBlockEntity(pos);
-        if (entity instanceof MachineBlockEntity && ((MachineBlockEntity) entity).getStatus().getType().isActive()) {
+        if (entity instanceof MachineBlockEntity machine && machine.getStatus().getType().isActive()) {
             world.addParticle(ParticleTypes.SMOKE, pos.getX() + random.nextDouble(), pos.getY() + 1, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
         }
     }

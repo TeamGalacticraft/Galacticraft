@@ -58,14 +58,14 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
             assert bubbleModel != null;
         }
         BlockEntity blockEntity = entity.world.getBlockEntity(entity.getBlockPos());
-        if (!(blockEntity instanceof BubbleDistributorBlockEntity) || entity.isRemoved()) {
+        if (!(blockEntity instanceof BubbleDistributorBlockEntity machine) || entity.isRemoved()) {
             ((ClientWorld) entity.world).removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
             return;
         }
-        if (!((BubbleDistributorBlockEntity) blockEntity).bubbleVisible) {
+        if (!machine.bubbleVisible) {
             return;
         }
-        double size = ((BubbleDistributorBlockEntity) blockEntity).getSize();
+        double size = machine.getSize();
 
         matrices.push();
         matrices.translate(0.5F, 1.0F, 0.5F);

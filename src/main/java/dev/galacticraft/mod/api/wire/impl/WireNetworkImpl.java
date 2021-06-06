@@ -69,12 +69,12 @@ public class WireNetworkImpl implements WireNetwork {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockEntity entity = world.getBlockEntity(pos.offset(direction));
             if (entity != null && !entity.isRemoved()) {
-                if (entity instanceof Wire) {
-                    if (((Wire) entity).getNetworkNullable() == null || ((Wire) entity).getNetwork().markedForRemoval()) {
-                        this.addWire(pos.offset(direction), (Wire) entity);
+                if (entity instanceof Wire wire1) {
+                    if (wire1.getNetworkNullable() == null || wire1.getNetwork().markedForRemoval()) {
+                        this.addWire(pos.offset(direction), wire1);
                     } else {
-                        if (((Wire) entity).getNetworkNullable() != this) {
-                            this.takeAll(((Wire) entity).getNetwork());
+                        if (wire1.getNetworkNullable() != this) {
+                            this.takeAll(wire1.getNetwork());
                         }
                     }
                     continue;
@@ -89,9 +89,9 @@ public class WireNetworkImpl implements WireNetwork {
 
     public void takeAll(@NotNull WireNetwork network) {
         for (BlockPos pos : network.getAllWires()) {
-            BlockEntity wire = this.world.getBlockEntity(pos);
-            if (wire instanceof Wire && !wire.isRemoved()) {
-                ((Wire) wire).setNetwork(this);
+            BlockEntity entity = this.world.getBlockEntity(pos);
+            if (entity instanceof Wire wire && !entity.isRemoved()) {
+                wire.setNetwork(this);
                 this.wires.add(pos);
             }
         }

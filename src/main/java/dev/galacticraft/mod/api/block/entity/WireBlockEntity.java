@@ -67,8 +67,8 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
             if (!this.world.isClient()) {
                 for (Direction direction : Constant.Misc.DIRECTIONS) {
                     BlockEntity entity = world.getBlockEntity(pos.offset(direction));
-                    if (entity instanceof Wire && ((Wire) entity).getNetworkNullable() != null) {
-                        ((Wire) entity).getNetwork().addWire(pos, this);
+                    if (entity instanceof Wire wire && wire.getNetworkNullable() != null) {
+                        wire.getNetwork().addWire(pos, this);
                     }
                 }
                 if (this.network == null) {
@@ -93,7 +93,7 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     @Override
     public @NotNull WireConnectionType getConnection(Direction direction, @NotNull BlockEntity entity) {
         if (!this.canConnect(direction)) return WireConnectionType.NONE;
-        if (entity instanceof Wire && ((Wire) entity).canConnect(direction.getOpposite())) return WireConnectionType.WIRE;
+        if (entity instanceof Wire wire && wire.canConnect(direction.getOpposite())) return WireConnectionType.WIRE;
         EnergyInsertable insertable = EnergyUtil.getEnergyInsertable(world, entity.getPos(), direction);
         EnergyExtractable extractable = EnergyUtil.getEnergyExtractable(world, entity.getPos(), direction);
         if (insertable != RejectingEnergyInsertable.NULL && extractable != EmptyEnergyExtractable.NULL) {

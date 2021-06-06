@@ -48,16 +48,16 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
     public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context) {
         super(context);
         ModelPart root, head, body;
-        if (context.getModel() instanceof SinglePartEntityModel) {
-            root = ((SinglePartEntityModel<?>) context.getModel()).getPart();
+        if (context.getModel() instanceof SinglePartEntityModel<?> model) {
+            root = model.getPart();
             head = root.getChild(EntityModelPartNames.HEAD);
             body = root.getChild(EntityModelPartNames.BODY);
-        } else if (context.getModel() instanceof BipedEntityModel){
-            head = ((BipedEntityModel<?>) context.getModel()).head;
-            body = ((BipedEntityModel<?>) context.getModel()).body;
-        } else if (context.getModel() instanceof AnimalModel){
-            head = ((AnimalModel<?>) context.getModel()).getHeadParts().iterator().next();
-            body = ((AnimalModel<?>) context.getModel()).getBodyParts().iterator().next();;
+        } else if (context.getModel() instanceof BipedEntityModel<?> model){
+            head = model.head;
+            body = model.body;
+        } else if (context.getModel() instanceof AnimalModel<?> model){
+            head = model.getHeadParts().iterator().next();
+            body = model.getBodyParts().iterator().next();;
         } else {
             this.mask = null;
             this.tank = null;

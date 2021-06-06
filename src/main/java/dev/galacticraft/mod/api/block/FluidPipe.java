@@ -51,9 +51,9 @@ public class FluidPipe extends Block implements BlockEntityProvider {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            BlockEntity pipe = world.getBlockEntity(pos);
-            if (pipe instanceof Pipe) {
-                Galacticraft.LOGGER.info(((Pipe) pipe).getNetworkNullable());
+            BlockEntity entity = world.getBlockEntity(pos);
+            if (entity instanceof Pipe pipe) {
+                Galacticraft.LOGGER.info(pipe.getNetworkNullable());
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);

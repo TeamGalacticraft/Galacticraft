@@ -100,8 +100,8 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
-        if (!world.isClient && placer instanceof PlayerEntity) {
-            ((MachineBlockEntity) world.getBlockEntity(pos)).security().setOwner(/*((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), */((PlayerEntity) placer)); //todo: teams
+        if (!world.isClient && placer instanceof PlayerEntity player) {
+            ((MachineBlockEntity) world.getBlockEntity(pos)).security().setOwner(/*((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), */player); //todo: teams
         }
     }
 
@@ -164,13 +164,13 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
     @Override
     public final ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
-            BlockEntity machine = world.getBlockEntity(pos);
-            if (machine instanceof MachineBlockEntity) {
-                SecurityInfo security = ((MachineBlockEntity) machine).security();
+            BlockEntity entity = world.getBlockEntity(pos);
+            if (entity instanceof MachineBlockEntity machine) {
+                SecurityInfo security = machine.security();
                 if (security.getOwner() == null) security.setOwner(/*((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), */player); //todo: teams
                 if (security.isOwner(player.getGameProfile())) {
                     security.sendPacket(pos, (ServerPlayerEntity) player);
-                    ((MachineBlockEntity) machine).redstoneInteraction().sendPacket(pos, (ServerPlayerEntity) player);
+                    machine.redstoneInteraction().sendPacket(pos, (ServerPlayerEntity) player);
                     NamedScreenHandlerFactory factory = state.createScreenHandlerFactory(world, pos);
 
                     if (factory != null) {
@@ -187,8 +187,8 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBreak(world, pos, state, player);
         BlockEntity entity = world.getBlockEntity(pos);
-        if (entity instanceof MachineBlockEntity) {
-            FixedItemInv inv = ((MachineBlockEntity) entity).itemInv();
+        if (entity instanceof MachineBlockEntity machine) {
+            FixedItemInv inv = machine.itemInv();
             for (int i = 0; i < inv.getSlotCount(); i++) {
                 ItemStack stack = inv.getInvStack(i);
                 if (!stack.isEmpty()) {

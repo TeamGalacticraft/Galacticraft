@@ -62,11 +62,11 @@ public class GalacticraftClientPacketReceiver {
             client.execute(() -> {
                 assert client.world != null;
                 BlockEntity entity = client.world.getBlockEntity(pos);
-                if (entity instanceof MachineBlockEntity) {
+                if (entity instanceof MachineBlockEntity machine) {
                     assert profile != null;
                     assert accessibility != null;
-                    ((MachineBlockEntity) entity).getConfiguration().getSecurity().setOwner(/*((ClientWorldTeamsGetter) client.world).getSpaceRaceTeams(), */profile); //todo teams
-                    ((MachineBlockEntity) entity).getConfiguration().getSecurity().setAccessibility(accessibility);
+                    machine.getConfiguration().getSecurity().setOwner(/*((ClientWorldTeamsGetter) client.world).getSpaceRaceTeams(), */profile); //todo teams
+                    machine.getConfiguration().getSecurity().setAccessibility(accessibility);
 
                 }
             });
@@ -108,8 +108,8 @@ public class GalacticraftClientPacketReceiver {
                 BlockPos pos = buffer.readBlockPos();
                 if (client.world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
                     BlockEntity entity = client.world.getBlockEntity(pos);
-                    if (entity instanceof BubbleDistributorBlockEntity) {
-                        ((BubbleDistributorBlockEntity) entity).setSize(buffer.readDouble());
+                    if (entity instanceof BubbleDistributorBlockEntity machine) {
+                        machine.setSize(buffer.readDouble());
                     }
                 }
             });

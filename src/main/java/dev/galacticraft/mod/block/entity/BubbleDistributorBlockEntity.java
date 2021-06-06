@@ -131,7 +131,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
         if (this.size > this.targetSize) {
             this.setSize(Math.max(size - 0.1F, targetSize));
         }
-        if (size > 0.0D && bubbleVisible && bubbleId == -1 && (world instanceof ServerWorld)) {
+        if (size > 0.0D && bubbleVisible && bubbleId == -1 && world instanceof ServerWorld serverWorld) {
             BubbleEntity entity = new BubbleEntity(GalacticraftEntityType.BUBBLE, world);
             entity.setPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
             entity.prevX = this.getPos().getX();
@@ -139,7 +139,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
             entity.prevZ = this.getPos().getZ();
             world.spawnEntity(entity);
             bubbleId = entity.getId();
-            for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
+            for (ServerPlayerEntity player : serverWorld.getPlayers()) {
                 player.networkHandler.sendPacket(entity.createSpawnPacket());
             }
         }

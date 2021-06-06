@@ -711,7 +711,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         color = getItemColor(matrices, mouseX, mouseY);;
         color.defaultReturnValue(-1);
         for (Slot slot : this.handler.slots) {
-            if (slot.inventory instanceof InventoryFixedWrapper && ((InventoryFixedWrapper) slot.inventory).getWrapped() == this.handler.machine.itemInv()) {
+            if (slot.inventory instanceof InventoryFixedWrapper inv && inv.getWrapped() == this.handler.machine.itemInv()) {
                 if (color.get(slot.index) != -1) {
                     RenderSystem.disableDepthTest();
                     int c = color.get(slot.index);

@@ -192,8 +192,8 @@ public class EnergyUtil {
     }
 
     public static EnergyTransferable getTransferable(EnergyInsertable insertable, EnergyExtractable extractable) {
-        if (insertable instanceof EnergyTransferable) return (EnergyTransferable) insertable;
-        if (extractable instanceof EnergyTransferable) return (EnergyTransferable) extractable;
+        if (insertable instanceof EnergyTransferable transferable) return transferable;
+        if (extractable instanceof EnergyTransferable transferable) return transferable;
         return new EnergyTransferable() {
             @Override
             public int tryExtract(EnergyType type, int amount, Simulation simulation) {

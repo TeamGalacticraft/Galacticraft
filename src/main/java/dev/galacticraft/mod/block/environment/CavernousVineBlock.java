@@ -74,11 +74,11 @@ public class CavernousVineBlock extends Block implements Waterloggable {
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (!(entity instanceof LivingEntity) || (entity instanceof PlayerEntity && ((PlayerEntity) entity).getAbilities().flying)) {
+        if (!(entity instanceof LivingEntity living) || (entity instanceof PlayerEntity player && player.getAbilities().flying)) {
             return;
         }
 
-        onCollided((LivingEntity) entity);
+        this.onCollided(living);
     }
 
     public void onCollided(LivingEntity entity) {

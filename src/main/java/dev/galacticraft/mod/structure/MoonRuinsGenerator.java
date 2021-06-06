@@ -154,8 +154,8 @@ public class MoonRuinsGenerator {
          if ("chest".equals(metadata)) {
             world.setBlockState(pos, Blocks.CHEST.getDefaultState().with(ChestBlock.WATERLOGGED, world.getFluidState(pos).isIn(FluidTags.WATER)), Block.NOTIFY_LISTENERS);
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof ChestBlockEntity) {
-               ((ChestBlockEntity) blockEntity).setLootTable(GalacticraftLootTable.BASIC_MOON_RUINS_CHEST, random.nextLong());
+            if (blockEntity instanceof ChestBlockEntity chest) {
+               chest.setLootTable(GalacticraftLootTable.BASIC_MOON_RUINS_CHEST, random.nextLong());
             }
          } else if ("drowned".equals(metadata)) {
             DrownedEntity drownedEntity = EntityType.DROWNED.create(world.toServerWorld());

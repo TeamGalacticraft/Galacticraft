@@ -50,7 +50,7 @@ public class OxygenCollectorBlock extends SimpleMachineBlock<OxygenCollectorBloc
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
-        if (blockEntity instanceof OxygenCollectorBlockEntity && ((OxygenCollectorBlockEntity) blockEntity).collectionAmount > 0) {
+        if (blockEntity instanceof OxygenCollectorBlockEntity machine && machine.collectionAmount > 0) {
             for (int count = 0; count < 10; count++) {
                 for (int i = 0; i < 32; ++i) {
                     double x2 = pos.getX() + random.nextFloat();

@@ -119,9 +119,9 @@ public class PipeWalkway extends FluidPipe {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!player.getStackInHand(hand).isEmpty()) {
-            if (player.getStackInHand(hand).getItem() instanceof DyeItem) {
+            if (player.getStackInHand(hand).getItem() instanceof DyeItem dye) {
                 ItemStack stack = player.getStackInHand(hand).copy();
-                DyeColor color = ((DyeItem) stack.getItem()).getColor();
+                DyeColor color = dye.getColor();
                 if (color != state.get(COLOR)) {
                     stack.decrement(1);
                     player.setStackInHand(hand, stack);

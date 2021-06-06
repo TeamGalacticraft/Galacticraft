@@ -69,12 +69,12 @@ public class PipeNetworkImpl implements PipeNetwork {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockEntity entity = world.getBlockEntity(pos.offset(direction));
             if (entity != null && !entity.isRemoved()) {
-                if (entity instanceof Pipe) {
-                    if (((Pipe) entity).getNetworkNullable() == null || ((Pipe) entity).getNetwork().markedForRemoval()) {
-                        this.addPipe(pos.offset(direction), (Pipe) entity);
+                if (entity instanceof Pipe pipe1) {
+                    if (pipe1.getNetworkNullable() == null || pipe1.getNetwork().markedForRemoval()) {
+                        this.addPipe(pos.offset(direction), pipe1);
                     } else {
-                        if (((Pipe) entity).getNetworkNullable() != this) {
-                            this.takeAll(((Pipe) entity).getNetwork());
+                        if (pipe1.getNetworkNullable() != this) {
+                            this.takeAll(pipe1.getNetwork());
                         }
                     }
                     continue;
@@ -89,9 +89,9 @@ public class PipeNetworkImpl implements PipeNetwork {
 
     public void takeAll(@NotNull PipeNetwork network) {
         for (BlockPos pos : network.getAllPipes()) {
-            BlockEntity pipe = this.world.getBlockEntity(pos);
-            if (pipe instanceof Pipe && !pipe.isRemoved()) {
-                ((Pipe) pipe).setNetwork(this);
+            BlockEntity entity = this.world.getBlockEntity(pos);
+            if (entity instanceof Pipe pipe && !entity.isRemoved()) {
+                pipe.setNetwork(this);
                 this.pipes.add(pos);
             }
         }
