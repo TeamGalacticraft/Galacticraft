@@ -44,7 +44,7 @@ public class RefineryScreen extends MachineHandledScreen<SimpleMachineScreenHand
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundHeight = 192;
 
-        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 29, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 29, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override

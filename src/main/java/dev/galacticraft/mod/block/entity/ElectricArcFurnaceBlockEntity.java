@@ -80,7 +80,7 @@ public class ElectricArcFurnaceBlockEntity extends MachineBlockEntity {
 
     public ElectricArcFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE, pos, state);
-        this.subInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
+        this.subInv = new InventoryFixedWrapper(this.itemInv().getMappedInv(INPUT_SLOT)) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
                 return getWrappedInventory().canPlayerUse(player);
@@ -115,7 +115,7 @@ public class ElectricArcFurnaceBlockEntity extends MachineBlockEntity {
         Optional<SmeltingRecipe> recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, subInv, this.world);
         if (!recipe.isPresent()) return Status.NOT_ENOUGH_ITEMS;
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (!this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1,
+        if (!this.itemInv().insertStack(OUTPUT_SLOT_2, this.itemInv().insertStack(OUTPUT_SLOT_1,
                 recipe.get().getOutput().copy(), Simulation.SIMULATE), Simulation.SIMULATE).isEmpty())
             return Status.OUTPUT_FULL;
         return Status.ACTIVE;
@@ -131,13 +131,13 @@ public class ElectricArcFurnaceBlockEntity extends MachineBlockEntity {
             }
             if (this.cookTime++ >= this.cookLength) {
                 SmeltingRecipe recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, subInv, this.world).orElseThrow(AssertionError::new);
-                if (this.getInventory().extractStack(INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty())
+                if (this.itemInv().extractStack(INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty())
                     return;
                 this.cookTime = 0;
                 this.cookLength = 0;
                 if (this.world.getRecipeManager().getFirstMatch(RecipeType.BLASTING, subInv, this.world).isPresent())
-                    this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1, recipe.getOutput().copy(), Simulation.ACTION), Simulation.ACTION);
-                this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1,
+                    this.itemInv().insertStack(OUTPUT_SLOT_2, this.itemInv().insertStack(OUTPUT_SLOT_1, recipe.getOutput().copy(), Simulation.ACTION), Simulation.ACTION);
+                this.itemInv().insertStack(OUTPUT_SLOT_2, this.itemInv().insertStack(OUTPUT_SLOT_1,
                         recipe.getOutput().copy(), Simulation.ACTION), Simulation.ACTION);
 
             }
@@ -149,7 +149,7 @@ public class ElectricArcFurnaceBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new ElectricArcFurnaceScreenHandler(syncId, player, this);
+        if (this.security().hasAccess(player)) return new ElectricArcFurnaceScreenHandler(syncId, player, this);
         return null;
     }
 

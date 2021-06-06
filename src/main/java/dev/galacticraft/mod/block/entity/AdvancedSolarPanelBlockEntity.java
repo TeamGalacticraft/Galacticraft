@@ -80,7 +80,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity {
     @NotNull
     @Override
     public MachineStatus updateStatus() {
-        if (getCapacitor().getEnergy() >= getCapacitor().getMaxCapacity()) {
+        if (capacitor().getEnergy() >= capacitor().getMaxCapacity()) {
             return Status.FULL;
         }
 
@@ -145,7 +145,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.ADVANCED_SOLAR_PANEL_HANDLER, syncId, inv, this);
+        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.ADVANCED_SOLAR_PANEL_HANDLER, syncId, inv, this);
         return null;
     }
 

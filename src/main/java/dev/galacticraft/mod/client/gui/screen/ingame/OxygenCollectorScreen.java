@@ -44,7 +44,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundHeight = 181;
 
-        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 13, 13, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 13, 13, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override

@@ -24,7 +24,6 @@ package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
@@ -41,9 +40,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -80,7 +76,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity {
     @NotNull
     @Override
     public MachineStatus updateStatus() {
-        if (getCapacitor().getEnergy() >= getCapacitor().getMaxCapacity()) {
+        if (capacitor().getEnergy() >= capacitor().getMaxCapacity()) {
             return Status.FULL;
         }
 
@@ -137,15 +133,10 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity {
         return Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate();
     }
 
-    @Override
-    public List<BlockFace> getLockedFaces() {
-        return Collections.singletonList(BlockFace.TOP);
-    }
-
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER, syncId, inv, this);
+        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER, syncId, inv, this);
         return null;
     }
 

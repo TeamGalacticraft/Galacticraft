@@ -66,7 +66,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
             }
         }));
 
-        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override

@@ -43,7 +43,7 @@ public class CoalGeneratorScreen extends MachineHandledScreen<SimpleMachineScree
     public CoalGeneratorScreen(SimpleMachineScreenHandler<CoalGeneratorBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundHeight = 176;
-        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 28, 42, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 28, 42, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override

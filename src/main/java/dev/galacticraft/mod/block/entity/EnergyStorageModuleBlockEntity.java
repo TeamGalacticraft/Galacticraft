@@ -100,7 +100,7 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER, syncId, inv, this);
+        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER, syncId, inv, this);
         return null;
     }
 }

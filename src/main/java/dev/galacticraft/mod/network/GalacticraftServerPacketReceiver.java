@@ -69,7 +69,7 @@ public class GalacticraftServerPacketReceiver {
                     int i = buf.readInt();
                     server.execute(() -> {
                         MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                        if (machine.getSecurity().hasAccess(player)) {
+                        if (machine.security().hasAccess(player)) {
                             if (i == -1) {
                                 machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
                                 return;
@@ -81,7 +81,7 @@ public class GalacticraftServerPacketReceiver {
                     int i = buf.readInt();
                     server.execute(() -> {
                         MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                        if (machine.getSecurity().hasAccess(player)) {
+                        if (machine.security().hasAccess(player)) {
                             if (i == -1) {
                                 machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
                                 return;
@@ -95,7 +95,7 @@ public class GalacticraftServerPacketReceiver {
                 int i = buf.readByte();
                 server.execute(() -> {
                     MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                    if (machine.getSecurity().hasAccess(player)) {
+                    if (machine.security().hasAccess(player)) {
                         machine.getConfiguration().getSideConfiguration().get(face).setOption(AutomationType.values()[i]);
                         machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
                         machine.sync();
@@ -108,7 +108,7 @@ public class GalacticraftServerPacketReceiver {
             RedstoneInteractionType redstoneInteractionType = RedstoneInteractionType.values()[buf.readByte()];
             server.execute(() -> {
                 MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                if (machine.getSecurity().hasAccess(player)) {
+                if (machine.security().hasAccess(player)) {
                     machine.getConfiguration().setRedstone(redstoneInteractionType);
                 }
             });
@@ -118,7 +118,7 @@ public class GalacticraftServerPacketReceiver {
             SecurityInfo.Accessibility accessibility = SecurityInfo.Accessibility.values()[buf.readByte()];
             server.execute(() -> {
                 MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                if (machine.getSecurity().isOwner(player)) {
+                if (machine.security().isOwner(player)) {
                     machine.getConfiguration().getSecurity().setAccessibility(accessibility);
                 }
             });
@@ -128,7 +128,7 @@ public class GalacticraftServerPacketReceiver {
             byte max = buf.readByte();
             server.execute(() -> {
                 BubbleDistributorBlockEntity machine = ((BubbleDistributorScreenHandler) player.currentScreenHandler).machine;
-                if (machine.getSecurity().hasAccess(player)) {
+                if (machine.security().hasAccess(player)) {
                     if (max > 0) {
                         machine.setTargetSize(max);
                     }
@@ -140,7 +140,7 @@ public class GalacticraftServerPacketReceiver {
             boolean visible = buf.readBoolean();
             server.execute(() -> {
                 BubbleDistributorBlockEntity machine = ((BubbleDistributorScreenHandler) player.currentScreenHandler).machine;
-                if (machine.getSecurity().hasAccess(player)) {
+                if (machine.security().hasAccess(player)) {
                     machine.bubbleVisible = visible;
                 }
             });
@@ -149,7 +149,7 @@ public class GalacticraftServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "tank_modify"), (server, player, handler, buf, responseSender) -> {
             int index = buf.readInt();
             server.execute(() -> {
-                MachineFluidInv inv = ((MachineScreenHandler<?>) player.currentScreenHandler).machine.getFluidInv();
+                MachineFluidInv inv = ((MachineScreenHandler<?>) player.currentScreenHandler).machine.fluidInv();
                 ItemInsertable excess = new FixedInventoryVanillaWrapper(player.getInventory()).getInsertable();
                 Reference<ItemStack> reference = new Reference<>() {
                     @Override

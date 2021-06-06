@@ -99,7 +99,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public FluidAmount getFluidTankCapacity() {
+    public FluidAmount fluidInvCapacity() {
         return MAX_OXYGEN;
     }
 
@@ -119,7 +119,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         FluidAmount oxygenRequired = FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D) + 1);
-        if (!this.getFluidInv().extractFluid(OXYGEN_TANK, null, FluidVolumeUtil.EMPTY, oxygenRequired, Simulation.SIMULATE).amount().equals(oxygenRequired)) return Status.NOT_ENOUGH_OXYGEN;
+        if (!this.fluidInv().extractFluid(OXYGEN_TANK, null, FluidVolumeUtil.EMPTY, oxygenRequired, Simulation.SIMULATE).amount().equals(oxygenRequired)) return Status.NOT_ENOUGH_OXYGEN;
         return Status.DISTRIBUTING;
     }
 
@@ -144,7 +144,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
             }
         }
         if (this.getStatus().getType().isActive()) {
-            this.getFluidInv().extractFluid(OXYGEN_TANK, null, FluidVolumeUtil.EMPTY, FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), Simulation.ACTION);
+            this.fluidInv().extractFluid(OXYGEN_TANK, null, FluidVolumeUtil.EMPTY, FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), Simulation.ACTION);
             if (!world.isClient()) {
                 if (size < targetSize) {
                     setSize(size + 0.05D);
@@ -211,19 +211,19 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     protected void drainOxygenFromStack(int slot) {
-        if (this.getFluidInv().getInvFluid(0).amount().compareTo(this.getFluidInv().getMaxAmount_F(0)) >= 0) {
+        if (this.fluidInv().getInvFluid(0).amount().compareTo(this.fluidInv().getMaxAmount_F(0)) >= 0) {
             return;
         }
-        if (FluidUtil.canExtractFluids(this.getInventory().getSlot(slot))) {
-            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(this.getInventory().getSlot(slot));
-            this.getFluidInv().insertFluid(OXYGEN_TANK, extractable.attemptExtraction(Constant.Filter.LOX_ONLY, this.getFluidInv().getMaxAmount_F(0).sub(this.getFluidInv().getInvFluid(0).amount()), Simulation.ACTION), Simulation.ACTION);
+        if (FluidUtil.canExtractFluids(this.itemInv().getSlot(slot))) {
+            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(this.itemInv().getSlot(slot));
+            this.fluidInv().insertFluid(OXYGEN_TANK, extractable.attemptExtraction(Constant.Filter.LOX_ONLY, this.fluidInv().getMaxAmount_F(0).sub(this.fluidInv().getInvFluid(0).amount()), Simulation.ACTION), Simulation.ACTION);
         }
     }
 
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new BubbleDistributorScreenHandler(syncId, player, this);
+        if (this.security().hasAccess(player)) return new BubbleDistributorScreenHandler(syncId, player, this);
         return null;
     }
 

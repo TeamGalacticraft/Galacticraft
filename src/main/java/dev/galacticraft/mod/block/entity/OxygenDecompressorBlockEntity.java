@@ -74,7 +74,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public FluidAmount getFluidTankCapacity() {
+    public FluidAmount fluidInvCapacity() {
         return MAX_OXYGEN;
     }
 
@@ -98,7 +98,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        OxygenTank tank = OxygenTankUtil.getOxygenTank(this.getInventory().getSlot(TANK_SLOT));
+        OxygenTank tank = OxygenTankUtil.getOxygenTank(this.itemInv().getSlot(TANK_SLOT));
         if (tank == EmptyOxygenTank.NULL) return Status.NOT_ENOUGH_ITEMS;
         if (tank.getAmount() <= 0) return Status.EMPTY_CANISTER;
         if (this.isTankFull(0)) return Status.FULL;
@@ -108,8 +108,8 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     @Override
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
-            OxygenTank tank = OxygenTankUtil.getOxygenTank(this.getInventory().getSlot(TANK_SLOT));
-            OxygenTankUtil.insertLiquidOxygen(tank, this.getFluidInv().insertFluid(0, OxygenTankUtil.extractLiquidOxygen(tank, 1620 / (20 * 5)), Simulation.ACTION));
+            OxygenTank tank = OxygenTankUtil.getOxygenTank(this.itemInv().getSlot(TANK_SLOT));
+            OxygenTankUtil.insertLiquidOxygen(tank, this.fluidInv().insertFluid(0, OxygenTankUtil.extractLiquidOxygen(tank, 1620 / (20 * 5)), Simulation.ACTION));
         }
     }
 
@@ -121,7 +121,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER, syncId, inv, this);
+        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER, syncId, inv, this);
         return null;
     }
 

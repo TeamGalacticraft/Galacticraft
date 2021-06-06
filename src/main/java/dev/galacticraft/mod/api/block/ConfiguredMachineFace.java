@@ -64,7 +64,7 @@ public class ConfiguredMachineFace {
         if (machine.canInsertEnergy()) if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.POWER_INPUT)) list.add(AutomationType.POWER_INPUT);
         if (machine.canExtractEnergy()) if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.POWER_OUTPUT)) list.add(AutomationType.POWER_OUTPUT);
 
-        for (SlotType type : machine.getFluidInv().getTypes()) {
+        for (SlotType type : machine.fluidInv().getTypes()) {
             if (type.getType().isBidirectional()) {
                 if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.FLUID_INPUT)) list.add(AutomationType.FLUID_INPUT);
                 if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.FLUID_OUTPUT)) list.add(AutomationType.FLUID_OUTPUT);
@@ -73,7 +73,7 @@ public class ConfiguredMachineFace {
             }
         }
 
-        for (SlotType type : machine.getInventory().getTypes()) {
+        for (SlotType type : machine.itemInv().getTypes()) {
             if (type.getType().isBidirectional()) {
                 if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.ITEM_INPUT)) list.add(AutomationType.ITEM_INPUT);
                 if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.ITEM_OUTPUT)) list.add(AutomationType.ITEM_OUTPUT);

@@ -77,7 +77,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
 
     public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.CIRCUIT_FABRICATOR, pos, state);
-        this.recipeSlotInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
+        this.recipeSlotInv = new InventoryFixedWrapper(this.itemInv().getMappedInv(INPUT_SLOT)) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
                 return getWrappedInventory().canPlayerUse(player);
@@ -117,7 +117,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         for (int i = 1; i < 6; i++) {
-            if (!this.getFilterForSlot(i).matches(getInventory().getInvStack(i))) {
+            if (!this.getFilterForSlot(i).matches(itemInv().getInvStack(i))) {
                 return Status.NOT_ENOUGH_RESOURCES;
             }
         }
@@ -134,13 +134,13 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
         }
         this.progress++;
         if (this.progress >= this.getMaxProgress()) {
-            if (this.getInventory().extractStack(INPUT_SLOT_DIAMOND, this.getFilterForSlot(INPUT_SLOT_DIAMOND), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
-            if (this.getInventory().extractStack(INPUT_SLOT_SILICON, this.getFilterForSlot(INPUT_SLOT_SILICON), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
-            if (this.getInventory().extractStack(INPUT_SLOT_SILICON_2, this.getFilterForSlot(INPUT_SLOT_SILICON_2), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
-            if (this.getInventory().extractStack(INPUT_SLOT_REDSTONE, this.getFilterForSlot(INPUT_SLOT_REDSTONE), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
-            if (this.getInventory().extractStack(INPUT_SLOT, this.getFilterForSlot(INPUT_SLOT), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.itemInv().extractStack(INPUT_SLOT_DIAMOND, this.getFilterForSlot(INPUT_SLOT_DIAMOND), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.itemInv().extractStack(INPUT_SLOT_SILICON, this.getFilterForSlot(INPUT_SLOT_SILICON), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.itemInv().extractStack(INPUT_SLOT_SILICON_2, this.getFilterForSlot(INPUT_SLOT_SILICON_2), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.itemInv().extractStack(INPUT_SLOT_REDSTONE, this.getFilterForSlot(INPUT_SLOT_REDSTONE), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.itemInv().extractStack(INPUT_SLOT, this.getFilterForSlot(INPUT_SLOT), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
             this.progress = 0;
-            this.getInventory().insertStack(OUTPUT_SLOT, this.getRecipe(recipeSlotInv).orElseThrow(RuntimeException::new).getOutput().copy(), Simulation.ACTION);
+            this.itemInv().insertStack(OUTPUT_SLOT, this.getRecipe(recipeSlotInv).orElseThrow(RuntimeException::new).getOutput().copy(), Simulation.ACTION);
         }
     }
 
@@ -178,7 +178,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new CircuitFabricatorScreenHandler(syncId, player, this);
+        if (this.security().hasAccess(player)) return new CircuitFabricatorScreenHandler(syncId, player, this);
         return null;
     }
 

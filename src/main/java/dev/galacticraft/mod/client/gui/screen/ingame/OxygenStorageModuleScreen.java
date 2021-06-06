@@ -55,8 +55,8 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<SimpleMachin
 
         this.drawOxygenBufferBar(matrices);
 
-        drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.current_oxygen", this.handler.machine.getFluidInv().getInvFluid(0).amount().asInt(1000, RoundingMode.HALF_DOWN)), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
-        drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.max_oxygen", this.handler.machine.getFluidInv().getMaxAmount_F(0).asInt(1000, RoundingMode.HALF_DOWN)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.current_oxygen", this.handler.machine.fluidInv().getInvFluid(0).amount().asInt(1000, RoundingMode.HALF_DOWN)), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.max_oxygen", this.handler.machine.fluidInv().getMaxAmount_F(0).asInt(1000, RoundingMode.HALF_DOWN)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
         super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
@@ -68,7 +68,7 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<SimpleMachin
     }
 
     private void drawOxygenBufferBar(MatrixStack matrices) {
-        double oxygenScale = this.handler.machine.getFluidInv().getInvFluid(0).amount().div(this.handler.machine.getFluidInv().getMaxAmount_F(0)).asInexactDouble();
+        double oxygenScale = this.handler.machine.fluidInv().getInvFluid(0).amount().div(this.handler.machine.fluidInv().getMaxAmount_F(0)).asInexactDouble();
 
         this.client.getTextureManager().bindTexture(Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
         this.drawTexture(matrices, this.x + 52, this.y + 57, 176, 0, (int) (72.0D * oxygenScale), 3);

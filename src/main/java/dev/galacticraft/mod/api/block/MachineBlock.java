@@ -101,7 +101,7 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
         if (!world.isClient && placer instanceof PlayerEntity) {
-            ((MachineBlockEntity) world.getBlockEntity(pos)).getSecurity().setOwner(/*((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), */((PlayerEntity) placer)); //todo: teams
+            ((MachineBlockEntity) world.getBlockEntity(pos)).security().setOwner(/*((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), */((PlayerEntity) placer)); //todo: teams
         }
     }
 
@@ -166,11 +166,11 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
         if (!world.isClient) {
             BlockEntity machine = world.getBlockEntity(pos);
             if (machine instanceof MachineBlockEntity) {
-                SecurityInfo security = ((MachineBlockEntity) machine).getSecurity();
+                SecurityInfo security = ((MachineBlockEntity) machine).security();
                 if (security.getOwner() == null) security.setOwner(/*((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), */player); //todo: teams
                 if (security.isOwner(player.getGameProfile())) {
                     security.sendPacket(pos, (ServerPlayerEntity) player);
-                    ((MachineBlockEntity) machine).getRedstoneInteraction().sendPacket(pos, (ServerPlayerEntity) player);
+                    ((MachineBlockEntity) machine).redstoneInteraction().sendPacket(pos, (ServerPlayerEntity) player);
                     NamedScreenHandlerFactory factory = state.createScreenHandlerFactory(world, pos);
 
                     if (factory != null) {
@@ -188,7 +188,7 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
         super.onBreak(world, pos, state, player);
         BlockEntity entity = world.getBlockEntity(pos);
         if (entity instanceof MachineBlockEntity) {
-            FixedItemInv inv = ((MachineBlockEntity) entity).getInventory();
+            FixedItemInv inv = ((MachineBlockEntity) entity).itemInv();
             for (int i = 0; i < inv.getSlotCount(); i++) {
                 ItemStack stack = inv.getInvStack(i);
                 if (!stack.isEmpty()) {

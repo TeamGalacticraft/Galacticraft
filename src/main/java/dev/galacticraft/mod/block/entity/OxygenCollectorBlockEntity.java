@@ -90,7 +90,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public FluidAmount getFluidTankCapacity() {
+    public FluidAmount fluidInvCapacity() {
         return MAX_OXYGEN;
     }
 
@@ -182,7 +182,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         this.collectionAmount = 0;
         if (this.getStatus().getType().isActive()) {
             this.collectionAmount = collectOxygen();
-            this.getFluidInv().insertFluid(OXYGEN_TANK, FluidKeys.get(GalacticraftFluid.LIQUID_OXYGEN).withAmount(FluidAmount.of(collectionAmount, 100)), Simulation.ACTION);
+            this.fluidInv().insertFluid(OXYGEN_TANK, FluidKeys.get(GalacticraftFluid.LIQUID_OXYGEN).withAmount(FluidAmount.of(collectionAmount, 100)), Simulation.ACTION);
         }
     }
 
@@ -194,7 +194,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new OxygenCollectorScreenHandler(syncId, player, this);
+        if (this.security().hasAccess(player)) return new OxygenCollectorScreenHandler(syncId, player, this);
         return null;
     }
 

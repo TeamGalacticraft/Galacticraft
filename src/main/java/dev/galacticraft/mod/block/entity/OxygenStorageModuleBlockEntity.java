@@ -55,7 +55,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public FluidAmount getFluidTankCapacity() {
+    public FluidAmount fluidInvCapacity() {
         return MAX_CAPACITY;
     }
 
@@ -87,7 +87,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER, syncId, inv, this);
+        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER, syncId, inv, this);
         return null;
     }
 }

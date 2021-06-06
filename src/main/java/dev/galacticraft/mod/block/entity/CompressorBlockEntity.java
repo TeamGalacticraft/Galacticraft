@@ -68,7 +68,7 @@ public class CompressorBlockEntity extends MachineBlockEntity {
 
     public CompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.COMPRESSOR, pos, state);
-        this.craftingInv = new InventoryFixedWrapper(this.getInventory().getSubInv(1, 10)) {
+        this.craftingInv = new InventoryFixedWrapper(this.itemInv().getSubInv(1, 10)) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
                 return getWrappedInventory().canPlayerUse(player);
@@ -106,7 +106,7 @@ public class CompressorBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull MachineStatus updateStatus() {
         Optional<CompressingRecipe> optional = this.getRecipe(this.craftingInv);
-        if ((this.fuelLength > 0 || !this.getInventory().getInvStack(FUEL_INPUT_SLOT).isEmpty()) && optional.isPresent()) {
+        if ((this.fuelLength > 0 || !this.itemInv().getInvStack(FUEL_INPUT_SLOT).isEmpty()) && optional.isPresent()) {
             if (this.canInsert(OUTPUT_SLOT, optional.get().getOutput())) {
                 return Status.PROCESSING;
             } else {
@@ -121,7 +121,7 @@ public class CompressorBlockEntity extends MachineBlockEntity {
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
             if (this.fuelLength == 0) {
-                this.fuelLength = FuelRegistry.INSTANCE.get(this.getInventory().extractStack(FUEL_INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem());
+                this.fuelLength = FuelRegistry.INSTANCE.get(this.itemInv().extractStack(FUEL_INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem());
                 this.fuelTime = this.fuelLength;
                 if (this.fuelLength == 0) return;
             }
@@ -180,7 +180,7 @@ public class CompressorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new CompressorScreenHandler(syncId, player, this);
+        if (this.security().hasAccess(player)) return new CompressorScreenHandler(syncId, player, this);
         return null;
     }
 

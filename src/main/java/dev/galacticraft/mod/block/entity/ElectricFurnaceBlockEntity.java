@@ -62,7 +62,7 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntity {
     
     public int cookTime = 0;
     public int cookLength = 0;
-    private final Inventory craftingInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
+    private final Inventory craftingInv = new InventoryFixedWrapper(this.itemInv().getMappedInv(INPUT_SLOT)) {
         @Override
         public boolean canPlayerUse(PlayerEntity player) {
             return getWrappedInventory().canPlayerUse(player);
@@ -116,10 +116,10 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntity {
             }
             if (this.cookTime++ >= this.cookLength) {
                 SmeltingRecipe recipe = this.getRecipe(RecipeType.SMELTING, craftingInv).orElseThrow(AssertionError::new);
-                if (this.getInventory().extractStack(INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+                if (this.itemInv().extractStack(INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
                 this.cookTime = 0;
                 this.cookLength = 0;
-                this.getInventory().insertStack(OUTPUT_SLOT, recipe.getOutput().copy(), Simulation.ACTION);
+                this.itemInv().insertStack(OUTPUT_SLOT, recipe.getOutput().copy(), Simulation.ACTION);
             }
 
         } else {
@@ -135,7 +135,7 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new ElectricFurnaceScreenHandler(syncId, player, this);
+        if (this.security().hasAccess(player)) return new ElectricFurnaceScreenHandler(syncId, player, this);
         return null;
     }
 

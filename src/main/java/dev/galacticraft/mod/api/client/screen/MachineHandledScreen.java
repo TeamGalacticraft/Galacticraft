@@ -221,7 +221,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
         this.spriteProvider = MachineBakedModel.SPRITE_PROVIDERS.getOrDefault(handler.machine.getCachedState() == null ? world.getBlockState(pos).getBlock() : handler.machine.getCachedState().getBlock(), MachineBakedModel.SpriteProvider.DEFAULT);
 
-        MinecraftClient.getInstance().getSkinProvider().loadSkin(handler.machine.getSecurity().getOwner(), (type, identifier, texture) -> {
+        MinecraftClient.getInstance().getSkinProvider().loadSkin(handler.machine.security().getOwner(), (type, identifier, texture) -> {
             if (type == MinecraftProfileTexture.Type.SKIN && identifier != null) {
                 MachineHandledScreen.this.ownerSkin = identifier;
             }
@@ -251,9 +251,9 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             if (Tab.REDSTONE.isOpen()) {
                 matrices.push();
                 matrices.translate(-PANEL_WIDTH, SPACING, 0);
-                this.drawButton(matrices, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.IGNORE);
-                this.drawButton(matrices, REDSTONE_LOW_X, REDSTONE_LOW_Y, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.LOW);
-                this.drawButton(matrices, REDSTONE_HIGH_X, REDSTONE_HIGH_Y, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.HIGH);
+                this.drawButton(matrices, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.redstoneInteraction() == RedstoneInteractionType.IGNORE);
+                this.drawButton(matrices, REDSTONE_LOW_X, REDSTONE_LOW_Y, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.redstoneInteraction() == RedstoneInteractionType.LOW);
+                this.drawButton(matrices, REDSTONE_HIGH_X, REDSTONE_HIGH_Y, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.redstoneInteraction() == RedstoneInteractionType.HIGH);
                 this.renderItemIcon(matrices, PANEL_ICON_X, PANEL_ICON_Y, REDSTONE);
                 this.renderItemIcon(matrices, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, REDSTONE);
                 this.renderItemIcon(matrices, REDSTONE_LOW_X, REDSTONE_LOW_Y - 2, UNLIT_TORCH);
@@ -262,7 +262,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.redstone")
                         .setStyle(Constant.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtil.WHITE);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.redstone.state",
-                        machine.getRedstoneInteraction().getName()).setStyle(Constant.Text.DARK_GRAY_STYLE), REDSTONE_STATE_TEXT_X, REDSTONE_STATE_TEXT_Y, ColorUtil.WHITE);
+                        machine.redstoneInteraction().getName()).setStyle(Constant.Text.DARK_GRAY_STYLE), REDSTONE_STATE_TEXT_X, REDSTONE_STATE_TEXT_Y, ColorUtil.WHITE);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.redstone.status",
                         !machine.disabled() ? new TranslatableText("ui.galacticraft.machine.redstone.status.enabled").setStyle(Constant.Text.GREEN_STYLE)
                                 : new TranslatableText("ui.galacticraft.machine.redstone.status.disabled").setStyle(Constant.Text.DARK_RED_STYLE))
@@ -314,9 +314,9 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.client.getTextureManager().bindTexture(Constant.ScreenTexture.MACHINE_CONFIG_PANELS);
                 this.drawTexture(matrices, PANEL_ICON_X, PANEL_ICON_Y, ICON_LOCK_PRIVATE_U, ICON_LOCK_PRIVATE_V, ICON_WIDTH, ICON_HEIGHT);
 
-                this.drawButton(matrices, SECURITY_PUBLIC_X, SECURITY_PUBLIC_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PUBLIC || !machine.getSecurity().isOwner(this.handler.player));
-                this.drawButton(matrices, SECURITY_TEAM_X, SECURITY_TEAM_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.TEAM || !machine.getSecurity().isOwner(this.handler.player));
-                this.drawButton(matrices, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PRIVATE || !machine.getSecurity().isOwner(this.handler.player));
+                this.drawButton(matrices, SECURITY_PUBLIC_X, SECURITY_PUBLIC_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.security().getAccessibility() == SecurityInfo.Accessibility.PUBLIC || !machine.security().isOwner(this.handler.player));
+                this.drawButton(matrices, SECURITY_TEAM_X, SECURITY_TEAM_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.security().getAccessibility() == SecurityInfo.Accessibility.TEAM || !machine.security().isOwner(this.handler.player));
+                this.drawButton(matrices, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.security().getAccessibility() == SecurityInfo.Accessibility.PRIVATE || !machine.security().isOwner(this.handler.player));
                 this.drawTexture(matrices, SECURITY_PUBLIC_X, SECURITY_PUBLIC_Y, ICON_LOCK_PRIVATE_U, ICON_LOCK_PRIVATE_V, ICON_WIDTH, ICON_HEIGHT);
                 this.drawTexture(matrices, SECURITY_TEAM_X, SECURITY_TEAM_Y, ICON_LOCK_PARTY_U, ICON_LOCK_PARTY_V, ICON_WIDTH, ICON_HEIGHT);
                 this.drawTexture(matrices, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, ICON_LOCK_PUBLIC_U, ICON_LOCK_PUBLIC_V, ICON_WIDTH, ICON_HEIGHT);
@@ -324,7 +324,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.security")
                         .setStyle(Constant.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtil.WHITE);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.security.state",
-                        machine.getSecurity().getAccessibility().getName()).setStyle(Constant.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y, ColorUtil.WHITE);
+                        machine.security().getAccessibility().getName()).setStyle(Constant.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y, ColorUtil.WHITE);
 //                assert machine.getSecurity().getOwner() != null;
 //                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft.machine.security.owned_by", machine.getSecurity().getOwner().getName())
 //                        .setStyle(Constants.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y + this.textRenderer.fontHeight + 4, ColorUtils.WHITE);
@@ -498,7 +498,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 return true;
             }
 
-            if (machine.getSecurity().isOwner(this.handler.player)) {
+            if (machine.security().isOwner(this.handler.player)) {
                 if (this.check(mouseX, mouseY, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                     this.setAccessibility(SecurityInfo.Accessibility.PRIVATE);
                     this.playButtonSound();
@@ -529,7 +529,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     protected void setAccessibility(SecurityInfo.Accessibility accessibility) {
-        this.handler.machine.getSecurity().setAccessibility(accessibility);
+        this.handler.machine.security().setAccessibility(accessibility);
         ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "security_config"), new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer((Long.SIZE / Byte.SIZE) + 1).writeByte(accessibility.ordinal())));
     }
 
@@ -602,8 +602,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         mouseY -= SPACING;
         if (Tab.STATS.isOpen()) {
             if (this.check(mouseX, mouseY, OWNER_FACE_X, OWNER_FACE_Y, OWNER_FACE_WIDTH, OWNER_FACE_HEIGHT)) {
-                assert machine.getSecurity().getOwner() != null;
-                this.renderTooltip(matrices, new LiteralText(machine.getSecurity().getOwner().getName()), mX, mY);
+                assert machine.security().getOwner() != null;
+                this.renderTooltip(matrices, new LiteralText(machine.security().getOwner().getName()), mX, mY);
             }
         } else {
             if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
@@ -616,7 +616,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             mouseX -= this.backgroundWidth;
             mouseY -= TAB_HEIGHT + SPACING + SPACING;
 
-            if (machine.getSecurity().isOwner(this.handler.player)) {
+            if (machine.security().isOwner(this.handler.player)) {
                 if (this.check(mouseX, mouseY, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                     this.renderTooltip(matrices, SecurityInfo.Accessibility.PRIVATE.getName(), mX, mY);
                 }
@@ -667,7 +667,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         assert this.client != null;
-        if (this.handler.machine == null || !this.handler.machine.getSecurity().hasAccess(handler.player)) {
+        if (this.handler.machine == null || !this.handler.machine.security().hasAccess(handler.player)) {
             this.onClose();
             return;
         }
@@ -711,7 +711,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         color = getItemColor(matrices, mouseX, mouseY);;
         color.defaultReturnValue(-1);
         for (Slot slot : this.handler.slots) {
-            if (slot.inventory instanceof InventoryFixedWrapper && ((InventoryFixedWrapper) slot.inventory).getWrapped() == this.handler.machine.getInventory()) {
+            if (slot.inventory instanceof InventoryFixedWrapper && ((InventoryFixedWrapper) slot.inventory).getWrapped() == this.handler.machine.itemInv()) {
                 if (color.get(slot.index) != -1) {
                     RenderSystem.disableDepthTest();
                     int c = color.get(slot.index);
@@ -734,27 +734,27 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             mouseY -= this.y + TAB_HEIGHT + SPACING;
             Int2IntArrayMap out = new Int2IntArrayMap();
             if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching() != null) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.getFluidInv()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.fluidInv()));
                 groupFluid(out, list);
             }
             if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching() != null) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.handler.machine.getFluidInv()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.handler.machine.fluidInv()));
                 groupFluid(out, list);
             }
             if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching() != null) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.handler.machine.getFluidInv()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.handler.machine.fluidInv()));
                 groupFluid(out, list);
             }
             if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching() != null) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.handler.machine.getFluidInv()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.handler.machine.fluidInv()));
                 groupFluid(out, list);
             }
             if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching() != null) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.handler.machine.getFluidInv()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.handler.machine.fluidInv()));
                 groupFluid(out, list);
             }
             if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching() != null) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getFluidInv()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.handler.machine.fluidInv()));
                 groupFluid(out, list);
             }
             return out;
@@ -768,27 +768,27 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             mouseY -= this.y + TAB_HEIGHT + SPACING;
             Int2IntArrayMap out = new Int2IntArrayMap();
             if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching() != null) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.itemInv()));
                 groupItem(out, list);
             }
             if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching() != null) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.handler.machine.itemInv()));
                 groupItem(out, list);
             }
             if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching() != null) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.handler.machine.itemInv()));
                 groupItem(out, list);
             }
             if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching() != null) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.handler.machine.itemInv()));
                 groupItem(out, list);
             }
             if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching() != null) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.handler.machine.itemInv()));
                 groupItem(out, list);
             }
             if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16) && this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching() != null) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.handler.machine.itemInv()));
                 groupItem(out, list);
             }
             return out;
@@ -799,7 +799,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     private void groupFluid(Int2IntMap out, IntList list) {
         for (Tank tank : this.handler.tanks) {
             if (list.contains(tank.index)) {
-                out.put(tank.index, this.handler.machine.getFluidInv().getTypes()[tank.index].getColor().getRgb());
+                out.put(tank.index, this.handler.machine.fluidInv().getTypes()[tank.index].getColor().getRgb());
             }
         }
     }
@@ -807,7 +807,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     private void groupItem(Int2IntMap out, IntList list) {
         for (Slot slot : this.handler.slots) {
             if (list.contains(slot.index)) {
-                out.put(slot.index, this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
+                out.put(slot.index, this.handler.machine.itemInv().getTypes()[slot.index].getColor().getRgb());
             }
         }
     }
@@ -817,27 +817,27 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             mouseX -= PANEL_WIDTH + this.x;
             mouseY -= this.y + TAB_HEIGHT + SPACING;
             if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.itemInv()));
                 groupStack(matrices, list);
             }
             if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.handler.machine.itemInv()));
                 groupStack(matrices, list);
             }
             if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.handler.machine.itemInv()));
                 groupStack(matrices, list);
             }
             if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.handler.machine.itemInv()));
                 groupStack(matrices, list);
             }
             if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.handler.machine.itemInv()));
                 groupStack(matrices, list);
             }
             if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.handler.machine.itemInv()));
                 groupStack(matrices, list);
             }
         }
@@ -862,32 +862,32 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 slot.x - 1, slot.y - 1,
                 slot.x - 1, slot.y + 17,
                 this.getZOffset(),
-                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
-                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
+                this.handler.machine.itemInv().getTypes()[slot.index].getColor().getRgb(),
+                this.handler.machine.itemInv().getTypes()[slot.index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getModel(), bufferBuilder,
                 slot.x - 1, slot.y + 17,
                 slot.x + 17, slot.y - 1,
                 this.getZOffset(),
-                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
-                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
+                this.handler.machine.itemInv().getTypes()[slot.index].getColor().getRgb(),
+                this.handler.machine.itemInv().getTypes()[slot.index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getModel(), bufferBuilder,
                 slot.x + 17, slot.y + 17,
                 slot.x + 17, slot.y - 1,
                 this.getZOffset(),
-                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
-                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
+                this.handler.machine.itemInv().getTypes()[slot.index].getColor().getRgb(),
+                this.handler.machine.itemInv().getTypes()[slot.index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getModel(), bufferBuilder,
                 slot.x + 17, slot.y - 1,
                 slot.x - 1, slot.y - 1,
                 this.getZOffset(),
-                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb(),
-                this.handler.machine.getInventory().getTypes()[slot.index].getColor().getRgb());
+                this.handler.machine.itemInv().getTypes()[slot.index].getColor().getRgb(),
+                this.handler.machine.itemInv().getTypes()[slot.index].getColor().getRgb());
         tessellator.draw();
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.enableDepthTest();
@@ -942,7 +942,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     public boolean isAllowed() {
         if (this.handler.machine != null) {
-            return handler.machine.getSecurity().hasAccess(handler.player);
+            return handler.machine.security().hasAccess(handler.player);
         }
         return false;
     }

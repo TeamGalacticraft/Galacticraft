@@ -49,12 +49,12 @@ public abstract class MachineScreenHandler<T extends MachineBlockEntity> extends
         super(handlerType, syncId);
         this.player = player;
         this.machine = machine;
-        this.machine.getInventory().createSlots(this);
-        this.machine.getFluidInv().createTanks(this);
-        this.addProperties(new FluidTankPropertyDelegate(machine.getFluidInv()));
+        this.machine.itemInv().createSlots(this);
+        this.machine.fluidInv().createTanks(this);
+        this.addProperties(new FluidTankPropertyDelegate(machine.fluidInv()));
 
         this.addProperty(new StatusProperty(machine));
-        this.addProperty(new CapacitorProperty(machine.getCapacitor()));
+        this.addProperty(new CapacitorProperty(machine.capacitor()));
     }
 
     @Override
@@ -70,11 +70,11 @@ public abstract class MachineScreenHandler<T extends MachineBlockEntity> extends
                 return stack;
             }
 
-            if (slotId < this.machine.getInventory().getSlotCount()) {
-                if (!this.insertItem(stack1, this.machine.getInventory().getSlotCount(), this.slots.size(), true)) {
+            if (slotId < this.machine.itemInv().getSlotCount()) {
+                if (!this.insertItem(stack1, this.machine.itemInv().getSlotCount(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(stack1, 0, this.machine.getInventory().getSlotCount(), false)) {
+            } else if (!this.insertItem(stack1, 0, this.machine.itemInv().getSlotCount(), false)) {
                 return ItemStack.EMPTY;
             }
             if (stack1.getCount() == 0) {
@@ -105,7 +105,7 @@ public abstract class MachineScreenHandler<T extends MachineBlockEntity> extends
 
     @Override
     public boolean canUse(PlayerEntity player) {
-        return machine.getSecurity().hasAccess(player);
+        return machine.security().hasAccess(player);
     }
 
     public Tank addTank(Tank tank) {

@@ -48,7 +48,7 @@ import java.util.List;
 public class AdvancedSolarPanelScreen extends MachineHandledScreen<SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity>> {
     public AdvancedSolarPanelScreen(SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
-        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override

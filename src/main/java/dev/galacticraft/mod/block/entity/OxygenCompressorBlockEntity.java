@@ -75,7 +75,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public FluidAmount getFluidTankCapacity() {
+    public FluidAmount fluidInvCapacity() {
         return MAX_OXYGEN;
     }
 
@@ -98,8 +98,8 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.getFluidInv().getInvFluid(OXYGEN_TANK).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
-        OxygenTank tank = OxygenTankUtil.getOxygenTank(this.getInventory().getSlot(1));
+        if (this.fluidInv().getInvFluid(OXYGEN_TANK).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
+        OxygenTank tank = OxygenTankUtil.getOxygenTank(this.itemInv().getSlot(1));
         if (tank == EmptyOxygenTank.NULL) return Status.NOT_ENOUGH_ITEMS;
         if (tank.getCapacity() >= tank.getCapacity()) return Status.CONTAINER_FULL;
         return Status.COMPRESSING;
@@ -108,8 +108,8 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     @Override
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
-            OxygenTank tank = OxygenTankUtil.getOxygenTank(this.getInventory().getSlot(1));
-            this.getFluidInv().insertFluid(OXYGEN_TANK, OxygenTankUtil.insertLiquidOxygen(tank, this.getFluidInv().attemptExtraction(Constant.Filter.LOX_ONLY, FluidAmount.of1620(1620 / 60), Simulation.ACTION)), Simulation.ACTION);
+            OxygenTank tank = OxygenTankUtil.getOxygenTank(this.itemInv().getSlot(1));
+            this.fluidInv().insertFluid(OXYGEN_TANK, OxygenTankUtil.insertLiquidOxygen(tank, this.fluidInv().attemptExtraction(Constant.Filter.LOX_ONLY, FluidAmount.of1620(1620 / 60), Simulation.ACTION)), Simulation.ACTION);
         }
     }
 
@@ -121,7 +121,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER, syncId, inv, this);
+        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER, syncId, inv, this);
         return null;
     }
 

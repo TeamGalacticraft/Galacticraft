@@ -119,7 +119,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
             if (face == BlockFace.FRONT || face == BlockFace.BACK) {
                 double energy;
                 if (machine != null) {
-                    energy = machine.getCapacitor().getEnergy();
+                    energy = machine.capacitor().getEnergy();
                 } else {
                     if (stack.getTag() != null && stack.getTag().contains(Constant.Nbt.ENERGY, NbtType.COMPOUND)) {
                         energy = stack.getTag().getInt(Constant.Nbt.ENERGY);
@@ -142,7 +142,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
             if (face == BlockFace.FRONT || face == BlockFace.BACK) {
                 FluidVolume volume;
                 if (machine != null) {
-                    volume = machine.getFluidInv().getInvFluid(0);
+                    volume = machine.fluidInv().getInvFluid(0);
                 } else {
                     if (stack.getTag() != null && stack.getTag().contains(Constant.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
                         if (stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).contains("tanks", NbtType.LIST)) {

@@ -46,7 +46,7 @@ public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceS
 
     public ElectricFurnaceScreen(ElectricFurnaceScreenHandler screenHandler, PlayerInventory playerInventory, Text title) {
         super(screenHandler, playerInventory, screenHandler.machine.getWorld(), screenHandler.machine.getPos(), title);
-        addWidget(new CapacitorWidget(screenHandler.machine.getCapacitor(), 8, 29, 48, this::getEnergyTooltipLines, screenHandler.machine::getStatus));
+        addWidget(new CapacitorWidget(screenHandler.machine.capacitor(), 8, 29, 48, this::getEnergyTooltipLines, screenHandler.machine::getStatus));
     }
 
     @Override

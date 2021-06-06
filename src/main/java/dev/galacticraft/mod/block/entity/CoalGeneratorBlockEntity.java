@@ -96,8 +96,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
 
     @Override
     public @NotNull MachineStatus updateStatus() {
-        if (this.fuelLength == 0 && this.getInventory().getInvStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
-        if (this.getCapacitor().getEnergy() >= this.getCapacitor().getMaxCapacity()) return Status.FULL;
+        if (this.fuelLength == 0 && this.itemInv().getInvStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
+        if (this.capacitor().getEnergy() >= this.capacitor().getMaxCapacity()) return Status.FULL;
         if (this.heat < 1 && this.fuelLength > 0) return Status.WARMING;
         if (this.heat > 0 && this.fuelLength == 0) return Status.COOLING;
         return Status.ACTIVE;
@@ -132,7 +132,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
             }
             if (this.fuelLength == 0) {
                 this.fuelTime = 0;
-                this.fuelLength = FUEL_MAP.getOrDefault(getInventory().extractStack(FUEL_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem(), 0);
+                this.fuelLength = FUEL_MAP.getOrDefault(itemInv().extractStack(FUEL_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem(), 0);
                 if (this.fuelLength == 0) return;
             }
 
@@ -146,7 +146,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.COAL_GENERATOR_HANDLER, syncId, inv, this);
+        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.COAL_GENERATOR_HANDLER, syncId, inv, this);
         return null;
     }
 

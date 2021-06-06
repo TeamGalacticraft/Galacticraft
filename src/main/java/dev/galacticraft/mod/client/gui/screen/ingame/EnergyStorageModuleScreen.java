@@ -42,7 +42,7 @@ import net.minecraft.util.Formatting;
 public class EnergyStorageModuleScreen extends MachineHandledScreen<SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity>> {
     public EnergyStorageModuleScreen(SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
-        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 54, 20, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 54, 20, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override
