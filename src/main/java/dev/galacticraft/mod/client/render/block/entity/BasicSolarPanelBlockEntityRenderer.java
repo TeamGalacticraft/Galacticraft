@@ -22,12 +22,12 @@
 
 package dev.galacticraft.mod.client.render.block.entity;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.BasicSolarPanelBlockEntity;
 import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLayer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -76,7 +76,7 @@ public class BasicSolarPanelBlockEntityRenderer implements BlockEntityRenderer<B
 
         matrices.push();
         matrices.translate(0.5F, 1.0F, 0.5F);
-        MinecraftClient.getInstance().getTextureManager().bindTexture(BasicSolarPanelBlockEntityRenderer.TEXTURE);
+        RenderSystem.setShaderTexture(0, BasicSolarPanelBlockEntityRenderer.TEXTURE);
         this.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(TEXTURE)), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
         matrices.pop();
     }

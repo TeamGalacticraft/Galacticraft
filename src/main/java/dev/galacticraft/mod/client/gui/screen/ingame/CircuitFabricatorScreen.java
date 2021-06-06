@@ -22,12 +22,14 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.CircuitFabricatorScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -85,7 +87,9 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         this.drawProgressBar(matrices);
@@ -103,7 +107,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     //24 + 19 + 18 + 65 + 14 = 140
     private void drawProgressBar(MatrixStack matrices) {
         assert this.client != null;
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         if (this.handler.machine.getProgress() > 0) {
             int progress = (int) ((((double) this.handler.machine.getProgress()) / ((double) this.handler.machine.getMaxProgress())) * 140.0);
             if (progress <= 24) {

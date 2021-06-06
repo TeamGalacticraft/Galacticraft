@@ -79,7 +79,7 @@
 //
 //            public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 //                DiffuseLighting.disableGuiDepthLighting();
-//                MinecraftClient.getInstance().getTextureManager().bindTexture(DefaultFabricationCategory.DISPLAY_TEXTURE);
+//                RenderSystem.setShaderTexture(0, DefaultFabricationCategory.DISPLAY_TEXTURE);
 //                this.drawTexture(matrices, startPoint.x, startPoint.y, 0, 0, 162, 82);
 //
 //                int height = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);

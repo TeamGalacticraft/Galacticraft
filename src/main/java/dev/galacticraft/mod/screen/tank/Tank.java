@@ -159,7 +159,7 @@ public class Tank {
     public void render(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY, boolean coloured, Int2IntMap color) {
         if (this.scale == 0) return;
         int[] data = this.getPositionData();
-        MinecraftClient.getInstance().getTextureManager().bindTexture(Constant.ScreenTexture.OVERLAY);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
         if (coloured) {
             int c = color.get(this.index);
             MachineHandledScreen.drawTextureColor(matrices, this.x, this.y, 0, data[0], data[1] + Constant.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constant.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128, c >> 16 & 0xFF, c >> 8 & 0xFF, c & 0xFF, 80);
@@ -172,10 +172,10 @@ public class Tank {
         matrices.push();
         double scale = content.amount().div(this.inv.getMaxAmount_F(this.index)).asInexactDouble();
         Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getRawFluid()).getFluidSprites(world, pos, content.getRawFluid().getDefaultState())[0];
-        client.getTextureManager().bindTexture(sprite.getAtlas().getId());
+        RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
         drawSprite(matrices, this.x + 1, this.y + (float)(-(data[2] - 1) * scale) + data[2] - 1, 0, Constant.TextureCoordinate.FLUID_TANK_WIDTH - 1, (float)((data[2] - 1) * scale), sprite);
         matrices.pop();
-        client.getTextureManager().bindTexture(Constant.ScreenTexture.OVERLAY);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
         DrawableHelper.drawTexture(matrices, this.x, this.y, 0, data[0], data[1], Constant.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128);
     }
 

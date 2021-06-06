@@ -87,7 +87,7 @@ public class OxygenTank extends Tank {
             RenderSystem.enableTexture();
         }
 
-        MinecraftClient.getInstance().getTextureManager().bindTexture(Constant.ScreenTexture.OVERLAY);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
         texturedQuad(matrices, x, y, Constant.TextureCoordinate.OXYGEN_DARK_X, Constant.TextureCoordinate.OXYGEN_DARK_Y, Constant.TextureCoordinate.OVERLAY_HEIGHT);
         texturedQuad(matrices, x, y + Constant.TextureCoordinate.OVERLAY_HEIGHT - (Constant.TextureCoordinate.OVERLAY_HEIGHT * scale), Constant.TextureCoordinate.OXYGEN_LIGHT_X, Constant.TextureCoordinate.OXYGEN_LIGHT_Y, Constant.TextureCoordinate.OVERLAY_HEIGHT * scale);
     }

@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
 import dev.galacticraft.mod.item.GalacticraftItems;
@@ -31,6 +32,7 @@ import dev.galacticraft.mod.util.OxygenTankUtil;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
@@ -88,7 +90,9 @@ public class GalacticraftPlayerInventoryScreen extends HandledScreen<Galacticraf
 
     @Override
     public void drawBackground(MatrixStack matrices, float v, int mouseX, int mouseY) {
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.PLAYER_INVENTORY_SCREEN);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.PLAYER_INVENTORY_SCREEN);
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         OxygenTank tank1 = OxygenTankUtil.getOxygenTank(this.handler.inventory.getSlot(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_1_SLOT));
         OxygenTank tank2 = OxygenTankUtil.getOxygenTank(this.handler.inventory.getSlot(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_2_SLOT));
@@ -97,7 +101,7 @@ public class GalacticraftPlayerInventoryScreen extends HandledScreen<Galacticraf
         this.drawOxygenBuffer(matrices, this.x + 152, this.y + 8, this.getZOffset(), tank2.getAmount(), tank2.getCapacity());
 
         InventoryScreen.drawEntity(this.x + 51, this.y + 75, 30, (float) (this.x + 51) - mouseX, (float) (this.y + 75 - 50) - mouseY, this.client.player);
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.PLAYER_INVENTORY_TABS);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.PLAYER_INVENTORY_TABS);
         this.drawTexture(matrices, this.x, this.y - 28, 0, 32, 57, 62);
     }
 }

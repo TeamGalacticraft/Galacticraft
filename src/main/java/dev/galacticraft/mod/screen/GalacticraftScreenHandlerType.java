@@ -168,8 +168,8 @@ public class GalacticraftScreenHandlerType {
     @SuppressWarnings({"ConstantConditions", "unchecked"}) // class will extend accessor
     public static <B extends MachineBlockEntity, T extends MachineScreenHandler<B>> T create(ExtendedScreenHandlerType<T> type, int syncId, PlayerInventory inventory, B machine) {
         ScreenHandlerRegistry.ExtendedClientHandlerFactory<T> factory = ((ExtendedScreenHandlerTypeAccessor<T>)(Object) type).getFactory();
-        if (factory instanceof MachineScreenHandlerFactory<B, T> machineScreenHandlerFactory) {
-            return machineScreenHandlerFactory.create(syncId, inventory, machine);
+        if (factory instanceof MachineScreenHandlerFactory) {
+            return ((MachineScreenHandlerFactory<B, T>) factory).create(syncId, inventory, machine);
         } else {
             PacketByteBuf buf = BUFFER.get();
             buf.clear();
