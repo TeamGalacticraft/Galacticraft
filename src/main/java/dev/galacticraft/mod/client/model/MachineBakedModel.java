@@ -168,7 +168,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
 
         register(GalacticraftBlock.OXYGEN_SEALER, (machine, stack, face, atlas, view, pos) -> {
             if (face == BlockFace.TOP) return atlas.apply(new Identifier(Constant.MOD_ID, "block/oxygen_sealer_top"));
-            if (face.isHorizontal()) atlas.apply(MACHINE_SIDE);
+            if (face.horizontal()) atlas.apply(MACHINE_SIDE);
             return atlas.apply(MACHINE);
         });
 
@@ -261,7 +261,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     @FunctionalInterface
     public interface SpriteProvider {
         SpriteProvider DEFAULT = (machine, stack, face, atlas, view, pos) -> {
-            if (face.isHorizontal()) return atlas.apply(MACHINE_SIDE);
+            if (face.horizontal()) return atlas.apply(MACHINE_SIDE);
             return atlas.apply(MACHINE);
         };
 
@@ -311,22 +311,15 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     }
 
     public static Sprite getSprite(BlockFace face, MachineBlockEntity machine, ItemStack stack, SpriteProvider provider, AutomationType type) {
-        switch (type) {
-            case FLUID_INPUT:
-                return CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_IN);
-            case POWER_INPUT:
-                return CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_IN);
-            case POWER_OUTPUT:
-                return CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_OUT);
-            case FLUID_OUTPUT:
-                return CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_OUT);
-            case ITEM_INPUT:
-                return CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_IN);
-            case ITEM_OUTPUT:
-                return CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_OUT);
-            default:
-                return provider.getSpritesForState(machine, stack, face, CACHING_SPRITE_ATLAS, null, null);
-        }
+        return switch (type) {
+            case FLUID_INPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_IN);
+            case POWER_INPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_IN);
+            case POWER_OUTPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_OUT);
+            case FLUID_OUTPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_OUT);
+            case ITEM_INPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_IN);
+            case ITEM_OUTPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_OUT);
+            default -> provider.getSpritesForState(machine, stack, face, CACHING_SPRITE_ATLAS, null, null);
+        };
     }
 
     public record FrontFaceSpriteProvider(Identifier sprite) implements SpriteProvider {
@@ -339,7 +332,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
         public @NotNull
         Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos) {
             if (face == BlockFace.FRONT) return atlas.apply(sprite);
-            if (face.isHorizontal()) return atlas.apply(MACHINE_SIDE);
+            if (face.horizontal()) return atlas.apply(MACHINE_SIDE);
             return atlas.apply(MACHINE);
         }
     }
@@ -378,7 +371,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
         public @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos) {
             if (face == BlockFace.FRONT) return atlas.apply(this.front);
             if (face == BlockFace.BACK) return atlas.apply(this.back);
-            if (this.sided && face.isHorizontal()) return atlas.apply(MACHINE_SIDE);
+            if (this.sided && face.horizontal()) return atlas.apply(MACHINE_SIDE);
             return atlas.apply(MACHINE);
         }
     }

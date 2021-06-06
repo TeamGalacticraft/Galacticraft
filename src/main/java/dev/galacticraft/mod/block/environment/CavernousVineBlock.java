@@ -173,15 +173,9 @@ public class CavernousVineBlock extends Block implements Waterloggable {
 
         if (stateAbove.getBlock() == GalacticraftBlock.CAVERNOUS_VINE || stateAbove.getBlock() == GalacticraftBlock.POISONOUS_CAVERNOUS_VINE) {
             switch (stateAbove.get(VINES).getMeta()) {
-                case 0:
-                    world.setBlockState(blockPos, this.getStateManager().getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_1));
-                    break;
-                case 1:
-                    world.setBlockState(blockPos, this.getStateManager().getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_2));
-                    break;
-                default:
-                    world.setBlockState(blockPos, this.getStateManager().getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_0));
-                    break;
+                case 0 -> world.setBlockState(blockPos, this.getStateManager().getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_1));
+                case 1 -> world.setBlockState(blockPos, this.getStateManager().getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_2));
+                default -> world.setBlockState(blockPos, this.getStateManager().getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_0));
             }
         }
     }

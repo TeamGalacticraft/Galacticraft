@@ -74,20 +74,13 @@ public class MachineIOConfig {
      * @return a {@link ConfiguredMachineFace} assignd to the given face.
      */
     public ConfiguredMachineFace get(@NotNull BlockFace face) {
-        switch (face) {
-            case FRONT:
-                return this.front;
-            case TOP:
-                return this.top;
-            case BACK:
-                return this.back;
-            case RIGHT:
-                return this.right;
-            case LEFT:
-                return this.left;
-            case BOTTOM:
-                return this.bottom;
-        }
-        throw new AssertionError();
+        return switch (face) {
+            case FRONT -> this.front;
+            case TOP -> this.top;
+            case BACK -> this.back;
+            case RIGHT -> this.right;
+            case LEFT -> this.left;
+            case BOTTOM -> this.bottom;
+        };
     }
 }

@@ -33,21 +33,19 @@ import org.jetbrains.annotations.NotNull;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public enum BlockFace {
-    FRONT(new TranslatableText("ui.galacticraft.machine.configuration.front"), true, false),
-    RIGHT(new TranslatableText("ui.galacticraft.machine.configuration.right"), true, false),
-    BACK(new TranslatableText("ui.galacticraft.machine.configuration.back"), true, false),
-    LEFT(new TranslatableText("ui.galacticraft.machine.configuration.left"), true, false),
-    TOP(new TranslatableText("ui.galacticraft.machine.configuration.top"), false, true),
-    BOTTOM(new TranslatableText("ui.galacticraft.machine.configuration.bottom"), false, true);
+    FRONT(new TranslatableText("ui.galacticraft.machine.configuration.front"), true),
+    RIGHT(new TranslatableText("ui.galacticraft.machine.configuration.right"), true),
+    BACK(new TranslatableText("ui.galacticraft.machine.configuration.back"), true),
+    LEFT(new TranslatableText("ui.galacticraft.machine.configuration.left"), true),
+    TOP(new TranslatableText("ui.galacticraft.machine.configuration.top"), false),
+    BOTTOM(new TranslatableText("ui.galacticraft.machine.configuration.bottom"), false);
 
     private final MutableText name;
     private final boolean horizontal;
-    private final boolean vertical;
 
-    BlockFace(MutableText name, boolean horizontal, boolean vertical) {
+    BlockFace(MutableText name, boolean horizontal) {
         this.name = name.setStyle(Constant.Text.GOLD_STYLE);
         this.horizontal = horizontal;
-        this.vertical = vertical;
     }
 
     public Text getName() {
@@ -64,58 +62,37 @@ public enum BlockFace {
             return TOP;
         }
 
-        switch (facing) {
-            case NORTH:
-                switch (target) {
-                    case NORTH:
-                        return FRONT;
-                    case EAST:
-                        return RIGHT;
-                    case SOUTH:
-                        return BACK;
-                    case WEST:
-                        return LEFT;
-                }
-                break;
-            case EAST:
-                switch (target) {
-                    case EAST:
-                        return FRONT;
-                    case NORTH:
-                        return LEFT;
-                    case WEST:
-                        return BACK;
-                    case SOUTH:
-                        return RIGHT;
-                }
-                break;
-            case SOUTH:
-                switch (target) {
-                    case SOUTH:
-                        return FRONT;
-                    case WEST:
-                        return RIGHT;
-                    case NORTH:
-                        return BACK;
-                    case EAST:
-                        return LEFT;
-                }
-                break;
-            case WEST:
-                switch (target) {
-                    case WEST:
-                        return FRONT;
-                    case SOUTH:
-                        return LEFT;
-                    case EAST:
-                        return BACK;
-                    case NORTH:
-                        return RIGHT;
-                }
-                break;
-        }
-
-        throw new RuntimeException();
+        return switch (facing) {
+            case NORTH -> switch (target) {
+                case NORTH -> FRONT;
+                case EAST -> RIGHT;
+                case SOUTH -> BACK;
+                case WEST -> LEFT;
+                default -> throw new IllegalStateException("Unexpected value: " + target);
+            };
+            case EAST -> switch (target) {
+                case EAST -> FRONT;
+                case NORTH -> LEFT;
+                case WEST -> BACK;
+                case SOUTH -> RIGHT;
+                default -> throw new IllegalStateException("Unexpected value: " + target);
+            };
+            case SOUTH -> switch (target) {
+                case SOUTH -> FRONT;
+                case WEST -> RIGHT;
+                case NORTH -> BACK;
+                case EAST -> LEFT;
+                default -> throw new IllegalStateException("Unexpected value: " + target);
+            };
+            case WEST -> switch (target) {
+                case WEST -> FRONT;
+                case SOUTH -> LEFT;
+                case EAST -> BACK;
+                case NORTH -> RIGHT;
+                default -> throw new IllegalStateException("Unexpected value: " + target);
+            };
+            default -> throw new IllegalStateException("Unexpected value: " + target);
+        };
     }
 
     @NotNull
@@ -128,83 +105,55 @@ public enum BlockFace {
             return Direction.UP;
         }
 
-        switch (facing) {
-            case NORTH:
-                switch (this) {
-                    case FRONT:
-                        return Direction.NORTH;
-                    case RIGHT:
-                        return Direction.EAST;
-                    case BACK:
-                        return Direction.SOUTH;
-                    case LEFT:
-                        return Direction.WEST;
-                }
-                break;
-            case EAST:
-                switch (this) {
-                    case RIGHT:
-                        return Direction.SOUTH;
-                    case FRONT:
-                        return Direction.EAST;
-                    case LEFT:
-                        return Direction.NORTH;
-                    case BACK:
-                        return Direction.WEST;
-                }
-                break;
-            case SOUTH:
-                switch (this) {
-                    case BACK:
-                        return Direction.NORTH;
-                    case LEFT:
-                        return Direction.EAST;
-                    case FRONT:
-                        return Direction.SOUTH;
-                    case RIGHT:
-                        return Direction.WEST;
-                }
-                break;
-            case WEST:
-                switch (this) {
-                    case LEFT:
-                        return Direction.SOUTH;
-                    case BACK:
-                        return Direction.EAST;
-                    case RIGHT:
-                        return Direction.NORTH;
-                    case FRONT:
-                        return Direction.WEST;
-                }
-                break;
-        }
-
-        throw new RuntimeException();
+        return switch (facing) {
+            case NORTH -> switch (this) {
+                case FRONT -> Direction.NORTH;
+                case RIGHT -> Direction.EAST;
+                case BACK -> Direction.SOUTH;
+                case LEFT -> Direction.WEST;
+                default -> throw new IllegalStateException("Unexpected value: " + this);
+            };
+            case EAST -> switch (this) {
+                case RIGHT -> Direction.SOUTH;
+                case FRONT -> Direction.EAST;
+                case LEFT -> Direction.NORTH;
+                case BACK -> Direction.WEST;
+                default -> throw new IllegalStateException("Unexpected value: " + this);
+            };
+            case SOUTH -> switch (this) {
+                case BACK -> Direction.NORTH;
+                case LEFT -> Direction.EAST;
+                case FRONT -> Direction.SOUTH;
+                case RIGHT -> Direction.WEST;
+                default -> throw new IllegalStateException("Unexpected value: " + this);
+            };
+            case WEST -> switch (this) {
+                case LEFT -> Direction.SOUTH;
+                case BACK -> Direction.EAST;
+                case RIGHT -> Direction.NORTH;
+                case FRONT -> Direction.WEST;
+                default -> throw new IllegalStateException("Unexpected value: " + this);
+            };
+            default -> throw new IllegalStateException("Unexpected value: " + facing);
+        };
     }
 
     public BlockFace getOpposite() {
-        switch (this) {
-            case BOTTOM:
-                return TOP;
-            case TOP:
-                return BOTTOM;
-            case BACK:
-                return FRONT;
-            case LEFT:
-                return RIGHT;
-            case RIGHT:
-                return LEFT;
-            case FRONT:
-                return BACK;
-        }
-        throw new RuntimeException();
+        return switch (this) {
+            case BOTTOM -> TOP;
+            case TOP -> BOTTOM;
+            case BACK -> FRONT;
+            case LEFT -> RIGHT;
+            case RIGHT -> LEFT;
+            case FRONT -> BACK;
+        };
     }
 
-    public boolean isHorizontal() {
-        return horizontal;
+    public boolean horizontal() {
+        return this.horizontal;
     }
 
-    public boolean isVertical() {
-        return vertical;
+    public boolean vertical() {
+        return !this.horizontal;
     }
 }

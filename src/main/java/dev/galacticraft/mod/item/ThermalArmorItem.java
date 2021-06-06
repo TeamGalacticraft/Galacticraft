@@ -61,16 +61,12 @@ public class ThermalArmorItem extends Item {
     }
 
     public int getSlotIdForType(EquipmentSlot slotType) {
-        switch (slotType) {
-            case HEAD:
-                return 0;
-            case CHEST:
-                return 1;
-            case LEGS:
-                return 2;
-            case FEET:
-                return 3;
-        }
-        return -128; //oh no
+        return switch (slotType) {
+            case HEAD -> 0;
+            case CHEST -> 1;
+            case LEGS -> 2;
+            case FEET -> 3;
+            default -> -128;
+        };
     }
 }

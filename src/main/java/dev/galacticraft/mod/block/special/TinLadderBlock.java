@@ -128,17 +128,12 @@ public class TinLadderBlock extends Block {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        switch(state.get(FACING)) {
-            case NORTH:
-                return NORTH_SHAPE;
-            case SOUTH:
-                return SOUTH_SHAPE;
-            case WEST:
-                return WEST_SHAPE;
-            case EAST:
-            default:
-                return EAST_SHAPE;
-        }
+        return switch (state.get(FACING)) {
+            case NORTH -> NORTH_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+            case WEST -> WEST_SHAPE;
+            default -> EAST_SHAPE;
+        };
     }
 
     @Override
