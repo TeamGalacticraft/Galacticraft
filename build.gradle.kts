@@ -121,7 +121,7 @@ repositories {
 
 /**
  * From:
- * @see net.fabricmc.loom.util.FabricApiExtension.getDependencyNotation
+ * @see net.fabricmc.loom.configuration.FabricApiExtension.getDependencyNotation
  */
 fun getFabricApiModule(moduleName: String, fabricApiVersion: String): String {
     return String.format("net.fabricmc.fabric-api:%s:%s", moduleName,
@@ -299,7 +299,7 @@ fun getVersionDecoration(): String {
 fun String.execute(): String {
     print(this)
     val output = ByteArrayOutputStream()
-    rootProject.exec() {
+    rootProject.exec {
         commandLine(split("\\s".toRegex()))
         workingDir = rootProject.projectDir
         isIgnoreExitValue = true
@@ -311,7 +311,7 @@ fun String.execute(): String {
 }
 
 fun String.exitValue(): Int {
-    return rootProject.exec() {
+    return rootProject.exec {
         commandLine(split("\\s".toRegex()))
         workingDir = rootProject.projectDir
         isIgnoreExitValue = true
