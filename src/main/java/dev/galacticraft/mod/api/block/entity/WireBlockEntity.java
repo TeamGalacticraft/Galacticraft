@@ -24,10 +24,10 @@ package dev.galacticraft.mod.api.block.entity;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProviderBlockEntity;
-import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
-import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
-import com.hrznstudio.galacticraft.energy.impl.EmptyEnergyExtractable;
-import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
+import dev.galacticraft.energy.api.EnergyExtractable;
+import dev.galacticraft.energy.api.EnergyInsertable;
+import dev.galacticraft.energy.impl.EmptyEnergyExtractable;
+import dev.galacticraft.energy.impl.RejectingEnergyInsertable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireConnectionType;

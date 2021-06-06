@@ -24,10 +24,10 @@ package dev.galacticraft.mod.api.wire.impl;
 
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
-import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
-import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
+import dev.galacticraft.energy.GalacticraftEnergy;
+import dev.galacticraft.energy.api.EnergyInsertable;
+import dev.galacticraft.energy.impl.DefaultEnergyType;
+import dev.galacticraft.energy.impl.RejectingEnergyInsertable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
@@ -191,7 +191,7 @@ public class WireNetworkImpl implements WireNetwork {
     public int insert(@NotNull BlockPos fromWire, int amount, @NotNull Simulation simulate) {
         if (simulate.isSimulate()) {
             for (EnergyInsertable insertable : this.getInsertable().values()) {
-                amount = insertable.tryInsert(DefaultEnergyType.INSTANCE, amount, simulate);
+                amount = insertable.attemptInsertion(DefaultEnergyType.INSTANCE, amount, simulate);
                 if (amount == 0) return 0;
             }
             return amount;
@@ -199,7 +199,7 @@ public class WireNetworkImpl implements WireNetwork {
         List<EnergyInsertable> nonFullInsertables = new ArrayList<>(this.getInsertable().values());
         int requested = 0;
         for (EnergyInsertable insertable : this.getInsertable().values()) {
-            int failed = insertable.tryInsert(DefaultEnergyType.INSTANCE, amount, Simulation.SIMULATE);
+            int failed = insertable.attemptInsertion(DefaultEnergyType.INSTANCE, amount, Simulation.SIMULATE);
             if (failed == amount) nonFullInsertables.remove(insertable);
             else requested += (amount - failed);
         }
@@ -210,7 +210,7 @@ public class WireNetworkImpl implements WireNetwork {
 
         for (EnergyInsertable insertable : nonFullInsertables) {
             int consumed = Math.min(available, (int) (amount * ratio));
-            consumed -= insertable.tryInsert(DefaultEnergyType.INSTANCE, consumed, simulate);
+            consumed -= insertable.attemptInsertion(DefaultEnergyType.INSTANCE, consumed, simulate);
             available -= consumed;
         }
 

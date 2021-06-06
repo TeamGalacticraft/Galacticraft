@@ -23,9 +23,9 @@
 package dev.galacticraft.mod.attribute.energy;
 
 import alexiil.mc.lib.attributes.Simulation;
-import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
-import com.hrznstudio.galacticraft.energy.api.EnergyType;
-import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
+import dev.galacticraft.energy.api.EnergyInsertable;
+import dev.galacticraft.energy.api.EnergyType;
+import dev.galacticraft.energy.impl.DefaultEnergyType;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +44,7 @@ public class WireEnergyInsertable implements EnergyInsertable {
     }
 
     @Override
-    public int tryInsert(EnergyType type, int amount, Simulation simulation) {
+    public int attemptInsertion(EnergyType type, int amount, Simulation simulation) {
         if (this.network != null) {
             if (this.maxTransfer < amount) {
                 int over = amount - this.maxTransfer;
@@ -56,7 +56,7 @@ public class WireEnergyInsertable implements EnergyInsertable {
     }
 
     @Override
-    public EnergyInsertable asPureInsertable() {
+    public EnergyInsertable getPureInsertable() {
         return this;
     }
 

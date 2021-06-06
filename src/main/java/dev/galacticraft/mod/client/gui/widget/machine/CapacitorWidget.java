@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.client.gui.widget.machine;
 
-import com.hrznstudio.galacticraft.energy.api.CapacitorView;
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.galacticraft.energy.api.CapacitorView;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.util.EnergyUtil;

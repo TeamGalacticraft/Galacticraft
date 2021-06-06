@@ -39,13 +39,13 @@ import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.misc.Reference;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.energy.api.CapacitorView;
-import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
-import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
-import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
-import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
-import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
+import dev.galacticraft.energy.GalacticraftEnergy;
+import dev.galacticraft.energy.api.CapacitorView;
+import dev.galacticraft.energy.api.EnergyExtractable;
+import dev.galacticraft.energy.api.EnergyInsertable;
+import dev.galacticraft.energy.impl.DefaultEnergyType;
+import dev.galacticraft.energy.impl.RejectingEnergyInsertable;
+import dev.galacticraft.energy.impl.SimpleCapacitor;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.WorldRendererAccessor;
@@ -249,12 +249,12 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             ConfiguredMachineFace cso = this.getIOConfig().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction.getOpposite()));
             if (cso.getAutomationType().isEnergy()) {
                 if (cso.getAutomationType().isOutput()) {
-                    return this.capacitor().asPureExtractable();
+                    return this.capacitor().getPureExtractable();
                 }
             }
             return null;
         }
-        return this.capacitor().asPureExtractable();
+        return this.capacitor().getPureExtractable();
     }
 
     public final @Nullable EnergyInsertable getEnergyInsertable(@NotNull BlockState state, @Nullable Direction direction) {
@@ -262,12 +262,12 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             ConfiguredMachineFace cso = this.getIOConfig().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction.getOpposite()));
             if (cso.getAutomationType().isEnergy()) {
                 if (cso.getAutomationType().isInput()) {
-                    return this.capacitor().asPureInsertable();
+                    return this.capacitor().getPureInsertable();
                 }
             }
             return null;
         }
-        return this.capacitor().asPureInsertable();
+        return this.capacitor().getPureInsertable();
     }
 
     public final @Nullable ItemExtractable getItemExtractable(@NotNull BlockState state, @Nullable Direction direction) {
@@ -485,7 +485,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
                     Direction dir = face.toDirection(this.getCachedState().get(Properties.HORIZONTAL_FACING));
                     EnergyInsertable insertable = GalacticraftEnergy.INSERTABLE.getFirst(world, pos.offset(dir), SearchOptions.inDirection(dir.getOpposite()));
                     if (insertable != RejectingEnergyInsertable.NULL) {
-                        this.capacitor().insert(insertable.tryInsert(DefaultEnergyType.INSTANCE, this.capacitor().extract(2048), Simulation.ACTION));
+                        this.capacitor().insert(insertable.attemptInsertion(DefaultEnergyType.INSTANCE, this.capacitor().extract(2048), Simulation.ACTION));
                     }
                 }
             }

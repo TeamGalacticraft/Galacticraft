@@ -41,7 +41,6 @@ val lbaVersion             = project.property("lba.version").toString()
 val energyVersion          = project.property("energy.version").toString()
 val galacticraftApiVersion = project.property("galacticraft.api.version").toString()
 val reiVersion             = project.property("rei.version").toString()
-val cottonResourcesVersion = project.property("cotton.resources.version").toString()
 val myronVersion           = project.property("myron.version").toString()
 val bannerppVersion        = project.property("bannerpp.version").toString()
 val wthitVersion           = project.property("wthit.version").toString()
@@ -83,7 +82,6 @@ repositories {
     }
     maven("https://server.bbkr.space/artifactory/libs-release/") {
         content {
-            includeGroup("io.github.cottonmc")
             includeGroup("io.github.fablabsmc")
         }
     }
@@ -175,12 +173,8 @@ dependencies {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     })
-    include(modImplementation("com.hrznstudio:Galacticraft-Energy:$energyVersion") { //todo fix publishing energy
-        exclude(group = "net.fabricmc")
-        exclude(group = "net.fabricmc.fabric-api")
-    })
+    include(modApi("dev.galacticraft:GalacticraftEnergy:$energyVersion") { isTransitive = false })
     include(modApi("dev.galacticraft:GalacticraftAPI:$galacticraftApiVersion") { isTransitive = false })
-    include(modApi("io.github.cottonmc:cotton-resources:$cottonResourcesVersion") { isTransitive = false })
     include(modApi("alexiil.mc.lib:libblockattributes-core:$lbaVersion") { isTransitive = false })
     include(modApi("alexiil.mc.lib:libblockattributes-items:$lbaVersion") { isTransitive = false })
     include(modApi("alexiil.mc.lib:libblockattributes-fluids:$lbaVersion") { isTransitive = false })
@@ -188,7 +182,7 @@ dependencies {
     // Optional Dependencies
     optionalImplementation("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
     optionalImplementation("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
-    modCompileOnly("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false } //todo update when this mod updates to 1.17
+    optionalImplementation("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false }
     optionalImplementation("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
         exclude(group = "net.fabricmc")
