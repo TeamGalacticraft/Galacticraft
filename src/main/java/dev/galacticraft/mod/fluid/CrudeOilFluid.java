@@ -104,9 +104,9 @@ public class CrudeOilFluid extends FlowableFluid {
     }
 
     @Override
-    public void beforeBreakingBlock(WorldAccess iWorld, BlockPos blockPos, BlockState blockState) {
-        BlockEntity blockEntity = blockState.getBlock().hasBlockEntity() ? iWorld.getBlockEntity(blockPos) : null;
-        Block.dropStacks(blockState, iWorld, blockPos, blockEntity);
+    public void beforeBreakingBlock(WorldAccess world, BlockPos pos, BlockState state) {
+        BlockEntity blockEntity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
+        Block.dropStacks(state, world, pos, blockEntity);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class CrudeOilFluid extends FlowableFluid {
 
     @Override
     public BlockState toBlockState(FluidState fluidState) {
-        return GalacticraftBlock.CRUDE_OIL.getDefaultState().with(FluidBlock.LEVEL, method_15741(fluidState));
+        return GalacticraftBlock.CRUDE_OIL.getDefaultState().with(FluidBlock.LEVEL, getBlockStateLevel(fluidState));
     }
 
     @Override

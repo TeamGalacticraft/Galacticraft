@@ -62,7 +62,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public DefaultedList<Ingredient> getPreviewInputs() {
+    public DefaultedList<Ingredient> getIngredients() {
         return this.input;
     }
 
@@ -104,7 +104,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
         public FabricationRecipe read(Identifier id, JsonObject json) {
             String group = JsonHelper.getString(json, "group", "");
             Ingredient ingredient = Ingredient.fromJson(JsonHelper.getObject(json, "ingredient"));
-            ItemStack result = ShapedRecipe.getItemStack(JsonHelper.getObject(json, "result"));
+            ItemStack result = new ItemStack(ShapedRecipe.getItem(JsonHelper.getObject(json, "result")));
             return new FabricationRecipe(id, group, ingredient, result);
         }
 

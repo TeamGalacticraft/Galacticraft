@@ -26,7 +26,6 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
-import dev.galacticraft.api.celestialbody.CelestialBodyType;
 import dev.galacticraft.api.entity.Rocket;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;

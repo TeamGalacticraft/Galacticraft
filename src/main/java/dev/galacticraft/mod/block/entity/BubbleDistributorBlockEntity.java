@@ -43,9 +43,10 @@ import dev.galacticraft.mod.util.OxygenTankUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -56,14 +57,14 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BubbleDistributorBlockEntity extends MachineBlockEntity implements Tickable {
+public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int BATTERY_SLOT = 0;
     public static final int OXYGEN_TANK_SLOT = 1;
@@ -75,8 +76,8 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     private int bubbleId = -1;
     private double prevSize;
 
-    public BubbleDistributorBlockEntity() {
-        super(GalacticraftBlockEntityType.BUBBLE_DISTRIBUTOR);
+    public BubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.BUBBLE_DISTRIBUTOR, pos, state);
     }
 
     @Override
@@ -98,7 +99,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     }
 
     @Override
-    public FluidAmount getFluidTankCapacity() {
+    public FluidAmount fluidInvCapacity() {
         return MAX_OXYGEN;
     }
 
@@ -118,7 +119,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         FluidAmount oxygenRequired = FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D) + 1);
-        if (!this.getFluidInv().extractFluid(OXYGEN_TANK, null, FluidVolumeUtil.EMPTY, oxygenRequired, Simulation.SIMULATE).amount().equals(oxygenRequired)) return Status.NOT_ENOUGH_OXYGEN;
+        if (!this.fluidInv().extractFluid(OXYGEN_TANK, null, FluidVolumeUtil.EMPTY, oxygenRequired, Simulation.SIMULATE).amount().equals(oxygenRequired)) return Status.NOT_ENOUGH_OXYGEN;
         return Status.DISTRIBUTING;
     }
 
@@ -130,20 +131,20 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
         if (this.size > this.targetSize) {
             this.setSize(Math.max(size - 0.1F, targetSize));
         }
-        if (size > 0.0D && bubbleVisible && bubbleId == -1 && (world instanceof ServerWorld)) {
+        if (size > 0.0D && bubbleVisible && bubbleId == -1 && world instanceof ServerWorld serverWorld) {
             BubbleEntity entity = new BubbleEntity(GalacticraftEntityType.BUBBLE, world);
             entity.setPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
             entity.prevX = this.getPos().getX();
             entity.prevY = this.getPos().getY();
             entity.prevZ = this.getPos().getZ();
             world.spawnEntity(entity);
-            bubbleId = entity.getEntityId();
-            for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
+            bubbleId = entity.getId();
+            for (ServerPlayerEntity player : serverWorld.getPlayers()) {
                 player.networkHandler.sendPacket(entity.createSpawnPacket());
             }
         }
         if (this.getStatus().getType().isActive()) {
-            this.getFluidInv().extractFluid(OXYGEN_TANK, null, FluidVolumeUtil.EMPTY, FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), Simulation.ACTION);
+            this.fluidInv().extractFluid(OXYGEN_TANK, null, FluidVolumeUtil.EMPTY, FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), Simulation.ACTION);
             if (!world.isClient()) {
                 if (size < targetSize) {
                     setSize(size + 0.05D);
@@ -151,7 +152,8 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
             }
         } else {
             if (this.bubbleId != -1 && size <= 0) {
-                world.getEntityById(bubbleId).remove();
+                world.getEntityById(bubbleId).remove(Entity.RemovalReason.DISCARDED);
+                world.getEntityById(bubbleId).onRemoved();
                 this.bubbleId = -1;
             }
 
@@ -179,16 +181,16 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.putByte(Constant.Nbt.MAX_SIZE, targetSize);
         tag.putDouble(Constant.Nbt.SIZE, size);
         return tag;
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         this.size = tag.getDouble(Constant.Nbt.SIZE);
         if (size < 0) size = 0;
         this.targetSize = tag.getByte(Constant.Nbt.MAX_SIZE);
@@ -209,19 +211,19 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     }
 
     protected void drainOxygenFromStack(int slot) {
-        if (this.getFluidInv().getInvFluid(0).amount().compareTo(this.getFluidInv().getMaxAmount_F(0)) >= 0) {
+        if (this.fluidInv().getInvFluid(0).amount().compareTo(this.fluidInv().getMaxAmount_F(0)) >= 0) {
             return;
         }
-        if (FluidUtil.canExtractFluids(this.getInventory().getSlot(slot))) {
-            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(this.getInventory().getSlot(slot));
-            this.getFluidInv().insertFluid(OXYGEN_TANK, extractable.attemptExtraction(Constant.Filter.LOX_ONLY, this.getFluidInv().getMaxAmount_F(0).sub(this.getFluidInv().getInvFluid(0).amount()), Simulation.ACTION), Simulation.ACTION);
+        if (FluidUtil.canExtractFluids(this.itemInv().getSlot(slot))) {
+            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(this.itemInv().getSlot(slot));
+            this.fluidInv().insertFluid(OXYGEN_TANK, extractable.attemptExtraction(Constant.Filter.LOX_ONLY, this.fluidInv().getMaxAmount_F(0).sub(this.fluidInv().getInvFluid(0).amount()), Simulation.ACTION), Simulation.ACTION);
         }
     }
 
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new BubbleDistributorScreenHandler(syncId, player, this);
+        if (this.security().hasAccess(player)) return new BubbleDistributorScreenHandler(syncId, player, this);
         return null;
     }
 

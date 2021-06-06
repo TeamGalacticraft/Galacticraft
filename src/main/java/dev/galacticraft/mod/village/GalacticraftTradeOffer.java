@@ -82,15 +82,14 @@ public class GalacticraftTradeOffer {
 
         @Nullable
         public TradeOffer create(Entity entity, Random random) {
-            if (!(entity.world instanceof ServerWorld)) {
+            if (!(entity.world instanceof ServerWorld world)) {
                 return null;
             } else {
-                ServerWorld serverWorld = (ServerWorld) entity.world;
-                BlockPos blockPos = serverWorld.locateStructure(this.structure, entity.getBlockPos(), 100, true);
+                BlockPos blockPos = world.locateStructure(this.structure, entity.getBlockPos(), 100, true);
                 if (blockPos != null) {
-                    ItemStack itemStack = FilledMapItem.createMap(serverWorld, blockPos.getX(), blockPos.getZ(), (byte) 2, true, true);
-                    FilledMapItem.fillExplorationMap(serverWorld, itemStack);
-                    MapState.addDecorationsTag(itemStack, blockPos, "+", this.iconType);
+                    ItemStack itemStack = FilledMapItem.createMap(world, blockPos.getX(), blockPos.getZ(), (byte) 2, true, true);
+                    FilledMapItem.fillExplorationMap(world, itemStack);
+                    MapState.addDecorationsNbt(itemStack, blockPos, "+", this.iconType);
                     itemStack.setCustomName(new TranslatableText("filled_map." + this.structure.getName().toLowerCase(Locale.ROOT)));
                     return new TradeOffer(new ItemStack(GalacticraftItem.LUNAR_SAPPHIRE, this.price), new ItemStack(Items.COMPASS), itemStack, this.maxUses, this.experience, 0.2F);
                 } else {

@@ -34,6 +34,7 @@ import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.ElectricCompressorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -45,6 +46,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,7 +61,7 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
     private static final int MAX_PROGRESS = 200; // In ticks, 100/20 = 10 seconds
 
-    private final Inventory craftingInv = new InventoryFixedWrapper(this.getInventory().getSubInv(1, 10)) {
+    private final Inventory craftingInv = new InventoryFixedWrapper(this.itemInv().getSubInv(1, 10)) {
         @Override
         public boolean canPlayerUse(PlayerEntity player) {
             return getWrappedInventory().canPlayerUse(player);
@@ -68,8 +70,8 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
 
     public int progress;
 
-    public ElectricCompressorBlockEntity() {
-        super(GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR);
+    public ElectricCompressorBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR, pos, state);
     }
 
     @Override
@@ -106,8 +108,8 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
         Optional<CompressingRecipe> optional = this.getRecipe(this.craftingInv);
         if (!optional.isPresent()) return Status.INVALID_RECIPE;
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (!this.getInventory().insertStack(SECOND_OUTPUT_SLOT,
-                this.getInventory().insertStack(OUTPUT_SLOT, optional.get().getOutput().copy(), Simulation.SIMULATE),
+        if (!this.itemInv().insertStack(SECOND_OUTPUT_SLOT,
+                this.itemInv().insertStack(OUTPUT_SLOT, optional.get().getOutput().copy(), Simulation.SIMULATE),
                 Simulation.SIMULATE).isEmpty()) return Status.OUTPUT_FULL;
         return Status.COMPRESSING;
     }
@@ -143,7 +145,7 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
         boolean canCraftTwo = true;
 
         for (int i = 1; i < 10; i++) {
-            ItemStack stack = getInventory().getInvStack(i);
+            ItemStack stack = itemInv().getInvStack(i);
             if (!stack.isEmpty() && stack.getCount() < 2) {
                 canCraftTwo = false;
                 break;
@@ -152,8 +154,8 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
         if (canCraftTwo) {
             ItemStack res = craftingResult.copy();
             res.setCount(res.getCount() * 2);
-            res = this.getInventory().insertStack(OUTPUT_SLOT, res, Simulation.SIMULATE);
-            res = this.getInventory().insertStack(SECOND_OUTPUT_SLOT, res, Simulation.SIMULATE);
+            res = this.itemInv().insertStack(OUTPUT_SLOT, res, Simulation.SIMULATE);
+            res = this.itemInv().insertStack(SECOND_OUTPUT_SLOT, res, Simulation.SIMULATE);
             if (!res.isEmpty()) {
                 canCraftTwo = false;
             }
@@ -166,7 +168,7 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
         for (int i = 1; i < 10; i++) {
             this.decrement(i, canCraftTwo ? 2 : 1);
         }
-        this.getInventory().insertStack(SECOND_OUTPUT_SLOT, this.getInventory().insertStack(OUTPUT_SLOT, craftingResult, Simulation.ACTION), Simulation.ACTION);
+        this.itemInv().insertStack(SECOND_OUTPUT_SLOT, this.itemInv().insertStack(OUTPUT_SLOT, craftingResult, Simulation.ACTION), Simulation.ACTION);
     }
 
     private Optional<CompressingRecipe> getRecipe(Inventory input) {
@@ -182,7 +184,7 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new ElectricCompressorScreenHandler(syncId, player, this);
+        if (this.security().hasAccess(player)) return new ElectricCompressorScreenHandler(syncId, player, this);
         return null;
     }
 

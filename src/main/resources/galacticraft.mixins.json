@@ -2,7 +2,7 @@
   "required": true,
   "package": "dev.galacticraft.mod.mixin",
   "plugin": "dev.galacticraft.mod.GalacticraftMixinPlugin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "mixins": [
     "BaseFluidMixin",
     "ChunkHolderMixin",
@@ -11,6 +11,7 @@
     "DimensionTypeMixin",
     "EmptyChunkMixin",
     "EntityMixin",
+    "ExtendedScreenHandlerTypeAccessor",
     "ItemStackMixin",
     "LanternBlockMixin",
     "LivingEntityMixin",

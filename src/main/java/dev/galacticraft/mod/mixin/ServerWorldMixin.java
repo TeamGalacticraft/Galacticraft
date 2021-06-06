@@ -24,7 +24,6 @@ package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
 import dev.galacticraft.api.atmosphere.AtmosphericGas;
-import dev.galacticraft.api.celestialbody.CelestialBodyType;
 import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
 import dev.galacticraft.mod.world.dimension.GalacticraftDimension;

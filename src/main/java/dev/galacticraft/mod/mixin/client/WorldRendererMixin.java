@@ -31,14 +31,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.chunk.ChunkBuilder;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.util.math.Vec3f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -48,7 +46,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
-import java.util.Set;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -61,72 +58,58 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
 
     @Shadow @Final private MinecraftClient client;
     @Shadow private ClientWorld world;
-    @Shadow @Final private VertexFormat skyVertexFormat;
     @Shadow private BuiltChunkStorage chunks;
-    private VertexBuffer starBufferMoon;
+    @Unique private VertexBuffer starBufferMoon;
 
     @Inject(at = @At("RETURN"), method = "<init>")
     private void initGalacticraft(MinecraftClient client, BufferBuilderStorage bufferBuilders, CallbackInfo ci) {
-        starBufferMoon = new VertexBuffer(skyVertexFormat);
-        this.generateStarBufferMoon();
+        this.starBufferMoon = new VertexBuffer();
+        this.generateStarBufferMoon(this.starBufferMoon);
     }
 
-    @Inject(method = "renderClouds(Lnet/minecraft/client/util/math/MatrixStack;FDDD)V", at = @At("HEAD"), cancellable = true)
-    private void renderClouds(MatrixStack matrices, float tickDelta, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
+    @Inject(method = "renderClouds(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/util/math/Matrix4f;FDDD)V", at = @At("HEAD"), cancellable = true)
+    private void renderClouds(MatrixStack matrices, Matrix4f matrix4f, float f, double d, double e, double g, CallbackInfo ci) {
         if (this.world.getRegistryKey() == GalacticraftDimension.MOON) {
             ci.cancel();
-            //noinspection UnnecessaryReturnStatement
-            return;
         }
     }
 
     @Inject(at = @At("HEAD"), method = "renderSky", cancellable = true)
-    private void renderSkyGC(MatrixStack matrices, float delta, CallbackInfo ci) {
+    private void renderSkyGC(MatrixStack matrices, Matrix4f matrix4f, float delta, Runnable runnable, CallbackInfo ci) {
         if (this.world.getRegistryKey() == GalacticraftDimension.MOON) {
+            runnable.run(); // fog?
             this.client.getProfiler().push("moon_sky_render");
             RenderSystem.disableTexture();
-            RenderSystem.disableFog();
-            RenderSystem.disableRescaleNormal();
-            RenderSystem.disableAlphaTest();
             RenderSystem.disableBlend();
-            RenderSystem.disableLighting();
             RenderSystem.depthMask(false);
 
             final BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-            float starBrightness = getStarBrightness(delta);
-
-//            this.lightSkyBufferMoon.bind();
-//            this.skyVertexFormat.startDrawing(0L);
-//            this.lightSkyBufferMoon.draw(matrices.peek().getModel(), 7);
-//            VertexBuffer.unbind();
-//            this.skyVertexFormat.endDrawing();
+            float starBrightness = this.getStarBrightness(delta);
 
             matrices.push();
-            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngleRadians(delta) * 360.0F));
-            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-19.0F));
-            RenderSystem.color4f(1.0F, 0.95F, 0.9F, starBrightness); //browner stars?
-
+            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngleRadians(delta) * 360.0F));
+            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-19.0F));
+            RenderSystem.setShaderColor(1.0F, 0.95F, 0.9F, starBrightness);
+            RenderSystem.disableTexture();
+            this.starBufferMoon.setShader(matrices.peek().getModel(), matrix4f, GameRenderer.getPositionShader());
             this.starBufferMoon.bind();
-            this.skyVertexFormat.startDrawing(0L);
-            this.starBufferMoon.draw(matrices.peek().getModel(), 7);
+            this.starBufferMoon.drawVertices();
             VertexBuffer.unbind();
-            this.skyVertexFormat.endDrawing();
 
             matrices.pop();
             matrices.push();
 
-            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngleRadians(delta) * 360.0F));
-
-            RenderSystem.disableTexture();
+            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngleRadians(delta) * 360.0F));
 
             Matrix4f matrix = matrices.peek().getModel();
             RenderSystem.enableTexture();
-            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             float size = 15.0F;
-            client.getTextureManager().bindTexture(SUN_TEXTURE);
-            buffer.begin(7, VertexFormats.POSITION_TEXTURE);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, SUN_TEXTURE);
+            buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
             buffer.vertex(matrix, -size, 100.0F, -size).texture(0.0F, 0.0F).next();
             buffer.vertex(matrix, size, 100.0F, -size).texture(1.0F, 0.0F).next();
             buffer.vertex(matrix, size, 100.0F, size).texture(1.0F, 1.0F).next();
@@ -143,12 +126,12 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
             assert client.player != null;
             float earthRotation = (float) (this.world.getSpawnPos().getZ() - client.player.getZ()) * 0.01F;
             matrices.scale(0.6F, 0.6F, 0.6F);
-            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((this.world.getSkyAngleRadians(delta) * 360.0F) * 0.001F));
-            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(earthRotation + 200.0F));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion((this.world.getSkyAngleRadians(delta) * 360.0F) * 0.001F));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(earthRotation + 200.0F));
 
-            client.getTextureManager().bindTexture(EARTH_TEXTURE);
+            RenderSystem.setShaderTexture(0, EARTH_TEXTURE);
 
-            buffer.begin(7, VertexFormats.POSITION_TEXTURE);
+            buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
             buffer.vertex(matrix, -size, -100.0F, size).texture(0.0F, 1.0F).next();
             buffer.vertex(matrix, size, -100.0F, size).texture(1.0F, 1.0F).next();
             buffer.vertex(matrix, size, -100.0F, -size).texture(1.0F, 0.0F).next();
@@ -158,15 +141,10 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
 
             matrices.pop();
 
-            RenderSystem.enableRescaleNormal();
             RenderSystem.disableTexture();
             RenderSystem.depthMask(true);
-            RenderSystem.enableColorMaterial();
-            RenderSystem.enableFog();
             this.client.getProfiler().pop();
             ci.cancel();
-            //noinspection UnnecessaryReturnStatement
-            return;
         }
     }
 
@@ -187,12 +165,12 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
     }
 
     @Unique
-    private void generateStarBufferMoon() {
+    private void generateStarBufferMoon(VertexBuffer vertexBuffer) {
         Random random = new Random(1671120782L);
 
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
-        buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION);
+        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
         for (int i = 0; i < 12000; ++i) {
             double j = random.nextFloat() * 2.0F - 1.0F;
             double k = random.nextFloat() * 2.0F - 1.0F;
@@ -233,7 +211,7 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
             }
         }
         buffer.end();
-        starBufferMoon.upload(buffer);
+        vertexBuffer.upload(buffer);
     }
 
     @Override

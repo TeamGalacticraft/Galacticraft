@@ -22,8 +22,9 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.screen.MachineHandledScreen;
+import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.CircuitFabricatorScreenHandler;
 import net.fabricmc.api.EnvType;
@@ -77,33 +78,27 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     private static final int SENARY_PROGRESS_HEIGHT = 14;
 
     public CircuitFabricatorScreen(CircuitFabricatorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         this.backgroundHeight = 176;
-        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 15, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 15, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
-
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        super.renderBackground(matrices, delta, mouseX, mouseY);
         this.drawProgressBar(matrices);
-        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-        assert this.client != null;
-        drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft.circuit_fabricator"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+    protected void renderForeground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.renderForeground(matrices, mouseX, mouseY, delta);
+        drawCenteredText(matrices, textRenderer, I18n.translate("block.galacticraft.circuit_fabricator"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
     }
 
     //24 + 19 + 18 + 65 + 14 = 140
     private void drawProgressBar(MatrixStack matrices) {
         assert this.client != null;
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         if (this.handler.machine.getProgress() > 0) {
             int progress = (int) ((((double) this.handler.machine.getProgress()) / ((double) this.handler.machine.getMaxProgress())) * 140.0);
             if (progress <= 24) {

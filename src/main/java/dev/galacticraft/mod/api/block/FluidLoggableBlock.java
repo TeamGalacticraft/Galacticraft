@@ -31,6 +31,8 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -103,15 +105,20 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
     }
 
     @Override
-    default Fluid tryDrainFluid(WorldAccess world, BlockPos pos, BlockState state) {
+    default ItemStack tryDrainFluid(WorldAccess world, BlockPos pos, BlockState state) {
         if (!state.get(FLUID).equals(Constant.Misc.EMPTY)) {
             world.setBlockState(pos, state.with(FLUID, Constant.Misc.EMPTY), 3);
             if (Registry.FLUID.get(state.get(FLUID)).getDefaultState().isStill()) {
-                return Registry.FLUID.get(state.get(FLUID));
+                return new ItemStack(Registry.FLUID.get(state.get(FLUID)).getBucketItem());
             }
         }
-        return Fluids.EMPTY;
+        return ItemStack.EMPTY;
     }
 
     BlockState getPlacementState(ItemPlacementContext context);
+
+    @Override
+    default Optional<SoundEvent> getBucketFillSound() {
+        return Fluids.WATER.getBucketFillSound();
+    }
 }

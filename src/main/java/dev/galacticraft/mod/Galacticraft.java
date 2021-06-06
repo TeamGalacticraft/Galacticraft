@@ -23,6 +23,7 @@
 package dev.galacticraft.mod;
 
 import com.mojang.serialization.Lifecycle;
+import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.mod.api.config.ConfigManager;
 import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
 import dev.galacticraft.mod.block.GalacticraftBlock;
@@ -53,6 +54,7 @@ import dev.galacticraft.mod.world.gen.feature.GalacticraftFeature;
 import dev.galacticraft.mod.world.gen.surfacebuilder.GalacticraftSurfaceBuilder;
 import dev.galacticraft.mod.world.poi.GalacticraftPointOfInterestType;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -95,13 +97,18 @@ public class Galacticraft implements ModInitializer {
         GalacticraftCommand.register();
         GalacticraftServerPacketReceiver.register();
         GalacticraftSound.register();
-        GalacticraftBannerPattern.register();
         GalacticraftPointOfInterestType.register();
         MoonVillagerType.register();
         GalacticraftConfiguredTravelPredicates.register();
         GalacticraftRocketParts.register();
         GalacticraftVillagerProfession.register();
 
+        Registry.register(AddonRegistry.ATMOSPHERIC_GAS, new Identifier(Constant.MOD_ID, "hydrogen_deuterium_oxygen"), GalacticraftGas.HYDROGEN_DEUTERIUM_OXYGEN);
+        Registry.register(AddonRegistry.ATMOSPHERIC_GAS, new Identifier(Constant.MOD_ID, "nitrogen_oxide"), GalacticraftGas.NITROGEN_OXIDE);
+
+        if (FabricLoader.getInstance().isModLoaded("bannerpp")) {
+            GalacticraftBannerPattern.register();
+        }
         LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

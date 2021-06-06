@@ -22,7 +22,8 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.api.celestialbody.CelestialBodyType;
+import dev.galacticraft.api.registry.RegistryUtil;
+import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.accessor.SoundSystemAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -46,7 +47,7 @@ public abstract class MinecraftClientMixin {
     @Inject(method = "setWorld", at = @At("RETURN"))
     private void gc_updateSoundMultiplier(ClientWorld world, CallbackInfo ci) {
         if (world != null) {
-            ((SoundSystemAccessor) this.getSoundManager().soundSystem).gc_updateAtmosphericMultiplier(CelestialBodyType.getByDimType(world.getRegistryManager(), world.getRegistryKey()).map(body -> body.getAtmosphere().getPressure()).orElse(1.0f));
+            ((SoundSystemAccessor) this.getSoundManager().soundSystem).gc_updateAtmosphericMultiplier(RegistryUtil.getCelestialBodyByDimension(world.getRegistryManager(), world.getRegistryKey()).map(body -> ((Landable) body.type()).atmosphere(body.config()).pressure()).orElse(1.0f));
         } else {
             ((SoundSystemAccessor) this.getSoundManager().soundSystem).gc_updateAtmosphericMultiplier(1.0f);
         }

@@ -26,13 +26,14 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
-import dev.galacticraft.mod.screen.OxygenStorageModuleScreenHandler;
+import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.screen.tank.NullTank;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,8 +44,8 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     private static final int OXYGEN_TANK = 0;
     public static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(50);
 
-    public OxygenStorageModuleBlockEntity() {
-        super(GalacticraftBlockEntityType.OXYGEN_STORAGE_MODULE);
+    public OxygenStorageModuleBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.OXYGEN_STORAGE_MODULE, pos, state);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public FluidAmount getFluidTankCapacity() {
+    public FluidAmount fluidInvCapacity() {
         return MAX_CAPACITY;
     }
 
@@ -86,7 +87,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new OxygenStorageModuleScreenHandler(syncId, player, this);
+        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER, syncId, inv, this);
         return null;
     }
 }

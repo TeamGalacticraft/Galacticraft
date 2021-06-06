@@ -24,8 +24,8 @@ package dev.galacticraft.mod.api.block;
 
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.pipe.Pipe;
-import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -37,7 +37,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,9 +51,9 @@ public class FluidPipe extends Block implements BlockEntityProvider {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            BlockEntity pipe = world.getBlockEntity(pos);
-            if (pipe instanceof Pipe) {
-                Galacticraft.LOGGER.info(((Pipe) pipe).getNetworkNullable());
+            BlockEntity entity = world.getBlockEntity(pos);
+            if (entity instanceof Pipe pipe) {
+                Galacticraft.LOGGER.info(pipe.getNetworkNullable());
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);
@@ -75,7 +74,7 @@ public class FluidPipe extends Block implements BlockEntityProvider {
     }
 
     @Override
-    public @Nullable PipeBlockEntity createBlockEntity(BlockView world) {
-        return new PipeBlockEntity(GalacticraftBlockEntityType.FLUID_PIPE);
+    public @Nullable PipeBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new PipeBlockEntity(GalacticraftBlockEntityType.FLUID_PIPE, pos, state);
     }
 }

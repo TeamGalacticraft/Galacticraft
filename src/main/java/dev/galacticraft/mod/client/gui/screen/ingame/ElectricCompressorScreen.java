@@ -22,8 +22,9 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.screen.MachineHandledScreen;
+import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.screen.ElectricCompressorScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -44,7 +45,7 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     private static final int PROGRESS_HEIGHT = 25;
 
     public ElectricCompressorScreen(ElectricCompressorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
         this.backgroundHeight = 199;
     }
 
@@ -53,27 +54,16 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
-
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-
+    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        super.renderBackground(matrices, delta, mouseX, mouseY);
         this.drawCraftProgressBar(matrices);
-        super.drawBackground(matrices, delta, mouseX, mouseY);
-    }
-
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-        drawCenteredString(matrices, textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+        drawCenteredText(matrices, textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
     }
 
     protected void drawCraftProgressBar(MatrixStack matrices) {
         float progressScale = (((float)this.handler.machine.getProgress()) / ((float)this.handler.machine.getMaxProgress()));
 
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
         this.drawTexture(matrices, this.x + 77, this.y + 29, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 }

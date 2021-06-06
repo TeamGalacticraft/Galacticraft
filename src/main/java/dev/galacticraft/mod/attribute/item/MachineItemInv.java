@@ -26,8 +26,8 @@ import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.attribute.Automatable;
-import dev.galacticraft.mod.screen.MachineScreenHandler;
 import dev.galacticraft.mod.screen.slot.AutoFilteredSlot;
 import dev.galacticraft.mod.screen.slot.OutputSlot;
 import dev.galacticraft.mod.screen.slot.SlotType;
@@ -138,30 +138,14 @@ public class MachineItemInv extends FullFixedItemInv implements Automatable {
         Slot create(MachineBlockEntity machineBlockEntity, int index, PlayerEntity player);
     }
 
-    private static class DefaultSlotFunction implements SlotFunction {
-        private final int x;
-        private final int y;
-
-        private DefaultSlotFunction(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
+    private record DefaultSlotFunction(int x, int y) implements SlotFunction {
         @Override
         public Slot create(MachineBlockEntity machineBlockEntity, int index, PlayerEntity player) {
             return new AutoFilteredSlot(machineBlockEntity, index, this.x, this.y);
         }
     }
 
-    public static class OutputSlotFunction implements SlotFunction {
-        private final int x;
-        private final int y;
-
-        public OutputSlotFunction(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
+    public record OutputSlotFunction(int x, int y) implements SlotFunction {
         @Override
         public Slot create(MachineBlockEntity machineBlockEntity, int index, PlayerEntity player) {
             return new OutputSlot(machineBlockEntity.getWrappedInventory(), index, this.x, this.y);

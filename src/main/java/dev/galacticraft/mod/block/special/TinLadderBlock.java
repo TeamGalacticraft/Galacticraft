@@ -85,12 +85,12 @@ public class TinLadderBlock extends Block {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack item = player.inventory.getStack(player.inventory.selectedSlot);
+        ItemStack item = player.getInventory().getStack(player.getInventory().selectedSlot);
         if (Block.getBlockFromItem(item.getItem()) instanceof TinLadderBlock) {
             if (!player.isCreative())
                 item.decrement(1);
-            if (player.pitch < 0f) {
-                for (BlockPos checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() < world.getDimensionHeight(); checkPos = checkPos.add(0, 1, 0)) {
+            if (player.getPitch() < 0f) {
+                for (BlockPos checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() < world.getHeight(); checkPos = checkPos.add(0, 1, 0)) {
                     ActionResult result = this.checkCanTinLadderBePlaced(world, checkPos, state);
                     if (result != null)
                         return result;
@@ -122,23 +122,18 @@ public class TinLadderBlock extends Block {
     }
 
     @Override
-    public VoxelShape getVisualShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return VoxelShapes.empty();
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        switch(state.get(FACING)) {
-            case NORTH:
-                return NORTH_SHAPE;
-            case SOUTH:
-                return SOUTH_SHAPE;
-            case WEST:
-                return WEST_SHAPE;
-            case EAST:
-            default:
-                return EAST_SHAPE;
-        }
+        return switch (state.get(FACING)) {
+            case NORTH -> NORTH_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+            case WEST -> WEST_SHAPE;
+            default -> EAST_SHAPE;
+        };
     }
 
     @Override

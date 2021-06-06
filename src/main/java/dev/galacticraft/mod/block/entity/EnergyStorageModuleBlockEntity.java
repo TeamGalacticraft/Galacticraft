@@ -26,26 +26,26 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
-import dev.galacticraft.mod.screen.EnergyStorageModuleScreenHandler;
+import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implements Tickable {
+public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_BATTERY_SLOT = 0;
     public static final int DRAIN_BATTERY_SLOT = 1;
 
-    public EnergyStorageModuleBlockEntity() {
-        super(GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE);
+    public EnergyStorageModuleBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE, pos, state);
         this.setStatus(MachineStatus.NULL);
     }
 
@@ -100,7 +100,7 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implement
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new EnergyStorageModuleScreenHandler(syncId, player, this);
+        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER, syncId, inv, this);
         return null;
     }
 }

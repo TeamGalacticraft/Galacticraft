@@ -72,7 +72,7 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
             stack[0] = stack[0].copy();
 
             if (this.size > 0) {
-                GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(new Reference<ItemStack>() {
+                GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(new Reference<>() {
                     @Override
                     public ItemStack get() {
                         return stack[0];

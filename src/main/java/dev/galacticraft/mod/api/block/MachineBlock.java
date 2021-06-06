@@ -24,17 +24,21 @@ package dev.galacticraft.mod.api.block;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import com.mojang.authlib.GameProfile;
-import dev.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
-import dev.galacticraft.mod.misc.TriFunction;
+import dev.galacticraft.mod.block.entity.MachineBlockEntityTicker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -47,7 +51,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -64,43 +68,19 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class MachineBlock extends BlockWithEntity {
+public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWithEntity {
     public static final BooleanProperty ARBITRARY_BOOLEAN_PROPERTY = BooleanProperty.of("update");
 
-    private final Function<BlockView, ? extends MachineBlockEntity> blockEntityFunc;
-    private final TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo;
-
     protected MachineBlock(Settings settings) {
-        this(settings, (view) -> null, LiteralText.EMPTY);
-    }
-
-    public MachineBlock(Settings settings, Function<BlockView, ? extends MachineBlockEntity> blockEntityFunc, TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo) {
         super(settings);
-        this.blockEntityFunc = blockEntityFunc;
-        this.machineInfo = machineInfo;
-    }
-
-    public MachineBlock(Settings settings, Function<BlockView, ? extends MachineBlockEntity> blockEntityFunc, Text machineInfo) {
-        this(settings, blockEntityFunc, (itemStack, blockView, tooltipContext) -> machineInfo);
-    }
-
-    public MachineBlock(Settings settings, Supplier<? extends MachineBlockEntity> blockEntitySupplier, TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo) {
-        this(settings, (view) -> blockEntitySupplier.get(), machineInfo);
-    }
-
-    public MachineBlock(Settings settings, Supplier<? extends MachineBlockEntity> blockEntitySupplier, Text machineInfo) {
-        this(settings, blockEntitySupplier, (itemStack, blockView, tooltipContext) -> machineInfo);
     }
 
     @Override
@@ -110,9 +90,7 @@ public class MachineBlock extends BlockWithEntity {
     }
 
     @Override
-    public MachineBlockEntity createBlockEntity(BlockView view) {
-        return blockEntityFunc.apply(view);
-    }
+    public abstract T createBlockEntity(BlockPos pos, BlockState state);
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
@@ -122,11 +100,8 @@ public class MachineBlock extends BlockWithEntity {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
-        if (this instanceof MultiBlockBase) {
-            ((MultiBlockBase) this).onMultiblockPlaced(world, pos, state);
-        }
-        if (!world.isClient && placer instanceof PlayerEntity) {
-            ((MachineBlockEntity) world.getBlockEntity(pos)).getSecurity().setOwner(((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), ((PlayerEntity) placer));
+        if (!world.isClient && placer instanceof PlayerEntity player) {
+            ((MachineBlockEntity) world.getBlockEntity(pos)).security().setOwner(/*((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), */player); //todo: teams
         }
     }
 
@@ -162,11 +137,11 @@ public class MachineBlock extends BlockWithEntity {
         }
 
         if (stack != null && stack.getTag() != null && stack.getTag().contains(Constant.Nbt.BLOCK_ENTITY_TAG)) {
-            CompoundTag tag = stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG);
+            NbtCompound tag = stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG);
             tooltip.add(LiteralText.EMPTY);
             if (tag.contains(Constant.Nbt.ENERGY, NbtType.INT)) tooltip.add(new TranslatableText("ui.galacticraft.machine.current_energy", new LiteralText(String.valueOf(tag.getInt(Constant.Nbt.ENERGY))).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.GOLD_STYLE));
             if (tag.contains(Constant.Nbt.SECURITY, NbtType.COMPOUND)) {
-                CompoundTag security = tag.getCompound(Constant.Nbt.SECURITY);
+                NbtCompound security = tag.getCompound(Constant.Nbt.SECURITY);
                 if (security.contains(Constant.Nbt.OWNER, NbtType.COMPOUND)) {
                     GameProfile profile = NbtHelper.toGameProfile(security.getCompound(Constant.Nbt.OWNER));
                     MutableText text1 = new TranslatableText("ui.galacticraft.machine.security.owner", new LiteralText(profile.getName()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE)).setStyle(Constant.Text.GRAY_STYLE);
@@ -189,13 +164,13 @@ public class MachineBlock extends BlockWithEntity {
     @Override
     public final ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
-            BlockEntity machine = world.getBlockEntity(pos);
-            if (machine instanceof MachineBlockEntity) {
-                SecurityInfo security = ((MachineBlockEntity) machine).getSecurity();
-                if (security.getOwner() == null) security.setOwner(((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), player);
+            BlockEntity entity = world.getBlockEntity(pos);
+            if (entity instanceof MachineBlockEntity machine) {
+                SecurityInfo security = machine.security();
+                if (security.getOwner() == null) security.setOwner(/*((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), */player); //todo: teams
                 if (security.isOwner(player.getGameProfile())) {
                     security.sendPacket(pos, (ServerPlayerEntity) player);
-                    ((MachineBlockEntity) machine).getRedstoneInteraction().sendPacket(pos, (ServerPlayerEntity) player);
+                    machine.redstoneInteraction().sendPacket(pos, (ServerPlayerEntity) player);
                     NamedScreenHandlerFactory factory = state.createScreenHandlerFactory(world, pos);
 
                     if (factory != null) {
@@ -212,8 +187,8 @@ public class MachineBlock extends BlockWithEntity {
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBreak(world, pos, state, player);
         BlockEntity entity = world.getBlockEntity(pos);
-        if (entity instanceof MachineBlockEntity) {
-            FixedItemInv inv = ((MachineBlockEntity) entity).getInventory();
+        if (entity instanceof MachineBlockEntity machine) {
+            FixedItemInv inv = machine.itemInv();
             for (int i = 0; i < inv.getSlotCount(); i++) {
                 ItemStack stack = inv.getInvStack(i);
                 if (!stack.isEmpty()) {
@@ -222,47 +197,33 @@ public class MachineBlock extends BlockWithEntity {
                 }
             }
         }
-
-        if (this instanceof MultiBlockBase) {
-            for (BlockPos otherPart : ((MultiBlockBase) this).getOtherParts(state, pos)) {
-                world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
-            }
-        }
     }
 
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
         BlockEntity entity = builder.get(LootContextParameters.BLOCK_ENTITY);
-        if (entity.toTag(new CompoundTag()).getBoolean(Constant.Nbt.NO_DROP)) return Collections.emptyList();
+        if (entity.writeNbt(new NbtCompound()).getBoolean(Constant.Nbt.NO_DROP)) return Collections.emptyList();
         return super.getDroppedStacks(state, builder);
-    }
-
-    @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        if (this instanceof MultiBlockBase) {
-            for (BlockPos otherPart : (((MultiBlockBase) this).getOtherParts(state, pos))) {
-                if (!world.getBlockState(otherPart).getMaterial().isReplaceable()) {
-                    return false;
-                }
-            }
-        }
-        return super.canPlaceAt(state, world, pos);
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public ItemStack getPickStack(BlockView view, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(view, pos, state);
-        CompoundTag tag = (stack.getTag() != null ? stack.getTag() : new CompoundTag());
+        NbtCompound tag = (stack.getTag() != null ? stack.getTag() : new NbtCompound());
         if (view.getBlockEntity(pos) != null) {
-            tag.put(Constant.Nbt.BLOCK_ENTITY_TAG, view.getBlockEntity(pos).toTag(new CompoundTag()));
+            tag.put(Constant.Nbt.BLOCK_ENTITY_TAG, view.getBlockEntity(pos).writeNbt(new NbtCompound()));
         }
 
         stack.setTag(tag);
         return stack;
     }
 
-    public Text machineInfo(ItemStack stack, BlockView view, boolean context) {
-        return machineInfo.apply(stack, view, context);
+    @Nullable
+    @Override
+    public <B extends BlockEntity> BlockEntityTicker<B> getTicker(World world, BlockState state, BlockEntityType<B> type) {
+        return MachineBlockEntityTicker.getInstance();
     }
+
+    public abstract Text machineInfo(ItemStack stack, BlockView view, boolean advanced);
 }

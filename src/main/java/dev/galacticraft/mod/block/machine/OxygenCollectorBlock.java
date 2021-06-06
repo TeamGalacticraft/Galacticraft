@@ -23,13 +23,14 @@
 package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -37,18 +38,19 @@ import java.util.Random;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenCollectorBlock extends MachineBlock {
+public class OxygenCollectorBlock extends SimpleMachineBlock<OxygenCollectorBlockEntity> {
+    private static final Text TOOLTIP_INFO = new TranslatableText("tooltip.galacticraft.oxygen_collector")
+            .setStyle(Constant.Text.DARK_GRAY_STYLE);
+
     public OxygenCollectorBlock(Settings settings) {
-        super(settings, OxygenCollectorBlockEntity::new,
-                new TranslatableText("tooltip.galacticraft.oxygen_collector")
-                        .setStyle(Constant.Text.DARK_GRAY_STYLE));
+        super(settings, OxygenCollectorBlockEntity::new, TOOLTIP_INFO);
     }
 
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
-        if (blockEntity instanceof OxygenCollectorBlockEntity && ((OxygenCollectorBlockEntity) blockEntity).collectionAmount > 0) {
+        if (blockEntity instanceof OxygenCollectorBlockEntity machine && machine.collectionAmount > 0) {
             for (int count = 0; count < 10; count++) {
                 for (int i = 0; i < 32; ++i) {
                     double x2 = pos.getX() + random.nextFloat();
@@ -60,19 +62,16 @@ public class OxygenCollectorBlock extends MachineBlock {
                     mY = (random.nextFloat() - 0.5D) * 0.5D;
                     mZ = (random.nextFloat() - 0.5D) * 0.5D;
 
-                    if (random.nextBoolean())
-                    {
+                    if (random.nextBoolean()) {
                         x2 = pos.getX() + 0.5D + 0.25D * dir;
                         mX = random.nextFloat() * 2.0F * dir;
-                    }
-                    else
-                    {
+                    } else {
                         z2 = pos.getZ() + 0.5D + 0.25D * dir;
                         mZ = random.nextFloat() * 2.0F * dir;
                     }
 
                     world.addParticle(
-                            new DustParticleEffect(0.8f, 0.8f, 1.0f, 1.0F),
+                            new DustParticleEffect(new Vec3f(0.8f, 0.8f, 1.0f), 1.0F),
                             x2, y2, z2,
                             mX, mY, mZ);
                 }

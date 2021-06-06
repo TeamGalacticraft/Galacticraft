@@ -27,7 +27,7 @@ import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.PlayerManager;
@@ -45,9 +45,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class PlayerManagerMixin {
     @Inject(method = "onPlayerConnect", at = @At("RETURN"))
     private void gc_syncInv(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
-        CompoundTag tag = ((GearInventoryProvider) player).writeGearToNbt(new CompoundTag());
+        NbtCompound tag = ((GearInventoryProvider) player).writeGearToNbt(new NbtCompound());
         for (ServerPlayerEntity player1 : PlayerLookup.tracking(player)) {
-            ServerPlayNetworking.send(player1, new Identifier(Constant.MOD_ID, "gear_inv_sync_full"), new PacketByteBuf(Unpooled.buffer().writeInt(player.getEntityId())).writeCompoundTag(tag));
+            ServerPlayNetworking.send(player1, new Identifier(Constant.MOD_ID, "gear_inv_sync_full"), new PacketByteBuf(Unpooled.buffer().writeInt(player.getId())).writeNbt(tag));
         }
     }
 }

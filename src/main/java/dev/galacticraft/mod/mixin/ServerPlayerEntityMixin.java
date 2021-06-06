@@ -28,7 +28,7 @@ import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -45,9 +45,9 @@ public abstract class ServerPlayerEntityMixin implements GearInventoryProvider {
     private FullFixedItemInv createGearInv() {
         FullFixedItemInv inv = new FullFixedItemInv(12);
         inv.setOwnerListener((invView, slot, prev, cur) -> {
-            ServerPlayNetworking.send(((ServerPlayerEntity) (Object) this), new Identifier(Constant.MOD_ID, "gear_inv_sync"), new PacketByteBuf(Unpooled.buffer().writeInt(((ServerPlayerEntity) (Object) this).getEntityId()).writeByte(slot)).writeItemStack(cur));
+            ServerPlayNetworking.send(((ServerPlayerEntity) (Object) this), new Identifier(Constant.MOD_ID, "gear_inv_sync"), new PacketByteBuf(Unpooled.buffer().writeInt(((ServerPlayerEntity) (Object) this).getId()).writeByte(slot)).writeItemStack(cur));
             for (ServerPlayerEntity player : PlayerLookup.tracking(((ServerPlayerEntity) (Object) this))) {
-                ServerPlayNetworking.send(player, new Identifier(Constant.MOD_ID, "gear_inv_sync"), new PacketByteBuf(Unpooled.buffer().writeInt(((ServerPlayerEntity) (Object) this).getEntityId()).writeByte(slot)).writeItemStack(cur));
+                ServerPlayNetworking.send(player, new Identifier(Constant.MOD_ID, "gear_inv_sync"), new PacketByteBuf(Unpooled.buffer().writeInt(((ServerPlayerEntity) (Object) this).getId()).writeByte(slot)).writeItemStack(cur));
             }
         });
         return inv;
@@ -59,12 +59,12 @@ public abstract class ServerPlayerEntityMixin implements GearInventoryProvider {
     }
 
     @Override
-    public CompoundTag writeGearToNbt(CompoundTag tag) {
+    public NbtCompound writeGearToNbt(NbtCompound tag) {
         return this.getGearInv().toTag(tag);
     }
 
     @Override
-    public void readGearFromNbt(CompoundTag tag) {
+    public void readGearFromNbt(NbtCompound tag) {
         this.getGearInv().fromTag(tag);
     }
 }

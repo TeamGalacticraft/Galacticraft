@@ -28,11 +28,12 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
+import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
@@ -43,15 +44,15 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tickable {
+public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     private static final Object2IntMap<Item> FUEL_MAP = Util.make(new Object2IntArrayMap<>(3), (map) -> {
         map.put(Items.COAL_BLOCK, 320 * 10);
         map.put(Items.COAL, 320);
@@ -72,8 +73,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
      * Coal Generator: generates 120gj/t (max heat)
      */
 
-    public CoalGeneratorBlockEntity() {
-        super(GalacticraftBlockEntityType.COAL_GENERATOR);
+    public CoalGeneratorBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.COAL_GENERATOR, pos, state);
     }
 
     @Override
@@ -95,8 +96,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
 
     @Override
     public @NotNull MachineStatus updateStatus() {
-        if (this.fuelLength == 0 && this.getInventory().getInvStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
-        if (this.getCapacitor().getEnergy() >= this.getCapacitor().getMaxCapacity()) return Status.FULL;
+        if (this.fuelLength == 0 && this.itemInv().getInvStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
+        if (this.capacitor().getEnergy() >= this.capacitor().getMaxCapacity()) return Status.FULL;
         if (this.heat < 1 && this.fuelLength > 0) return Status.WARMING;
         if (this.heat > 0 && this.fuelLength == 0) return Status.COOLING;
         return Status.ACTIVE;
@@ -131,7 +132,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
             }
             if (this.fuelLength == 0) {
                 this.fuelTime = 0;
-                this.fuelLength = FUEL_MAP.getOrDefault(getInventory().extractStack(FUEL_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem(), 0);
+                this.fuelLength = FUEL_MAP.getOrDefault(itemInv().extractStack(FUEL_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem(), 0);
                 if (this.fuelLength == 0) return;
             }
 
@@ -145,7 +146,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new CoalGeneratorScreenHandler(syncId, player, this);
+        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.COAL_GENERATOR_HANDLER, syncId, inv, this);
         return null;
     }
 

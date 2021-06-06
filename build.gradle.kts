@@ -20,6 +20,8 @@
  * SOFTWARE.
  */
 
+import java.io.ByteArrayOutputStream
+import java.io.OutputStream
 import java.time.Year
 import java.time.format.DateTimeFormatter
 
@@ -41,21 +43,21 @@ val lbaVersion             = project.property("lba.version").toString()
 val energyVersion          = project.property("energy.version").toString()
 val galacticraftApiVersion = project.property("galacticraft.api.version").toString()
 val reiVersion             = project.property("rei.version").toString()
-val cottonResourcesVersion = project.property("cotton.resources.version").toString()
 val myronVersion           = project.property("myron.version").toString()
 val bannerppVersion        = project.property("bannerpp.version").toString()
 val wthitVersion           = project.property("wthit.version").toString()
+val runtimeOptional        = project.property("optional_dependencies.enabled") == "true"
 
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("0.7-SNAPSHOT")
+    id("fabric-loom") version("0.8-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.5.1")
 }
 
 configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
 }
 
 group = modGroup
@@ -77,11 +79,11 @@ repositories {
             includeGroup("me.shedaniel.cloth.api")
             includeGroup("me.shedaniel.cloth")
             includeGroup("me.shedaniel")
+            includeGroup("dev.architectury")
         }
     }
     maven("https://server.bbkr.space/artifactory/libs-release/") {
         content {
-            includeGroup("io.github.cottonmc")
             includeGroup("io.github.fablabsmc")
         }
     }
@@ -119,7 +121,7 @@ repositories {
 
 /**
  * From:
- * @see net.fabricmc.loom.util.FabricApiExtension.getDependencyNotation
+ * @see net.fabricmc.loom.configuration.FabricApiExtension.getDependencyNotation
  */
 fun getFabricApiModule(moduleName: String, fabricApiVersion: String): String {
     return String.format("net.fabricmc.fabric-api:%s:%s", moduleName,
@@ -128,7 +130,7 @@ fun getFabricApiModule(moduleName: String, fabricApiVersion: String): String {
 
 fun optionalImplementation(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
     project.dependencies.modCompileOnly(dependencyNotation, dependencyConfiguration)
-    project.dependencies.modRuntime(dependencyNotation, dependencyConfiguration)
+    if (!net.fabricmc.loom.util.OperatingSystem.isCIBuild() && runtimeOptional) project.dependencies.modRuntime(dependencyNotation, dependencyConfiguration)
 }
 
 dependencies {
@@ -173,21 +175,17 @@ dependencies {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     })
-    include(modImplementation("com.hrznstudio:Galacticraft-Energy:$energyVersion") {
-        exclude(group = "net.fabricmc")
-        exclude(group = "net.fabricmc.fabric-api")
-    })
+    include(modApi("dev.galacticraft:GalacticraftEnergy:$energyVersion") { isTransitive = false })
     include(modApi("dev.galacticraft:GalacticraftAPI:$galacticraftApiVersion") { isTransitive = false })
-    include(modImplementation("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false })
-    include(modApi("io.github.cottonmc:cotton-resources:$cottonResourcesVersion") { isTransitive = false })
     include(modApi("alexiil.mc.lib:libblockattributes-core:$lbaVersion") { isTransitive = false })
     include(modApi("alexiil.mc.lib:libblockattributes-items:$lbaVersion") { isTransitive = false })
     include(modApi("alexiil.mc.lib:libblockattributes-fluids:$lbaVersion") { isTransitive = false })
 
     // Optional Dependencies
     optionalImplementation("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
-    optionalImplementation("mcp.mobius.waila:wthit-fabric:$wthitVersion") { isTransitive = false }
-    optionalImplementation("me.shedaniel:RoughlyEnoughItems:$reiVersion") {
+    optionalImplementation("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
+    optionalImplementation("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false }
+    optionalImplementation("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
@@ -267,32 +265,57 @@ license {
     }
 }
 
+tasks.withType(JavaCompile::class) {
+    options.encoding = "UTF-8"
+    options.release.set(16)
+}
+
 // inspired by https://github.com/TerraformersMC/GradleScripts/blob/2.0/ferry.gradle
 fun getVersionDecoration(): String {
-    if((System.getenv("DISABLE_VERSION_DECORATION") ?: "false") == "true") return ""
-    if(project.hasProperty("release")) return ""
+    if ((System.getenv("DISABLE_VERSION_DECORATION") ?: "false") == "true") return ""
+    if (project.hasProperty("release")) return ""
 
     var version = "+build"
-    val branch = "git branch --show-current".execute()
-    if(branch.isNotEmpty() && branch != "main") {
-        version += ".${branch}"
-    }
-    val commitHashLines = "git rev-parse --short HEAD".execute()
-    if(commitHashLines.isNotEmpty()) {
-        version += ".${commitHashLines}"
+    if ("git".exitValue() != 0) {
+        version += ".unknown"
+    } else {
+        val branch = "git branch --show-current".execute()
+        if (branch.isNotEmpty() && branch != "main") {
+            version += ".${branch}"
+        }
+        val commitHashLines = "git rev-parse --short HEAD".execute()
+        if (commitHashLines.isNotEmpty()) {
+            version += ".${commitHashLines}"
+        }
+        val dirty = "git diff-index --quiet HEAD".exitValue()
+        if (dirty != 0) {
+            version += "-modified"
+        }
     }
     return version
 }
 
-// from https://discuss.gradle.org/t/how-to-run-execute-string-as-a-shell-command-in-kotlin-dsl/32235/5
-fun String.execute(workingDir: File = project.file("./")): String {
-    val parts = this.split("\\s".toRegex())
-    val proc = ProcessBuilder(*parts.toTypedArray())
-        .directory(workingDir)
-        .redirectOutput(ProcessBuilder.Redirect.PIPE)
-        .redirectError(ProcessBuilder.Redirect.PIPE)
-        .start()
+// from https://discuss.gradle.org/t/how-to-run-execute-string-as-a-shell-command-in-kotlin-dsl/32235/9
+fun String.execute(): String {
+    print(this)
+    val output = ByteArrayOutputStream()
+    rootProject.exec {
+        commandLine(split("\\s".toRegex()))
+        workingDir = rootProject.projectDir
+        isIgnoreExitValue = true
+        standardOutput = output
+        errorOutput = OutputStream.nullOutputStream()
+    }
 
-    proc.waitFor(1, TimeUnit.MINUTES)
-    return proc.inputStream.bufferedReader().readText().trim()
+    return String(output.toByteArray()).trim()
+}
+
+fun String.exitValue(): Int {
+    return rootProject.exec {
+        commandLine(split("\\s".toRegex()))
+        workingDir = rootProject.projectDir
+        isIgnoreExitValue = true
+        standardOutput = OutputStream.nullOutputStream()
+        errorOutput = OutputStream.nullOutputStream()
+    }.exitValue
 }

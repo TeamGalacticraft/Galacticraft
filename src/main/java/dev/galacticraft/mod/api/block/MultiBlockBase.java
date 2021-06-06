@@ -22,14 +22,12 @@
 
 package dev.galacticraft.mod.api.block;
 
-import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.block.entity.SolarPanelPartBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
@@ -40,24 +38,15 @@ public interface MultiBlockBase {
     default void onPartDestroyed(World world, PlayerEntity player, BlockState state, BlockPos pos, BlockState partState, BlockPos partPos) {
         world.breakBlock(pos, !player.isCreative());
 
-        for (BlockPos otherPart : getOtherParts(state, pos)) {
+        for (BlockPos otherPart : this.getOtherParts(state)) {
+            otherPart = otherPart.toImmutable().add(pos);
             if (!world.getBlockState(otherPart).isAir()) {
                 world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
             }
         }
     }
 
-    List<BlockPos> getOtherParts(BlockState state, BlockPos pos);
+    @Unmodifiable List<BlockPos> getOtherParts(BlockState state);
 
-    default void onMultiblockPlaced(World world, BlockPos basePos, BlockState state) {
-        BlockState defaultState = GalacticraftBlock.SOLAR_PANEL_PART.getDefaultState();
-        for (BlockPos otherPart : this.getOtherParts(state, basePos)) {
-            world.setBlockState(otherPart, defaultState);
-
-            BlockEntity partEntity = world.getBlockEntity(otherPart);
-            assert partEntity != null; // This will never be null because world.setBlockState will put a blockentity there.
-            ((SolarPanelPartBlockEntity) partEntity).setBasePos(basePos);
-            partEntity.markDirty();
-        }
-    }
+    void onMultiBlockPlaced(World world, BlockPos pos, BlockState state);
 }

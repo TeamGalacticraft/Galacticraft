@@ -23,9 +23,10 @@
 package dev.galacticraft.mod.mixin.client;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
-import dev.galacticraft.api.celestialbody.CelestialBodyType;
 import dev.galacticraft.api.entity.Rocket;
+import dev.galacticraft.api.registry.RegistryUtil;
 import dev.galacticraft.api.rocket.LaunchStage;
+import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.accessor.SoundSystemAccessor;
@@ -36,10 +37,11 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.input.Input;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -53,6 +55,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin implements GearInventoryProvider {
+    @Shadow @Final protected MinecraftClient client;
     private final @Unique FullFixedItemInv gearInv = createInv();
     @Shadow public Input input;
 
@@ -73,8 +76,8 @@ public abstract class ClientPlayerEntityMixin implements GearInventoryProvider {
                 }
                 if (!hasFreqModule) {
                     ((SoundSystemAccessor) MinecraftClient.getInstance().getSoundManager().soundSystem)
-                            .gc_updateAtmosphericMultiplier(CelestialBodyType.getByDimType(MinecraftClient.getInstance().world.getRegistryManager(), MinecraftClient.getInstance().world.getRegistryKey())
-                                    .map(body -> body.getAtmosphere().getPressure()).orElse(1.0f));
+                            .gc_updateAtmosphericMultiplier(RegistryUtil.getCelestialBodyByDimension(client.world.getRegistryManager(), client.world.getRegistryKey())
+                                    .map(body -> ((Landable) body.type()).atmosphere(body.config()).pressure()).orElse(1.0f));
                 }
             }
         });
@@ -87,12 +90,12 @@ public abstract class ClientPlayerEntityMixin implements GearInventoryProvider {
     }
 
     @Override
-    public CompoundTag writeGearToNbt(CompoundTag tag) {
+    public NbtCompound writeGearToNbt(NbtCompound tag) {
         return this.getGearInv().toTag(tag);
     }
 
     @Override
-    public void readGearFromNbt(CompoundTag tag) {
+    public void readGearFromNbt(NbtCompound tag) {
         this.getGearInv().fromTag(tag);
     }
 

@@ -44,12 +44,13 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,9 +75,9 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     public Status status = Status.NOT_ENOUGH_RESOURCES;
     public int progress;
 
-    public CircuitFabricatorBlockEntity() {
-        super(GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
-        this.recipeSlotInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
+    public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.CIRCUIT_FABRICATOR, pos, state);
+        this.recipeSlotInv = new InventoryFixedWrapper(this.itemInv().getMappedInv(INPUT_SLOT)) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
                 return getWrappedInventory().canPlayerUse(player);
@@ -116,7 +117,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         for (int i = 1; i < 6; i++) {
-            if (!this.getFilterForSlot(i).matches(getInventory().getInvStack(i))) {
+            if (!this.getFilterForSlot(i).matches(itemInv().getInvStack(i))) {
                 return Status.NOT_ENOUGH_RESOURCES;
             }
         }
@@ -133,13 +134,13 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
         }
         this.progress++;
         if (this.progress >= this.getMaxProgress()) {
-            if (this.getInventory().extractStack(INPUT_SLOT_DIAMOND, this.getFilterForSlot(INPUT_SLOT_DIAMOND), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
-            if (this.getInventory().extractStack(INPUT_SLOT_SILICON, this.getFilterForSlot(INPUT_SLOT_SILICON), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
-            if (this.getInventory().extractStack(INPUT_SLOT_SILICON_2, this.getFilterForSlot(INPUT_SLOT_SILICON_2), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
-            if (this.getInventory().extractStack(INPUT_SLOT_REDSTONE, this.getFilterForSlot(INPUT_SLOT_REDSTONE), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
-            if (this.getInventory().extractStack(INPUT_SLOT, this.getFilterForSlot(INPUT_SLOT), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.itemInv().extractStack(INPUT_SLOT_DIAMOND, this.getFilterForSlot(INPUT_SLOT_DIAMOND), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.itemInv().extractStack(INPUT_SLOT_SILICON, this.getFilterForSlot(INPUT_SLOT_SILICON), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.itemInv().extractStack(INPUT_SLOT_SILICON_2, this.getFilterForSlot(INPUT_SLOT_SILICON_2), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.itemInv().extractStack(INPUT_SLOT_REDSTONE, this.getFilterForSlot(INPUT_SLOT_REDSTONE), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.itemInv().extractStack(INPUT_SLOT, this.getFilterForSlot(INPUT_SLOT), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
             this.progress = 0;
-            this.getInventory().insertStack(OUTPUT_SLOT, this.getRecipe(recipeSlotInv).orElseThrow(RuntimeException::new).getOutput().copy(), Simulation.ACTION);
+            this.itemInv().insertStack(OUTPUT_SLOT, this.getRecipe(recipeSlotInv).orElseThrow(RuntimeException::new).getOutput().copy(), Simulation.ACTION);
         }
     }
 
@@ -157,15 +158,15 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.putInt(Constant.Nbt.PROGRESS, this.progress);
         return tag;
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         this.progress = tag.getInt(Constant.Nbt.PROGRESS);
     }
 
@@ -177,7 +178,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new CircuitFabricatorScreenHandler(syncId, player, this);
+        if (this.security().hasAccess(player)) return new CircuitFabricatorScreenHandler(syncId, player, this);
         return null;
     }
 

@@ -41,7 +41,7 @@ public class GalacticraftFeature {
     public static final RandomPatchFeatureConfig MOON_FLOWER_CONFIG = new RandomPatchFeatureConfig.Builder(new MoonFloraBlockStateProvider(), new SimpleBlockPlacer()).tries(64).build();
     public static final BlockPileFeatureConfig CHEESE_LOG_PILE_CONFIG = new BlockPileFeatureConfig(new PillarBlockStateProvider(GalacticraftBlock.MOON_CHEESE_LOG));
     public static final BlockStateProviderType<MoonFloraBlockStateProvider> MOON_FLOWER_PROVIDER = Registry.register(Registry.BLOCK_STATE_PROVIDER_TYPE, new Identifier(Constant.MOD_ID, "moon_flower_provider"), new BlockStateProviderType<>(MoonFloraBlockStateProvider.CODEC));
-    public static final ConfiguredFeature<?, ?> OIL_LAKE = Feature.LAKE.configure(new SingleStateFeatureConfig(GalacticraftBlock.CRUDE_OIL.getDefaultState())).decorate(Decorator.WATER_LAKE.configure(new ChanceDecoratorConfig(70)));
+    public static final ConfiguredFeature<?, ?> OIL_LAKE = Feature.LAKE.configure(new SingleStateFeatureConfig(GalacticraftBlock.CRUDE_OIL.getDefaultState())).decorate(Decorator.LAVA_LAKE.configure(new ChanceDecoratorConfig(70)));
 
     public static void register() {
     }

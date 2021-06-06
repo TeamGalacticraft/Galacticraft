@@ -29,7 +29,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.StringIdentifiable;
@@ -39,6 +41,8 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
+
+import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -94,6 +98,11 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
             state1 = state1.with(FlowableFluid.LEVEL, state.get(FlowableFluid.LEVEL));
         }
         return state1;
+    }
+
+    @Override
+    public Optional<SoundEvent> getBucketFillSound() {
+        return Fluids.WATER.getBucketFillSound();
     }
 
     public enum GratingState implements StringIdentifiable {

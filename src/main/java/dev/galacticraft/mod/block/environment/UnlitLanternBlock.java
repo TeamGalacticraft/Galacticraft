@@ -46,7 +46,7 @@ public class UnlitLanternBlock extends LanternBlock {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (player.getStackInHand(hand).getItem() instanceof FlintAndSteelItem) {
-            world.setBlockState(pos, Blocks.LANTERN.getDefaultState().with(HANGING, state.get(HANGING)).with(field_26441, state.get(field_26441)));
+            world.setBlockState(pos, Blocks.LANTERN.getDefaultState().with(HANGING, state.get(HANGING)).with(WATERLOGGED, state.get(WATERLOGGED)));
             ItemStack stack = player.getStackInHand(hand).copy();
             stack.damage(1, player, e -> {});
             player.setStackInHand(hand, stack);

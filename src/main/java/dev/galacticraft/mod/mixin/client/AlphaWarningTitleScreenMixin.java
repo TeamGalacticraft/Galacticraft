@@ -22,12 +22,14 @@
 
 package dev.galacticraft.mod.mixin.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -67,7 +69,9 @@ public abstract class AlphaWarningTitleScreenMixin extends Screen {
     @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V", at = @At("HEAD"), cancellable = true)
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (!warningHidden) {
-            this.client.getTextureManager().bindTexture(ALPHA_WARNING_GC_TEXTURE);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderTexture(0, ALPHA_WARNING_GC_TEXTURE);
             drawTexture(matrices, MathHelper.clamp(this.width / 2 - 128, 0, this.width), MathHelper.clamp(this.height / 2 - 64, 0, this.height), 0.0F, 0.0F, 256, 128, 256, 128);
             drawCenteredText(matrices, this.textRenderer, ALPHA_WARNING_GC_HEADER, this.width / 2, this.height / 2 - 48, 0xFF0000);
             drawCenteredText(matrices, this.textRenderer, ALPHA_WARNING_GC_CONTENT1, this.width / 2, this.height / 2 - 16, 0xFFFFFF);

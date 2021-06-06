@@ -23,86 +23,92 @@
 package dev.galacticraft.mod.client.render.entity.feature;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.model.*;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.entity.model.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Quaternion;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/oxygen_gear.png");
-    private final ModelTransformer<T> maskTransforms;
-    private final ModelTransformer<T> tankTransforms;
-    private final ModelPart oxygenMask;
-    private final ModelPart oxygenTank;
+    private final @Nullable ModelPart mask;
+    private final @Nullable ModelPart tank;
+    private final @Nullable ModelPart pipe;
 
-    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms, ModelTransformer<T> tankTransforms) {
+    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context) {
         super(context);
-        this.maskTransforms = maskTransforms;
-        this.tankTransforms = tankTransforms;
+        ModelPart root, head, body;
+        if (context.getModel() instanceof SinglePartEntityModel<?> model) {
+            root = model.getPart();
+            head = root.getChild(EntityModelPartNames.HEAD);
+            body = root.getChild(EntityModelPartNames.BODY);
+        } else if (context.getModel() instanceof BipedEntityModel<?> model){
+            head = model.head;
+            body = model.body;
+        } else if (context.getModel() instanceof AnimalModel<?> model){
+            head = model.getHeadParts().iterator().next();
+            body = model.getBodyParts().iterator().next();;
+        } else {
+            this.mask = null;
+            this.tank = null;
+            this.pipe = null;
+            return;
+        }
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+        if (head != null) {
+            modelPartData.addChild(Constant.ModelPartName.OXYGEN_MASK, ModelPartBuilder.create().uv(0, 10).cuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, Dilation.NONE), ModelTransform.pivot(head.pivotX, head.pivotY, head.pivotZ));
+        }
 
-        this.oxygenMask = new ModelPart(64, 32, 0, 10);
-        this.oxygenMask.setPivot(0.0F, 6.0F, 0.0F);
-        this.oxygenMask.addCuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, extra);
-        this.oxygenTank = new ModelPart(64, 32, 0, 0);
-        this.oxygenTank.setPivot(0.0F, 6.0F, 0.0F);
-        this.oxygenTank.addCuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, extra);
-        ModelPart oxygenPipe = new ModelPart(64, 32, 40, 17);
-        oxygenPipe.setPivot(0.0F, 2.0F, 0.0F);
-        oxygenPipe.addCuboid(-2.0F, -3.0F, 0.0F, 4, 5, 8, extra);
-        this.oxygenTank.addChild(oxygenPipe);
-    }
+        if (body != null) {
+            modelPartData.addChild(Constant.ModelPartName.OXYGEN_TANK, ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, Dilation.NONE), ModelTransform.pivot(body.pivotX, body.pivotY, body.pivotZ));
+            modelPartData.addChild(Constant.ModelPartName.OXYGEN_PIPE, ModelPartBuilder.create().uv(40, 17).cuboid(-2.0F, -3.0F, 0.0F, 4, 5, 8, Dilation.NONE), ModelTransform.pivot(body.pivotX, body.pivotY, body.pivotZ));
+        }
 
-    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extraHelmet, float extraTank, float pivotX, float pivotY, float pivotZ, ModelTransformer<T> maskTransforms, ModelTransformer<T> tankTransforms) {
-        super(context);
-        this.maskTransforms = maskTransforms;
-        this.tankTransforms = tankTransforms;
+        root = modelPartData.createPart(64, 32);
 
-        this.oxygenMask = new ModelPart(64, 32, 0, 10);
-        this.oxygenMask.setPivot(pivotX, pivotY, pivotZ);
-        this.oxygenMask.addCuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, extraHelmet);
-        this.oxygenTank = new ModelPart(64, 32, 0, 0);
-        this.oxygenTank.setPivot(0.0F, 6.0F, 0.0F);
-        this.oxygenTank.addCuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, extraTank);
-        ModelPart oxygenPipe = new ModelPart(64, 32, 40, 17);
-        oxygenPipe.setPivot(0.0F, 2.0F, 0.0F);
-        oxygenPipe.addCuboid(-2.0F, -3.0F, 0.0F, 4, 5, 8, extraTank);
-        this.oxygenTank.addChild(oxygenPipe);
+        if (head != null) {
+            this.mask = root.getChild(Constant.ModelPartName.OXYGEN_MASK);
+        } else {
+            this.mask = null;
+        }
+
+        if (body != null) {
+            this.tank = root.getChild(Constant.ModelPartName.OXYGEN_TANK);
+            this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
+        } else {
+            this.tank = null;
+            this.pipe = null;
+        }
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(getTexture(entity), true));
-        matrices.push();
-        maskTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
-        matrices.push();
-        matrices.multiply(new Quaternion(Vector3f.POSITIVE_Y, headYaw, true));
-        matrices.multiply(new Quaternion(Vector3f.POSITIVE_X, headPitch, true));
-        oxygenMask.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-        matrices.pop();
-        tankTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
-        oxygenTank.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-        matrices.pop();
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(this.getTexture(entity), true));
+        if (mask != null) {
+            this.mask.yaw = headYaw;
+            this.mask.pitch = headPitch;
+            this.mask.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+        }
+        if (this.tank != null) {
+            assert this.pipe != null;
+            this.tank.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+            this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+        }
     }
 
     @Override
     protected Identifier getTexture(T entity) {
         return TEXTURE;
-    }
-
-    @FunctionalInterface
-    public interface ModelTransformer<T extends Entity> {
-        void transformModel(MatrixStack matrices, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch);
     }
 }

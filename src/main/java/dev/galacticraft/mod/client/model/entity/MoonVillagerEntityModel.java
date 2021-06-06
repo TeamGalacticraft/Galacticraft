@@ -22,37 +22,45 @@
 
 package dev.galacticraft.mod.client.model.entity;
 
-import com.google.common.collect.Iterables;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.entity.MoonVillagerEntity;
-import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.model.*;
+import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.client.render.entity.model.VillagerResemblingModel;
-
-import java.util.Collections;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonVillagerEntityModel extends VillagerResemblingModel<MoonVillagerEntity> {
+    private final ModelPart head;
     private final ModelPart brain;
 
-    public MoonVillagerEntityModel(float scale, int textureWidth, int textureHeight) {
-        super(scale, textureWidth, textureHeight);
-        this.field_17141.visible = false; // set invisible
-        this.field_17141 = new ModelPart(this);
-
-        this.brain = new ModelPart(this).setTextureSize(textureWidth, textureHeight);
-        this.brain.setPivot(0.0F, 0.0F, 0.0F);
-        this.brain.setTextureOffset(0, 38).addCuboid(-5.0F, -16.0F, -5.0F, 10.0F, 8.0F, 10.0F, scale, false);
-        //                                                           .addCuboid    -4.0F,    -10.0F,     -4.0F,       8.0F,        10.0F,      8.0F, scale)
+    public MoonVillagerEntityModel(ModelPart root) {
+        super(root);
+        this.head = root.getChild(EntityModelPartNames.HEAD);
+        this.brain = head.getChild(Constant.ModelPartName.MOON_VILLAGER_BRAIN);
     }
 
-    public MoonVillagerEntityModel(float v) {
-        this(v, 64, 64);
+    public static ModelData getModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+        ModelPartData modelPartData2 = modelPartData.addChild(EntityModelPartNames.HEAD, ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F), ModelTransform.NONE);
+        ModelPartData modelPartData3 = modelPartData2.addChild(EntityModelPartNames.HAT, ModelPartBuilder.create().uv(32, 0).cuboid(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new Dilation(0.5F)), ModelTransform.NONE);
+        modelPartData3.addChild(EntityModelPartNames.HAT_RIM, ModelPartBuilder.create().uv(30, 47).cuboid(-8.0F, -8.0F, -6.0F, 16.0F, 16.0F, 1.0F), ModelTransform.rotation(-1.5707964F, 0.0F, 0.0F));
+        modelPartData2.addChild(EntityModelPartNames.NOSE, ModelPartBuilder.create().uv(24, 0).cuboid(-1.0F, -1.0F, -6.0F, 2.0F, 4.0F, 2.0F), ModelTransform.pivot(0.0F, -2.0F, 0.0F));
+        modelPartData2.addChild(Constant.ModelPartName.MOON_VILLAGER_BRAIN, ModelPartBuilder.create().uv(0, 38).cuboid(-5.0F, -16.0F, -5.0F, 10.0F, 8.0F, 10.0F), ModelTransform.NONE);
+        ModelPartData modelPartData4 = modelPartData.addChild(EntityModelPartNames.BODY, ModelPartBuilder.create().uv(16, 20).cuboid(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 6.0F), ModelTransform.NONE);
+        modelPartData4.addChild(EntityModelPartNames.JACKET, ModelPartBuilder.create().uv(0, 38).cuboid(-4.0F, 0.0F, -3.0F, 8.0F, 18.0F, 6.0F, new Dilation(0.5F)), ModelTransform.NONE);
+        modelPartData.addChild(EntityModelPartNames.ARMS, ModelPartBuilder.create().uv(44, 22).cuboid(-8.0F, -2.0F, -2.0F, 4.0F, 8.0F, 4.0F).uv(44, 22).cuboid(4.0F, -2.0F, -2.0F, 4.0F, 8.0F, 4.0F, true).uv(40, 38).cuboid(-4.0F, 2.0F, -2.0F, 8.0F, 4.0F, 4.0F), ModelTransform.of(0.0F, 3.0F, -1.0F, -0.75F, 0.0F, 0.0F));
+        modelPartData.addChild(EntityModelPartNames.RIGHT_LEG, ModelPartBuilder.create().uv(0, 22).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F), ModelTransform.pivot(-2.0F, 12.0F, 0.0F));
+        modelPartData.addChild(EntityModelPartNames.LEFT_LEG, ModelPartBuilder.create().uv(0, 22).mirrored().cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F), ModelTransform.pivot(2.0F, 12.0F, 0.0F));
+        return modelData;
     }
 
     @Override
     public void setAngles(MoonVillagerEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
         super.setAngles(entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
+        this.setHatVisible(false);
         this.brain.visible = head.visible;
         this.brain.yaw = this.head.yaw;
         this.brain.pitch = this.head.pitch;
@@ -60,18 +68,11 @@ public class MoonVillagerEntityModel extends VillagerResemblingModel<MoonVillage
         this.brain.pivotY = this.head.pivotY;
         this.brain.pivotZ = this.head.pivotZ;
         this.brain.roll = this.head.roll;
-//        this.brain.mirror = this.head.mirror;
-    }
-
-    @Override
-    public Iterable<ModelPart> getParts() {
-        return Iterables.concat(Collections.singletonList(brain), super.getParts());
     }
 
     @Override
     public void setHatVisible(boolean visible) {
-        this.head.visible = visible;
-        this.field_17141.visible = false;
-        this.field_17142.visible = false;
+        super.setHatVisible(visible);
+        this.brain.visible = visible;
     }
 }

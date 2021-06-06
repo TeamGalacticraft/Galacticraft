@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.api.wire;
 
 import alexiil.mc.lib.attributes.Simulation;
-import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
+import dev.galacticraft.energy.api.EnergyInsertable;
 import dev.galacticraft.mod.api.wire.impl.WireNetworkImpl;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;

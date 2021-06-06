@@ -26,7 +26,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import dev.galacticraft.api.celestialbody.CelestialBodyType;
+import dev.galacticraft.api.registry.RegistryUtil;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
@@ -42,7 +42,6 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -77,7 +76,7 @@ public class GalacticraftCommand {
                             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                             .executes(context -> {
                                 context.getSource().getPlayer().networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer().writeInt(Integer.MAX_VALUE))));
-                                ((ServerPlayerEntityAccessor) context.getSource().getPlayer()).setCelestialScreenState(RocketData.EMPTY);
+                                ((ServerPlayerEntityAccessor) context.getSource().getPlayer()).setCelestialScreenState(RocketData.empty());
                                 return 1;
                             })
             );
@@ -97,10 +96,6 @@ public class GalacticraftCommand {
             commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimtp_gui));
             commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimensiontp_root));
             commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimensiontp_pos));
-
-            commandDispatcher.register(
-                    CommandManager.literal("gclistbodies")
-                    .executes(GalacticraftCommand::listBodies));
         });
     }
 
@@ -114,8 +109,8 @@ public class GalacticraftCommand {
         }
         context.getSource().getMinecraftServer().execute(() -> {
             try {
-                if (!CelestialBodyType.getByDimType(context.getSource().getRegistryManager(), context.getSource().getWorld().getRegistryKey()).isPresent()) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.gcrhouston.cannot_detect_signal").setStyle(Constant.Text.RED_STYLE));
+                if (!RegistryUtil.getCelestialBodyByDimension(context.getSource().getRegistryManager(), context.getSource().getWorld().getRegistryKey()).isPresent()) {
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft.gchouston.cannot_detect_signal").setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
                     return;
                 }
@@ -141,8 +136,8 @@ public class GalacticraftCommand {
                             pos.getX(),
                             pos.getY(),
                             pos.getZ(),
-                            player.yaw,
-                            player.pitch);
+                            player.getYaw(),
+                            player.getPitch());
                     context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.gchouston.success", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.GREEN_STYLE), true);
                 }
             } catch (CommandSyntaxException e) {
@@ -181,8 +176,8 @@ public class GalacticraftCommand {
                         pos.getX(),
                         pos.getY(),
                         pos.getZ(),
-                        player.yaw,
-                        player.pitch);
+                        player.getYaw(),
+                        player.getPitch());
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.dimensiontp.success.single", serverWorld.getRegistryKey().getValue()), true);
             } catch (CommandSyntaxException e) {
                 context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.RED_STYLE));
@@ -247,10 +242,10 @@ public class GalacticraftCommand {
                 ServerPlayerEntity player = context.getSource().getPlayer();
                 player.teleport(serverWorld,
                         MathHelper.clamp(pos.getX(), -30000000, 30000000),
-                        MathHelper.clamp(pos.getY(), 0, serverWorld.getDimensionHeight() - 1),
+                        MathHelper.clamp(pos.getY(), 0, serverWorld.getHeight() - 1),
                         MathHelper.clamp(pos.getZ(), -30000000, 30000000),
-                        player.yaw,
-                        player.pitch);
+                        player.getYaw(),
+                        player.getPitch());
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.dimensiontp.success.pos", serverWorld.getRegistryKey().getValue(), pos.getX(), pos.getY(), pos.getZ()), true);
             } catch (CommandSyntaxException e) {
                 context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constant.Text.RED_STYLE));
@@ -258,13 +253,6 @@ public class GalacticraftCommand {
             }
         });
         return retval[0];
-    }
-
-    private static int listBodies(CommandContext<ServerCommandSource> context) {
-        StringBuilder builder = new StringBuilder();
-        CelestialBodyType.getAll(context.getSource().getRegistryManager()).forEach(celestialBodyType -> builder.append(celestialBodyType.getTranslationKey()).append("\n"));
-        context.getSource().sendFeedback(new LiteralText(builder.toString()), true);
-        return Command.SINGLE_SUCCESS;
     }
 
     /**

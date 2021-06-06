@@ -39,7 +39,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -47,6 +47,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,9 +66,9 @@ public class CompressorBlockEntity extends MachineBlockEntity {
     public int fuelLength;
     public int progress;
 
-    public CompressorBlockEntity() {
-        super(GalacticraftBlockEntityType.COMPRESSOR);
-        this.craftingInv = new InventoryFixedWrapper(this.getInventory().getSubInv(1, 10)) {
+    public CompressorBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.COMPRESSOR, pos, state);
+        this.craftingInv = new InventoryFixedWrapper(this.itemInv().getSubInv(1, 10)) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
                 return getWrappedInventory().canPlayerUse(player);
@@ -105,7 +106,7 @@ public class CompressorBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull MachineStatus updateStatus() {
         Optional<CompressingRecipe> optional = this.getRecipe(this.craftingInv);
-        if ((this.fuelLength > 0 || !this.getInventory().getInvStack(FUEL_INPUT_SLOT).isEmpty()) && optional.isPresent()) {
+        if ((this.fuelLength > 0 || !this.itemInv().getInvStack(FUEL_INPUT_SLOT).isEmpty()) && optional.isPresent()) {
             if (this.canInsert(OUTPUT_SLOT, optional.get().getOutput())) {
                 return Status.PROCESSING;
             } else {
@@ -120,7 +121,7 @@ public class CompressorBlockEntity extends MachineBlockEntity {
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
             if (this.fuelLength == 0) {
-                this.fuelLength = FuelRegistry.INSTANCE.get(this.getInventory().extractStack(FUEL_INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem());
+                this.fuelLength = FuelRegistry.INSTANCE.get(this.itemInv().extractStack(FUEL_INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem());
                 this.fuelTime = this.fuelLength;
                 if (this.fuelLength == 0) return;
             }
@@ -163,15 +164,15 @@ public class CompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound writeNbt(NbtCompound tag) {
         tag.putInt(Constant.Nbt.PROGRESS, this.progress);
         tag.putInt(Constant.Nbt.FUEL_TIME, this.fuelTime);
-        return super.toTag(tag);
+        return super.writeNbt(tag);
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         this.progress = tag.getInt(Constant.Nbt.PROGRESS);
         this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
     }
@@ -179,7 +180,7 @@ public class CompressorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new CompressorScreenHandler(syncId, player, this);
+        if (this.security().hasAccess(player)) return new CompressorScreenHandler(syncId, player, this);
         return null;
     }
 

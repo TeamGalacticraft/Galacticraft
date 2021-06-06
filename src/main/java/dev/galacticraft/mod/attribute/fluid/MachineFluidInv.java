@@ -29,8 +29,8 @@ import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.attribute.Automatable;
-import dev.galacticraft.mod.screen.MachineScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.screen.tank.OxygenTank;
 import dev.galacticraft.mod.screen.tank.Tank;
@@ -66,7 +66,7 @@ public class MachineFluidInv extends SimpleFixedFluidInv implements Automatable 
 
     public void createTanks(MachineScreenHandler<?> screenHandler) {
         for (int i = 0; i < getTankCount(); i++) {
-            screenHandler.addTank(this.tankProviders[i].createTank(i, screenHandler.machine.getFluidInv()));
+            screenHandler.addTank(this.tankProviders[i].createTank(i, screenHandler.machine.fluidInv()));
         }
     }
 
@@ -103,13 +103,13 @@ public class MachineFluidInv extends SimpleFixedFluidInv implements Automatable 
         }
 
         public void addTank(int index, SlotType type, FluidFilter filter, int x, int y) {
-            this.tankProviders.add(index, new DefaultTankProvider(x, y));
+            this.tankProviders.add(index, new DefaultTankProvider(x, y, 1));
             this.slotTypes.add(index, type);
             this.filters.add(index, filter.or(EMPTY_ONLY));
         }
 
         public void addTank(int index, SlotType type, int x, int y) {
-            this.tankProviders.add(index, new DefaultTankProvider(x, y));
+            this.tankProviders.add(index, new DefaultTankProvider(x, y, 1));
             this.slotTypes.add(index, type);
             this.filters.add(index, ConstantFluidFilter.ANYTHING);
         }
@@ -139,36 +139,14 @@ public class MachineFluidInv extends SimpleFixedFluidInv implements Automatable 
         Tank createTank(int index, FixedFluidInv inv);
     }
 
-    public static class DefaultTankProvider implements TankProvider {
-        private final int x;
-        private final int y;
-        private final int scale;
-
-        public DefaultTankProvider(int x, int y, int scale) {
-            this.x = x;
-            this.y = y;
-            this.scale = scale;
-        }
-
-        public DefaultTankProvider(int x, int y) {
-            this(x, y, 1);
-        }
-
+    public record DefaultTankProvider(int x, int y, int scale) implements TankProvider {
         @Override
         public Tank createTank(int index, FixedFluidInv inv) {
             return new Tank(index, inv, this.x, this.y, this.scale);
         }
     }
 
-    public static class OxygenTankProvider implements TankProvider {
-        private final int x;
-        private final int y;
-
-        public OxygenTankProvider(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
+    public record OxygenTankProvider(int x, int y) implements TankProvider {
         @Override
         public Tank createTank(int index, FixedFluidInv inv) {
             return new OxygenTank(index, inv, x, y);

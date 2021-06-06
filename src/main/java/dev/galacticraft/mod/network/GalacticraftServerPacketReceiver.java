@@ -33,7 +33,6 @@ import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.datafixers.util.Either;
-import dev.galacticraft.api.celestialbody.CelestialBodyType;
 import dev.galacticraft.api.celestialbody.CelestialObjectType;
 import dev.galacticraft.api.celestialbody.satellite.Satellite;
 import dev.galacticraft.api.celestialbody.satellite.SatelliteRecipe;
@@ -49,6 +48,7 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
+import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
@@ -56,7 +56,6 @@ import dev.galacticraft.mod.block.entity.RocketAssemblerBlockEntity;
 import dev.galacticraft.mod.block.entity.RocketDesignerBlockEntity;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
-import dev.galacticraft.mod.screen.MachineScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -92,7 +91,7 @@ public class GalacticraftServerPacketReceiver {
                     int i = buf.readInt();
                     server.execute(() -> {
                         MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                        if (machine.getSecurity().hasAccess(player)) {
+                        if (machine.security().hasAccess(player)) {
                             if (i == -1) {
                                 machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
                                 return;
@@ -104,7 +103,7 @@ public class GalacticraftServerPacketReceiver {
                     int i = buf.readInt();
                     server.execute(() -> {
                         MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                        if (machine.getSecurity().hasAccess(player)) {
+                        if (machine.security().hasAccess(player)) {
                             if (i == -1) {
                                 machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
                                 return;
@@ -118,7 +117,7 @@ public class GalacticraftServerPacketReceiver {
                 int i = buf.readByte();
                 server.execute(() -> {
                     MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                    if (machine.getSecurity().hasAccess(player)) {
+                    if (machine.security().hasAccess(player)) {
                         machine.getConfiguration().getSideConfiguration().get(face).setOption(AutomationType.values()[i]);
                         machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
                         machine.sync();
@@ -131,7 +130,7 @@ public class GalacticraftServerPacketReceiver {
             RedstoneInteractionType redstoneInteractionType = RedstoneInteractionType.values()[buf.readByte()];
             server.execute(() -> {
                 MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                if (machine.getSecurity().hasAccess(player)) {
+                if (machine.security().hasAccess(player)) {
                     machine.getConfiguration().setRedstone(redstoneInteractionType);
                 }
             });
@@ -141,7 +140,7 @@ public class GalacticraftServerPacketReceiver {
             SecurityInfo.Accessibility accessibility = SecurityInfo.Accessibility.values()[buf.readByte()];
             server.execute(() -> {
                 MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                if (machine.getSecurity().isOwner(player)) {
+                if (machine.security().isOwner(player)) {
                     machine.getConfiguration().getSecurity().setAccessibility(accessibility);
                 }
             });
@@ -151,7 +150,7 @@ public class GalacticraftServerPacketReceiver {
             byte max = buf.readByte();
             server.execute(() -> {
                 BubbleDistributorBlockEntity machine = ((BubbleDistributorScreenHandler) player.currentScreenHandler).machine;
-                if (machine.getSecurity().hasAccess(player)) {
+                if (machine.security().hasAccess(player)) {
                     if (max > 0) {
                         machine.setTargetSize(max);
                     }
@@ -163,7 +162,7 @@ public class GalacticraftServerPacketReceiver {
             boolean visible = buf.readBoolean();
             server.execute(() -> {
                 BubbleDistributorBlockEntity machine = ((BubbleDistributorScreenHandler) player.currentScreenHandler).machine;
-                if (machine.getSecurity().hasAccess(player)) {
+                if (machine.security().hasAccess(player)) {
                     machine.bubbleVisible = visible;
                 }
             });
@@ -172,17 +171,17 @@ public class GalacticraftServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "tank_modify"), (server, player, handler, buf, responseSender) -> {
             int index = buf.readInt();
             server.execute(() -> {
-                MachineFluidInv inv = ((MachineScreenHandler<?>) player.currentScreenHandler).machine.getFluidInv();
-                ItemInsertable excess = new FixedInventoryVanillaWrapper(player.inventory).getInsertable();
-                Reference<ItemStack> reference = new Reference<ItemStack>() {
+                MachineFluidInv inv = ((MachineScreenHandler<?>) player.currentScreenHandler).machine.fluidInv();
+                ItemInsertable excess = new FixedInventoryVanillaWrapper(player.getInventory()).getInsertable();
+                Reference<ItemStack> reference = new Reference<>() {
                     @Override
                     public ItemStack get() {
-                        return player.inventory.getCursorStack();
+                        return player.currentScreenHandler.getCursorStack();
                     }
 
                     @Override
                     public boolean set(ItemStack value) {
-                        player.inventory.setCursorStack(value);
+                        player.currentScreenHandler.setCursorStack(value);
                         return true;
                     }
 

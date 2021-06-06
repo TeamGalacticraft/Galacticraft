@@ -11,5 +11,7 @@
   "coordinate_scale": 1.0,
   "piglin_safe": false,
   "has_skylight": true,
-  "has_ceiling": false
+  "has_ceiling": false,
+  "min_y": 0,
+  "height": 256
 }

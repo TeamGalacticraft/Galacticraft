@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.accessor;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -31,7 +31,7 @@ import net.minecraft.nbt.CompoundTag;
 public interface GearInventoryProvider {
     FixedItemInv getGearInv();
 
-    CompoundTag writeGearToNbt(CompoundTag tag);
+    NbtCompound writeGearToNbt(NbtCompound tag);
 
-    void readGearFromNbt(CompoundTag tag);
+    void readGearFromNbt(NbtCompound tag);
 }

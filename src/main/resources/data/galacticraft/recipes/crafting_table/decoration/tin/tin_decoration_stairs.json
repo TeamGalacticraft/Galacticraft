@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "L  ",
+    "LL ",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "item": "galacticraft:tin_decoration"
+    }
+  },
+  "result": {
+    "item": "galacticraft:tin_decoration_stairs",
+    "count": 4
+  }
+}

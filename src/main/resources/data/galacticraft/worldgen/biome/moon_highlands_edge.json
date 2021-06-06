@@ -27,16 +27,13 @@
   },
   "features": [
     [],
-    [
-      "galacticraft:moon_rock"
-    ],
+    [],
     [],
     [],
     [],
     [],
     [
       "galacticraft:disk_moon_basalt",
-      "galacticraft:ore_copper_moon",
       "galacticraft:ore_tin_moon",
       "galacticraft:ore_cheese_moon"
     ],

@@ -30,6 +30,7 @@ import dev.galacticraft.mod.client.network.GalacticraftClientPacketReceiver;
 import dev.galacticraft.mod.client.render.MoonSkyProperties;
 import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.entity.*;
+import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLayer;
 import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
 import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resource.GalacticraftResourceReloadListener;
@@ -114,20 +115,21 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenRegistry.register(GalacticraftScreenHandlerType.ROCKET_ASSEMBLER_HANDLER, RocketAssemblerScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerType.FUEL_LOADER_HANDLER, FuelLoaderScreen::new);
 
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.MOON_VILLAGER, (dispatcher, context) -> new MoonVillagerEntityRenderer(dispatcher, context.getResourceManager()));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_ZOMBIE, (dispatcher, context) -> new EvolvedZombieRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_CREEPER, (dispatcher, context) -> new EvolvedCreeperEntityRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_SKELETON, (dispatcher, context) -> new EvolvedSkeletonEntityRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_SPIDER, (dispatcher, context) -> new EvolvedSpiderEntityRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_EVOKER, (dispatcher, context) -> new EvolvedEvokerEntityRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_PILLAGER, (dispatcher, context) -> new EvolvedPillagerEntityRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_VINDICATOR, (dispatcher, context) -> new EvolvedVindicatorEntityRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.BUBBLE, (dispatcher, context) -> new BubbleEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.MOON_VILLAGER, MoonVillagerEntityRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_ZOMBIE, EvolvedZombieRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_CREEPER, EvolvedCreeperEntityRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_SKELETON, EvolvedSkeletonEntityRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_SPIDER, EvolvedSpiderEntityRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_EVOKER, EvolvedEvokerEntityRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_PILLAGER, EvolvedPillagerEntityRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_VINDICATOR, EvolvedVindicatorEntityRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.BUBBLE, BubbleEntityRenderer::new);
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.ROCKET, (entityRenderDispatcher, context) -> new RocketEntityRenderer(entityRenderDispatcher));
 
         GalacticraftBlockEntityRenderer.register();
         GalacticraftClientPacketReceiver.register();
         MachineBakedModel.registerDefaults();
+        GalacticraftEntityModelLayer.register();
         GalacticraftRocketPartRenderers.register();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.TIN_LADDER, RenderLayer.getCutout());

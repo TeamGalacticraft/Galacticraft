@@ -30,11 +30,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
 /**
@@ -45,8 +47,8 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
     private static final Identifier MODEL = new Identifier(Constant.MOD_ID, "models/misc/sphere");
     public static BakedModel bubbleModel = null;
 
-    public BubbleEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
-        super(entityRenderDispatcher);
+    public BubbleEntityRenderer(EntityRendererFactory.Context context) {
+        super(context);
     }
 
     @Override
@@ -56,14 +58,14 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
             assert bubbleModel != null;
         }
         BlockEntity blockEntity = entity.world.getBlockEntity(entity.getBlockPos());
-        if (!(blockEntity instanceof BubbleDistributorBlockEntity) || entity.removed) {
-            entity.remove();
+        if (!(blockEntity instanceof BubbleDistributorBlockEntity machine) || entity.isRemoved()) {
+            ((ClientWorld) entity.world).removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
             return;
         }
-        if (!((BubbleDistributorBlockEntity) blockEntity).bubbleVisible) {
+        if (!machine.bubbleVisible) {
             return;
         }
-        double size = ((BubbleDistributorBlockEntity) blockEntity).getSize();
+        double size = machine.getSize();
 
         matrices.push();
         matrices.translate(0.5F, 1.0F, 0.5F);

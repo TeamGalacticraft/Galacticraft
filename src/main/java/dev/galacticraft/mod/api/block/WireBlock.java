@@ -36,7 +36,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,8 +52,8 @@ public class WireBlock extends Block implements BlockEntityProvider {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof Wire) {
-                Galacticraft.LOGGER.info(((Wire) entity).getNetworkNullable());
+            if (entity instanceof Wire wire) {
+                Galacticraft.LOGGER.info(wire.getNetworkNullable());
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);
@@ -76,7 +75,7 @@ public class WireBlock extends Block implements BlockEntityProvider {
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView view) {
-        return new WireBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new WireBlockEntity(pos, state);
     }
 }

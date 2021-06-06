@@ -23,32 +23,22 @@
 package dev.galacticraft.mod.world.dimension;
 
 import dev.galacticraft.api.atmosphere.AtmosphericGas;
-import dev.galacticraft.api.registry.AddonRegistry;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.text.TranslatableText;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftGas {
-
     public static final AtmosphericGas NITROGEN_OXIDE =
             new AtmosphericGas(
-                    new Identifier("galacticraft", "nitrogen_oxide"),
-                    "ui.galacticraft.nitrogen_oxide",
+                    new TranslatableText("ui.galacticraft.nitrogen_oxide"),
                     "NO"
             );
 
     public static final AtmosphericGas HYDROGEN_DEUTERIUM_OXYGEN =
             new AtmosphericGas(
-                    new Identifier("galacticraft", "hydrogen_deuterium_oxygen"),
-                    "ui.galacticraft.hydrogen_deuterium_oxygen",
+                    new TranslatableText("ui.galacticraft.hydrogen_deuterium_oxygen"),
                     "HDO"
 
             );
-
-    public static void register() {
-        Registry.register(AddonRegistry.ATMOSPHERIC_GAS, GalacticraftGas.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGas.HYDROGEN_DEUTERIUM_OXYGEN);
-        Registry.register(AddonRegistry.ATMOSPHERIC_GAS, GalacticraftGas.NITROGEN_OXIDE.getId(), GalacticraftGas.NITROGEN_OXIDE);
-    }
 }

@@ -23,7 +23,10 @@
 package dev.galacticraft.mod.log;
 
 import dev.galacticraft.mod.Constant;
-import org.apache.logging.log4j.message.*;
+import org.apache.logging.log4j.message.AbstractMessageFactory;
+import org.apache.logging.log4j.message.Message;
+import org.apache.logging.log4j.message.ParameterizedMessage;
+import org.apache.logging.log4j.message.SimpleMessage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>

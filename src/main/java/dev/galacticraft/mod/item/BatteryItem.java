@@ -26,9 +26,9 @@ import alexiil.mc.lib.attributes.AttributeProviderItem;
 import alexiil.mc.lib.attributes.ItemAttributeList;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
-import com.hrznstudio.galacticraft.energy.api.CapacitorView;
-import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
-import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
+import dev.galacticraft.energy.api.CapacitorView;
+import dev.galacticraft.energy.impl.DefaultEnergyType;
+import dev.galacticraft.energy.impl.SimpleCapacitor;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.EnergyUtil;
 import net.fabricmc.api.EnvType;
@@ -38,7 +38,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
@@ -85,7 +85,7 @@ public class BatteryItem extends Item implements AttributeProviderItem {
 
     @Override
     public void onCraft(@NotNull ItemStack battery, World world, PlayerEntity player) {
-        CompoundTag batteryTag = battery.getOrCreateTag();
+        NbtCompound batteryTag = battery.getOrCreateTag();
         battery.setDamage(getMaxCapacity());
         battery.setTag(batteryTag);
     }
