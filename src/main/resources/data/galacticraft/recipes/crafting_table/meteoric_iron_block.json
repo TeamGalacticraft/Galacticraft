@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "MMM",
+    "MMM",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "item": "galacticraft:meteoric_iron_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraft:meteoric_iron_block",
+    "count": 1
+  }
+}

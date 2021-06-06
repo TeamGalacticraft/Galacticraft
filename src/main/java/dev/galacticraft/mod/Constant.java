@@ -69,17 +69,20 @@ public interface Constant {
         String VAPOR_SPOUT = "vapor_spout";
 
         // Ore
-        String ASTEROID_ALUMINUM_ORE = "asteroid_aluminum_ore";
         String MOON_CHEESE_ORE = "moon_cheese_ore";
+        String MOON_BASALT_CHEESE_ORE = "moon_basalt_cheese_ore";
         String MOON_COPPER_ORE = "moon_copper_ore";
-        String MARS_COPPER_ORE = "mars_copper_ore";
+        String MOON_BASALT_COPPER_ORE = "moon_basalt_copper_ore";
         String DESH_ORE = "desh_ore";
         String ILMENITE_ORE = "ilmenite_ore";
-        String MARS_IRON_ORE = "mars_iron_ore";
-        String ASTEROID_IRON_ORE = "asteroid_iron_ore";
         String SILICON_ORE = "silicon_ore";
+        String DEEPSLATE_SILICON_ORE = "deepslate_silicon_ore";
+        String TIN_ORE = "tin_ore";
+        String DEEPSLATE_TIN_ORE = "deepslate_tin_ore";
         String MOON_TIN_ORE = "moon_tin_ore";
-        String MARS_TIN_ORE = "mars_tin_ore";
+        String MOON_BASALT_TIN_ORE = "moon_basalt_tin_ore";
+        String ALUMINUM_ORE = "aluminum_ore";
+        String DEEPSLATE_ALUMINUM_ORE = "deepslate_aluminum_ore";
         String GALENA_ORE = "galena_ore";
 
         // Solid Blocks
@@ -232,19 +235,18 @@ public interface Constant {
 
     interface Item {
         String ITEM_GROUP = "items";
-        String LEAD_INGOT = "lead_ingot";
         String RAW_SILICON = "raw_silicon";
-        String RAW_METEORIC_IRON = "raw_meteoric_iron";
-        String METEORIC_IRON_INGOT = "meteoric_iron_ingot";
+        String METEORIC_IRON = "meteoric_iron";
+        String DESH = "desh";
+        String LEAD = "lead";
+        String ALUMINUM = "aluminum";
+        String TIN = "tin";
+        String STEEL = "steel";
+        String TITANIUM = "titanium";
         String LUNAR_SAPPHIRE = "lunar_sapphire";
-        String UNREFINED_DESH = "raw_desh";
-        String DESH_INGOT = "desh_ingot";
         String DESH_STICK = "desh_stick";
         String CARBON_FRAGMENTS = "carbon_fragments";
         String IRON_SHARD = "iron_shard";
-        String TITANIUM_SHARD = "titanium_shard";
-        String TITANIUM_INGOT = "titanium_ingot";
-        String TITANIUM_DUST = "titanium_dust";
         String SOLAR_DUST = "solar_dust";
         String BASIC_WAFER = "basic_wafer";
         String ADVANCED_WAFER = "advanced_wafer";

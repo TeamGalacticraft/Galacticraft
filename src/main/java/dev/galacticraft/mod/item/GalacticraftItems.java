@@ -57,19 +57,18 @@ public class GalacticraftItems {
             .build();
 
     // MATERIALS
-    public static final Item LEAD_INGOT = registerItem(Constant.Item.LEAD_INGOT, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item RAW_SILICON = registerItem(Constant.Item.RAW_SILICON, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item RAW_METEORIC_IRON = registerItem(Constant.Item.RAW_METEORIC_IRON, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item METEORIC_IRON_INGOT = registerItem(Constant.Item.METEORIC_IRON_INGOT, new Item(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item[] METEORIC_IRON = registerOreItems(Constant.Item.METEORIC_IRON);
+    public static final Item[] DESH = registerOreItems(Constant.Item.DESH);
+    public static final Item[] LEAD = registerOreItems(Constant.Item.LEAD);
+    public static final Item[] ALUMINUM = registerOreItems(Constant.Item.ALUMINUM);
+    public static final Item[] TIN = registerOreItems(Constant.Item.TIN);
+    public static final Item[] STEEL = registerOreItems(Constant.Item.STEEL);
+    public static final Item[] TITANIUM = registerOreItems(Constant.Item.TITANIUM);
     public static final Item LUNAR_SAPPHIRE = registerItem(Constant.Item.LUNAR_SAPPHIRE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item UNREFINED_DESH = registerItem(Constant.Item.UNREFINED_DESH, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item DESH_INGOT = registerItem(Constant.Item.DESH_INGOT, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_STICK = registerItem(Constant.Item.DESH_STICK, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item CARBON_FRAGMENTS = registerItem(Constant.Item.CARBON_FRAGMENTS, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item IRON_SHARD = registerItem(Constant.Item.IRON_SHARD, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item TITANIUM_SHARD = registerItem(Constant.Item.TITANIUM_SHARD, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item TITANIUM_INGOT = registerItem(Constant.Item.TITANIUM_INGOT, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item TITANIUM_DUST = registerItem(Constant.Item.TITANIUM_DUST, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item SOLAR_DUST = registerItem(Constant.Item.SOLAR_DUST, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item BASIC_WAFER = registerItem(Constant.Item.BASIC_WAFER, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item ADVANCED_WAFER = registerItem(Constant.Item.ADVANCED_WAFER, new Item(new Item.Settings().group(ITEMS_GROUP)));
@@ -226,6 +225,14 @@ public class GalacticraftItems {
 
     private static <T extends Item> T registerItem(String id, T item) {
         return Registry.register(Registry.ITEM, new Identifier(Constant.MOD_ID, id), item);
+    }
+
+    private static Item[] registerOreItems(String id) {
+        Item[] items = new Item[3];
+        items[0] = Registry.register(Registry.ITEM, new Identifier(Constant.MOD_ID, "raw_" + id), new Item(new Item.Settings().group(ITEMS_GROUP)));
+        items[1] = Registry.register(Registry.ITEM, new Identifier(Constant.MOD_ID, id + "_ingot"), new Item(new Item.Settings().group(ITEMS_GROUP)));
+        items[2] = Registry.register(Registry.ITEM, new Identifier(Constant.MOD_ID, id + "_nugget"), new Item(new Item.Settings().group(ITEMS_GROUP)));
+        return items;
     }
     
     public static void register() {

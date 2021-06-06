@@ -40,11 +40,11 @@ public enum GalacticraftToolMaterial implements ToolMaterial {
     }),
 
     DESH(3, 1024, 5.0F, 2.5F, 10, () -> {
-        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.DESH_INGOT));
+        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.DESH[1]));
     }),
 
     TITANIUM(4, 760, 14.0F, 4.0F, 16, () -> {
-        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.TITANIUM_INGOT));
+        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.TITANIUM[1]));
     });
 
     private final int miningLevel;

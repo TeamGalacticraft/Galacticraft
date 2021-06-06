@@ -1,5 +1,5 @@
 {
-  "type": "smelting",
+  "type": "minecraft:smelting",
   "ingredient": {
     "item": "galacticraft:iron_shard"
   },
