@@ -29,7 +29,6 @@ import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.CircuitFabricatorScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -79,29 +78,21 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     private static final int SENARY_PROGRESS_HEIGHT = 14;
 
     public CircuitFabricatorScreen(CircuitFabricatorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         this.backgroundHeight = 176;
         this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 15, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        this.renderBackground(matrices);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
-
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        super.renderBackground(matrices, delta, mouseX, mouseY);
         this.drawProgressBar(matrices);
-        super.drawBackground(matrices, delta, mouseX, mouseY);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-        assert this.client != null;
+    protected void renderForeground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.renderForeground(matrices, mouseX, mouseY, delta);
         drawCenteredText(matrices, textRenderer, I18n.translate("block.galacticraft.circuit_fabricator"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
     //24 + 19 + 18 + 65 + 14 = 140

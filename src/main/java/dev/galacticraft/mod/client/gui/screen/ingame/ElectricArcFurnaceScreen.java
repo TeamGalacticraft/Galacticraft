@@ -22,12 +22,10 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.ElectricArcFurnaceScreenHandler;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -48,30 +46,18 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
     private static final int ARROW_HEIGHT = 15;
 
     public ElectricArcFurnaceScreen(ElectricArcFurnaceScreenHandler screenHandler, PlayerInventory playerInventory, Text title) {
-        super(screenHandler, playerInventory, screenHandler.machine.getWorld(), screenHandler.machine.getPos(), title);
+        super(screenHandler, playerInventory, screenHandler.machine.getWorld(), screenHandler.machine.getPos(), title, Constant.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
         addWidget(new CapacitorWidget(screenHandler.machine.capacitor(), 8, 29, 48, this::getEnergyTooltipLines, screenHandler.machine::getStatus));
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        this.renderBackground(matrices);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        super.renderBackground(matrices, delta, mouseX, mouseY);
         if (handler.machine.cookLength != 0 && handler.machine.cookTime != 0) {
             double scale = ((double)handler.machine.cookTime) / ((double)handler.machine.cookLength);
 
             this.drawTexture(matrices, this.x + ARROW_X, this.y + ARROW_Y, LIT_ARROW_X, LIT_ARROW_Y, (int) (((double)ARROW_WIDTH) * scale), ARROW_HEIGHT);
         }
-
         drawCenteredText(matrices, textRenderer, I18n.translate("block.galacticraft.electric_arc_furnace"), this.width / 2, this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        super.drawBackground(matrices, delta, mouseX, mouseY);
-    }
-
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

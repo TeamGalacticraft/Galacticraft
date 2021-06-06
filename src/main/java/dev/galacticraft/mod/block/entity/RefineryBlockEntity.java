@@ -93,7 +93,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
 
     @Override
     protected MachineStatus getStatusById(int index) {
-        return null;
+        return Status.values()[index];
     }
 
     @Override

@@ -29,7 +29,6 @@ import dev.galacticraft.mod.block.entity.OxygenStorageModuleBlockEntity;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -44,31 +43,19 @@ import java.math.RoundingMode;
 @Environment(EnvType.CLIENT)
 public class OxygenStorageModuleScreen extends MachineHandledScreen<SimpleMachineScreenHandler<OxygenStorageModuleBlockEntity>> {
     public OxygenStorageModuleScreen(SimpleMachineScreenHandler<OxygenStorageModuleBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        this.renderBackground(matrices);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-
+    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        super.renderBackground(matrices, delta, mouseX, mouseY);
         this.drawOxygenBufferBar(matrices);
 
+        drawCenteredText(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_storage_module"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.current_oxygen", this.handler.machine.fluidInv().getInvFluid(0).amount().asInt(1000, RoundingMode.HALF_DOWN)), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
         drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.max_oxygen", this.handler.machine.fluidInv().getMaxAmount_F(0).asInt(1000, RoundingMode.HALF_DOWN)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
-        super.drawBackground(matrices, delta, mouseX, mouseY);
-    }
-
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-        drawCenteredText(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_storage_module"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
     private void drawOxygenBufferBar(MatrixStack matrices) {

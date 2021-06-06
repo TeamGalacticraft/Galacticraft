@@ -31,7 +31,6 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -48,7 +47,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     private final TextFieldWidget textField;
 
     public BubbleDistributorScreen(BubbleDistributorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.BUBBLE_DISTRIBUTOR_SCREEN);
         this.textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, this.x + 132, this.y + 59, 26, 20, new LiteralText(String.valueOf(handler.machine.getSize())));
         textField.setChangedListener((s -> {
             try {
@@ -72,14 +71,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        this.renderBackground(matrices);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.BUBBLE_DISTRIBUTOR_SCREEN);
-
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-
+    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
 
         if (!handler.machine.bubbleVisible) {
@@ -108,8 +100,8 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
+    protected void renderForeground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.renderForeground(matrices, mouseX, mouseY, delta);
         textField.setText(String.valueOf(handler.machine.getTargetSize()));
         drawCenteredText(matrices, this.textRenderer, new TranslatableText("block.galacticraft.oxygen_bubble_distributor").asString(), (this.width / 2) + 28, this.y + 5, Formatting.DARK_GRAY.getColorValue());
 
@@ -123,7 +115,6 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
         if (handler.machine.getStatus().getType().isActive()) {
             this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.bubble_distributor.current_size", String.valueOf((int) Math.floor(handler.machine.getSize()))).setStyle(Constant.Text.DARK_GRAY_STYLE), this.x + 60, this.y + 42, Formatting.DARK_GRAY.getColorValue());
         }
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
     @Override

@@ -212,15 +212,17 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     private @NotNull Identifier ownerSkin = new Identifier("textures/entity/steve.png");
     private final MachineBakedModel.SpriteProvider spriteProvider;
     private final List<Text> tooltipCache = new LinkedList<>();
+    private final Identifier texture;
 
-    public MachineHandledScreen(C handler, PlayerInventory playerInventory, World world, BlockPos pos, Text textComponent) {
-        super(handler, playerInventory, textComponent);
+    public MachineHandledScreen(C handler, PlayerInventory playerInventory, World world, BlockPos pos, Text title, Identifier texture) {
+        super(handler, playerInventory, title);
         this.pos = pos;
         this.world = world;
+        this.texture = texture;
 
         this.spriteProvider = MachineBakedModel.SPRITE_PROVIDERS.getOrDefault(handler.machine.getCachedState() == null ? world.getBlockState(pos).getBlock() : handler.machine.getCachedState().getBlock(), MachineBakedModel.SpriteProvider.DEFAULT);
 
-        MinecraftClient.getInstance().getSkinProvider().loadSkin(handler.machine.security().getOwner(), (type, identifier, texture) -> {
+        MinecraftClient.getInstance().getSkinProvider().loadSkin(handler.machine.security().getOwner(), (type, identifier, tex) -> {
             if (type == MinecraftProfileTexture.Type.SKIN && identifier != null) {
                 MachineHandledScreen.this.ownerSkin = identifier;
             }
@@ -662,7 +664,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public final void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         assert this.client != null;
         if (this.handler.machine == null || !this.handler.machine.security().hasAccess(handler.player)) {
             this.onClose();
@@ -677,13 +679,29 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             widget.render(matrices, mouseX - this.x, mouseY - this.y, delta);
         }
         matrices.pop();
+
+        this.renderForeground(matrices, mouseX, mouseY, delta);
+        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+    }
+
+    protected void renderForeground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    protected final void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        this.renderBackground(matrices);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, this.texture);
+
+        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.renderBackground(matrices, delta, mouseX, mouseY);
         this.drawConfigTabs(matrices, mouseX, mouseY, delta);
         this.drawTanks(matrices, mouseX, mouseY, delta);
         this.handleSlotHighlight(matrices, mouseX, mouseY, delta);
+    }
+
+    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
     }
 
     protected void drawTanks(MatrixStack matrices, int mouseX, int mouseY, float delta) {
