@@ -21,6 +21,7 @@
  */
 
 import java.io.ByteArrayOutputStream
+import java.io.OutputStream
 import java.time.Year
 import java.time.format.DateTimeFormatter
 
@@ -271,28 +272,24 @@ tasks.withType(JavaCompile::class) {
 
 // inspired by https://github.com/TerraformersMC/GradleScripts/blob/2.0/ferry.gradle
 fun getVersionDecoration(): String {
-    if((System.getenv("DISABLE_VERSION_DECORATION") ?: "false") == "true") return ""
-    if(project.hasProperty("release")) return ""
+    if ((System.getenv("DISABLE_VERSION_DECORATION") ?: "false") == "true") return ""
+    if (project.hasProperty("release")) return ""
 
     var version = "+build"
-    if (System.getenv("GITHUB_RUN_NUMBER") != null) {
-        version += ".${System.getenv("GITHUB_RUN_NUMBER")}"
+    if ("git".exitValue() != 0) {
+        version += ".unknown"
     } else {
-        if ("git".exitValue() != 0) {
-            version += ".unknown"
-        } else {
-            val branch = "git branch --show-current".execute()
-            if (branch.isNotEmpty() && branch != "main") {
-                version += ".${branch}"
-            }
-            val commitHashLines = "git rev-parse --short HEAD".execute()
-            if (commitHashLines.isNotEmpty()) {
-                version += ".${commitHashLines}"
-            }
-            val dirty = "git diff-index --quiet HEAD".exitValue()
-            if (dirty != 0) {
-                version += "-modified"
-            }
+        val branch = "git branch --show-current".execute()
+        if (branch.isNotEmpty() && branch != "main") {
+            version += ".${branch}"
+        }
+        val commitHashLines = "git rev-parse --short HEAD".execute()
+        if (commitHashLines.isNotEmpty()) {
+            version += ".${commitHashLines}"
+        }
+        val dirty = "git diff-index --quiet HEAD".exitValue()
+        if (dirty != 0) {
+            version += "-modified"
         }
     }
     return version
@@ -307,6 +304,7 @@ fun String.execute(): String {
         workingDir = rootProject.projectDir
         isIgnoreExitValue = true
         standardOutput = output
+        errorOutput = OutputStream.nullOutputStream()
     }
 
     return String(output.toByteArray()).trim()
@@ -317,5 +315,7 @@ fun String.exitValue(): Int {
         commandLine(split("\\s".toRegex()))
         workingDir = rootProject.projectDir
         isIgnoreExitValue = true
+        standardOutput = OutputStream.nullOutputStream()
+        errorOutput = OutputStream.nullOutputStream()
     }.exitValue
 }
