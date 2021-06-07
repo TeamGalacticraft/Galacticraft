@@ -34,7 +34,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.screen.slot.SlotActionType;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -42,15 +41,17 @@ import net.minecraft.screen.slot.SlotActionType;
 public class RocketAssemblerScreenHandler extends ScreenHandler {
 
     protected Inventory inventory;
+    public final PlayerEntity player;
     public final RocketAssemblerBlockEntity assembler;
 
-    public RocketAssemblerScreenHandler(int syncId, PlayerEntity playerEntity, RocketAssemblerBlockEntity assembler) {
+    public RocketAssemblerScreenHandler(int syncId, PlayerEntity player, RocketAssemblerBlockEntity assembler) {
         super(GalacticraftScreenHandlerType.ROCKET_ASSEMBLER_HANDLER, syncId);
+        this.player = player;
         this.assembler = assembler;
         this.inventory = new InventoryFixedWrapper(assembler.getInventory()) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
-                return player == playerEntity;
+                return player == RocketAssemblerScreenHandler.this.player;
             }
         };
 
@@ -60,14 +61,14 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.SCHEMATIC_INPUT_SLOT, 235, 19) {
             @Override
             public boolean canInsert(ItemStack stack) {
-                RocketData data = RocketData.fromTag(stack.getTag(), playerEntity.world.getRegistryManager());
+                RocketData data = RocketData.fromTag(stack.getTag(), player.world.getRegistryManager());
                 return this.getStack().isEmpty() || (stack.getItem() == GalacticraftItem.ROCKET_SCHEMATIC
-                        && data.getCone().isUnlocked(playerEntity)
-                        && data.getBody().isUnlocked(playerEntity)
-                        && data.getBooster().isUnlocked(playerEntity)
-                        && data.getBottom().isUnlocked(playerEntity)
-                        && data.getFin().isUnlocked(playerEntity)
-                        && data.getUpgrade().isUnlocked(playerEntity)
+                        && data.cone().isUnlocked(player)
+                        && data.body().isUnlocked(player)
+                        && data.booster().isUnlocked(player)
+                        && data.bottom().isUnlocked(player)
+                        && data.fin().isUnlocked(player)
+                        && data.upgrade().isUnlocked(player)
                 );
             }
 
@@ -104,13 +105,13 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
 
         // Hotbar slots
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18 + playerInvXOffset, playerInvYOffset + 58));
+            this.addSlot(new Slot(player.getInventory(), i, 8 + i * 18 + playerInvXOffset, playerInvYOffset + 58));
         }
 
         // Player inventory slots
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + (j * 18) + playerInvXOffset, playerInvYOffset + i * 18));
+                this.addSlot(new Slot(player.getInventory(), j + i * 9 + 9, 8 + (j * 18) + playerInvXOffset, playerInvYOffset + i * 18));
             }
         }
     }
@@ -119,23 +120,23 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         this(syncId, inv.player, (RocketAssemblerBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
     }
 
-    @Override
-    public ItemStack onSlotClick(int i, int j, SlotActionType actionType, PlayerEntity playerEntity) {
-        if (actionType == SlotActionType.QUICK_MOVE) {
-            if (slots.get(i).getStack().getItem() != GalacticraftItem.ROCKET_SCHEMATIC) {
-                return ItemStack.EMPTY;
-            } else {
-                if(inventory.getStack(0).isEmpty()) {
-                    inventory.setStack(0, slots.get(i).getStack().copy());
-                    slots.get(i).setStack(ItemStack.EMPTY);
-                    return inventory.getStack(0);
-                } else {
-                    return ItemStack.EMPTY;
-                }
-            }
-        }
-        return super.onSlotClick(i, j, actionType, playerEntity);
-    }
+//    @Override
+//    public void onSlotClick(int i, int j, SlotActionType actionType, PlayerEntity playerEntity) {
+//        if (actionType == SlotActionType.QUICK_MOVE) {
+//            if (slots.get(i).getStack().getItem() != GalacticraftItem.ROCKET_SCHEMATIC) {
+//                return ItemStack.EMPTY;
+//            } else {
+//                if(inventory.getStack(0).isEmpty()) {
+//                    inventory.setStack(0, slots.get(i).getStack().copy());
+//                    slots.get(i).setStack(ItemStack.EMPTY);
+//                    return inventory.getStack(0);
+//                } else {
+//                    return ItemStack.EMPTY;
+//                }
+//            }
+//        }
+//        super.onSlotClick(i, j, actionType, playerEntity);
+//    }
 
     @Override
     public boolean canUse(PlayerEntity player) {

@@ -24,10 +24,10 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import alexiil.mc.lib.attributes.Simulation;
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.galacticraft.api.client.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
-import dev.galacticraft.api.rocket.part.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
@@ -44,12 +44,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -59,8 +57,8 @@ import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3f;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -241,13 +239,13 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                         }
                         matrices.push();
                         matrices.translate(this.x + 13, this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * baOY), 0);
-                        RocketPartRendererRegistry.getRenderer(blockEntity.data.getPartForType(RocketPartType.values()[i]).getId()).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+                        RocketPartRendererRegistry.INSTANCE.getRenderer(this.blockEntity.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(blockEntity.data.getPartForType(RocketPartType.values()[i]))).renderGUI(client.world, matrices, mouseX, mouseY, delta);
                         matrices.pop();
                     }
                 }
             }
         } else if (tab == Tab.LANDER) {
-            drawCenteredString(matrices, client.textRenderer, "WIP - TO BE DESIGNED", this.x / 2, this.y + (height) / 2, Integer.MAX_VALUE);
+            drawCenteredText(matrices, client.textRenderer, "WIP - TO BE DESIGNED", this.x / 2, this.y + (height) / 2, Integer.MAX_VALUE);
         }
     }
 
@@ -295,8 +293,8 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
         RenderSystem.scalef(3.0F, 3.0F, -3.0F);
         MatrixStack matrixStack = new MatrixStack();
         matrixStack.translate(0.0D, 0.0D, 1000.0D);
-        Quaternion quaternion = Vector3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
-        Quaternion quaternion2 = Vector3f.POSITIVE_X.getDegreesQuaternion(0.0F);
+        Quaternion quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
+        Quaternion quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(0.0F);
         quaternion.hamiltonProduct(quaternion2);
         matrixStack.multiply(quaternion);
         entity.yaw = 180.0F;
@@ -342,36 +340,36 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                             if (check(mouseX, mouseY, this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT)) {
                                 boolean success = false;
                                 if (slot < blockEntity.getExtendedInv().getSlotCount()) {
-                                    if (playerInventory.getCursorStack().isEmpty()) {
+                                    if (this.handler.getCursorStack().isEmpty()) {
                                         success = true;
-                                        playerInventory.setCursorStack(blockEntity.getExtendedInv().getInvStack(slot));
+                                        this.handler.setCursorStack(blockEntity.getExtendedInv().getInvStack(slot));
                                         blockEntity.getExtendedInv().setInvStack(slot, ItemStack.EMPTY, Simulation.ACTION);
                                     } else {
-                                        if (blockEntity.getExtendedInv().getFilterForSlot(slot).matches(playerInventory.getCursorStack())) {
+                                        if (blockEntity.getExtendedInv().getFilterForSlot(slot).matches(this.handler.getCursorStack())) {
                                             if (blockEntity.getExtendedInv().getInvStack(slot).isEmpty()) {
-                                                if (blockEntity.getExtendedInv().getMaxAmount(slot, playerInventory.getCursorStack()) >= playerInventory.getCursorStack().getCount()) {
-                                                    blockEntity.getExtendedInv().setInvStack(slot, playerInventory.getCursorStack().copy(), Simulation.ACTION);
-                                                    playerInventory.setCursorStack(ItemStack.EMPTY);
+                                                if (blockEntity.getExtendedInv().getMaxAmount(slot, this.handler.getCursorStack()) >= this.handler.getCursorStack().getCount()) {
+                                                    blockEntity.getExtendedInv().setInvStack(slot, this.handler.getCursorStack().copy(), Simulation.ACTION);
+                                                    this.handler.setCursorStack(ItemStack.EMPTY);
                                                 } else {
-                                                    ItemStack stack = playerInventory.getCursorStack().copy();
-                                                    ItemStack stack1 = playerInventory.getCursorStack().copy();
+                                                    ItemStack stack = this.handler.getCursorStack().copy();
+                                                    ItemStack stack1 = this.handler.getCursorStack().copy();
                                                     stack.setCount(blockEntity.getExtendedInv().getMaxAmount(slot, blockEntity.getExtendedInv().getInvStack(slot)));
                                                     stack1.setCount(stack1.getCount() - blockEntity.getExtendedInv().getMaxAmount(slot, blockEntity.getExtendedInv().getInvStack(slot)));
                                                     blockEntity.getExtendedInv().setInvStack(slot, stack, Simulation.ACTION);
-                                                    playerInventory.setCursorStack(stack1);
+                                                    this.handler.setCursorStack(stack1);
                                                 }
                                             } else { // IMPOSSIBLE FOR THE 2 STACKS TO BE DIFFERENT AS OF RIGHT NOW. THIS MAY CHANGE.
                                                 // SO... IF IT DOES, YOU NEED TO UPDATE THIS.
-                                                ItemStack stack = playerInventory.getCursorStack().copy();
+                                                ItemStack stack = this.handler.getCursorStack().copy();
                                                 int max = blockEntity.getExtendedInv().getMaxAmount(slot, blockEntity.getExtendedInv().getInvStack(slot));
                                                 stack.setCount(stack.getCount() + blockEntity.getExtendedInv().getInvStack(slot).getCount());
                                                 if (stack.getCount() <= max) {
-                                                    playerInventory.setCursorStack(ItemStack.EMPTY);
+                                                    this.handler.setCursorStack(ItemStack.EMPTY);
                                                 } else {
                                                     ItemStack stack1 = stack.copy();
                                                     stack.setCount(max);
                                                     stack1.setCount(stack1.getCount() - max);
-                                                    playerInventory.setCursorStack(stack1);
+                                                    this.handler.setCursorStack(stack1);
                                                 }
                                                 blockEntity.getExtendedInv().setInvStack(slot, stack, Simulation.ACTION);
                                             }
@@ -408,7 +406,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
     }
 
     public SlotActionType getType(int button, int slot) {
-        if (this.client.player.inventory.getCursorStack().isEmpty()) {
+        if (this.handler.getCursorStack().isEmpty()) {
             if (this.client.options.keyPickItem.matchesMouse(button)) {
                 return SlotActionType.CLONE;
             } else {

@@ -32,13 +32,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.screen.slot.SlotActionType;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RocketDesignerScreenHandler extends ScreenHandler {
 
+    public final PlayerEntity player;
     protected Inventory inventory;
     public RocketDesignerBlockEntity blockEntity;
 
@@ -48,7 +48,7 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
         this.inventory = new InventoryFixedWrapper(machine.getInventory()) {
             @Override
             public boolean canPlayerUse(PlayerEntity invPlayer) {
-                return invPlayer == player;
+                return invPlayer == RocketDesignerScreenHandler.this.player;
             }
         };
 
@@ -70,15 +70,16 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
 
         // Hotbar slots
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(player.inventory, i, 8 + i * 18 + playerInvXOffset, playerInvYOffset + 58));
+            this.addSlot(new Slot(player.getInventory(), i, 8 + i * 18 + playerInvXOffset, playerInvYOffset + 58));
         }
 
         // Player inventory slots
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(player.inventory, j + i * 9 + 9, 8 + (j * 18) + playerInvXOffset, playerInvYOffset + i * 18));
+                this.addSlot(new Slot(player.getInventory(), j + i * 9 + 9, 8 + (j * 18) + playerInvXOffset, playerInvYOffset + i * 18));
             }
         }
+        this.player = player;
     }
 
     public RocketDesignerScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
@@ -115,31 +116,26 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
         return itemStack;
     }
 
-    @Override
-    public ItemStack onSlotClick(int i, int j, SlotActionType actionType, PlayerEntity playerEntity) {
-        if (actionType == SlotActionType.QUICK_MOVE) {
-            if (slots.get(i).getStack().getItem() != GalacticraftItem.ROCKET_SCHEMATIC) {
-                return ItemStack.EMPTY;
-            } else {
-                if(inventory.getStack(0).isEmpty()) {
-                    inventory.setStack(0, slots.get(i).getStack().copy());
-                    slots.get(i).setStack(ItemStack.EMPTY);
-                    return inventory.getStack(0);
-                } else {
-                    return ItemStack.EMPTY;
-                }
-            }
-        }
-        return super.onSlotClick(i, j, actionType, playerEntity);
-    }
+//    @Override
+//    public void onSlotClick(int i, int j, SlotActionType actionType, PlayerEntity playerEntity) {
+//        if (actionType == SlotActionType.QUICK_MOVE) {
+//            if (slots.get(i).getStack().getItem() != GalacticraftItem.ROCKET_SCHEMATIC) {
+//                return ItemStack.EMPTY;
+//            } else {
+//                if(inventory.getStack(0).isEmpty()) {
+//                    inventory.setStack(0, slots.get(i).getStack().copy());
+//                    slots.get(i).setStack(ItemStack.EMPTY);
+//                    return inventory.getStack(0);
+//                } else {
+//                    return ItemStack.EMPTY;
+//                }
+//            }
+//        }
+//        return super.onSlotClick(i, j, actionType, playerEntity);
+//    }
 
     @Override
     public boolean canUse(PlayerEntity playerEntity) {
         return true;
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
     }
 }

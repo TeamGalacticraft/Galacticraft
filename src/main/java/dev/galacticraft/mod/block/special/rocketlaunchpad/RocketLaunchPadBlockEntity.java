@@ -26,10 +26,9 @@ import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.entity.RocketEntity;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Box;
 
 import java.util.UUID;
@@ -57,8 +56,8 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         if (tag.contains("rocketUuid")) {
             this.rocketEntityUUID = tag.getUuid("rocketUuid");
             for (Entity entity : world.getEntitiesByType(GalacticraftEntityType.ROCKET, new Box(-3, -2, -3, 3, 9, 3), rocketEntity -> true)) {
@@ -75,7 +74,7 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound toTag(NbtCompound tag) {
         if (hasRocket()) tag.putUuid("rocketUuid", rocketEntityUUID);
         return super.toTag(tag);
     }
@@ -86,7 +85,7 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {
+    public void fromClientTag(NbtCompound tag) {
         if (tag.contains("rocketUuid")) {
             this.rocketEntityUUID = tag.getUuid("rocketUuid");
         } else {
@@ -96,9 +95,9 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag compoundTag) {
-        toTag(compoundTag);
-        compoundTag.putInt("reid", rocketEntityId);
-        return compoundTag;
+    public NbtCompound toClientTag(NbtCompound nbtCompound) {
+        toTag(nbtCompound);
+        nbtCompound.putInt("reid", rocketEntityId);
+        return nbtCompound;
     }
 }

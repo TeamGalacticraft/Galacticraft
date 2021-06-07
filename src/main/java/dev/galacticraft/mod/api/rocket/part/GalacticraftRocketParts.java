@@ -22,18 +22,23 @@
 
 package dev.galacticraft.mod.api.rocket.part;
 
+import dev.galacticraft.api.client.rocket.render.RocketPartRenderer;
+import dev.galacticraft.api.client.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
-import dev.galacticraft.api.rocket.part.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPartType;
-import dev.galacticraft.api.rocket.part.travel.ConfiguredTravelPredicate;
+import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
+import dev.galacticraft.impl.rocket.travelpredicate.config.AccessTypeTravelPredicateConfig;
+import dev.galacticraft.impl.rocket.travelpredicate.config.AccessWeightTravelPredicateConfig;
+import dev.galacticraft.impl.rocket.travelpredicate.type.AccessWeightPredicateType;
+import dev.galacticraft.impl.rocket.travelpredicate.type.ConstantTravelPredicateType;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.rocket.travel.GalacticraftConfiguredTravelPredicates;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,131 +46,109 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GalacticraftRocketParts {
-    public static final RocketPart DEFAULT_CONE = RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "default_cone"))
+    public static final RocketPart DEFAULT_CONE = RocketPart.Builder.create()
             .name(new TranslatableText("rocket_part.galacticraft.default_cone"))
-            .travelPredicate(GalacticraftConfiguredTravelPredicates.TIER_ONE)
+            .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.CONE)
             .build();
 
-    public static final RocketPart DEFAULT_BODY = RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "default_body"))
+    public static final RocketPart DEFAULT_BODY = RocketPart.Builder.create()
             .name(new TranslatableText("rocket_part.galacticraft.default_body"))
-            .travelPredicate(GalacticraftConfiguredTravelPredicates.TIER_ONE)
+            .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.BODY)
             .build();
 
-    public static final RocketPart DEFAULT_FIN = RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "default_fin"))
+    public static final RocketPart DEFAULT_FIN = RocketPart.Builder.create()
             .name(new TranslatableText("rocket_part.galacticraft.default_fin"))
-            .travelPredicate(GalacticraftConfiguredTravelPredicates.TIER_ONE)
+            .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.FIN)
             .build();
 
-    public static final RocketPart NO_BOOSTER = RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "default_booster"))
+    public static final RocketPart NO_BOOSTER = RocketPart.Builder.create()
             .name(new TranslatableText("rocket_part.galacticraft.default_booster"))
-            .travelPredicate(GalacticraftConfiguredTravelPredicates.TIER_ONE)
+            .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.BOOSTER)
             .recipe(false)
             .build();
 
-    public static final RocketPart DEFAULT_BOTTOM = RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "default_bottom"))
+    public static final RocketPart DEFAULT_BOTTOM = RocketPart.Builder.create()
             .name(new TranslatableText("rocket_part.galacticraft.default_bottom"))
-            .travelPredicate(GalacticraftConfiguredTravelPredicates.TIER_ONE)
+            .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.BOTTOM)
             .build();
 
-    public static final RocketPart ADVANCED_CONE = RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "advanced_cone"))
+    public static final RocketPart ADVANCED_CONE = RocketPart.Builder.create()
             .name(new TranslatableText("rocket_part.galacticraft.advanced_cone"))
-            .travelPredicate(ConfiguredTravelPredicate.PASS)
+            .travelPredicate(ConstantTravelPredicateType.INSTANCE.configure(new AccessTypeTravelPredicateConfig(TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.CONE)
             .build();
 
-    public static final RocketPart SLOPED_CONE = RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "sloped_cone"))
+    public static final RocketPart SLOPED_CONE = RocketPart.Builder.create()
             .name(new TranslatableText("rocket_part.galacticraft.cone_sloped"))
-            .travelPredicate(ConfiguredTravelPredicate.PASS)
+            .travelPredicate(ConstantTravelPredicateType.INSTANCE.configure(new AccessTypeTravelPredicateConfig(TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.CONE)
             .build();
 
-    public static final RocketPart BOOSTER_TIER_1 = RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "booster_1"))
+    public static final RocketPart BOOSTER_TIER_1 = RocketPart.Builder.create()
             .name(new TranslatableText("rocket_part.galacticraft.booster_1"))
-            .travelPredicate(GalacticraftConfiguredTravelPredicates.TIER_TWO)
+            .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(2, TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.BOOSTER)
             .build();
 
-    public static final RocketPart BOOSTER_TIER_2 = RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "booster_2"))
+    public static final RocketPart BOOSTER_TIER_2 = RocketPart.Builder.create()
             .name(new TranslatableText("rocket_part.galacticraft.booster_2"))
-            .travelPredicate(GalacticraftConfiguredTravelPredicates.TIER_THREE)
+            .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(3, TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.BOOSTER)
             .build();
 
-    public static final RocketPart NO_UPGRADE = RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "default_upgrade"))
+    public static final RocketPart NO_UPGRADE = RocketPart.Builder.create()
             .name(new TranslatableText("rocket_part.galacticraft.default_upgrade"))
-            .travelPredicate(ConfiguredTravelPredicate.PASS)
+            .travelPredicate(ConstantTravelPredicateType.INSTANCE.configure(new AccessTypeTravelPredicateConfig(TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.UPGRADE)
             .build();
 
-    public static final RocketPart STORAGE_UPGRADE = RocketPart.Builder.create(new Identifier(Constant.MOD_ID, "storage_upgrade"))
+    public static final RocketPart STORAGE_UPGRADE = RocketPart.Builder.create()
             .name(new TranslatableText("rocket_part.galacticraft.storage_upgrade"))
-            .travelPredicate(ConfiguredTravelPredicate.PASS)
+            .travelPredicate(ConstantTravelPredicateType.INSTANCE.configure(new AccessTypeTravelPredicateConfig(TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.UPGRADE)
             .build();
 
     public static void register() {
-        Registry.register(AddonRegistry.ROCKET_PART, DEFAULT_CONE.getId(), DEFAULT_CONE);
-        Registry.register(AddonRegistry.ROCKET_PART, DEFAULT_BODY.getId(), DEFAULT_BODY);
-        Registry.register(AddonRegistry.ROCKET_PART, DEFAULT_FIN.getId(), DEFAULT_FIN);
-        Registry.register(AddonRegistry.ROCKET_PART, NO_BOOSTER.getId(), NO_BOOSTER);
-        Registry.register(AddonRegistry.ROCKET_PART, DEFAULT_BOTTOM.getId(), DEFAULT_BOTTOM);
-        Registry.register(AddonRegistry.ROCKET_PART, ADVANCED_CONE.getId(), ADVANCED_CONE);
-        Registry.register(AddonRegistry.ROCKET_PART, SLOPED_CONE.getId(), SLOPED_CONE);
-        Registry.register(AddonRegistry.ROCKET_PART, BOOSTER_TIER_1.getId(), BOOSTER_TIER_1);
-        Registry.register(AddonRegistry.ROCKET_PART, BOOSTER_TIER_2.getId(), BOOSTER_TIER_2);
-        Registry.register(AddonRegistry.ROCKET_PART, NO_UPGRADE.getId(), NO_UPGRADE);
-        Registry.register(AddonRegistry.ROCKET_PART, STORAGE_UPGRADE.getId(), STORAGE_UPGRADE);
+        Registry.register(AddonRegistry.ROCKET_PART, new Identifier(Constant.MOD_ID, "default_cone"), DEFAULT_CONE);
+        Registry.register(AddonRegistry.ROCKET_PART, new Identifier(Constant.MOD_ID, "default_body"), DEFAULT_BODY);
+        Registry.register(AddonRegistry.ROCKET_PART, new Identifier(Constant.MOD_ID, "default_fin"), DEFAULT_FIN);
+        Registry.register(AddonRegistry.ROCKET_PART, new Identifier(Constant.MOD_ID, "default_booster"), NO_BOOSTER);
+        Registry.register(AddonRegistry.ROCKET_PART, new Identifier(Constant.MOD_ID, "default_bottom"), DEFAULT_BOTTOM);
+        Registry.register(AddonRegistry.ROCKET_PART, new Identifier(Constant.MOD_ID, "advanced_cone"), ADVANCED_CONE);
+        Registry.register(AddonRegistry.ROCKET_PART, new Identifier(Constant.MOD_ID, "sloped_cone"), SLOPED_CONE);
+        Registry.register(AddonRegistry.ROCKET_PART, new Identifier(Constant.MOD_ID, "booster_1"), BOOSTER_TIER_1);
+        Registry.register(AddonRegistry.ROCKET_PART, new Identifier(Constant.MOD_ID, "booster_2"), BOOSTER_TIER_2);
+        Registry.register(AddonRegistry.ROCKET_PART, new Identifier(Constant.MOD_ID, "default_upgrade"), NO_UPGRADE);
+        Registry.register(AddonRegistry.ROCKET_PART, new Identifier(Constant.MOD_ID, "storage_upgrade"), STORAGE_UPGRADE);
     }
 
     @NotNull
     public static RocketPart getDefaultPartForType(RocketPartType type) {
-        switch (type) {
-            case BODY:
-                return DEFAULT_BODY;
-            case CONE:
-                return DEFAULT_CONE;
-            case FIN:
-                return DEFAULT_FIN;
-            case BOTTOM:
-                return DEFAULT_BOTTOM;
-            case BOOSTER:
-                return NO_BOOSTER;
-            case UPGRADE:
-                return NO_UPGRADE;
-            default:
-                throw new IllegalArgumentException("invalid part type");
-        }
+        return switch (type) {
+            case BODY -> DEFAULT_BODY;
+            case CONE -> DEFAULT_CONE;
+            case FIN -> DEFAULT_FIN;
+            case BOTTOM -> DEFAULT_BOTTOM;
+            case BOOSTER -> NO_BOOSTER;
+            case UPGRADE -> NO_UPGRADE;
+        };
     }
 
     @NotNull
     @Environment(EnvType.CLIENT)
-    public static RocketPartRendererRegistry.RocketPartRenderer getPartToRenderForType(@NotNull RocketPartType type) {
-        switch (type) {
-            case BODY:
-                return RocketPartRendererRegistry.getRenderer(DEFAULT_BODY.getId());
-            case CONE:
-                return RocketPartRendererRegistry.getRenderer(DEFAULT_CONE.getId());
-            case FIN:
-                return RocketPartRendererRegistry.getRenderer(DEFAULT_FIN.getId());
-            case BOTTOM:
-                return RocketPartRendererRegistry.getRenderer(DEFAULT_BOTTOM.getId());
-            case BOOSTER:
-                return RocketPartRendererRegistry.getRenderer(BOOSTER_TIER_1.getId());
-            case UPGRADE:
-                return RocketPartRendererRegistry.getRenderer(STORAGE_UPGRADE.getId());
-        }
-        throw new AssertionError();
+    public static RocketPartRenderer getPartToRenderForType(DynamicRegistryManager manager, @NotNull RocketPartType type) {
+        return RocketPartRendererRegistry.INSTANCE.getRenderer(manager.get(AddonRegistry.ROCKET_PART_KEY).getId(getDefaultPartForType(type)));
     }
 
     public static List<RocketPart> getUnlockedParts(PlayerEntity player, RocketPartType type) {
         List<RocketPart> parts = new LinkedList<>();
         for (RocketPart part : RocketPart.getAll(player.world.getRegistryManager())) {
-            if (part.getType() == type && part.isUnlocked(player)) {
+            if (part.type() == type && part.isUnlocked(player)) {
                 parts.add(part);
             }
         }

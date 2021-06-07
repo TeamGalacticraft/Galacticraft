@@ -22,29 +22,29 @@
 
 package dev.galacticraft.mod.client.render.entity.rocket;
 
+import dev.galacticraft.api.client.rocket.render.RocketPartRendererRegistry;
+import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.part.RocketPart;
-import dev.galacticraft.api.rocket.part.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.entity.RocketEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3f;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
-
-    public RocketEntityRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher);
+    public RocketEntityRenderer(EntityRendererFactory.Context context) {
+        super(context);
     }
 
     @Override
@@ -56,8 +56,8 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         if (entity.getStage() == LaunchStage.IGNITED) {
             matrices.translate((entity.world.random.nextDouble() - 0.5D) * 0.1D, 0, (entity.world.random.nextDouble() - 0.5D) * 0.1D);
         }
-        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((MathHelper.lerpAngleDegrees(tickDelta, entity.prevYaw - 180.0F, entity.yaw - 180.0F)) * -1.0F));
-        matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(MathHelper.lerpAngleDegrees(tickDelta, entity.prevPitch, entity.pitch)));
+        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(entity.getYaw(tickDelta)));
+        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entity.getPitch(tickDelta)));
 
         float float_7 = (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - tickDelta;
         float float_8 = entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_STRENGTH) - tickDelta;
@@ -67,7 +67,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         }
 
         if (float_7 > 0.0F) {
-            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(MathHelper.sin(float_7) * float_7 * float_8 / 10.0F * (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_SIDE)));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(MathHelper.sin(float_7) * float_7 * float_8 / 10.0F * (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_SIDE)));
         }
 
         client.getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
@@ -76,7 +76,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         RocketPart part = entity.getPartForType(RocketPartType.BOTTOM);
         if (part != null) {
             matrices.push();
-            RocketPartRendererRegistry.getRenderer(part.getId()).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(entity.world.getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.pop();
         }
 
@@ -85,14 +85,14 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.getPartForType(RocketPartType.BOOSTER);
         if (part != null) {
             matrices.push();
-            RocketPartRendererRegistry.getRenderer(part.getId()).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(entity.world.getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.pop();
         }
 
         part = entity.getPartForType(RocketPartType.FIN);
         if (part != null) {
             matrices.push();
-            RocketPartRendererRegistry.getRenderer(part.getId()).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(entity.world.getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.pop();
         }
 
@@ -101,7 +101,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.getPartForType(RocketPartType.BODY);
         if (part != null) {
             matrices.push();
-            RocketPartRendererRegistry.getRenderer(part.getId()).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(entity.world.getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.pop();
         }
 
@@ -110,7 +110,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.getPartForType(RocketPartType.CONE);
         if (part != null) {
             matrices.push();
-            RocketPartRendererRegistry.getRenderer(part.getId()).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(entity.world.getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.pop();
         }
 

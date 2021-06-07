@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.api.math;
 
-import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.client.util.math.Vector4f;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.Vector4f;
 
 import java.nio.FloatBuffer;
 
@@ -480,7 +480,7 @@ public class Matrix4
         return translation;
     }
 
-    public static Matrix4 translate(Vector3f vec, Matrix4 src, Matrix4 dest)
+    public static Matrix4 translate(Vec3f vec, Matrix4 src, Matrix4 dest)
     {
         if (dest == null)
         {
@@ -503,12 +503,12 @@ public class Matrix4
      * @param axis  axis of rotation
      * @return Rotation matrix
      */
-    public static Matrix4 rotate(float angle, Vector3f axis)
+    public static Matrix4 rotate(float angle, Vec3f axis)
     {
         return rotate(angle, axis, new Matrix4(), new Matrix4());
     }
 
-    public static Matrix4 rotate(float angle, Vector3f axis, Matrix4 src, Matrix4 dest)
+    public static Matrix4 rotate(float angle, Vec3f axis, Matrix4 src, Matrix4 dest)
     {
         if (dest == null)
         {
@@ -579,7 +579,7 @@ public class Matrix4
         return scaling;
     }
 
-    public static Matrix4 scale(Vector3f vec, Matrix4 src, Matrix4 dest)
+    public static Matrix4 scale(Vec3f vec, Matrix4 src, Matrix4 dest)
     {
         if (dest == null)
         {

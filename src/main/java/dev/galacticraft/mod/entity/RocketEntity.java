@@ -27,11 +27,13 @@ import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import dev.galacticraft.api.entity.Rocket;
+import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
-import dev.galacticraft.api.rocket.part.travel.AccessType;
+import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
 import dev.galacticraft.mod.block.GalacticraftBlock;
@@ -58,7 +60,7 @@ import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
@@ -73,6 +75,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -189,41 +192,46 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public boolean canTravelTo(CelestialBodyType celestialBodyType) {
+    public boolean canTravelTo(CelestialBody<?, ?> body) {
         Object2BooleanMap<RocketPart> map = new Object2BooleanArrayMap<>();
-        AccessType type = AccessType.PASS;
+        TravelPredicateType.AccessType type = TravelPredicateType.AccessType.PASS;
         for (RocketPart part : this.parts) {
             map.put(part, true);
-            type = type.merge(this.travel(part, celestialBodyType, map));
+            type = type.merge(this.travel(this.world.getRegistryManager(), part, body, map));
         }
-        return type == AccessType.ALLOW;
+        return type == TravelPredicateType.AccessType.ALLOW;
     }
 
-    private AccessType travel(RocketPart part, CelestialBodyType type, Object2BooleanMap<RocketPart> map) {
-        return part.getTravelPredicate().canTravelTo(type, p -> map.computeBooleanIfAbsent((RocketPart) p, p1 -> {
-            if (Arrays.stream(this.parts).anyMatch(p2 -> p2.getId() == p1.getId())) {
-                map.put((RocketPart) p, false);
-                return travel(p1, type, map) != AccessType.BLOCK;
-            } else {
-                return false;
-            }
-        }));
+
+    private TravelPredicateType.AccessType travel(DynamicRegistryManager manager, RocketPart part, CelestialBody<?, ?> type, Object2BooleanMap<RocketPart> map) {
+        return part.travelPredicate().canTravelTo(type, (p) -> {
+            return map.computeBooleanIfAbsent((RocketPart)p, (p1) -> {
+                if (Arrays.stream(this.getParts()).anyMatch((p2) -> {
+                    return RocketPart.getId(manager, p2).equals(RocketPart.getId(manager, p1));
+                })) {
+                    map.put((RocketPart)p, false);
+                    return this.travel(manager, p1, type, map) != TravelPredicateType.AccessType.BLOCK;
+                } else {
+                    return false;
+                }
+            });
+        });
     }
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (!this.world.isClient && !this.removed) {
+        if (!this.world.isClient && !this.isRemoved()) {
             if (this.isInvulnerableTo(source)) {
                 return false;
             } else {
                 this.dataTracker.set(DAMAGE_WOBBLE_SIDE, -this.dataTracker.get(DAMAGE_WOBBLE_SIDE));
                 this.dataTracker.set(DAMAGE_WOBBLE_TICKS, 10);
                 this.dataTracker.set(DAMAGE_WOBBLE_STRENGTH, this.dataTracker.get(DAMAGE_WOBBLE_STRENGTH) + amount * 10.0F);
-                boolean creative = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity)source.getAttacker()).abilities.creativeMode;
+                boolean creative = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity)source.getAttacker()).getAbilities().creativeMode;
                 if (creative || this.dataTracker.get(DAMAGE_WOBBLE_STRENGTH) > 40.0F) {
                     this.removeAllPassengers();
                     if (creative && !this.hasCustomName()) {
-                        this.remove();
+                        this.remove(RemovalReason.DISCARDED);
                     } else {
                         this.dropItems(source, false);
                     }
@@ -237,8 +245,8 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void remove(RemovalReason reason) {
+        super.remove(reason);
         if (this.linkedPad != null) {
             BlockEntity pad = this.world.getBlockEntity(this.linkedPad);
             if (pad instanceof RocketLaunchPadBlockEntity){
@@ -287,8 +295,8 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public void readCustomDataFromTag(CompoundTag tag) {
-        CompoundTag parts = tag.getCompound("Parts");
+    public void readCustomDataFromNbt(NbtCompound tag) {
+        NbtCompound parts = tag.getCompound("Parts");
         RocketPart[] list = new RocketPart[RocketPartType.values().length];
         for (RocketPartType type : RocketPartType.values()) {
             if (parts.contains(type.asString())) {
@@ -314,13 +322,12 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public void writeCustomDataToTag(CompoundTag tag) {
-        CompoundTag parts = new CompoundTag();
-        CompoundTag color = new CompoundTag();
+    public void writeCustomDataToNbt(NbtCompound tag) {
+        NbtCompound parts = new NbtCompound();
 
         for (RocketPart part : this.getParts()) {
             if (part != null) {
-                parts.putString(part.getType().asString(), part.getId().toString());
+                parts.putString(part.type().asString(), this.world.getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part).toString());
             }
         }
 
@@ -383,14 +390,15 @@ public class RocketEntity extends Entity implements Rocket {
     public Packet<?> createSpawnPacket() {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeVarInt(Registry.ENTITY_TYPE.getRawId(this.getType()));
-        buf.writeVarInt(this.getEntityId());
+        buf.writeVarInt(this.getId());
         buf.writeUuid(this.uuid);
         buf.writeDouble(getX());
         buf.writeDouble(getY());
         buf.writeDouble(getZ());
-        buf.writeByte((int) (pitch / 360F * 256F));
-        buf.writeByte((int) (yaw / 360F * 256F));
-        buf.writeCompoundTag(new RocketData(this.getColor(), this.getParts()).toTag(this.world.getRegistryManager(), new CompoundTag()));
+        buf.writeByte((int) (this.getPitch() / 360F * 256F));
+        buf.writeByte((int) (this.getYaw() / 360F * 256F));
+        RocketPart[] parts = this.getParts();
+        buf.writeNbt(RocketData.create(this.getColor(), parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]).toTag(this.world.getRegistryManager(), new NbtCompound()));
         return new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "rocket_spawn"), buf);
     }
 
@@ -425,7 +433,7 @@ public class RocketEntity extends Entity implements Rocket {
                 world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
                 world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
                 world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
-                this.remove();
+                this.remove(RemovalReason.KILLED);
             }
 
             if (getStage() == LaunchStage.IGNITED) {
@@ -456,15 +464,8 @@ public class RocketEntity extends Entity implements Rocket {
                     this.setStage(LaunchStage.FAILED);
                 } else {
                     this.getTank().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 100), Simulation.ACTION); //todo find balanced values
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-
+                    for (int i = 0; i < 4; i++) ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    for (int i = 0; i < 4; i++) ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
 
                     this.setSpeed(Math.min(0.75, this.getSpeed() + 0.05D));
 
@@ -478,9 +479,9 @@ public class RocketEntity extends Entity implements Rocket {
                     //
                     // I hope this is right
 
-                    double velX = -MathHelper.sin(yaw / 180.0F * (float) Math.PI) * MathHelper.cos((pitch + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
-                    double velY = MathHelper.sin((pitch + 90.0F) / 180.0F * (float) Math.PI) * this.getSpeed();
-                    double velZ = MathHelper.cos(yaw / 180.0F * (float) Math.PI) * MathHelper.cos((pitch + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
+                    double velX = -MathHelper.sin(this.getYaw() / 180.0F * (float) Math.PI) * MathHelper.cos((this.getPitch() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
+                    double velY = MathHelper.sin((this.getPitch() + 90.0F) / 180.0F * (float) Math.PI) * this.getSpeed();
+                    double velZ = MathHelper.cos(this.getYaw() / 180.0F * (float) Math.PI) * MathHelper.cos((this.getPitch() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
 
                     this.setVelocity(velX, velY, velZ);
                 }
@@ -488,8 +489,8 @@ public class RocketEntity extends Entity implements Rocket {
                 if (this.getPos().getY() >= 1200.0F) {
                     for (Entity entity : getPassengerList()) {
                         if (entity instanceof ServerPlayerEntity) {
-                            ((ServerPlayerEntityAccessor) entity).setCelestialScreenState(new RocketData(this.getColor(), this.getParts()));
-                            ServerPlayNetworking.send(((ServerPlayerEntity) entity), new Identifier(Constant.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer()).writeCompoundTag(new RocketData(this.getColor(), this.getParts()).toTag(this.world.getRegistryManager(), new CompoundTag())));
+                            ((ServerPlayerEntityAccessor) entity).setCelestialScreenState(RocketData.create(this.getColor(), parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]));
+                            ServerPlayNetworking.send(((ServerPlayerEntity) entity), new Identifier(Constant.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer()).writeNbt(RocketData.create(this.getColor(), parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]).toTag(this.world.getRegistryManager(), new NbtCompound())));
                             break;
                         }
                     }
@@ -497,9 +498,9 @@ public class RocketEntity extends Entity implements Rocket {
             } else if (!onGround) {
                 this.setSpeed(Math.max(-1.5F, this.getSpeed() - 0.05D));
 
-                double velX = -MathHelper.sin(yaw / 180.0F * (float) Math.PI) * MathHelper.cos((pitch + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
-                double velY = MathHelper.sin((pitch + 90.0F) / 180.0F * (float) Math.PI) * this.getSpeed();
-                double velZ = MathHelper.cos(yaw / 180.0F * (float) Math.PI) * MathHelper.cos((pitch + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
+                double velX = -MathHelper.sin(this.getYaw() / 180.0F * (float) Math.PI) * MathHelper.cos((this.getPitch() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
+                double velY = MathHelper.sin((this.getPitch() + 90.0F) / 180.0F * (float) Math.PI) * this.getSpeed();
+                double velZ = MathHelper.cos(this.getYaw() / 180.0F * (float) Math.PI) * MathHelper.cos((this.getPitch() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
 
                 this.setVelocity(velX, velY, velZ);
             }
@@ -507,20 +508,13 @@ public class RocketEntity extends Entity implements Rocket {
             this.move(MovementType.SELF, this.getVelocity());
 
             if (getStage() == LaunchStage.FAILED) {
-                setRotation((yaw + world.random.nextFloat() - 0.5F * 8.0F) % 360.0F, (pitch + world.random.nextFloat() - 0.5F * 8.0F) % 360.0F);
+                setRotation((this.getYaw() + world.random.nextFloat() - 0.5F * 8.0F) % 360.0F, (this.getPitch() + world.random.nextFloat() - 0.5F * 8.0F) % 360.0F);
 
-                ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (world.random.nextDouble() - 0.5), 0, world.random.nextDouble() - 0.5, 1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (world.random.nextDouble() - 0.5), 0, world.random.nextDouble() - 0.5, 1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (world.random.nextDouble() - 0.5), 0, world.random.nextDouble() - 0.5, 1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (world.random.nextDouble() - 0.5), 0, world.random.nextDouble() - 0.5, 1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-
+                for (int i = 0; i < 4; i++) ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (world.random.nextDouble() - 0.5), 0, world.random.nextDouble() - 0.5, 1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
 
                 if (this.onGround) {
-                    world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
-                    world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
-                    world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
-                    world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
-                    this.remove();
+                    for (int i = 0; i < 4; i++) world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
+                    this.remove(RemovalReason.KILLED);
                 }
             }
 
@@ -584,23 +578,10 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public boolean handleFallDamage(float fallDistance, float damageMultiplier) {
-        if (this.hasPassengers()) {
-            for (Entity entity : this.getPassengerList()) {
-                entity.handleFallDamage(fallDistance, damageMultiplier);
-            }
-        }
-        return true;
-    }
-
-    @Override
-    protected void setOnFireFromLava() {
+    public void setOnFireFromLava() {
         super.setOnFireFromLava();
-        world.createExplosion(this, this.getPos().x + ((world.random.nextDouble() - 0.5) * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + ((world.random.nextDouble() -0.5) * 4), 10.0F, Explosion.DestructionType.DESTROY);
-        world.createExplosion(this, this.getPos().x + ((world.random.nextDouble() - 0.5) * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + ((world.random.nextDouble() -0.5) * 4), 10.0F, Explosion.DestructionType.DESTROY);
-        world.createExplosion(this, this.getPos().x + ((world.random.nextDouble() - 0.5) * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + ((world.random.nextDouble() -0.5) * 4), 10.0F, Explosion.DestructionType.DESTROY);
-        world.createExplosion(this, this.getPos().x + ((world.random.nextDouble() - 0.5) * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + ((world.random.nextDouble() -0.5) * 4), 10.0F, Explosion.DestructionType.DESTROY);
-        this.remove();
+        for (int i = 0; i < 4; i++) world.createExplosion(this, this.getPos().x + ((world.random.nextDouble() - 0.5) * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + ((world.random.nextDouble() -0.5) * 4), 10.0F, Explosion.DestructionType.DESTROY);
+        this.remove(RemovalReason.KILLED);
     }
 
     @Override
@@ -612,30 +593,17 @@ public class RocketEntity extends Entity implements Rocket {
     public void setOnFireFor(int seconds) {
         super.setOnFireFor(seconds);
         if (!world.isClient) {
-            world.createExplosion(this, this.getPos().x + ((world.random.nextDouble() - 0.5) * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + ((world.random.nextDouble() - 0.5) * 4), 10.0F, Explosion.DestructionType.DESTROY);
-            world.createExplosion(this, this.getPos().x + ((world.random.nextDouble() - 0.5) * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + ((world.random.nextDouble() - 0.5) * 4), 10.0F, Explosion.DestructionType.DESTROY);
-            world.createExplosion(this, this.getPos().x + ((world.random.nextDouble() - 0.5) * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + ((world.random.nextDouble() - 0.5) * 4), 10.0F, Explosion.DestructionType.DESTROY);
-            world.createExplosion(this, this.getPos().x + ((world.random.nextDouble() - 0.5) * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + ((world.random.nextDouble() - 0.5) * 4), 10.0F, Explosion.DestructionType.DESTROY);
+            for (int i = 0; i < 4; i++) world.createExplosion(this, this.getPos().x + ((world.random.nextDouble() - 0.5) * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + ((world.random.nextDouble() - 0.5) * 4), 10.0F, Explosion.DestructionType.DESTROY);
         }
-        this.remove();
+        this.remove(RemovalReason.KILLED);
     }
 
     @Override
     protected void onBlockCollision(BlockState state) {
         if (getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal() && timeAsState >= 30 && !state.isAir() && !world.isClient) {
-            world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
-            world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
-            world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
-            world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
-            this.remove();
+            for (int i = 0; i < 4; i++) world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
+            this.remove(RemovalReason.KILLED);
         }
-    }
-
-
-    @Override
-    public void setPos(double x, double y, double z) {
-        super.setPos(x, y, z);
-        this.getPassengerList().forEach(this::updatePassengerPosition);
     }
 
     @Override
@@ -695,7 +663,7 @@ public class RocketEntity extends Entity implements Rocket {
     @Override
     public void setPart(RocketPart part) {
         Identifier[] ids = Arrays.copyOf(this.dataTracker.get(PARTS), this.dataTracker.get(PARTS).length);
-        ids[part.getType().ordinal()] = RocketPart.getId(this.world.getRegistryManager(), part);
+        ids[part.type().ordinal()] = RocketPart.getId(this.world.getRegistryManager(), part);
         this.dataTracker.set(PARTS, ids);
     }
 

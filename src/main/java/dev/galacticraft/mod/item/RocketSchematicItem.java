@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.item;
 
-import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.api.item.SchematicItem;
@@ -32,7 +31,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -41,8 +40,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.world.World;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -63,7 +62,7 @@ public class RocketSchematicItem extends Item implements SchematicItem {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        CompoundTag tag = stack.getOrCreateTag();
+        NbtCompound tag = stack.getOrCreateTag();
         if (Screen.hasShiftDown()) {
             if (tag.contains("red") && tag.contains("cone")) {
 //                tooltip.add(new TranslatableText("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));

@@ -38,7 +38,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
@@ -104,7 +104,7 @@ public class RocketItem extends Item {
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (isIn(group)) {
             ItemStack stack = new ItemStack(this);
-            CompoundTag tag = new CompoundTag();
+            NbtCompound tag = new NbtCompound();
 //            tag.putInt("tier", 1);
             tag.putInt("color", 0xFFFFFFFF);
             for (RocketPartType type : RocketPartType.values()) {
@@ -120,7 +120,7 @@ public class RocketItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        CompoundTag tag = stack.getOrCreateTag();
+        NbtCompound tag = stack.getOrCreateTag();
         if (Screen.hasShiftDown()) {
             if (tag.contains("color") && tag.contains("cone")) {
 //                tooltip.add(new TranslatableText("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));

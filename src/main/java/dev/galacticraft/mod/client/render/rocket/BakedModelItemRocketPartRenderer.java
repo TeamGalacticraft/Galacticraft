@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.client.render.rocket;
 
+import dev.galacticraft.api.client.rocket.render.RocketPartRenderer;
 import dev.galacticraft.api.entity.Rocket;
-import dev.galacticraft.api.rocket.part.RocketPartRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -31,16 +31,12 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Lazy;
-import net.minecraft.util.math.Vec2f;
 import org.jetbrains.annotations.Nullable;
 
-public class BakedModelItemRocketPartRenderer implements RocketPartRendererRegistry.RocketPartRenderer {
+public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
     private final ItemStack stack;
     private final @Nullable BakedModel model;
     private final RenderLayer layer;

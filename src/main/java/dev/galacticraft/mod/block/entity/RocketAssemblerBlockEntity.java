@@ -25,32 +25,29 @@ package dev.galacticraft.mod.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
-import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
+import dev.galacticraft.energy.impl.DefaultEnergyType;
+import dev.galacticraft.energy.impl.SimpleCapacitor;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.block.GalacticraftBlock;
-import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
-import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.entity.RocketEntity;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.recipe.RocketAssemblerRecipe;
 import dev.galacticraft.mod.util.EnergyUtil;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +55,7 @@ import java.util.Map;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Tickable {
+public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     private static final FullFixedItemInv EMPTY_INV = new FullFixedItemInv(0);
     public static final int SCHEMATIC_INPUT_SLOT = 0;
     public static final int ROCKET_OUTPUT_SLOT = 1;
@@ -90,8 +87,8 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     private boolean building = false;
     private boolean queuedUpdate = false;
 
-    public RocketAssemblerBlockEntity() {
-        super(GalacticraftBlockEntityType.ROCKET_ASSEMBLER_TYPE);
+    public RocketAssemblerBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.ROCKET_ASSEMBLER_TYPE, pos, state);
         inventory.addListener((view, i, previous, current) -> {
             if (!world.isClient && i == SCHEMATIC_INPUT_SLOT) {
                 schematicUpdate(previous, current);
@@ -194,7 +191,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
                     fakeEntity.setPart(part);
                 }
             }
-            fakeEntity.setColor(this.data.getColor());
+            fakeEntity.setColor(this.data.color());
         }
 
         extendedInv.addListener((view) -> {
@@ -286,7 +283,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
                 return -1;
             }
         };
-        CompoundTag tag = new CompoundTag();
+        NbtCompound tag = new NbtCompound();
         extendedInv.toTag(tag);
         inv.fromTag(tag);
 
@@ -329,33 +326,33 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag compoundTag) {
-        super.fromTag(state, compoundTag);
-        this.inventory.fromTag(compoundTag);
-        this.data = RocketData.fromTag(compoundTag.getCompound("data"), this.world.getRegistryManager());
-        this.extendedInv = new FullFixedItemInv(compoundTag.getInt("slots"));
-        this.extendedInv.fromTag(compoundTag);
+    public void readNbt(NbtCompound nbtCompound) {
+        super.readNbt(nbtCompound);
+        this.inventory.fromTag(nbtCompound);
+        this.data = RocketData.fromTag(nbtCompound.getCompound("data"), this.world.getRegistryManager());
+        this.extendedInv = new FullFixedItemInv(nbtCompound.getInt("slots"));
+        this.extendedInv.fromTag(nbtCompound);
         this.schematicUpdateFromTag();
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag compoundTag) {
-        super.toTag(compoundTag);
-        compoundTag.put("data", data.toTag(this.world.getRegistryManager(), new CompoundTag()));
-        compoundTag.putInt("slots", extendedInv.getSlotCount());
-        inventory.toTag(compoundTag);
-        extendedInv.toTag(compoundTag);
-        return compoundTag;
+    public NbtCompound writeNbt(NbtCompound nbtCompound) {
+        super.writeNbt(nbtCompound);
+        nbtCompound.put("data", data.toTag(this.world.getRegistryManager(), new NbtCompound()));
+        nbtCompound.putInt("slots", extendedInv.getSlotCount());
+        inventory.toTag(nbtCompound);
+        extendedInv.toTag(nbtCompound);
+        return nbtCompound;
     }
 
     @Override
-    public void fromClientTag(CompoundTag compoundTag) {
-        this.fromTag(GalacticraftBlock.ROCKET_ASSEMBLER.getDefaultState(), compoundTag);
+    public void fromClientTag(NbtCompound nbtCompound) {
+        this.readNbt(nbtCompound);
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag compoundTag) {
-        return this.toTag(compoundTag);
+    public NbtCompound toClientTag(NbtCompound nbtCompound) {
+        return this.writeNbt(nbtCompound);
     }
 
     @Override

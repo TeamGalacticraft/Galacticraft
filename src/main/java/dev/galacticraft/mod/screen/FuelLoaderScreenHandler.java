@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.screen;
 
+import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.block.entity.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.screen.property.BlockPosPropertyDelegate;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,9 +35,7 @@ import net.minecraft.network.PacketByteBuf;
 public class FuelLoaderScreenHandler extends MachineScreenHandler<FuelLoaderBlockEntity> {
     public FuelLoaderScreenHandler(int syncId, PlayerEntity player, FuelLoaderBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerType.FUEL_LOADER_HANDLER);
-
         this.addProperties(new BlockPosPropertyDelegate(machine::getConnectionPos, machine::setConnectionPos));
-
         this.addPlayerInventorySlots(0, 84);
     }
 

@@ -154,19 +154,19 @@ public class GalacticraftClientPacketReceiver {
             float pitch = (buf.readByte() * 360) / 256.0F;
             float yaw = (buf.readByte() * 360) / 256.0F;
 
-            RocketData data = RocketData.fromTag(buf.readCompoundTag(), client.world.getRegistryManager());
+            RocketData data = RocketData.fromTag(buf.readNbtCompound(), client.world.getRegistryManager());
 
             client.execute(() -> {
                 RocketEntity entity = type.create(client.world);
                 assert entity != null;
                 entity.updateTrackedPosition(x, y, z);
                 entity.setPos(x, y, z);
-                entity.pitch = pitch;
-                entity.yaw = yaw;
+                entity.setPitch(pitch);
+                entity.setYaw(yaw);
                 entity.setEntityId(entityID);
                 entity.setUuid(entityUUID);
 
-                entity.setColor(data.getColor());
+                entity.setColor(data.color());
                 entity.setParts(data.getParts());
 
                 MinecraftClient.getInstance().world.addEntity(entityID, entity);

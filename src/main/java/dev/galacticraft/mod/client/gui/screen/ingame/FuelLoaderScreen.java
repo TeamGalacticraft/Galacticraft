@@ -24,14 +24,13 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.entity.RocketEntity;
 import dev.galacticraft.mod.screen.FuelLoaderScreenHandler;
-import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
@@ -46,7 +45,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
@@ -75,35 +73,29 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
     private final FuelLoaderBlockEntity fuelLoader;
 
     public FuelLoaderScreen(FuelLoaderScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.FUEL_LOADER_SCREEN);
         this.fuelLoader = handler.machine;
-        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 10, 9, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 10, 9, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override
-    protected void drawBackground(MatrixStack stack, float v, int mouseX, int mouseY) {
-        this.renderBackground(stack);
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.FUEL_LOADER_SCREEN);
+    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        super.renderBackground(matrices, delta, mouseX, mouseY);
 
-        int leftPos = this.x;
-        int topPos = this.y;
-
-        this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
-
-        if (this.fuelLoader.getFluidInv().getInvFluid(0).getRawFluid() != null
-        && this.fuelLoader.getFluidInv().getInvFluid(0).getRawFluid() != Fluids.EMPTY) {
-            stack.push();
-            Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(this.fuelLoader.getFluidInv().getInvFluid(0).getRawFluid()).getFluidSprites(null, null, this.fuelLoader.getFluidInv().getInvFluid(0).getRawFluid().getDefaultState())[0];
+        if (this.fuelLoader.fluidInv().getInvFluid(0).getRawFluid() != null
+                && this.fuelLoader.fluidInv().getInvFluid(0).getRawFluid() != Fluids.EMPTY) {
+            matrices.push();
+            Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(this.fuelLoader.fluidInv().getInvFluid(0).getRawFluid()).getFluidSprites(null, null, this.fuelLoader.fluidInv().getInvFluid(0).getRawFluid().getDefaultState())[0];
             this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-            drawSprite(stack, x + 106, y + 46, getZOffset(), -TANK_OVERLAY_WIDTH, (int)-(((double)TANK_OVERLAY_HEIGHT) * (fuelLoader.getFluidInv().getInvFluid(0).getAmount_F().asInexactDouble() / fuelLoader.getFluidInv().getMaxAmount_F(0).asInexactDouble())), sprite);
-            stack.pop();
+            drawSprite(matrices, x + 106, y + 46, getZOffset(), -TANK_OVERLAY_WIDTH, (int)-(((double)TANK_OVERLAY_HEIGHT) * (fuelLoader.fluidInv().getInvFluid(0).getAmount_F().asInexactDouble() / fuelLoader.fluidInv().getMaxAmount_F(0).asInexactDouble())), sprite);
+            matrices.pop();
             this.client.getTextureManager().bindTexture(Constant.ScreenTexture.FUEL_LOADER_SCREEN);
-            drawTexture(stack, x + 68, y + 8, TANK_OVERLAY_X, TANK_OVERLAY_Y, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
+            drawTexture(matrices, x + 68, y + 8, TANK_OVERLAY_X, TANK_OVERLAY_Y, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
         }
 
         if (fuelLoader.getStatus().getType() == MachineStatus.StatusType.MISSING_RESOURCE) {
             this.client.getTextureManager().bindTexture(Constant.ScreenTexture.FUEL_LOADER_SCREEN);
-            drawTexture(stack, x + 116, y + 45, X_X, X_Y, X_WIDTH, X_HEIGHT);
+            drawTexture(matrices, x + 116, y + 45, X_X, X_Y, X_WIDTH, X_HEIGHT);
         }
 
         if (check(mouseX, mouseY, x + 145, y + 29, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
@@ -116,11 +108,11 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
                             if (!((RocketEntity) entity).getTank().getInvFluid(0).isEmpty()) {
                                 double amount = ((RocketEntity) entity).getTank().getInvFluid(0).getAmount_F().asInexactDouble();
                                 double max = ((RocketEntity) entity).getTank().getMaxAmount_F(0).asInexactDouble();
-                                stack.push();
+                                matrices.push();
                                 Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(((RocketEntity) entity).getTank().getInvFluid(0).getRawFluid()).getFluidSprites(null, null, ((RocketEntity) entity).getTank().getInvFluid(0).getRawFluid().getDefaultState())[0];
                                 this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-                                DrawableHelper.drawSprite(stack, x + 159, y + 64, getZOffset(), -ROCKET_FACE_WIDTH, (int) -(((double) ROCKET_FACE_HEIGHT) * (amount / max)), sprite);
-                                stack.pop();
+                                DrawableHelper.drawSprite(matrices, x + 159, y + 64, getZOffset(), -ROCKET_FACE_WIDTH, (int) -(((double) ROCKET_FACE_HEIGHT) * (amount / max)), sprite);
+                                matrices.pop();
                             }
                         }
                     }
@@ -128,27 +120,20 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
             }
         } else {
             this.client.getTextureManager().bindTexture(Constant.ScreenTexture.FUEL_LOADER_SCREEN);
-            drawTexture(stack, x + 145, y + 29, ROCKET_FACE_X, ROCKET_FACE_Y, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT);
+            drawTexture(matrices, x + 145, y + 29, ROCKET_FACE_X, ROCKET_FACE_Y, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT);
         }
-        // 115 44
+        drawCenteredText(matrices, this.client.textRenderer, I18n.translate("block.galacticraft.fuel_loader"), (this.width / 2), this.y - 18, Formatting.DARK_GRAY.getColorValue());
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float v) {
-        super.render(stack, mouseX, mouseY, v);
-        drawCenteredString(stack, this.client.textRenderer, I18n.translate("block.galacticraft.fuel_loader"), (this.width / 2), this.y - 18, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(stack, mouseX, mouseY);
-    }
-
-    @Override
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(stack, mouseX, mouseY);
+    public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
+        super.drawMouseoverTooltip(matrices, mouseX, mouseY);
         List<OrderedText> list = new ArrayList<>();
         if (check(mouseX, mouseY, x + 69, y + 9, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT)) {
-            if (fuelLoader.getFluidInv().getInvFluid(0).isEmpty()) {
+            if (fuelLoader.fluidInv().getInvFluid(0).isEmpty()) {
                 list.add(new TranslatableText("tooltip.galacticraft.no_fluid").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
             } else {
-                FluidAmount fraction = fuelLoader.getFluidInv().getInvFluid(0).getAmount_F().mul(FluidAmount.ONE); //every action forces simplification of the fraction
+                FluidAmount fraction = fuelLoader.fluidInv().getInvFluid(0).getAmount_F().mul(FluidAmount.ONE); //every action forces simplification of the fraction
                 if (fraction.denominator == 1) {
                     list.add(new TranslatableText("tooltip.galacticraft.buckets", fraction.numerator).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                 } else {
@@ -165,10 +150,10 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
                     }
                 }
                 if (Screen.hasControlDown()) {
-                    list.add(new TranslatableText("tooltip.galacticraft.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(fuelLoader.getFluidInv().getInvFluid(0).getRawFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
+                    list.add(new TranslatableText("tooltip.galacticraft.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(fuelLoader.fluidInv().getInvFluid(0).getRawFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
                 }
             }
-            this.renderOrderedTooltip(stack, list, mouseX, mouseY);
+            this.renderOrderedTooltip(matrices, list, mouseX, mouseY);
         }
         list.clear();
 
@@ -207,7 +192,7 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
                 }
             }
             if (!list.isEmpty()) {
-                this.renderOrderedTooltip(stack, list, mouseX, mouseY);
+                this.renderOrderedTooltip(matrices, list, mouseX, mouseY);
             }
         }
     }

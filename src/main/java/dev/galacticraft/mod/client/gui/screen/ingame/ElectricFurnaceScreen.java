@@ -52,7 +52,7 @@ public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceS
     @Override
     protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         super.renderBackground(matrices, delta, mouseX, mouseY);
-        drawCenteredString(matrices, textRenderer, this.title, this.width / 2, this.y + 5, Formatting.GRAY.getColorValue());
+        drawCenteredText(matrices, textRenderer, this.title, this.width / 2, this.y + 5, Formatting.GRAY.getColorValue());
         if (handler.machine.cookLength != 0 && handler.machine.cookTime != 0) {
             double scale = ((double)handler.machine.cookTime) / ((double)handler.machine.cookLength);
 

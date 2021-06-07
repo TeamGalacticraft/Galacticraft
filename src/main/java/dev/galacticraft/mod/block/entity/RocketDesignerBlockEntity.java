@@ -26,7 +26,6 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.google.common.collect.Lists;
-import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Constant;
@@ -36,11 +35,10 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
@@ -98,7 +96,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound toTag(NbtCompound tag) {
         super.toTag(tag);
 
         tag.putInt("red", red);
@@ -117,8 +115,8 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
 
         if (tag.contains("red")) red = tag.getInt("red");
         if (tag.contains("green")) green = tag.getInt("green");
@@ -134,13 +132,13 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     }
 
     @Override
-    public void fromClientTag(CompoundTag compoundTag) {
-        this.fromTag(GalacticraftBlock.ROCKET_DESIGNER.getDefaultState(), compoundTag);
+    public void fromClientTag(NbtCompound nbtCompound) {
+        this.fromTag(GalacticraftBlock.ROCKET_DESIGNER.getDefaultState(), nbtCompound);
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag compoundTag) {
-        return this.toTag(compoundTag);
+    public NbtCompound toClientTag(NbtCompound nbtCompound) {
+        return this.toTag(nbtCompound);
     }
 
     @Nullable
@@ -284,7 +282,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
         if (this.world != null && !this.world.isClient) {
             if (this.inventory.getInvStack(0).getItem() == GalacticraftItem.ROCKET_SCHEMATIC) {
                 ItemStack stack = this.inventory.getInvStack(0).copy();
-                CompoundTag tag = new CompoundTag();
+                NbtCompound tag = new NbtCompound();
                 tag.putInt("red", red);
                 tag.putInt("green", green);
                 tag.putInt("blue", blue);

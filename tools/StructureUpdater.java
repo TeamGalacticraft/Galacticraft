@@ -26,7 +26,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.DataFixer;
 import net.minecraft.datafixer.Schemas;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.structure.Structure;
@@ -54,10 +54,10 @@ public class StructureUpdater {
             StructureManager manager = new StructureManager(null, storage.createSession("session"), dataFixer);
 
             for (String s : fileNamesList) {
-                CompoundTag tag = NbtIo.readCompressed(new File(s));
-                tag = new StringNbtReader(new StringReader(tag.toString().replaceAll("[- ][Rr]ewoven", ""))).parseCompoundTag();
+                NbtCompound tag = NbtIo.readCompressed(new File(s));
+                tag = new StringNbtReader(new StringReader(tag.toString().replaceAll("[- ][Rr]ewoven", ""))).parseNbtCompound();
                 Structure structure = manager.createStructure(tag);
-                tag = structure.toTag(new CompoundTag());
+                tag = structure.toTag(new NbtCompound());
                 File file1 = new File("./structure_update/out/" + s.replace("../src/main/resources/data/galacticraft/", ""));
                 file1.getParentFile().mkdirs();
                 NbtIo.writeCompressed(tag, file1);

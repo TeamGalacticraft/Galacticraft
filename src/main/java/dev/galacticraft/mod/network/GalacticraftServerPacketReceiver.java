@@ -33,14 +33,11 @@ import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.datafixers.util.Either;
-import dev.galacticraft.api.celestialbody.CelestialObjectType;
-import dev.galacticraft.api.celestialbody.satellite.Satellite;
-import dev.galacticraft.api.celestialbody.satellite.SatelliteRecipe;
 import dev.galacticraft.api.entity.Rocket;
-import dev.galacticraft.api.internal.accessor.SatelliteAccessor;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
 import dev.galacticraft.mod.api.block.AutomationType;
@@ -64,7 +61,6 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
@@ -209,7 +205,7 @@ public class GalacticraftServerPacketReceiver {
         });
 
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "dimension_teleport"), ((server, player, handler, buf, responseSender) -> {
-            RegistryKey<World> dimension = RegistryKey.of(Registry.DIMENSION, buf.readIdentifier());
+            RegistryKey<World> dimension = RegistryKey.of(Registry.WORLD_KEY, buf.readIdentifier());
             server.execute(() -> {
                 player.setWorld(player.getServer().getWorld(dimension));
             });
@@ -311,9 +307,7 @@ public class GalacticraftServerPacketReceiver {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             server.execute(() -> {
                 if (player.getVehicle() instanceof Rocket && ((Rocket) player.getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
-                    player.getVehicle().prevYaw = player.getVehicle().yaw;
-                    player.getVehicle().yaw += buffer.readBoolean() ? 2.0F : -2.0F;
-                    player.getVehicle().yaw %= 360.0F;
+                    player.getVehicle().setYaw((player.getVehicle().getYaw() + (buffer.readBoolean() ? 2.0F : -2.0F)) % 360.0f);
                 }
             });
         }));
@@ -322,9 +316,7 @@ public class GalacticraftServerPacketReceiver {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             server.execute(() -> {
                 if (player.getVehicle() instanceof Rocket && ((Rocket) player.getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
-                    player.getVehicle().prevPitch = player.getVehicle().pitch;
-                    player.getVehicle().pitch += buffer.readBoolean() ? 2.0F : -2.0F;
-                    player.getVehicle().pitch %= 360.0F;
+                    player.getVehicle().setPitch((player.getVehicle().getPitch() + (buffer.readBoolean() ? 2.0F : -2.0F)) % 360.0f);
                 }
             });
         }));
@@ -335,41 +327,41 @@ public class GalacticraftServerPacketReceiver {
                 int slot = buffer.readInt();
                 BlockPos pos = buffer.readBlockPos();
                 boolean success = false;
-                ServerWorld world = ((ServerPlayerEntity) player).getServerWorld();
-                if (((ServerPlayerEntity) player).getServerWorld().isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                ServerWorld world = player.getServerWorld();
+                if (player.getServerWorld().isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
                     if (player.world.getBlockEntity(pos) instanceof RocketAssemblerBlockEntity) {
                         FullFixedItemInv inventory = ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInv();
                         if (slot < inventory.getSlotCount()) {
-                            if (player.inventory.getCursorStack().isEmpty()) {
+                            if (player.currentScreenHandler.getCursorStack().isEmpty()) {
                                 success = true;
-                                player.inventory.setCursorStack(inventory.getInvStack(slot));
+                                player.currentScreenHandler.setCursorStack(inventory.getInvStack(slot));
                                 inventory.setInvStack(slot, ItemStack.EMPTY, Simulation.ACTION);
                             } else {
-                                if (inventory.getFilterForSlot(slot).matches(player.inventory.getCursorStack().copy())) {
+                                if (inventory.getFilterForSlot(slot).matches(player.currentScreenHandler.getCursorStack().copy())) {
                                     if (inventory.getInvStack(slot).isEmpty()) {
-                                        if (inventory.getMaxAmount(slot, player.inventory.getCursorStack()) >= player.inventory.getCursorStack().getCount()) {
-                                            inventory.setInvStack(slot, player.inventory.getCursorStack().copy(), Simulation.ACTION);
-                                            player.inventory.setCursorStack(ItemStack.EMPTY);
+                                        if (inventory.getMaxAmount(slot, player.currentScreenHandler.getCursorStack()) >= player.currentScreenHandler.getCursorStack().getCount()) {
+                                            inventory.setInvStack(slot, player.currentScreenHandler.getCursorStack().copy(), Simulation.ACTION);
+                                            player.currentScreenHandler.setCursorStack(ItemStack.EMPTY);
                                         } else {
-                                            ItemStack stack = player.inventory.getCursorStack().copy();
-                                            ItemStack stack1 = player.inventory.getCursorStack().copy();
-                                            stack.setCount(inventory.getMaxAmount(slot, player.inventory.getCursorStack()));
-                                            stack1.setCount(stack1.getCount() - inventory.getMaxAmount(slot, player.inventory.getCursorStack()));
+                                            ItemStack stack = player.currentScreenHandler.getCursorStack().copy();
+                                            ItemStack stack1 = player.currentScreenHandler.getCursorStack().copy();
+                                            stack.setCount(inventory.getMaxAmount(slot, player.currentScreenHandler.getCursorStack()));
+                                            stack1.setCount(stack1.getCount() - inventory.getMaxAmount(slot, player.currentScreenHandler.getCursorStack()));
                                             inventory.setInvStack(slot, stack, Simulation.ACTION);
-                                            player.inventory.setCursorStack(stack1);
+                                            player.currentScreenHandler.setCursorStack(stack1);
                                         }
                                     } else { // IMPOSSIBLE FOR THE 2 STACKS TO BE DIFFERENT AS OF RIGHT NOW. THIS MAY CHANGE.
                                         // SO... IF IT DOES, YOU NEED TO UPDATE THIS.
-                                        ItemStack stack = player.inventory.getCursorStack().copy();
-                                        int max = inventory.getMaxAmount(slot, player.inventory.getCursorStack());
+                                        ItemStack stack = player.currentScreenHandler.getCursorStack().copy();
+                                        int max = inventory.getMaxAmount(slot, player.currentScreenHandler.getCursorStack());
                                         stack.setCount(stack.getCount() + inventory.getInvStack(slot).getCount());
                                         if (stack.getCount() <= max) {
-                                            player.inventory.setCursorStack(ItemStack.EMPTY);
+                                            player.currentScreenHandler.setCursorStack(ItemStack.EMPTY);
                                         } else {
                                             ItemStack stack1 = stack.copy();
                                             stack.setCount(max);
                                             stack1.setCount(stack1.getCount() - max);
-                                            player.inventory.setCursorStack(stack1);
+                                            player.currentScreenHandler.setCursorStack(stack1);
                                         }
                                         inventory.setInvStack(slot, stack, Simulation.ACTION);
                                     }
@@ -401,7 +393,7 @@ public class GalacticraftServerPacketReceiver {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() != RocketData.EMPTY) {
                 server.execute(() -> {
-                    CelestialBodyType parent = CelestialBodyType.getById(server.getRegistryManager(), buffer.readIdentifier());
+                    CelestialBody<?, ?> parent = CelestialBodyType.getById(server.getRegistryManager(), buffer.readIdentifier());
                     if (parent != null) {
                         if (parent.getType() != CelestialObjectType.SATELLITE) {
                             if (((ServerPlayerEntityAccessor) player).getCelestialScreenState().canTravelTo(parent)) {
@@ -430,12 +422,12 @@ public class GalacticraftServerPacketReceiver {
             if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() != RocketData.EMPTY) {
                 server.execute(() -> {
                     Identifier id = buffer.readIdentifier();
-                    CelestialBodyType body = ((SatelliteAccessor) server).getSatellites().stream().filter(satellite -> satellite.getId().equals(id)).findFirst().orElse(null);
+                    CelestialBody<?, ?> body = ((SatelliteAccessor) server).getSatellites().stream().filter(satellite -> satellite.getId().equals(id)).findFirst().orElse(null);
                     if (body == null) body = CelestialBodyType.getById(server.getRegistryManager(), id);
 
                     if (body != null && ((ServerPlayerEntityAccessor) player).getCelestialScreenState().canTravelTo(body)) {
                         if (body.getWorld() != null) {
-                            player.teleport(server.getWorld(body.getWorld()), player.getX(), 500, player.getZ(), player.yaw, player.pitch);
+                            player.teleport(server.getWorld(body.getWorld()), player.getX(), 500, player.getZ(), player.getYaw(), player.getPitch());
                             ((ServerPlayerEntityAccessor) player).setCelestialScreenState(RocketData.EMPTY);
                         }
                     } else {
@@ -444,6 +436,5 @@ public class GalacticraftServerPacketReceiver {
                 });
             }
         }));
-
     }
 }

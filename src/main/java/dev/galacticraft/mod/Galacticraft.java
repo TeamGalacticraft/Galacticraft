@@ -39,7 +39,6 @@ import dev.galacticraft.mod.misc.banner.GalacticraftBannerPattern;
 import dev.galacticraft.mod.network.GalacticraftServerPacketReceiver;
 import dev.galacticraft.mod.particle.GalacticraftParticle;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
-import dev.galacticraft.mod.rocket.travel.GalacticraftConfiguredTravelPredicates;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.sound.GalacticraftSound;
 import dev.galacticraft.mod.structure.GalacticraftStructure;
@@ -49,6 +48,7 @@ import dev.galacticraft.mod.village.MoonVillagerType;
 import dev.galacticraft.mod.world.biome.GalacticraftBiome;
 import dev.galacticraft.mod.world.biome.source.GalacticraftBiomeSource;
 import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
+import dev.galacticraft.mod.world.dimension.GalacticraftGas;
 import dev.galacticraft.mod.world.gen.carver.GalacticraftCarver;
 import dev.galacticraft.mod.world.gen.feature.GalacticraftFeature;
 import dev.galacticraft.mod.world.gen.surfacebuilder.GalacticraftSurfaceBuilder;
@@ -99,7 +99,6 @@ public class Galacticraft implements ModInitializer {
         GalacticraftSound.register();
         GalacticraftPointOfInterestType.register();
         MoonVillagerType.register();
-        GalacticraftConfiguredTravelPredicates.register();
         GalacticraftRocketParts.register();
         GalacticraftVillagerProfession.register();
 

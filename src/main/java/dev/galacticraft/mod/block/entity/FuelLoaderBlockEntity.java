@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
@@ -40,18 +39,16 @@ import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEn
 import dev.galacticraft.mod.entity.RocketEntity;
 import dev.galacticraft.mod.screen.FuelLoaderScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.screen.tank.Tank;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import dev.galacticraft.mod.util.EnergyUtil;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -159,7 +156,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound toTag(NbtCompound tag) {
         if (connectionPos != null) {
             tag.putBoolean("has_connection" , true);
             tag.putLong("connection_pos", connectionPos.asLong());
@@ -168,8 +165,8 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         if (tag.getBoolean("has_connection")) {
             connectionPos = BlockPos.fromLong(tag.getLong("connection_pos"));
         }
