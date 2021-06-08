@@ -188,7 +188,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             int offsetY = 0;
             int offsetX = 0;
             int slot = 0;
-            if (this.blockEntity.data != RocketData.EMPTY) {
+            if (this.blockEntity.data != RocketData.empty()) {
                 for (int i = 0; i < RocketPartType.values().length; i++) {
                     if (blockEntity.data.getPartForType(RocketPartType.values()[i]).hasRecipe()) {
                         if (offsetX != 0) {
@@ -255,7 +255,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
         super.render(stack, mouseX, mouseY, delta);
         DiffuseLighting.enableGuiDepthLighting();
 
-        if (blockEntity.data != null && blockEntity.data != RocketData.EMPTY) {
+        if (blockEntity.data != null && blockEntity.data != RocketData.empty()) {
             client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.rocket_info").asString(), this.x + 234, this.y + 41, 11184810);
 //            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.tier", blockEntity.data.getTier()).asString(), this.x + 234, this.y + 41 + 11, 11184810);
             client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.assembler_status").asString(), this.x + 234, this.y + 41 + 22, 11184810);
@@ -327,7 +327,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             int offsetX = 0;
             int offsetY = 0;
             int slot = 0;
-            if (this.blockEntity.data != RocketData.EMPTY) {
+            if (this.blockEntity.data != RocketData.empty()) {
                 for (int i = 0; i < RocketPartType.values().length; i++) {
                     if (blockEntity.data.getPartForType(RocketPartType.values()[i]).hasRecipe()) {
                         if (offsetX != 0) {

@@ -217,7 +217,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     }
 
 
-    public List<RocketPart> getParts() {
+    public List<RocketPart> parts() {
         return Lists.newArrayList(cone, body, booster, fin, bottom, upgrade);
     }
 
@@ -296,8 +296,8 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
                 tag.putString("upgrade", Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), upgrade)).toString());
 
 //                int tier = 0;
-//                for (RocketPart part : getParts()) {
-//                    tier = Math.max(part.getTier(getParts()), tier);
+//                for (RocketPart part : parts()) {
+//                    tier = Math.max(part.getTier(parts()), tier);
 //                }
 //
 //                tag.putInt("tier", tier);

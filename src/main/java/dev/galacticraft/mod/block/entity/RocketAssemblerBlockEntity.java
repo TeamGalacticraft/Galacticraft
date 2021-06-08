@@ -77,7 +77,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             return this.getFilterForSlot(slot).matches(item);
         }
     };
-    public RocketData data = RocketData.EMPTY;
+    public RocketData data = RocketData.empty();
     public Map<Identifier, RocketAssemblerRecipe> recipes = new HashMap<>();
     private final SimpleCapacitor energy = new SimpleCapacitor(DefaultEnergyType.INSTANCE, Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize());
     private FullFixedItemInv extendedInv = EMPTY_INV;
@@ -133,7 +133,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         }
 
         if (current.isEmpty()) {
-            this.data = RocketData.EMPTY;
+            this.data = RocketData.empty();
             this.extendedInv = EMPTY_INV;
             return;
         }
@@ -163,7 +163,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
 
             @Override
             public int getMaxAmount(int slot, ItemStack stack) {
-                if (data != RocketData.EMPTY) {
+                if (data != RocketData.empty()) {
                     int a = 0;
                     for (int i = 0; i < RocketPartType.values().length; i++) {
                         if (data.getPartForType(RocketPartType.values()[i]).hasRecipe()) {
@@ -186,7 +186,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         };
 
         if (!data.isEmpty()) {
-            for (RocketPart part : data.getParts()) {
+            for (RocketPart part : data.parts()) {
                 if (part != null) {
                     fakeEntity.setPart(part);
                 }
@@ -262,7 +262,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
 
             @Override
             public int getMaxAmount(int slot, ItemStack stack) {
-                if (data != RocketData.EMPTY) {
+                if (data != RocketData.empty()) {
                     int a = 0;
                     for (int i = 0; i < RocketPartType.values().length; i++) {
                         if (data.getPartForType(RocketPartType.values()[i]).hasRecipe()) {
@@ -291,7 +291,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         extendedInv = inv;
 
         if (!data.isEmpty()) {
-            for (RocketPart part : data.getParts()) {
+            for (RocketPart part : data.parts()) {
                 if (part != null) {
                     fakeEntity.setPart(part);
                 }

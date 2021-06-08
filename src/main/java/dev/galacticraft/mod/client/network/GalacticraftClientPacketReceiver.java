@@ -167,7 +167,7 @@ public class GalacticraftClientPacketReceiver {
                 entity.setUuid(entityUUID);
 
                 entity.setColor(data.color());
-                entity.setParts(data.getParts());
+                entity.setParts(data.parts());
 
                 MinecraftClient.getInstance().world.addEntity(entityID, entity);
             });

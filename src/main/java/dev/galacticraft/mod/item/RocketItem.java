@@ -80,7 +80,7 @@ public class RocketItem extends Item {
             if (context.getWorld() instanceof ServerWorld) {
                 RocketEntity rocket = new RocketEntity(GalacticraftEntityType.ROCKET, context.getWorld());
                 RocketData data = RocketData.fromTag(context.getPlayer().getStackInHand(context.getHand()).getTag(), context.getWorld().getRegistryManager());
-                rocket.setParts(data.getParts());
+                rocket.setParts(data.parts());
                 rocket.setColor(data.getColor());
                 rocket.setLinkedPad(pos);
                 rocket.resetPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
