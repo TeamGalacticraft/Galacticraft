@@ -92,7 +92,7 @@ public class GalacticraftClientPacketReceiver {
                 int id = buffer.readVarInt();
                 UUID uuid = buffer.readUuid();
                 Entity entity = Registry.ENTITY_TYPE.get(buffer.readVarInt()).create(MinecraftClient.getInstance().world);
-                entity.setEntityId(id);
+                entity.setId(id);
                 entity.setUuid(uuid);
                 entity.setPos(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
                 entity.setYaw((float) (buffer.readByte() * 360) / 256.0F);

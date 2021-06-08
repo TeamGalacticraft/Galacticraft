@@ -266,6 +266,7 @@ license {
 }
 
 tasks.withType(JavaCompile::class) {
+    dependsOn(tasks.checkLicenses)
     options.encoding = "UTF-8"
     options.release.set(16)
 }

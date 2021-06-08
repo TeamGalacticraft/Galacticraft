@@ -24,7 +24,6 @@ package dev.galacticraft.mod.mixin.client;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import dev.galacticraft.api.registry.RegistryUtil;
-import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.accessor.SoundSystemAccessor;
 import dev.galacticraft.mod.item.GalacticraftItems;
@@ -64,8 +63,8 @@ public abstract class ClientPlayerEntityMixin implements GearInventoryProvider {
                 }
                 if (!hasFreqModule) {
                     ((SoundSystemAccessor) MinecraftClient.getInstance().getSoundManager().soundSystem)
-                            .gc_updateAtmosphericMultiplier(RegistryUtil.getCelestialBodyByDimension(client.world.getRegistryManager(), client.world.getRegistryKey())
-                                    .map(body -> ((Landable) body.type()).atmosphere(body.config()).pressure()).orElse(1.0f));
+                            .gc_updateAtmosphericMultiplier(RegistryUtil.getCelestialBodyByDimension(this.client.world)
+                                    .map(body -> body.type().atmosphere(body.config()).pressure()).orElse(1.0f));
                 }
             }
         });

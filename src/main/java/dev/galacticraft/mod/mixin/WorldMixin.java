@@ -22,16 +22,12 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.api.atmosphere.AtmosphericGas;
 import dev.galacticraft.api.registry.RegistryUtil;
-import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.WorldChunk;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -43,8 +39,6 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class WorldMixin implements WorldOxygenAccessor {
 
     @Shadow public abstract WorldChunk getWorldChunk(BlockPos pos);
-
-    @Shadow @Final private RegistryKey<World> registryKey;
 
     @Shadow
     public static boolean isValid(BlockPos pos) {
@@ -58,7 +52,7 @@ public abstract class WorldMixin implements WorldOxygenAccessor {
     public boolean isBreathable(BlockPos pos) {
         if (!this.init) {
             this.init = true;
-            RegistryUtil.getCelestialBodyByDimension(((World)(Object)this).getRegistryManager(), this.registryKey).ifPresent(celestialBodyType -> this.breathable = ((Landable) celestialBodyType.type()).atmosphere(celestialBodyType.config()).composition().containsKey(AtmosphericGas.OXYGEN_ID));
+            RegistryUtil.getCelestialBodyByDimension(((World)(Object)this)).ifPresent(celestialBodyType -> this.breathable = celestialBodyType.type().atmosphere(celestialBodyType.config()).breathable());
         }
         if (breathable) return true;
         if (isValid(pos)) return false;
@@ -69,7 +63,7 @@ public abstract class WorldMixin implements WorldOxygenAccessor {
     public void setBreathable(BlockPos pos, boolean value) {
         if (!this.init) {
             this.init = true;
-            RegistryUtil.getCelestialBodyByDimension(((World)(Object)this).getRegistryManager(), this.registryKey).ifPresent(celestialBodyType -> this.breathable = ((Landable) celestialBodyType.type()).atmosphere(celestialBodyType.config()).composition().containsKey(AtmosphericGas.OXYGEN_ID));
+            RegistryUtil.getCelestialBodyByDimension(((World)(Object)this)).ifPresent(celestialBodyType -> this.breathable = celestialBodyType.type().atmosphere(celestialBodyType.config()).breathable());
         }
         if (isValid(pos) || breathable) return;
         ((ChunkOxygenAccessor) this.getWorldChunk(pos)).setBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15, value);
