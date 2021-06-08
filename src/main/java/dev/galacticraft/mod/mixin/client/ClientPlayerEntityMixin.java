@@ -26,7 +26,6 @@ import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import dev.galacticraft.api.entity.Rocket;
 import dev.galacticraft.api.registry.RegistryUtil;
 import dev.galacticraft.api.rocket.LaunchStage;
-import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.accessor.SoundSystemAccessor;
@@ -76,8 +75,8 @@ public abstract class ClientPlayerEntityMixin implements GearInventoryProvider {
                 }
                 if (!hasFreqModule) {
                     ((SoundSystemAccessor) MinecraftClient.getInstance().getSoundManager().soundSystem)
-                            .gc_updateAtmosphericMultiplier(RegistryUtil.getCelestialBodyByDimension(client.world.getRegistryManager(), client.world.getRegistryKey())
-                                    .map(body -> ((Landable) body.type()).atmosphere(body.config()).pressure()).orElse(1.0f));
+                            .gc_updateAtmosphericMultiplier(RegistryUtil.getCelestialBodyByDimension(this.client.world)
+                                    .map(body -> body.type().atmosphere(body.config()).pressure()).orElse(1.0f));
                 }
             }
         });
@@ -112,26 +111,18 @@ public abstract class ClientPlayerEntityMixin implements GearInventoryProvider {
 
                 if (((Rocket) player.getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
                     if (this.input.pressingForward) {
-                        player.getVehicle().prevPitch = player.getVehicle().pitch;
-                        player.getVehicle().pitch -= 2.0F;
-                        player.getVehicle().pitch %= 360.0F;
+                        player.getVehicle().setPitch((player.getVehicle().getPitch() - 2.0F) % 360.0f);
                         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_pitch"), new PacketByteBuf(Unpooled.buffer().writeBoolean(false))));
                     } else if (this.input.pressingBack) {
-                        player.getVehicle().prevPitch = player.getVehicle().pitch;
-                        player.getVehicle().pitch += 2.0F;
-                        player.getVehicle().pitch %= 360.0F;
+                        player.getVehicle().setPitch((player.getVehicle().getPitch() + 2.0F) % 360.0f);
                         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_pitch"), new PacketByteBuf(Unpooled.buffer().writeBoolean(true))));
                     }
 
                     if (this.input.pressingLeft) {
-                        player.getVehicle().prevYaw = player.getVehicle().yaw;
-                        player.getVehicle().yaw -= 2.0F;
-                        player.getVehicle().yaw %= 360.0F;
+                        player.getVehicle().setYaw((player.getVehicle().getYaw() - 2.0F) % 360.0f);
                         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_yaw"), new PacketByteBuf(Unpooled.buffer().writeBoolean(false))));
                     } else if (this.input.pressingRight) {
-                        player.getVehicle().prevYaw = player.getVehicle().yaw;
-                        player.getVehicle().yaw += 2.0F;
-                        player.getVehicle().yaw %= 360.0F;
+                        player.getVehicle().setYaw((player.getVehicle().getYaw() + 2.0F) % 360.0f);
                         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_yaw"), new PacketByteBuf(Unpooled.buffer().writeBoolean(true))));
 
                     }

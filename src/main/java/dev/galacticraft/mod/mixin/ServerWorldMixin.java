@@ -23,15 +23,12 @@
 package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
-import dev.galacticraft.api.atmosphere.AtmosphericGas;
-import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
 import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
@@ -39,7 +36,10 @@ import net.minecraft.world.gen.Spawner;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.level.ServerWorldProperties;
 import net.minecraft.world.level.storage.LevelStorage;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -53,25 +53,6 @@ import java.util.concurrent.Executor;
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin implements WorldOxygenAccessor {
     @Shadow @Final @Mutable private List<Spawner> spawners;
-    private @Unique boolean breathable = true;
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void init(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> registryKey, DimensionType dimensionType, WorldGenerationProgressListener worldGenerationProgressListener, ChunkGenerator chunkGenerator, boolean debugWorld, long l, List<Spawner> list, boolean bl, CallbackInfo ci) {
-        CelestialBodyType.getByDimType(server.getRegistryManager(), ((World)(Object)this).getRegistryKey()).ifPresent(celestialBodyType -> this.breathable = celestialBodyType.getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN));
-    }
-
-    @Override
-    public boolean isBreathable(BlockPos pos) {
-        if (breathable) return true;
-        if (World.isOutOfBuildLimitVertically(pos)) return false;
-        return ((ChunkOxygenAccessor) ((World)(Object)this).getWorldChunk(pos)).isBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
-    }
-
-    @Override
-    public void setBreathable(BlockPos pos, boolean value) {
-        if (World.isOutOfBuildLimitVertically(pos) || breathable) return;
-        ((ChunkOxygenAccessor) ((World)(Object)this).getWorldChunk(pos)).setBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15, value);
-    }
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void setSpawnersGC(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> registryKey, DimensionType dimensionType, WorldGenerationProgressListener worldGenerationProgressListener, ChunkGenerator chunkGenerator, boolean debugWorld, long l, List<Spawner> list, boolean bl, CallbackInfo ci) {

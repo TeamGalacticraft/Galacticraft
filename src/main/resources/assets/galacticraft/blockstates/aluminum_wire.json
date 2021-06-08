@@ -1,11 +1,11 @@
 {
   "multipart": [
     {"apply": {"model": "galacticraft:block/aluminum_wire"}},
-    {"when":  {"attached_north": "true"}, "apply":  {"model": "galacticraft:block/aluminum_wire_side"}},
-    {"when":  {"attached_east":  "true"}, "apply":  {"model": "galacticraft:block/aluminum_wire_side", "y": 90}},
-    {"when":  {"attached_south": "true"}, "apply":  {"model": "galacticraft:block/aluminum_wire_side", "y": 180}},
-    {"when":  {"attached_west":  "true"}, "apply":  {"model": "galacticraft:block/aluminum_wire_side", "y": 270}},
-    {"when":  {"attached_up":    "true"}, "apply":  {"model": "galacticraft:block/aluminum_wire_side", "x": 270, "y": 90}},
-    {"when":  {"attached_down":  "true"}, "apply":  {"model": "galacticraft:block/aluminum_wire_side", "x": 90, "y": 270}}
+    {"when":  {"north": "true"}, "apply":  {"model": "galacticraft:block/aluminum_wire_side"}},
+    {"when":  {"east":  "true"}, "apply":  {"model": "galacticraft:block/aluminum_wire_side", "y": 90}},
+    {"when":  {"south": "true"}, "apply":  {"model": "galacticraft:block/aluminum_wire_side", "y": 180}},
+    {"when":  {"west":  "true"}, "apply":  {"model": "galacticraft:block/aluminum_wire_side", "y": 270}},
+    {"when":  {"up":    "true"}, "apply":  {"model": "galacticraft:block/aluminum_wire_side", "x": 270, "y": 90}},
+    {"when":  {"down":  "true"}, "apply":  {"model": "galacticraft:block/aluminum_wire_side", "x": 90, "y": 270}}
   ]
 }

@@ -24,9 +24,9 @@ package dev.galacticraft.mod.mixin.client;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.galacticraft.api.atmosphere.AtmosphericGas;
 import dev.galacticraft.api.registry.RegistryUtil;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
@@ -48,8 +48,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Optional;
-
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
@@ -63,8 +61,8 @@ public abstract class InGameHudMixin extends DrawableHelper implements DrawableU
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderColor(FFFF)V", ordinal = 1))
     private void draw(MatrixStack matrices, float delta, CallbackInfo ci) {
-        Optional<CelestialBody<?, ?>> optional = RegistryUtil.getCelestialBodyByDimension(client.world.getRegistryManager(), client.world.getRegistryKey());
-        if (optional.isPresent() && !((Landable) optional.get().type()).atmosphere(optional.get().config()).composition().containsKey(AtmosphericGas.OXYGEN_ID)) {
+        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = RegistryUtil.getCelestialBodyByDimension(this.client.world).orElse(null);
+        if (body != null && !body.type().atmosphere(body.config()).breathable()) {
             fill(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * 2) - 11, 4, this.client.getWindow().getScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 9, 6 + Constant.TextureCoordinate.OVERLAY_HEIGHT, 0);
             fill(matrices, this.client.getWindow().getScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 6, 4, this.client.getWindow().getScaledWidth() - 4, 6 + Constant.TextureCoordinate.OVERLAY_HEIGHT, 0);
 

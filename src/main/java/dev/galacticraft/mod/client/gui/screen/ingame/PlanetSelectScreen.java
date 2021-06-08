@@ -333,7 +333,7 @@ public class PlanetSelectScreen extends Screen {
 
         if (key == GLFW.GLFW_KEY_ESCAPE) {
             if (this.selectedBody != null) {
-                this.unselectCelestialBody<?, ?>();
+                this.unselectCelestialBody();
             }
 
             return true;
@@ -405,12 +405,12 @@ public class PlanetSelectScreen extends Screen {
             return false;
         }
 
-        boolean foundCelestialBody<SatelliteConfig, SatelliteType> = false;
+        boolean foundSatellite = false;
         assert client != null;
         assert client.world != null;
         for (CelestialBody<SatelliteConfig, SatelliteType> type : ((SatelliteAccessor) client.getNetworkHandler()).getSatellites()) {
             if (type.parent(manager) == atBody && type.getOwnershipData().getOwner().equals(this.client.player.getUuid())) {
-                foundCelestialBody<SatelliteConfig, SatelliteType> = true;
+                foundSatellite = true;
                 break;
             }
         }
@@ -421,7 +421,7 @@ public class PlanetSelectScreen extends Screen {
         return atBody.getSatelliteRecipe() != null;
     }
 
-    protected void unselectCelestialBody<?, ?>() {
+    protected void unselectCelestialBody() {
         this.selectionState = EnumSelection.UNSELECTED;
         this.ticksSinceUnselectionF = 0;
         this.ticksSinceUnselection = 0;
@@ -526,7 +526,7 @@ public class PlanetSelectScreen extends Screen {
         final int TOP = LHS;
 
         if (this.selectedBody != null && x > LHS && x < LHS + 88 && y > TOP && y < TOP + 13) {
-            this.unselectCelestialBody<?, ?>();
+            this.unselectCelestialBody();
             return true;
         }
 
@@ -590,7 +590,7 @@ public class PlanetSelectScreen extends Screen {
                         String strName = this.client.player.getName().getString();
 //                        Integer spacestationID = this.spaceStationIDs.get(strName);
 //                        if (spacestationID == null) spacestationID = this.spaceStationIDs.get(strName.toLowerCase());
-                        CelestialBody<SatelliteConfig, SatelliteType> selectedCelestialBody<SatelliteConfig, SatelliteType> = (Satellite) this.selectedBody;
+                        CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (Satellite) this.selectedBody;
                         selectedSatellite.setName(this.renamingString);
 //                        RegistryKey<World> spacestationID = selectedSatellite.getWorld();
 //                        this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).get(strName).setStationName(this.renamingString);
@@ -615,7 +615,7 @@ public class PlanetSelectScreen extends Screen {
                     }
                 }
 
-                CelestialBody<SatelliteConfig, SatelliteType> selectedCelestialBody<SatelliteConfig, SatelliteType> = (Satellite) this.selectedBody;
+                CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (Satellite) this.selectedBody;
                 int stationListSize = ((SatelliteAccessor) this.client.getNetworkHandler()).getSatellites().size();
                 int max = Math.min((this.height / 2) / 14, stationListSize);
 
@@ -685,7 +685,7 @@ public class PlanetSelectScreen extends Screen {
             EnumSelection selectionCountOld = this.selectionState;
 
             if (this.isSelected()) {
-                this.unselectCelestialBody<?, ?>();
+                this.unselectCelestialBody();
             }
 
             if (selectionCountOld == EnumSelection.ZOOMED) {
@@ -713,7 +713,7 @@ public class PlanetSelectScreen extends Screen {
 
                 EnumSelection selectionCountOld = this.selectionState;
                 if (this.isSelected()) {
-                    this.unselectCelestialBody<?, ?>();
+                    this.unselectCelestialBody();
                 }
                 if (selectionCountOld == EnumSelection.ZOOMED) {
                     this.selectionState = EnumSelection.SELECTED;
@@ -774,7 +774,7 @@ public class PlanetSelectScreen extends Screen {
                         if (this.isSelected() && this.selectedBody != bodyClicked) {
                             /*if (!(this.selectedBody instanceof IChildBody) || ((IChildBody) this.selectedBody).parent(manager) != bodyClicked)
                             {
-//                                this.unselectCelestialBody<?, ?>();
+//                                this.unselectCelestialBody();
                             }
                             else */
                             if (this.isZoomed()) {
@@ -820,7 +820,7 @@ public class PlanetSelectScreen extends Screen {
 
         if (!clickHandled) {
             if (this.selectedBody != null) {
-                this.unselectCelestialBody<?, ?>();
+                this.unselectCelestialBody();
                 this.planetZoom = 0.0F;
             }
 
@@ -1323,7 +1323,7 @@ public class PlanetSelectScreen extends Screen {
                 RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
 
                 if (isSatellite(this.selectedBody)) {
-                    CelestialBody<SatelliteConfig, SatelliteType> selectedCelestialBody<SatelliteConfig, SatelliteType> = (Satellite) this.selectedBody;
+                    CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (Satellite) this.selectedBody;
                     int stationListSize = (int) ((SatelliteAccessor) this.client.getNetworkHandler()).getSatellites().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager)).count();
 
                     int max = Math.min((this.height / 2) / 14, stationListSize);
@@ -1583,7 +1583,7 @@ public class PlanetSelectScreen extends Screen {
                     this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
                     this.blit(RHS - 182, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE - sliderPos, 83, 38, 512 - 166, 512 - 76, 166, 76, true, false);
 
-                    boolean flag0 = getVisibleSatellitesForCelestialBody<?, ?>(this.selectedBody).size() > 0;
+                    boolean flag0 = getVisibleSatellitesForCelestialBody(this.selectedBody).size() > 0;
                     boolean flag1 = isPlanet(this.selectedBody) && getChildren(this.selectedBody).size() > 0;
                     if (flag0 && flag1) {
                         this.drawSplitString(matrices, I18n.translate("gui.message.click_again.0"), RHS - 182 + 41, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE + 2 - sliderPos, 79, GREY5, false, false);
@@ -1613,7 +1613,7 @@ public class PlanetSelectScreen extends Screen {
                     this.textRenderer.draw(matrices, str, width / 2f + 36 - this.textRenderer.getWidth(str) / 2f, this.height / 2f + 23, WHITE);
 
                     if (this.renamingString == null) {
-                        CelestialBody<SatelliteConfig, SatelliteType> selectedCelestialBody<SatelliteConfig, SatelliteType> = (Satellite) this.selectedBody;
+                        CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (Satellite) this.selectedBody;
                         String playerName = this.client.player.getName().getString();
                         this.renamingString = selectedSatellite.getName();
                         if (this.renamingString == null) {
@@ -1644,7 +1644,7 @@ public class PlanetSelectScreen extends Screen {
         }
     }
 
-    private List<Satellite> getVisibleSatellitesForCelestialBody<?, ?>(CelestialBody<?, ?> selectedBody) {
+    private List<Satellite> getVisibleSatellitesForCelestialBody(CelestialBody<?, ?> selectedBody) {
         if (selectedBody == null || selectedBody.getType() == CelestialObjectType.SATELLITE) return Collections.emptyList();
         List<Satellite> list = new LinkedList<>();
         for (CelestialBody<SatelliteConfig, SatelliteType> satellite : ((SatelliteAccessor) this.client.getNetworkHandler()).getSatellites()) {

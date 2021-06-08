@@ -23,7 +23,8 @@
     "SkyPropertiesAccessor",
     "StructurePoolGeneratorMixin",
     "TorchBlockMixin",
-    "WorldChunkMixin"
+    "WorldChunkMixin",
+    "WorldMixin"
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",
@@ -31,7 +32,6 @@
     "client.BipedEntityModelMixin",
     "client.ClientChunkSectionMixin",
     "client.ClientPlayerEntityMixin",
-    "client.ClientWorldMixin",
     "client.HandledScreenAccessor",
     "client.InGameHudMixin",
     "client.MinecraftClientMixin",
