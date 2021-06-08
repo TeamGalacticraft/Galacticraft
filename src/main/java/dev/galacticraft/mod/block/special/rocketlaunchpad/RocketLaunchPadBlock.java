@@ -22,24 +22,17 @@
 
 package dev.galacticraft.mod.block.special.rocketlaunchpad;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.entity.RocketEntity;
 import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.entity.RocketEntity;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -50,7 +43,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
-
 import org.jetbrains.annotations.Nullable;
 
 public class RocketLaunchPadBlock extends BlockWithEntity {
@@ -379,8 +371,8 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView view) {
-        return new RocketLaunchPadBlockEntity(); //i give up on lazily creating the BE
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new RocketLaunchPadBlockEntity(pos, state); //i give up on lazily creating the BE
     }
 
     public enum Part implements StringIdentifiable {

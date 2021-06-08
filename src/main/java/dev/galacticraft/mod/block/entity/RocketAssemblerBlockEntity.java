@@ -119,10 +119,10 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         }
 
         if (!current.isEmpty() && current.getItem() == GalacticraftItem.ROCKET_SCHEMATIC) {
-            if (this.data.equals(RocketData.fromTag(current.getTag(), this.world.getRegistryManager()))) {
+            if (this.data.equals(RocketData.fromNbt(current.getTag(), this.world.getRegistryManager()))) {
                 return;
             }
-            this.data = RocketData.fromTag(current.getTag(), this.world.getRegistryManager());
+            this.data = RocketData.fromNbt(current.getTag(), this.world.getRegistryManager());
         }
 
         for (int i = 0; i < extendedInv.getSlotCount(); i++) {
@@ -229,9 +229,9 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         }
 
         if (inventory.getInvStack(SCHEMATIC_INPUT_SLOT).getItem() == GalacticraftItem.ROCKET_SCHEMATIC) {
-            if (!this.data.equals(RocketData.fromTag(inventory.getInvStack(SCHEMATIC_INPUT_SLOT).copy().getOrCreateTag(), this.world.getRegistryManager()))) {
+            if (!this.data.equals(RocketData.fromNbt(inventory.getInvStack(SCHEMATIC_INPUT_SLOT).copy().getOrCreateTag(), this.world.getRegistryManager()))) {
                 ItemStack stack = new ItemStack(GalacticraftItem.ROCKET_SCHEMATIC);
-                data.toTag(this.world.getRegistryManager(), stack.getOrCreateTag());
+                data.toNbt(this.world.getRegistryManager(), stack.getOrCreateTag());
                 schematicUpdate(stack, inventory.getInvStack(SCHEMATIC_INPUT_SLOT));
                 return;
             }
@@ -285,7 +285,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         };
         NbtCompound tag = new NbtCompound();
         extendedInv.toTag(tag);
-        inv.fromTag(tag);
+        inv.toTag(tag);
 
 
         extendedInv = inv;
@@ -329,7 +329,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     public void readNbt(NbtCompound nbtCompound) {
         super.readNbt(nbtCompound);
         this.inventory.fromTag(nbtCompound);
-        this.data = RocketData.fromTag(nbtCompound.getCompound("data"), this.world.getRegistryManager());
+        this.data = RocketData.fromNbt(nbtCompound.getCompound("data"), this.world.getRegistryManager());
         this.extendedInv = new FullFixedItemInv(nbtCompound.getInt("slots"));
         this.extendedInv.fromTag(nbtCompound);
         this.schematicUpdateFromTag();
@@ -338,7 +338,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     @Override
     public NbtCompound writeNbt(NbtCompound nbtCompound) {
         super.writeNbt(nbtCompound);
-        nbtCompound.put("data", data.toTag(this.world.getRegistryManager(), new NbtCompound()));
+        nbtCompound.put("data", data.toNbt(this.world.getRegistryManager(), new NbtCompound()));
         nbtCompound.putInt("slots", extendedInv.getSlotCount());
         inventory.toTag(nbtCompound);
         extendedInv.toTag(nbtCompound);
@@ -384,7 +384,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
                     extendedInv.setInvStack(i, ItemStack.EMPTY, Simulation.ACTION);
                 }
                 ItemStack stack1 = new ItemStack(GalacticraftItem.ROCKET);
-                data.toTag(this.world.getRegistryManager(), stack1.getOrCreateTag());
+                data.toNbt(this.world.getRegistryManager(), stack1.getOrCreateTag());
                 this.inventory.setInvStack(ROCKET_OUTPUT_SLOT, stack1, Simulation.ACTION);
             }
         } else {

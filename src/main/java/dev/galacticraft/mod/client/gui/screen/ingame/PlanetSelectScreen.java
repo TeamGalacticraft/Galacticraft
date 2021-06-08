@@ -65,6 +65,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.Vector4f;
 import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -640,7 +641,7 @@ public class PlanetSelectScreen extends Screen {
                     if (j >= this.spaceStationListOffset) {
                         int xOffset = 0;
 
-                        if (satellite.getOwnershipData().getUsername().equalsIgnoreCase(this.selectedStationOwner)) {
+                        if (satellite.type().ownershipData(satellite.config()).username().equalsIgnoreCase(this.selectedStationOwner)) {
                             xOffset -= 5;
                         }
 
@@ -648,7 +649,7 @@ public class PlanetSelectScreen extends Screen {
                         yPos = TOP + 50 + i * 14;
 
                         if (x >= xPos && x <= xPos + 93 && y >= yPos && y <= yPos + 12) {
-                            this.selectedStationOwner = satellite.getOwnershipData().getUsername();
+                            this.selectedStationOwner = satellite.type().ownershipData(satellite.config()).username();
                             clickHandled = true;
                         }
                         i++;
@@ -795,8 +796,8 @@ public class PlanetSelectScreen extends Screen {
                         }
 
                         //Auto select if it's a spacestation and there is only a single entry
-                        if (isSatellite(this.selectedBody) && ((SatelliteAccessor) this.client.getNetworkHandler()).satellites().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager)).count() == 1) {
-                            this.selectedStationOwner = ((CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody).getOwnershipData().getUsername();
+                        if (isSatellite(this.selectedBody) && ((SatelliteAccessor) this.client.getNetworkHandler()).satellites().values().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager)).count() == 1) {
+                            this.selectedStationOwner = ((CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody).type().ownershipData().username();
                         }
 
                         clickHandled = true;
@@ -1091,7 +1092,7 @@ public class PlanetSelectScreen extends Screen {
 
         float timeScale = isPlanet(cBody) ? 200.0F : 2.0F;
         float distanceFromCenter = this.getScale(cBody); // / 24000d because it needs to be relative to overworld //todo phaseshift?!
-        Vec3f cBodyPos = new Vec3f((float) Math.sin(ticksTotalF / (timeScale * (cBody.getDisplayInfo().getOrbitTime() / 24000d)) + /*cBody.getPhaseShift()*/ Math.PI) * distanceFromCenter, (float) Math.cos(ticksTotalF / (timeScale * (cBody.getDisplayInfo().getOrbitTime() / 24000d)) + /*cBody.getPhaseShift()*/Math.PI) * distanceFromCenter, 0);
+        Vec3f cBodyPos = new Vec3f((float) Math.sin(ticksTotalF / (timeScale * (cBody.display().() / 24000d)) + /*cBody.getPhaseShift()*/ Math.PI) * distanceFromCenter, (float) Math.cos(ticksTotalF / (timeScale * (cBody.getDisplayInfo().getOrbitTime() / 24000d)) + /*cBody.getPhaseShift()*/Math.PI) * distanceFromCenter, 0);
 
         if (cBody.parent(manager) != null) {
             cBodyPos.add(this.getCelestialBodyPosition(cBody.parent(manager)));
@@ -1312,7 +1313,7 @@ public class PlanetSelectScreen extends Screen {
 
                 if (isSatellite(this.selectedBody)) {
                     CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
-                    int stationListSize = (int) ((SatelliteAccessor) this.client.getNetworkHandler()).satellites().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager)).count();
+                    int stationListSize = (int) ((SatelliteAccessor) this.client.getNetworkHandler()).satellites().values().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager)).count();
 
                     int max = Math.min((this.height / 2) / 14, stationListSize);
                     this.blit(RHS - 95, TOP, 95, 53, this.selectedStationOwner.length() == 0 ? 95 : 0, 186, 95, 53, false, false);
@@ -1330,7 +1331,7 @@ public class PlanetSelectScreen extends Screen {
                     this.blit(RHS - 85, TOP + 49 + max * 14, 61, 4, 0, 239, 61, 4, false, true);
                     RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
 
-                    if (!((SatelliteAccessor) this.client.getNetworkHandler()).satellites().stream().anyMatch(s -> s.parent(manager) == this.selectedBody.parent(manager) && s.getOwnershipData().canAccess(client.player))) {
+                    if (!((SatelliteAccessor) this.client.getNetworkHandler()).satellites().values().stream().anyMatch(s -> s.parent(manager) == this.selectedBody.parent(manager) && s.type().ownershipData().canAccess(client.player))) {
                         str = I18n.translate("gui.message.select_ss");
                         this.drawSplitString(matrices, str, RHS - 47, TOP + 20, 91, WHITE, false, false);
                     } else {
@@ -1340,7 +1341,7 @@ public class PlanetSelectScreen extends Screen {
                         this.textRenderer.draw(matrices, str, RHS - 47 - this.textRenderer.getWidth(str) / 2, TOP + 30, WHITE);
                     }
 
-                    Iterator<CelestialBody<SatelliteConfig, SatelliteType>> it = ((SatelliteAccessor) this.client.getNetworkHandler()).satellites().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager) && s.getOwnershipData().canAccess(client.player)).iterator();
+                    Iterator<CelestialBody<SatelliteConfig, SatelliteType>> it = ((SatelliteAccessor) this.client.getNetworkHandler()).satellites().values().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager) && s.type().ownershipData().canAccess(client.player)).iterator();
                     int i = 0;
                     int j = 0;
                     while (it.hasNext() && i < max) {
@@ -1351,13 +1352,13 @@ public class PlanetSelectScreen extends Screen {
                             RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
                             int xOffset = 0;
 
-                            if (e.getOwnershipData().getUsername().equalsIgnoreCase(this.selectedStationOwner)) {
+                            if (e.type().ownershipData(e.config()).username().equalsIgnoreCase(this.selectedStationOwner)) {
                                 xOffset -= 5;
                             }
 
                             this.blit(RHS - 95 + xOffset, TOP + 50 + i * 14, 93, 12, 95, 464, 93, 12, true, false);
                             str = "";
-                            String str0 = e.getName();
+                            String str0 = I18n.translate(e.name().getKey());
                             int point = 0;
                             while (this.textRenderer.getWidth(str) < 80 && point < str0.length()) {
                                 str = str + str0.charAt(point);
@@ -1544,7 +1545,7 @@ public class PlanetSelectScreen extends Screen {
                 this.blit(LHS + 4, TOP, 83, 12, 0, 477, 83, 12, false, false);
 
                 if (!this.mapMode) {
-                    if (!this.data.canTravelTo(manager, this.selectedBody) || this.selectedBody.getWorld() == null || (isSatellite(this.selectedBody) && !((CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody).getOwnershipData().canAccess(this.client.player)))
+                    if (!this.data.canTravelTo(manager, this.selectedBody) || this.selectedBody.getWorld() == null || (isSatellite(this.selectedBody) && !((CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody).type().ownershipData().canAccess(this.client.player)))
                     {
                         RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
                     } else {
@@ -1635,8 +1636,8 @@ public class PlanetSelectScreen extends Screen {
     private List<CelestialBody<SatelliteConfig, SatelliteType>> getVisibleSatellitesForCelestialBody(CelestialBody<?, ?> selectedBody) {
         if (selectedBody == null || selectedBody.getType() == CelestialObjectType.SATELLITE) return Collections.emptyList();
         List<CelestialBody<SatelliteConfig, SatelliteType>> list = new LinkedList<>();
-        for (CelestialBody<SatelliteConfig, SatelliteType> satellite : ((SatelliteAccessor) this.client.getNetworkHandler()).satellites()) {
-            if (satellite.parent(manager) == selectedBody && satellite.getOwnershipData().canAccess(this.client.player)) {
+        for (CelestialBody<SatelliteConfig, SatelliteType> satellite : ((SatelliteAccessor) this.client.getNetworkHandler()).satellites().values()) {
+            if (satellite.parent(manager) == selectedBody && satellite.type().ownershipData(satellite.config()).canAccess(this.client.player)) {
                 list.add(satellite);
             }
         }
@@ -1917,7 +1918,7 @@ public class PlanetSelectScreen extends Screen {
             boolean selected = body == this.selectedBody || (body.parent(manager) == this.selectedBody && this.selectionState != EnumSelection.SELECTED);
             boolean ready = this.lastSelectedBody != null || this.ticksSinceSelectionF > 35;
             boolean isSibling = getSiblings(this.selectedBody).contains(body);
-            boolean isPossible = (!isSatellite(body) || ((CelestialBody<SatelliteConfig, SatelliteType>) body).getOwnershipData().canAccess(this.client.player))/* || (this.possibleBodies != null && this.possibleBodies.contains(body))*/;
+            boolean isPossible = (!isSatellite(body) || ((CelestialBody<SatelliteConfig, SatelliteType>) body).type().ownershipData().canAccess(this.client.player))/* || (this.possibleBodies != null && this.possibleBodies.contains(body))*/;
             if ((!selected && !isSibling) || !isPossible) {
                 alpha = 0.0F;
             } else if (this.isZoomed() && ((!selected || !ready) && !isSibling)) {

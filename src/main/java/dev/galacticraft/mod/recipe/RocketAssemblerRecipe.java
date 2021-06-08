@@ -25,23 +25,21 @@ package dev.galacticraft.mod.recipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import dev.galacticraft.mod.Galacticraft;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import me.shedaniel.rei.api.common.transfer.RecipeFinder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.*;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-
-import java.util.Map;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -82,15 +80,15 @@ public class RocketAssemblerRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public boolean matches(Inventory inv, World world_1) {
+    public boolean matches(Inventory inv, World world) {
         RecipeFinder finder = new RecipeFinder();
         int found = 0;
 
         for (int i = 0; i < inv.size(); ++i) {
-            ItemStack itemStack_1 = inv.getStack(i);
-            if (!itemStack_1.isEmpty()) {
+            ItemStack stack = inv.getStack(i);
+            if (!stack.isEmpty()) {
                 ++found;
-                finder.addItem(itemStack_1);
+                finder.addItem(stack);
             }
         }
 

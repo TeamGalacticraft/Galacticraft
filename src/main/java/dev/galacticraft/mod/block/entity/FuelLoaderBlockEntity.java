@@ -44,6 +44,7 @@ import dev.galacticraft.mod.util.EnergyUtil;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -69,8 +70,8 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     private BlockPos connectionPos = null;
     private Direction check = null;
 
-    public FuelLoaderBlockEntity() {
-        super(GalacticraftBlockEntityType.FUEL_LOADER_TYPE);
+    public FuelLoaderBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.FUEL_LOADER_TYPE, pos, state);
     }
 
     @Nullable
@@ -110,7 +111,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.getFluidInv().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.ONE, Simulation.SIMULATE).isEmpty()) return Status.NOT_ENOUGH_FUEL;
+        if (this.fluidInv().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.ONE, Simulation.SIMULATE).isEmpty()) return Status.NOT_ENOUGH_FUEL;
         if (this.connectionPos == null) return Status.NO_ROCKET;
         BlockEntity be = this.world.getBlockEntity(connectionPos);
         if (be instanceof RocketLaunchPadBlockEntity) {
@@ -141,27 +142,27 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
         }
 
         if (!this.isTankFull(0)) {
-            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.getFirstOrNull(this.getInventory().getSlot(FUEL_INPUT_SLOT));
+            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.getFirstOrNull(this.itemInv().getSlot(FUEL_INPUT_SLOT));
             if (extractable != null) {
                 if (!extractable.attemptExtraction(key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidAmount.of(1, 20), Simulation.ACTION).isEmpty()) {
-                    this.getFluidInv().insertFluid(0, extractable.extract(key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidAmount.of(1, 20)), Simulation.ACTION);
+                    this.fluidInv().insertFluid(0, extractable.extract(key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidAmount.of(1, 20)), Simulation.ACTION);
                 }
             }
         }
 
         if (this.getStatus().getType().isActive()) {
             SimpleFixedFluidInv inv = ((RocketEntity) this.world.getEntityById(((RocketLaunchPadBlockEntity) world.getBlockEntity(connectionPos)).getRocketEntityId())).getTank();
-            this.getFluidInv().insertFluid(0, inv.insertFluid(0, this.getFluidInv().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 50), Simulation.ACTION), Simulation.ACTION), Simulation.ACTION);
+            this.fluidInv().insertFluid(0, inv.insertFluid(0, this.fluidInv().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 50), Simulation.ACTION), Simulation.ACTION), Simulation.ACTION);
         }
     }
 
     @Override
-    public NbtCompound toTag(NbtCompound tag) {
+    public NbtCompound writeNbt(NbtCompound tag) {
         if (connectionPos != null) {
             tag.putBoolean("has_connection" , true);
             tag.putLong("connection_pos", connectionPos.asLong());
         }
-        return super.toTag(tag);
+        return super.writeNbt(tag);
     }
 
     @Override

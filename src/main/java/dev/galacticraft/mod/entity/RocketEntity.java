@@ -206,7 +206,7 @@ public class RocketEntity extends Entity implements Rocket {
     private TravelPredicateType.AccessType travel(DynamicRegistryManager manager, RocketPart part, CelestialBody<?, ?> type, Object2BooleanMap<RocketPart> map) {
         return part.travelPredicate().canTravelTo(type, (p) -> {
             return map.computeBooleanIfAbsent((RocketPart)p, (p1) -> {
-                if (Arrays.stream(this.parts()).anyMatch((p2) -> {
+                if (Arrays.stream(this.getParts()).anyMatch((p2) -> {
                     return RocketPart.getId(manager, p2).equals(RocketPart.getId(manager, p1));
                 })) {
                     map.put((RocketPart)p, false);
@@ -325,7 +325,7 @@ public class RocketEntity extends Entity implements Rocket {
     public void writeCustomDataToNbt(NbtCompound tag) {
         NbtCompound parts = new NbtCompound();
 
-        for (RocketPart part : this.parts()) {
+        for (RocketPart part : this.getParts()) {
             if (part != null) {
                 parts.putString(part.type().asString(), this.world.getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part).toString());
             }
@@ -397,8 +397,8 @@ public class RocketEntity extends Entity implements Rocket {
         buf.writeDouble(getZ());
         buf.writeByte((int) (this.getPitch() / 360F * 256F));
         buf.writeByte((int) (this.getYaw() / 360F * 256F));
-        RocketPart[] parts = this.parts();
-        buf.writeNbt(RocketData.create(this.getColor(), parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]).toTag(this.world.getRegistryManager(), new NbtCompound()));
+        RocketPart[] parts = this.getParts();
+        buf.writeNbt(RocketData.create(this.getColor(), parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]).toNbt(this.world.getRegistryManager(), new NbtCompound()));
         return new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "rocket_spawn"), buf);
     }
 
@@ -629,7 +629,7 @@ public class RocketEntity extends Entity implements Rocket {
 
     @Override
     public void onJump() {
-        for (RocketPart part : this.parts()) {
+        for (RocketPart part : this.getParts()) {
             if (part == null) return;
         }
 
@@ -648,7 +648,7 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public RocketPart[] parts() {
+    public RocketPart[] getParts() {
         for (int i = 0; i < this.dataTracker.get(PARTS).length; i++) {
             this.parts[i] = RocketPart.getById(this.world.getRegistryManager(), this.dataTracker.get(PARTS)[i]);
         }
@@ -657,7 +657,7 @@ public class RocketEntity extends Entity implements Rocket {
 
     @Override
     public RocketPart getPartForType(RocketPartType type) {
-        return this.parts()[type.ordinal()];
+        return this.getParts()[type.ordinal()];
     }
 
     @Override

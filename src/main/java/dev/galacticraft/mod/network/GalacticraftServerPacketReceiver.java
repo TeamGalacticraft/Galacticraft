@@ -285,7 +285,7 @@ public class GalacticraftServerPacketReceiver {
                         RocketPart part = RocketPart.getById(server.getRegistryManager(), buffer.readIdentifier());
                         if (part == null) player.networkHandler.disconnect(new LiteralText("Invalid rocket designer packet received."));
                         if (part.isUnlocked(player)) {
-                            blockEntity.setPartServer(part);
+                            blockEntity.setPart(part);
                             blockEntity.updateSchematic();
                         }
                     }

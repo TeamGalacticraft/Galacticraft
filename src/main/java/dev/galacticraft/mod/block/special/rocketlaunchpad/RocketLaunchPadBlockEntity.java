@@ -26,9 +26,11 @@ import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.entity.RocketEntity;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 
 import java.util.UUID;
@@ -38,8 +40,8 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
     private UUID rocketEntityUUID = null;
     private int rocketEntityId = Integer.MIN_VALUE;
 
-    public RocketLaunchPadBlockEntity() {
-        super(GalacticraftBlockEntityType.LAUNCH_PAD_TYPE);
+    public RocketLaunchPadBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.LAUNCH_PAD_TYPE, pos, state);
     }
 
     public void setRocketEntityUUID(UUID rocketEntityUUID) {
@@ -63,7 +65,7 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
             for (Entity entity : world.getEntitiesByType(GalacticraftEntityType.ROCKET, new Box(-3, -2, -3, 3, 9, 3), rocketEntity -> true)) {
                 if (entity instanceof RocketEntity) {
                     if (entity.getUuid() == this.rocketEntityUUID) {
-                        this.rocketEntityId = entity.getEntityId();
+                        this.rocketEntityId = entity.getId();
                     }
                 }
             }
@@ -74,9 +76,9 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
     }
 
     @Override
-    public NbtCompound toTag(NbtCompound tag) {
+    public NbtCompound writeNbt(NbtCompound tag) {
         if (hasRocket()) tag.putUuid("rocketUuid", rocketEntityUUID);
-        return super.toTag(tag);
+        return super.writeNbt(tag);
     }
 
     public void setRocketEntityId(int entityId) {
@@ -96,7 +98,7 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
 
     @Override
     public NbtCompound toClientTag(NbtCompound nbtCompound) {
-        toTag(nbtCompound);
+        this.writeNbt(nbtCompound);
         nbtCompound.putInt("reid", rocketEntityId);
         return nbtCompound;
     }

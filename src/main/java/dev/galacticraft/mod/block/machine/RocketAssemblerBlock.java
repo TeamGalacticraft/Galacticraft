@@ -26,8 +26,6 @@ import dev.galacticraft.mod.api.block.AbstractHorizontalDirectionalBlock;
 import dev.galacticraft.mod.block.entity.RocketAssemblerBlockEntity;
 import dev.galacticraft.mod.screen.RocketAssemblerScreenHandler;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -50,8 +48,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -64,8 +62,8 @@ public class RocketAssemblerBlock extends AbstractHorizontalDirectionalBlock imp
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView view) {
-        return new RocketAssemblerBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new RocketAssemblerBlockEntity(pos, state);
     }
 
     @Override

@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.api.block.MachineBlock;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.block.entity.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import net.minecraft.block.Block;
@@ -41,7 +40,7 @@ import net.minecraft.world.WorldAccess;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class FuelLoaderBlock extends MachineBlock {
+public class FuelLoaderBlock extends MachineBlock<FuelLoaderBlockEntity> {
     public static final BooleanProperty CONNECTED = BooleanProperty.of("connected");
 
     public FuelLoaderBlock(Settings settings) {
@@ -50,14 +49,14 @@ public class FuelLoaderBlock extends MachineBlock {
     }
 
     @Override
-    public MachineBlockEntity createBlockEntity(BlockView blockView) {
-        return new FuelLoaderBlockEntity();
-    }
-
-    @Override
     public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
         super.appendProperties(stateBuilder);
         stateBuilder.add(CONNECTED);
+    }
+
+    @Override
+    public FuelLoaderBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new FuelLoaderBlockEntity(pos, state);
     }
 
     @Override

@@ -61,8 +61,8 @@ public class RocketDesignerBlock extends AbstractHorizontalDirectionalBlock impl
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView var1) {
-        return new RocketDesignerBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new RocketDesignerBlockEntity(pos, state);
     }
 
     @Override

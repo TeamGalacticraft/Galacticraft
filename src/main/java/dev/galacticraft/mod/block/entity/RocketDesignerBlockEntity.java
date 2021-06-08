@@ -29,12 +29,12 @@ import com.google.common.collect.Lists;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
@@ -42,6 +42,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -80,8 +81,8 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
     private ItemStack previous = ItemStack.EMPTY;
 
-    public RocketDesignerBlockEntity() {
-        super(GalacticraftBlockEntityType.ROCKET_DESIGNER_TYPE);
+    public RocketDesignerBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.ROCKET_DESIGNER_TYPE, pos, state);
 
         this.inventory.addListener((view, slot, prev, cur) -> {
             if (!previous.getOrCreateTag().equals(inventory.getInvStack(0).getTag())) {
@@ -96,8 +97,8 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     }
 
     @Override
-    public NbtCompound toTag(NbtCompound tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
 
         tag.putInt("red", red);
         tag.putInt("green", green);
@@ -133,89 +134,49 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
     @Override
     public void fromClientTag(NbtCompound nbtCompound) {
-        this.fromTag(GalacticraftBlock.ROCKET_DESIGNER.getDefaultState(), nbtCompound);
+        this.readNbt(nbtCompound);
     }
 
     @Override
     public NbtCompound toClientTag(NbtCompound nbtCompound) {
-        return this.toTag(nbtCompound);
+        return this.writeNbt(nbtCompound);
     }
 
     @Nullable
     public RocketPart getPart(RocketPartType type) {
-        switch (type) {
-            case BOOSTER:
-                return booster;
-            case BOTTOM:
-                return bottom;
-            case CONE:
-                return cone;
-            case BODY:
-                return body;
-            case FIN:
-                return fin;
-            case UPGRADE:
-                return upgrade;
-            default:
-                return null;
-        }
+        return switch (type) {
+            case BOOSTER -> booster;
+            case BOTTOM -> bottom;
+            case CONE -> cone;
+            case BODY -> body;
+            case FIN -> fin;
+            case UPGRADE -> upgrade;
+            default -> null;
+        };
     }
 
-    public void setPartServer(RocketPart part) {
-        switch (part.getType()) {
-            case BOOSTER:
-                booster = part;
-                break;
-            case BOTTOM:
-                bottom = part;
-                break;
-            case CONE:
-                cone = part;
-                break;
-            case BODY:
-                body = part;
-                break;
-            case FIN:
-                fin = part;
-                break;
-            case UPGRADE:
-                upgrade = part;
-                break;
+    public void setPart(RocketPart part) {
+        switch (part.type()) {
+            case BOOSTER -> booster = part;
+            case BOTTOM -> bottom = part;
+            case CONE -> cone = part;
+            case BODY -> body = part;
+            case FIN -> fin = part;
+            case UPGRADE -> upgrade = part;
         }
     }
 
     @Environment(EnvType.CLIENT)
     public void setPartClient(RocketPart part) {
         assert world.isClient;
-        switch (part.getType()) {
-            case BOOSTER:
-                booster = part;
-                break;
-            case BOTTOM:
-                bottom = part;
-                break;
-            case CONE:
-                cone = part;
-                break;
-            case BODY:
-                body = part;
-                break;
-            case FIN:
-                fin = part;
-                break;
-            case UPGRADE:
-                upgrade = part;
-                break;
-        }
-
-        sendDesignerPartUpdate(part);
+        this.setPart(part);
+        this.sendDesignerPartUpdate(part);
     }
 
     @Environment(EnvType.CLIENT)
     private void sendDesignerPartUpdate(RocketPart part) {
         Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "designer_part"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeIdentifier(Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), part)))));
     }
-
 
     public List<RocketPart> parts() {
         return Lists.newArrayList(cone, body, booster, fin, bottom, upgrade);
@@ -264,7 +225,6 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
         Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "designer_green"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(green - 128))));
         this.green = green;
     }
-
 
     @Environment(EnvType.CLIENT)
     public void setBlueClient(int blue) {
