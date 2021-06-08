@@ -45,7 +45,7 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @SuppressWarnings("unused")
-public class GalacticraftItems {
+public class GalacticraftItem {
     public static final List<Item> HIDDEN_ITEMS = new LinkedList<>();
 
     public static final Item GLOWSTONE_TORCH = registerItem(Constant.Block.GLOWSTONE_TORCH, new WallStandingBlockItem(GalacticraftBlock.GLOWSTONE_TORCH, GalacticraftBlock.GLOWSTONE_WALL_TORCH, (new Item.Settings())/*.group(GalacticraftBlocks.BLOCKS_GROUP)*/));
@@ -53,7 +53,7 @@ public class GalacticraftItems {
 
     public static final ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constant.MOD_ID, Constant.Item.ITEM_GROUP))
-            .icon(() -> new ItemStack(GalacticraftItems.CANVAS))
+            .icon(() -> new ItemStack(GalacticraftItem.CANVAS))
             .build();
 
     // MATERIALS

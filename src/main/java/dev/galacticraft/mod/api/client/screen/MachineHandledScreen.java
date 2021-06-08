@@ -39,7 +39,7 @@ import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.client.gui.widget.machine.AbstractWidget;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.screen.tank.Tank;
 import dev.galacticraft.mod.util.ColorUtil;
@@ -90,9 +90,9 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public abstract class MachineHandledScreen<C extends MachineScreenHandler<? extends MachineBlockEntity>> extends HandledScreen<C> implements DrawableUtil {
     private static final ItemStack REDSTONE = new ItemStack(Items.REDSTONE);
-    private static final ItemStack UNLIT_TORCH = new ItemStack(GalacticraftItems.UNLIT_TORCH);
+    private static final ItemStack UNLIT_TORCH = new ItemStack(GalacticraftItem.UNLIT_TORCH);
     private static final ItemStack REDSTONE_TORCH = new ItemStack(Items.REDSTONE_TORCH);
-    private static final ItemStack WRENCH = new ItemStack(GalacticraftItems.STANDARD_WRENCH);
+    private static final ItemStack WRENCH = new ItemStack(GalacticraftItem.STANDARD_WRENCH);
     private static final ItemStack ALUMINUM_WIRE = new ItemStack(GalacticraftBlock.ALUMINUM_WIRE);
 
     public static final int PANEL_WIDTH = 100;

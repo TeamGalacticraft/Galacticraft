@@ -26,7 +26,7 @@ import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import dev.galacticraft.api.registry.RegistryUtil;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.accessor.SoundSystemAccessor;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -49,13 +49,13 @@ public abstract class ClientPlayerEntityMixin implements GearInventoryProvider {
     private FullFixedItemInv createInv() {
         FullFixedItemInv inv = new FullFixedItemInv(12);
         inv.setOwnerListener((invView, slot, prev, current) -> {
-            if (current.getItem() == GalacticraftItems.FREQUENCY_MODULE) {
+            if (current.getItem() == GalacticraftItem.FREQUENCY_MODULE) {
                 ((SoundSystemAccessor) MinecraftClient.getInstance().getSoundManager().soundSystem).gc_updateAtmosphericMultiplier(1.0f);
-            } else if (prev.getItem() == GalacticraftItems.FREQUENCY_MODULE) {
+            } else if (prev.getItem() == GalacticraftItem.FREQUENCY_MODULE) {
                 boolean hasFreqModule = false;
                 for (int i = 0; i < invView.getSlotCount(); i++) {
                     if (i == slot) continue;
-                    if (invView.getInvStack(i).getItem() == GalacticraftItems.FREQUENCY_MODULE) {
+                    if (invView.getInvStack(i).getItem() == GalacticraftItem.FREQUENCY_MODULE) {
                         ((SoundSystemAccessor) MinecraftClient.getInstance().getSoundManager().soundSystem).gc_updateAtmosphericMultiplier(1.0f);
                         hasFreqModule = true;
                         break;

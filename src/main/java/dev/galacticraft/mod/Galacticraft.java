@@ -31,7 +31,7 @@ import dev.galacticraft.mod.command.GalacticraftCommand;
 import dev.galacticraft.mod.config.ConfigManagerImpl;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.log.GalacticraftPrependingMessageFactory;
 import dev.galacticraft.mod.loot.GalacticraftLootTable;
 import dev.galacticraft.mod.misc.banner.GalacticraftBannerPattern;
@@ -79,7 +79,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftFluid.register();
         GalacticraftBlock.register();
         GalacticraftBlockEntityType.register();
-        GalacticraftItems.register();
+        GalacticraftItem.register();
         GalacticraftTag.register();
         GalacticraftRecipe.register();
         GalacticraftEntityType.register();

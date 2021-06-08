@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.fluid;
 
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.particle.GalacticraftParticle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -67,7 +67,7 @@ public class FuelFluid extends FlowableFluid {
 
     @Override
     public Item getBucketItem() {
-        return GalacticraftItems.FUEL_BUCKET;
+        return GalacticraftItem.FUEL_BUCKET;
     }
 
     @Environment(EnvType.CLIENT)
