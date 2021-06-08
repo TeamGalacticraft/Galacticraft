@@ -107,11 +107,6 @@ repositories {
             includeGroup("mcp.mobius.waila")
         }
     }
-    maven ("https://cdn.hrzn.studio/maven/") {
-        content {
-            includeGroup("com.hrznstudio")
-        }
-    }
     maven("https://maven.galacticraft.dev") {
         content {
             includeGroup("dev.galacticraft")

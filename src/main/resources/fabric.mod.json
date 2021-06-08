@@ -132,12 +132,12 @@
     }
   },
   "depends": {
-    "minecraft": ">=1.17-rc.2",
+    "minecraft": ">=1.17",
     "fabricloader": ">=0.11.3",
-    "galacticraft-api": ">=0.4.0-prealpha1+1.16.1",
-    "libblockattributes_core": ">=0.8",
-    "libblockattributes_items": ">=0.8",
-    "libblockattributes_fluids": ">=0.8",
+    "galacticraft-api": ">=0.4.0-prealpha2+1.17",
+    "libblockattributes_core": ">=0.9",
+    "libblockattributes_items": ">=0.9",
+    "libblockattributes_fluids": ">=0.9",
     "galacticraftenergy": ">=0.2.1",
 
     "fabric-api-base": "*",
