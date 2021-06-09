@@ -33,7 +33,6 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.RocketAssemblerBlockEntity;
-import dev.galacticraft.mod.entity.RocketEntity;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.recipe.RocketAssemblerRecipe;
 import dev.galacticraft.mod.screen.RocketAssemblerScreenHandler;
@@ -41,11 +40,8 @@ import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -57,8 +53,6 @@ import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -163,7 +157,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlock.MOON_TURF), this.x - 20, this.y + 35);
 
             if (!this.blockEntity.data.isEmpty()) {
-                drawEntity(this.x + 186 + 17, this.y + 73, this.blockEntity.fakeEntity);
+                RocketDesignerScreen.drawRocket(this.x + 186 + 17, this.y + 73, 1, mouseX, mouseY, this.blockEntity.fakeEntity);
             }
         } else if (tab == Tab.LANDER) {
             drawTexture(matrices, this.x - 27, this.y + 3, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
@@ -284,32 +278,6 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
         } else {
             return new TranslatableText("tooltip.galacticraft.missing_resources").asString();
         }
-    }
-
-
-    public static void drawEntity(int x, int y, RocketEntity entity) {
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef((float)x, (float)y, 1050.0F);
-        RenderSystem.scalef(3.0F, 3.0F, -3.0F);
-        MatrixStack matrixStack = new MatrixStack();
-        matrixStack.translate(0.0D, 0.0D, 1000.0D);
-        Quaternion quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
-        Quaternion quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(0.0F);
-        quaternion.hamiltonProduct(quaternion2);
-        matrixStack.multiply(quaternion);
-        entity.yaw = 180.0F;
-        entity.pitch = -20.0F;
-        EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
-        quaternion2.conjugate();
-        entityRenderDispatcher.setRotation(quaternion2);
-        entityRenderDispatcher.setRenderShadows(false);
-        VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-        RenderSystem.runAsFancy(() -> {
-            entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack, immediate, 15728880);
-        });
-        immediate.draw();
-        entityRenderDispatcher.setRenderShadows(true);
-        RenderSystem.popMatrix();
     }
 
     @Override

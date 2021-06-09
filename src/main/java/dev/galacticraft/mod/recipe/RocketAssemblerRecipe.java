@@ -25,6 +25,7 @@ package dev.galacticraft.mod.recipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import me.shedaniel.rei.api.common.transfer.RecipeFinder;
@@ -39,6 +40,7 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 /**
@@ -91,8 +93,10 @@ public class RocketAssemblerRecipe implements Recipe<Inventory> {
                 finder.addItem(stack);
             }
         }
+        DefaultedList<Ingredient> ingredientList = DefaultedList.ofSize(this.input.keySet().size(), Ingredient.empty());
+        ingredientList.addAll(this.input.keySet());
 
-        return found == this.input.size() && finder.findRecipe(this, null);
+        return found == this.input.size() && finder.findRecipe(ingredientList, new IntArrayList(this.input.values()));
     }
 
     @Override

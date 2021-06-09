@@ -73,7 +73,7 @@ public class RocketSchematicItem extends Item implements SchematicItem {
                 tooltip.add(new TranslatableText("tooltip.galacticraft.alpha", tag.getInt("alpha")).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
                 tooltip.add(new LiteralText("-----").setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
                 for (RocketPartType type : RocketPartType.values()) {
-                    tooltip.add(new TranslatableText("tooltip.galacticraft.part_type." + type.asString()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(RocketPart.getById(world.getRegistryManager(), new Identifier(tag.getString(type.asString()))).getName()));
+                    tooltip.add(new TranslatableText("tooltip.galacticraft.part_type." + type.asString()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(RocketPart.getById(world.getRegistryManager(), new Identifier(tag.getString(type.asString()))).name()));
                 }
             } else {
                 tooltip.add(new TranslatableText("tooltip.galacticraft.blank").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));

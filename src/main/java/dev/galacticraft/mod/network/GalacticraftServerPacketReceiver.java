@@ -33,11 +33,17 @@ import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.datafixers.util.Either;
+import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.entity.Rocket;
+import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.satellite.SatelliteRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.api.universe.celestialbody.landable.Landable;
+import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
+import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
 import dev.galacticraft.mod.api.block.AutomationType;
@@ -393,20 +399,20 @@ public class GalacticraftServerPacketReceiver {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() != RocketData.empty()) {
                 server.execute(() -> {
-                    CelestialBody<?, ?> parent = CelestialBodyType.getById(server.getRegistryManager(), buffer.readIdentifier());
+                    CelestialBody<?, ?> parent = server.getRegistryManager().get(AddonRegistry.CELESTIAL_BODY_KEY).get(buffer.readIdentifier());
                     if (parent != null) {
-                        if (parent.getType() != CelestialObjectType.SATELLITE) {
-                            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState().canTravelTo(parent)) {
-                                if (parent.getSatelliteRecipe() != null) {
-                                    SatelliteRecipe recipe = parent.getSatelliteRecipe();
-                                    if (recipe.test(player.inventory) || player.isCreative()) {
+                        if (parent.type() instanceof Orbitable orbitable) {
+                            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState().canTravelTo(server.getRegistryManager(), parent)) {
+                                if (orbitable.satelliteRecipe(parent.config()) != null) {
+                                    SatelliteRecipe recipe = orbitable.satelliteRecipe(parent.config());
+                                    if (recipe.test(player.getInventory()) || player.isCreative()) {
                                         if (!player.isCreative()) {
-                                            List<ItemStack> ingredients = new ArrayList<>(recipe.getIngredients());
+                                            List<ItemStack> ingredients = new ArrayList<>(recipe.ingredients());
                                             for (ItemStack stack : ingredients) {
-                                                assert stack.getCount() == Inventories.remove(player.inventory, stack1 -> stack1.getItem() == stack.getItem(), stack.getCount(), false) : "Inventory had enough items, but cannot extract said items?!?";
+                                                assert stack.getCount() == Inventories.remove(player.getInventory(), stack1 -> stack1.getItem() == stack.getItem(), stack.getCount(), false) : "Inventory had enough items, but cannot extract said items?!?";
                                             }
                                         }
-                                        Satellite.create(server, player, parent);
+                                        SatelliteType.registerSatellite(server, player, parent);
                                     }
                                 }
                             }
@@ -422,12 +428,12 @@ public class GalacticraftServerPacketReceiver {
             if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() != RocketData.empty()) {
                 server.execute(() -> {
                     Identifier id = buffer.readIdentifier();
-                    CelestialBody<?, ?> body = ((SatelliteAccessor) server).getSatellites().stream().filter(satellite -> satellite.getId().equals(id)).findFirst().orElse(null);
-                    if (body == null) body = CelestialBodyType.getById(server.getRegistryManager(), id);
+                    CelestialBody<?, ?> body = ((SatelliteAccessor) server).satellites().get(id);
+                    if (body == null) body = server.getRegistryManager().get(AddonRegistry.CELESTIAL_BODY_KEY).get(id);
 
-                    if (body != null && ((ServerPlayerEntityAccessor) player).getCelestialScreenState().canTravelTo(body)) {
-                        if (body.getWorld() != null) {
-                            player.teleport(server.getWorld(body.getWorld()), player.getX(), 500, player.getZ(), player.getYaw(), player.getPitch());
+                    if (body != null && ((ServerPlayerEntityAccessor) player).getCelestialScreenState().canTravelTo(server.getRegistryManager(), body)) {
+                        if (body.type() instanceof Landable landable) {
+                            player.teleport(server.getWorld(landable.world(body.config())), player.getX(), 500, player.getZ(), player.getYaw(), player.getPitch());
                             ((ServerPlayerEntityAccessor) player).setCelestialScreenState(RocketData.empty());
                         }
                     } else {

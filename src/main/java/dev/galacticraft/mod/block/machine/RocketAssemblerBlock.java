@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.api.block.AbstractHorizontalDirectionalBlock;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.block.entity.RocketAssemblerBlockEntity;
 import dev.galacticraft.mod.screen.RocketAssemblerScreenHandler;
 import io.netty.buffer.Unpooled;
@@ -30,6 +31,8 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -104,8 +107,14 @@ public class RocketAssemblerBlock extends AbstractHorizontalDirectionalBlock imp
         return ActionResult.SUCCESS;
     }
 
+    @Nullable
     @Override
-    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
-        super.onBreak(world, blockPos, blockState, playerEntity);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, GalacticraftBlockEntityType.ROCKET_ASSEMBLER_TYPE, RocketAssemblerBlockEntity::tick);
+    }
+
+    @Nullable
+    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> checkType(BlockEntityType<A> givenType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
+        return expectedType == givenType ? (BlockEntityTicker<A>) ticker : null;
     }
 }

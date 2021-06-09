@@ -148,29 +148,6 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         this.validParts.addAll(GalacticraftRocketParts.getUnlockedParts(inv.player, currentType));
     }
 
-    public static void drawEntity(int x, int y, RocketEntity entity) {
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef((float)x, (float)y, 1050.0F);
-        RenderSystem.scalef(3.0F, 3.0F, -3.0F);
-        MatrixStack matrixStack = new MatrixStack();
-        matrixStack.translate(0.0D, 0.0D, 1000.0D);
-        Quaternion quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
-        Quaternion quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(0.0F);
-        quaternion.hamiltonProduct(quaternion2);
-        matrixStack.multiply(quaternion);
-        entity.setYaw(180.0F);
-        entity.setPitch(-20.0F);
-        EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
-        quaternion2.conjugate();
-        entityRenderDispatcher.setRotation(quaternion2);
-        entityRenderDispatcher.setRenderShadows(false);
-        VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-        RenderSystem.runAsFancy(() -> entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack, immediate, 15728880));
-        immediate.draw();
-        entityRenderDispatcher.setRenderShadows(true);
-        RenderSystem.popMatrix();
-    }
-
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
@@ -323,7 +300,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         }
         this.entity.setColor(this.blockEntity.getAlpha() << 24 | this.blockEntity.getRed() << 16 | this.blockEntity.getGreen() << 8 | this.blockEntity.getBlue());
 
-        drawEntity(this.x + 172 + 24, this.y + 64, entity);
+        drawRocket(this.x + 172 + 24, this.y + 64, 1, mouseX, mouseY, entity);
 
         drawCenteredText(matrices, this.client.textRenderer, I18n.translate("ui.galacticraft.rocket_designer.name"), (this.width / 2), this.y + 6 - 15, Formatting.WHITE.getColorValue());
 
@@ -336,6 +313,43 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 //        client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.rocket_designer.tier", this.entity.getTier()).asString(), this.x + 245, this.y + 62, Formatting.DARK_GRAY.getColorValue());
 
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+    }
+
+    public static void drawRocket(int x, int y, int size, float mouseX, float mouseY, RocketEntity entity) {
+        float f = (float)Math.atan(mouseX / 40.0F);
+        float g = (float)Math.atan(mouseY / 40.0F);
+        MatrixStack matrixStack = RenderSystem.getModelViewStack();
+        matrixStack.push();
+        matrixStack.translate(x, y, 1050.0D);
+        matrixStack.scale(1.0F, 1.0F, -1.0F);
+        RenderSystem.applyModelViewMatrix();
+        MatrixStack matrixStack2 = new MatrixStack();
+        matrixStack2.translate(0.0D, 0.0D, 1000.0D);
+        matrixStack2.scale((float)size, (float)size, (float)size);
+        Quaternion quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
+        Quaternion quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(g * 20.0F);
+        quaternion.hamiltonProduct(quaternion2);
+        matrixStack2.multiply(quaternion);
+        float i = entity.getYaw();
+        float j = entity.getPitch();
+        entity.setYaw(180.0F + f * 40.0F);
+        entity.setPitch(-g * 20.0F);
+        DiffuseLighting.method_34742();
+        EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
+        quaternion2.conjugate();
+        entityRenderDispatcher.setRotation(quaternion2);
+        entityRenderDispatcher.setRenderShadows(false);
+        VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+        RenderSystem.runAsFancy(() -> {
+            entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack2, immediate, 15728880);
+        });
+        immediate.draw();
+        entityRenderDispatcher.setRenderShadows(true);
+        entity.setYaw(i);
+        entity.setPitch(j);
+        matrixStack.pop();
+        RenderSystem.applyModelViewMatrix();
+        DiffuseLighting.enableGuiDepthLighting();
     }
 
     @Override
@@ -481,8 +495,8 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                     }
                 }
             } else {
-                for (int i = page * 25; i < GalacticraftRocketParts.getUnlockedParts(playerInventory.player).size(); i++) {
-                    RocketPart part = GalacticraftRocketParts.getUnlockedParts(playerInventory.player).get(i);
+                for (int i = page * 25; i < GalacticraftRocketParts.getUnlockedParts(this.handler.player).size(); i++) {
+                    RocketPart part = GalacticraftRocketParts.getUnlockedParts(this.handler.player).get(i);
                     if (check(mouseX, mouseY, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), BOX_WIDTH, BOX_HEIGHT)) {
                         this.blockEntity.setPartClient(part);
                         break;

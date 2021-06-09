@@ -42,11 +42,10 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
-import net.minecraft.tag.FluidTags;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
@@ -117,12 +116,13 @@ public class FluidCanister extends Item implements AttributeProviderItem {
                     BlockState blockState;
                     blockState = world.getBlockState(blockPos);
                     if (blockState.getBlock() instanceof FluidDrainable) {
-                        Fluid fluid = ((FluidDrainable) blockState.getBlock()).tryDrainFluid(world, blockPos, blockState);
+                        ItemStack s = ((FluidDrainable) blockState.getBlock()).tryDrainFluid(world, blockPos, blockState);
+                        Fluid fluid = s.getItem() instanceof BucketItem ? ((BucketItem) s.getItem()).fluid : Fluids.EMPTY;
                         if (fluid != Fluids.EMPTY) {
                             user.incrementStat(Stats.USED.getOrCreateStat(this));
-                            user.playSound(fluid.isIn(FluidTags.LAVA) ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
+                            if (fluid.getBucketFillSound().isPresent()) user.playSound(fluid.getBucketFillSound().get(), 1.0F, 1.0F);
                             final ItemStack[] stack1 = {stack.copy()};
-                            FluidUtil.getFixedFluidInv(new Reference<ItemStack>() {
+                            FluidUtil.getFixedFluidInv(new Reference<>() {
                                 @Override
                                 public ItemStack get() {
                                     return stack1[0];

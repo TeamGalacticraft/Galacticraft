@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.item;
 
+import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
@@ -79,11 +80,11 @@ public class RocketItem extends Item {
 
             if (context.getWorld() instanceof ServerWorld) {
                 RocketEntity rocket = new RocketEntity(GalacticraftEntityType.ROCKET, context.getWorld());
-                RocketData data = RocketData.fromTag(context.getPlayer().getStackInHand(context.getHand()).getTag(), context.getWorld().getRegistryManager());
+                RocketData data = RocketData.fromNbt(context.getPlayer().getStackInHand(context.getHand()).getTag(), context.getWorld().getRegistryManager());
                 rocket.setParts(data.parts());
-                rocket.setColor(data.getColor());
+                rocket.setColor(data.color());
                 rocket.setLinkedPad(pos);
-                rocket.resetPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+                rocket.resetPosition();
                 rocket.updatePosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
                 context.getWorld().spawnEntity(rocket);
 
@@ -93,7 +94,7 @@ public class RocketItem extends Item {
                     context.getPlayer().setStackInHand(context.getHand(), stack);
                 }
                 blockEntity.setRocketEntityUUID(rocket.getUuid());
-                blockEntity.setRocketEntityId(rocket.getEntityId());
+                blockEntity.setRocketEntityId(rocket.getId());
             }
             return ActionResult.SUCCESS;
         }
@@ -108,7 +109,7 @@ public class RocketItem extends Item {
 //            tag.putInt("tier", 1);
             tag.putInt("color", 0xFFFFFFFF);
             for (RocketPartType type : RocketPartType.values()) {
-                tag.putString(type.asString(), GalacticraftRocketParts.getDefaultPartForType(type).getId().toString());
+                tag.putString(type.asString(), AddonRegistry.ROCKET_PART.getId(GalacticraftRocketParts.getDefaultPartForType(type)).toString());
             }
             stack.setTag(tag);
             stacks.add(stack);

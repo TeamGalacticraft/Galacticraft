@@ -154,7 +154,7 @@ public class GalacticraftClientPacketReceiver {
             float pitch = (buf.readByte() * 360) / 256.0F;
             float yaw = (buf.readByte() * 360) / 256.0F;
 
-            RocketData data = RocketData.fromTag(buf.readNbtCompound(), client.world.getRegistryManager());
+            RocketData data = RocketData.fromNbt(buf.readNbt(), client.world.getRegistryManager());
 
             client.execute(() -> {
                 RocketEntity entity = type.create(client.world);
@@ -163,7 +163,7 @@ public class GalacticraftClientPacketReceiver {
                 entity.setPos(x, y, z);
                 entity.setPitch(pitch);
                 entity.setYaw(yaw);
-                entity.setEntityId(entityID);
+                entity.setId(entityID);
                 entity.setUuid(entityUUID);
 
                 entity.setColor(data.color());

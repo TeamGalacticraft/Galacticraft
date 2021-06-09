@@ -22,12 +22,13 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constant;
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.NarratorManager;
@@ -66,8 +67,8 @@ public class SpaceTravelScreen extends Screen {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         this.client.getTextureManager().bindTexture(TEXTURE);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR_TEXTURE);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
         bufferBuilder.vertex(0.0D, this.height, 0.0D).color(200, 200, 200, 255).texture(0.0F, (float)this.height / 32.0F).next();
         bufferBuilder.vertex(this.width, this.height, 0.0D).color(200, 200, 200, 255).texture((float)this.width / 32.0F, (float)this.height / 32.0F).next();
         bufferBuilder.vertex(this.width, 0.0D, 0.0D).color(200, 200, 200, 255).texture((float)this.width / 32.0F, 0.0F).next();

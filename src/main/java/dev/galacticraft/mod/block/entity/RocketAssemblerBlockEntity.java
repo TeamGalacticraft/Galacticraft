@@ -48,6 +48,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -355,41 +356,40 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         return this.writeNbt(nbtCompound);
     }
 
-    @Override
-    public void tick() {
-        if (queuedUpdate) {
-            queuedUpdate = false;
-            this.schematicUpdateFromTag();
+    public static void tick(World world, BlockPos pos, BlockState state, RocketAssemblerBlockEntity assembler) {
+        if (assembler.queuedUpdate) {
+            assembler.queuedUpdate = false;
+            assembler.schematicUpdateFromTag();
         }
-        if (getEnergyAttribute().getEnergy() >= getEnergyAttribute().getMaxCapacity()) {
+        if (assembler.getEnergyAttribute().getEnergy() >= assembler.getEnergyAttribute().getMaxCapacity()) {
             return;
         }
-        int neededEnergy = Math.min(50, getEnergyAttribute().getMaxCapacity() - getEnergyAttribute().getEnergy());
-        if (EnergyUtil.isEnergyExtractable(this.getInventory().getSlot(ENERGY_INPUT_SLOT))) {
-            int amountFailedToExtract = EnergyUtil.extractEnergy(this.getInventory().getSlot(ENERGY_INPUT_SLOT), neededEnergy, Simulation.ACTION);
-            this.getEnergyAttribute().insert(DefaultEnergyType.INSTANCE, neededEnergy - amountFailedToExtract, Simulation.ACTION);
+        int neededEnergy = Math.min(50, assembler.getEnergyAttribute().getMaxCapacity() - assembler.getEnergyAttribute().getEnergy());
+        if (EnergyUtil.isEnergyExtractable(assembler.getInventory().getSlot(ENERGY_INPUT_SLOT))) {
+            int amountFailedToExtract = EnergyUtil.extractEnergy(assembler.getInventory().getSlot(ENERGY_INPUT_SLOT), neededEnergy, Simulation.ACTION);
+            assembler.getEnergyAttribute().insert(DefaultEnergyType.INSTANCE, neededEnergy - amountFailedToExtract, Simulation.ACTION);
         }
 
-        if (this.building) { //out of 600 ticks
-            if (this.energy.getEnergy() >= 20) {
-                this.energy.extract(DefaultEnergyType.INSTANCE, Galacticraft.CONFIG_MANAGER.get().rocketAssemblerEnergyConsumptionRate(), Simulation.ACTION);
+        if (assembler.building) { //out of 600 ticks
+            if (assembler.energy.getEnergy() >= 20) {
+                assembler.energy.extract(DefaultEnergyType.INSTANCE, Galacticraft.CONFIG_MANAGER.get().rocketAssemblerEnergyConsumptionRate(), Simulation.ACTION);
             } else {
-                this.building = false;
+                assembler.building = false;
             }
 
-            if (progress++ >= Galacticraft.CONFIG_MANAGER.get().rocketAssemblerProcessTime()) {
-                this.building = false;
-                this.progress = 0;
-                for (int i = 0; i < extendedInv.getSlotCount(); i++) {
-                    extendedInv.setInvStack(i, ItemStack.EMPTY, Simulation.ACTION);
+            if (assembler.progress++ >= Galacticraft.CONFIG_MANAGER.get().rocketAssemblerProcessTime()) {
+                assembler.building = false;
+                assembler.progress = 0;
+                for (int i = 0; i < assembler.extendedInv.getSlotCount(); i++) {
+                    assembler.extendedInv.setInvStack(i, ItemStack.EMPTY, Simulation.ACTION);
                 }
                 ItemStack stack1 = new ItemStack(GalacticraftItem.ROCKET);
-                data.toNbt(this.world.getRegistryManager(), stack1.getOrCreateTag());
-                this.inventory.setInvStack(ROCKET_OUTPUT_SLOT, stack1, Simulation.ACTION);
+                assembler.data.toNbt(assembler.world.getRegistryManager(), stack1.getOrCreateTag());
+                assembler.inventory.setInvStack(ROCKET_OUTPUT_SLOT, stack1, Simulation.ACTION);
             }
         } else {
-            if (this.progress > 0) {
-                this.progress--;
+            if (assembler.progress > 0) {
+                assembler.progress--;
             }
         }
     }
