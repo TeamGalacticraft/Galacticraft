@@ -36,6 +36,7 @@ import net.minecraft.block.Block;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.command.CommandManager;
@@ -75,7 +76,7 @@ public class GalacticraftCommand {
                     CommandManager.literal("dimensiontp")
                             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                             .executes(context -> {
-                                context.getSource().getPlayer().networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer().writeInt(Integer.MAX_VALUE))));
+                                context.getSource().getPlayer().networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer()).writeNbt(RocketData.empty().toNbt(context.getSource().getRegistryManager(), new NbtCompound()))));
                                 ((ServerPlayerEntityAccessor) context.getSource().getPlayer()).setCelestialScreenState(RocketData.empty());
                                 return 1;
                             })

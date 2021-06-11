@@ -31,6 +31,7 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
+import dev.galacticraft.mod.client.gui.screen.ingame.PlanetSelectScreen;
 import dev.galacticraft.mod.entity.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -139,6 +140,11 @@ public class GalacticraftClientPacketReceiver {
             int entity = packetByteBuf.readInt();
             NbtCompound tag = packetByteBuf.readNbt();
             minecraftClient.execute(() -> ((GearInventoryProvider) minecraftClient.world.getEntityById(entity)).readGearFromNbt(tag));
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "planet_menu_open"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+            RocketData rocketData = RocketData.fromNbt(packetByteBuf.readNbt(), clientPlayNetworkHandler.getRegistryManager());
+            minecraftClient.execute(() -> minecraftClient.openScreen(new PlanetSelectScreen(false, rocketData, true)));
         });
 
         ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "rocket_spawn"), ((client, handler, buf, responseSender) -> {

@@ -73,7 +73,6 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
 import java.nio.FloatBuffer;
 import java.util.*;
@@ -95,13 +94,13 @@ public class PlanetSelectScreen extends Screen {
     protected static final int RED = ColorUtil.to32BitColor(255, 255, 0, 0);
     protected static final int RED3 = ColorUtil.to32BitColor(255, 255, 100, 100);
     protected static final int CYAN = ColorUtil.to32BitColor(255, 150, 200, 255);
-    protected static Identifier guiMain0 = new Identifier(Constant.MOD_ID, "textures/gui/celestialselection.png");
-    protected static Identifier guiMain1 = new Identifier(Constant.MOD_ID, "textures/gui/celestialselection1.png");
+    protected static final Identifier guiMain0 = new Identifier(Constant.MOD_ID, "textures/gui/celestialselection.png");
+    protected static final Identifier guiMain1 = new Identifier(Constant.MOD_ID, "textures/gui/celestialselection1.png");
     protected static int BORDER_SIZE = 0;
     protected static int BORDER_EDGE_SIZE = 0;
     protected final boolean mapMode;
     private final RocketData data;
-    public boolean canCreateStations;
+    public final boolean canCreateStations;
     protected float zoom = 0.0F;
     protected float planetZoom = 0.0F;
     protected boolean doneZooming = false;
@@ -115,13 +114,13 @@ public class PlanetSelectScreen extends Screen {
     protected int ticksSinceUnselection = -1;
     protected int animateGrandchildren = 0;
     protected Vec2f position = new Vec2f(0, 0);
-    protected Map<CelestialBody<?, ?>, Vector3d> planetPosMap = new HashMap<>();
+    protected final Map<CelestialBody<?, ?>, Vector3d> planetPosMap = new HashMap<>();
     @Deprecated
     protected Map<CelestialBody<?, ?>, Integer> celestialBodyTicks = new HashMap<>();
     protected CelestialBody<?, ?> selectedBody = BuiltinObjects.SOL;
     protected CelestialBody<?, ?> lastSelectedBody;
     protected int canCreateOffset = 24;
-    protected EnumView viewState = EnumView.PREVIEW;
+    protected final EnumView viewState = EnumView.PREVIEW;
     protected EnumSelection selectionState = EnumSelection.UNSELECTED;
     protected int zoomTooltipPos = 0;
     protected CelestialBody<?, ?> selectedParent = BuiltinObjects.SOL;
@@ -137,7 +136,7 @@ public class PlanetSelectScreen extends Screen {
     protected final DynamicRegistryManager manager = MinecraftClient.getInstance().world.getRegistryManager();
     protected final Registry<Galaxy> galaxyRegistry = manager.get(AddonRegistry.GALAXY_KEY);
     protected final Registry<CelestialBody<?, ?>> celestialBodyRegistry = manager.get(AddonRegistry.CELESTIAL_BODY_KEY);
-    protected List<CelestialBody<?, ?>> bodiesToRender = new ArrayList<>();
+    protected final List<CelestialBody<?, ?>> bodiesToRender = new ArrayList<>();
     private final ClientSatelliteAccessor.SatelliteListener listener = (satellite, b) -> {
         if (!b) {
             bodiesToRender.remove(satellite);
@@ -151,7 +150,7 @@ public class PlanetSelectScreen extends Screen {
         this.mapMode = mapMode;
         this.data = data;
         this.canCreateStations = canCreateStations;
-        ((ClientSatelliteAccessor) MinecraftClient.getInstance().getNetworkHandler()).addListener(this.listener);
+        ((ClientSatelliteAccessor) Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler())).addListener(this.listener);
     }
 
     protected static float lerp(float v0, float v1, float t) {
@@ -168,27 +167,29 @@ public class PlanetSelectScreen extends Screen {
         PlanetSelectScreen.BORDER_EDGE_SIZE = PlanetSelectScreen.BORDER_SIZE / 4;
         this.bodiesToRender.clear();
         this.bodiesToRender.addAll(celestialBodyRegistry.stream().collect(Collectors.toList()));
-        this.bodiesToRender.addAll(((ClientSatelliteAccessor) this.client.getNetworkHandler()).satellites().values());
+        assert this.client != null;
+        this.bodiesToRender.addAll(((ClientSatelliteAccessor) Objects.requireNonNull(this.client.getNetworkHandler())).satellites().values());
     }
 
     @Override
     public void onClose() {
         super.onClose();
-        ((ClientSatelliteAccessor) this.client.getNetworkHandler()).removeListener(this.listener);
+        assert this.client != null;
+        ((ClientSatelliteAccessor) Objects.requireNonNull(this.client.getNetworkHandler())).removeListener(this.listener);
     }
 
     protected String getGrandparentName() {
         CelestialBody<?, ?> parent = this.selectedBody;
         if (parent == null) return "null";
-        for (int i = 0; i < 2; i++) {
-            if (parent.parent(manager) != null) {
-                parent = parent.parent(manager);
+        if (parent.parent(manager) != null) {
+            if (parent.parent(manager).parent(manager) != null) {
+                return I18n.translate(parent.parent(manager).parent(manager).name().getKey());
             } else {
-                return I18n.translate(galaxyRegistry.get(parent.galaxy()).name().getKey());
+                return I18n.translate(galaxyRegistry.get(parent.parent(manager).galaxy()).name().getKey());
             }
-
+        } else {
+            return I18n.translate(galaxyRegistry.get(parent.galaxy()).name().getKey());
         }
-        return I18n.translate(parent.name().getKey());
     }
 
     private boolean isChildBody(CelestialBody<?, ?> type) {
@@ -196,7 +197,7 @@ public class PlanetSelectScreen extends Screen {
     }
 
     private boolean isPlanet(CelestialBody<?, ?> type) {
-        return type != null && type.parent(manager).type() instanceof Star;
+        return type != null && type.parent(manager) != null && type.parent(manager).type() instanceof Star;
     }
 
     private boolean isStar(CelestialBody<?, ?> type) {
@@ -204,7 +205,7 @@ public class PlanetSelectScreen extends Screen {
     }
 
     protected RegistryKey<World> getSatelliteParentID(CelestialBody<SatelliteConfig, SatelliteType> satellite) {
-        return satellite.parent(manager).type() instanceof Landable o ? o.world(satellite.parent(manager).config()) : null;
+        return satellite.parent(manager) != null && satellite.parent(manager).type() instanceof Landable o ? o.world(satellite.parent(manager).config()) : null;
     }
 
     protected String parentName() {
@@ -225,7 +226,7 @@ public class PlanetSelectScreen extends Screen {
         if (system == null) return Collections.emptyList();
 
         for (CelestialBody<?, ?> planet : celestialBodyRegistry) {
-            if (planet.parent(manager).equals(system)) {
+            if (planet.parent(manager) != null && planet.parent(manager).equals(system)) {
                 bodyList.add(planet);
             }
         }
@@ -347,6 +348,7 @@ public class PlanetSelectScreen extends Screen {
 
                 return true;
             } else if (Screen.isPaste(key)) {
+                assert this.client != null;
                 String pastestring = this.client.keyboard.getClipboard();
 
                 if (pastestring == null || pastestring.isEmpty()) {
@@ -403,9 +405,12 @@ public class PlanetSelectScreen extends Screen {
         assert client != null;
         assert client.world != null;
         for (CelestialBody<SatelliteConfig, SatelliteType> type : ((SatelliteAccessor) client.getNetworkHandler()).satellites().values()) {
-            if (type.parent(manager) == atBody && type.type().ownershipData(type.config()).owner().equals(this.client.player.getUuid())) {
-                foundSatellite = true;
-                break;
+            if (type.parent(manager) == atBody) {
+                assert this.client.player != null;
+                if (type.type().ownershipData(type.config()).owner().equals(this.client.player.getUuid())) {
+                    foundSatellite = true;
+                    break;
+                }
             }
         }
 
@@ -430,6 +435,7 @@ public class PlanetSelectScreen extends Screen {
         }
 
         if (!this.renamingSpaceStation && (this.selectedBody == null || !this.isZoomed())) {
+            assert client != null;
             if (InputUtil.isKeyPressed(client.getWindow().getHandle(), GLFW.GLFW_KEY_LEFT)) {
                 translation = new Vec2f(translation.x - 2, translation.y - 2);
             }
@@ -452,6 +458,7 @@ public class PlanetSelectScreen extends Screen {
         if (this.selectedBody.type() instanceof Landable landable && landable.world(this.selectedBody.config()) != null) {
             if (this.data.canTravelTo(manager, this.selectedBody)) {
                 try {
+                    assert client != null;
                     client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "planet_tp"), new PacketByteBuf(Unpooled.buffer()).writeIdentifier(celestialBodyRegistry.getId(this.selectedBody))));
                     client.openScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite)this.selectedBody.type()).getCustomName(this.selectedBody.config()).asString() : this.selectedBody.name().getKey(), ((Landable) this.selectedBody.type()).world(this.selectedBody.config())));
                 } catch (Exception e) {
@@ -514,20 +521,21 @@ public class PlanetSelectScreen extends Screen {
 
         final int LHS = PlanetSelectScreen.BORDER_SIZE + PlanetSelectScreen.BORDER_EDGE_SIZE;
         final int RHS = width - LHS;
-        final int TOP = LHS;
 
-        if (this.selectedBody != null && x > LHS && x < LHS + 88 && y > TOP && y < TOP + 13) {
+        if (this.selectedBody != null && x > LHS && x < LHS + 88 && y > LHS && y < LHS + 13) {
             this.unselectCelestialBody();
             return true;
         }
 
         if (!this.mapMode) {
-            if (x >= RHS - 95 && x < RHS && y > TOP + 181 + canCreateOffset && y < TOP + 182 + 12 + canCreateOffset) {
+            if (x >= RHS - 95 && x < RHS && y > LHS + 181 + canCreateOffset && y < LHS + 182 + 12 + canCreateOffset) {
                 if (this.selectedBody != null && this.selectedBody.type() instanceof Orbitable orbitable/* && this.selectedBody.getWorld() != null*/)
                 {
                     SatelliteRecipe recipe = orbitable.satelliteRecipe(this.selectedBody.config());
                     if (recipe != null && this.canCreateSpaceStation(this.selectedBody))
                     {
+                        assert this.client != null;
+                        assert this.client.player != null;
                         if (recipe.test(this.client.player.getInventory()) || this.client.player.getAbilities().creativeMode)
                         {
 //                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BIND_SPACE_STATION_ID, GCCoreUtil.getWorld(this.client.world), new Object[]{this.selectedBody.getWorld()}));
@@ -550,9 +558,10 @@ public class PlanetSelectScreen extends Screen {
             }
         }
 
-        boolean a = x > RHS - 88 && x < RHS && y > TOP && y < TOP + 13;
+        boolean a = x > RHS - 88 && x < RHS && y > LHS && y < LHS + 13;
         if (this.mapMode) {
             if (a) {
+                assert this.client != null;
                 this.client.openScreen(null);
                 clickHandled = true;
             }
@@ -578,6 +587,8 @@ public class PlanetSelectScreen extends Screen {
                 if (x >= width / 2f - 90 && x <= width / 2f + 90 && y >= this.height / 2f - 38 && y <= this.height / 2f + 38) {
                     // Apply
                     if (x >= width / 2f - 90 + 17 && x <= width / 2f - 90 + 17 + 72 && y >= this.height / 2f - 38 + 59 && y <= this.height / 2f - 38 + 59 + 12) {
+                        assert this.client.player != null;
+                        assert this.client != null;
                         String strName = this.client.player.getName().getString();
 //                        Integer spacestationID = this.spaceStationIDs.get(strName);
 //                        if (spacestationID == null) spacestationID = this.spaceStationIDs.get(strName.toLowerCase());
@@ -596,17 +607,21 @@ public class PlanetSelectScreen extends Screen {
                     clickHandled = true;
                 }
             } else {
-                this.blit(width / 2 - 47, TOP, 94, 11, 0, 414, 188, 22, false, false);
+                this.blit(width / 2 - 47, LHS, 94, 11, 0, 414, 188, 22, false, false);
 
-                if (x >= width / 2f - 47 && x <= width / 2f - 47 + 94 && y >= TOP && y <= TOP + 11) {
-                    if (this.selectedStationOwner.length() != 0 && this.selectedStationOwner.equalsIgnoreCase(this.client.player.getName().getString())) {
-                        this.renamingSpaceStation = true;
-                        this.renamingString = null;
-                        clickHandled = true;
+                if (x >= width / 2f - 47 && x <= width / 2f - 47 + 94 && y >= LHS && y <= LHS + 11) {
+                    if (this.selectedStationOwner.length() != 0) {
+                        assert this.client != null;
+                        if (this.selectedStationOwner.equalsIgnoreCase(this.client.player.getName().getString())) {
+                            this.renamingSpaceStation = true;
+                            this.renamingString = null;
+                            clickHandled = true;
+                        }
                     }
                 }
 
                 CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
+                assert this.client != null;
                 int stationListSize = ((SatelliteAccessor) this.client.getNetworkHandler()).satellites().size();
                 int max = Math.min((this.height / 2) / 14, stationListSize);
 
@@ -615,7 +630,7 @@ public class PlanetSelectScreen extends Screen {
 
                 // Up button
                 xPos = RHS - 85;
-                yPos = TOP + 45;
+                yPos = LHS + 45;
 
                 if (x >= xPos && x <= xPos + 61 && y >= yPos && y <= yPos + 4) {
                     if (this.spaceStationListOffset > 0) {
@@ -626,7 +641,7 @@ public class PlanetSelectScreen extends Screen {
 
                 // Down button
                 xPos = RHS - 85;
-                yPos = TOP + 49 + max * 14;
+                yPos = LHS + 49 + max * 14;
 
                 if (x >= xPos && x <= xPos + 61 && y >= yPos && y <= yPos + 4) {
                     if (max + spaceStationListOffset < stationListSize) {
@@ -648,7 +663,7 @@ public class PlanetSelectScreen extends Screen {
                         }
 
                         xPos = RHS - 95 + xOffset;
-                        yPos = TOP + 50 + i * 14;
+                        yPos = LHS + 50 + i * 14;
 
                         if (x >= xPos && x <= xPos + 93 && y >= yPos && y <= yPos + 12) {
                             this.selectedStationOwner = satellite.type().ownershipData(satellite.config()).username();
@@ -662,7 +677,7 @@ public class PlanetSelectScreen extends Screen {
         }
 
         int xPos = LHS + 2;
-        int yPos = TOP + 10;
+        int yPos = LHS + 10;
 
         boolean planetZoomedMoon = this.isZoomed() && isPlanet(this.selectedParent);
 
@@ -723,7 +738,7 @@ public class PlanetSelectScreen extends Screen {
         if (!clickHandled) {
             List<CelestialBody<?, ?>> children = this.getChildren(this.isZoomed() && !(isPlanet(this.selectedParent)) ? this.selectedBody : this.selectedParent);
 
-            yPos = TOP + 50;
+            yPos = LHS + 50;
             for (CelestialBody<?, ?> child : children) {
                 clickHandled = this.testClicked(child, child.equals(this.selectedBody) ? 5 : 0, yPos, x, y, false);
                 yPos += 14;
@@ -949,9 +964,8 @@ public class PlanetSelectScreen extends Screen {
         matrices.push();
         RenderSystem.enableBlend();
 
-        Matrix4f modelviewMatrix = RenderSystem.getModelViewMatrix();
-        modelviewMatrix.loadIdentity();
-        modelviewMatrix.multiply(Matrix4f.translate(0.0F, 0.0F, -9000.0F));
+        RenderSystem.getModelViewStack().loadIdentity();
+        RenderSystem.getModelViewStack().translate(0.0F, 0.0F, -9000.0F);
         RenderSystem.backupProjectionMatrix();
         Matrix4f projectionMatrix = new Matrix4f();
         projectionMatrix.loadIdentity();
@@ -982,6 +996,7 @@ public class PlanetSelectScreen extends Screen {
         for (Map.Entry<CelestialBody<?, ?>, Matrix4f> e : matrixMap.entrySet()) {
             Matrix4f planetMatrix = e.getValue();
             planetMatrix.multiply(projectionMatrix);
+            assert client != null;
             int x = (int) Math.floor((planetMatrix.a30 * 0.5 + 0.5) * client.getWindow().getWidth());
             int y = (int) Math.floor(client.getWindow().getHeight() - (planetMatrix.a31 * 0.5 + 0.5) * client.getWindow().getHeight());
             double mx = (x * (this.client.getWindow().getScaledWidth() / (double) this.client.getWindow().getWidth()));
@@ -1015,6 +1030,8 @@ public class PlanetSelectScreen extends Screen {
 //        RenderSystem.loadIdentity();
 //        RenderSystem.matrixMode(GL11.GL_MODELVIEW);
 //        RenderSystem.loadIdentity();
+        RenderSystem.restoreProjectionMatrix();
+        RenderSystem.getModelViewStack().loadIdentity();
     }
 
     protected void drawSelectionCursor(MatrixStack matrices, float delta) {
@@ -1035,6 +1052,7 @@ public class PlanetSelectScreen extends Screen {
                     this.setupMatrix(this.selectedBody, matrices, delta);
                     matrices.scale(1 / 15.0F, 1 / 15.0F, 1);
                     RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
+                    RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                     float colMod = this.getZoomAdvanced() < 4.9F ? (float) (Math.sin(this.ticksSinceSelectionF / 2.0F) * 0.5F + 0.5F) : 1.0F;
                     RenderSystem.setShaderColor(1.0F, 1.0F, 0.0F, 1 * colMod);
                     int width = (int) Math.floor((getWidthForCelestialBody(this.selectedBody) / 2.0) * (isChildBody(this.selectedBody) ? 9.0 : 30.0));
@@ -1059,6 +1077,7 @@ public class PlanetSelectScreen extends Screen {
                     float scale = Math.max(0.3F, 1.5F / (this.ticksSinceSelectionF / 5.0F)) * 2.0F / div;
                     matrices.scale(scale, scale, 1);
                     RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
+                    RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                     float colMod = this.getZoomAdvanced() < 4.9F ? (float) (Math.sin(this.ticksSinceSelectionF) * 0.5F + 0.5F) : 1.0F;
                     RenderSystem.setShaderColor(0.4F, 0.8F, 1.0F, 1 * colMod);
                     int width = getWidthForCelestialBody(this.selectedBody) * 13;
@@ -1075,6 +1094,8 @@ public class PlanetSelectScreen extends Screen {
         if (cBody == null) {
             return Vec3f.ZERO;
         }
+        assert client != null;
+        assert client.world != null;
         Vec3f cBodyPos = new Vec3f((float)cBody.position().x((int) client.world.getTime(), delta), (float)cBody.position().y((int) client.world.getTime(), delta), 0);
 
         if (cBody.parent(manager) != null) {
@@ -1108,7 +1129,7 @@ public class PlanetSelectScreen extends Screen {
             if (alpha > 0.0F) {
                 matrices.push();
                 setupMatrix(body, matrices, hasParent ? 0.25F : 1.0F, delta);
-                CelestialDisplay display = body.display();
+                CelestialDisplay<?, ?> display = body.display();
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
                 display.render(matrices, Tessellator.getInstance().getBuffer(), getWidthForCelestialBody(body), 0, 0, delta);
                 matrixMap.put(body, new Matrix4f(matrices.peek().getModel()));
@@ -1144,13 +1165,16 @@ public class PlanetSelectScreen extends Screen {
 
         if (this.viewState == EnumView.PROFILE) {
             RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
             this.blit(width / 2 - 43, TOP, 86, 15, 266, 0, 172, 29, false, false);
             String str = I18n.translate("gui.message.catalog").toUpperCase();
             this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f, TOP + this.textRenderer.fontHeight / 2f, WHITE);
 
             if (this.selectedBody != null) {
+                RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
+
 
                 if (mousePosX > LHS && mousePosX < LHS + 88 && mousePosY > TOP && mousePosY < TOP + 13) {
                     RenderSystem.setShaderColor(3.0F, 0.0F, 0.0F, 1.0F);
@@ -1162,6 +1186,7 @@ public class PlanetSelectScreen extends Screen {
                 str = I18n.translate("gui.message.back").toUpperCase();
                 this.textRenderer.draw(matrices, str, LHS + 45 - this.textRenderer.getWidth(str) / 2f, TOP + this.textRenderer.fontHeight / 2f - 2, WHITE);
 
+                RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
                 if (mousePosX > RHS - 88 && mousePosX < RHS && mousePosY > TOP && mousePosY < TOP + 13) {
                     RenderSystem.setShaderColor(0.0F, 3.0F, 0.0F, 1.0F);
@@ -1228,6 +1253,7 @@ public class PlanetSelectScreen extends Screen {
                     this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 187, WHITE);
                 }
 
+                RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
                 RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
                 this.blit(posX2, menuTopLeft + 12, 17, 199, 439, 0, 32, 399, false, false);
@@ -1236,6 +1262,7 @@ public class PlanetSelectScreen extends Screen {
         } else {
             String str;
             // Catalog:
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
             RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
             this.blit(LHS, TOP, 74, 11, 0, 392, 148, 22, false, false);
@@ -1248,12 +1275,14 @@ public class PlanetSelectScreen extends Screen {
 
             // Parent frame:
             RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
             this.blit(LHS - 95 + scale, TOP + 12, 95, 41, 0, 436, 95, 41, false, false);
             str = /*planetZoomedNotMoon ? I18n.translate(this.selectedBody.name().getKey()) :*/ this.parentName();
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             this.textRenderer.draw(matrices, str, LHS + 9 - 95 + scale, TOP + 34, WHITE);
             RenderSystem.setShaderColor(1, 1, 0, 1);
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
 
             // Grandparent frame:
@@ -1267,6 +1296,7 @@ public class PlanetSelectScreen extends Screen {
             drawChildren(matrices, children, 0, 0, true);
 
             if (this.mapMode) {
+                RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
                 RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
                 this.blit(RHS - 74, TOP, 74, 11, 0, 392, 148, 22, true, false);
@@ -1277,6 +1307,7 @@ public class PlanetSelectScreen extends Screen {
 
             if (this.selectedBody != null) {
                 // Right-hand bar (basic selectionState info)
+                RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain1);
                 RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
 
@@ -1300,14 +1331,14 @@ public class PlanetSelectScreen extends Screen {
                     this.blit(RHS - 85, TOP + 49 + max * 14, 61, 4, 0, 239, 61, 4, false, true);
                     RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
 
-                    if (!((SatelliteAccessor) this.client.getNetworkHandler()).satellites().values().stream().anyMatch(s -> s.parent(manager) == this.selectedBody.parent(manager) && s.type().ownershipData(s.config()).canAccess(client.player))) {
+                    if (((SatelliteAccessor) this.client.getNetworkHandler()).satellites().values().stream().noneMatch(s -> s.parent(manager) == this.selectedBody.parent(manager) && s.type().ownershipData(s.config()).canAccess(client.player))) {
                         str = I18n.translate("gui.message.select_ss");
                         this.drawSplitString(matrices, str, RHS - 47, TOP + 20, 91, WHITE, false, false);
                     } else {
                         str = I18n.translate("gui.message.ss_owner");
                         this.textRenderer.draw(matrices, str, RHS - 85, TOP + 18, WHITE);
                         str = this.selectedStationOwner;
-                        this.textRenderer.draw(matrices, str, RHS - 47 - this.textRenderer.getWidth(str) / 2, TOP + 30, WHITE);
+                        this.textRenderer.draw(matrices, str, RHS - 47 - this.textRenderer.getWidth(str) / 2f, TOP + 30, WHITE);
                     }
 
                     Iterator<CelestialBody<SatelliteConfig, SatelliteType>> it = ((SatelliteAccessor) this.client.getNetworkHandler()).satellites().values().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager) && s.type().ownershipData(s.config()).canAccess(client.player)).iterator();
@@ -1317,6 +1348,7 @@ public class PlanetSelectScreen extends Screen {
                         CelestialBody<SatelliteConfig, SatelliteType> e = it.next();
 
                         if (j >= this.spaceStationListOffset) {
+                            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                             RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
                             RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
                             int xOffset = 0;
@@ -1349,6 +1381,7 @@ public class PlanetSelectScreen extends Screen {
                 if (this.canCreateSpaceStation(this.selectedBody) && (!(isSatellite(this.selectedBody))))
                 {
                     RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
+                    RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                     RenderSystem.setShaderTexture(0, guiMain1);
                     int canCreateLength = Math.max(0, this.drawSplitString(matrices, I18n.translate("gui.message.can_create_space_station"), 0, 0, 91, 0, true, true) - 2);
                     canCreateOffset = canCreateLength * this.textRenderer.fontHeight;
@@ -1440,6 +1473,7 @@ public class PlanetSelectScreen extends Screen {
                             RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
                         }
 
+                        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                         RenderSystem.setShaderTexture(0, guiMain1);
 
                         if (!this.mapMode)
@@ -1467,6 +1501,7 @@ public class PlanetSelectScreen extends Screen {
                 }
 
                 // Catalog overlay
+                RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.3F - Math.min(0.3F, this.ticksSinceSelectionF / 50.0F));
                 this.blit(LHS, TOP, 74, 11, 0, 392, 148, 22, false, false);
@@ -1474,6 +1509,7 @@ public class PlanetSelectScreen extends Screen {
                 this.textRenderer.draw(matrices, str, LHS + 40 - textRenderer.getWidth(str) / 2f, TOP + 1, WHITE);
 
                 // Top bar title:
+                RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
                 RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
                 if (isSatellite(this.selectedBody)) {
@@ -1482,10 +1518,8 @@ public class PlanetSelectScreen extends Screen {
                     } else {
                         RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1.0F);
                     }
-                    this.blit(width / 2 - 47, TOP, 94, 11, 0, 414, 188, 22, false, false);
-                } else {
-                    this.blit(width / 2 - 47, TOP, 94, 11, 0, 414, 188, 22, false, false);
                 }
+                this.blit(width / 2 - 47, TOP, 94, 11, 0, 414, 188, 22, false, false);
                 if (this.selectedBody.type() instanceof Landable landable && landable.accessWeight(this.selectedBody.config()) >= 0 && (!(isSatellite(this.selectedBody)))) {
                     boolean canReach;
                     if (!this.data.canTravelTo(manager, this.selectedBody) || landable.world(this.selectedBody.config()) == null) {
@@ -1510,6 +1544,7 @@ public class PlanetSelectScreen extends Screen {
                 this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f, TOP + 2, WHITE);
 
                 // Catalog wedge:
+                RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
                 RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
                 this.blit(LHS + 4, TOP, 83, 12, 0, 477, 83, 12, false, false);
@@ -1522,6 +1557,7 @@ public class PlanetSelectScreen extends Screen {
                         RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1);
                     }
 
+                    RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                     RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
                     this.blit(RHS - 74, TOP, 74, 11, 0, 392, 148, 22, true, false);
                     str = I18n.translate("gui.message.launch").toUpperCase();
@@ -1539,6 +1575,7 @@ public class PlanetSelectScreen extends Screen {
                     }
 
                     RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
+                    RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                     RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
                     this.blit(RHS - 182, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE - sliderPos, 83, 38, 512 - 166, 512 - 76, 166, 76, true, false);
 
@@ -1558,6 +1595,7 @@ public class PlanetSelectScreen extends Screen {
                 if (isSatellite(this.selectedBody) && renamingSpaceStation) {
                     this.renderBackground(matrices);
                     RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
+                    RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                     RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain1);
                     this.blit(width / 2 - 90, this.height / 2 - 38, 179, 67, 159, 0, 179, 67, false, false);
                     this.blit(width / 2 - 90 + 4, this.height / 2 - 38 + 2, 171, 10, 159, 92, 171, 10, false, false);
@@ -1593,6 +1631,7 @@ public class PlanetSelectScreen extends Screen {
                     this.textRenderer.draw(matrices, str0, width / 2f - this.textRenderer.getWidth(str) / 2f, this.height / 2f - 17, WHITE);
                 }
 
+//                RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 //                RenderSystem.setShaderTexture(0, guiMain0);
 //                RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
             }
@@ -1630,6 +1669,7 @@ public class PlanetSelectScreen extends Screen {
             int xOffset = xOffsetBase + (child.equals(this.selectedBody) ? 5 : 0);
             final int scale = (int) Math.min(95.0F, Math.max(0.0F, (this.ticksSinceMenuOpenF * 25.0F) - 95 * i));
 
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
             float brightness = child.equals(this.selectedBody) ? 0.2F : 0.0F;
             if (child.type() instanceof Landable landable && this.data.canTravelTo(manager, child) && landable.world(child.config()) != null) {
@@ -1674,7 +1714,7 @@ public class PlanetSelectScreen extends Screen {
     protected int getAmountInInventory(ItemStack ingredient) {
         int i = 0;
 
-        for(int j = 0; j < this.client.player.getInventory().size(); ++j) {
+        for(int j = 0; j < Objects.requireNonNull(Objects.requireNonNull(this.client).player).getInventory().size(); ++j) {
             ItemStack stack = this.client.player.getInventory().getStack(j);
             if (ingredient.isItemEqual(stack)) {
                 i += stack.getCount();
@@ -1748,19 +1788,21 @@ public class PlanetSelectScreen extends Screen {
     public void setBlackBackground() {
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
-        RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        RenderSystem.disableBlend();
         RenderSystem.disableTexture();
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder worldRenderer = tessellator.getBuffer();
+        BufferBuilder buffer = tessellator.getBuffer();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
-        worldRenderer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-        worldRenderer.vertex(0.0D, height, -90.0D).next();
-        worldRenderer.vertex(width, height, -90.0D).next();
-        worldRenderer.vertex(width, 0.0D, -90.0D).next();
-        worldRenderer.vertex(0.0D, 0.0D, -90.0D).next();
+        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+        buffer.vertex(0.0D, height, -90.0D).color(0, 0, 0, 1).next();
+        buffer.vertex(width, height, -90.0D).color(0, 0, 0, 1).next();
+        buffer.vertex(width, 0.0D, -90.0D).color(0, 0, 0, 1).next();
+        buffer.vertex(0.0D, 0.0D, -90.0D).color(0, 0, 0, 1).next();
         tessellator.draw();
         RenderSystem.depthMask(true);
         RenderSystem.disableDepthTest();
+        RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
@@ -1785,18 +1827,19 @@ public class PlanetSelectScreen extends Screen {
      */
     public void drawGrid(float gridSize, float gridScale) {
         RenderSystem.setShaderColor(0.0F, 0.2F, 0.5F, 0.55F);
-
-        GL11.glBegin(GL11.GL_LINES);
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        bufferBuilder.begin(VertexFormat.DrawMode.LINES, VertexFormats.POSITION);
 
         gridSize += gridScale / 2;
         for (float v = -gridSize; v <= gridSize; v += gridScale) {
-            GL11.glVertex3f(v, -gridSize, -0.0F);
-            GL11.glVertex3f(v, gridSize, -0.0F);
-            GL11.glVertex3f(-gridSize, v, -0.0F);
-            GL11.glVertex3f(gridSize, v, -0.0F);
+            bufferBuilder.vertex(v, -gridSize, -0.0F).next();
+            bufferBuilder.vertex(v, gridSize, -0.0F).next();
+            bufferBuilder.vertex(-gridSize, v, -0.0F).next();
+            bufferBuilder.vertex(gridSize, v, -0.0F).next();
         }
 
-        GL11.glEnd();
+        bufferBuilder.end();
+        BufferRenderer.draw(bufferBuilder);
     }
 
     /**
@@ -1838,18 +1881,20 @@ public class PlanetSelectScreen extends Screen {
 //                {
                 matrices.translate(systemOffset.getX(), systemOffset.getY(), systemOffset.getZ());
 
-                GL11.glBegin(GL11.GL_LINE_LOOP);
+                BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+                buffer.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.POSITION);
 
                 float temp;
                 for (int i = 0; i < 90; i++) {
-                    GL11.glVertex2f(x, y);
+                    buffer.vertex(x, y, 0);
 
                     temp = x;
                     x = cos * x - sin * y;
                     y = sin * temp + cos * y;
                 }
 
-                GL11.glEnd();
+                buffer.end();
+                BufferRenderer.draw(buffer);
 
                 matrices.translate(-systemOffset.getX(), -systemOffset.getY(), -systemOffset.getZ());
 
@@ -1876,7 +1921,7 @@ public class PlanetSelectScreen extends Screen {
             boolean selected = body == this.selectedBody || (body.parent(manager) == this.selectedBody && this.selectionState != EnumSelection.SELECTED);
             boolean ready = this.lastSelectedBody != null || this.ticksSinceSelectionF > 35;
             boolean isSibling = getSiblings(this.selectedBody).contains(body);
-            boolean isPossible = (!isSatellite(body) || ((Satellite) body.type()).ownershipData(body.config()).canAccess(this.client.player))/* || (this.possibleBodies != null && this.possibleBodies.contains(body))*/;
+            boolean isPossible = (!isSatellite(body) || ((Satellite) body.type()).ownershipData(body.config()).canAccess(Objects.requireNonNull(this.client).player))/* || (this.possibleBodies != null && this.possibleBodies.contains(body))*/;
             if ((!selected && !isSibling) || !isPossible) {
                 alpha = 0.0F;
             } else if (this.isZoomed() && ((!selected || !ready) && !isSibling)) {
