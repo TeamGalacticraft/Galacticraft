@@ -85,6 +85,16 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     public static final Identifier MACHINE_FLUID_OUT = new Identifier(Constant.MOD_ID, "block/machine_fluid_output");
     public static final Identifier MACHINE_ITEM_IN = new Identifier(Constant.MOD_ID, "block/machine_item_input");
     public static final Identifier MACHINE_ITEM_OUT = new Identifier(Constant.MOD_ID, "block/machine_item_output");
+    private static final ModelTransformation TRANSFORMATION = new ModelTransformation(
+            new Transformation(new Vec3f(75, 45, 0), new Vec3f(0, 0.25f, 0), new Vec3f(0.375f, 0.375f, 0.375f)),
+            new Transformation(new Vec3f(75, 45, 0), new Vec3f(0, 0.25f, 0), new Vec3f(0.375f, 0.375f, 0.375f)),
+            new Transformation(new Vec3f(0, 225, 0), new Vec3f(0, 0, 0), new Vec3f(0.40f, 0.40f, 0.40f)),
+            new Transformation(new Vec3f(0, 45, 0), new Vec3f(0, 0, 0), new Vec3f(0.40f, 0.40f, 0.40f)),
+            Transformation.IDENTITY,
+            new Transformation(new Vec3f(30, 225, 0), new Vec3f(0, 0, 0), new Vec3f(0.625f, 0.625f, 0.625f)),
+            new Transformation(new Vec3f(0, 0, 0), new Vec3f(0, 0.2f, 0), new Vec3f(0.25f, 0.25f, 0.25f)),
+            new Transformation(new Vec3f(0, 0, 0), new Vec3f(0, 0, 0), new Vec3f(0.5f, 0.5f, 0.5f))
+    );
 
     @ApiStatus.Internal
     public static final CachingSpriteAtlas CACHING_SPRITE_ATLAS = new CachingSpriteAtlas(null);
@@ -241,16 +251,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
 
     @Override
     public ModelTransformation getTransformation() {
-        return new ModelTransformation(
-                new Transformation(new Vec3f(75, 45, 0), new Vec3f(0, 0.25f, 0), new Vec3f(0.375f, 0.375f, 0.375f)),
-                new Transformation(new Vec3f(75, 45, 0), new Vec3f(0, 0.25f, 0), new Vec3f(0.375f, 0.375f, 0.375f)),
-                new Transformation(new Vec3f(0, 225, 0), new Vec3f(0, 0, 0), new Vec3f(0.40f, 0.40f, 0.40f)),
-                new Transformation(new Vec3f(0, 45, 0), new Vec3f(0, 0, 0), new Vec3f(0.40f, 0.40f, 0.40f)),
-                Transformation.IDENTITY,
-                new Transformation(new Vec3f(30, 225, 0), new Vec3f(0, 0, 0), new Vec3f(0.625f, 0.625f, 0.625f)),
-                new Transformation(new Vec3f(0, 0, 0), new Vec3f(0, 0.2f, 0), new Vec3f(0.25f, 0.25f, 0.25f)),
-                new Transformation(new Vec3f(0, 0, 0), new Vec3f(0, 0, 0), new Vec3f(0.5f, 0.5f, 0.5f))
-        );
+        return TRANSFORMATION;
     }
 
     @Override

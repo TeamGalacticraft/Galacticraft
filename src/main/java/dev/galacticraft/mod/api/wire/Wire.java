@@ -67,4 +67,6 @@ public interface Wire {
      * @return the maximum amount of energy (in gJ) allowed to be transferred through this wire.
      */
     int getMaxTransferRate();
+
+    boolean[] connections();
 }

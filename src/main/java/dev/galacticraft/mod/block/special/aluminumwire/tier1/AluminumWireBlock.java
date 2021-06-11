@@ -24,17 +24,11 @@ package dev.galacticraft.mod.block.special.aluminumwire.tier1;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.WireBlock;
-import dev.galacticraft.mod.util.ConnectingBlockUtil;
+import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.util.EnergyUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -43,6 +37,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -60,79 +55,60 @@ public class AluminumWireBlock extends WireBlock {
 
     public AluminumWireBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState()
-                .with(Properties.NORTH, false).with(Properties.EAST, false)
-                .with(Properties.SOUTH, false).with(Properties.WEST, false)
-                .with(Properties.UP, false).with(Properties.DOWN, false));
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
-        ArrayList<VoxelShape> shapes = new ArrayList<>();
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
+        WireBlockEntity wire = (WireBlockEntity) view.getBlockEntity(pos);
+        if (wire != null) {
+            List<VoxelShape> shapes = new ArrayList<>();
 
-        if (blockState.get(Properties.NORTH)) {
-            shapes.add(NORTH);
+            if (wire.connections()[2]) {
+                shapes.add(NORTH);
+            }
+            if (wire.connections()[3]) {
+                shapes.add(SOUTH);
+            }
+            if (wire.connections()[5]) {
+                shapes.add(EAST);
+            }
+            if (wire.connections()[4]) {
+                shapes.add(WEST);
+            }
+            if (wire.connections()[1]) {
+                shapes.add(UP);
+            }
+            if (wire.connections()[0]) {
+                shapes.add(DOWN);
+            }
+            if (!shapes.isEmpty()) {
+                return VoxelShapes.union(NONE, shapes.toArray(new VoxelShape[0]));
+            }
         }
-        if (blockState.get(Properties.SOUTH)) {
-            shapes.add(SOUTH);
-        }
-        if (blockState.get(Properties.EAST)) {
-            shapes.add(EAST);
-        }
-        if (blockState.get(Properties.WEST)) {
-            shapes.add(WEST);
-        }
-        if (blockState.get(Properties.UP)) {
-            shapes.add(UP);
-        }
-        if (blockState.get(Properties.DOWN)) {
-            shapes.add(DOWN);
-        }
-        if (shapes.isEmpty()) {
-            return NONE;
-        } else {
-            return VoxelShapes.union(NONE, shapes.toArray(new VoxelShape[0]));
-        }
+        return NONE;
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        BlockState state = this.getDefaultState();
-        for (Direction direction : Constant.Misc.DIRECTIONS) {
-            BlockState block = context.getWorld().getBlockState(context.getBlockPos().offset(direction));
-            state = state.with(ConnectingBlockUtil.getBooleanProperty(direction), !block.isAir() && (block.getBlock() instanceof WireBlock
-                    || EnergyUtil.canAccessEnergy(context.getWorld(), context.getBlockPos().offset(direction), direction)));
-
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+        super.onBlockAdded(state, world, pos, oldState, notify);
+        WireBlockEntity wire = (WireBlockEntity) world.getBlockEntity(pos);
+        assert wire != null;
+        boolean b = false;
+        for (Direction dir : Constant.Misc.DIRECTIONS) {
+            b |= (wire.connections()[dir.ordinal()] = EnergyUtil.canAccessEnergy(world, pos.offset(dir), dir) && wire.canConnect(dir));
         }
-
-        return state;
+        if (b) wire.sync();
     }
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborUpdate(state, world, pos, block, fromPos, notify);
-        BlockState neighbor = world.getBlockState(fromPos);
+        WireBlockEntity wire = (WireBlockEntity) world.getBlockEntity(pos);
         Direction dir = Direction.fromVector(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
         assert dir != null;
-        world.setBlockState(pos, state.with(ConnectingBlockUtil.getBooleanProperty(dir), !neighbor.isAir() && block instanceof WireBlock
-                || EnergyUtil.canAccessEnergy(world, fromPos, dir)
-        ));
-    }
-
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(Properties.NORTH, Properties.EAST, Properties.SOUTH, Properties.WEST, Properties.UP, Properties.DOWN);
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public float getAmbientOcclusionLightLevel(BlockState state, BlockView view, BlockPos pos) {
-        return 1.0F;
+        assert wire != null;
+        if (wire.connections()[dir.ordinal()] != (wire.connections()[dir.ordinal()] = EnergyUtil.canAccessEnergy(world, fromPos, dir) && wire.canConnect(dir))) {
+            wire.sync();
+        }
     }
 }

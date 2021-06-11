@@ -26,6 +26,8 @@ import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
 import dev.galacticraft.mod.client.model.MachineUnbakedModel;
+import dev.galacticraft.mod.client.model.WireBakedModel;
+import dev.galacticraft.mod.client.model.WireUnbakedModel;
 import dev.galacticraft.mod.client.network.GalacticraftClientPacketReceiver;
 import dev.galacticraft.mod.client.render.MoonSkyProperties;
 import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRenderer;
@@ -144,6 +146,8 @@ public class GalacticraftClient implements ClientModInitializer {
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(resourceManager -> (resourceId, context) -> {
             if (MachineBakedModel.MACHINE_MARKER.equals(resourceId)) {
                 return MachineUnbakedModel.INSTANCE;
+            } else if (WireBakedModel.WIRE_MARKER.equals(resourceId)) {
+                return WireUnbakedModel.INSTANCE;
             }
             return null;
         });
