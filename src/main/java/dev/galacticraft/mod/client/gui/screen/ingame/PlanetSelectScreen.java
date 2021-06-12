@@ -397,7 +397,7 @@ public class PlanetSelectScreen extends Screen {
             return false;
         }
 
-        if (!this.data.canTravelTo(manager, atBody)) {
+        if (!this.data.canTravelTo(manager, atBody) && this.data != RocketData.empty()) {
             // If parent body is unreachable, the satellite is also unreachable
             return false;
         }
@@ -457,7 +457,7 @@ public class PlanetSelectScreen extends Screen {
 
     protected void teleportToSelectedBody() {
         if (this.selectedBody != null && this.selectedBody.type() instanceof Landable landable && landable.world(this.selectedBody.config()) != null) {
-            if (this.data.canTravelTo(manager, this.selectedBody)) {
+            if (this.data.canTravelTo(manager, this.selectedBody) || this.data == RocketData.empty()) {
                 try {
                     assert client != null;
                     client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "planet_tp"), new PacketByteBuf(Unpooled.buffer()).writeIdentifier(celestialBodyRegistry.getId(this.selectedBody))));
@@ -987,7 +987,7 @@ public class PlanetSelectScreen extends Screen {
         this.setIsometric(delta, matrices);
         float gridSize = 7000F; //194.4F;
         //TODO: Add dynamic map sizing, to allow the map to be small by default and expand when more distant solar systems are added.
-        this.drawGrid(gridSize, height / 3f / 3.5F);
+        this.drawGrid(matrices.peek().getModel(), gridSize, height / 3f / 3.5F);
         this.drawCircles(matrices, delta);
         matrices.pop();
 
@@ -1536,7 +1536,7 @@ public class PlanetSelectScreen extends Screen {
                 this.blit(width / 2 - 47, LHS, 94, 11, 0, 414, 188, 22, false, false);
                 if (this.selectedBody.type() instanceof Landable landable && landable.accessWeight(this.selectedBody.config()) >= 0 && (!(isSatellite(this.selectedBody)))) {
                     boolean canReach;
-                    if (!this.data.canTravelTo(manager, this.selectedBody) || landable.world(this.selectedBody.config()) == null) {
+                    if ((!this.data.canTravelTo(manager, this.selectedBody) && this.data != RocketData.empty()) || landable.world(this.selectedBody.config()) == null) {
                         canReach = false;
                         RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1.0F);
                     } else {
@@ -1565,7 +1565,7 @@ public class PlanetSelectScreen extends Screen {
 
                 if (!this.mapMode) {
                     resetShader(GameRenderer::getPositionTexColorShader);
-                    if (!this.data.canTravelTo(manager, this.selectedBody) || (!(this.selectedBody.type() instanceof Landable landable) || landable.world(this.selectedBody.config()) == null) || (isSatellite(this.selectedBody) && !((Satellite) this.selectedBody.type()).ownershipData(this.selectedBody.config()).canAccess(this.client.player)))
+                    if ((!this.data.canTravelTo(manager, this.selectedBody) && this.data != RocketData.empty()) || (!(this.selectedBody.type() instanceof Landable landable) || landable.world(this.selectedBody.config()) == null) || (isSatellite(this.selectedBody) && !((Satellite) this.selectedBody.type()).ownershipData(this.selectedBody.config()).canAccess(this.client.player)))
                     {
                         RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
                     } else {
@@ -1686,7 +1686,7 @@ public class PlanetSelectScreen extends Screen {
             resetShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
             float brightness = child.equals(this.selectedBody) ? 0.2F : 0.0F;
-            if (child.type() instanceof Landable landable && this.data.canTravelTo(manager, child) && landable.world(child.config()) != null) {
+            if (child.type() instanceof Landable landable && (this.data.canTravelTo(manager, child) || this.data == RocketData.empty()) && landable.world(child.config()) != null) {
                 RenderSystem.setShaderColor(0.0F, 0.6F + brightness, 0.0F, scale / 95.0F);
             } else {
                 RenderSystem.setShaderColor(0.6F + brightness, 0.0F, 0.0F, scale / 95.0F);
@@ -1839,20 +1839,24 @@ public class PlanetSelectScreen extends Screen {
     /**
      * Draw background grid
      */
-    public void drawGrid(float gridSize, float gridScale) {
+    public void drawGrid(Matrix4f model, float gridSize, float gridScale) {
         resetShader(GameRenderer::getPositionColorShader);
+        RenderSystem.disableTexture();
+        RenderSystem.depthMask(false);
+        RenderSystem.disableCull();
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.disableTexture();
+        RenderSystem.lineWidth(1);
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
         buffer.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
 
         gridSize += gridScale / 2;
         for (float v = -gridSize; v <= gridSize; v += gridScale) {
-            buffer.vertex(v, -gridSize, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(0, 0, 0).next();
-            buffer.vertex(v, gridSize, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(0, 0, 0).next();
+            buffer.vertex(model, v, -gridSize, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(1, 0, 0).next();
+            buffer.vertex(model, v, gridSize, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(1, 0, 0).next();
 
-            buffer.vertex(-gridSize, v, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(0, 0, 0).next();
-            buffer.vertex(gridSize, v, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(0, 0, 0).next();
+            buffer.vertex(model, -gridSize, v, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(0, 1, 0).next();
+            buffer.vertex(model, gridSize, v, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(0, 1, 0).next();
         }
 
         buffer.end();
@@ -1864,6 +1868,7 @@ public class PlanetSelectScreen extends Screen {
      * Draw orbit circles on gui
      */
     public void drawCircles(MatrixStack matrices, float delta) {
+        resetShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.lineWidth(3);
         int count = 0;
@@ -1873,7 +1878,8 @@ public class PlanetSelectScreen extends Screen {
         final float sin = (float) Math.sin(theta);
 
         for (CelestialBody<?, ?> body : bodiesToRender) {
-            Vec3f systemOffset = new Vec3f(0.0F, 0.0F, 0.0F);
+
+            Vec3f systemOffset = Vec3f.ZERO;
             if (isChildBody(body)) {
                 systemOffset = this.getCelestialBodyPosition(body.parent(manager), delta);
             } else if (isPlanet(body)) {
@@ -1887,45 +1893,38 @@ public class PlanetSelectScreen extends Screen {
             float alpha = getAlpha(body);
 
             if (alpha > 0.0F) {
-                switch (count % 2) {
-                    case 0 -> RenderSystem.setShaderColor(0.0F / 1.4F, 0.6F / 1.4F, 1.0F / 1.4F, alpha / 1.4F);
-                    case 1 -> RenderSystem.setShaderColor(0.3F / 1.4F, 0.8F / 1.4F, 1.0F / 1.4F, alpha / 1.4F);
-                }
-//todo event
-//                CelestialBody<?, ?>RenderEvent.CelestialRingRenderEvent.Pre preEvent = new CelestialBody<?, ?>RenderEvent.CelestialRingRenderEvent.Pre(body, systemOffset);
-//                MinecraftForge.EVENT_BUS.post(preEvent);
+                matrices.push();
+                float[] color = switch (count % 2) {
+                    case 0 -> new float[]{0.0F / 1.4F, 0.6F / 1.4F, 1.0F / 1.4F, alpha / 1.4F};
+                    case 1 -> new float[]{0.3F / 1.4F, 0.8F / 1.4F, 1.0F / 1.4F, alpha / 1.4F};
+                    default -> throw new IllegalStateException("Unexpected value: " + count % 2);
+                };
 
-//                if (!preEvent.isCanceled())
-//                {
                 matrices.translate(systemOffset.getX(), systemOffset.getY(), systemOffset.getZ());
 
                 BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-                buffer.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.POSITION);
+                buffer.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.POSITION_COLOR);
 
                 float temp;
                 float x1 = x;
                 float y1 = y;
+                Matrix4f model = matrices.peek().getModel();
                 for (int i = 0; i < 90; i++) {
-                    buffer.vertex(x, y, 0);
+                    buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]);
 
                     temp = x;
                     x = cos * x - sin * y;
                     y = sin * temp + cos * y;
                 }
 
-                buffer.vertex(x1, y1, 0); //LINE_LOOP is gone
+                buffer.vertex(model, x1, y1, 0).color(color[0], color[1], color[2], color[3]); //LINE_LOOP is gone
 
                 buffer.end();
                 BufferRenderer.draw(buffer);
-
-                matrices.translate(-systemOffset.getX(), -systemOffset.getY(), -systemOffset.getZ());
-
                 count++;
-//                }
-//
-//                CelestialBody<?, ?>RenderEvent.CelestialRingRenderEvent.Post postEvent = new CelestialBody<?, ?>RenderEvent.CelestialRingRenderEvent.Post(body);
-//                MinecraftForge.EVENT_BUS.post(postEvent);
+                matrices.pop();
             }
+
         }
 
         RenderSystem.lineWidth(1);

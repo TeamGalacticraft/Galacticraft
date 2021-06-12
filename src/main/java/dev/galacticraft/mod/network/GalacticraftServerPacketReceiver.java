@@ -402,7 +402,7 @@ public class GalacticraftServerPacketReceiver {
                     CelestialBody<?, ?> parent = server.getRegistryManager().get(AddonRegistry.CELESTIAL_BODY_KEY).get(buffer.readIdentifier());
                     if (parent != null) {
                         if (parent.type() instanceof Orbitable orbitable) {
-                            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState().canTravelTo(server.getRegistryManager(), parent)) {
+                            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState().canTravelTo(server.getRegistryManager(), parent) || ((ServerPlayerEntityAccessor) player).getCelestialScreenState() == RocketData.empty()) {
                                 if (orbitable.satelliteRecipe(parent.config()) != null) {
                                     SatelliteRecipe recipe = orbitable.satelliteRecipe(parent.config());
                                     if (recipe.test(player.getInventory()) || player.isCreative()) {
@@ -430,12 +430,9 @@ public class GalacticraftServerPacketReceiver {
                     Identifier id = buffer.readIdentifier();
                     CelestialBody<?, ?> body = ((SatelliteAccessor) server).satellites().get(id);
                     if (body == null) body = server.getRegistryManager().get(AddonRegistry.CELESTIAL_BODY_KEY).get(id);
-
-                    if (body != null && ((ServerPlayerEntityAccessor) player).getCelestialScreenState().canTravelTo(server.getRegistryManager(), body)) {
-                        if (body.type() instanceof Landable landable) {
-                            player.teleport(server.getWorld(landable.world(body.config())), player.getX(), 500, player.getZ(), player.getYaw(), player.getPitch());
-                            ((ServerPlayerEntityAccessor) player).setCelestialScreenState(RocketData.empty());
-                        }
+                    if (body.type() instanceof Landable landable && (((ServerPlayerEntityAccessor) player).getCelestialScreenState().canTravelTo(server.getRegistryManager(), body) || ((ServerPlayerEntityAccessor) player).getCelestialScreenState() == RocketData.empty())) {
+                        ((ServerPlayerEntityAccessor) player).setCelestialScreenState(RocketData.empty());
+                        player.teleport(server.getWorld(landable.world(body.config())), player.getX(), 500, player.getZ(), player.getYaw(), player.getPitch());
                     } else {
                         player.networkHandler.disconnect(new LiteralText("Invalid planet teleport packet received."));
                     }
