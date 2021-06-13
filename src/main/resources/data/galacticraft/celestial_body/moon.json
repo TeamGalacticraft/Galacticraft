@@ -24,11 +24,13 @@
     "display": {
       "type": "galacticraft-api:static_icon",
       "config": {
-        "texture": "galacticraft:moon",
+        "texture": "galacticraft:textures/gui/celestialbody/moon.png",
         "u": 0,
         "v": 0,
         "width": 16,
         "height": 16,
+        "tex_width": 16,
+        "tex_height": 16,
         "scale": 1
       }
     }

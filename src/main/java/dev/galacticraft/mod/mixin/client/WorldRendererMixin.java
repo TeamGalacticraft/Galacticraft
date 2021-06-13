@@ -53,8 +53,8 @@ import java.util.Random;
 @Mixin(WorldRenderer.class)
 @Environment(EnvType.CLIENT)
 public abstract class WorldRendererMixin implements WorldRendererAccessor {
-    private static final Identifier EARTH_TEXTURE = new Identifier(Constant.MOD_ID, "textures/gui/celestialbodies/earth.png");
-    private static final Identifier SUN_TEXTURE = new Identifier(Constant.MOD_ID, "textures/gui/celestialbodies/sun.png");
+    private static final Identifier EARTH_TEXTURE = new Identifier(Constant.MOD_ID, "textures/gui/celestialbody/earth.png");
+    private static final Identifier SUN_TEXTURE = new Identifier(Constant.MOD_ID, "textures/gui/celestialbody/sun.png");
 
     @Shadow @Final private MinecraftClient client;
     @Shadow private ClientWorld world;
