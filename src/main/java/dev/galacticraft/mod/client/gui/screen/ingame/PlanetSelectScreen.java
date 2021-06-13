@@ -280,7 +280,7 @@ public class PlanetSelectScreen extends Screen {
         return 12 + this.planetZoom;
     }
 
-    protected Vec2f getTranslationAdvanced(float partialTicks) {
+    protected Vec2f getTranslationAdvanced(float delta) {
         if (this.selectedBody == null) {
             if (this.ticksSinceUnselectionF > 0) {
                 float f0 = Math.max(0.0F, Math.min(this.ticksSinceUnselectionF / 100.0F, 1.0F));
@@ -296,7 +296,7 @@ public class PlanetSelectScreen extends Screen {
 
         if (!this.isZoomed()) {
             if (isChildBody(this.selectedBody)) {
-                Vec3f posVec = this.getCelestialBodyPosition(this.selectedBody.parent(manager), partialTicks);
+                Vec3f posVec = this.getCelestialBodyPosition(this.selectedBody.parent(manager), delta);
                 return new Vec2f(posVec.getX(), posVec.getY());
             }
 
@@ -311,11 +311,11 @@ public class PlanetSelectScreen extends Screen {
 
 
         if (this.lastSelectedBody != null) {
-            Vec3f pos3 = this.getCelestialBodyPosition(this.lastSelectedBody, partialTicks);
+            Vec3f pos3 = this.getCelestialBodyPosition(this.lastSelectedBody, delta);
             this.position = new Vec2f(pos3.getX(), pos3.getY());
         }
 
-        Vec3f posVec = this.getCelestialBodyPosition(this.selectedBody, partialTicks);
+        Vec3f posVec = this.getCelestialBodyPosition(this.selectedBody, delta);
         return lerpVec2(this.position, new Vec2f(posVec.getX(), posVec.getY()), Math.max(0.0F, Math.min((this.ticksSinceSelectionF - 18) / 7.5F, 1.0F)));
     }
 
@@ -471,9 +471,7 @@ public class PlanetSelectScreen extends Screen {
 
     @Override
     public boolean mouseDragged(double x, double y, int activeButton, double relOffsetX, double relOffsetY) {
-        if (mouseDragging && lastMovePosX != -1 && activeButton == 0) {
-            double deltaX = x - lastMovePosX;
-            double deltaY = y - lastMovePosY;
+        if (mouseDragging && lastMovePosX != -1 && activeButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             float scrollMultiplier = -Math.abs(this.zoom);
 
             if (this.zoom == -1.0F) {
@@ -487,11 +485,11 @@ public class PlanetSelectScreen extends Screen {
             if (this.zoom >= 0.15F) {
                 scrollMultiplier = -0.15F;
             }
-            translation = new Vec2f(translation.x + (float) (deltaX - deltaY) * scrollMultiplier * 0.2F, translation.y + (float) (deltaY + deltaX) * scrollMultiplier * 0.2F);
+            translation = new Vec2f(translation.x + (float) (relOffsetX - relOffsetY) * scrollMultiplier * 0.2F, translation.y + (float) (relOffsetY + relOffsetX) * scrollMultiplier * 0.2F);
         }
 
-        lastMovePosX = x;
-        lastMovePosY = y;
+        lastMovePosX = relOffsetX;
+        lastMovePosY = relOffsetY;
         return true;
     }
 
@@ -933,14 +931,14 @@ public class PlanetSelectScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        double wheel = amount / (this.selectedBody == null ? 500.0 : 250.0);
+        double wheel = amount / (this.selectedBody == null ? 5.0 : 2.5);
 
         if (wheel != 0) {
             if (this.selectedBody == null || (this.viewState == EnumView.PREVIEW && !this.isZoomed())) {
                 //Minimum zoom increased from 0.55F to 1F to allow zoom out to see other solar systems
-                this.zoom = (float) Math.min(Math.max(this.zoom + wheel * ((this.zoom + 2.0)) / 10.0, -1.0), 3);
+                this.zoom = (float) Math.min(Math.max(this.zoom + wheel * ((this.zoom + 2.0)) / 10.0, -1.0), 10);
             } else {
-                this.planetZoom = (float) Math.min(Math.max(this.planetZoom + wheel, -4.9), 5);
+                this.planetZoom = (float) Math.min(Math.max(this.planetZoom + wheel, -8), 8);
             }
             return true;
         }
@@ -984,14 +982,14 @@ public class PlanetSelectScreen extends Screen {
 
             this.setBlackBackground();
 
-            float gridSize = 7000F; //194.4F;
-            //TODO: Add dynamic map sizing, to allow the map to be small by default and expand when more distant solar systems are added.
-            this.drawGrid(matrices.peek().getModel(), gridSize, height / 3f / 3.5F);
-            this.drawCircles(matrices, delta);
-
             matrices.push();
             {
                 this.setIsometric(delta, matrices);
+                float gridSize = 7000F; //194.4F;
+                //TODO: Add dynamic map sizing, to allow the map to be small by default and expand when more distant solar systems are added.
+                this.drawGrid(matrices.peek().getModel(), gridSize, height / 3f / 3.5F);
+                this.drawCircles(matrices, delta);
+
                 Map<CelestialBody<?, ?>, Matrix4f> matrixMap = this.drawCelestialBodies(matrices, mouseX, mouseY, delta);
 
                 this.planetPosMap.clear();
@@ -1157,20 +1155,6 @@ public class PlanetSelectScreen extends Screen {
                 this.setupMatrix(body, matrices, hasParent ? 0.25F : 1.0F, delta);
                 CelestialDisplay<?, ?> display = body.display();
                 display.render(matrices, Tessellator.getInstance().getBuffer(), this.getWidthForCelestialBody(body), mouseX, mouseY, delta, s -> resetAlphaShader(alpha, s));
-                {
-                    resetAlphaShader(alpha, GameRenderer::getPositionTexShader);
-                    BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-                    Matrix4f model = matrices.peek().getModel();
-                    RenderSystem.setShaderTexture(0, new Identifier("galacticraft:textures/gui/celestialbody/moon.png"));
-                    int size = this.getWidthForCelestialBody(body);
-                    buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-                    buffer.vertex(model, -size, -size, 0).texture(0, 0).next();
-                    buffer.vertex(model, -size, size, 0).texture(0, 1).next();
-                    buffer.vertex(model, size, size, 0).texture(1, 1).next();
-                    buffer.vertex(model, size, -size, 0).texture(1, 0).next();
-                    buffer.end();
-                    BufferRenderer.draw(buffer);
-                }
                 matrixMap.put(body, new Matrix4f(matrices.peek().getModel()));
                 matrices.pop();
             }
@@ -1860,15 +1844,26 @@ public class PlanetSelectScreen extends Screen {
     /**
      * Rotates/translates/scales to appropriate values before drawing celestial bodies
      */
-    public void setIsometric(float partialTicks, MatrixStack matrices) {
+    public void setIsometric(float delta, MatrixStack matrices) {
         matrices.loadIdentity();
         matrices.translate(width / 2.0F, height / 2f, 0);
         matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(55));
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-45));
+        matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(45));
         float zoomLocal = this.getZoomAdvanced();
         this.zoom = zoomLocal;
         matrices.scale(1.1f + zoomLocal, 1.1F + zoomLocal, 1.1F + zoomLocal);
-        Vec2f cBodyPos = this.getTranslationAdvanced(partialTicks);
+        Vec2f cBodyPos = this.getTranslationAdvanced(delta);
+        this.position = cBodyPos;
+        matrices.translate(-cBodyPos.x, -cBodyPos.y, 0);
+    }
+
+    public void translateToBody(float delta, MatrixStack matrices) {
+        matrices.loadIdentity();
+        matrices.translate(width / 2.0F, height / 2f, 0);
+        float zoomLocal = this.getZoomAdvanced();
+        this.zoom = zoomLocal;
+        matrices.scale(1.1f + zoomLocal, 1.1F + zoomLocal, 1.1F + zoomLocal);
+        Vec2f cBodyPos = this.getTranslationAdvanced(delta);
         this.position = cBodyPos;
         matrices.translate(-cBodyPos.x, -cBodyPos.y, 0);
     }
@@ -1877,35 +1872,30 @@ public class PlanetSelectScreen extends Screen {
      * Draw background grid
      */
     public void drawGrid(Matrix4f model, float gridSize, float gridScale) {
-        resetShader(GameRenderer::getPositionColorShader);
-        RenderSystem.disableTexture();
-        RenderSystem.depthMask(false);
-        RenderSystem.disableCull();
+        resetShader(GameRenderer::getRenderTypeLinesShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.disableTexture();
         RenderSystem.lineWidth(1);
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
         buffer.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
 
         gridSize += gridScale / 2;
         for (float v = -gridSize; v <= gridSize; v += gridScale) {
-            buffer.vertex(/*model, */v, -gridSize, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(1, 0, 0).next();
-            buffer.vertex(/*model, */v, gridSize, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(1, 0, 0).next();
+            buffer.vertex(model, v, -gridSize, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(1, 0, 0).next();
+            buffer.vertex(model, v, gridSize, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(1, 0, 0).next();
 
-            buffer.vertex(/*model, */-gridSize, v, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(0, 1, 0).next();
-            buffer.vertex(/*model, */gridSize, v, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(0, 1, 0).next();
+            buffer.vertex(model, -gridSize, v, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(0, 1, 0).next();
+            buffer.vertex(model, gridSize, v, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(0, 1, 0).next();
         }
 
         buffer.end();
         BufferRenderer.draw(buffer);
-        RenderSystem.enableTexture();
     }
 
     /**
      * Draw orbit circles on gui
      */
     public void drawCircles(MatrixStack matrices, float delta) {
-        resetShader(GameRenderer::getPositionColorShader);
+        resetShader(GameRenderer::getRenderTypeLinesShader);
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.lineWidth(3);
         int count = 0;
@@ -1919,9 +1909,6 @@ public class PlanetSelectScreen extends Screen {
             if (body.parent(manager) != null) {
                 systemOffset = this.getCelestialBodyPosition(body.parent(manager), delta);
             }
-//            else if (isPlanet(body)) {
-//                systemOffset = this.getCelestialBodyPosition(body.parent(manager), delta); //star
-//            }
 
             float x = this.lineScale(body);
             if (Float.isNaN(x)) continue;
@@ -1930,7 +1917,6 @@ public class PlanetSelectScreen extends Screen {
             float alpha = getAlpha(body);
 
             if (alpha > 0.0F) {
-                matrices = new MatrixStack();
                 matrices.push();
                 float[] color = switch (count % 2) {
                     case 0 -> new float[]{0.0F / 1.4F, 0.6F / 1.4F, 1.0F / 1.4F, alpha / 1.4F};
@@ -1939,23 +1925,23 @@ public class PlanetSelectScreen extends Screen {
                 };
 
                 matrices.translate(systemOffset.getX(), systemOffset.getY(), systemOffset.getZ());
-
+//                if (body.parent(manager) != null) setupMatrix(body.parent(manager), matrices, delta);
                 BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-                buffer.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.POSITION_COLOR);
+                buffer.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.LINES);
 
                 float temp;
                 float x1 = x;
                 float y1 = y;
                 Matrix4f model = matrices.peek().getModel();
                 for (int i = 0; i < 90; i++) {
-                    buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]);
+                    buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]).normal(0, 1, 0).next();
 
                     temp = x;
                     x = cos * x - sin * y;
                     y = sin * temp + cos * y;
                 }
 
-                buffer.vertex(model, x1, y1, 0).color(color[0], color[1], color[2], color[3]); //LINE_LOOP is gone
+                buffer.vertex(model, x1, y1, 0).color(color[0], color[1], color[2], color[3]).normal(0, 1, 0).next(); //LINE_LOOP is gone
 
                 buffer.end();
                 BufferRenderer.draw(buffer);
@@ -2019,8 +2005,8 @@ public class PlanetSelectScreen extends Screen {
         Vec3f celestialBodyPosition = this.getCelestialBodyPosition(body, delta);
 //        matrices.translate(this.position.x, this.position.y, 0);
         matrices.translate(celestialBodyPosition.getX(), celestialBodyPosition.getY(), celestialBodyPosition.getZ());
+        matrices.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(55));
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(45));
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-55));
         if (scaleXZ != 1.0F) {
             matrices.scale(scaleXZ, scaleXZ, 1.0F);
         }

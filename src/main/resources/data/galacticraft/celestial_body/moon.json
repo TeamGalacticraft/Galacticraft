@@ -8,7 +8,7 @@
       "config": {
         "orbit_time": 655200,
         "distance": 1,
-        "planet": false
+        "planet": true
       }
     },
     "galaxy": "galacticraft-api:milky_way",
