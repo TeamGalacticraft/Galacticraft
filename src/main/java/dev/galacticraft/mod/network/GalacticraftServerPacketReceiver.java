@@ -61,11 +61,13 @@ import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
@@ -74,9 +76,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Handles server-bound (C2S) packets.
@@ -405,11 +404,12 @@ public class GalacticraftServerPacketReceiver {
                             if (((ServerPlayerEntityAccessor) player).getCelestialScreenState().canTravelTo(server.getRegistryManager(), parent) || ((ServerPlayerEntityAccessor) player).getCelestialScreenState() == RocketData.empty()) {
                                 if (orbitable.satelliteRecipe(parent.config()) != null) {
                                     SatelliteRecipe recipe = orbitable.satelliteRecipe(parent.config());
-                                    if (recipe.test(player.getInventory()) || player.isCreative()) {
+                                    if (player.isCreative() || recipe.test(player.getInventory())) {
                                         if (!player.isCreative()) {
-                                            List<ItemStack> ingredients = new ArrayList<>(recipe.ingredients());
-                                            for (ItemStack stack : ingredients) {
-                                                assert stack.getCount() == Inventories.remove(player.getInventory(), stack1 -> stack1.getItem() == stack.getItem(), stack.getCount(), false) : "Inventory had enough items, but cannot extract said items?!?";
+                                            Object2IntMap<Ingredient> ingredients = recipe.ingredients();
+                                            for (Object2IntMap.Entry<Ingredient> entry : ingredients.object2IntEntrySet()) {
+                                                if (entry.getIntValue() != Inventories.remove(player.getInventory(), stack1 -> entry.getKey().test(stack1), entry.getIntValue(), false))
+                                                    throw new IllegalStateException("Inventory had enough items, but cannot extract said items?!?");
                                             }
                                         }
                                         SatelliteType.registerSatellite(server, player, parent);

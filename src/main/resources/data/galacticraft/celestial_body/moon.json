@@ -22,7 +22,7 @@
     "gravity": 0.166,
     "access_weight": 1,
     "display": {
-      "type": "galacticraft-api:icon",
+      "type": "galacticraft-api:ico",
       "config": {
         "texture": "galacticraft:textures/gui/celestialbody/moon.png",
         "u": 0,

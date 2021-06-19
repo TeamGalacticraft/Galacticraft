@@ -27,8 +27,8 @@ import com.ibm.icu.text.ArabicShaping;
 import com.ibm.icu.text.ArabicShapingException;
 import com.ibm.icu.text.Bidi;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.galacticraft.api.accessor.ClientSatelliteAccessor;
 import dev.galacticraft.api.accessor.SatelliteAccessor;
+import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
 import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.satellite.Satellite;
@@ -45,6 +45,7 @@ import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.ColorUtil;
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -59,6 +60,7 @@ import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.TranslatableText;
@@ -457,12 +459,13 @@ public class PlanetSelectScreen extends Screen {
     }
 
     protected void teleportToSelectedBody() {
-        if (this.selectedBody != null && this.selectedBody.type() instanceof Landable landable && landable.world(this.selectedBody.config()) != null) {
+        if (this.selectedBody != null && this.selectedBody.type() instanceof Landable landable) {
+            landable.world(this.selectedBody.config());
             if (this.data.canTravelTo(manager, this.selectedBody) || this.data == RocketData.empty()) {
                 try {
                     assert this.client != null;
                     this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "planet_tp"), new PacketByteBuf(Unpooled.buffer()).writeIdentifier(celestialBodyRegistry.getId(this.selectedBody))));
-                    this.client.openScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite)this.selectedBody.type()).getCustomName(this.selectedBody.config()).asString() : this.selectedBody.name().getKey(), ((Landable) this.selectedBody.type()).world(this.selectedBody.config())));
+                    this.client.openScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite) this.selectedBody.type()).getCustomName(this.selectedBody.config()).asString() : this.selectedBody.name().getKey(), ((Landable) this.selectedBody.type()).world(this.selectedBody.config())));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1439,16 +1442,18 @@ public class PlanetSelectScreen extends Screen {
                         boolean validInputMaterials = true;
 
                         int i = 0;
-                        for (ItemStack ingredient : recipe.ingredients())
+                        for (Object2IntMap.Entry<Ingredient> entry : recipe.ingredients().object2IntEntrySet())
                         {
+                            Ingredient ingredient = entry.getKey();
                             int xPos = (int) (RHS - 95 + i * 93 / (double) recipe.ingredients().size() + 5);
                             int yPos = LHS + 154 + canCreateOffset;
 
                             boolean b = mousePosX >= xPos && mousePosX <= xPos + 16 && mousePosY >= yPos && mousePosY <= yPos + 16;
                             int amount = getAmountInInventory(ingredient);
                             DiffuseLighting.enableGuiDepthLighting();
-                            this.itemRenderer.renderGuiItemIcon(ingredient, xPos, yPos);
-                            this.itemRenderer.renderGuiItemOverlay(textRenderer, ingredient, xPos, yPos, null);
+                            ItemStack stack = ingredient.getMatchingStacksClient()[(int) (client.world.getTime() % (20 * ingredient.getMatchingStacksClient().length) / 20)];
+                            this.itemRenderer.renderGuiItemIcon(stack, xPos, yPos);
+                            this.itemRenderer.renderGuiItemOverlay(textRenderer, stack, xPos, yPos, null);
                             DiffuseLighting.disableGuiDepthLighting();
                             RenderSystem.enableBlend();
 
@@ -1457,7 +1462,7 @@ public class PlanetSelectScreen extends Screen {
                                 RenderSystem.enableDepthTest();
                                 matrices.push();
                                 matrices.translate(0, 0, 300);
-                                int k = this.textRenderer.getWidth(ingredient.getName());
+                                int k = this.textRenderer.getWidth(stack.getName());
                                 int j2 = mousePosX - k / 2;
                                 int k2 = mousePosY - 12;
                                 int i1 = 8;
@@ -1485,13 +1490,13 @@ public class PlanetSelectScreen extends Screen {
                                 this.fillGradient(matrices, j2 - 3, k2 - 3, j2 + k + 3, k2 - 3 + 1, k1, k1);
                                 this.fillGradient(matrices, j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
 
-                                this.textRenderer.draw(matrices, ingredient.getName(), j2, k2, WHITE);
+                                this.textRenderer.draw(matrices, stack.getName(), j2, k2, WHITE);
 
                                 matrices.pop();
                             }
 
-                            str = "" + ingredient.getCount();
-                            boolean valid = amount >= ingredient.getCount();
+                            str = "" + entry.getIntValue();
+                            boolean valid = amount >= entry.getIntValue();
                             if (!valid && validInputMaterials) {
                                 validInputMaterials = false;
                             }
@@ -1559,7 +1564,7 @@ public class PlanetSelectScreen extends Screen {
                 this.blit(width / 2 - 47, LHS, 94, 11, 0, 414, 188, 22, false, false);
                 if (this.selectedBody.type() instanceof Landable landable && landable.accessWeight(this.selectedBody.config()) >= 0 && (!(isSatellite(this.selectedBody)))) {
                     boolean canReach;
-                    if ((!this.data.canTravelTo(manager, this.selectedBody) && this.data != RocketData.empty()) || landable.world(this.selectedBody.config()) == null) {
+                    if ((!this.data.canTravelTo(manager, this.selectedBody) && this.data != RocketData.empty())) {
                         canReach = false;
                         RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1.0F);
                     } else {
@@ -1588,7 +1593,7 @@ public class PlanetSelectScreen extends Screen {
 
                 if (!this.mapMode) {
                     resetShader(GameRenderer::getPositionTexColorShader);
-                    if ((!this.data.canTravelTo(manager, this.selectedBody) && this.data != RocketData.empty()) || (!(this.selectedBody.type() instanceof Landable landable) || landable.world(this.selectedBody.config()) == null) || (isSatellite(this.selectedBody) && !((Satellite) this.selectedBody.type()).ownershipData(this.selectedBody.config()).canAccess(this.client.player)))
+                    if (!this.data.canTravelTo(manager, this.selectedBody) && this.data != RocketData.empty() || !(this.selectedBody.type() instanceof Landable) || isSatellite(this.selectedBody) && !((Satellite) this.selectedBody.type()).ownershipData(this.selectedBody.config()).canAccess(this.client.player))
                     {
                         RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
                     } else {
@@ -1709,7 +1714,7 @@ public class PlanetSelectScreen extends Screen {
             resetShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
             float brightness = child.equals(this.selectedBody) ? 0.2F : 0.0F;
-            if (child.type() instanceof Landable landable && (this.data.canTravelTo(manager, child) || this.data == RocketData.empty()) && landable.world(child.config()) != null) {
+            if (child.type() instanceof Landable landable && (this.data.canTravelTo(manager, child) || this.data == RocketData.empty())) {
                 RenderSystem.setShaderColor(0.0F, 0.6F + brightness, 0.0F, scale / 95.0F);
             } else {
                 RenderSystem.setShaderColor(0.6F + brightness, 0.0F, 0.0F, scale / 95.0F);
@@ -1748,12 +1753,12 @@ public class PlanetSelectScreen extends Screen {
         return yOffset;
     }
 
-    protected int getAmountInInventory(ItemStack ingredient) {
+    protected int getAmountInInventory(Ingredient ingredient) {
         int i = 0;
 
         for(int j = 0; j < Objects.requireNonNull(Objects.requireNonNull(this.client).player).getInventory().size(); ++j) {
             ItemStack stack = this.client.player.getInventory().getStack(j);
-            if (ingredient.isItemEqual(stack)) {
+            if (ingredient.test(stack)) {
                 i += stack.getCount();
             }
         }
