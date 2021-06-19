@@ -179,16 +179,17 @@ public class PlanetSelectScreen extends Screen {
     }
 
     protected String getGrandparentName() {
-        CelestialBody<?, ?> parent = this.selectedBody;
-        if (parent == null) return "null";
-        if (parent.parent(manager) != null) {
-            if (parent.parent(manager).parent(manager) != null) {
-                return I18n.translate(parent.parent(manager).parent(manager).name().getKey());
+        CelestialBody<?, ?> body = this.selectedBody;
+        if (body == null) return I18n.translate(BuiltinObjects.MILKY_WAY.name().getKey());
+        if (body.parent(manager) != null) {
+            if (body.parent(manager).parent(manager) != null) {
+                return I18n.translate(body.parent(manager).parent(manager).name().getKey());
             } else {
-                return I18n.translate(galaxyRegistry.get(parent.parent(manager).galaxy()).name().getKey());
+                return I18n.translate(galaxyRegistry.get(body.parent(manager).galaxy()).name().getKey());
             }
         } else {
-            return I18n.translate(galaxyRegistry.get(parent.galaxy()).name().getKey());
+            return "";
+//            return I18n.translate(galaxyRegistry.get(body.galaxy()).name().getKey());
         }
     }
 
@@ -209,7 +210,7 @@ public class PlanetSelectScreen extends Screen {
     }
 
     protected String parentName() {
-        if (this.selectedBody == null) return "null";
+        if (this.selectedBody == null) return "";
         if (this.selectedBody.parent(manager) != null) return I18n.translate(this.selectedBody.parent(manager).name().getKey());
         return I18n.translate(galaxyRegistry.get(this.selectedBody.galaxy()).name().getKey());
     }
@@ -472,20 +473,19 @@ public class PlanetSelectScreen extends Screen {
     @Override
     public boolean mouseDragged(double x, double y, int activeButton, double relOffsetX, double relOffsetY) {
         if (mouseDragging && lastMovePosX != -1 && activeButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            float scrollMultiplier = -Math.abs(this.zoom);
-
-            if (this.zoom == -1.0F) {
-                scrollMultiplier = -1.5F;
-            }
-
-            if (this.zoom >= -0.25F && this.zoom <= 0.15F) {
-                scrollMultiplier = -0.2F;
-            }
-
-            if (this.zoom >= 0.15F) {
-                scrollMultiplier = -0.15F;
-            }
-            translation = new Vec2f(translation.x + (float) (relOffsetX - relOffsetY) * scrollMultiplier * 0.2F, translation.y + (float) (relOffsetY + relOffsetX) * scrollMultiplier * 0.2F);
+            float scrollMultiplier = /*-Math.abs(this.zoom)*/ -1;
+//            if (this.zoom == -1.0F) {
+//                scrollMultiplier = -1.5F;
+//            }
+//
+//            if (this.zoom >= -0.25F && this.zoom <= 0.15F) {
+//                scrollMultiplier = -0.2F;
+//            }
+//
+//            if (this.zoom >= 0.15F) {
+//                scrollMultiplier = -0.15F;
+//            }
+            translation = new Vec2f(/*translation.x +*/ (float) (relOffsetX - relOffsetY) * scrollMultiplier * 0.2F, /*translation.y +*/ (float) (relOffsetY + relOffsetX) * scrollMultiplier * 0.2F);
         }
 
         lastMovePosX = relOffsetX;
@@ -936,7 +936,7 @@ public class PlanetSelectScreen extends Screen {
         if (wheel != 0) {
             if (this.selectedBody == null || (this.viewState == EnumView.PREVIEW && !this.isZoomed())) {
                 //Minimum zoom increased from 0.55F to 1F to allow zoom out to see other solar systems
-                this.zoom = (float) Math.min(Math.max(this.zoom + wheel * ((this.zoom + 2.0)) / 10.0, -1.0), 10);
+                this.zoom = (float) Math.min(Math.max(this.zoom + wheel * ((this.zoom + 2.0)) / 10.0, -0.0), 10);
             } else {
                 this.planetZoom = (float) Math.min(Math.max(this.planetZoom + wheel, -8), 8);
             }
@@ -1174,6 +1174,7 @@ public class PlanetSelectScreen extends Screen {
     public void drawBorder(MatrixStack matrices) {
         resetShader(GameRenderer::getPositionColorShader);
         RenderSystem.colorMask(true, true, true, false);
+        RenderSystem.disableBlend();
         fill(matrices, 0, 0, PlanetSelectScreen.BORDER_SIZE, height, GREY2);
         fill(matrices, width - PlanetSelectScreen.BORDER_SIZE, 0, width, height, GREY2);
         fill(matrices, 0, 0, width, PlanetSelectScreen.BORDER_SIZE, GREY2);
@@ -1183,6 +1184,7 @@ public class PlanetSelectScreen extends Screen {
         fill(matrices, width - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE, PlanetSelectScreen.BORDER_SIZE, width - PlanetSelectScreen.BORDER_SIZE, height - PlanetSelectScreen.BORDER_SIZE, GREY1);
         fill(matrices, PlanetSelectScreen.BORDER_SIZE + PlanetSelectScreen.BORDER_EDGE_SIZE, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE, width - PlanetSelectScreen.BORDER_SIZE, height - PlanetSelectScreen.BORDER_SIZE, GREY1);
         RenderSystem.colorMask(true, true, true, true);
+        RenderSystem.enableBlend();
     }
 
     public void drawButtons(MatrixStack matrices, int mousePosX, int mousePosY) {
@@ -1198,7 +1200,7 @@ public class PlanetSelectScreen extends Screen {
             RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
             RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
             this.blit(width / 2 - 43, LHS, 86, 15, 266, 0, 172, 29, false, false);
-            String str = I18n.translate("gui.message.catalog").toUpperCase();
+            String str = I18n.translate("ui.galacticraft.celestialselection.catalog").toUpperCase();
             this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f, LHS + this.textRenderer.fontHeight / 2f, WHITE);
 
             if (this.selectedBody != null) {
@@ -1213,7 +1215,7 @@ public class PlanetSelectScreen extends Screen {
                 }
 
                 this.blit(LHS, LHS, 88, 13, 0, 392, 148, 22, false, false);
-                str = I18n.translate("gui.message.back").toUpperCase();
+                str = I18n.translate("ui.galacticraft.celestialselection.back").toUpperCase();
                 this.textRenderer.draw(matrices, str, LHS + 45 - this.textRenderer.getWidth(str) / 2f, LHS + this.textRenderer.fontHeight / 2f - 2, WHITE);
 
                 resetShader(GameRenderer::getPositionTexColorShader);
@@ -1238,47 +1240,47 @@ public class PlanetSelectScreen extends Screen {
 //			str = this.selectedBody.getLocalizedName();
 //			this.textRenderer.draw(matrices, str, posX + 20, textRendererPosY, GCCoreUtil.to32BitColor(255, 255, 255, 255));
 
-                str = I18n.translate("gui.message.daynightcycle") + ":";
+                str = I18n.translate("ui.galacticraft.celestialselection.daynightcycle") + ":";
                 this.textRenderer.draw(matrices, str, posX + 5, textRendererPosY + 14, CYAN);
-                str = I18n.translate("gui.message." + this.selectedBody.name().getKey() + ".daynightcycle.0");
+                str = I18n.translate("ui.galacticraft.celestialselection." + this.selectedBody.name().getKey() + ".daynightcycle.0");
                 this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 25, WHITE);
-                str = I18n.translate("gui.message." + this.selectedBody.name().getKey() + ".daynightcycle.1");
+                str = I18n.translate("ui.galacticraft.celestialselection." + this.selectedBody.name().getKey() + ".daynightcycle.1");
                 if (!str.isEmpty()) {
                     this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 36, WHITE);
                 }
 
-                str = I18n.translate("gui.message.surfacegravity") + ":";
+                str = I18n.translate("ui.galacticraft.celestialselection.surfacegravity") + ":";
                 this.textRenderer.draw(matrices, str, posX + 5, textRendererPosY + 50, CYAN);
-                str = I18n.translate("gui.message." + this.selectedBody.name().getKey() + ".surfacegravity.0");
+                str = I18n.translate("ui.galacticraft.celestialselection." + this.selectedBody.name().getKey() + ".surfacegravity.0");
                 this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 61, WHITE);
-                str = I18n.translate("gui.message." + this.selectedBody.name().getKey() + ".surfacegravity.1");
+                str = I18n.translate("ui.galacticraft.celestialselection." + this.selectedBody.name().getKey() + ".surfacegravity.1");
                 if (!str.isEmpty()) {
                     this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 72, WHITE);
                 }
 
-                str = I18n.translate("gui.message.surfacecomposition") + ":";
+                str = I18n.translate("ui.galacticraft.celestialselection.surfacecomposition") + ":";
                 this.textRenderer.draw(matrices, str, posX + 5, textRendererPosY + 88, CYAN);
-                str = I18n.translate("gui.message." + this.selectedBody.name().getKey() + ".surfacecomposition.0");
+                str = I18n.translate("ui.galacticraft.celestialselection." + this.selectedBody.name().getKey() + ".surfacecomposition.0");
                 this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 99, WHITE);
-                str = I18n.translate("gui.message." + this.selectedBody.name().getKey() + ".surfacecomposition.1");
+                str = I18n.translate("ui.galacticraft.celestialselection." + this.selectedBody.name().getKey() + ".surfacecomposition.1");
                 if (!str.isEmpty()) {
                     this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 110, WHITE);
                 }
 
-                str = I18n.translate("gui.message.atmosphere") + ":";
+                str = I18n.translate("ui.galacticraft.celestialselection.atmosphere") + ":";
                 this.textRenderer.draw(matrices, str, posX + 5, textRendererPosY + 126, CYAN);
-                str = I18n.translate("gui.message." + this.selectedBody.name().getKey() + ".atmosphere.0");
+                str = I18n.translate("ui.galacticraft.celestialselection." + this.selectedBody.name().getKey() + ".atmosphere.0");
                 this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 137, WHITE);
-                str = I18n.translate("gui.message." + this.selectedBody.name().getKey() + ".atmosphere.1");
+                str = I18n.translate("ui.galacticraft.celestialselection." + this.selectedBody.name().getKey() + ".atmosphere.1");
                 if (!str.isEmpty()) {
                     this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 148, WHITE);
                 }
 
-                str = I18n.translate("gui.message.meansurfacetemp") + ":";
+                str = I18n.translate("ui.galacticraft.celestialselection.meansurfacetemp") + ":";
                 this.textRenderer.draw(matrices, str, posX + 5, textRendererPosY + 165, CYAN);
-                str = I18n.translate("gui.message." + this.selectedBody.name().getKey() + ".meansurfacetemp.0");
+                str = I18n.translate("ui.galacticraft.celestialselection." + this.selectedBody.name().getKey() + ".meansurfacetemp.0");
                 this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 176, WHITE);
-                str = I18n.translate("gui.message." + this.selectedBody.name().getKey() + ".meansurfacetemp.1");
+                str = I18n.translate("ui.galacticraft.celestialselection." + this.selectedBody.name().getKey() + ".meansurfacetemp.1");
                 if (!str.isEmpty()) {
                     this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 187, WHITE);
                 }
@@ -1296,7 +1298,7 @@ public class PlanetSelectScreen extends Screen {
             RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
             RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
             this.blit(LHS, LHS, 74, 11, 0, 392, 148, 22, false, false);
-            str = I18n.translate("gui.message.catalog").toUpperCase();
+            str = I18n.translate("ui.galacticraft.celestialselection.catalog").toUpperCase();
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             this.textRenderer.draw(matrices, str, LHS + 40 - textRenderer.getWidth(str) / 2f, LHS + 1, WHITE);
 
@@ -1331,7 +1333,7 @@ public class PlanetSelectScreen extends Screen {
                 RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
                 RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
                 this.blit(RHS - 74, LHS, 74, 11, 0, 392, 148, 22, true, false);
-                str = I18n.translate("gui.message.exit").toUpperCase();
+                str = I18n.translate("ui.galacticraft.celestialselection.exit").toUpperCase();
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 this.textRenderer.draw(matrices, str, RHS - 40 - textRenderer.getWidth(str) / 2f, LHS + 1, WHITE);
             }
@@ -1363,10 +1365,10 @@ public class PlanetSelectScreen extends Screen {
                     RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
 
                     if (((SatelliteAccessor) this.client.getNetworkHandler()).satellites().values().stream().noneMatch(s -> s.parent(manager) == this.selectedBody.parent(manager) && s.type().ownershipData(s.config()).canAccess(this.client.player))) {
-                        str = I18n.translate("gui.message.select_ss");
+                        str = I18n.translate("ui.galacticraft.celestialselection.select_ss");
                         this.drawSplitString(matrices, str, RHS - 47, LHS + 20, 91, WHITE, false, false);
                     } else {
-                        str = I18n.translate("gui.message.ss_owner");
+                        str = I18n.translate("ui.galacticraft.celestialselection.ss_owner");
                         this.textRenderer.draw(matrices, str, RHS - 85, LHS + 18, WHITE);
                         str = this.selectedStationOwner;
                         this.textRenderer.draw(matrices, str, RHS - 47 - this.textRenderer.getWidth(str) / 2f, LHS + 30, WHITE);
@@ -1415,7 +1417,7 @@ public class PlanetSelectScreen extends Screen {
                 if (this.canCreateSpaceStation(this.selectedBody) && (!(isSatellite(this.selectedBody))))
                 {
                     RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
-                    int canCreateLength = Math.max(0, this.drawSplitString(matrices, I18n.translate("gui.message.can_create_space_station"), 0, 0, 91, 0, true, true) - 2);
+                    int canCreateLength = Math.max(0, this.drawSplitString(matrices, I18n.translate("ui.galacticraft.celestialselection.can_create_space_station"), 0, 0, 91, 0, true, true) - 2);
                     canCreateOffset = canCreateLength * this.textRenderer.fontHeight;
                     resetShader(GameRenderer::getPositionTexColorShader);
                     RenderSystem.setShaderTexture(0, guiMain1);
@@ -1522,16 +1524,16 @@ public class PlanetSelectScreen extends Screen {
                         this.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
 
                         int color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
-                        this.drawSplitString(matrices, I18n.translate("gui.message.can_create_space_station"), RHS - 48, LHS + 137, 91, ColorUtil.to32BitColor(255, color, 255, color), true, false);
+                        this.drawSplitString(matrices, I18n.translate("ui.galacticraft.celestialselection.can_create_space_station"), RHS - 48, LHS + 137, 91, ColorUtil.to32BitColor(255, color, 255, color), true, false);
 
                         if (!mapMode)
                         {
-                            this.drawSplitString(matrices, I18n.translate("gui.message.create_ss").toUpperCase(), RHS - 48, LHS + 185 + canCreateOffset, 91, WHITE, false, false);
+                            this.drawSplitString(matrices, I18n.translate("ui.galacticraft.celestialselection.create_ss").toUpperCase(), RHS - 48, LHS + 185 + canCreateOffset, 91, WHITE, false, false);
                         }
                     }
                     else
                     {
-                        this.drawSplitString(matrices, I18n.translate("gui.message.cannot_create_space_station"), RHS - 48, LHS + 138, 91, WHITE, true, false);
+                        this.drawSplitString(matrices, I18n.translate("ui.galacticraft.celestialselection.cannot_create_space_station"), RHS - 48, LHS + 138, 91, WHITE, true, false);
                     }
                 }
 
@@ -1540,7 +1542,7 @@ public class PlanetSelectScreen extends Screen {
                 RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.3F - Math.min(0.3F, this.ticksSinceSelectionF / 50.0F));
                 this.blit(LHS, LHS, 74, 11, 0, 392, 148, 22, false, false);
-                str = I18n.translate("gui.message.catalog").toUpperCase();
+                str = I18n.translate("ui.galacticraft.celestialselection.catalog").toUpperCase();
                 this.textRenderer.draw(matrices, str, LHS + 40 - textRenderer.getWidth(str) / 2f, LHS + 1, WHITE);
 
                 // Top bar title:
@@ -1566,14 +1568,14 @@ public class PlanetSelectScreen extends Screen {
                     }
                     this.blit(width / 2 - 30, LHS + 11, 30, 11, 0, 414, 60, 22, false, false);
                     this.blit(width / 2, LHS + 11, 30, 11, 128, 414, 60, 22, false, false);
-                    str = I18n.translate("gui.message.tier", landable.accessWeight(this.selectedBody.config()) == -1 ? "?" : landable.accessWeight(this.selectedBody.config()));
+                    str = I18n.translate("ui.galacticraft.celestialselection.tier", landable.accessWeight(this.selectedBody.config()) == -1 ? "?" : landable.accessWeight(this.selectedBody.config()));
                     this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f, LHS + 13, canReach ? GREY4 : RED3);
                 }
 
                 str = I18n.translate(this.selectedBody.name().getKey());
 
                 if (isSatellite(this.selectedBody)) {
-                    str = I18n.translate("gui.message.r").toUpperCase();
+                    str = I18n.translate("ui.galacticraft.celestialselection.r").toUpperCase();
                 }
 
                 this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f, LHS + 2, WHITE);
@@ -1595,7 +1597,7 @@ public class PlanetSelectScreen extends Screen {
 
                     RenderSystem.setShaderTexture(0, PlanetSelectScreen.guiMain0);
                     this.blit(RHS - 74, LHS, 74, 11, 0, 392, 148, 22, true, false);
-                    str = I18n.translate("gui.message.launch").toUpperCase();
+                    str = I18n.translate("ui.galacticraft.celestialselection.launch").toUpperCase();
                     RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                     this.textRenderer.draw(matrices, str, RHS - 40 - textRenderer.getWidth(str) / 2f, LHS + 2, WHITE);
                 }
@@ -1617,13 +1619,13 @@ public class PlanetSelectScreen extends Screen {
                     boolean flag0 = getVisibleSatellitesForCelestialBody(this.selectedBody).size() > 0;
                     boolean flag1 = isPlanet(this.selectedBody) && getChildren(this.selectedBody).size() > 0;
                     if (flag0 && flag1) {
-                        this.drawSplitString(matrices, I18n.translate("gui.message.click_again.0"), RHS - 182 + 41, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE + 2 - sliderPos, 79, GREY5, false, false);
+                        this.drawSplitString(matrices, I18n.translate("ui.galacticraft.celestialselection.click_again.0"), RHS - 182 + 41, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE + 2 - sliderPos, 79, GREY5, false, false);
                     } else if (!flag0 && flag1) {
-                        this.drawSplitString(matrices, I18n.translate("gui.message.click_again.1"), RHS - 182 + 41, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE + 6 - sliderPos, 79, GREY5, false, false);
+                        this.drawSplitString(matrices, I18n.translate("ui.galacticraft.celestialselection.click_again.1"), RHS - 182 + 41, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE + 6 - sliderPos, 79, GREY5, false, false);
                     } else if (flag0) {
-                        this.drawSplitString(matrices, I18n.translate("gui.message.click_again.2"), RHS - 182 + 41, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE + 6 - sliderPos, 79, GREY5, false, false);
+                        this.drawSplitString(matrices, I18n.translate("ui.galacticraft.celestialselection.click_again.2"), RHS - 182 + 41, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE + 6 - sliderPos, 79, GREY5, false, false);
                     } else {
-                        this.drawSplitString(matrices, I18n.translate("gui.message.click_again.3"), RHS - 182 + 41, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE + 11 - sliderPos, 79, GREY5, false, false);
+                        this.drawSplitString(matrices, I18n.translate("ui.galacticraft.celestialselection.click_again.3"), RHS - 182 + 41, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE + 11 - sliderPos, 79, GREY5, false, false);
                     }
                 }
 
@@ -1637,11 +1639,11 @@ public class PlanetSelectScreen extends Screen {
                     this.blit(width / 2 - 90 + 8, this.height / 2 - 38 + 18, 161, 13, 159, 67, 161, 13, false, false);
                     this.blit(width / 2 - 90 + 17, this.height / 2 - 38 + 59, 72, 12, 159, 80, 72, 12, true, false);
                     this.blit(width / 2, this.height / 2 - 38 + 59, 72, 12, 159, 80, 72, 12, false, false);
-                    str = I18n.translate("gui.message.assign");
+                    str = I18n.translate("ui.galacticraft.celestialselection.assign");
                     this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f, this.height / 2f - 35, WHITE);
-                    str = I18n.translate("gui.message.apply");
+                    str = I18n.translate("ui.galacticraft.celestialselection.apply");
                     this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f - 36, this.height / 2f + 23, WHITE);
-                    str = I18n.translate("gui.message.cancel");
+                    str = I18n.translate("ui.galacticraft.celestialselection.cancel");
                     this.textRenderer.draw(matrices, str, width / 2f + 36 - this.textRenderer.getWidth(str) / 2f, this.height / 2f + 23, WHITE);
 
                     if (this.renamingString == null) {
@@ -1880,11 +1882,11 @@ public class PlanetSelectScreen extends Screen {
 
         gridSize += gridScale / 2;
         for (float v = -gridSize; v <= gridSize; v += gridScale) {
-            buffer.vertex(model, v, -gridSize, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(1, 0, 0).next();
-            buffer.vertex(model, v, gridSize, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(1, 0, 0).next();
+            buffer.vertex(model, v, -gridSize, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(1, 1, 0).next();
+            buffer.vertex(model, v, gridSize, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(1, 1, 0).next();
 
-            buffer.vertex(model, -gridSize, v, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(0, 1, 0).next();
-            buffer.vertex(model, gridSize, v, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(0, 1, 0).next();
+            buffer.vertex(model, -gridSize, v, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(1, 0, 1).next();
+            buffer.vertex(model, gridSize, v, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(1, 0, 1).next();
         }
 
         buffer.end();
@@ -1897,12 +1899,12 @@ public class PlanetSelectScreen extends Screen {
     public void drawCircles(MatrixStack matrices, float delta) {
         resetShader(GameRenderer::getRenderTypeLinesShader);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        RenderSystem.lineWidth(3);
+        RenderSystem.lineWidth(5);
         int count = 0;
 
-        final float theta = (float) (2 * Math.PI / 90);
-        final float cos = (float) Math.cos(theta);
-        final float sin = (float) Math.sin(theta);
+        float theta = (float) (2f * Math.PI / 90f);
+        float cos = (float) Math.cos(theta);
+        float sin = (float) Math.sin(theta);
 
         for (CelestialBody<?, ?> body : this.bodiesToRender) {
             Vec3f systemOffset = Vec3f.ZERO;
@@ -1918,14 +1920,14 @@ public class PlanetSelectScreen extends Screen {
 
             if (alpha > 0.0F) {
                 matrices.push();
+                matrices.translate(systemOffset.getX(), systemOffset.getY(), systemOffset.getZ());
+                matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(45));
                 float[] color = switch (count % 2) {
                     case 0 -> new float[]{0.0F / 1.4F, 0.6F / 1.4F, 1.0F / 1.4F, alpha / 1.4F};
                     case 1 -> new float[]{0.3F / 1.4F, 0.8F / 1.4F, 1.0F / 1.4F, alpha / 1.4F};
                     default -> throw new IllegalStateException("Unexpected value: " + count % 2);
                 };
 
-                matrices.translate(systemOffset.getX(), systemOffset.getY(), systemOffset.getZ());
-//                if (body.parent(manager) != null) setupMatrix(body.parent(manager), matrices, delta);
                 BufferBuilder buffer = Tessellator.getInstance().getBuffer();
                 buffer.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.LINES);
 
@@ -1934,14 +1936,44 @@ public class PlanetSelectScreen extends Screen {
                 float y1 = y;
                 Matrix4f model = matrices.peek().getModel();
                 for (int i = 0; i < 90; i++) {
-                    buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]).normal(0, 1, 0).next();
+                    buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]).normal(-1, 1, 0).next();
+
+                    temp = x;
+                    x = cos * x - sin * y;
+                    y = sin * temp + cos * y;
+                }
+                x = x1;
+                y = y1;
+                for (int i = 0; i < 90; i++) {
+                    buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]).normal(1, 1, 0).next();
+
+                    temp = x;
+                    x = cos * x - sin * y;
+                    y = sin * temp + cos * y;
+                }
+                x = x1;
+                y = y1;
+                theta = (float) (2f * Math.PI / -90f);
+                cos = (float) Math.cos(theta);
+                sin = (float) Math.sin(theta);
+                for (int i = 0; i < 90; i++) {
+                    buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]).normal(-1, 1, 0).next();
+
+                    temp = x;
+                    x = cos * x - sin * y;
+                    y = sin * temp + cos * y;
+                }
+                x = x1;
+                y = y1;
+                for (int i = 0; i < 90; i++) {
+                    buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]).normal(1, 1, 0).next();
 
                     temp = x;
                     x = cos * x - sin * y;
                     y = sin * temp + cos * y;
                 }
 
-                buffer.vertex(model, x1, y1, 0).color(color[0], color[1], color[2], color[3]).normal(0, 1, 0).next(); //LINE_LOOP is gone
+                buffer.vertex(model, x1, y1, 0).color(color[0], color[1], color[2], color[3]).normal(1, 1, 0).next(); //LINE_LOOP is gone
 
                 buffer.end();
                 BufferRenderer.draw(buffer);
@@ -2003,7 +2035,6 @@ public class PlanetSelectScreen extends Screen {
 
     protected void setupMatrix(CelestialBody<?, ?> body, MatrixStack matrices, float scaleXZ, float delta) {
         Vec3f celestialBodyPosition = this.getCelestialBodyPosition(body, delta);
-//        matrices.translate(this.position.x, this.position.y, 0);
         matrices.translate(celestialBodyPosition.getX(), celestialBodyPosition.getY(), celestialBodyPosition.getZ());
         matrices.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(55));
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(45));
