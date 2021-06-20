@@ -1097,12 +1097,12 @@ public class CelestialSelectionScreen extends Screen {
         }
         assert this.client != null;
         assert this.client.world != null;
-        Vec3f cBodyPos = new Vec3f((float)cBody.position().x(this.client.world.getTime() * 500, delta), (float)cBody.position().y(this.client.world.getTime() * 500, delta), 0);
+        Vec3f cBodyPos = new Vec3f((float)cBody.position().x(this.client.world.getTime(), delta), (float)cBody.position().y(this.client.world.getTime(), delta), 0);
 
         if (cBody.parent(manager) != null) {
             cBodyPos.add(this.getCelestialBodyPosition(cBody.parent(manager), delta));
         } else {
-            cBodyPos.add((float)this.galaxyRegistry.get(cBody.galaxy()).position().x(this.client.world.getTime() * 500, delta), (float)this.galaxyRegistry.get(cBody.galaxy()).position().y(this.client.world.getTime() * 500, delta), 0);
+            cBodyPos.add((float)this.galaxyRegistry.get(cBody.galaxy()).position().x(this.client.world.getTime(), delta), (float)this.galaxyRegistry.get(cBody.galaxy()).position().y(this.client.world.getTime(), delta), 0);
         }
         return cBodyPos;
     }
