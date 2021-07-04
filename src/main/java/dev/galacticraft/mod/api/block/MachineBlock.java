@@ -78,6 +78,7 @@ import java.util.List;
  */
 public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWithEntity {
     public static final BooleanProperty ARBITRARY_BOOLEAN_PROPERTY = BooleanProperty.of("update");
+    public static final BooleanProperty ACTIVE = BooleanProperty.of("active");
 
     protected MachineBlock(Settings settings) {
         super(settings);
@@ -86,7 +87,7 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(Properties.HORIZONTAL_FACING, ARBITRARY_BOOLEAN_PROPERTY);
+        builder.add(Properties.HORIZONTAL_FACING, ARBITRARY_BOOLEAN_PROPERTY, ACTIVE);
     }
 
     @Override
@@ -94,7 +95,7 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, context.getPlayerFacing().getOpposite()).with(ARBITRARY_BOOLEAN_PROPERTY, false);
+        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, context.getPlayerFacing().getOpposite()).with(ARBITRARY_BOOLEAN_PROPERTY, false).with(ACTIVE, false);
     }
 
     @Override

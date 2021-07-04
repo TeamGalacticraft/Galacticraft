@@ -38,12 +38,23 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
         this.addProperty(new Property() {
             @Override
             public int get() {
-                return machine.progress;
+                return machine.progress();
             }
 
             @Override
             public void set(int value) {
-                machine.progress = value;
+                machine.progress(value);
+            }
+        });
+        this.addProperty(new Property() {
+            @Override
+            public int get() {
+                return machine.maxProgress();
+            }
+
+            @Override
+            public void set(int value) {
+                machine.maxProgress(value);
             }
         });
 

@@ -39,24 +39,24 @@ public class ElectricFurnaceScreenHandler extends MachineScreenHandler<ElectricF
         this.addProperty(new Property() {
             @Override
             public int get() {
-                return machine.cookTime;
+                return machine.progress();
             }
 
             @Override
             public void set(int value) {
-                machine.cookTime = value;
+                machine.progress(value);
             }
         });
 
         this.addProperty(new Property() {
             @Override
             public int get() {
-                return machine.cookLength;
+                return machine.maxProgress();
             }
 
             @Override
             public void set(int value) {
-                machine.cookLength = value;
+                machine.maxProgress(value);
             }
         });
 

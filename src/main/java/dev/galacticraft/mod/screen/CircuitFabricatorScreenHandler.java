@@ -36,18 +36,31 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
     public final Property progress = new Property() {
         @Override
         public int get() {
-            return CircuitFabricatorScreenHandler.this.machine.progress;
+            return CircuitFabricatorScreenHandler.this.machine.progress();
         }
 
         @Override
         public void set(int value) {
-            CircuitFabricatorScreenHandler.this.machine.progress = value;
+            CircuitFabricatorScreenHandler.this.machine.progress(value);
+        }
+    };
+
+    public final Property maxProgress = new Property() {
+        @Override
+        public int get() {
+            return CircuitFabricatorScreenHandler.this.machine.maxProgress();
+        }
+
+        @Override
+        public void set(int value) {
+            CircuitFabricatorScreenHandler.this.machine.maxProgress(value);
         }
     };
 
     public CircuitFabricatorScreenHandler(int syncId, PlayerEntity player, CircuitFabricatorBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerType.CIRCUIT_FABRICATOR_HANDLER);
         this.addProperty(this.progress);
+        this.addProperty(this.maxProgress);
         this.addPlayerInventorySlots(0, 94);
     }
 

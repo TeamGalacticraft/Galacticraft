@@ -29,11 +29,13 @@ import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.CircuitFabricatorScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.*;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.Matrix4f;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -70,7 +72,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     private static final int QUINARY_PROGRESS_V = 197;
     private static final int QUINARY_PROGRESS_X = 140;
     private static final int QUINARY_PROGRESS_Y = 51;
-    private static final int QUINARY_PROGRESS_HEIGHT = -19;
+    private static final int QUINARY_PROGRESS_HEIGHT = 19;
     private static final int SENARY_PROGRESS_U = 110;
     private static final int SENARY_PROGRESS_V = 220;
     private static final int SENARY_PROGRESS_X = 158;
@@ -99,8 +101,8 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     private void drawProgressBar(MatrixStack matrices) {
         assert this.client != null;
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
-        if (this.handler.machine.getProgress() > 0) {
-            int progress = (int) ((((double) this.handler.machine.getProgress()) / ((double) this.handler.machine.getMaxProgress())) * 140.0);
+        if (this.handler.machine.progress() > 0) {
+            float progress = (float) ((((double) this.handler.machine.progress()) / ((double) this.handler.machine.maxProgress())) * 140.0);
             if (progress <= 24) {
                 this.drawTexture(matrices, this.x + INITIAL_PROGRESS_X, this.y + INITIAL_PROGRESS_Y, INITIAL_PROGRESS_U, INITIAL_PROGRESS_V, progress, PROGRESS_SIZE);
             } else {
@@ -119,7 +121,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
                             this.drawTexture(matrices, this.x + QUATERNARY_PROGRESS_X, this.y + QUATERNARY_PROGRESS_Y, QUATERNARY_PROGRESS_U, QUATERNARY_PROGRESS_V, PROGRESS_SIZE, Math.min(14, progress - (24 + 19 + 18 + 17 + 3)));
                         }
                         if (progress > 24 + 19 + 18 + 44 + 3) {
-                            this.drawTexture(matrices, this.x + QUINARY_PROGRESS_X, this.y + QUINARY_PROGRESS_Y - Math.min(19, progress - (24 + 19 + 18 + 44 + 3)), QUINARY_PROGRESS_U, QUINARY_PROGRESS_V, PROGRESS_SIZE, Math.min(19, progress - (24 + 19 + 18 + 44 + 3)));
+                            this.drawTexture(matrices, this.x + QUINARY_PROGRESS_X, (int) (this.y + QUINARY_PROGRESS_Y - Math.floor(Math.min(QUINARY_PROGRESS_HEIGHT, progress - (24 + 19 + 18 + 44 + 3)))), QUINARY_PROGRESS_U, QUINARY_PROGRESS_V, PROGRESS_SIZE, Math.min(19, progress - (24 + 19 + 18 + 44 + 3)));
                         }
                         if (progress > 24 + 19 + 18 + 65) {
                             this.drawTexture(matrices, this.x + SENARY_PROGRESS_X, this.y + SENARY_PROGRESS_Y, SENARY_PROGRESS_U, SENARY_PROGRESS_V, PROGRESS_SIZE, progress - (24 + 19 + 18 + 65));
@@ -128,5 +130,29 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
                 }
             }
         }
+    }
+
+    public void drawTexture(MatrixStack matrices, int x, int y, int u, int v, float width, float height) {
+        drawTexture(matrices, x, y, this.getZOffset(), (float)u, (float)v, width, height, 256, 256);
+    }
+
+    public static void drawTexture(MatrixStack matrices, int x, int y, int z, float u, float v, float width, float height, int textureHeight, int textureWidth) {
+        drawTexture(matrices, x, x + width, y, y + height, z, width, height, u, v, textureWidth, textureHeight);
+    }
+
+    private static void drawTexture(MatrixStack matrices, float x0, float y0, float x1, float y1, float z, float regionWidth, float regionHeight, float u, float v, int textureWidth, int textureHeight) {
+        drawTexturedQuad(matrices.peek().getModel(), x0, y0, x1, y1, z, (u + 0.0F) / (float)textureWidth, (u + regionWidth) / (float)textureWidth, (v + 0.0F) / (float)textureHeight, (v + regionHeight) / (float)textureHeight);
+    }
+
+    private static void drawTexturedQuad(Matrix4f matrices, float x0, float x1, float y0, float y1, float z, float u0, float u1, float v0, float v1) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+        bufferBuilder.vertex(matrices, x0, y1, z).texture(u0, v1).next();
+        bufferBuilder.vertex(matrices, x1, y1, z).texture(u1, v1).next();
+        bufferBuilder.vertex(matrices, x1, y0, z).texture(u1, v0).next();
+        bufferBuilder.vertex(matrices, x0, y0, z).texture(u0, v0).next();
+        bufferBuilder.end();
+        BufferRenderer.draw(bufferBuilder);
     }
 }

@@ -36,12 +36,23 @@ public class CompressorScreenHandler extends MachineScreenHandler<CompressorBloc
     public final Property progress = new Property() {
         @Override
         public int get() {
-            return CompressorScreenHandler.this.machine.progress;
+            return CompressorScreenHandler.this.machine.progress();
         }
 
         @Override
         public void set(int value) {
-            CompressorScreenHandler.this.machine.progress = value;
+            CompressorScreenHandler.this.machine.progress(value);
+        }
+    };
+    public final Property maxProgress = new Property() {
+        @Override
+        public int get() {
+            return CompressorScreenHandler.this.machine.maxProgress();
+        }
+
+        @Override
+        public void set(int value) {
+            CompressorScreenHandler.this.machine.maxProgress(value);
         }
     };
     public final Property fuelTime = new Property() {
@@ -58,8 +69,9 @@ public class CompressorScreenHandler extends MachineScreenHandler<CompressorBloc
 
     public CompressorScreenHandler(int syncId, PlayerEntity player, CompressorBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerType.COMPRESSOR_HANDLER);
-        this.addProperty(progress);
-        this.addProperty(fuelTime);
+        this.addProperty(this.progress);
+        this.addProperty(this.maxProgress);
+        this.addProperty(this.fuelTime);
         this.addPlayerInventorySlots(0, 110);
     }
 

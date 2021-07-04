@@ -26,14 +26,12 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.CoalGeneratorBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -53,8 +51,6 @@ public class CoalGeneratorBlock extends SimpleMachineBlock<CoalGeneratorBlockEnt
 
     public CoalGeneratorBlock(Settings settings) {
         super(settings, CoalGeneratorBlockEntity::new, TOOLTIP_INFO);
-
-        this.setDefaultState(this.getDefaultState().with(Constant.Property.ACTIVE, false));
     }
 
     @Environment(EnvType.CLIENT)
@@ -78,12 +74,6 @@ public class CoalGeneratorBlock extends SimpleMachineBlock<CoalGeneratorBlockEnt
             world.addParticle(ParticleTypes.SMOKE, x + xo, y + yo, z + zo, 0.0D, 0.0D, 0.0D);
             world.addParticle(ParticleTypes.FLAME, x + xo, y + yo, z + zo, 0.0D, 0.0D, 0.0D);
         }
-    }
-
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(Constant.Property.ACTIVE);
     }
 
     @Override

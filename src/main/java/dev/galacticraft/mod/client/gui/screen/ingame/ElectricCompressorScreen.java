@@ -61,7 +61,7 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     }
 
     protected void drawCraftProgressBar(MatrixStack matrices) {
-        float progressScale = (((float)this.handler.machine.getProgress()) / ((float)this.handler.machine.getMaxProgress()));
+        float progressScale = (((float)this.handler.machine.progress()) / ((float)this.handler.machine.maxProgress()));
 
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
         this.drawTexture(matrices, this.x + 77, this.y + 29, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
