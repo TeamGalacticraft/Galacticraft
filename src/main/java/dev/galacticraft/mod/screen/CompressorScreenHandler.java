@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.block.entity.CompressorBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -32,29 +31,7 @@ import net.minecraft.screen.Property;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CompressorScreenHandler extends MachineScreenHandler<CompressorBlockEntity> {
-    public final Property progress = new Property() {
-        @Override
-        public int get() {
-            return CompressorScreenHandler.this.machine.progress();
-        }
-
-        @Override
-        public void set(int value) {
-            CompressorScreenHandler.this.machine.progress(value);
-        }
-    };
-    public final Property maxProgress = new Property() {
-        @Override
-        public int get() {
-            return CompressorScreenHandler.this.machine.maxProgress();
-        }
-
-        @Override
-        public void set(int value) {
-            CompressorScreenHandler.this.machine.maxProgress(value);
-        }
-    };
+public class CompressorScreenHandler extends RecipeMachineScreenHandler<CompressorBlockEntity> {
     public final Property fuelTime = new Property() {
         @Override
         public int get() {
@@ -67,12 +44,22 @@ public class CompressorScreenHandler extends MachineScreenHandler<CompressorBloc
         }
     };
 
+    public final Property fuelLength = new Property() {
+        @Override
+        public int get() {
+            return CompressorScreenHandler.this.machine.fuelLength;
+        }
+
+        @Override
+        public void set(int value) {
+            CompressorScreenHandler.this.machine.fuelLength = value;
+        }
+    };
+
     public CompressorScreenHandler(int syncId, PlayerEntity player, CompressorBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerType.COMPRESSOR_HANDLER);
-        this.addProperty(this.progress);
-        this.addProperty(this.maxProgress);
+        super(syncId, player, machine, () -> GalacticraftScreenHandlerType.COMPRESSOR_HANDLER, 0, 110);
         this.addProperty(this.fuelTime);
-        this.addPlayerInventorySlots(0, 110);
+        this.addProperty(this.fuelLength);
     }
 
     public CompressorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {

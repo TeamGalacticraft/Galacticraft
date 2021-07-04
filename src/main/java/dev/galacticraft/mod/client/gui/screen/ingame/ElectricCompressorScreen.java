@@ -25,7 +25,8 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
-import dev.galacticraft.mod.screen.ElectricCompressorScreenHandler;
+import dev.galacticraft.mod.block.entity.ElectricCompressorBlockEntity;
+import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
@@ -38,13 +39,13 @@ import net.minecraft.util.Formatting;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompressorScreenHandler> {
+public class ElectricCompressorScreen extends MachineHandledScreen<RecipeMachineScreenHandler<ElectricCompressorBlockEntity>> {
     private static final int PROGRESS_X = 204;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
-    public ElectricCompressorScreen(ElectricCompressorScreenHandler handler, PlayerInventory inv, Text title) {
+    public ElectricCompressorScreen(RecipeMachineScreenHandler<ElectricCompressorBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
         this.backgroundHeight = 199;
     }
