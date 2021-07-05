@@ -72,7 +72,7 @@ public interface DrawableUtil {
         BufferRenderer.draw(bufferBuilder);
     }
 
-    default boolean check(double mouseX, double mouseY, int x, int y, int width, int height) {
+    default boolean isWithin(double mouseX, double mouseY, int x, int y, int width, int height) {
         return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
     }
 }

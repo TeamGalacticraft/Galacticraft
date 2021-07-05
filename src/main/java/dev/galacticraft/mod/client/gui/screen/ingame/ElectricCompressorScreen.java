@@ -26,6 +26,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.ElectricCompressorBlockEntity;
+import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,15 +40,17 @@ import net.minecraft.util.Formatting;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class ElectricCompressorScreen extends MachineHandledScreen<RecipeMachineScreenHandler<ElectricCompressorBlockEntity>> {
-    private static final int PROGRESS_X = 204;
+public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompressorBlockEntity, RecipeMachineScreenHandler<ElectricCompressorBlockEntity>> {
+    private static final int PROGRESS_X = 177;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
     public ElectricCompressorScreen(RecipeMachineScreenHandler<ElectricCompressorBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
-        this.backgroundHeight = 199;
+        super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
+        this.backgroundWidth = 176;
+        this.backgroundHeight = 166;
+        this.addWidget(new CapacitorWidget(this.machine.capacitorView(), 8, 9, 48, this::getEnergyTooltipLines, this.machine::getStatus));
     }
 
     private String getContainerDisplayName() {
@@ -62,9 +65,9 @@ public class ElectricCompressorScreen extends MachineHandledScreen<RecipeMachine
     }
 
     protected void drawCraftProgressBar(MatrixStack matrices) {
-        float progressScale = (((float)this.handler.machine.progress()) / ((float)this.handler.machine.maxProgress()));
+        float progressScale = (((float)this.machine.progress()) / ((float)this.machine.maxProgress()));
 
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
-        this.drawTexture(matrices, this.x + 77, this.y + 29, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
+        this.drawTexture(matrices, this.x + 91, this.y + 31, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 }

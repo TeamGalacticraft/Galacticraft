@@ -81,7 +81,7 @@ public class GalacticraftScreenHandlerType {
     public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR_HANDLER =
             Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ELECTRIC_COMPRESSOR_SCREEN_HANDLER),
                     new ExtendedScreenHandlerType<>(
-                            RecipeMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.ELECTRIC_COMPRESSOR_HANDLER, 117)
+                            RecipeMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.ELECTRIC_COMPRESSOR_HANDLER)
                     )
             );
 

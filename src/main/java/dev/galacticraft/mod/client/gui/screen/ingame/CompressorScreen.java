@@ -48,7 +48,8 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
 
     public CompressorScreen(CompressorScreenHandler electricCompressorContainer, PlayerInventory inv, Text title) {
         super(electricCompressorContainer, inv, title);
-        this.backgroundHeight = 192;
+        this.backgroundWidth = 176;
+        this.backgroundHeight = 167;
     }
 
     @Override
@@ -89,7 +90,7 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
         float progressScale = (((float)this.handler.machine.progress()) / ((float)this.handler.machine.maxProgress()));
 
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.COMPRESSOR_SCREEN);
-        this.drawTexture(matrices, this.x + 77, this.x + 28, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
+        this.drawTexture(matrices, this.x + 77, this.y + 28, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 
     private int getFuelProgress() {
@@ -98,8 +99,7 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
             maxFuelTime = 200;
         }
 
-        // 0 = CompressorBlockEntity#fuelTime
-        return this.handler.fuelTime.get() * 13 / maxFuelTime;
+        return this.handler.machine.fuelTime * 13 / maxFuelTime;
     }
 
     @Override

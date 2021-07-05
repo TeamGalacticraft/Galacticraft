@@ -34,7 +34,7 @@ import java.util.function.Supplier;
  */
 public class RecipeMachineScreenHandlerFactory<B extends RecipeMachineBlockEntity<?, ?>, T extends MachineScreenHandler<B>> extends MachineScreenHandlerFactory<B, T> {
     protected RecipeMachineScreenHandlerFactory(Supplier<ScreenHandlerType<T>> type, int invX, int invY) {
-        super((syncId, player, machine) -> (T) RecipeMachineScreenHandler.create(syncId, player, machine, () -> (ScreenHandlerType<MachineScreenHandler<B>>) type.get(), invX, invY));
+        super((syncId, player, machine) -> (T) RecipeMachineScreenHandler.create(syncId, player, machine, () -> type.get(), invX, invY));
     }
 
     public static <B extends RecipeMachineBlockEntity<?, ?>, T extends MachineScreenHandler<B>> RecipeMachineScreenHandlerFactory<B, T> create(Supplier<ScreenHandlerType<T>> type, int invX, int invY) {
@@ -42,7 +42,7 @@ public class RecipeMachineScreenHandlerFactory<B extends RecipeMachineBlockEntit
     }
 
     public static <B extends RecipeMachineBlockEntity<?, ?>, T extends MachineScreenHandler<B>> RecipeMachineScreenHandlerFactory<B, T> create(Supplier<ScreenHandlerType<T>> type, int invY) {
-        return create(type, 0, invY);
+        return create(type, 8, invY);
     }
 
     public static <B extends RecipeMachineBlockEntity<?, ?>, T extends MachineScreenHandler<B>> RecipeMachineScreenHandlerFactory<B, T> create(Supplier<ScreenHandlerType<T>> type) {

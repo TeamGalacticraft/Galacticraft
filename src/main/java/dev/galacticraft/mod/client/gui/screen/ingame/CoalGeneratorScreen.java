@@ -39,11 +39,11 @@ import net.minecraft.util.Formatting;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class CoalGeneratorScreen extends MachineHandledScreen<SimpleMachineScreenHandler<CoalGeneratorBlockEntity>> {
+public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorBlockEntity, SimpleMachineScreenHandler<CoalGeneratorBlockEntity>> {
     public CoalGeneratorScreen(SimpleMachineScreenHandler<CoalGeneratorBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.COAL_GENERATOR_SCREEN);
+        super(handler, inv, title, Constant.ScreenTexture.COAL_GENERATOR_SCREEN);
         this.backgroundHeight = 176;
-        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 28, 42, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 28, 42, this::getEnergyTooltipLines, this.machine::getStatus));
     }
 
     @Override

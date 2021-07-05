@@ -57,7 +57,7 @@ public class CompressorScreenHandler extends RecipeMachineScreenHandler<Compress
     };
 
     public CompressorScreenHandler(int syncId, PlayerEntity player, CompressorBlockEntity machine) {
-        super(syncId, player, machine, () -> GalacticraftScreenHandlerType.COMPRESSOR_HANDLER, 0, 110);
+        super(syncId, player, machine, () -> GalacticraftScreenHandlerType.COMPRESSOR_HANDLER, 8, 85);
         this.addProperty(this.fuelTime);
         this.addProperty(this.fuelLength);
     }

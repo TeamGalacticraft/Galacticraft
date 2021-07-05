@@ -39,18 +39,18 @@ import net.minecraft.util.Formatting;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenDecompressorScreen extends MachineHandledScreen<SimpleMachineScreenHandler<OxygenDecompressorBlockEntity>> {
+public class OxygenDecompressorScreen extends MachineHandledScreen<OxygenDecompressorBlockEntity, SimpleMachineScreenHandler<OxygenDecompressorBlockEntity>> {
     public OxygenDecompressorScreen(SimpleMachineScreenHandler<OxygenDecompressorBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
+        super(handler, inv, title, Constant.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;
-        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, this.machine::getStatus));
     }
 
     @Override
     protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         super.renderBackground(matrices, delta, mouseX, mouseY);
-        if (handler.machine.getStatus().getType().isActive()) {
+        if (this.machine.getStatus().getType().isActive()) {
             int height = (int) (System.currentTimeMillis() % 2250);
             if (height == 0) height = 1; //prevent dividing by zero
             height /= 125;

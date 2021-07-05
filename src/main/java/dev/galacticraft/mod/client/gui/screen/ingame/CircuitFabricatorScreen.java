@@ -42,7 +42,7 @@ import net.minecraft.util.math.Matrix4f;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class CircuitFabricatorScreen extends MachineHandledScreen<RecipeMachineScreenHandler<CircuitFabricatorBlockEntity>> {
+public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabricatorBlockEntity, RecipeMachineScreenHandler<CircuitFabricatorBlockEntity>> {
     private static final int PROGRESS_SIZE = 4;
     private static final int INITIAL_PROGRESS_U = 0;
     private static final int INITIAL_PROGRESS_V = 186;
@@ -81,9 +81,9 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<RecipeMachineS
     private static final int SENARY_PROGRESS_HEIGHT = 14;
 
     public CircuitFabricatorScreen(RecipeMachineScreenHandler<CircuitFabricatorBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
+        super(handler, inv, title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         this.backgroundHeight = 176;
-        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 15, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 15, 48, this::getEnergyTooltipLines, this.machine::getStatus));
     }
 
     @Override
@@ -102,8 +102,8 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<RecipeMachineS
     private void drawProgressBar(MatrixStack matrices) {
         assert this.client != null;
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
-        if (this.handler.machine.progress() > 0) {
-            float progress = (float) ((((double) this.handler.machine.progress()) / ((double) this.handler.machine.maxProgress())) * 140.0);
+        if (this.machine.progress() > 0) {
+            float progress = (float) ((((double) this.machine.progress()) / ((double) this.machine.maxProgress())) * 140.0);
             if (progress <= 24) {
                 this.drawTexture(matrices, this.x + INITIAL_PROGRESS_X, this.y + INITIAL_PROGRESS_Y, INITIAL_PROGRESS_U, INITIAL_PROGRESS_V, progress, PROGRESS_SIZE);
             } else {
