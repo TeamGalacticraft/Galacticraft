@@ -92,7 +92,7 @@ public class CraterCarver extends Carver<CarverConfig> {
                                 if (toDig > 0) toDig++; // Increase crater depth, but for sum, not each crater
                                 if (fresh) toDig++; // Dig one more block, because we're not replacing the top with turf
 
-                                mutable.set(innerChunkX, context.getMaxY(), innerChunkZ);
+                                mutable.set(innerChunkX, context.getHeight(), innerChunkZ);
                                 carvingMask.set((cX + 1) | (cZ + 1) << 4);
                                 for (int dug = 0; dug < toDig; dug++) {
                                     mutable.move(Direction.DOWN);

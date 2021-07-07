@@ -95,11 +95,11 @@ public class GalacticraftCommand {
         final int[] retval = new int[]{Command.SINGLE_SUCCESS};
         // Clear the expired timers
         for (UUID id : GC_HOUSTON_TIMERS.keySet()) {
-            if (GC_HOUSTON_TIMERS.get(id) + GC_HOUSTON_TIMER_LENGTH < context.getSource().getMinecraftServer().getTicks()) {
+            if (GC_HOUSTON_TIMERS.get(id) + GC_HOUSTON_TIMER_LENGTH < context.getSource().getServer().getTicks()) {
                 GC_HOUSTON_TIMERS.remove(id);
             }
         }
-        context.getSource().getMinecraftServer().execute(() -> {
+        context.getSource().getServer().execute(() -> {
             try {
                 if (!RegistryUtil.getCelestialBodyByDimension(context.getSource().getRegistryManager(), context.getSource().getWorld().getRegistryKey()).isPresent()) {
                     context.getSource().sendError(new TranslatableText("commands.galacticraft.gchouston.cannot_detect_signal").setStyle(Constant.Text.RED_STYLE));
@@ -107,7 +107,7 @@ public class GalacticraftCommand {
                     return;
                 }
                 ServerPlayerEntity player = context.getSource().getPlayer();
-                ServerWorld serverWorld = context.getSource().getMinecraftServer().getWorld(World.OVERWORLD);
+                ServerWorld serverWorld = context.getSource().getServer().getWorld(World.OVERWORLD);
                 if (serverWorld == null) {
                     context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
@@ -119,9 +119,9 @@ public class GalacticraftCommand {
                 }
                 UUID playerID = context.getSource().getPlayer().getGameProfile().getId();
                 if (!GC_HOUSTON_TIMERS.containsKey(playerID)) {
-                    GC_HOUSTON_TIMERS.put(playerID, context.getSource().getMinecraftServer().getTicks());
+                    GC_HOUSTON_TIMERS.put(playerID, context.getSource().getServer().getTicks());
                     context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.gchouston.confirm", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.RED_STYLE), false);
-                } else if (GC_HOUSTON_TIMERS.get(playerID) + GC_HOUSTON_TIMER_LENGTH > context.getSource().getMinecraftServer().getTicks()) {
+                } else if (GC_HOUSTON_TIMERS.get(playerID) + GC_HOUSTON_TIMER_LENGTH > context.getSource().getServer().getTicks()) {
                     GC_HOUSTON_TIMERS.remove(playerID);
                     BlockPos pos = getValidTeleportPos(serverWorld, player);
                     player.teleport(serverWorld,
@@ -143,7 +143,7 @@ public class GalacticraftCommand {
 
     private static int teleport(CommandContext<ServerCommandSource> context) {
         final int[] retval = new int[]{Command.SINGLE_SUCCESS};
-        context.getSource().getMinecraftServer().execute(() -> {
+        context.getSource().getServer().execute(() -> {
             ServerPlayerEntity player;
             try {
                 player = context.getSource().getPlayer();
@@ -181,7 +181,7 @@ public class GalacticraftCommand {
     /*
     private static int teleportMultiple(CommandContext<ServerCommandSource> context) {
         final int[] retval = new int[1]{Command.SINGLE_SUCCESS};
-        context.getSource().getMinecraftServer().execute(() -> {
+        context.getSource().getServer().execute(() -> {
             try {
                 ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
                 if (serverWorld == null) {
@@ -210,7 +210,7 @@ public class GalacticraftCommand {
 
     private static int teleportToCoords(CommandContext<ServerCommandSource> context) {
         final int[] retval = new int[]{Command.SINGLE_SUCCESS};
-        context.getSource().getMinecraftServer().execute(() -> {
+        context.getSource().getServer().execute(() -> {
             ServerWorld serverWorld;
             BlockPos pos;
             try {

@@ -92,7 +92,7 @@ repositories {
             includeGroup("alexiil.mc.lib")
         }
     }
-    maven("https://maven.terraformersmc.com/") {
+    maven(/*"https://maven.terraformersmc.com/"*/"https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases/") { //fixme: wait for TerraformersMC maven to stabilize
         content {
             includeGroup("com.terraformersmc")
         }
