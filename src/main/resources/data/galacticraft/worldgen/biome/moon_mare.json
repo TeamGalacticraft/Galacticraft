@@ -1,8 +1,8 @@
 {
   "depth": -0.8,
-  "scale": 0.03,
-  "downfall": 0.01,
-  "temperature": -100,
+  "scale": 0.6,
+  "downfall": 0.0,
+  "temperature": 2.0,
   "precipitation": "none",
   "category": "none",
   "effects": {
@@ -21,7 +21,6 @@
   "carvers": {
     "air": [
       "galacticraft:moon_mare_cave",
-      "galacticraft:moon_crater",
       "galacticraft:canyon"
     ]
   },
