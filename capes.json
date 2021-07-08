@@ -1,544 +1,544 @@
 {
-    "players": [
-        {
-            "uuid": "4e0dd4b7-c04f-4b72-8bbc-d8f1510d9cc7",
-            "cape": "earth",
-            "name": "micdoodle8"
-        },
-        {
-            "uuid": "bba235f5-7858-48a1-98bc-7ccba53a309e",
-            "cape": "earth",
-            "name": "radfast"
-        },
-        {
-            "uuid": "35282c16-cf0a-4d8e-b5d6-e2c2b2af8d25",
-            "cape": "earth",
-            "name": "JTE"
-        },
-        {
-            "uuid": "f782663c-84ee-4761-88b5-28c672400477",
-            "cape": "earth",
-            "name": "Mitchski"
-        },
-        {
-            "uuid": "1a32606e-2e55-4a68-b1bc-def5527a06c9",
-            "cape": "earth",
-            "name": "TheGookuPJ"
-        },
-        {
-            "uuid": "a7108076-b5e4-4668-9e8f-38ce170b7c3d",
-            "cape": "earth",
-            "name": "bob10234"
-        },
-        {
-            "uuid": "7b87531a-c683-4a71-a531-d4216b999077",
-            "cape": "earth",
-            "name": "Flies_On_Eyes"
-        },
-        {
-            "uuid": "6b2697be-fb72-4476-b136-6560dad61de5",
-            "cape": "earth",
-            "name": "CrimsonKMR"
-        },
-        {
-            "uuid": "7ba60d3f-8d3f-435a-92c5-9867614ce97f",
-            "cape": "earth",
-            "name": "_lime"
-        },
-        {
-            "uuid": "09912f8b-02dc-4372-8d0d-60ae66d85d7a",
-            "cape": "earth",
-            "name": "Hachipatas"
-        },
-        {
-            "uuid": "15a5921d-36cf-4c13-9bce-e254e2ff2885",
-            "cape": "earth",
-            "name": "Happypancakes56"
-        },
-        {
-            "uuid": "0dd8daa9-bec7-4255-ba48-34911fe70526",
-            "cape": "earth",
-            "name": "Slke"
-        },
-        {
-            "uuid": "532a13ec-3126-453f-87a0-df16f0eccbad",
-            "cape": "earth",
-            "name": "Tyroul"
-        },
-        {
-            "uuid": "3d7c4b45-715d-4623-a910-4193996e1900",
-            "cape": "earth",
-            "name": "kungfu_dragon"
-        },
-        {
-            "uuid": "9da24e27-9764-41d8-accc-a25da2f1457f",
-            "cape": "earth",
-            "name": "Lewis_McReu"
-        },
-        {
-            "uuid": "bc14cd20-a79b-42fc-b6f6-eab39ed59036",
-            "cape": "earth",
-            "name": "TheDaveStream"
-        },
-        {
-            "uuid": "322a9067-73a3-43f8-9299-8ff9d9ceb336",
-            "cape": "earth",
-            "name": "RampantDolphin"
-        },
-        {
-            "uuid": "2228ec9a-323a-40dd-b0e9-98e65d05608a",
-            "cape": "earth",
-            "name": "PureTryOut"
-        },
-        {
-            "uuid": "401af2b7-34d1-4a5e-a78a-9ae81757b9ee",
-            "cape": "earth",
-            "name": "ramenators"
-        },
-        {
-            "uuid": "751f7a3b-f3ab-43e4-b5d2-352c7a0d7d9a",
-            "cape": "earth",
-            "name": "randhope21"
-        },
-        {
-            "uuid": "c3ea8486-38e1-46c1-8f42-b2479ac16ea8",
-            "cape": "earth",
-            "name": "Night_Fury_CZ"
-        },
-        {
-            "uuid": "c18b17fc-ae49-4d93-a1db-83121dc01bff",
-            "cape": "earth",
-            "name": "SoaringChris137"
-        },
-        {
-            "uuid": "58cdd8b6-9e00-4a33-9914-666457cf6421",
-            "cape": "earth",
-            "name": "TerraGenome"
-        },
-        {
-            "uuid": "2eaac1b2-af09-4a72-bf83-3c462a8f97a4",
-            "cape": "earth",
-            "name": "Yangjo"
-        },
-        {
-            "uuid": "80228a05-8c13-45da-a5d0-ea0fdcb4eb12",
-            "cape": "earth",
-            "name": "Made_This_Name"
-        },
-        {
-            "uuid": "7776112e-3ade-489a-9ac1-83ff5e1cae7a",
-            "cape": "earth",
-            "name": "spamenigma"
-        },
-        {
-            "uuid": "a865907c-6b83-47b2-a088-35688169dc6a",
-            "cape": "earth",
-            "name": "EzerArch"
-        },
-        {
-            "uuid": "e1d0ee1c-4202-4b89-85d9-540bac457463",
-            "cape": "earth",
-            "name": "GiantWaffle"
-        },
-        {
-            "uuid": "e7c3e2a3-3e1a-477f-9fed-a46fe674bea8",
-            "cape": "earth",
-            "name": "Lastnecron"
-        },
-        {
-            "uuid": "b31a1434-66cf-4b1e-b276-40252e0ca974",
-            "cape": "earth",
-            "name": "Devsio"
-        },
-        {
-            "uuid": "a163bd86-b3b8-4778-8045-f11cc1b171bf",
-            "cape": "earth",
-            "name": "Tyrantelf"
-        },
-        {
-            "uuid": "f3a1ea32-7dd0-4d0b-9759-203a4adff99c",
-            "cape": "earth",
-            "name": "Cellenseres"
-        },
-        {
-            "uuid": "47257425-c09d-44d9-846e-db042571dbec",
-            "cape": "earth",
-            "name": "SgtAce"
-        },
-        {
-            "uuid": "743392cc-83bc-49f2-bd3e-ac04ccf69aa9",
-            "cape": "earth",
-            "name": "Roosterteeth546"
-        },
-        {
-            "uuid": "db9eea4b-99e0-4132-97aa-5be75010b0ad",
-            "cape": "earth",
-            "name": "SundayxFunday"
-        },
-        {
-            "uuid": "42232dec-4ffd-458d-bee4-5791c822bd83",
-            "cape": "earth",
-            "name": "THEproWINN"
-        },
-        {
-            "uuid": "766cebb7-c568-4099-8709-76aa5f069538",
-            "cape": "earth",
-            "name": "Puggy04"
-        },
-        {
-            "uuid": "cdec6b44-1de1-45f8-a7d4-50ff27b48a62",
-            "cape": "earth",
-            "name": "scriptoffate14"
-        },
-        {
-            "uuid": "cd6eb3ef-44c1-4030-812f-ab39ce53febe",
-            "cape": "earth",
-            "name": "Ohrm"
-        },
-        {
-            "uuid": "ade5c795-8eea-4880-b5c3-05eb898dcc99",
-            "cape": "earth",
-            "name": "SirFuzzhead"
-        },
-        {
-            "uuid": "291f9006-9169-4858-8960-f5f6d06b6e47",
-            "cape": "earth",
-            "name": "alexljn5"
-        },
-        {
-            "uuid": "e7a8ff43-db5a-48f1-90c2-bdd039bea7ef",
-            "cape": "earth",
-            "name": "Tatertot2222"
-        },
-        {
-            "uuid": "5725dfbd-769d-4df8-9816-33346b788f36",
-            "cape": "earth",
-            "name": "atomicpichu"
-        },
-        {
-            "uuid": "c9ba14cd-7a8f-41cf-9e6b-13cca78563b7",
-            "cape": "earth",
-            "name": "chattanooga"
-        },
-        {
-            "uuid": "aca4ca40-b5e7-4d99-8d24-385acaee46f8",
-            "cape": "earth",
-            "name": "so2ro"
-        },
-        {
-            "uuid": "2054059c-45d3-4375-b51e-60d59303d6e1",
-            "cape": "earth",
-            "name": "Sir_Killz"
-        },
-        {
-            "uuid": "60fbe691-d5fd-4007-b0e8-5bfe54fbac7b",
-            "cape": "earth",
-            "name": "ForbiddeFan12"
-        },
-        {
-            "uuid": "c02818a7-2663-4132-a0ee-abc88616d415",
-            "cape": "earth",
-            "name": "GradeAWizard"
-        },
-        {
-            "uuid": "8f1c823c-9a3b-401d-a0a2-f77829cdba33",
-            "cape": "earth",
-            "name": "kelvinxj"
-        },
-        {
-            "uuid": "82419cb6-c25b-403f-8b1f-c503340fff15",
-            "cape": "earth",
-            "name": "BCQX"
-        },
-        {
-            "uuid": "055d629e-9610-4ddd-bad0-1944ab5f7d29",
-            "cape": "earth",
-            "name": "Shamrocker101"
-        },
-        {
-            "uuid": "08ca7900-afa8-474d-b3bc-1147ed61942e",
-            "cape": "earth",
-            "name": "Truman04"
-        },
-        {
-            "uuid": "ea62f001-7661-4473-99c6-c5224b5180c9",
-            "cape": "earth",
-            "name": "Krystal_Disc"
-        },
-        {
-            "uuid": "4f6de754-f9ef-4462-bc75-6b55094b4f6e",
-            "cape": "earth",
-            "name": "eggsandbaon"
-        },
-        {
-            "uuid": "2f6980eb-fac4-48c7-9021-e452fda174f6",
-            "cape": "earth",
-            "name": "Germaniac"
-        },
-        {
-            "uuid": "bdfd2c1c-2896-4bf4-b22e-684ac1ed9118",
-            "cape": "earth",
-            "name": "ALterRy"
-        },
-        {
-            "uuid": "ff42d35e-94b4-4933-bcb2-d482d277f83f",
-            "cape": "earth",
-            "name": "nanatorium"
-        },
-        {
-            "uuid": "cccbf098-d820-4d11-9fa9-c85a0f92fee0",
-            "cape": "earth",
-            "name": "Phlonk"
-        },
-        {
-            "uuid": "c7b62bb0-8a7a-41f8-a9d9-812c89ee9c99",
-            "cape": "earth",
-            "name": "AquaBarnes"
-        },
-        {
-            "uuid": "459f310e-7022-4bff-ba46-cfb8f28c9b01",
-            "cape": "earth",
-            "name": "CmdrPineapple"
-        },
-        {
-            "uuid": "9a4668a9-23d3-4fa2-8054-820c305bd308",
-            "cape": "earth",
-            "name": "lancewalker"
-        },
-        {
-            "uuid": "8ef62b5c-d49a-4dd3-a59a-1bfbb3d3d380",
-            "cape": "earth",
-            "name": "LordLington"
-        },
-        {
-            "uuid": "3101ea80-b190-4de4-b556-e4b46dde541c",
-            "cape": "earth",
-            "name": "MoonRaven"
-        },
-        {
-            "uuid": "21f531d2-d0dd-4359-a0b4-ba5d036a0ce7",
-            "cape": "earth",
-            "name": "Survarium"
-        },
-        {
-            "uuid": "ba7e73d2-cbf5-4d63-858f-2d60ae9eaa6b",
-            "cape": "earth",
-            "name": "bobdole010"
-        },
-        {
-            "uuid": "0e585f22-f606-47e2-a2b5-6ca7196cfa74",
-            "cape": "earth",
-            "name": "dragonguide"
-        },
-        {
-            "uuid": "9ca6ab76-cdf3-4b13-a3f9-2d36d337567a",
-            "cape": "earth",
-            "name": "MrRobin1512"
-        },
-        {
-            "uuid": "a0c708a9-b5fb-4b82-9903-6fc4437c34b9",
-            "cape": "earth",
-            "name": "IndianGooN"
-        },
-        {
-            "uuid": "6bcc4b6a-3543-44ce-be6e-4de701ba45d1",
-            "cape": "earth",
-            "name": "Mysticslay"
-        },
-        {
-            "uuid": "f5f0b2ce-0c09-4ced-9c14-7156a6a205b5",
-            "cape": "earth",
-            "name": "BeeCannon"
-        },
-        {
-            "uuid": "fc9b324e-8d0d-4c5d-8fd6-d11d5d042e61",
-            "cape": "earth",
-            "name": "KrazyMonkey"
-        },
-        {
-            "uuid": "76ae9784-cec6-448c-b352-1eed1abf16f9",
-            "cape": "earth",
-            "name": "Knightblock"
-        },
-        {
-            "uuid": "1630c57a-471e-43a6-8052-40d4a3cbbb55",
-            "cape": "earth",
-            "name": "Shadow_Beats"
-        },
-        {
-            "uuid": "98313813-c3f4-494f-bb4d-68f342633a83",
-            "cape": "earth",
-            "name": "Strachey"
-        },
-        {
-            "uuid": "57d64951-c09c-4f49-8875-d404841efac9",
-            "cape": "earth",
-            "name": "JacobiCarter"
-        },
-        {
-            "uuid": "c0e6fa88-62d2-4556-902e-f49823b96dfe",
-            "cape": "earth",
-            "name": "afoolishmoon"
-        },
-        {
-            "uuid": "ed4bf20f-800b-4f32-b797-18ddb1b24d7b",
-            "cape": "earth",
-            "name": "LokeYourLord"
-        },
-        {
-            "uuid": "c4c022ed-b98a-4337-832a-5ea8417aea4e",
-            "cape": "earth",
-            "name": "GetVape"
-        },
-        {
-            "uuid": "fe481dee-2e6d-4c28-9fb7-42fd3db796e2",
-            "cape": "earth",
-            "name": "ma10as234"
-        },
-        {
-            "uuid": "0a429b96-9fb0-4d9f-b34d-032ebeb07c9c",
-            "cape": "earth",
-            "name": "ARedHel66"
-        },
-        {
-            "uuid": "c53ed454-efba-4dcf-a307-ba9eb26c58d3",
-            "cape": "earth",
-            "name": "PrezGman"
-        },
-        {
-            "uuid": "0de2e5f8-9170-49b6-999c-5f1fca7d0ad4",
-            "cape": "earth",
-            "name": "creeperchick15"
-        },
-        {
-            "uuid": "e4be2000-6bfb-4003-b4e5-f6dc4f153471",
-            "cape": "earth",
-            "name": "sonic5223"
-        },
-        {
-            "uuid": "34314a92-dc5c-43a7-afa8-48f101699203",
-            "cape": "earth",
-            "name": "Master_Apple"
-        },
-        {
-            "uuid": "6a419733-b550-46d3-a21c-46656b801849",
-            "cape": "earth",
-            "name": "urix123"
-        },
-        {
-            "uuid": "f71b1f8b-4657-4347-a74b-0d1b0b25659f",
-            "cape": "earth",
-            "name": "monkeypants_271"
-        },
-        {
-            "uuid": "c1785921-12bb-4a71-b082-b422153f267b",
-            "cape": "earth",
-            "name": "Nomad043"
-        },
-        {
-            "uuid": "1dafe96c-b8a3-4cf6-be51-367468409943",
-            "cape": "earth",
-            "name": "Malstrim"
-        },
-        {
-            "uuid": "504e79e9-7f46-4068-8611-f18075df5c4e",
-            "cape": "earth",
-            "name": "Cthulhu"
-        },
-        {
-            "uuid": "09d4c327-6150-4341-b145-e3048fb13d04",
-            "cape": "earth",
-            "name": "Akahito666"
-        },
-        {
-            "uuid": "d41727d5-8ec9-47f7-a8de-eabcb2577f9f",
-            "cape": "earth",
-            "name": "Timsuper2"
-        },
-        {
-            "uuid": "6f71c011-4d91-4942-904d-c9b63326df4c",
-            "cape": "earth",
-            "name": "Sonic_Blender"
-        },
-        {
-            "uuid": "fab0af0f-6890-4845-9474-5b0c0205d1a6",
-            "cape": "earth",
-            "name": "xX_CreeperMr_Xx"
-        },
-        {
-            "uuid": "74304286-45f5-4fe8-b5ac-a82bff3f1400",
-            "cape": "earth",
-            "name": "Santiv"
-        },
-        {
-            "uuid": "36ab85cc-86da-42a9-9172-956dfc80edec",
-            "cape": "earth",
-            "name": "SebaSphere"
-        },
-        {
-            "uuid": "d5d826c1-2390-4ceb-8b55-a160345b91e3",
-            "cape": "earth",
-            "name": "Takos"
-        },
-        {
-            "uuid": "592e9044-ec26-496e-9029-6a6dcc43d407",
-            "cape": "earth",
-            "name": "WetToast"
-        },
-        {
-            "uuid": "e655aa98-5fec-4b4e-b03a-7cd71df90b05",
-            "cape": "developer",
-            "name": "JoeZwet"
-        },
-        {
-            "uuid": "70fb1b09-505b-4206-b0c5-8f0237e8ee33",
-            "cape": "developer",
-            "name": "vos6434"
-        },
-        {
-            "uuid": "9af1156e-80bf-4f4c-9496-455555a3deb3",
-            "cape": "developer",
-            "name": "marcus8448"
-        },
-        {
-            "uuid": "eef3a603-1c1b-4c98-8264-d2f04b231ef4",
-            "cape": "developer",
-            "name": "SteveKunG"
-        },
-        {
-            "uuid": "903f6b43-d59b-42e6-919e-2f10c2ee141c",
-            "cape": "developer",
-            "name": "CraftableScience"
-        },
-        {
-            "uuid": "3f5150ea-fade-4233-ad40-719e207154e9",
-            "cape": "developer",
-            "name": "B0undarybreaker"
-        },
-        {
-            "uuid": "eefc9ec2-70c1-4cd4-8c36-65a692e0b90f",
-            "cape": "mars",
-            "name": "WatermElon_Musk"
-        },
-        {
-            "uuid": "dc90e627-3628-491d-8cc1-917b97f0d7e0",
-            "cape": "moon",
-            "name": "missingsemicolon"
-        },
-        {
-            "uuid": "6f0350f6-5372-4cdd-aa0b-0381753da000",
-            "cape": "moon",
-            "name": "TeenSarlacc"
-        },
-        {
-            "uuid": "e124c552-5b18-4826-b491-d3a1ac2a4418",
-            "cape": "developer",
-            "name": "iNewHorizons"
-        },
-        {
-            "uuid": "01d916c8-4932-4f54-8ab4-c49e6cd8bbf8",
-            "cape": "developer",
-            "name": "NBH_iNewHorizons"
-        }
-    ]
+  "players": [
+    {
+      "uuid": "4e0dd4b7-c04f-4b72-8bbc-d8f1510d9cc7",
+      "cape": "earth",
+      "name": "micdoodle8"
+    },
+    {
+      "uuid": "bba235f5-7858-48a1-98bc-7ccba53a309e",
+      "cape": "earth",
+      "name": "radfast"
+    },
+    {
+      "uuid": "35282c16-cf0a-4d8e-b5d6-e2c2b2af8d25",
+      "cape": "earth",
+      "name": "JTE"
+    },
+    {
+      "uuid": "f782663c-84ee-4761-88b5-28c672400477",
+      "cape": "earth",
+      "name": "Mitchski"
+    },
+    {
+      "uuid": "1a32606e-2e55-4a68-b1bc-def5527a06c9",
+      "cape": "earth",
+      "name": "TheGookuPJ"
+    },
+    {
+      "uuid": "a7108076-b5e4-4668-9e8f-38ce170b7c3d",
+      "cape": "earth",
+      "name": "bob10234"
+    },
+    {
+      "uuid": "7b87531a-c683-4a71-a531-d4216b999077",
+      "cape": "earth",
+      "name": "Flies_On_Eyes"
+    },
+    {
+      "uuid": "6b2697be-fb72-4476-b136-6560dad61de5",
+      "cape": "earth",
+      "name": "CrimsonKMR"
+    },
+    {
+      "uuid": "7ba60d3f-8d3f-435a-92c5-9867614ce97f",
+      "cape": "earth",
+      "name": "_lime"
+    },
+    {
+      "uuid": "09912f8b-02dc-4372-8d0d-60ae66d85d7a",
+      "cape": "earth",
+      "name": "Hachipatas"
+    },
+    {
+      "uuid": "15a5921d-36cf-4c13-9bce-e254e2ff2885",
+      "cape": "earth",
+      "name": "Happypancakes56"
+    },
+    {
+      "uuid": "0dd8daa9-bec7-4255-ba48-34911fe70526",
+      "cape": "earth",
+      "name": "Slke"
+    },
+    {
+      "uuid": "532a13ec-3126-453f-87a0-df16f0eccbad",
+      "cape": "earth",
+      "name": "Tyroul"
+    },
+    {
+      "uuid": "3d7c4b45-715d-4623-a910-4193996e1900",
+      "cape": "earth",
+      "name": "kungfu_dragon"
+    },
+    {
+      "uuid": "9da24e27-9764-41d8-accc-a25da2f1457f",
+      "cape": "earth",
+      "name": "Lewis_McReu"
+    },
+    {
+      "uuid": "bc14cd20-a79b-42fc-b6f6-eab39ed59036",
+      "cape": "earth",
+      "name": "TheDaveStream"
+    },
+    {
+      "uuid": "322a9067-73a3-43f8-9299-8ff9d9ceb336",
+      "cape": "earth",
+      "name": "RampantDolphin"
+    },
+    {
+      "uuid": "2228ec9a-323a-40dd-b0e9-98e65d05608a",
+      "cape": "earth",
+      "name": "PureTryOut"
+    },
+    {
+      "uuid": "401af2b7-34d1-4a5e-a78a-9ae81757b9ee",
+      "cape": "earth",
+      "name": "ramenators"
+    },
+    {
+      "uuid": "751f7a3b-f3ab-43e4-b5d2-352c7a0d7d9a",
+      "cape": "earth",
+      "name": "randhope21"
+    },
+    {
+      "uuid": "c3ea8486-38e1-46c1-8f42-b2479ac16ea8",
+      "cape": "earth",
+      "name": "Night_Fury_CZ"
+    },
+    {
+      "uuid": "c18b17fc-ae49-4d93-a1db-83121dc01bff",
+      "cape": "earth",
+      "name": "SoaringChris137"
+    },
+    {
+      "uuid": "58cdd8b6-9e00-4a33-9914-666457cf6421",
+      "cape": "earth",
+      "name": "TerraGenome"
+    },
+    {
+      "uuid": "2eaac1b2-af09-4a72-bf83-3c462a8f97a4",
+      "cape": "earth",
+      "name": "Yangjo"
+    },
+    {
+      "uuid": "80228a05-8c13-45da-a5d0-ea0fdcb4eb12",
+      "cape": "earth",
+      "name": "Made_This_Name"
+    },
+    {
+      "uuid": "7776112e-3ade-489a-9ac1-83ff5e1cae7a",
+      "cape": "earth",
+      "name": "spamenigma"
+    },
+    {
+      "uuid": "a865907c-6b83-47b2-a088-35688169dc6a",
+      "cape": "earth",
+      "name": "EzerArch"
+    },
+    {
+      "uuid": "e1d0ee1c-4202-4b89-85d9-540bac457463",
+      "cape": "earth",
+      "name": "GiantWaffle"
+    },
+    {
+      "uuid": "e7c3e2a3-3e1a-477f-9fed-a46fe674bea8",
+      "cape": "earth",
+      "name": "Lastnecron"
+    },
+    {
+      "uuid": "b31a1434-66cf-4b1e-b276-40252e0ca974",
+      "cape": "earth",
+      "name": "Devsio"
+    },
+    {
+      "uuid": "a163bd86-b3b8-4778-8045-f11cc1b171bf",
+      "cape": "earth",
+      "name": "Tyrantelf"
+    },
+    {
+      "uuid": "f3a1ea32-7dd0-4d0b-9759-203a4adff99c",
+      "cape": "earth",
+      "name": "Cellenseres"
+    },
+    {
+      "uuid": "47257425-c09d-44d9-846e-db042571dbec",
+      "cape": "earth",
+      "name": "SgtAce"
+    },
+    {
+      "uuid": "743392cc-83bc-49f2-bd3e-ac04ccf69aa9",
+      "cape": "earth",
+      "name": "Roosterteeth546"
+    },
+    {
+      "uuid": "db9eea4b-99e0-4132-97aa-5be75010b0ad",
+      "cape": "earth",
+      "name": "SundayxFunday"
+    },
+    {
+      "uuid": "42232dec-4ffd-458d-bee4-5791c822bd83",
+      "cape": "earth",
+      "name": "THEproWINN"
+    },
+    {
+      "uuid": "766cebb7-c568-4099-8709-76aa5f069538",
+      "cape": "earth",
+      "name": "Puggy04"
+    },
+    {
+      "uuid": "cdec6b44-1de1-45f8-a7d4-50ff27b48a62",
+      "cape": "earth",
+      "name": "scriptoffate14"
+    },
+    {
+      "uuid": "cd6eb3ef-44c1-4030-812f-ab39ce53febe",
+      "cape": "earth",
+      "name": "Ohrm"
+    },
+    {
+      "uuid": "ade5c795-8eea-4880-b5c3-05eb898dcc99",
+      "cape": "earth",
+      "name": "SirFuzzhead"
+    },
+    {
+      "uuid": "291f9006-9169-4858-8960-f5f6d06b6e47",
+      "cape": "earth",
+      "name": "alexljn5"
+    },
+    {
+      "uuid": "e7a8ff43-db5a-48f1-90c2-bdd039bea7ef",
+      "cape": "earth",
+      "name": "Tatertot2222"
+    },
+    {
+      "uuid": "5725dfbd-769d-4df8-9816-33346b788f36",
+      "cape": "earth",
+      "name": "atomicpichu"
+    },
+    {
+      "uuid": "c9ba14cd-7a8f-41cf-9e6b-13cca78563b7",
+      "cape": "earth",
+      "name": "chattanooga"
+    },
+    {
+      "uuid": "aca4ca40-b5e7-4d99-8d24-385acaee46f8",
+      "cape": "earth",
+      "name": "so2ro"
+    },
+    {
+      "uuid": "2054059c-45d3-4375-b51e-60d59303d6e1",
+      "cape": "earth",
+      "name": "Sir_Killz"
+    },
+    {
+      "uuid": "60fbe691-d5fd-4007-b0e8-5bfe54fbac7b",
+      "cape": "earth",
+      "name": "ForbiddeFan12"
+    },
+    {
+      "uuid": "c02818a7-2663-4132-a0ee-abc88616d415",
+      "cape": "earth",
+      "name": "GradeAWizard"
+    },
+    {
+      "uuid": "8f1c823c-9a3b-401d-a0a2-f77829cdba33",
+      "cape": "earth",
+      "name": "kelvinxj"
+    },
+    {
+      "uuid": "82419cb6-c25b-403f-8b1f-c503340fff15",
+      "cape": "earth",
+      "name": "BCQX"
+    },
+    {
+      "uuid": "055d629e-9610-4ddd-bad0-1944ab5f7d29",
+      "cape": "earth",
+      "name": "Shamrocker101"
+    },
+    {
+      "uuid": "08ca7900-afa8-474d-b3bc-1147ed61942e",
+      "cape": "earth",
+      "name": "Truman04"
+    },
+    {
+      "uuid": "ea62f001-7661-4473-99c6-c5224b5180c9",
+      "cape": "earth",
+      "name": "Krystal_Disc"
+    },
+    {
+      "uuid": "4f6de754-f9ef-4462-bc75-6b55094b4f6e",
+      "cape": "earth",
+      "name": "eggsandbaon"
+    },
+    {
+      "uuid": "2f6980eb-fac4-48c7-9021-e452fda174f6",
+      "cape": "earth",
+      "name": "Germaniac"
+    },
+    {
+      "uuid": "bdfd2c1c-2896-4bf4-b22e-684ac1ed9118",
+      "cape": "earth",
+      "name": "ALterRy"
+    },
+    {
+      "uuid": "ff42d35e-94b4-4933-bcb2-d482d277f83f",
+      "cape": "earth",
+      "name": "nanatorium"
+    },
+    {
+      "uuid": "cccbf098-d820-4d11-9fa9-c85a0f92fee0",
+      "cape": "earth",
+      "name": "Phlonk"
+    },
+    {
+      "uuid": "c7b62bb0-8a7a-41f8-a9d9-812c89ee9c99",
+      "cape": "earth",
+      "name": "AquaBarnes"
+    },
+    {
+      "uuid": "459f310e-7022-4bff-ba46-cfb8f28c9b01",
+      "cape": "earth",
+      "name": "CmdrPineapple"
+    },
+    {
+      "uuid": "9a4668a9-23d3-4fa2-8054-820c305bd308",
+      "cape": "earth",
+      "name": "lancewalker"
+    },
+    {
+      "uuid": "8ef62b5c-d49a-4dd3-a59a-1bfbb3d3d380",
+      "cape": "earth",
+      "name": "LordLington"
+    },
+    {
+      "uuid": "3101ea80-b190-4de4-b556-e4b46dde541c",
+      "cape": "earth",
+      "name": "MoonRaven"
+    },
+    {
+      "uuid": "21f531d2-d0dd-4359-a0b4-ba5d036a0ce7",
+      "cape": "earth",
+      "name": "Survarium"
+    },
+    {
+      "uuid": "ba7e73d2-cbf5-4d63-858f-2d60ae9eaa6b",
+      "cape": "earth",
+      "name": "bobdole010"
+    },
+    {
+      "uuid": "0e585f22-f606-47e2-a2b5-6ca7196cfa74",
+      "cape": "earth",
+      "name": "dragonguide"
+    },
+    {
+      "uuid": "9ca6ab76-cdf3-4b13-a3f9-2d36d337567a",
+      "cape": "earth",
+      "name": "MrRobin1512"
+    },
+    {
+      "uuid": "a0c708a9-b5fb-4b82-9903-6fc4437c34b9",
+      "cape": "earth",
+      "name": "IndianGooN"
+    },
+    {
+      "uuid": "6bcc4b6a-3543-44ce-be6e-4de701ba45d1",
+      "cape": "earth",
+      "name": "Mysticslay"
+    },
+    {
+      "uuid": "f5f0b2ce-0c09-4ced-9c14-7156a6a205b5",
+      "cape": "earth",
+      "name": "BeeCannon"
+    },
+    {
+      "uuid": "fc9b324e-8d0d-4c5d-8fd6-d11d5d042e61",
+      "cape": "earth",
+      "name": "KrazyMonkey"
+    },
+    {
+      "uuid": "76ae9784-cec6-448c-b352-1eed1abf16f9",
+      "cape": "earth",
+      "name": "Knightblock"
+    },
+    {
+      "uuid": "1630c57a-471e-43a6-8052-40d4a3cbbb55",
+      "cape": "earth",
+      "name": "Shadow_Beats"
+    },
+    {
+      "uuid": "98313813-c3f4-494f-bb4d-68f342633a83",
+      "cape": "earth",
+      "name": "Strachey"
+    },
+    {
+      "uuid": "57d64951-c09c-4f49-8875-d404841efac9",
+      "cape": "earth",
+      "name": "JacobiCarter"
+    },
+    {
+      "uuid": "c0e6fa88-62d2-4556-902e-f49823b96dfe",
+      "cape": "earth",
+      "name": "afoolishmoon"
+    },
+    {
+      "uuid": "ed4bf20f-800b-4f32-b797-18ddb1b24d7b",
+      "cape": "earth",
+      "name": "LokeYourLord"
+    },
+    {
+      "uuid": "c4c022ed-b98a-4337-832a-5ea8417aea4e",
+      "cape": "earth",
+      "name": "GetVape"
+    },
+    {
+      "uuid": "fe481dee-2e6d-4c28-9fb7-42fd3db796e2",
+      "cape": "earth",
+      "name": "ma10as234"
+    },
+    {
+      "uuid": "0a429b96-9fb0-4d9f-b34d-032ebeb07c9c",
+      "cape": "earth",
+      "name": "ARedHel66"
+    },
+    {
+      "uuid": "c53ed454-efba-4dcf-a307-ba9eb26c58d3",
+      "cape": "earth",
+      "name": "PrezGman"
+    },
+    {
+      "uuid": "0de2e5f8-9170-49b6-999c-5f1fca7d0ad4",
+      "cape": "earth",
+      "name": "creeperchick15"
+    },
+    {
+      "uuid": "e4be2000-6bfb-4003-b4e5-f6dc4f153471",
+      "cape": "earth",
+      "name": "sonic5223"
+    },
+    {
+      "uuid": "34314a92-dc5c-43a7-afa8-48f101699203",
+      "cape": "earth",
+      "name": "Master_Apple"
+    },
+    {
+      "uuid": "6a419733-b550-46d3-a21c-46656b801849",
+      "cape": "earth",
+      "name": "urix123"
+    },
+    {
+      "uuid": "f71b1f8b-4657-4347-a74b-0d1b0b25659f",
+      "cape": "earth",
+      "name": "monkeypants_271"
+    },
+    {
+      "uuid": "c1785921-12bb-4a71-b082-b422153f267b",
+      "cape": "earth",
+      "name": "Nomad043"
+    },
+    {
+      "uuid": "1dafe96c-b8a3-4cf6-be51-367468409943",
+      "cape": "earth",
+      "name": "Malstrim"
+    },
+    {
+      "uuid": "504e79e9-7f46-4068-8611-f18075df5c4e",
+      "cape": "earth",
+      "name": "Cthulhu"
+    },
+    {
+      "uuid": "09d4c327-6150-4341-b145-e3048fb13d04",
+      "cape": "earth",
+      "name": "Akahito666"
+    },
+    {
+      "uuid": "d41727d5-8ec9-47f7-a8de-eabcb2577f9f",
+      "cape": "earth",
+      "name": "Timsuper2"
+    },
+    {
+      "uuid": "6f71c011-4d91-4942-904d-c9b63326df4c",
+      "cape": "earth",
+      "name": "Sonic_Blender"
+    },
+    {
+      "uuid": "fab0af0f-6890-4845-9474-5b0c0205d1a6",
+      "cape": "earth",
+      "name": "xX_CreeperMr_Xx"
+    },
+    {
+      "uuid": "74304286-45f5-4fe8-b5ac-a82bff3f1400",
+      "cape": "earth",
+      "name": "Santiv"
+    },
+    {
+      "uuid": "36ab85cc-86da-42a9-9172-956dfc80edec",
+      "cape": "earth",
+      "name": "SebaSphere"
+    },
+    {
+      "uuid": "d5d826c1-2390-4ceb-8b55-a160345b91e3",
+      "cape": "earth",
+      "name": "Takos"
+    },
+    {
+      "uuid": "592e9044-ec26-496e-9029-6a6dcc43d407",
+      "cape": "earth",
+      "name": "WetToast"
+    },
+    {
+      "uuid": "e655aa98-5fec-4b4e-b03a-7cd71df90b05",
+      "cape": "developer",
+      "name": "JoeZwet"
+    },
+    {
+      "uuid": "70fb1b09-505b-4206-b0c5-8f0237e8ee33",
+      "cape": "developer",
+      "name": "vos6434"
+    },
+    {
+      "uuid": "9af1156e-80bf-4f4c-9496-455555a3deb3",
+      "cape": "developer",
+      "name": "marcus8448"
+    },
+    {
+      "uuid": "eef3a603-1c1b-4c98-8264-d2f04b231ef4",
+      "cape": "developer",
+      "name": "SteveKunG"
+    },
+    {
+      "uuid": "903f6b43-d59b-42e6-919e-2f10c2ee141c",
+      "cape": "developer",
+      "name": "CraftableScience"
+    },
+    {
+      "uuid": "3f5150ea-fade-4233-ad40-719e207154e9",
+      "cape": "developer",
+      "name": "B0undarybreaker"
+    },
+    {
+      "uuid": "eefc9ec2-70c1-4cd4-8c36-65a692e0b90f",
+      "cape": "mars",
+      "name": "WatermElon_Musk"
+    },
+    {
+      "uuid": "dc90e627-3628-491d-8cc1-917b97f0d7e0",
+      "cape": "moon",
+      "name": "missingsemicolon"
+    },
+    {
+      "uuid": "6f0350f6-5372-4cdd-aa0b-0381753da000",
+      "cape": "moon",
+      "name": "TeenSarlacc"
+    },
+    {
+      "uuid": "e124c552-5b18-4826-b491-d3a1ac2a4418",
+      "cape": "developer",
+      "name": "iNewHorizons"
+    },
+    {
+      "uuid": "01d916c8-4932-4f54-8ab4-c49e6cd8bbf8",
+      "cape": "developer",
+      "name": "NBH_iNewHorizons"
+    }
+  ]
 }
