@@ -36,9 +36,6 @@
       "type": "minecraft:biased_to_bottom"
     },
     "y_scale": 0.5,
-    "surface_block": {
-      "Name": "galacticraft:moon_turf"
-    },
     "max_radius": 29,
     "min_radius": 8,
     "ideal_range_offset": 8

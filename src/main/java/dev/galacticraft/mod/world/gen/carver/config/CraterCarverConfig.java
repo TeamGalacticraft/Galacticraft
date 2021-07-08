@@ -24,7 +24,6 @@ package dev.galacticraft.mod.world.gen.carver.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.BlockState;
 import net.minecraft.util.math.floatprovider.FloatProvider;
 import net.minecraft.world.gen.YOffset;
 import net.minecraft.world.gen.carver.CarverConfig;
@@ -37,20 +36,17 @@ public class CraterCarverConfig extends CarverConfig {
             HeightProvider.CODEC.fieldOf("y").forGetter(i -> i.y),
             FloatProvider.VALUE_CODEC.fieldOf("y_scale").forGetter(i -> i.yScale),
             CarverDebugConfig.CODEC.fieldOf("debug_settings").forGetter(i -> i.debugConfig),
-            BlockState.CODEC.fieldOf("surface_block").forGetter(i -> i.surfaceBlock),
             Codec.INT.fieldOf("max_radius").forGetter(i -> i.maxRadius),
             Codec.INT.fieldOf("min_radius").forGetter(i -> i.minRadius),
             Codec.INT.fieldOf("ideal_range_offset").forGetter(i -> i.idealRangeOffset)
     ).apply(instance, CraterCarverConfig::new));
 
-    public final BlockState surfaceBlock;
     public final int maxRadius;
     public final int minRadius;
     public final int idealRangeOffset;
 
-    public CraterCarverConfig(float probability, HeightProvider y, FloatProvider yScale, CarverDebugConfig debugConfig, BlockState surfaceBlock, int maxRadius, int minRadius, int idealRangeOffset) {
+    public CraterCarverConfig(float probability, HeightProvider y, FloatProvider yScale, CarverDebugConfig debugConfig, int maxRadius, int minRadius, int idealRangeOffset) {
         super(probability, y, yScale, YOffset.fixed(0), false, debugConfig);
-        this.surfaceBlock = surfaceBlock;
         this.maxRadius = maxRadius;
         this.minRadius = minRadius;
         this.idealRangeOffset = idealRangeOffset;
