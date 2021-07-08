@@ -24,7 +24,6 @@ package dev.galacticraft.mod.world.gen.carver;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
-import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
@@ -45,12 +44,6 @@ public class CraterCarver extends Carver<CraterCarverConfig> {
 
     @Override
     public boolean carve(CarverContext context, CraterCarverConfig config, Chunk chunk, Function<BlockPos, Biome> posToBiome, Random random, AquiferSampler aquiferSampler, ChunkPos pos, BitSet carvingMask) {
-        if (chunk.getPos().equals(pos)) {
-            BlockPos.Mutable mutable = new BlockPos.Mutable(15, 0, 15);
-            for (int i = 60; i < 128; i++) {
-                chunk.setBlockState(mutable.setY(i), Blocks.ANDESITE.getDefaultState(), false);
-            }
-        }
         int y = 128;//config.y.get(random, context);
         //pos = center chunk pos
         BlockPos craterCenter = pos.getBlockPos(random.nextInt(16), y, random.nextInt(16));
