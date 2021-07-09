@@ -45,10 +45,10 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class AdvancedSolarPanelScreen extends MachineHandledScreen<SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity>> {
+public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolarPanelBlockEntity, SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity>> {
     public AdvancedSolarPanelScreen(SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
-        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        super(handler, inv, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
+        this.addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, this.machine::getStatus));
     }
 
     @Override
@@ -61,13 +61,13 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<SimpleMachine
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
         List<Text> lines = new LinkedList<>();
-        if (this.handler.machine.getStatus().getType().isActive()) {
+        if (this.machine.getStatus().getType().isActive()) {
             long time = world.getTimeOfDay() % 24000;
             if (time > 6000) {
                 time = 6000 - (time - 6000);
             }
 
-            lines.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", (int) this.handler.machine.getEnergyConsumption()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", (int) this.machine.getEnergyConsumption()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
         }
         return lines;
     }

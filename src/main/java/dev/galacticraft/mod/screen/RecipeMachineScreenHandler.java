@@ -23,35 +23,57 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.mod.api.screen.MachineScreenHandler;
-import dev.galacticraft.mod.block.entity.CircuitFabricatorBlockEntity;
+import dev.galacticraft.mod.block.entity.RecipeMachineBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
+import net.minecraft.screen.ScreenHandlerType;
+
+import java.util.function.Supplier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CircuitFabricatorScreenHandler extends MachineScreenHandler<CircuitFabricatorBlockEntity> {
+public class RecipeMachineScreenHandler<T extends RecipeMachineBlockEntity<?, ?>> extends MachineScreenHandler<T> {
+    private final Supplier<ScreenHandlerType<? extends MachineScreenHandler<T>>> type;
+
     public final Property progress = new Property() {
         @Override
         public int get() {
-            return CircuitFabricatorScreenHandler.this.machine.progress;
+            return RecipeMachineScreenHandler.this.machine.progress();
         }
 
         @Override
         public void set(int value) {
-            CircuitFabricatorScreenHandler.this.machine.progress = value;
+            RecipeMachineScreenHandler.this.machine.progress(value);
         }
     };
 
-    public CircuitFabricatorScreenHandler(int syncId, PlayerEntity player, CircuitFabricatorBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerType.CIRCUIT_FABRICATOR_HANDLER);
+    public final Property maxProgress = new Property() {
+        @Override
+        public int get() {
+            return RecipeMachineScreenHandler.this.machine.maxProgress();
+        }
+
+        @Override
+        public void set(int value) {
+            RecipeMachineScreenHandler.this.machine.maxProgress(value);
+        }
+    };
+
+    protected RecipeMachineScreenHandler(int syncId, PlayerEntity player, T machine, Supplier<ScreenHandlerType<? extends MachineScreenHandler<T>>> type, int invX, int invY) {
+        super(syncId, player, machine, null);
+        this.type = type;
         this.addProperty(this.progress);
-        this.addPlayerInventorySlots(0, 94);
+        this.addProperty(this.maxProgress);
+        this.addPlayerInventorySlots(invX, invY);
     }
 
-    public CircuitFabricatorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (CircuitFabricatorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public static <T extends RecipeMachineBlockEntity<?, ?>> RecipeMachineScreenHandler<T> create(int syncId, PlayerEntity playerEntity, T machine, Supplier<ScreenHandlerType<? extends MachineScreenHandler<T>>> handlerType, int invX, int invY) {
+        return new RecipeMachineScreenHandler<>(syncId, playerEntity, machine, handlerType, invX, invY);
+    }
+
+    @Override
+    public ScreenHandlerType<?> getType() {
+        return this.type.get();
     }
 }

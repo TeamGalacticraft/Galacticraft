@@ -39,12 +39,12 @@ import net.minecraft.util.Formatting;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class RefineryScreen extends MachineHandledScreen<SimpleMachineScreenHandler<RefineryBlockEntity>> {
+public class RefineryScreen extends MachineHandledScreen<RefineryBlockEntity, SimpleMachineScreenHandler<RefineryBlockEntity>> {
     public RefineryScreen(SimpleMachineScreenHandler<RefineryBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.REFINERY_SCREEN);
+        super(handler, inv, title, Constant.ScreenTexture.REFINERY_SCREEN);
         this.backgroundHeight = 192;
 
-        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 29, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 29, 48, this::getEnergyTooltipLines, this.machine::getStatus));
     }
 
     @Override

@@ -657,6 +657,7 @@ public interface Constant {
         String MAX_SIZE = "MaxSize";
         String GC_DATA = "GCData";
         String FUEL_TIME = "FuelTime";
+        String FUEL_LENGTH = "FuelLength";
         String TEAM = "Team";
         String ACCESSIBILITY = "Accessibility";
         String SECURITY = "Security";
@@ -673,6 +674,7 @@ public interface Constant {
         String REDSTONE_INTERACTION_TYPE = "RedstoneInteraction";
         String MATCH = "Match";
         String INTEGER = "Integer";
+        String MAX_PROGRESS = "MaxProgress";
     }
 
     interface Property {

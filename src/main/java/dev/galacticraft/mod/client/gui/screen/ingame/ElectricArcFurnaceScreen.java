@@ -24,8 +24,9 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.mod.block.entity.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
-import dev.galacticraft.mod.screen.ElectricArcFurnaceScreenHandler;
+import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -35,7 +36,7 @@ import net.minecraft.util.Formatting;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFurnaceScreenHandler> {
+public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFurnaceBlockEntity, RecipeMachineScreenHandler<ElectricArcFurnaceBlockEntity>> {
     private static final int ARROW_X = 78;
     private static final int ARROW_Y = 24;
 
@@ -45,16 +46,16 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
     private static final int ARROW_WIDTH = 22;
     private static final int ARROW_HEIGHT = 15;
 
-    public ElectricArcFurnaceScreen(ElectricArcFurnaceScreenHandler screenHandler, PlayerInventory playerInventory, Text title) {
-        super(screenHandler, playerInventory, screenHandler.machine.getWorld(), screenHandler.machine.getPos(), title, Constant.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
-        addWidget(new CapacitorWidget(screenHandler.machine.capacitor(), 8, 29, 48, this::getEnergyTooltipLines, screenHandler.machine::getStatus));
+    public ElectricArcFurnaceScreen(RecipeMachineScreenHandler<ElectricArcFurnaceBlockEntity> handler, PlayerInventory inv, Text title) {
+        super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
+        addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 29, 48, this::getEnergyTooltipLines, this.machine::getStatus));
     }
 
     @Override
     protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         super.renderBackground(matrices, delta, mouseX, mouseY);
-        if (handler.machine.cookLength != 0 && handler.machine.cookTime != 0) {
-            double scale = ((double)handler.machine.cookTime) / ((double)handler.machine.cookLength);
+        if (this.machine.maxProgress() != 0 && this.machine.progress() != 0) {
+            double scale = ((double)handler.machine.progress()) / ((double)handler.machine.maxProgress());
 
             this.drawTexture(matrices, this.x + ARROW_X, this.y + ARROW_Y, LIT_ARROW_X, LIT_ARROW_Y, (int) (((double)ARROW_WIDTH) * scale), ARROW_HEIGHT);
         }

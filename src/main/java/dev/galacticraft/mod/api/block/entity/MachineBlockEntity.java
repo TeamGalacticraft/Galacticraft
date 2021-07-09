@@ -187,6 +187,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     }
 
     public void setStatus(MachineStatus status) {
+        assert this.world != null;
+        if (!this.world.isClient()) this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(MachineBlock.ACTIVE, status.getType().isActive()));
         this.configuration.setStatus(status);
     }
 

@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
@@ -140,7 +139,6 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
                 this.heat = Math.min(1, this.heat + 0.004);
             }
         }
-        this.world.setBlockState(this.pos, this.getCachedState().with(Constant.Property.ACTIVE, this.getHeat() > 0));
     }
 
     @Nullable

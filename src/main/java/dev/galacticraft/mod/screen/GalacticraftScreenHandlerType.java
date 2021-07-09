@@ -28,6 +28,7 @@ import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.block.entity.*;
 import dev.galacticraft.mod.mixin.ExtendedScreenHandlerTypeAccessor;
 import dev.galacticraft.mod.screen.factory.MachineScreenHandlerFactory;
+import dev.galacticraft.mod.screen.factory.RecipeMachineScreenHandlerFactory;
 import dev.galacticraft.mod.screen.factory.SimpleMachineScreenHandlerFactory;
 import io.netty.buffer.ByteBufAllocator;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
@@ -64,26 +65,24 @@ public class GalacticraftScreenHandlerType {
                     )
             );
 
-    public static final Identifier CIRCUIT_FABRICATOR_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.CIRCUIT_FABRICATOR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<CircuitFabricatorScreenHandler> CIRCUIT_FABRICATOR_HANDLER =
-            ScreenHandlerRegistry.registerExtended(
-                    CIRCUIT_FABRICATOR_HANDLER_ID,
-                    CircuitFabricatorScreenHandler::new
+    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<CircuitFabricatorBlockEntity>> CIRCUIT_FABRICATOR_HANDLER =
+            Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.CIRCUIT_FABRICATOR_SCREEN_HANDLER),
+                    new ExtendedScreenHandlerType<>(
+                            RecipeMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.CIRCUIT_FABRICATOR_HANDLER, 94)
+                    )
             );
 
-
-    public static final Identifier COMPRESSOR_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.COMPRESSOR_SCREEN_HANDLER);
     public static final ScreenHandlerType<CompressorScreenHandler> COMPRESSOR_HANDLER =
             ScreenHandlerRegistry.registerExtended(
-                    COMPRESSOR_HANDLER_ID,
+                    new Identifier(Constant.MOD_ID, Constant.ScreenHandler.COMPRESSOR_SCREEN_HANDLER),
                     CompressorScreenHandler::new
             );
 
-    public static final Identifier ELECTRIC_COMPRESSOR_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ELECTRIC_COMPRESSOR_SCREEN_HANDLER);
-    public static final ScreenHandlerType<ElectricCompressorScreenHandler> ELECTRIC_COMPRESSOR_HANDLER =
-            ScreenHandlerRegistry.registerExtended(
-                    ELECTRIC_COMPRESSOR_HANDLER_ID,
-                    ElectricCompressorScreenHandler::new
+    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR_HANDLER =
+            Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ELECTRIC_COMPRESSOR_SCREEN_HANDLER),
+                    new ExtendedScreenHandlerType<>(
+                            RecipeMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.ELECTRIC_COMPRESSOR_HANDLER)
+                    )
             );
 
     public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity>> ENERGY_STORAGE_MODULE_HANDLER =
@@ -103,21 +102,21 @@ public class GalacticraftScreenHandlerType {
     public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<OxygenCompressorBlockEntity>> OXYGEN_COMPRESSOR_HANDLER =
             Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_COMPRESSOR_SCREEN_HANDLER),
                     new ExtendedScreenHandlerType<>(
-                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER, 84)
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER)
                     )
             );
 
     public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<OxygenSealerBlockEntity>> OXYGEN_SEALER_HANDLER =
             Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_SEALER_SCREEN_HANDLER),
                     new ExtendedScreenHandlerType<>(
-                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.OXYGEN_SEALER_HANDLER, 84)
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.OXYGEN_SEALER_HANDLER)
                     )
             );
 
     public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<OxygenDecompressorBlockEntity>> OXYGEN_DECOMPRESSOR_HANDLER =
             Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_DECOMPRESSOR_SCREEN_HANDLER),
                     new ExtendedScreenHandlerType<>(
-                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER, 84)
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER)
                     )
             );
 
@@ -131,22 +130,22 @@ public class GalacticraftScreenHandlerType {
     public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<RefineryBlockEntity>> REFINERY_HANDLER =
             Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.REFINERY_SCREEN_HANDLER),
                     new ExtendedScreenHandlerType<>(
-                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.REFINERY_HANDLER, 84)
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.REFINERY_HANDLER)
                     )
             );
 
-    public static final Identifier ELECTRIC_FURNACE_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ELECTRIC_FURNACE_SCREEN_HANDLER);
-    public static final ScreenHandlerType<ElectricFurnaceScreenHandler> ELECTRIC_FURNACE_HANDLER =
-            ScreenHandlerRegistry.registerExtended(
-                    ELECTRIC_FURNACE_HANDLER_ID,
-                    ElectricFurnaceScreenHandler::new
+    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE_HANDLER =
+            Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ELECTRIC_FURNACE_SCREEN_HANDLER),
+                    new ExtendedScreenHandlerType<>(
+                            RecipeMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.ELECTRIC_FURNACE_HANDLER)
+                    )
             );
 
-    public static final Identifier ELECTRIC_ARC_FURNACE_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ELECTRIC_ARC_FURNACE_SCREEN_HANDLER);
-    public static final ScreenHandlerType<ElectricArcFurnaceScreenHandler> ELECTRIC_ARC_FURNACE_HANDLER =
-            ScreenHandlerRegistry.registerExtended(
-                    ELECTRIC_ARC_FURNACE_HANDLER_ID,
-                    ElectricArcFurnaceScreenHandler::new
+    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<ElectricArcFurnaceBlockEntity>> ELECTRIC_ARC_FURNACE_HANDLER =
+            Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ELECTRIC_ARC_FURNACE_SCREEN_HANDLER),
+                    new ExtendedScreenHandlerType<>(
+                            RecipeMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER)
+                    )
             );
 
     public static final Identifier BUBBLE_DISTRIBUTOR_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.BUBBLE_DISTRIBUTOR_SCREEN_HANDLER);
@@ -159,7 +158,7 @@ public class GalacticraftScreenHandlerType {
     public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<OxygenStorageModuleBlockEntity>> OXYGEN_STORAGE_MODULE_HANDLER =
             Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_STORAGE_MODULE_SCREEN_HANDLER),
                     new ExtendedScreenHandlerType<>(
-                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER, 84)
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER)
                     )
             );
 

@@ -39,10 +39,10 @@ import net.minecraft.util.Formatting;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class EnergyStorageModuleScreen extends MachineHandledScreen<SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity>> {
+public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorageModuleBlockEntity, SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity>> {
     public EnergyStorageModuleScreen(SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.ENERGY_STORAGE_MODULE_SCREEN);
-        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 54, 20, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        super(handler, inv, title, Constant.ScreenTexture.ENERGY_STORAGE_MODULE_SCREEN);
+        this.addWidget(new CapacitorWidget(this.machine.capacitor(), 54, 20, 48, this::getEnergyTooltipLines, this.machine::getStatus));
     }
 
     @Override

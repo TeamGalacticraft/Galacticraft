@@ -52,10 +52,10 @@ plugins {
     java
     `maven-publish`
     id("fabric-loom") version("0.8-SNAPSHOT")
-    id("org.cadixdev.licenser") version("0.5.1")
+    id("org.cadixdev.licenser") version("0.6.1")
 }
 
-configure<JavaPluginConvention> {
+configure<JavaPluginExtension> {
     sourceCompatibility = JavaVersion.VERSION_16
     targetCompatibility = JavaVersion.VERSION_16
 }
@@ -64,7 +64,7 @@ group = modGroup
 version = modVersion + getVersionDecoration()
 
 base {
-    archivesBaseName = modName
+    archivesName.set(modName)
 }
 
 loom {
@@ -92,7 +92,7 @@ repositories {
             includeGroup("alexiil.mc.lib")
         }
     }
-    maven("https://maven.terraformersmc.com/") {
+    maven(/*"https://maven.terraformersmc.com/"*/"https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases/") { //fixme: wait for TerraformersMC maven to stabilize
         content {
             includeGroup("com.terraformersmc")
         }
@@ -251,7 +251,7 @@ publishing {
 }
 
 license {
-    header = project.file("LICENSE_HEADER.txt")
+    setHeader(project.file("LICENSE_HEADER.txt"))
     include("**/dev/galacticraft/**/*.java")
     include("build.gradle.kts")
     ext {
@@ -272,7 +272,7 @@ fun getVersionDecoration(): String {
     if (project.hasProperty("release")) return ""
 
     var version = "+build"
-    if ("git".exitValue() != 0) {
+    if ("git".exitValue() != 1) {
         version += ".unknown"
     } else {
         val branch = "git branch --show-current".execute()
@@ -293,7 +293,6 @@ fun getVersionDecoration(): String {
 
 // from https://discuss.gradle.org/t/how-to-run-execute-string-as-a-shell-command-in-kotlin-dsl/32235/9
 fun String.execute(): String {
-    print(this)
     val output = ByteArrayOutputStream()
     rootProject.exec {
         commandLine(split("\\s".toRegex()))

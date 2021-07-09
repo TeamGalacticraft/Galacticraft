@@ -24,12 +24,10 @@ package dev.galacticraft.mod.world.gen.chunk;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.structure.GalacticraftStructure;
 import dev.galacticraft.mod.world.biome.source.MoonBiomeSource;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.math.BlockPos;
@@ -38,7 +36,9 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.chunk.*;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
+import net.minecraft.world.gen.chunk.NoiseChunkGenerator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
@@ -47,23 +47,15 @@ import java.util.function.Supplier;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public final class MoonChunkGenerator extends NoiseChunkGenerator {
-    public static final Codec<MoonChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(MoonBiomeSource.CODEC.fieldOf("biome_source").forGetter((moonChunkGenerator) -> (MoonBiomeSource) moonChunkGenerator.biomeSource), Codec.LONG.fieldOf("seed").stable().forGetter((moonChunkGenerator) -> moonChunkGenerator.seed)).apply(instance, instance.stable(MoonChunkGenerator::new)));
-    public static final ChunkGeneratorSettings SETTINGS = new ChunkGeneratorSettings(
-            new StructuresConfig(false),
-            GenerationShapeConfig.create(
-                    0, 256, new NoiseSamplingConfig(0.8239043235D, 0.826137924865D, 120.0D, 140.0D),
-                    new SlideConfig(-10, 3, 0), new SlideConfig(-30, 2, -1),
-                    4, 2, 1.0D, -0.46875D, true,
-                    true, false, false),
-            GalacticraftBlock.MOON_ROCKS[0].getDefaultState(), Blocks.AIR.getDefaultState(), -10, 0, 1, 0,  false, false, false, false, false, false);
+    public static final Codec<MoonChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+            MoonBiomeSource.CODEC.fieldOf("biome_source").forGetter((moonChunkGenerator) -> (MoonBiomeSource) moonChunkGenerator.biomeSource),
+            Codec.LONG.fieldOf("seed").stable().forGetter((moonChunkGenerator) -> moonChunkGenerator.seed),
+            ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").stable().forGetter(moonChunkGenerator -> moonChunkGenerator.settings)
+    ).apply(instance, instance.stable(MoonChunkGenerator::new)));
 
     private final long seed;
 
-    public MoonChunkGenerator(MoonBiomeSource biomeSource, long seed) {
-        this(biomeSource, seed, () -> SETTINGS);
-    }
-
-    private MoonChunkGenerator(BiomeSource biomeSource, long seed, @NotNull Supplier<ChunkGeneratorSettings> settingsSupplier) {
+    public MoonChunkGenerator(BiomeSource biomeSource, long seed, @NotNull Supplier<ChunkGeneratorSettings> settingsSupplier) {
         super(biomeSource, seed, settingsSupplier);
         this.seed = seed;
     }
@@ -77,6 +69,11 @@ public final class MoonChunkGenerator extends NoiseChunkGenerator {
     @Environment(EnvType.CLIENT)
     public ChunkGenerator withSeed(long seed) {
         return new MoonChunkGenerator(this.biomeSource.withSeed(seed), seed, this.settings);
+    }
+
+    @Override
+    public int getSeaLevel() {
+        return Integer.MIN_VALUE;
     }
 
     @Override

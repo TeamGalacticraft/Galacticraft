@@ -45,11 +45,11 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class BasicSolarPanelScreen extends MachineHandledScreen<SimpleMachineScreenHandler<BasicSolarPanelBlockEntity>> {
+public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelBlockEntity, SimpleMachineScreenHandler<BasicSolarPanelBlockEntity>> {
     public BasicSolarPanelScreen(SimpleMachineScreenHandler<BasicSolarPanelBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
+        super(handler, inv, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
 
-        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, this.machine::getStatus));
     }
 
     @Override
@@ -62,8 +62,8 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<SimpleMachineScr
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
         List<Text> lines = new LinkedList<>();
-        if (this.handler.machine.getStatus().getType().isActive()) {
-            lines.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", this.handler.machine.getEnergyGenerated()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
+        if (this.machine.getStatus().getType().isActive()) {
+            lines.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", this.machine.getEnergyGenerated()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
         }
         return lines;
     }

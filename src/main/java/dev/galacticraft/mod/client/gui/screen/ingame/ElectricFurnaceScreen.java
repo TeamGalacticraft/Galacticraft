@@ -24,8 +24,10 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.mod.block.entity.ElectricFurnaceBlockEntity;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
-import dev.galacticraft.mod.screen.ElectricFurnaceScreenHandler;
+import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
@@ -34,7 +36,7 @@ import net.minecraft.util.Formatting;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceScreenHandler> {
+public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceBlockEntity, RecipeMachineScreenHandler<ElectricFurnaceBlockEntity>> {
     private static final int ARROW_X = 78;
     private static final int ARROW_Y = 24;
 
@@ -44,17 +46,17 @@ public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceS
     private static final int ARROW_WIDTH = 22;
     private static final int ARROW_HEIGHT = 15;
 
-    public ElectricFurnaceScreen(ElectricFurnaceScreenHandler screenHandler, PlayerInventory playerInventory, Text title) {
-        super(screenHandler, playerInventory, screenHandler.machine.getWorld(), screenHandler.machine.getPos(), title, Constant.ScreenTexture.ELECTRIC_FURNACE_SCREEN);
-        addWidget(new CapacitorWidget(screenHandler.machine.capacitor(), 8, 29, 48, this::getEnergyTooltipLines, screenHandler.machine::getStatus));
+    public ElectricFurnaceScreen(RecipeMachineScreenHandler<ElectricFurnaceBlockEntity> handler, PlayerInventory inv, Text title) {
+        super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_FURNACE_SCREEN);
+        addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 29, 48, this::getEnergyTooltipLines, this.machine::getStatus));
     }
 
     @Override
     protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         super.renderBackground(matrices, delta, mouseX, mouseY);
-        drawCenteredText(matrices, textRenderer, this.title, this.width / 2, this.y + 5, Formatting.GRAY.getColorValue());
-        if (handler.machine.cookLength != 0 && handler.machine.cookTime != 0) {
-            double scale = ((double)handler.machine.cookTime) / ((double)handler.machine.cookLength);
+        DrawableUtil.drawCenteredString(matrices, textRenderer, this.title, this.width / 2, this.y + 5, Formatting.GRAY.getColorValue());
+        if (this.machine.maxProgress() != 0 && this.machine.progress() != 0) {
+            double scale = ((double)handler.machine.progress()) / ((double)handler.machine.maxProgress());
 
             this.drawTexture(matrices, this.x + ARROW_X, this.y + ARROW_Y, LIT_ARROW_X, LIT_ARROW_Y, (int) (((double)ARROW_WIDTH) * scale), ARROW_HEIGHT);
         }

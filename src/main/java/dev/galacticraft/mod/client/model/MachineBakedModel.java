@@ -89,7 +89,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     @ApiStatus.Internal
     public static final CachingSpriteAtlas CACHING_SPRITE_ATLAS = new CachingSpriteAtlas(null);
     @ApiStatus.Internal
-    public static final Map<Block, SpriteProvider> SPRITE_PROVIDERS = new HashMap<>();
+    public static final Map<Block, SpriteProvider> SPRITE_PROVIDERS = new IdentityHashMap<>();
     @ApiStatus.Internal
     public static final Map<String, Set<String>> IDENTIFIERS = new HashMap<>();
     public static final List<Identifier> TEXTURE_DEPENDENCIES = new LinkedList<>();

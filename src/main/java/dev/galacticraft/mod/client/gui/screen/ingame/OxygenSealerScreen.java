@@ -39,12 +39,12 @@ import net.minecraft.util.Formatting;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenSealerScreen extends MachineHandledScreen<SimpleMachineScreenHandler<OxygenSealerBlockEntity>> {
+public class OxygenSealerScreen extends MachineHandledScreen<OxygenSealerBlockEntity, SimpleMachineScreenHandler<OxygenSealerBlockEntity>> {
     public OxygenSealerScreen(SimpleMachineScreenHandler<OxygenSealerBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.OXYGEN_SEALER_SCREEN);
+        super(handler, inv, title, Constant.ScreenTexture.OXYGEN_SEALER_SCREEN);
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;
-        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, this.machine::getStatus));
     }
 
     @Override

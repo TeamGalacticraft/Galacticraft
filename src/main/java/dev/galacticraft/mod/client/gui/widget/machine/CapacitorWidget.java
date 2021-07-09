@@ -26,6 +26,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.energy.api.CapacitorView;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -87,8 +88,8 @@ public class CapacitorWidget extends AbstractWidget {
     }
 
     private void render(MatrixStack matrices, int height, double scale) {
-        this.drawTexture(matrices, this.x, this.y, Constant.TextureCoordinate.ENERGY_DARK_X, Constant.TextureCoordinate.ENERGY_DARK_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, height);
-        this.drawTexture(matrices, this.x, (int) ((this.y - (height * scale)) + height), Constant.TextureCoordinate.ENERGY_LIGHT_X, Constant.TextureCoordinate.ENERGY_LIGHT_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, (int) (height * scale));
+        DrawableUtil.drawProgressTexture(matrices, this.x, this.y, this.getZOffset(), Constant.TextureCoordinate.ENERGY_DARK_X, Constant.TextureCoordinate.ENERGY_DARK_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, height, 128, 128);
+        DrawableUtil.drawProgressTexture(matrices, this.x, (int) ((this.y - (height * scale)) + height), this.getZOffset(), Constant.TextureCoordinate.ENERGY_LIGHT_X, Constant.TextureCoordinate.ENERGY_LIGHT_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, (float) (height * scale), 128, 128);
     }
 
     @Override
