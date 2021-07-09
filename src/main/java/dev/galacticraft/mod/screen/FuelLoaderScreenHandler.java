@@ -36,7 +36,7 @@ public class FuelLoaderScreenHandler extends MachineScreenHandler<FuelLoaderBloc
     public FuelLoaderScreenHandler(int syncId, PlayerEntity player, FuelLoaderBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerType.FUEL_LOADER_HANDLER);
         this.addProperties(new BlockPosPropertyDelegate(machine::getConnectionPos, machine::setConnectionPos));
-        this.addPlayerInventorySlots(0, 84);
+        this.addPlayerInventorySlots(8, 84);
     }
 
     public FuelLoaderScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {

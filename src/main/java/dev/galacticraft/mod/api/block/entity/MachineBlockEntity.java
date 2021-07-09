@@ -354,6 +354,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     }
 
     public void tick(World world, BlockPos pos, BlockState state) {
+        this.setCachedState(state);
         if (!world.isClient) {
             this.updateComponents();
             if (disabled()) {

@@ -24,32 +24,31 @@ package dev.galacticraft.mod.screen.property;
 
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class BlockPosPropertyDelegate implements PropertyDelegate {
-    private final Supplier<BlockPos> supplier;
-    private final Consumer<BlockPos> consumer;
-
-    public BlockPosPropertyDelegate(Supplier<BlockPos> supplier, Consumer<BlockPos> consumer) {
-        this.supplier = supplier;
-        this.consumer = consumer;
-    }
+public record BlockPosPropertyDelegate(Supplier<@NotNull BlockPos> supplier, Consumer<@NotNull BlockPos> consumer) implements PropertyDelegate {
 
     @Override
     public int get(int index) {
-        if (supplier.get() == null) return 0;
-        if (index == 0) return supplier.get().getX();
-        if (index == 1) return supplier.get().getY();
-        return supplier.get().getZ();
+        BlockPos pos = supplier.get();
+        if (index == 0) return pos.getX();
+        if (index == 1) return pos.getY();
+        return pos.getZ();
     }
 
     @Override
     public void set(int index, int value) {
-        if (index == 0) consumer.accept(new BlockPos(value, supplier.get().getY(), supplier.get().getZ()));
-        else if (index == 1) consumer.accept(new BlockPos(supplier.get().getX(), value, supplier.get().getZ()));
-        else consumer.accept(new BlockPos(supplier.get().getX(), supplier.get().getY(), value));
+        BlockPos pos = supplier.get();
+        if (index == 0) {
+            consumer.accept(new BlockPos(value, pos.getY(), pos.getZ()));
+        } else if (index == 1) {
+            consumer.accept(pos.withY(value));
+        } else {
+            consumer.accept(new BlockPos(pos.getX(), pos.getY(), value));
+        }
     }
 
     @Override

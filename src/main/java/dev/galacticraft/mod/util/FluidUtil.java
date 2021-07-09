@@ -35,12 +35,19 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.attributes.misc.Ref;
 import alexiil.mc.lib.attributes.misc.Reference;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tag.Tag;
+import net.minecraft.text.OrderedText;
+import net.minecraft.text.Style;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -155,5 +162,24 @@ public class FluidUtil {
     public static boolean isExtractableOrInsertable(World world, BlockPos pos, Direction direction) {
         return FluidAttributes.EXTRACTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null
                 || FluidAttributes.INSERTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null;
+    }
+
+    public static void createFluidTooltip(List<OrderedText> list, FluidAmount fraction) {
+        if (fraction.isZero()) list.add(new TranslatableText("tooltip.galacticraft.no_fluid").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());;
+        if (fraction.denominator == 1) {
+            list.add(new TranslatableText("tooltip.galacticraft.buckets", fraction.numerator).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
+        } else {
+            if (!Screen.hasShiftDown()) {
+                if (fraction.asInexactDouble() > 1.0D) {
+                    long whole = fraction.whole;
+                    int numerator = (int) (fraction.numerator % fraction.denominator);
+                    list.add(new TranslatableText("tooltip.galacticraft.buckets_mixed_number", whole, numerator, fraction.denominator).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
+                } else {
+                    list.add(new TranslatableText("tooltip.galacticraft.buckets_fraction", fraction.numerator, fraction.denominator).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
+                }
+            } else {
+                list.add(new TranslatableText("tooltip.galacticraft.buckets", fraction.asInexactDouble()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
+            }
+        }
     }
 }

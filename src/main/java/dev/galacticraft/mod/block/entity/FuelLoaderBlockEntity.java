@@ -66,29 +66,29 @@ import org.jetbrains.annotations.Nullable;
 public class FuelLoaderBlockEntity extends MachineBlockEntity {
     private static final int CHARGE_SLOT = 0;
     private static final int FUEL_INPUT_SLOT = 1;
-    private static final int FUEL = 1;
-    private BlockPos connectionPos = null;
+    private static final int FUEL = 0;
+    private BlockPos connectionPos = BlockPos.ORIGIN;
     private Direction check = null;
 
     public FuelLoaderBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.FUEL_LOADER_TYPE, pos, state);
     }
 
-    @Nullable
+    @NotNull
     public BlockPos getConnectionPos() {
         return connectionPos;
     }
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 53);
-        builder.addSlot(FUEL_INPUT_SLOT, SlotType.FLUID_TANK_IO, FluidUtil::isExtractable, 80, 53);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 61);
+        builder.addSlot(FUEL_INPUT_SLOT, SlotType.FLUID_TANK_IO, FluidUtil::isExtractable, 80, 61);
         return builder;
     }
 
     @Override
     protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
-        builder.addTank(FUEL, SlotType.FUEL_OUT, Constant.Filter.FUEL, 0, 0, 0);
+        builder.addTank(FUEL, SlotType.FUEL_IN, Constant.Filter.FUEL, 0, 0, 0);
         return builder;
     }
 
@@ -110,19 +110,20 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
 
     @Override
     public @NotNull MachineStatus updateStatus() {
-        if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.fluidInv().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.ONE, Simulation.SIMULATE).isEmpty()) return Status.NOT_ENOUGH_FUEL;
-        if (this.connectionPos == null) return Status.NO_ROCKET;
+        if (this.connectionPos == BlockPos.ORIGIN) return Status.NO_ROCKET;
         BlockEntity be = this.world.getBlockEntity(connectionPos);
-        if (be instanceof RocketLaunchPadBlockEntity) {
-            if (!((RocketLaunchPadBlockEntity) be).hasRocket()) return Status.NO_ROCKET;
-            Entity e = world.getEntityById(((RocketLaunchPadBlockEntity) be).getRocketEntityId());
-            if (!(e instanceof RocketEntity)) return Status.NO_ROCKET;
-            if (((RocketEntity) e).getTank().getInvFluid(0).getAmount_F().compareTo(((RocketEntity) e).getTank().getMaxAmount_F(0)) >= 0) return Status.ROCKET_IS_FULL;
+        Entity entity;
+        if (be instanceof RocketLaunchPadBlockEntity launchPad) {
+            if (!launchPad.hasRocket()) return Status.NO_ROCKET;
+            entity = world.getEntityById(launchPad.getRocketEntityId());
+            if (!(entity instanceof RocketEntity)) return Status.NO_ROCKET;
         } else {
             return Status.NO_ROCKET;
         }
+        if (((RocketEntity) entity).getTank().getInvFluid(0).getAmount_F().compareTo(((RocketEntity) entity).getTank().getMaxAmount_F(0)) >= 0) return Status.ROCKET_IS_FULL;
 
+        if (this.fluidInv().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.ONE, Simulation.SIMULATE).isEmpty()) return Status.NOT_ENOUGH_FUEL;
+        if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         return Status.LOADING;
     }
 
@@ -158,7 +159,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
 
     @Override
     public NbtCompound writeNbt(NbtCompound tag) {
-        if (connectionPos != null) {
+        if (connectionPos != BlockPos.ORIGIN) {
             tag.putBoolean("has_connection" , true);
             tag.putLong("connection_pos", connectionPos.asLong());
         }
@@ -170,6 +171,8 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
         super.readNbt(tag);
         if (tag.getBoolean("has_connection")) {
             connectionPos = BlockPos.fromLong(tag.getLong("connection_pos"));
+        } else {
+            connectionPos = BlockPos.ORIGIN;
         }
     }
 
@@ -178,7 +181,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     }
 
     @Environment(EnvType.CLIENT)
-    public void setConnectionPos(BlockPos connectionPos) {
+    public void setConnectionPos(@NotNull BlockPos connectionPos) {
         this.connectionPos = connectionPos;
     }
 
