@@ -87,7 +87,7 @@ public class CraterCarver extends Carver<CraterCarverConfig> {
                                 carvingMask.set(innerChunkX + (innerChunkZ << 4) + ((mutable.getY() + 128) << 8), true);
                             }
                             if (!fresh && dug + 1 >= toDig && !chunk.getBlockState(copy.set(mutable).move(Direction.DOWN, 2)).isAir()) {
-                                chunk.setBlockState(mutable.move(Direction.DOWN), posToBiome.apply(mutable).getGenerationSettings().getSurfaceConfig().getTopMaterial(), false);
+                                chunk.setBlockState(mutable.move(Direction.DOWN), posToBiome.apply(chunk.getPos().getBlockPos(mutable.getX(), mutable.getY(), mutable.getZ())).getGenerationSettings().getSurfaceConfig().getTopMaterial(), false);
                             }
                         } else {
                             dug--;
