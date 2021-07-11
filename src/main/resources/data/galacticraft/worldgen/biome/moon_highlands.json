@@ -20,8 +20,8 @@
   "surface_builder": "galacticraft:moon_highlands",
   "carvers": {
     "air": [
-      "galacticraft:moon_highlands_cave",
       "galacticraft:moon_craters",
+      "galacticraft:moon_highlands_cave",
       "galacticraft:canyon"
     ]
   },

@@ -20,8 +20,8 @@
   "surface_builder": "galacticraft:moon_mare",
   "carvers": {
     "air": [
-      "galacticraft:moon_mare_cave",
       "galacticraft:moon_craters",
+      "galacticraft:moon_mare_cave",
       "galacticraft:canyon"
     ]
   },
