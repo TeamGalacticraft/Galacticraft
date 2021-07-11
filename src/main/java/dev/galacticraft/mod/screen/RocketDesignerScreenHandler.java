@@ -40,11 +40,11 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
 
     public final PlayerEntity player;
     protected Inventory inventory;
-    public RocketDesignerBlockEntity blockEntity;
+    public RocketDesignerBlockEntity designer;
 
     public RocketDesignerScreenHandler(int syncId, PlayerEntity player, RocketDesignerBlockEntity machine) {
         super(GalacticraftScreenHandlerType.ROCKET_DESIGNER_HANDLER, syncId);
-        this.blockEntity = machine;
+        this.designer = machine;
         this.inventory = new InventoryFixedWrapper(machine.getInventory()) {
             @Override
             public boolean canPlayerUse(PlayerEntity invPlayer) {
@@ -99,7 +99,7 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
                 return itemStack;
             }
 
-            if (slotId < this.blockEntity.getInventory().getSlotCount()) {
+            if (slotId < this.designer.getInventory().getSlotCount()) {
 
                 if (!this.insertItem(itemStack1, this.inventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;

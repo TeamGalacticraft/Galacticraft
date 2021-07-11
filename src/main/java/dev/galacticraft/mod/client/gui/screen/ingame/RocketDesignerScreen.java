@@ -38,6 +38,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.resource.language.I18n;
@@ -59,23 +60,23 @@ import java.util.List;
 public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHandler> {
     protected RocketDesignerBlockEntity blockEntity;
 
-    private static final int WHITE_BOX_X = 192;
-    private static final int WHITE_BOX_Y = 166;
+    private static final int WHITE_BOX_U = 192;
+    private static final int WHITE_BOX_V = 166;
 
-    private static final int RED_BOX_X = WHITE_BOX_X + 25;
-    private static final int RED_BOX_Y = WHITE_BOX_Y + 25;
+    private static final int RED_BOX_U = WHITE_BOX_U + 25;
+    private static final int RED_BOX_V = WHITE_BOX_V + 25;
 
-    private static final int GREEN_BOX_X = RED_BOX_X + 25;
-    private static final int GREEN_BOX_Y = RED_BOX_Y + 25;
+    private static final int GREEN_BOX_U = RED_BOX_U + 25;
+    private static final int GREEN_BOX_V = RED_BOX_V + 25;
 
     private static final int BOX_WIDTH = 24;
     private static final int BOX_HEIGHT = 24;
 
-    private static final int SELECTED_TAB_X = 0;
-    private static final int SELECTED_TAB_Y = 166;
+    private static final int SELECTED_TAB_U = 0;
+    private static final int SELECTED_TAB_V = 166;
 
-    private static final int DEFAULT_TAB_X = 33;
-    private static final int DEFAULT_TAB_Y = 166;
+    private static final int DEFAULT_TAB_U = 33;
+    private static final int DEFAULT_TAB_V = 166;
 
     private static final int SELECTED_TAB_WIDTH = 32;
     private static final int SELECTED_TAB_HEIGHT = 26;
@@ -83,49 +84,49 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
     private static final int DEFAULT_TAB_WIDTH = 28;
     private static final int DEFAULT_TAB_HEIGHT = 25;
 
-    private static final int ARROW_X = 178;
-    private static final int ARROW_Y = 166;
+    private static final int ARROW_U = 178;
+    private static final int ARROW_V = 166;
 
     private static final int ARROW_WIDTH = 6;
     private static final int ARROW_HEIGHT = 11;
 
-    private static final int HOVERED_ARROW_X = 185;
-    private static final int HOVERED_ARROW_Y = 166;
+    private static final int HOVERED_ARROW_U = 185;
+    private static final int HOVERED_ARROW_V = 166;
 
-    private static final int BACK_ARROW_X = ARROW_X - ARROW_WIDTH;
-    private static final int BACK_ARROW_Y = ARROW_Y - ARROW_HEIGHT;
+    private static final int BACK_ARROW_U = ARROW_U - ARROW_WIDTH;
+    private static final int BACK_ARROW_V = ARROW_V - ARROW_HEIGHT;
 
     private static final int BACK_ARROW_WIDTH = -ARROW_WIDTH;
     private static final int BACK_ARROW_HEIGHT = -ARROW_HEIGHT;
 
-    private static final int BACK_HOVERED_ARROW_X = HOVERED_ARROW_X - ARROW_WIDTH;
-    private static final int BACK_HOVERED_ARROW_Y = HOVERED_ARROW_Y - ARROW_HEIGHT;
+    private static final int BACK_HOVERED_ARROW_U = HOVERED_ARROW_U - ARROW_WIDTH;
+    private static final int BACK_HOVERED_ARROW_V = HOVERED_ARROW_V - ARROW_HEIGHT;
 
-    private static final int RED_COLOUR_X = 62;
-    private static final int RED_COLOUR_Y = 182;
+    private static final int RED_COLOUR_U = 62;
+    private static final int RED_COLOUR_V = 182;
 
-    private static final int GREEN_COLOUR_X = 118;
-    private static final int GREEN_COLOUR_Y = 182;
+    private static final int GREEN_COLOUR_U = 118;
+    private static final int GREEN_COLOUR_V = 182;
 
-    private static final int BLUE_COLOUR_X = 62;
-    private static final int BLUE_COLOUR_Y = 187;
+    private static final int BLUE_COLOUR_U = 62;
+    private static final int BLUE_COLOUR_V = 187;
 
-    private static final int ALPHA_X = 118;
-    private static final int ALPHA_Y = 187;
+    private static final int ALPHA_U = 118;
+    private static final int ALPHA_V = 187;
 
     private static final int COLOUR_PICKER_HEIGHT = 5;
 
-    private static final int RED_END_COLOUR_X = 116;
-    private static final int RED_END_COLOUR_Y = 182;
+    private static final int RED_END_COLOUR_U = 116;
+    private static final int RED_END_COLOUR_V = 182;
 
-    private static final int GREEN_END_COLOUR_X = 172;
-    private static final int GREEN_END_COLOUR_Y = 182;
+    private static final int GREEN_END_COLOUR_U = 172;
+    private static final int GREEN_END_COLOUR_V = 182;
 
-    private static final int BLUE_END_COLOUR_X = 116;
-    private static final int BLUE_END_COLOUR_Y = 187;
+    private static final int BLUE_END_COLOUR_U = 116;
+    private static final int BLUE_END_COLOUR_V = 187;
 
-    private static final int ALPHA_END_X = 172;
-    private static final int ALPHA_END_Y = 187;
+    private static final int ALPHA_END_U = 172;
+    private static final int ALPHA_END_V = 187;
 
     private static final int COLOUR_PICKER_END_WIDTH = 2;
     private static final int COLOUR_PICKER_END_HEIGHT = 5;
@@ -143,7 +144,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         super(screenHandler, inv, title);
         this.backgroundWidth = 323;
         this.backgroundHeight = 164;
-        this.blockEntity = screenHandler.blockEntity;
+        this.blockEntity = screenHandler.designer;
         this.entity = new RocketEntity(GalacticraftEntityType.ROCKET, inv.player.world);
         this.validParts.addAll(GalacticraftRocketParts.getUnlockedParts(inv.player, currentType));
     }
@@ -154,16 +155,16 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
         DiffuseLighting.enableGuiDepthLighting();
 
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
 
         drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         for (int i = 0; i < ROCKET_PART_TYPES.length; i++) {
-            this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
+            RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
             if (ROCKET_PART_TYPES[i] != currentType) {
-                drawTexture(matrices, this.x - 27, this.y + 3 + (27 * i), DEFAULT_TAB_X, DEFAULT_TAB_Y, DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT);
+                drawTexture(matrices, this.x - 27, this.y + 3 + (27 * i), DEFAULT_TAB_U, DEFAULT_TAB_V, DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT);
             } else {
-                drawTexture(matrices, this.x - 29, this.y + 3 + (27 * i), SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
+                drawTexture(matrices, this.x - 29, this.y + 3 + (27 * i), SELECTED_TAB_U, SELECTED_TAB_V, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
             }
             matrices.push();
             matrices.translate((this.x - 31) + 13, this.y + 3 + ((27) * i) + 4, 0);
@@ -178,21 +179,22 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
         DiffuseLighting.enableGuiDepthLighting();
         RenderSystem.disableDepthTest();
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
 
         int x = 0;
         int y = 0;
         for (int i = page * 25; i < validParts.size(); i++) {
             RocketPart part = validParts.get(i);
 
-            this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
-            drawTexture(matrices, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), WHITE_BOX_X, WHITE_BOX_Y, BOX_WIDTH, BOX_HEIGHT);
+            RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
+            drawTexture(matrices, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), WHITE_BOX_U, WHITE_BOX_V, BOX_WIDTH, BOX_HEIGHT);
 
             if (part != null) {
                 matrices.push();
                 matrices.translate(this.x + 13 + ((BOX_WIDTH + 2) * x), this.y + 13 + ((BOX_HEIGHT + 2) * y), 0);
-                RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.blockEntity.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+                RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.designer.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
                 matrices.pop();
             }
             if (++x == 5) {
@@ -212,95 +214,95 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
         if (maxPage > 0) {
             if (page < maxPage) {
-                drawTexture(matrices, this.x + 60, this.y + 145, ARROW_X, ARROW_Y, ARROW_WIDTH, ARROW_HEIGHT);
+                drawTexture(matrices, this.x + 60, this.y + 145, ARROW_U, ARROW_V, ARROW_WIDTH, ARROW_HEIGHT);
             }
 
             if (page - 1 > 0) {
-                drawTexture(matrices, this.x + 40 - BACK_ARROW_HEIGHT, this.y + 145 - BACK_ARROW_WIDTH, BACK_ARROW_X, BACK_ARROW_Y, BACK_ARROW_WIDTH, BACK_ARROW_HEIGHT);
+                drawTexture(matrices, this.x + 40 - BACK_ARROW_HEIGHT, this.y + 145 - BACK_ARROW_WIDTH, BACK_ARROW_U, BACK_ARROW_V, BACK_ARROW_WIDTH, BACK_ARROW_HEIGHT);
             }
         }
         RocketPart part = this.blockEntity.getPart(RocketPartType.CONE);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 8, 0);
-            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.blockEntity.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.designer.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.BODY);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 24, 0);
-            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.blockEntity.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.designer.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.FIN);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 40, 0);
-            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.blockEntity.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.designer.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.UPGRADE);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 26, 0);
-            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.blockEntity.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.designer.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.BOOSTER);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 44, 0);
-            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.blockEntity.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.designer.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.BOTTOM);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 60, 0);
-            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.blockEntity.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.designer.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
 
         int red = (int) (56.0F * (this.blockEntity.getRed() / 255.0F));
         if (red >= 3 && red != 255) {
-            this.drawTexture(matrices, this.x + (257 + red - 2), this.y + 9, RED_END_COLOUR_X, RED_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
+            this.drawTexture(matrices, this.x + (257 + red - 2), this.y + 9, RED_END_COLOUR_U, RED_END_COLOUR_V, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
             red -= 2;
         }
 
-        this.drawTexture(matrices, this.x + 257, this.y + 9, RED_COLOUR_X, RED_COLOUR_Y, red, COLOUR_PICKER_HEIGHT);
+        this.drawTexture(matrices, this.x + 257, this.y + 9, RED_COLOUR_U, RED_COLOUR_V, red, COLOUR_PICKER_HEIGHT);
 
         int green = (int) (56.0F * (this.blockEntity.getGreen() / 255.0F));
         if (green >= 3 && green != 255) {
-            this.drawTexture(matrices, this.x + (257 + green - 2), this.y + 19, GREEN_END_COLOUR_X, GREEN_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
+            this.drawTexture(matrices, this.x + (257 + green - 2), this.y + 19, GREEN_END_COLOUR_U, GREEN_END_COLOUR_V, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
             green -= 2;
         }
 
-        this.drawTexture(matrices, this.x + 257, this.y + 19, GREEN_COLOUR_X, GREEN_COLOUR_Y, green, COLOUR_PICKER_HEIGHT);
+        this.drawTexture(matrices, this.x + 257, this.y + 19, GREEN_COLOUR_U, GREEN_COLOUR_V, green, COLOUR_PICKER_HEIGHT);
 
         int blue = (int) (56.0F * (this.blockEntity.getBlue() / 255.0F));
         if (blue >= 3 && blue != 255) {
-            this.drawTexture(matrices, this.x + (257 + blue - 2), this.y + 29, BLUE_END_COLOUR_X, BLUE_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
+            this.drawTexture(matrices, this.x + (257 + blue - 2), this.y + 29, BLUE_END_COLOUR_U, BLUE_END_COLOUR_V, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
             blue -= 2;
         }
 
-        this.drawTexture(matrices, this.x + 257, this.y + 29, BLUE_COLOUR_X, BLUE_COLOUR_Y, blue, COLOUR_PICKER_HEIGHT);
+        this.drawTexture(matrices, this.x + 257, this.y + 29, BLUE_COLOUR_U, BLUE_COLOUR_V, blue, COLOUR_PICKER_HEIGHT);
 
         int alpha = (int) (56.0F * (this.blockEntity.getAlpha() / 255.0F));
         if (alpha >= 3 && alpha != 255) {
-            this.drawTexture(matrices, this.x + (257 + alpha - 2), this.y + 39, ALPHA_END_X, ALPHA_END_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
+            this.drawTexture(matrices, this.x + (257 + alpha - 2), this.y + 39, ALPHA_END_U, ALPHA_END_V, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
             alpha -= 2;
         }
 
-        this.drawTexture(matrices, this.x + 257, this.y + 39, ALPHA_X, ALPHA_Y, alpha, COLOUR_PICKER_HEIGHT);
+        this.drawTexture(matrices, this.x + 257, this.y + 39, ALPHA_U, ALPHA_V, alpha, COLOUR_PICKER_HEIGHT);
 
         for (RocketPartType type : ROCKET_PART_TYPES) {
             if (this.blockEntity.getPart(type) != null) this.entity.setPart(this.blockEntity.getPart(type));
         }
         this.entity.setColor(this.blockEntity.getAlpha() << 24 | this.blockEntity.getRed() << 16 | this.blockEntity.getGreen() << 8 | this.blockEntity.getBlue());
 
-        drawRocket(this.x + 172 + 24, this.y + 64, 1, mouseX, mouseY, entity);
+        drawRocket(this.x + 172 + 24, this.y + 64, 20, mouseX, mouseY, entity);
 
         drawCenteredText(matrices, this.client.textRenderer, I18n.translate("ui.galacticraft.rocket_designer.name"), (this.width / 2), this.y + 6 - 15, Formatting.WHITE.getColorValue());
 
