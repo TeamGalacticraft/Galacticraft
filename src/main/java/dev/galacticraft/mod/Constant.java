@@ -431,6 +431,10 @@ public interface Constant {
         String ENERGY_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_size";
         String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_compressor_energy_consumption_rate";
         String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
+
+        String CLIENT = "config.galacticraft.client";
+        String SKYBOX = "config.galacticraft.client.skybox";
+        String MULTICOLOR_STARS = "config.galacticraft.client.skybox.multicolor_stars";
     }
 
     interface ScreenTexture {

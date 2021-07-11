@@ -38,7 +38,8 @@
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",
     "client.SoundSystemMixin",
-    "client.WorldRendererMixin"
+    "client.WorldRendererMixin",
+    "client.WorldRendererOverworldMixin"
   ],
   "minVersion": "0.8.0",
   "injectors": {
