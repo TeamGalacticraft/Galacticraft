@@ -64,7 +64,6 @@ public class MoonVillagerEntityRenderer extends MobEntityRenderer<MoonVillagerEn
         } else {
             this.shadowRadius = 0.5F;
         }
-
         matrixStack.scale(g, g, g);
     }
 }
