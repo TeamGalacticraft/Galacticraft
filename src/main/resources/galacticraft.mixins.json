@@ -30,7 +30,6 @@
     "client.AbstractClientPlayerEntityMixin",
     "client.AlphaWarningTitleScreenMixin",
     "client.ClientChunkSectionMixin",
-    "client.ClientPlayerEntityMixin",
     "client.HandledScreenAccessor",
     "client.InGameHudMixin",
     "client.MinecraftClientMixin",
