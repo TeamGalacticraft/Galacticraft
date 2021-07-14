@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.entity;
 
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.entity.attribute.GalacticraftEntityAttribute;
+import dev.galacticraft.mod.village.GalacticraftVillagerProfession;
 import dev.galacticraft.mod.village.MoonVillagerType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -57,7 +57,7 @@ public class MoonVillagerEntity extends VillagerEntity {
 
     @Override
     public void setVillagerData(VillagerData villagerData) {
-        if (villagerData != null && Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY.getId(villagerData.getProfession()) != null) {
+        if (villagerData != null && GalacticraftVillagerProfession.MOON_VILLAGER_PROFESSION_REGISTRY.getId(villagerData.getProfession()) != null) {
             super.setVillagerData(villagerData);
         }
     }

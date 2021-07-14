@@ -26,7 +26,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
 import io.netty.buffer.Unpooled;
@@ -51,7 +50,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     public BubbleDistributorScreen(BubbleDistributorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.BUBBLE_DISTRIBUTOR_SCREEN);
         this.textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, this.x + 132, this.y + 59, 26, 20, new LiteralText(String.valueOf(this.machine.getSize())));
-        textField.setChangedListener((s -> {
+        this.textField.setChangedListener((s -> {
             try {
                 if (Byte.parseByte(s) < 1) {
                     textField.setText(String.valueOf(this.machine.getTargetSize()));
@@ -61,7 +60,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
             }
         }));
 
-        textField.setTextPredicate((s -> {
+        this.textField.setTextPredicate((s -> {
             try {
                 return Byte.parseByte(s) >= 1;
             } catch (NumberFormatException ignore) {
@@ -69,7 +68,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
             }
         }));
 
-        this.addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, this.machine::getStatus));
+        this.addWidget(this.createCapacitorWidget(8, 8, 48));
     }
 
     @Override
@@ -105,7 +104,6 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     protected void renderForeground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.renderForeground(matrices, mouseX, mouseY, delta);
         textField.setText(String.valueOf(this.machine.getTargetSize()));
-        drawCenteredText(matrices, this.textRenderer, new TranslatableText("block.galacticraft.oxygen_bubble_distributor").asString(), (this.width / 2) + 28, this.y + 5, Formatting.DARK_GRAY.getColorValue());
 
         this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.machine.status").append(this.machine.getStatus().getName()), this.x + 60, this.y + 30, Formatting.DARK_GRAY.getColorValue());
 

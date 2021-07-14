@@ -442,6 +442,10 @@ public interface Constant {
 
         String MISC = "config.galacticraft.misc";
         String MISC_MACHINES = "config.galacticraft.misc.machines";
+
+        String CLIENT = "config.galacticraft.client";
+        String SKYBOX = "config.galacticraft.client.skybox";
+        String MULTICOLOR_STARS = "config.galacticraft.client.skybox.multicolor_stars";
     }
 
     interface ScreenTexture {

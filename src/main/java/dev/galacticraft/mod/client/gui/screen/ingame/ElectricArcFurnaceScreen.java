@@ -25,13 +25,10 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.ElectricArcFurnaceBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -48,7 +45,7 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
 
     public ElectricArcFurnaceScreen(RecipeMachineScreenHandler<ElectricArcFurnaceBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
-        addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 29, 48, this::getEnergyTooltipLines, this.machine::getStatus));
+        addWidget(this.createCapacitorWidget(8, 29, 48));
     }
 
     @Override
@@ -59,6 +56,5 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
 
             this.drawTexture(matrices, this.x + ARROW_X, this.y + ARROW_Y, LIT_ARROW_X, LIT_ARROW_Y, (int) (((double)ARROW_WIDTH) * scale), ARROW_HEIGHT);
         }
-        drawCenteredText(matrices, textRenderer, I18n.translate("block.galacticraft.electric_arc_furnace"), this.width / 2, this.y + 5, Formatting.DARK_GRAY.getColorValue());
     }
 }

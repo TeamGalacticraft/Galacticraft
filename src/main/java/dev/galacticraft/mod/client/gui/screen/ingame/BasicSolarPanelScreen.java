@@ -25,16 +25,12 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.BasicSolarPanelBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -48,14 +44,7 @@ import java.util.List;
 public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelBlockEntity, SimpleMachineScreenHandler<BasicSolarPanelBlockEntity>> {
     public BasicSolarPanelScreen(SimpleMachineScreenHandler<BasicSolarPanelBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
-
-        this.addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, this.machine::getStatus));
-    }
-
-    @Override
-    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        super.renderBackground(matrices, delta, mouseX, mouseY);
-        drawCenteredText(matrices, this.textRenderer, I18n.translate("block.galacticraft.basic_solar_panel"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        this.addWidget(this.createCapacitorWidget(8, 8, 48));
     }
 
     @Override

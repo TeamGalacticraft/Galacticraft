@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.ElectricFurnaceBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.client.util.math.MatrixStack;
@@ -48,7 +47,7 @@ public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceB
 
     public ElectricFurnaceScreen(RecipeMachineScreenHandler<ElectricFurnaceBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_FURNACE_SCREEN);
-        addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 29, 48, this::getEnergyTooltipLines, this.machine::getStatus));
+        addWidget(this.createCapacitorWidget(8, 29, 48));
     }
 
     @Override

@@ -44,8 +44,6 @@ import java.math.RoundingMode;
 public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorageModuleBlockEntity, SimpleMachineScreenHandler<OxygenStorageModuleBlockEntity>> {
     public OxygenStorageModuleScreen(SimpleMachineScreenHandler<OxygenStorageModuleBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
-        this.backgroundWidth = 176;
-        this.backgroundHeight = 166;
     }
 
     @Override
@@ -53,7 +51,6 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
         super.renderBackground(matrices, delta, mouseX, mouseY);
         this.drawOxygenBufferBar(matrices);
 
-        drawCenteredText(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_storage_module"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.current_oxygen", this.machine.fluidInv().getInvFluid(0).amount().asInt(1000, RoundingMode.HALF_DOWN)), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
         drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.max_oxygen", this.machine.fluidInv().getMaxAmount_F(0).asInt(1000, RoundingMode.HALF_DOWN)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
     }

@@ -35,6 +35,10 @@ public interface Config {
 
     void setAlphaWarningHidden(boolean flag);
 
+    boolean areMoreMulticoloredStarsEnabled();
+
+    void setMoreMulticolorStars(boolean flag);
+
     boolean isDebugLogEnabled();
 
     void setDebugLog(boolean flag);

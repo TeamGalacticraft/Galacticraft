@@ -26,16 +26,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.CircuitFabricatorBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -80,19 +77,14 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     public CircuitFabricatorScreen(RecipeMachineScreenHandler<CircuitFabricatorBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         this.backgroundHeight = 176;
-        this.addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 15, 48, this::getEnergyTooltipLines, this.machine::getStatus));
+        this.addWidget(this.createCapacitorWidget(8, 15, 48));
+        this.titleY -= 1;
     }
 
     @Override
     protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         super.renderBackground(matrices, delta, mouseX, mouseY);
         this.drawProgressBar(matrices);
-    }
-
-    @Override
-    protected void renderForeground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.renderForeground(matrices, mouseX, mouseY, delta);
-        drawCenteredText(matrices, textRenderer, I18n.translate("block.galacticraft.circuit_fabricator"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
     }
 
     //24 + 19 + 18 + 65 + 14 = 140
