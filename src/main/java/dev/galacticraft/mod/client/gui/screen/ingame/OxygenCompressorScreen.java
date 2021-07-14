@@ -25,15 +25,12 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.OxygenCompressorBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -42,9 +39,7 @@ import net.minecraft.util.Formatting;
 public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompressorBlockEntity, SimpleMachineScreenHandler<OxygenCompressorBlockEntity>> {
     public OxygenCompressorScreen(SimpleMachineScreenHandler<OxygenCompressorBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
-        this.backgroundWidth = 176;
-        this.backgroundHeight = 166;
-        this.addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, this.machine::getStatus));
+        this.addWidget(this.createCapacitorWidget(8, 8, 48));
     }
 
     @Override
@@ -56,6 +51,5 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
             height /= -125D;
             this.drawTexture(matrices, this.x + 93, this.y + 64, 187, 18, -11, (int) height);
         }
-        drawCenteredText(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_compressor"), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
     }
 }

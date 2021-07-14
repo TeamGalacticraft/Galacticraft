@@ -34,7 +34,6 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -68,7 +67,7 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        drawCenteredText(matrices, this.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredText(matrices, this.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, 0x404040);
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 

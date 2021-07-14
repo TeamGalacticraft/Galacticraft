@@ -38,6 +38,7 @@ import dev.galacticraft.mod.api.machine.SecurityInfo;
 import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.client.gui.widget.machine.AbstractWidget;
+import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.screen.slot.SlotType;
@@ -230,6 +231,12 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
         }, true);
     }
 
+    @Override
+    protected void init() {
+        super.init();
+        this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
+    }
+
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
         return Collections.emptyList();
@@ -335,6 +342,10 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
             }
             matrices.pop();
         }
+    }
+
+    protected void drawTitle(MatrixStack matrices) {
+        this.textRenderer.draw(matrices, this.title, this.titleX, this.titleY, 0x555555);
     }
 
     private void drawMachineFace(MatrixStack matrices, int x, int y, MachineBlockEntity machine, BlockFace face) {
@@ -970,6 +981,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
 
     @Override
     protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+        this.drawTitle(matrices);
     }
 
     @Override
@@ -1039,6 +1051,10 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
         if (widget == null) return null;
         this.widgets.add(widget);
         return widget;
+    }
+
+    public CapacitorWidget createCapacitorWidget(int x, int y, int height) {
+        return new CapacitorWidget(this.machine.capacitorView(), x, y, height, this::getEnergyTooltipLines, this.machine::getStatus);
     }
 
     public enum Tab {

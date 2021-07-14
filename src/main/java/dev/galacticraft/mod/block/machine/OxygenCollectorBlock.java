@@ -25,7 +25,6 @@ package dev.galacticraft.mod.block.machine;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -48,9 +47,7 @@ public class OxygenCollectorBlock extends SimpleMachineBlock<OxygenCollectorBloc
 
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-
-        if (blockEntity instanceof OxygenCollectorBlockEntity machine && machine.collectionAmount > 0) {
+        if (state.get(ACTIVE) && world.getBlockEntity(pos) instanceof OxygenCollectorBlockEntity machine && machine.collectionAmount > 0) {
             for (int count = 0; count < 10; count++) {
                 for (int i = 0; i < 32; ++i) {
                     double x2 = pos.getX() + random.nextFloat();
