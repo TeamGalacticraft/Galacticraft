@@ -1,7 +1,7 @@
 # Blender MTL File: 'GCRocketBottom1.blend'
 # Material Count: 1
 
-newmtl RocketTexture
+newmtl sprite
 ambient_occlusion true
 blend_mode CUTOUT
 Ns 96.078431

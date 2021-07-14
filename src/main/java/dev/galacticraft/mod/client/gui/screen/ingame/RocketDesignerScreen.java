@@ -320,10 +320,10 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
     public static void drawRocket(int x, int y, int size, float mouseX, float mouseY, RocketEntity entity) {
         float f = (float)Math.atan(mouseX / 40.0F);
         float g = (float)Math.atan(mouseY / 40.0F);
-        MatrixStack matrixStack = RenderSystem.getModelViewStack();
-        matrixStack.push();
-        matrixStack.translate(x, y, 1050.0D);
-        matrixStack.scale(1.0F, 1.0F, -1.0F);
+        MatrixStack matrices = RenderSystem.getModelViewStack();
+        matrices.push();
+        matrices.translate(x, y, 1050.0D);
+        matrices.scale(1.0F, 1.0F, -1.0F);
         RenderSystem.applyModelViewMatrix();
         MatrixStack matrixStack2 = new MatrixStack();
         matrixStack2.translate(0.0D, 0.0D, 1000.0D);
@@ -342,14 +342,12 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         entityRenderDispatcher.setRotation(quaternion2);
         entityRenderDispatcher.setRenderShadows(false);
         VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-        RenderSystem.runAsFancy(() -> {
-            entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack2, immediate, 15728880);
-        });
+        RenderSystem.runAsFancy(() -> entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack2, immediate, 15728880));
         immediate.draw();
         entityRenderDispatcher.setRenderShadows(true);
         entity.setYaw(i);
         entity.setPitch(j);
-        matrixStack.pop();
+        matrices.pop();
         RenderSystem.applyModelViewMatrix();
         DiffuseLighting.enableGuiDepthLighting();
     }

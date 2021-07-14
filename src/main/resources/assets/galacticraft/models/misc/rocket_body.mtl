@@ -1,7 +1,7 @@
 # Blender MTL File: 'rocketmidFinalV2.0.blend'
 # Material Count: 1
 
-newmtl RocketTexture
+newmtl sprite
 ambient_occlusion true
 blend_mode TRANSLUCENT
 Ns 96.078431
