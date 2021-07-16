@@ -23,8 +23,9 @@
 package dev.galacticraft.mod.accessor;
 
 import dev.galacticraft.api.rocket.RocketData;
+import org.jetbrains.annotations.Nullable;
 
 public interface ServerPlayerEntityAccessor {
-    RocketData getCelestialScreenState();
-    void setCelestialScreenState(RocketData data);
+    @Nullable RocketData getCelestialScreenState();
+    void setCelestialScreenState(@Nullable RocketData data);
 }

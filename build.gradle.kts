@@ -63,9 +63,7 @@ configure<JavaPluginExtension> {
 group = modGroup
 version = modVersion + getVersionDecoration()
 
-base {
-    archivesName.set(modName)
-}
+base.archivesName.set(modName)
 
 loom {
     refmapName = "galacticraft.refmap.json"

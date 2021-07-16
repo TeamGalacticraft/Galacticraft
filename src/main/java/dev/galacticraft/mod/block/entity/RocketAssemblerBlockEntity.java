@@ -48,6 +48,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -87,6 +88,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     private boolean ready = false;
     private boolean building = false;
     private boolean queuedUpdate = false;
+    private Registry<RocketPart> registry = null;
 
     public RocketAssemblerBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.ROCKET_ASSEMBLER_TYPE, pos, state);
@@ -100,6 +102,12 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         });
         
         fakeEntity = new RocketEntity(GalacticraftEntityType.ROCKET, null);
+    }
+
+    @Override
+    public void setWorld(World world) {
+        super.setWorld(world);
+        this.registry = RocketPart.getRegistry(world.getRegistryManager());
     }
 
     private void schematicUpdate(ItemStack prev, ItemStack current) {
@@ -120,10 +128,10 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         }
 
         if (!current.isEmpty() && current.getItem() == GalacticraftItem.ROCKET_SCHEMATIC) {
-            if (this.data.equals(RocketData.fromNbt(current.getTag(), this.world.getRegistryManager()))) {
+            if (this.data.equals(RocketData.fromNbt(current.getTag()))) {
                 return;
             }
-            this.data = RocketData.fromNbt(current.getTag(), this.world.getRegistryManager());
+            this.data = RocketData.fromNbt(current.getTag());
         }
 
         for (int i = 0; i < extendedInv.getSlotCount(); i++) {
@@ -143,8 +151,8 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         Map<Integer, ItemFilter> filters = new HashMap<>();
         RocketPartType[] values = RocketPartType.values();
         for (RocketPartType type : values) {
-            if (this.data.getPartForType(type).hasRecipe()) {
-                Identifier id = RocketPart.getId(this.world.getRegistryManager(), this.data.getPartForType(type));
+            if (RocketPart.getById(this.registry, this.data.getPartForType(type)).hasRecipe()) {
+                Identifier id = this.data.getPartForType(type);
                 for (Ingredient ingredient : this.recipes.get(id).getInput().keySet()) {
                     filters.put(slots++, ingredient::test); //damage matters
                 }
@@ -167,8 +175,8 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
                 if (data != RocketData.empty()) {
                     int a = 0;
                     for (int i = 0; i < RocketPartType.values().length; i++) {
-                        if (data.getPartForType(RocketPartType.values()[i]).hasRecipe()) {
-                            Identifier id = RocketPart.getId(world.getRegistryManager(), data.getPartForType(RocketPartType.values()[i]));
+                        if (RocketPart.getById(RocketAssemblerBlockEntity.this.registry, data.getPartForType(RocketPartType.values()[i])).hasRecipe()) {
+                            Identifier id = data.getPartForType(RocketPartType.values()[i]);
                             if (a + recipes.get(id).getInput().size() > slot) {
                                 for (int amount : recipes.get(id).getInput().values()) {
                                     if (a == slot) {
@@ -187,10 +195,11 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         };
 
         if (!data.isEmpty()) {
-            for (RocketPart part : data.parts()) {
-                if (part != null) {
-                    fakeEntity.setPart(part);
-                }
+            Identifier[] parts = data.parts();
+            for (int i = 0; i < parts.length; i++) {
+                Identifier part = parts[i];
+                assert part != null;
+                fakeEntity.setPart(part, RocketPartType.values()[i]);
             }
             fakeEntity.setColor(this.data.color());
         }
@@ -230,9 +239,9 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         }
 
         if (inventory.getInvStack(SCHEMATIC_INPUT_SLOT).getItem() == GalacticraftItem.ROCKET_SCHEMATIC) {
-            if (!this.data.equals(RocketData.fromNbt(inventory.getInvStack(SCHEMATIC_INPUT_SLOT).copy().getOrCreateTag(), this.world.getRegistryManager()))) {
+            if (!this.data.equals(RocketData.fromNbt(inventory.getInvStack(SCHEMATIC_INPUT_SLOT).copy().getOrCreateTag()))) {
                 ItemStack stack = new ItemStack(GalacticraftItem.ROCKET_SCHEMATIC);
-                data.toNbt(this.world.getRegistryManager(), stack.getOrCreateTag());
+                data.toNbt(stack.getOrCreateTag());
                 schematicUpdate(stack, inventory.getInvStack(SCHEMATIC_INPUT_SLOT));
                 return;
             }
@@ -242,8 +251,8 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         Map<Integer, ItemFilter> filters = new HashMap<>();
         RocketPartType[] values = RocketPartType.values();
         for (RocketPartType type : values) {
-            if (this.data.getPartForType(type).hasRecipe()) {
-                Identifier id = RocketPart.getId(world.getRegistryManager(), this.data.getPartForType(type));
+            if (RocketPart.getById(this.registry, this.data.getPartForType(type)).hasRecipe()) {
+                Identifier id = this.data.getPartForType(type);
                 for (Ingredient ingredient : this.recipes.get(id).getInput().keySet()) {
                     filters.put(slots++, ingredient::test);
                 }
@@ -266,8 +275,8 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
                 if (data != RocketData.empty()) {
                     int a = 0;
                     for (int i = 0; i < RocketPartType.values().length; i++) {
-                        if (data.getPartForType(RocketPartType.values()[i]).hasRecipe()) {
-                            Identifier id = RocketPart.getId(world.getRegistryManager(), data.getPartForType(RocketPartType.values()[i]));
+                        if (RocketPart.getById(RocketAssemblerBlockEntity.this.registry, data.getPartForType(RocketPartType.values()[i])).hasRecipe()) {
+                            Identifier id = data.getPartForType(RocketPartType.values()[i]);
                             if (a + recipes.get(id).getInput().size() > slot) {
                                 for (int amount : recipes.get(id).getInput().values()) {
                                     if (a == slot) {
@@ -292,16 +301,16 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         extendedInv = inv;
 
         if (!data.isEmpty()) {
-            for (RocketPart part : data.parts()) {
-                if (part != null) {
-                    fakeEntity.setPart(part);
-                }
+            Identifier[] parts = data.parts();
+            for (int i = 0; i < parts.length; i++) {
+                Identifier part = parts[i];
+                assert part != null;
+                fakeEntity.setPart(part, RocketPartType.values()[i]);
             }
         }
 
         extendedInv.addListener((view, slot, prev, cur) -> {
             if (extendedInv.getSlotCount() > 0) {
-
                 boolean success = true;
                 for (int i = 0; i < extendedInv.getSlotCount(); i++) {
                     if (extendedInv.getFilterForSlot(i).matches(extendedInv.getInvStack(i)) &&
@@ -330,7 +339,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     public void readNbt(NbtCompound nbtCompound) {
         super.readNbt(nbtCompound);
         this.inventory.fromTag(nbtCompound);
-        this.data = RocketData.fromNbt(nbtCompound.getCompound("data"), this.world.getRegistryManager());
+        this.data = RocketData.fromNbt(nbtCompound.getCompound("data"));
         this.extendedInv = new FullFixedItemInv(nbtCompound.getInt("slots"));
         this.extendedInv.fromTag(nbtCompound);
         this.schematicUpdateFromTag();
@@ -339,7 +348,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     @Override
     public NbtCompound writeNbt(NbtCompound nbtCompound) {
         super.writeNbt(nbtCompound);
-        nbtCompound.put("data", data.toNbt(this.world.getRegistryManager(), new NbtCompound()));
+        nbtCompound.put("data", data.toNbt(new NbtCompound()));
         nbtCompound.putInt("slots", extendedInv.getSlotCount());
         inventory.toTag(nbtCompound);
         extendedInv.toTag(nbtCompound);
@@ -384,7 +393,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
                     assembler.extendedInv.setInvStack(i, ItemStack.EMPTY, Simulation.ACTION);
                 }
                 ItemStack stack1 = new ItemStack(GalacticraftItem.ROCKET);
-                assembler.data.toNbt(assembler.world.getRegistryManager(), stack1.getOrCreateTag());
+                assembler.data.toNbt(stack1.getOrCreateTag());
                 assembler.inventory.setInvStack(ROCKET_OUTPUT_SLOT, stack1, Simulation.ACTION);
             }
         } else {

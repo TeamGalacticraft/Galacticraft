@@ -140,6 +140,18 @@ public class GalacticraftRocketParts {
     }
 
     @NotNull
+    public static Identifier getDefaultPartIdForType(RocketPartType type) {
+        return switch (type) {
+            case BODY -> new Identifier(Constant.MOD_ID, "default_body");
+            case CONE -> new Identifier(Constant.MOD_ID, "default_cone");
+            case FIN -> new Identifier(Constant.MOD_ID, "default_fin");
+            case BOTTOM -> new Identifier(Constant.MOD_ID, "default_bottom");
+            case BOOSTER -> new Identifier(Constant.MOD_ID, "default_booster");
+            case UPGRADE -> new Identifier(Constant.MOD_ID, "default_upgrade");
+        };
+    }
+
+    @NotNull
     @Environment(EnvType.CLIENT)
     public static RocketPartRenderer getPartToRenderForType(DynamicRegistryManager manager, @NotNull RocketPartType type) {
         return RocketPartRendererRegistry.INSTANCE.getRenderer(manager.get(AddonRegistry.ROCKET_PART_KEY).getId(getDefaultPartForType(type)));
@@ -147,7 +159,8 @@ public class GalacticraftRocketParts {
 
     public static List<RocketPart> getUnlockedParts(PlayerEntity player, RocketPartType type) {
         List<RocketPart> parts = new LinkedList<>();
-        for (RocketPart part : RocketPart.getAll(player.world.getRegistryManager())) {
+        Registry<RocketPart> registry = RocketPart.getRegistry(player.world.getRegistryManager());
+        for (RocketPart part : registry) {
             if (part.type() == type && part.isUnlocked(player)) {
                 parts.add(part);
             }
@@ -157,7 +170,8 @@ public class GalacticraftRocketParts {
 
     public static List<RocketPart> getUnlockedParts(PlayerEntity player) {
         List<RocketPart> parts = new LinkedList<>();
-        for (RocketPart part : RocketPart.getAll(player.world.getRegistryManager())) {
+        Registry<RocketPart> registry = RocketPart.getRegistry(player.world.getRegistryManager());
+        for (RocketPart part : registry) {
             if (part.isUnlocked(player)) {
                 parts.add(part);
             }

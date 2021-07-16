@@ -143,7 +143,7 @@ public class GalacticraftClientPacketReceiver {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "planet_menu_open"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-            RocketData rocketData = RocketData.fromNbt(packetByteBuf.readNbt(), clientPlayNetworkHandler.getRegistryManager());
+            RocketData rocketData = RocketData.fromNbt(packetByteBuf.readNbt());
             minecraftClient.execute(() -> minecraftClient.openScreen(new CelestialSelectionScreen(false, rocketData, true)));
         });
 
@@ -160,7 +160,7 @@ public class GalacticraftClientPacketReceiver {
             float pitch = (buf.readByte() * 360) / 256.0F;
             float yaw = (buf.readByte() * 360) / 256.0F;
 
-            RocketData data = RocketData.fromNbt(buf.readNbt(), client.world.getRegistryManager());
+            RocketData data = RocketData.fromNbt(buf.readNbt());
 
             client.execute(() -> {
                 RocketEntity entity = type.create(client.world);

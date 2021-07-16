@@ -24,6 +24,7 @@ package dev.galacticraft.mod.screen;
 
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.block.entity.RocketAssemblerBlockEntity;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.util.EnergyUtil;
@@ -34,6 +35,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.registry.Registry;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -58,17 +60,19 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         final int playerInvYOffset = 94;
         final int playerInvXOffset = 148;
 
+        Registry<RocketPart> registry = RocketPart.getRegistry(player.getEntityWorld().getRegistryManager());
+
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.SCHEMATIC_INPUT_SLOT, 235, 19) {
             @Override
             public boolean canInsert(ItemStack stack) {
-                RocketData data = RocketData.fromNbt(stack.getTag(), player.world.getRegistryManager());
+                RocketData data = RocketData.fromNbt(stack.getTag());
                 return this.getStack().isEmpty() || (stack.getItem() == GalacticraftItem.ROCKET_SCHEMATIC
-                        && data.cone().isUnlocked(player)
-                        && data.body().isUnlocked(player)
-                        && data.booster().isUnlocked(player)
-                        && data.bottom().isUnlocked(player)
-                        && data.fin().isUnlocked(player)
-                        && data.upgrade().isUnlocked(player)
+                        && RocketPart.getById(registry, data.cone()).isUnlocked(player)
+                        && RocketPart.getById(registry, data.body()).isUnlocked(player)
+                        && RocketPart.getById(registry, data.booster()).isUnlocked(player)
+                        && RocketPart.getById(registry, data.bottom()).isUnlocked(player)
+                        && RocketPart.getById(registry, data.fin()).isUnlocked(player)
+                        && RocketPart.getById(registry, data.upgrade()).isUnlocked(player)
                 );
             }
 

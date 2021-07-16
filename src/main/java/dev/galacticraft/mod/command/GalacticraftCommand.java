@@ -26,8 +26,8 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import dev.galacticraft.api.registry.RegistryUtil;
 import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
 import io.netty.buffer.Unpooled;
@@ -76,7 +76,7 @@ public class GalacticraftCommand {
                     CommandManager.literal("dimensiontp")
                             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                             .executes(context -> {
-                                context.getSource().getPlayer().networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer()).writeNbt(RocketData.empty().toNbt(context.getSource().getRegistryManager(), new NbtCompound()))));
+                                context.getSource().getPlayer().networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer()).writeNbt(RocketData.empty().toNbt(new NbtCompound()))));
                                 ((ServerPlayerEntityAccessor) context.getSource().getPlayer()).setCelestialScreenState(RocketData.empty());
                                 return 1;
                             })
@@ -110,7 +110,7 @@ public class GalacticraftCommand {
         }
         context.getSource().getServer().execute(() -> {
             try {
-                if (!RegistryUtil.getCelestialBodyByDimension(context.getSource().getRegistryManager(), context.getSource().getWorld().getRegistryKey()).isPresent()) {
+                if (!CelestialBody.getCelestialBodyByDimension(context.getSource().getRegistryManager(), context.getSource().getWorld().getRegistryKey()).isPresent()) {
                     context.getSource().sendError(new TranslatableText("commands.galacticraft.gchouston.cannot_detect_signal").setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
                     return;

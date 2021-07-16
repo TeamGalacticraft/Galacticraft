@@ -67,7 +67,7 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
                 return new BlockPos(Direction.valueOf(part.asString().toUpperCase()).getOpposite().getOffsetX(), 0, Direction.valueOf(part.asString().toUpperCase()).getOpposite().getOffsetZ());
             case NONE:
             case CENTER:
-                return new BlockPos(0, 0, 0);
+                return BlockPos.ORIGIN;
             default:
                 return new BlockPos(Direction.valueOf(part.asString().split("_")[1].toUpperCase()).getOpposite().getOffsetX(), 0, Direction.valueOf(part.asString().split("_")[0].toUpperCase()).getOpposite().getOffsetZ());
         }
@@ -90,7 +90,7 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
             case SOUTH_EAST:
                 return new BlockPos(-1, 0, -1);
             default:
-                return new BlockPos(0, 0, 0);
+                return BlockPos.ORIGIN;
         }*/
 
     @Override

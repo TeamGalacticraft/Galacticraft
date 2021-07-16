@@ -70,12 +70,15 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.structure.Structure;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
+
+import java.util.Optional;
 
 /**
  * Handles server-bound (C2S) packets.
@@ -396,7 +399,7 @@ public class GalacticraftServerPacketReceiver {
         }));
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "create_satellite"), ((server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
-            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() != RocketData.empty()) {
+            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() != null) {
                 server.execute(() -> {
                     CelestialBody<?, ?> parent = server.getRegistryManager().get(AddonRegistry.CELESTIAL_BODY_KEY).get(buffer.readIdentifier());
                     if (parent != null) {
@@ -409,10 +412,11 @@ public class GalacticraftServerPacketReceiver {
                                             Object2IntMap<Ingredient> ingredients = recipe.ingredients();
                                             for (Object2IntMap.Entry<Ingredient> entry : ingredients.object2IntEntrySet()) {
                                                 if (entry.getIntValue() != Inventories.remove(player.getInventory(), stack1 -> entry.getKey().test(stack1), entry.getIntValue(), false))
-                                                    throw new IllegalStateException("Inventory had enough items, but cannot extract said items?!?");
+                                                    throw new IllegalStateException("Inventory had enough items, but cannot extract said items?!? Player: " + player.getGameProfile().getName());
                                             }
                                         }
-                                        SatelliteType.registerSatellite(server, player, parent);
+                                        Optional<Structure> structure = server.getStructureManager().getStructure(new Identifier(Constant.MOD_ID, "satellite"));
+                                        SatelliteType.registerSatellite(server, player, parent, structure.orElse(new Structure()));
                                     }
                                 }
                             }
@@ -425,18 +429,20 @@ public class GalacticraftServerPacketReceiver {
         }));
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "planet_tp"), ((server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
-            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() != RocketData.empty()) {
+            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() != null) {
                 server.execute(() -> {
                     Identifier id = buffer.readIdentifier();
                     CelestialBody<?, ?> body = ((SatelliteAccessor) server).satellites().get(id);
                     if (body == null) body = server.getRegistryManager().get(AddonRegistry.CELESTIAL_BODY_KEY).get(id);
                     if (body.type() instanceof Landable landable && (((ServerPlayerEntityAccessor) player).getCelestialScreenState().canTravelTo(server.getRegistryManager(), body) || ((ServerPlayerEntityAccessor) player).getCelestialScreenState() == RocketData.empty())) {
-                        ((ServerPlayerEntityAccessor) player).setCelestialScreenState(RocketData.empty());
+                        ((ServerPlayerEntityAccessor) player).setCelestialScreenState(null);
                         player.teleport(server.getWorld(landable.world(body.config())), player.getX(), 500, player.getZ(), player.getYaw(), player.getPitch());
                     } else {
                         player.networkHandler.disconnect(new LiteralText("Invalid planet teleport packet received."));
                     }
                 });
+            } else {
+                player.networkHandler.disconnect(new LiteralText("Invalid planet teleport packet received."));
             }
         }));
     }

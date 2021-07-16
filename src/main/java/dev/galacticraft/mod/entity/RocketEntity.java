@@ -36,6 +36,7 @@ import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
+import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
@@ -88,7 +89,7 @@ import java.util.Collections;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RocketEntity extends Entity implements Rocket {
-    private static final TrackedData<LaunchStage> STAGE = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<LaunchStage>() {
+    private static final TrackedData<LaunchStage> STAGE = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<>() {
         @Override
         public void write(PacketByteBuf buf, LaunchStage stage) {
             buf.writeEnumConstant(stage);
@@ -111,7 +112,7 @@ public class RocketEntity extends Entity implements Rocket {
     public static final TrackedData<Integer> DAMAGE_WOBBLE_SIDE = DataTracker.registerData(RocketEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public static final TrackedData<Float> DAMAGE_WOBBLE_STRENGTH = DataTracker.registerData(RocketEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
-    public static final TrackedData<Double> SPEED = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<Double>() {
+    public static final TrackedData<Double> SPEED = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<>() {
         @Override
         public void write(PacketByteBuf buf, Double speed) {
             buf.writeDouble(speed);
@@ -128,7 +129,7 @@ public class RocketEntity extends Entity implements Rocket {
         }
     });
 
-    public static final TrackedData<Identifier[]> PARTS = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<Identifier[]>() {
+    public static final TrackedData<Identifier[]> PARTS = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<>() {
         @Override
         public void write(PacketByteBuf buf, Identifier[] parts) {
             for (byte i = 0; i < RocketPartType.values().length; i++) {
@@ -166,7 +167,7 @@ public class RocketEntity extends Entity implements Rocket {
         TrackedDataHandlerRegistry.register(PARTS.getType());
     }
 
-    private BlockPos linkedPad = new BlockPos(0, 0, 0);
+    private BlockPos linkedPad = BlockPos.ORIGIN;
     private final SimpleFixedFluidInv tank = new SimpleFixedFluidInv(1, FluidAmount.ofWhole(10));
     private final RocketPart[] parts = new RocketPart[RocketPartType.values().length];
 
@@ -297,10 +298,10 @@ public class RocketEntity extends Entity implements Rocket {
     @Override
     public void readCustomDataFromNbt(NbtCompound tag) {
         NbtCompound parts = tag.getCompound("Parts");
-        RocketPart[] list = new RocketPart[RocketPartType.values().length];
+        Identifier[] list = new Identifier[RocketPartType.values().length];
         for (RocketPartType type : RocketPartType.values()) {
             if (parts.contains(type.asString())) {
-                list[type.ordinal()] = RocketPart.getById(this.world.getRegistryManager(), new Identifier(parts.getString(type.asString())));
+                list[type.ordinal()] = new Identifier(parts.getString(type.asString()));
             }
         }
 
@@ -383,6 +384,9 @@ public class RocketEntity extends Entity implements Rocket {
         dataTracker.startTracking(DAMAGE_WOBBLE_STRENGTH, 0.0F);
 
         Identifier[] parts = new Identifier[RocketPartType.values().length];
+        for (RocketPartType value : RocketPartType.values()) {
+            parts[value.ordinal()] = GalacticraftRocketParts.getDefaultPartIdForType(value);
+        }
         dataTracker.startTracking(PARTS, parts);
     }
 
@@ -397,8 +401,8 @@ public class RocketEntity extends Entity implements Rocket {
         buf.writeDouble(getZ());
         buf.writeByte((int) (this.getPitch() / 360F * 256F));
         buf.writeByte((int) (this.getYaw() / 360F * 256F));
-        RocketPart[] parts = this.getParts();
-        buf.writeNbt(RocketData.create(this.getColor(), parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]).toNbt(this.world.getRegistryManager(), new NbtCompound()));
+        Identifier[] parts = this.getPartIds();
+        buf.writeNbt(RocketData.create(this.getColor(), parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]).toNbt(new NbtCompound()));
         return new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "rocket_spawn"), buf);
     }
 
@@ -447,7 +451,7 @@ public class RocketEntity extends Entity implements Rocket {
                 this.getTank().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 100), Simulation.ACTION); //todo find balanced values
                 if (timeAsState >= 400) {
                     this.setStage(LaunchStage.LAUNCHED);
-                    if (!(new BlockPos(0, 0, 0)).equals(this.getLinkedPad())) {
+                    if (this.getLinkedPad() != BlockPos.ORIGIN) {
                         for (int x = -1; x <= 1; x++) {
                             for (int z = -1; z <= 1; z++) {
                                 if (world.getBlockState(getLinkedPad().add(x, 0, z)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
@@ -489,8 +493,9 @@ public class RocketEntity extends Entity implements Rocket {
                 if (this.getPos().getY() >= 1200.0F) {
                     for (Entity entity : getPassengerList()) {
                         if (entity instanceof ServerPlayerEntity) {
-                            ((ServerPlayerEntityAccessor) entity).setCelestialScreenState(RocketData.create(this.getColor(), parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]));
-                            ServerPlayNetworking.send(((ServerPlayerEntity) entity), new Identifier(Constant.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer()).writeNbt(RocketData.create(this.getColor(), parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]).toNbt(this.world.getRegistryManager(), new NbtCompound())));
+                            Identifier[] partIds = this.getPartIds();
+                            ((ServerPlayerEntityAccessor) entity).setCelestialScreenState(RocketData.create(this.getColor(), partIds[0], partIds[1], partIds[2], partIds[3], partIds[4], partIds[5]));
+                            ServerPlayNetworking.send(((ServerPlayerEntity) entity), new Identifier(Constant.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer()).writeNbt(RocketData.create(this.getColor(), partIds[0], partIds[1], partIds[2], partIds[3], partIds[4], partIds[5]).toNbt(new NbtCompound())));
                             break;
                         }
                     }
@@ -655,6 +660,10 @@ public class RocketEntity extends Entity implements Rocket {
         return parts;
     }
 
+    public Identifier[] getPartIds() {
+        return this.dataTracker.get(PARTS);
+    }
+
     @Override
     public RocketPart getPartForType(RocketPartType type) {
         return this.getParts()[type.ordinal()];
@@ -662,18 +671,19 @@ public class RocketEntity extends Entity implements Rocket {
 
     @Override
     public void setPart(RocketPart part) {
-        Identifier[] ids = Arrays.copyOf(this.dataTracker.get(PARTS), this.dataTracker.get(PARTS).length);
-        ids[part.type().ordinal()] = RocketPart.getId(this.world.getRegistryManager(), part);
-        this.dataTracker.set(PARTS, ids);
+        this.setPart(RocketPart.getId(this.world.getRegistryManager(), part), part.type());
     }
 
     @Override
-    public void setParts(RocketPart[] parts) {
-        Identifier[] partsi = new Identifier[6];
-        for (int i = 0; i < parts.length; i++) {
-            partsi[i] = RocketPart.getId(this.world.getRegistryManager(), parts[i]);
-        }
-        this.dataTracker.set(PARTS, partsi);
+    public void setPart(Identifier identifier, RocketPartType rocketPartType) {
+        Identifier[] ids = Arrays.copyOf(this.dataTracker.get(PARTS), this.dataTracker.get(PARTS).length);
+        ids[rocketPartType.ordinal()] = identifier;
+        this.setParts(ids);
+    }
+
+    @Override
+    public void setParts(Identifier[] parts) {
+        this.dataTracker.set(PARTS, parts);
     }
 
     @Override

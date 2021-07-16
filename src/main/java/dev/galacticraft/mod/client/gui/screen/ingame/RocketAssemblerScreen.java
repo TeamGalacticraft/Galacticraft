@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import alexiil.mc.lib.attributes.Simulation;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.api.client.rocket.render.RocketPartRendererRegistry;
-import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
@@ -53,6 +52,7 @@ import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -121,14 +121,23 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
     public static final int PROGRESS_ARROW_X = 364;
     public static final int PROGRESS_ARROW_Y = 8;
 
-    private final RocketAssemblerBlockEntity blockEntity;
+    private final RocketAssemblerBlockEntity assembler;
+    private Registry<RocketPart> registry;
     private Tab tab = Tab.ROCKET;
 
     public RocketAssemblerScreen(RocketAssemblerScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, title);
         this.backgroundWidth = 323;
         this.backgroundHeight = 175;
-        this.blockEntity = handler.assembler;
+        this.assembler = handler.assembler;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        assert this.client != null;
+        assert this.client.world != null;
+        this.registry = RocketPart.getRegistry(this.client.world.getRegistryManager());
     }
 
     @Override
@@ -140,12 +149,12 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
         DiffuseLighting.enableGuiDepthLighting();
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
         drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        drawTexture(matrices, this.x + ENERGY_OVERLAY_RENDER_X, this.y + ENERGY_OVERLAY_RENDER_Y, ENERGY_OVERLAY_X, ENERGY_OVERLAY_Y, ENERGY_OVERLAY_WIDTH, (int) (((float) ENERGY_OVERLAY_HEIGHT) * (((float) this.blockEntity.getEnergyAttribute().getEnergy() / (float) this.blockEntity.getEnergyAttribute().getMaxCapacity()))));
+        drawTexture(matrices, this.x + ENERGY_OVERLAY_RENDER_X, this.y + ENERGY_OVERLAY_RENDER_Y, ENERGY_OVERLAY_X, ENERGY_OVERLAY_Y, ENERGY_OVERLAY_WIDTH, (int) (((float) ENERGY_OVERLAY_HEIGHT) * (((float) this.assembler.getEnergyAttribute().getEnergy() / (float) this.assembler.getEnergyAttribute().getMaxCapacity()))));
 
-        if (blockEntity.ready() && !blockEntity.building()) {
+        if (assembler.ready() && !assembler.building()) {
             drawTexture(matrices, this.x + 257, this.y + 18, BUILD_X, BUILD_Y, BUILD_WIDTH, BUILD_HEIGHT);
         }
 
@@ -156,8 +165,8 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftItem.ROCKET_SCHEMATIC), this.x - 20, this.y + 8);
             itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlock.MOON_TURF), this.x - 20, this.y + 35);
 
-            if (!this.blockEntity.data.isEmpty()) {
-                RocketDesignerScreen.drawRocket(this.x + 186 + 17, this.y + 73, 1, mouseX, mouseY, this.blockEntity.fakeEntity);
+            if (!this.assembler.data.isEmpty()) {
+                RocketDesignerScreen.drawRocket(this.x + 186 + 17, this.y + 73, 1, mouseX, mouseY, this.assembler.fakeEntity);
             }
         } else if (tab == Tab.LANDER) {
             drawTexture(matrices, this.x - 27, this.y + 3, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
@@ -167,9 +176,9 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlock.MOON_TURF), this.x - 20, this.y + 35);
         }
 
-        if (blockEntity.building()) {
-            float progress = blockEntity.getProgress();
-            this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);//OUT OF 600 //133 / 140
+        if (assembler.building()) {
+            float progress = assembler.getProgress();
+            RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
             final float maxProgress = Galacticraft.CONFIG_MANAGER.get().rocketAssemblerProcessTime();
             if (progress < ((maxProgress / 140F) * 133F)) {
                 drawTexture(matrices, this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, (int) (((float) PROGRESS_ARROW_WIDTH) * (progress / ((maxProgress / 140F) * 133F))), PROGRESS_ARROW_HEIGHT);
@@ -182,23 +191,23 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             int offsetY = 0;
             int offsetX = 0;
             int slot = 0;
-            if (this.blockEntity.data != RocketData.empty()) {
+            if (this.assembler.data != RocketData.empty()) {
                 for (int i = 0; i < RocketPartType.values().length; i++) {
-                    if (blockEntity.data.getPartForType(RocketPartType.values()[i]).hasRecipe()) {
+                    if (RocketPart.getById(this.registry, assembler.data.getPartForType(RocketPartType.values()[i])).hasRecipe()) {
                         if (offsetX != 0) {
                             offsetY++;
                             offsetX = 0;
                         }
-                        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
+                        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
                         final int baOY = offsetY;
                         boolean aG = true;
                         offsetX++;
 
-                        RocketAssemblerRecipe recipe = blockEntity.recipes.get(RocketPart.getId(blockEntity.getWorld().getRegistryManager(), blockEntity.data.getPartForType(RocketPartType.values()[i])));
+                        RocketAssemblerRecipe recipe = assembler.recipes.get(assembler.data.getPartForType(RocketPartType.values()[i]));
                         for (Object2IntMap.Entry<Ingredient> stack : recipe.getInput().object2IntEntrySet()) {
-                            this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
+                            RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
 
-                            if (this.blockEntity.getExtendedInv().getInvStack(slot).getCount() == stack.getIntValue()) {
+                            if (this.assembler.getExtendedInv().getInvStack(slot).getCount() == stack.getIntValue()) {
                                 drawTexture(matrices, this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
                             } else {
                                 drawTexture(matrices, this.x + 9 + ((RED_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((RED_BOX_HEIGHT + 2) * offsetY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
@@ -207,7 +216,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                             int time = (int) (System.currentTimeMillis() % 50000) / 1000;
                             ItemStack[] msc = stack.getKey().getMatchingStacksClient();
                             itemRenderer.renderGuiItemIcon(msc[time % msc.length], this.x + 13 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * offsetY));
-                            itemRenderer.renderGuiItemOverlay(client.textRenderer, msc[time % msc.length], this.x + 13 + (GREEN_BOX_WIDTH + 2) * offsetX, this.y + 13 + (GREEN_BOX_HEIGHT + 2) * offsetY, this.blockEntity.getExtendedInv().getInvStack(slot).getCount() + "/" + stack.getIntValue());
+                            itemRenderer.renderGuiItemOverlay(client.textRenderer, msc[time % msc.length], this.x + 13 + (GREEN_BOX_WIDTH + 2) * offsetX, this.y + 13 + (GREEN_BOX_HEIGHT + 2) * offsetY, this.assembler.getExtendedInv().getInvStack(slot).getCount() + "/" + stack.getIntValue());
 
                             if (check(mouseX, mouseY, (this.x + 9 + ((GREEN_BOX_WIDTH) + 2) * offsetX) + 2, (this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY)) + 2, GREEN_BOX_WIDTH - 4, GREEN_BOX_HEIGHT - 4)) {
                                 RenderSystem.disableDepthTest();
@@ -225,7 +234,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                             slot++;
                         }
 
-                        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
+                        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
                         if (aG) {
                             drawTexture(matrices, this.x + 9, this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * baOY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
                         } else {
@@ -233,7 +242,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                         }
                         matrices.push();
                         matrices.translate(this.x + 13, this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * baOY), 0);
-                        RocketPartRendererRegistry.INSTANCE.getRenderer(this.blockEntity.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(blockEntity.data.getPartForType(RocketPartType.values()[i]))).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+                        RocketPartRendererRegistry.INSTANCE.getRenderer(assembler.data.getPartForType(RocketPartType.values()[i])).renderGUI(client.world, matrices, mouseX, mouseY, delta);
                         matrices.pop();
                     }
                 }
@@ -249,7 +258,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
         super.render(stack, mouseX, mouseY, delta);
         DiffuseLighting.enableGuiDepthLighting();
 
-        if (blockEntity.data != null && blockEntity.data != RocketData.empty()) {
+        if (assembler.data != null && assembler.data != RocketData.empty()) {
             client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.rocket_info").asString(), this.x + 234, this.y + 41, 11184810);
 //            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.tier", blockEntity.data.getTier()).asString(), this.x + 234, this.y + 41 + 11, 11184810);
             client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.assembler_status").asString(), this.x + 234, this.y + 41 + 22, 11184810);
@@ -265,15 +274,15 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
     }
 
     private String getStatus() {
-        if (blockEntity.building()) {
+        if (assembler.building()) {
             return new TranslatableText("tooltip.galacticraft.building").asString();
-        } else if (blockEntity.ready()) {
-            if (blockEntity.getEnergyAttribute().getEnergy() > 20) {
+        } else if (assembler.ready()) {
+            if (assembler.getEnergyAttribute().getEnergy() > 20) {
                 return new TranslatableText("tooltip.galacticraft.ready").asString();
             } else {
                 return new TranslatableText("tooltip.galacticraft.no_energy").asString();
             }
-        } else if (this.blockEntity.data == null || this.blockEntity.data.isEmpty()) {
+        } else if (this.assembler.data == null || this.assembler.data.isEmpty()) {
             return new TranslatableText("tooltip.galacticraft.no_schematic").asString();
         } else {
             return new TranslatableText("tooltip.galacticraft.missing_resources").asString();
@@ -295,42 +304,42 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             int offsetX = 0;
             int offsetY = 0;
             int slot = 0;
-            if (this.blockEntity.data != RocketData.empty()) {
+            if (this.assembler.data != RocketData.empty()) {
                 for (int i = 0; i < RocketPartType.values().length; i++) {
-                    if (blockEntity.data.getPartForType(RocketPartType.values()[i]).hasRecipe()) {
+                    if (RocketPart.getById(this.registry, assembler.data.getPartForType(RocketPartType.values()[i])).hasRecipe()) {
                         if (offsetX != 0) {
                             offsetY++;
                         }
                         offsetX = 1;
-                        RocketAssemblerRecipe recipe = blockEntity.recipes.get(RocketPart.getId(blockEntity.getWorld().getRegistryManager(), blockEntity.data.getPartForType(RocketPartType.values()[i])));
+                        RocketAssemblerRecipe recipe = assembler.recipes.get(assembler.data.getPartForType(RocketPartType.values()[i]));
                         Object2IntMap<Ingredient> input = recipe.getInput();
                         for (int i1 = 0; i1 < input.size(); i1++) {
                             if (check(mouseX, mouseY, this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT)) {
                                 boolean success = false;
-                                if (slot < blockEntity.getExtendedInv().getSlotCount()) {
+                                if (slot < assembler.getExtendedInv().getSlotCount()) {
                                     if (this.handler.getCursorStack().isEmpty()) {
                                         success = true;
-                                        this.handler.setCursorStack(blockEntity.getExtendedInv().getInvStack(slot));
-                                        blockEntity.getExtendedInv().setInvStack(slot, ItemStack.EMPTY, Simulation.ACTION);
+                                        this.handler.setCursorStack(assembler.getExtendedInv().getInvStack(slot));
+                                        assembler.getExtendedInv().setInvStack(slot, ItemStack.EMPTY, Simulation.ACTION);
                                     } else {
-                                        if (blockEntity.getExtendedInv().getFilterForSlot(slot).matches(this.handler.getCursorStack())) {
-                                            if (blockEntity.getExtendedInv().getInvStack(slot).isEmpty()) {
-                                                if (blockEntity.getExtendedInv().getMaxAmount(slot, this.handler.getCursorStack()) >= this.handler.getCursorStack().getCount()) {
-                                                    blockEntity.getExtendedInv().setInvStack(slot, this.handler.getCursorStack().copy(), Simulation.ACTION);
+                                        if (assembler.getExtendedInv().getFilterForSlot(slot).matches(this.handler.getCursorStack())) {
+                                            if (assembler.getExtendedInv().getInvStack(slot).isEmpty()) {
+                                                if (assembler.getExtendedInv().getMaxAmount(slot, this.handler.getCursorStack()) >= this.handler.getCursorStack().getCount()) {
+                                                    assembler.getExtendedInv().setInvStack(slot, this.handler.getCursorStack().copy(), Simulation.ACTION);
                                                     this.handler.setCursorStack(ItemStack.EMPTY);
                                                 } else {
                                                     ItemStack stack = this.handler.getCursorStack().copy();
                                                     ItemStack stack1 = this.handler.getCursorStack().copy();
-                                                    stack.setCount(blockEntity.getExtendedInv().getMaxAmount(slot, blockEntity.getExtendedInv().getInvStack(slot)));
-                                                    stack1.setCount(stack1.getCount() - blockEntity.getExtendedInv().getMaxAmount(slot, blockEntity.getExtendedInv().getInvStack(slot)));
-                                                    blockEntity.getExtendedInv().setInvStack(slot, stack, Simulation.ACTION);
+                                                    stack.setCount(assembler.getExtendedInv().getMaxAmount(slot, assembler.getExtendedInv().getInvStack(slot)));
+                                                    stack1.setCount(stack1.getCount() - assembler.getExtendedInv().getMaxAmount(slot, assembler.getExtendedInv().getInvStack(slot)));
+                                                    assembler.getExtendedInv().setInvStack(slot, stack, Simulation.ACTION);
                                                     this.handler.setCursorStack(stack1);
                                                 }
                                             } else { // IMPOSSIBLE FOR THE 2 STACKS TO BE DIFFERENT AS OF RIGHT NOW. THIS MAY CHANGE.
                                                 // SO... IF IT DOES, YOU NEED TO UPDATE THIS.
                                                 ItemStack stack = this.handler.getCursorStack().copy();
-                                                int max = blockEntity.getExtendedInv().getMaxAmount(slot, blockEntity.getExtendedInv().getInvStack(slot));
-                                                stack.setCount(stack.getCount() + blockEntity.getExtendedInv().getInvStack(slot).getCount());
+                                                int max = assembler.getExtendedInv().getMaxAmount(slot, assembler.getExtendedInv().getInvStack(slot));
+                                                stack.setCount(stack.getCount() + assembler.getExtendedInv().getInvStack(slot).getCount());
                                                 if (stack.getCount() <= max) {
                                                     this.handler.setCursorStack(ItemStack.EMPTY);
                                                 } else {
@@ -339,7 +348,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                                                     stack1.setCount(stack1.getCount() - max);
                                                     this.handler.setCursorStack(stack1);
                                                 }
-                                                blockEntity.getExtendedInv().setInvStack(slot, stack, Simulation.ACTION);
+                                                assembler.getExtendedInv().setInvStack(slot, stack, Simulation.ACTION);
                                             }
                                             success = true;
                                         }
@@ -347,7 +356,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                                 }
 
                                 if (success) {
-                                    PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer().writeInt(slot)).writeBlockPos(this.blockEntity.getPos());
+                                    PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer().writeInt(slot)).writeBlockPos(this.assembler.getPos());
                                     this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "assembler_wc"), buf));
                                     return true;
                                 }
@@ -366,8 +375,8 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
 
         if (button == 0) {
             if (check(mouseX, mouseY, this.x + 257, this.y + 18, BUILD_WIDTH, BUILD_HEIGHT)) {
-                blockEntity.startBuilding();
-                client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "assembler_build"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(blockEntity.getPos())));
+                assembler.startBuilding();
+                client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "assembler_build"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(assembler.getPos())));
             }
         }
         return false;

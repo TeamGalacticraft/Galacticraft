@@ -24,12 +24,8 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
@@ -56,18 +52,21 @@ public class SpaceTravelScreen extends Screen {
         super(NarratorManager.EMPTY);
         this.planet = I18n.translate(planetKey);
         this.target = target;
-        this.text = MinecraftClient.getInstance().world.random.nextInt(POSSIBLE_TEXTS.length);
+        this.text = (int) (System.currentTimeMillis() % 3);
     }
 
+    @Override
     public boolean shouldCloseOnEsc() {
         return false;
     }
 
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
+        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         this.client.getTextureManager().bindTexture(TEXTURE);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, TEXTURE);
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
         bufferBuilder.vertex(0.0D, this.height, 0.0D).color(200, 200, 200, 255).texture(0.0F, (float)this.height / 32.0F).next();
         bufferBuilder.vertex(this.width, this.height, 0.0D).color(200, 200, 200, 255).texture((float)this.width / 32.0F, (float)this.height / 32.0F).next();
@@ -87,6 +86,7 @@ public class SpaceTravelScreen extends Screen {
         if (client.world.getRegistryKey().equals(this.target)) this.client.openScreen(null);
     }
 
+    @Override
     public boolean isPauseScreen() {
         return false;
     }

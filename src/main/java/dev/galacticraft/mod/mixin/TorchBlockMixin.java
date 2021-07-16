@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.api.registry.RegistryUtil;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
@@ -48,7 +47,7 @@ public abstract class TorchBlockMixin extends Block {
     @Deprecated
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
         super.onBlockAdded(state, world, pos, oldState, moved);
-        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = RegistryUtil.getCelestialBodyByDimension(world).orElse(null);
+        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getCelestialBodyByDimension(world).orElse(null);
         if (body != null && !body.type().atmosphere(body.config()).breathable()) {
             if (state.getBlock() == Blocks.TORCH) {
                 world.setBlockState(pos, GalacticraftBlock.UNLIT_TORCH.getDefaultState());
