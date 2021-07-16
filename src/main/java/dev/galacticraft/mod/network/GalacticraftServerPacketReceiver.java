@@ -290,10 +290,11 @@ public class GalacticraftServerPacketReceiver {
                     if (player.world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity) {
                         RocketDesignerBlockEntity blockEntity = (RocketDesignerBlockEntity) player.world.getBlockEntity(pos);
                         assert blockEntity != null;
-                        RocketPart part = RocketPart.getById(server.getRegistryManager(), buffer.readIdentifier());
+                        Identifier id = buffer.readIdentifier();
+                        RocketPart part = RocketPart.getById(server.getRegistryManager(), id);
                         if (part == null) player.networkHandler.disconnect(new LiteralText("Invalid rocket designer packet received."));
                         if (part.isUnlocked(player)) {
-                            blockEntity.setPart(part);
+                            blockEntity.setPart(id, part.type());
                             blockEntity.updateSchematic();
                         }
                     }

@@ -24,7 +24,6 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.api.client.rocket.render.RocketPartRendererRegistry;
-import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Constant;
@@ -47,6 +46,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 
@@ -194,7 +194,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
             if (part != null) {
                 matrices.push();
                 matrices.translate(this.x + 13 + ((BOX_WIDTH + 2) * x), this.y + 13 + ((BOX_HEIGHT + 2) * y), 0);
-                RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.designer.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+                RocketPartRendererRegistry.INSTANCE.getRenderer(RocketPart.getId(this.blockEntity.getWorld().getRegistryManager(), part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
                 matrices.pop();
             }
             if (++x == 5) {
@@ -221,46 +221,46 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                 drawTexture(matrices, this.x + 40 - BACK_ARROW_HEIGHT, this.y + 145 - BACK_ARROW_WIDTH, BACK_ARROW_U, BACK_ARROW_V, BACK_ARROW_WIDTH, BACK_ARROW_HEIGHT);
             }
         }
-        RocketPart part = this.blockEntity.getPart(RocketPartType.CONE);
+        Identifier part = this.blockEntity.getPart(RocketPartType.CONE);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 8, 0);
-            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.designer.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.BODY);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 24, 0);
-            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.designer.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.FIN);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 40, 0);
-            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.designer.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.UPGRADE);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 26, 0);
-            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.designer.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.BOOSTER);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 44, 0);
-            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.designer.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         part = this.blockEntity.getPart(RocketPartType.BOTTOM);
         if (part != null) {
             matrices.push();
             matrices.translate(this.x + 156, this.y + 60, 0);
-            RocketPartRendererRegistry.INSTANCE.getRenderer(this.handler.designer.getWorld().getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part)).renderGUI(client.world, matrices, mouseX, mouseY, delta);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).renderGUI(client.world, matrices, mouseX, mouseY, delta);
             matrices.pop();
         }
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_DESIGNER_SCREEN);
@@ -298,7 +298,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         this.drawTexture(matrices, this.x + 257, this.y + 39, ALPHA_U, ALPHA_V, alpha, COLOUR_PICKER_HEIGHT);
 
         for (RocketPartType type : ROCKET_PART_TYPES) {
-            if (this.blockEntity.getPart(type) != null) this.entity.setPart(this.blockEntity.getPart(type));
+            if (this.blockEntity.getPart(type) != null) this.entity.setPart(this.blockEntity.getPart(type), type);
         }
         this.entity.setColor(this.blockEntity.getAlpha() << 24 | this.blockEntity.getRed() << 16 | this.blockEntity.getGreen() << 8 | this.blockEntity.getBlue());
 
@@ -484,7 +484,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                 for (int i = page * 25; i < validParts.size(); i++) {
                     RocketPart part = validParts.get(i);
                     if (check(mouseX, mouseY, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), BOX_WIDTH, BOX_HEIGHT)) {
-                        this.blockEntity.setPartClient(part);
+                        this.blockEntity.setPartClient(RocketPart.getId(this.blockEntity.getWorld().getRegistryManager(), part), part.type());
                         break;
                     }
                     if (++x == 5) {
@@ -498,7 +498,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                 for (int i = page * 25; i < GalacticraftRocketParts.getUnlockedParts(this.handler.player).size(); i++) {
                     RocketPart part = GalacticraftRocketParts.getUnlockedParts(this.handler.player).get(i);
                     if (check(mouseX, mouseY, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), BOX_WIDTH, BOX_HEIGHT)) {
-                        this.blockEntity.setPartClient(part);
+                        this.blockEntity.setPartClient(RocketPart.getId(this.blockEntity.getWorld().getRegistryManager(), part), part.type());
                         break;
                     }
                     if (++x == 5) {

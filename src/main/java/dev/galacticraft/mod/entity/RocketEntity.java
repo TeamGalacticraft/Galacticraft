@@ -27,7 +27,6 @@ import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import dev.galacticraft.api.entity.Rocket;
-import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
@@ -169,7 +168,6 @@ public class RocketEntity extends Entity implements Rocket {
 
     private BlockPos linkedPad = BlockPos.ORIGIN;
     private final SimpleFixedFluidInv tank = new SimpleFixedFluidInv(1, FluidAmount.ofWhole(10));
-    private final RocketPart[] parts = new RocketPart[RocketPartType.values().length];
 
     public RocketEntity(EntityType<RocketEntity> type, World world) {
         super(type, world);
@@ -194,9 +192,9 @@ public class RocketEntity extends Entity implements Rocket {
 
     @Override
     public boolean canTravelTo(CelestialBody<?, ?> body) {
-        Object2BooleanMap<RocketPart> map = new Object2BooleanArrayMap<>();
+        Object2BooleanMap<Identifier> map = new Object2BooleanArrayMap<>();
         TravelPredicateType.AccessType type = TravelPredicateType.AccessType.PASS;
-        for (RocketPart part : this.parts) {
+        for (Identifier part : this.getPartIds()) {
             map.put(part, true);
             type = type.merge(this.travel(this.world.getRegistryManager(), part, body, map));
         }
@@ -204,19 +202,16 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
 
-    private TravelPredicateType.AccessType travel(DynamicRegistryManager manager, RocketPart part, CelestialBody<?, ?> type, Object2BooleanMap<RocketPart> map) {
-        return part.travelPredicate().canTravelTo(type, (p) -> {
-            return map.computeBooleanIfAbsent((RocketPart)p, (p1) -> {
-                if (Arrays.stream(this.getParts()).anyMatch((p2) -> {
-                    return RocketPart.getId(manager, p2).equals(RocketPart.getId(manager, p1));
-                })) {
-                    map.put((RocketPart)p, false);
-                    return this.travel(manager, p1, type, map) != TravelPredicateType.AccessType.BLOCK;
-                } else {
-                    return false;
-                }
-            });
-        });
+    private TravelPredicateType.AccessType travel(DynamicRegistryManager manager, Identifier part, CelestialBody<?, ?> type, Object2BooleanMap<Identifier> map) {
+        RocketPart part1 = RocketPart.getById(this.world.getRegistryManager(), part);
+        return part1.travelPredicate().canTravelTo(type, p -> map.computeBooleanIfAbsent((Identifier) p, (p1) -> {
+            if (Arrays.asList(RocketEntity.this.getPartIds()).contains(p1)) {
+                map.put(part, false);
+                return RocketEntity.this.travel(manager, p1, type, map) != TravelPredicateType.AccessType.BLOCK;
+            } else {
+                return false;
+            }
+        }));
     }
 
     @Override
@@ -326,9 +321,11 @@ public class RocketEntity extends Entity implements Rocket {
     public void writeCustomDataToNbt(NbtCompound tag) {
         NbtCompound parts = new NbtCompound();
 
-        for (RocketPart part : this.getParts()) {
+        Identifier[] partIds = this.getPartIds();
+        for (int i = 0; i < partIds.length; i++) {
+            Identifier part = partIds[i];
             if (part != null) {
-                parts.putString(part.type().asString(), this.world.getRegistryManager().get(AddonRegistry.ROCKET_PART_KEY).getId(part).toString());
+                parts.putString(RocketPartType.values()[i].asString(), part.toString());
             }
         }
 
@@ -634,10 +631,6 @@ public class RocketEntity extends Entity implements Rocket {
 
     @Override
     public void onJump() {
-        for (RocketPart part : this.getParts()) {
-            if (part == null) return;
-        }
-
         if (!this.getPassengerList().isEmpty() && ticksSinceJump > 10) {
             if (this.getPassengerList().get(0) instanceof ServerPlayerEntity) {
                 if (getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
@@ -653,25 +646,13 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public RocketPart[] getParts() {
-        for (int i = 0; i < this.dataTracker.get(PARTS).length; i++) {
-            this.parts[i] = RocketPart.getById(this.world.getRegistryManager(), this.dataTracker.get(PARTS)[i]);
-        }
-        return parts;
-    }
-
     public Identifier[] getPartIds() {
         return this.dataTracker.get(PARTS);
     }
 
     @Override
-    public RocketPart getPartForType(RocketPartType type) {
-        return this.getParts()[type.ordinal()];
-    }
-
-    @Override
-    public void setPart(RocketPart part) {
-        this.setPart(RocketPart.getId(this.world.getRegistryManager(), part), part.type());
+    public Identifier getPartForType(RocketPartType type) {
+        return this.getPartIds()[type.ordinal()];
     }
 
     @Override

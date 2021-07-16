@@ -25,8 +25,6 @@ package dev.galacticraft.mod.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
-import com.google.common.collect.Lists;
-import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.item.GalacticraftItem;
@@ -45,7 +43,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -60,12 +57,12 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     private int blue = 255;
     private int alpha = 255;
 
-    private RocketPart cone = null;
-    private RocketPart body = null;
-    private RocketPart fin = null;
-    private RocketPart booster = null;
-    private RocketPart bottom = null;
-    private RocketPart upgrade = null;
+    private Identifier cone = null;
+    private Identifier body = null;
+    private Identifier fin = null;
+    private Identifier booster = null;
+    private Identifier bottom = null;
+    private Identifier upgrade = null;
 
     private final FullFixedItemInv inventory = new FullFixedItemInv(1) {
         @Override
@@ -105,12 +102,12 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
         tag.putInt("blue", blue);
         tag.putInt("alpha", alpha);
 
-        if (cone != null) tag.putString("cone", Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), cone)).toString());
-        if (body != null) tag.putString("body", Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), body)).toString());
-        if (fin != null) tag.putString("fin", Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), fin)).toString());
-        if (booster != null) tag.putString("booster", Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), booster)).toString());
-        if (bottom != null) tag.putString("bottom", Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), bottom)).toString());
-        if (upgrade != null) tag.putString("upgrade", Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), upgrade)).toString());
+        if (cone != null) tag.putString("cone", cone.toString());
+        if (body != null) tag.putString("body", body.toString());
+        if (fin != null) tag.putString("fin", fin.toString());
+        if (booster != null) tag.putString("booster", booster.toString());
+        if (bottom != null) tag.putString("bottom", bottom.toString());
+        if (upgrade != null) tag.putString("upgrade", upgrade.toString());
 
         return tag;
     }
@@ -124,12 +121,12 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
         if (tag.contains("blue")) tag.getInt("blue");
         if (tag.contains("alpha")) alpha = tag.getInt("alpha");
 
-        if (tag.contains("cone")) cone = RocketPart.getById(this.world.getRegistryManager(), new Identifier(tag.getString("cone")));
-        if (tag.contains("body")) body = RocketPart.getById(this.world.getRegistryManager(), new Identifier(tag.getString("body")));
-        if (tag.contains("fin")) fin = RocketPart.getById(this.world.getRegistryManager(), new Identifier(tag.getString("fin")));
-        if (tag.contains("booster")) booster = RocketPart.getById(this.world.getRegistryManager(), new Identifier(tag.getString("booster")));
-        if (tag.contains("bottom")) bottom = RocketPart.getById(this.world.getRegistryManager(), new Identifier(tag.getString("bottom")));
-        if (tag.contains("upgrade")) upgrade = RocketPart.getById(this.world.getRegistryManager(), new Identifier(tag.getString("upgrade")));
+        if (tag.contains("cone")) cone = new Identifier(tag.getString("cone"));
+        if (tag.contains("body")) body = new Identifier(tag.getString("body"));
+        if (tag.contains("fin")) fin = new Identifier(tag.getString("fin"));
+        if (tag.contains("booster")) booster = new Identifier(tag.getString("booster"));
+        if (tag.contains("bottom")) bottom = new Identifier(tag.getString("bottom"));
+        if (tag.contains("upgrade")) upgrade = new Identifier(tag.getString("upgrade"));
     }
 
     @Override
@@ -143,7 +140,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     }
 
     @Nullable
-    public RocketPart getPart(RocketPartType type) {
+    public Identifier getPart(RocketPartType type) {
         return switch (type) {
             case BOOSTER -> booster;
             case BOTTOM -> bottom;
@@ -151,12 +148,11 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
             case BODY -> body;
             case FIN -> fin;
             case UPGRADE -> upgrade;
-            default -> null;
         };
     }
 
-    public void setPart(RocketPart part) {
-        switch (part.type()) {
+    public void setPart(Identifier part, RocketPartType type) {
+        switch (type) {
             case BOOSTER -> booster = part;
             case BOTTOM -> bottom = part;
             case CONE -> cone = part;
@@ -167,19 +163,15 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     }
 
     @Environment(EnvType.CLIENT)
-    public void setPartClient(RocketPart part) {
+    public void setPartClient(Identifier part, RocketPartType type) {
         assert world.isClient;
-        this.setPart(part);
+        this.setPart(part, type);
         this.sendDesignerPartUpdate(part);
     }
 
     @Environment(EnvType.CLIENT)
-    private void sendDesignerPartUpdate(RocketPart part) {
-        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "designer_part"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeIdentifier(Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), part)))));
-    }
-
-    public List<RocketPart> parts() {
-        return Lists.newArrayList(cone, body, booster, fin, bottom, upgrade);
+    private void sendDesignerPartUpdate(Identifier part) {
+        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "designer_part"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeIdentifier(part)));
     }
 
     public int getRed() {
@@ -248,19 +240,12 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
                 tag.putInt("blue", blue);
                 tag.putInt("alpha", alpha);
 
-                tag.putString("cone", Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), cone)).toString());
-                tag.putString("body", Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), body)).toString());
-                tag.putString("fin", Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), fin)).toString());
-                tag.putString("booster", Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), booster)).toString());
-                tag.putString("bottom", Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), bottom)).toString());
-                tag.putString("upgrade", Objects.requireNonNull(RocketPart.getId(this.world.getRegistryManager(), upgrade)).toString());
-
-//                int tier = 0;
-//                for (RocketPart part : parts()) {
-//                    tier = Math.max(part.getTier(parts()), tier);
-//                }
-//
-//                tag.putInt("tier", tier);
+                tag.putString("cone", cone.toString());
+                tag.putString("body", body.toString());
+                tag.putString("fin", fin.toString());
+                tag.putString("booster", booster.toString());
+                tag.putString("bottom", bottom.toString());
+                tag.putString("upgrade", upgrade.toString());
 
                 stack.setTag(tag);
                 if (!this.inventory.getInvStack(0).getOrCreateTag().equals(tag)) this.inventory.setInvStack(0, stack, Simulation.ACTION);
