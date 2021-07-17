@@ -1,9 +1,8 @@
 # Blender MTL File: 'rocketbottomFinalV2.blend'
 # Material Count: 1
 
-newmtl sprite
-ambient_occlusion true
-blend_mode CUTOUT
+newmtl RocketTexture
+uvlock true
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -12,4 +11,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-texture galacticraft:model/rocket/rocket_tex
+map_Kd galacticraft:model/rocket/rocket

@@ -293,14 +293,16 @@ public class RocketEntity extends Entity implements Rocket {
     @Override
     public void readCustomDataFromNbt(NbtCompound tag) {
         NbtCompound parts = tag.getCompound("Parts");
-        Identifier[] list = new Identifier[RocketPartType.values().length];
+        Identifier[] array = new Identifier[RocketPartType.values().length];
         for (RocketPartType type : RocketPartType.values()) {
             if (parts.contains(type.asString())) {
-                list[type.ordinal()] = new Identifier(parts.getString(type.asString()));
+                array[type.ordinal()] = new Identifier(parts.getString(type.asString()));
+            } else {
+                array[type.ordinal()] = GalacticraftRocketParts.getDefaultPartIdForType(type);
             }
         }
 
-        setParts(list);
+        setParts(array);
 
         if (tag.contains("Color")) {
             this.setColor(tag.getInt("Color"));
