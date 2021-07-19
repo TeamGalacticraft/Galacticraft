@@ -1,20 +1,19 @@
 {
-  "textures": {
-    "particle": "galacticraft:block/glass_fluid_pipe/white",
-    "color": "galacticraft:block/glass_fluid_pipe/white"
-  },
-  "elements": [
-    {
-      "from": [6, 6, 0],
-      "to": [10, 10, 6],
-      "faces": {
-        "down": {"uv": [6, 0, 10, 6], "texture": "#color"},
-        "up": {"uv": [6, 0, 10, 6], "texture": "#color"},
-        "north": {"uv": [6, 6, 10, 10], "texture": "#color"},
-        "south": {"uv": [6, 6, 10, 10], "texture": "#color"},
-        "west": {"uv": [6, 0, 10, 6], "rotation": 90, "texture": "#color"},
-        "east": {"uv": [6, 0, 10, 6], "rotation": 90, "texture": "#color"}
-      }
-    }
-  ]
+	"credit": "Made with Blockbench",
+	"textures": {
+		"particle": "galacticraft:block/glass_fluid_pipe/white",
+		"color": "galacticraft:block/glass_fluid_pipe/white"
+	},
+	"elements": [
+		{
+			"from": [6, 6, 0],
+			"to": [10, 10, 6],
+			"faces": {
+				"east": {"uv": [6, 0, 10, 6], "rotation": 270, "texture": "#color"},
+				"west": {"uv": [6, 0, 10, 6], "rotation": 90, "texture": "#color"},
+				"up": {"uv": [6, 0, 10, 6], "rotation": 180, "texture": "#color"},
+				"down": {"uv": [6, 0, 10, 6], "texture": "#color"}
+			}
+		}
+	]
 }

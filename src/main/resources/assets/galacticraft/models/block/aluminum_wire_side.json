@@ -1,22 +1,20 @@
 {
-  "credit": "Made with Blockbench",
-  "textures": {
-    "0": "galacticraft:block/aluminum_wire",
-    "particle": "galacticraft:block/aluminum_wire"
-  },
-  "elements": [
-    {
-      "name": "north",
-      "from": [6, 6, 0],
-      "to": [10, 10, 6],
-      "faces": {
-        "north": {"uv": [12, 4, 16, 8], "texture": "#0"},
-        "east": {"uv": [0, 0, 4, 8], "rotation": 90, "texture": "#0"},
-        "south": {"uv": [12, 4, 16, 8], "texture": "#0"},
-        "west": {"uv": [0, 0, 4, 8], "rotation": 270, "texture": "#0"},
-        "up": {"uv": [0, 0, 4, 8], "texture": "#0"},
-        "down": {"uv": [0, 0, 4, 8], "rotation": 180, "texture": "#0"}
-      }
-    }
-  ]
+	"credit": "Made with Blockbench",
+	"textures": {
+		"wire": "galacticraft:block/aluminum_wire",
+		"particle": "galacticraft:block/aluminum_wire"
+	},
+	"elements": [
+		{
+			"name": "north",
+			"from": [6, 6, 0],
+			"to": [10, 10, 6],
+			"faces": {
+				"east": {"uv": [0, 0, 4, 8], "rotation": 90, "texture": "#wire"},
+				"west": {"uv": [0, 0, 4, 8], "rotation": 270, "texture": "#wire"},
+				"up": {"uv": [0, 0, 4, 8], "texture": "#wire"},
+				"down": {"uv": [0, 0, 4, 8], "rotation": 180, "texture": "#wire"}
+			}
+		}
+	]
 }

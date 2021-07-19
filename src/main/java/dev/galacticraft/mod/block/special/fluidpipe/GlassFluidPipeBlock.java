@@ -83,7 +83,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
         BlockPos pos = context.getBlockPos().toImmutable();
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockState block = context.getWorld().getBlockState(pos.offset(direction));
-            if ((block.getBlock() instanceof FluidPipe /*&& block.get(COLOR) == DyeColor.WHITE*/) || FluidUtil.isExtractableOrInsertable(context.getWorld(), pos.offset(direction), direction)) state = state.with(propFromDirection(direction), true);
+            if ((block.getBlock() instanceof FluidPipe /*&& block.get(COLOR) == DyeColor.WHITE*/) || FluidUtil.isExtractableOrInsertable(context.getWorld(), pos.offset(direction), direction)) state = state.with(ConnectingBlockUtil.getBooleanProperty(direction), true);
         }
         return state;
     }
@@ -138,10 +138,6 @@ public class GlassFluidPipeBlock extends FluidPipe {
     @Override
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView view, BlockPos pos) {
         return 1.0F;
-    }
-
-    private BooleanProperty propFromDirection(Direction direction) {
-        return ConnectingBlockUtil.getBooleanProperty(direction);
     }
 
     @Override
