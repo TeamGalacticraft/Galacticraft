@@ -727,8 +727,18 @@ public interface Constant {
     @Environment(EnvType.CLIENT)
     interface ModelPartName {
         String OXYGEN_MASK = "oxygen_mask";
-        String OXYGEN_TANK = "oxygen_tank";
-        String OXYGEN_PIPE = "oxygen_pipe";
+        String LEFT_OXYGEN_TANK_LIGHT = "left_oxygen_tank_light";
+        String LEFT_OXYGEN_TANK_MEDIUM = "left_oxygen_tank_medium";
+        String LEFT_OXYGEN_TANK_HEAVY = "left_oxygen_tank_heavy";
+        String LEFT_OXYGEN_TANK_INFINITE = "left_oxygen_tank_infinite";
+        String RIGHT_OXYGEN_TANK_LIGHT = "right_oxygen_tank_light";
+        String RIGHT_OXYGEN_TANK_MEDIUM = "right_oxygen_tank_medium";
+        String RIGHT_OXYGEN_TANK_HEAVY = "right_oxygen_tank_heavy";
+        String RIGHT_OXYGEN_TANK_INFINITE = "right_oxygen_tank_infinite";
+        String LEFT_OXYGEN_PIPE = "left_oxygen_pipe";
+        String RIGHT_OXYGEN_PIPE = "right_oxygen_pipe";
+        String SENSOR_GLASSES = "sensor_glasses";
+        String FREQUENCY_MODULE = "frequency_module";
         String MOON_VILLAGER_BRAIN = "moon_villager_brain";
         String SOLAR_PANEL_POLE = "solar_panel_pole";
         String SOLAR_PANEL_PANEL = "solar_panel_panel";
