@@ -89,12 +89,13 @@ public abstract class AbstractClientPlayerEntityMixin implements GearInventoryPr
 
     @Override
     public NbtCompound writeGearToNbt(NbtCompound tag) {
-        return this.getGearInv().toTag(tag);
+        tag.put("GearInv", this.getGearInv().toTag());
+        return tag;
     }
 
     @Override
     public void readGearFromNbt(NbtCompound tag) {
-        this.getGearInv().fromTag(tag);
+        this.getGearInv().fromTag(tag.getCompound("GearInv"));
     }
 
     @Inject(method = "getCapeTexture", at = @At("RETURN"), cancellable = true)

@@ -33,7 +33,6 @@
     "client.HandledScreenAccessor",
     "client.InGameHudMixin",
     "client.MinecraftClientMixin",
-    "client.OtherClientPlayerEntityMixin",
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",
     "client.SoundSystemMixin",

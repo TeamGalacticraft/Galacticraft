@@ -46,6 +46,7 @@ public abstract class PlayerManagerMixin {
     @Inject(method = "onPlayerConnect", at = @At("RETURN"))
     private void gc_syncInv(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
         NbtCompound tag = ((GearInventoryProvider) player).writeGearToNbt(new NbtCompound());
+        ServerPlayNetworking.send(player, new Identifier(Constant.MOD_ID, "gear_inv_sync_full"), new PacketByteBuf(Unpooled.buffer().writeInt(player.getId())).writeNbt(tag));
         for (ServerPlayerEntity player1 : PlayerLookup.tracking(player)) {
             ServerPlayNetworking.send(player1, new Identifier(Constant.MOD_ID, "gear_inv_sync_full"), new PacketByteBuf(Unpooled.buffer().writeInt(player.getId())).writeNbt(tag));
         }
