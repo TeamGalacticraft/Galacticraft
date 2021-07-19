@@ -90,7 +90,7 @@ repositories {
             includeGroup("alexiil.mc.lib")
         }
     }
-    maven("https://maven.terraformersmc.com/") {
+    maven("https://maven.kotlindiscord.com/repository/terraformers/") {
         content {
             includeGroup("com.terraformersmc")
         }
