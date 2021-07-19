@@ -216,7 +216,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
     private final Identifier texture;
 
     public MachineHandledScreen(H handler, PlayerInventory inv, Text title, Identifier texture) {
-        super(handler, inv, title);
+        super(handler, inv, title.copy().setStyle(Constant.Text.DARK_GRAY_STYLE));
         this.pos = this.handler.machine.getPos();
         this.world = inv.player.world;
         this.machine = this.handler.machine;
@@ -345,7 +345,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
     }
 
     protected void drawTitle(MatrixStack matrices) {
-        this.textRenderer.draw(matrices, this.title, this.titleX, this.titleY, 0x555555);
+        this.textRenderer.draw(matrices, this.title, this.titleX, this.titleY, 0xFFFFFFFF);
     }
 
     private void drawMachineFace(MatrixStack matrices, int x, int y, MachineBlockEntity machine, BlockFace face) {

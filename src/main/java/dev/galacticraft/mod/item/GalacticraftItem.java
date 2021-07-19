@@ -63,7 +63,6 @@ public class GalacticraftItem {
     public static final Item[] LEAD = registerOreItems(Constant.Item.LEAD);
     public static final Item[] ALUMINUM = registerOreItems(Constant.Item.ALUMINUM);
     public static final Item[] TIN = registerOreItems(Constant.Item.TIN);
-    public static final Item[] STEEL = registerOreItems(Constant.Item.STEEL);
     public static final Item[] TITANIUM = registerOreItems(Constant.Item.TITANIUM);
     public static final Item LUNAR_SAPPHIRE = registerItem(Constant.Item.LUNAR_SAPPHIRE, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_STICK = registerItem(Constant.Item.DESH_STICK, new Item(new Item.Settings().group(ITEMS_GROUP)));
