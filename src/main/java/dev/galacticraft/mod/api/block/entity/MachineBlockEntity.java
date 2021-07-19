@@ -569,7 +569,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
     @Override
     public Text getDisplayName() {
-        return this.getCachedState().getBlock().getName().copy().setStyle(Constant.Text.GRAY_STYLE);
+        return this.getCachedState().getBlock().getName().copy().setStyle(Constant.Text.DARK_GRAY_STYLE);
     }
 
     @Override

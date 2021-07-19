@@ -216,7 +216,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
     private final Identifier texture;
 
     public MachineHandledScreen(H handler, PlayerInventory inv, Text title, Identifier texture) {
-        super(handler, inv, title.copy().setStyle(Constant.Text.DARK_GRAY_STYLE));
+        super(handler, inv, title);
         this.pos = this.handler.machine.getPos();
         this.world = inv.player.world;
         this.machine = this.handler.machine;
