@@ -26,7 +26,7 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
-import dev.galacticraft.mod.screen.OxygenStorageModuleScreenHandler;
+import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.screen.tank.NullTank;
 import net.minecraft.entity.player.PlayerEntity;
@@ -85,7 +85,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return new OxygenStorageModuleScreenHandler(syncId, player, this);
+        if (this.getSecurity().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER, syncId, inv, this);
         return null;
     }
 }

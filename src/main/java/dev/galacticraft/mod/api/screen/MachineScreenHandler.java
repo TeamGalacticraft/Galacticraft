@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen;
+package dev.galacticraft.mod.api.screen;
 
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.screen.property.CapacitorProperty;

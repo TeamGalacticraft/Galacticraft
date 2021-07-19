@@ -1,10 +1,10 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest a new feature for Galacticraft.
 title: ''
-labels: 'Feature Request'
+labels: 'type: feature'
 assignees: ''
 
 ---
 
-What new feature(s) would you like added to this mod? Please explain the rationale behind your idea.
+What's your idea?

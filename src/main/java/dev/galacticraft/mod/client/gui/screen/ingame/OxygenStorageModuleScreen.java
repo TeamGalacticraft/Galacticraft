@@ -23,8 +23,9 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.screen.MachineHandledScreen;
-import dev.galacticraft.mod.screen.OxygenStorageModuleScreenHandler;
+import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.mod.block.entity.OxygenStorageModuleBlockEntity;
+import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
@@ -39,8 +40,8 @@ import java.math.RoundingMode;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorageModuleScreenHandler> {
-    public OxygenStorageModuleScreen(OxygenStorageModuleScreenHandler handler, PlayerInventory inv, Text title) {
+public class OxygenStorageModuleScreen extends MachineHandledScreen<SimpleMachineScreenHandler<OxygenStorageModuleBlockEntity>> {
+    public OxygenStorageModuleScreen(SimpleMachineScreenHandler<OxygenStorageModuleBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;

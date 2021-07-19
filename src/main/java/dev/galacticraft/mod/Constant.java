@@ -571,8 +571,8 @@ public interface Constant {
 
     interface ScreenHandler {
         String COAL_GENERATOR_SCREEN_HANDLER = "coal_generator_screen_handler";
-        String BASIC_SOLAR_SCREEN_HANDLER = "basic_solar_panel_screen_handler";
-        String ADVANCED_SOLAR_SCREEN_HANDLER = "advanced_solar_panel_screen_handler";
+        String BASIC_SOLAR_PANEL_SCREEN_HANDLER = "basic_solar_panel_screen_handler";
+        String ADVANCED_SOLAR_PANEL_SCREEN_HANDLER = "advanced_solar_panel_screen_handler";
         String CIRCUIT_FABRICATOR_SCREEN_HANDLER = "circuit_fabricator_screen_handler";
         String COMPRESSOR_SCREEN_HANDLER = "compressor_screen_handler";
         String ELECTRIC_COMPRESSOR_SCREEN_HANDLER = "electric_compressor_screen_handler";

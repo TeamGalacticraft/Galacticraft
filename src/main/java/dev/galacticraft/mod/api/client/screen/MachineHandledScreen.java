@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.screen;
+package dev.galacticraft.mod.api.client.screen;
 
 import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
@@ -35,11 +35,11 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
+import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.client.gui.widget.machine.AbstractWidget;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
 import dev.galacticraft.mod.item.GalacticraftItems;
-import dev.galacticraft.mod.screen.MachineScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.screen.tank.Tank;
 import dev.galacticraft.mod.util.ColorUtil;

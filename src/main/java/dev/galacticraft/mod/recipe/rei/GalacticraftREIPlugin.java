@@ -24,7 +24,7 @@ package dev.galacticraft.mod.recipe.rei;
 
 import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.screen.MachineHandledScreen;
+import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.item.GalacticraftItems;
 import dev.galacticraft.mod.mixin.client.HandledScreenAccessor;

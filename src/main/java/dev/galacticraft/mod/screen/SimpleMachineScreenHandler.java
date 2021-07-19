@@ -22,24 +22,28 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.mod.block.entity.EnergyStorageModuleBlockEntity;
-import dev.galacticraft.mod.screen.slot.AutoFilteredSlot;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandlerType;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class EnergyStorageModuleScreenHandler extends MachineScreenHandler<EnergyStorageModuleBlockEntity> {
-    public EnergyStorageModuleScreenHandler(int syncId, PlayerEntity player, EnergyStorageModuleBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER);
-        this.addSlot(new AutoFilteredSlot(machine, 0, 18 * 6 - 6, 18 + 6));
-        this.addSlot(new AutoFilteredSlot(machine, 1, 18 * 6 - 6, 18 * 2 + 12));
-        this.addPlayerInventorySlots(0, 84);
+import java.util.function.Supplier;
+
+public class SimpleMachineScreenHandler<T extends MachineBlockEntity> extends MachineScreenHandler<T> {
+    private final Supplier<ScreenHandlerType<MachineScreenHandler<T>>> type;
+
+    protected SimpleMachineScreenHandler(int syncId, PlayerEntity player, T machine, Supplier<ScreenHandlerType<MachineScreenHandler<T>>> type, int invX, int invY) {
+        super(syncId, player, machine, null);
+        this.type = type;
+        this.addPlayerInventorySlots(invX, invY);
     }
 
-    public EnergyStorageModuleScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (EnergyStorageModuleBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public static <T extends MachineBlockEntity> SimpleMachineScreenHandler<T> create(int syncId, PlayerEntity playerEntity, T machine, Supplier<ScreenHandlerType<MachineScreenHandler<T>>> handlerType, int invX, int invY) {
+        return new SimpleMachineScreenHandler<>(syncId, playerEntity, machine, handlerType, invX, invY);
+    }
+
+    @Override
+    public ScreenHandlerType<?> getType() {
+        return this.type.get();
     }
 }

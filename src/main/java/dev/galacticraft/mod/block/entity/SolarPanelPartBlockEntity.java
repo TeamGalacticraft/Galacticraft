@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.mod.api.block.MultiBlockBase;
+import dev.galacticraft.mod.api.block.MultiBlockPart;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
@@ -31,7 +31,7 @@ import net.minecraft.util.math.BlockPos;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class SolarPanelPartBlockEntity extends BlockEntity {
+public class SolarPanelPartBlockEntity extends BlockEntity implements MultiBlockPart {
     public BlockPos basePos = BlockPos.ORIGIN;
 
     public SolarPanelPartBlockEntity() {
@@ -57,10 +57,9 @@ public class SolarPanelPartBlockEntity extends BlockEntity {
         }
     }
 
+    @Override
     public void setBasePos(BlockPos basePos) {
-        if (this.getCachedState().getBlock() instanceof MultiBlockBase) {
-            this.basePos = basePos;
-            this.markDirty();
-        }
+        this.basePos = basePos;
+        this.markDirty();
     }
 }
