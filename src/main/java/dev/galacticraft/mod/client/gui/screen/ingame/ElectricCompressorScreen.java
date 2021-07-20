@@ -26,7 +26,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.ElectricCompressorBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,7 +33,6 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -48,9 +46,7 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
 
     public ElectricCompressorScreen(RecipeMachineScreenHandler<ElectricCompressorBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
-        this.backgroundWidth = 176;
-        this.backgroundHeight = 166;
-        this.addWidget(new CapacitorWidget(this.machine.capacitorView(), 8, 9, 48, this::getEnergyTooltipLines, this.machine::getStatus));
+        this.addWidget(this.createCapacitorWidget(8, 9, 48));
     }
 
     private String getContainerDisplayName() {
@@ -61,7 +57,6 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         super.renderBackground(matrices, delta, mouseX, mouseY);
         this.drawCraftProgressBar(matrices);
-        drawCenteredText(matrices, textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
     }
 
     protected void drawCraftProgressBar(MatrixStack matrices) {

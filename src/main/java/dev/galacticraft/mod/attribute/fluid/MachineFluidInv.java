@@ -61,7 +61,7 @@ public class MachineFluidInv extends SimpleFixedFluidInv implements Automatable 
 
     @Override
     public boolean isFluidValidForTank(int tank, FluidKey fluid) {
-        return this.getFilterForTank(tank).matches(fluid);
+        return fluid.isEmpty() || this.getFilterForTank(tank).matches(fluid);
     }
 
     public void createTanks(MachineScreenHandler<?> screenHandler) {

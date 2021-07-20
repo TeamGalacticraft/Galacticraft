@@ -60,11 +60,12 @@ public abstract class ServerPlayerEntityMixin implements GearInventoryProvider {
 
     @Override
     public NbtCompound writeGearToNbt(NbtCompound tag) {
-        return this.getGearInv().toTag(tag);
+        tag.put("GearInv", this.getGearInv().toTag());
+        return tag;
     }
 
     @Override
     public void readGearFromNbt(NbtCompound tag) {
-        this.getGearInv().fromTag(tag);
+        this.getGearInv().fromTag(tag.getCompound("GearInv"));
     }
 }

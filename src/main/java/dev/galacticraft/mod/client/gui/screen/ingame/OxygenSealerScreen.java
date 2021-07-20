@@ -25,15 +25,11 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -42,14 +38,6 @@ import net.minecraft.util.Formatting;
 public class OxygenSealerScreen extends MachineHandledScreen<OxygenSealerBlockEntity, SimpleMachineScreenHandler<OxygenSealerBlockEntity>> {
     public OxygenSealerScreen(SimpleMachineScreenHandler<OxygenSealerBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.OXYGEN_SEALER_SCREEN);
-        this.backgroundWidth = 176;
-        this.backgroundHeight = 166;
-        this.addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, this.machine::getStatus));
-    }
-
-    @Override
-    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        super.renderBackground(matrices, delta, mouseX, mouseY);
-        drawCenteredText(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_sealer"), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        this.addWidget(this.createCapacitorWidget(8, 8, 48));
     }
 }

@@ -73,7 +73,6 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -570,7 +569,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
     @Override
     public Text getDisplayName() {
-        return LiteralText.EMPTY;
+        return this.getCachedState().getBlock().getName().copy().setStyle(Constant.Text.DARK_GRAY_STYLE);
     }
 
     @Override

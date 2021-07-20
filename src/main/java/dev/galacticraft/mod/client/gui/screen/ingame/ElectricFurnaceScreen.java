@@ -25,13 +25,10 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.ElectricFurnaceBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
-import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -48,13 +45,12 @@ public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceB
 
     public ElectricFurnaceScreen(RecipeMachineScreenHandler<ElectricFurnaceBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_FURNACE_SCREEN);
-        addWidget(new CapacitorWidget(this.machine.capacitor(), 8, 29, 48, this::getEnergyTooltipLines, this.machine::getStatus));
+        this.addWidget(this.createCapacitorWidget(8, 29, 48));
     }
 
     @Override
     protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         super.renderBackground(matrices, delta, mouseX, mouseY);
-        DrawableUtil.drawCenteredString(matrices, textRenderer, this.title, this.width / 2, this.y + 5, Formatting.GRAY.getColorValue());
         if (this.machine.maxProgress() != 0 && this.machine.progress() != 0) {
             double scale = ((double)handler.machine.progress()) / ((double)handler.machine.maxProgress());
 

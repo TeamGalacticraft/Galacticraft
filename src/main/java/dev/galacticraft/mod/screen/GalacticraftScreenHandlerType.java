@@ -88,7 +88,7 @@ public class GalacticraftScreenHandlerType {
     public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity>> ENERGY_STORAGE_MODULE_HANDLER =
             Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ENERGY_STORAGE_MODULE_SCREEN_HANDLER),
                     new ExtendedScreenHandlerType<>(
-                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER, 94)
+                            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER)
                     )
             );
 
