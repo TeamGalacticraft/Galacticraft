@@ -22,7 +22,9 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.client.render.entity.feature.SpaceGearFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenMaskFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenTankFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenTankTextureOffset;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.ZombieEntityRenderer;
 
@@ -32,6 +34,7 @@ import net.minecraft.client.render.entity.ZombieEntityRenderer;
 public class EvolvedZombieRenderer extends ZombieEntityRenderer {
     public EvolvedZombieRenderer(EntityRendererFactory.Context context) {
         super(context);
-        this.addFeature(new SpaceGearFeatureRenderer<>(this));
+        this.addFeature(new OxygenMaskFeatureRenderer<>(this, null));
+        this.addFeature(new OxygenTankFeatureRenderer<>(this, OxygenTankTextureOffset.MEDIUM_TANK, OxygenTankTextureOffset.MEDIUM_TANK));
     }
 }

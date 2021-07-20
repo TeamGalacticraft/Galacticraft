@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class FrequencyModuleFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
+public class FrequencyModuleFeatureRenderer<T extends Entity, M extends EntityModel<T> & ModelWithHead> extends FeatureRenderer<T, M> {
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.FREQUENCY_MODULE);
     public final @Nullable ModelPart freqModule;
 

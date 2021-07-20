@@ -24,9 +24,8 @@ package dev.galacticraft.mod.client.render.entity.feature.gear.player;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
-import dev.galacticraft.mod.client.render.entity.feature.ModelTransformer;
+import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenTankFeatureRenderer;
 import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenTankTextureOffset;
-import dev.galacticraft.mod.client.render.entity.feature.gear.RightOxygenTankFeatureRenderer;
 import dev.galacticraft.mod.item.OxygenTankItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -44,36 +43,42 @@ import net.minecraft.item.ItemStack;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class PlayerRightOxygenTankFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T>> extends RightOxygenTankFeatureRenderer<T, M> {
+public class PlayerOxygenTankFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T>> extends OxygenTankFeatureRenderer<T, M> {
 
-    public PlayerRightOxygenTankFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> leftTankTransforms) {
-        super(context, extra, leftTankTransforms, OxygenTankTextureOffset.HEAVY_TANK);
+    public PlayerOxygenTankFeatureRenderer(FeatureRendererContext<T, M> context) {
+        super(context, OxygenTankTextureOffset.HEAVY_TANK, OxygenTankTextureOffset.HEAVY_TANK);
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        ItemStack itemStack = ((FullFixedItemInv)((GearInventoryProvider) entity).getGearInv()).getSlot(6).get();
+        ItemStack itemStack = ((FullFixedItemInv)((GearInventoryProvider) entity).getGearInv()).getSlot(7).get();
         if (itemStack.getItem() instanceof OxygenTankItem) {
             switch (((OxygenTankItem) itemStack.getItem()).getTankType()) {
-                case SMALL:
-                    this.textureType = OxygenTankTextureOffset.SMALL_TANK;
-                    break;
-                case MEDIUM:
-                    this.textureType = OxygenTankTextureOffset.MEDIUM_TANK;
-                    break;
-                case HEAVY:
-                    this.textureType = OxygenTankTextureOffset.HEAVY_TANK;
-                    break;
-                case INFINITE:
-                    this.textureType = OxygenTankTextureOffset.INFINITE_TANK;
-                    break;
+                case SMALL -> this.textureTypeLeft = OxygenTankTextureOffset.SMALL_TANK;
+                case MEDIUM -> this.textureTypeLeft = OxygenTankTextureOffset.MEDIUM_TANK;
+                case HEAVY -> this.textureTypeLeft = OxygenTankTextureOffset.HEAVY_TANK;
+                case INFINITE -> this.textureTypeLeft = OxygenTankTextureOffset.INFINITE_TANK;
             }
-            if (itemStack.hasGlint()) {
-                VertexConsumer vertexConsumerGlint = ItemRenderer.getArmorGlintConsumer(vertexConsumers, RenderLayer.getArmorCutoutNoCull(getTexture(entity)), false, itemStack.hasGlint());
-                super.render(matrices, vertexConsumerGlint, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
-            } else {
-                super.render(matrices, vertexConsumers, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
-            }
+        } else {
+            this.textureTypeLeft = null;
         }
+        ItemStack itemStack2 = ((FullFixedItemInv)((GearInventoryProvider) entity).getGearInv()).getSlot(8).get();
+        if (itemStack2.getItem() instanceof OxygenTankItem) {
+            switch (((OxygenTankItem) itemStack2.getItem()).getTankType()) {
+                case SMALL -> this.textureTypeRight = OxygenTankTextureOffset.SMALL_TANK;
+                case MEDIUM -> this.textureTypeRight = OxygenTankTextureOffset.MEDIUM_TANK;
+                case HEAVY -> this.textureTypeRight = OxygenTankTextureOffset.HEAVY_TANK;
+                case INFINITE -> this.textureTypeRight = OxygenTankTextureOffset.INFINITE_TANK;
+            }
+        } else {
+            this.textureTypeRight = null;
+        }
+        /*if (itemStack.hasGlint()) {
+            VertexConsumer vertexConsumerGlint = ItemRenderer.getArmorGlintConsumer(vertexConsumers, RenderLayer.getArmorCutoutNoCull(getTexture(entity)), false, itemStack.hasGlint());
+            super.renderWithGlint(matrices, vertexConsumerGlint, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+        } else {*/
+        // todo: add back glints
+            super.render(matrices, vertexConsumers, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
+        //}
     }
 }

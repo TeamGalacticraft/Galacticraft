@@ -42,7 +42,7 @@ import net.minecraft.util.Identifier;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class SensorGlassesFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
+public class SensorGlassesFeatureRenderer<T extends Entity, M extends EntityModel<T> & ModelWithHead> extends FeatureRenderer<T, M> {
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.GEAR);
     public final @Nullable ModelPart sensorGlasses;
 

@@ -45,7 +45,7 @@ import java.util.HashMap;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenMaskFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T,M> {
+public class OxygenMaskFeatureRenderer<T extends Entity, M extends EntityModel<T> & ModelWithHead> extends FeatureRenderer<T,M> {
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.OXYGEN_MASK);
     private final @Nullable ModelPart mask;
     public final DyeColor color;
