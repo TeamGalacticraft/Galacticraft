@@ -980,7 +980,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
     }
 
     @Override
-    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+    protected final void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
         this.drawTitle(matrices);
     }
 

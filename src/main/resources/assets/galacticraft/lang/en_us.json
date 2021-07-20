@@ -430,6 +430,7 @@
   "ui.galacticraft.io_config.wildcard_fluid": "Any Fluid",
   "ui.galacticraft.io_config.oil": "Oil",
   "ui.galacticraft.io_config.fuel": "Fuel",
+  "ui.galacticraft.io_config.solid_fuel": "Solid Fuel",
   "ui.galacticraft.io_config.oxygen_in": "Oxygen In",
   "ui.galacticraft.io_config.oxygen_out": "Oxygen Out",
   "ui.galacticraft.io_config.oxygen": "Oxygen",
