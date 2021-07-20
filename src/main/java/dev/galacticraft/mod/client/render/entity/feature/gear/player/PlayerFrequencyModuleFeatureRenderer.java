@@ -24,14 +24,10 @@ package dev.galacticraft.mod.client.render.entity.feature.gear.player;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import dev.galacticraft.mod.accessor.GearInventoryProvider;
-import dev.galacticraft.mod.client.render.entity.feature.ModelTransformer;
 import dev.galacticraft.mod.client.render.entity.feature.gear.FrequencyModuleFeatureRenderer;
 import dev.galacticraft.mod.item.FrequencyModuleItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -45,19 +41,14 @@ import net.minecraft.entity.player.PlayerEntity;
 @Environment(EnvType.CLIENT)
 public class PlayerFrequencyModuleFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T> & ModelWithHead> extends FrequencyModuleFeatureRenderer<T, M> implements PlayerAccessoryRenderer {
 
-    public PlayerFrequencyModuleFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> sensorGlassesTransforms) {
-        super(context, extra, sensorGlassesTransforms);
+    public PlayerFrequencyModuleFeatureRenderer(FeatureRendererContext<T, M> context) {
+        super(context);
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         if (shouldRenderAccessory((FullFixedItemInv)((GearInventoryProvider) entity).getGearInv(), FrequencyModuleItem.class)) {
-            VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(getTexture(entity), true));
-            matrices.push();
-            this.getContextModel().getHead().rotate(matrices);
-            this.freqModuleTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
-            this.freqModule.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-            matrices.pop();
+            super.render(matrices, vertexConsumers, light, entity, limbAngle, limbDistance, tickDelta,animationProgress, headYaw, headPitch);
         }
     }
 }

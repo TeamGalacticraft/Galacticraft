@@ -23,22 +23,20 @@
 package dev.galacticraft.mod.client.render.entity.feature.gear;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.render.entity.feature.ModelTransformer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.model.*;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.entity.model.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Quaternion;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -46,27 +44,48 @@ import net.minecraft.util.math.Quaternion;
 @Environment(EnvType.CLIENT)
 public class FrequencyModuleFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, Constant.FeatureRendererTexture.FREQUENCY_MODULE);
-    public final ModelTransformer<T> freqModuleTransforms;
-    public final ModelPart freqModule;
+    public final @Nullable ModelPart freqModule;
 
-    public FrequencyModuleFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> freqModuleTransforms) {
+    public FrequencyModuleFeatureRenderer(FeatureRendererContext<T, M> context) {
         super(context);
-        this.freqModuleTransforms = freqModuleTransforms;
 
-        this.freqModule = new ModelPart(Constant.FeatureRendererTexture.FREQUENCY_MODULE_WIDTH, Constant.FeatureRendererTexture.FREQUENCY_MODULE_HEIGHT, 0, 0);
-        this.freqModule.setPivot(0.0F, 0.0F, 0.0F);
-        this.freqModule.addCuboid(-8.0F, -16.0F, 0.0F, 1, 9, 1, extra);
+        ModelPart root, head;
+        if (context.getModel() instanceof SinglePartEntityModel<?> model) {
+            root = model.getPart();
+            head = root.getChild(EntityModelPartNames.HEAD);
+        } else if (context.getModel() instanceof BipedEntityModel<?> model){
+            head = model.head;
+        } else if (context.getModel() instanceof AnimalModel<?> model){
+            head = model.getHeadParts().iterator().next();
+        } else {
+            this.freqModule = null;
+            return;
+        }
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+        if (head != null) {
+            modelPartData.addChild(Constant.ModelPartName.FREQUENCY_MODULE,
+                    ModelPartBuilder.create()
+                            .uv(64, 10)
+                            .cuboid(-8.0F, -16.0F, 0.0F, 1, 9, 1, Dilation.NONE),
+                    ModelTransform.pivot(head.pivotX, head.pivotY, head.pivotZ));
+        }
+
+        root = modelPartData.createPart(Constant.FeatureRendererTexture.FREQUENCY_MODULE_WIDTH, Constant.FeatureRendererTexture.FREQUENCY_MODULE_HEIGHT);
+
+        if (head != null) {
+            this.freqModule = root.getChild(Constant.ModelPartName.FREQUENCY_MODULE);
+        } else {
+            this.freqModule = null;
+        }
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(getTexture(entity), true));
-        matrices.push();
-        this.freqModuleTransforms.transformModel(matrices, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);
-        matrices.multiply(new Quaternion(Vector3f.POSITIVE_Y, headYaw, true));
-        matrices.multiply(new Quaternion(Vector3f.POSITIVE_X, headPitch, true));
-        this.freqModule.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-        matrices.pop();
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(this.getTexture(entity), true));
+        if (this.freqModule != null) {
+            this.freqModule.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+        }
     }
 
     @Override
