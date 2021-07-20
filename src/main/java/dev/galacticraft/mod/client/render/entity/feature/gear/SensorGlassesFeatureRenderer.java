@@ -84,6 +84,8 @@ public class SensorGlassesFeatureRenderer<T extends Entity, M extends EntityMode
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         if (this.sensorGlasses != null) {
             VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(this.getTexture(entity), true));
+            this.sensorGlasses.yaw = (float) Math.toRadians(headYaw);
+            this.sensorGlasses.pitch = (float) Math.toRadians(headPitch);
             this.sensorGlasses.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
         }
     }

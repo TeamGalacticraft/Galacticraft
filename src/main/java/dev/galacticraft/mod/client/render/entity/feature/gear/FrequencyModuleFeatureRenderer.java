@@ -82,8 +82,10 @@ public class FrequencyModuleFeatureRenderer<T extends Entity, M extends EntityMo
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(this.getTexture(entity), true));
         if (this.freqModule != null) {
+            VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(this.getTexture(entity), true));
+            this.freqModule.yaw = (float) Math.toRadians(headYaw);
+            this.freqModule.pitch = (float) Math.toRadians(headPitch);
             this.freqModule.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
         }
     }

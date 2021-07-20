@@ -87,10 +87,10 @@ public class OxygenMaskFeatureRenderer<T extends Entity, M extends EntityModel<T
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(this.getTexture(entity), true));
         if (this.mask != null) {
-            this.mask.yaw = headYaw;
-            this.mask.pitch = headPitch;
+            VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(this.getTexture(entity), true));
+            this.mask.yaw = (float) Math.toRadians(headYaw);
+            this.mask.pitch = (float) Math.toRadians(headPitch);
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
         }
     }
