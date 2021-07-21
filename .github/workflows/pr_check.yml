@@ -1,7 +1,9 @@
 name: Pull Request Check
 on:
   push:
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
     types: [ synchronize, opened ]
 
 jobs:
