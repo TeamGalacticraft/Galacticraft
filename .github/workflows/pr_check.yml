@@ -1,5 +1,6 @@
 name: Pull Request Check
 on:
+  push:
   pull_request:
     types: [ synchronize, opened ]
 
