@@ -32,6 +32,8 @@ accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator      
 accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator                    BIOME_WEIGHT_TABLE [F
 accessible      field    net/minecraft/screen/slot/Slot                                       index              I
 accessible      field    net/minecraft/client/sound/SoundManager                              soundSystem        Lnet/minecraft/client/sound/SoundSystem;
+accessible      field    net/minecraft/entity/mob/AbstractSkeletonEntity                      bowAttackGoal      Lnet/minecraft/entity/ai/goal/BowAttackGoal;
+accessible      field    net/minecraft/entity/mob/AbstractSkeletonEntity                      meleeAttackGoal    Lnet/minecraft/entity/ai/goal/MeleeAttackGoal;
 extendable      class    net/minecraft/world/gen/chunk/NoiseChunkGenerator
 accessible      class    net/minecraft/block/entity/BlockEntityType$BlockEntityFactory
 

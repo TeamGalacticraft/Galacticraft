@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.command;
 
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -48,7 +47,6 @@ import net.minecraft.world.World;
 
 import java.util.Collection;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -77,7 +75,7 @@ public class GalacticraftCommand {
                     .executes(GalacticraftCommand::teleport)));
             // TODO: either fix this or remove it
              LiteralCommandNode<ServerCommandSource> dimensiontp_entities = commandDispatcher.register(
-                    LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
+                     CommandManager.literal("dimensiontp")
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
                     .then(CommandManager.argument("entities", EntityArgumentType.entities())
@@ -90,9 +88,11 @@ public class GalacticraftCommand {
                     .executes(GalacticraftCommand::teleportToCoords))));
 
             // Because I don't like to type
-            commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimensiontp_root));
-            commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimensiontp_entities));
-            commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimensiontp_pos));
+            commandDispatcher.register(CommandManager.literal("dimtp")
+                    .redirect(dimensiontp_root)
+                    .redirect(dimensiontp_entities)
+                    .redirect(dimensiontp_pos)
+            );
         });
     }
 
@@ -199,7 +199,7 @@ public class GalacticraftCommand {
                     return;
                 }
                 Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
-                entities.forEach((Consumer<Entity>) entity -> {
+                for (Entity entity : entities) {
                     BlockPos pos = getValidTeleportPos(serverWorld, entity);
                     if (entity instanceof ServerPlayerEntity player) {
                         player.teleport(serverWorld,
@@ -216,7 +216,7 @@ public class GalacticraftCommand {
                             context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constant.Text.RED_STYLE));
                         }
                     }
-                });
+                }
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.dimensiontp.success.multiple", entities.size(), serverWorld.getRegistryKey().getValue()), true);
             } catch (CommandSyntaxException e) {
                 context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constant.Text.RED_STYLE));
