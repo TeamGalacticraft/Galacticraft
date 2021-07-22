@@ -81,7 +81,7 @@ public class GalacticraftPlayerInventoryScreen extends HandledScreen<Galacticraf
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseX), this.x, this.x + 29)
                 && GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseY), this.y - 26, this.y)) {
-            this.client.openScreen(new InventoryScreen(this.handler.player));
+            this.client.setScreen(new InventoryScreen(this.handler.player));
             return true;
         }
 

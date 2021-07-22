@@ -121,8 +121,8 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
                 if (machine != null) {
                     energy = machine.capacitor().getEnergy();
                 } else {
-                    if (stack.getTag() != null && stack.getTag().contains(Constant.Nbt.ENERGY, NbtType.COMPOUND)) {
-                        energy = stack.getTag().getInt(Constant.Nbt.ENERGY);
+                    if (stack.getNbt() != null && stack.getNbt().contains(Constant.Nbt.ENERGY, NbtType.COMPOUND)) {
+                        energy = stack.getNbt().getInt(Constant.Nbt.ENERGY);
                     } else {
                         energy = 0;
                     }
@@ -144,9 +144,9 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
                 if (machine != null) {
                     volume = machine.fluidInv().getInvFluid(0);
                 } else {
-                    if (stack.getTag() != null && stack.getTag().contains(Constant.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
-                        if (stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).contains("tanks", NbtType.LIST)) {
-                            NbtList tag1 = stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).getList("tanks", NbtType.COMPOUND);
+                    if (stack.getNbt() != null && stack.getNbt().contains(Constant.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
+                        if (stack.getNbt().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).contains("tanks", NbtType.LIST)) {
+                            NbtList tag1 = stack.getNbt().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).getList("tanks", NbtType.COMPOUND);
                             if (tag1.size() > 0) {
                                 volume = FluidVolume.fromTag(tag1.getCompound(0));
                             } else {
@@ -235,7 +235,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     }
 
     @Override
-    public Sprite getSprite() {
+    public Sprite getParticleSprite() {
         return CACHING_SPRITE_ATLAS.apply(MACHINE);
     }
 
@@ -292,7 +292,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     }
 
     public static boolean transformItem(ItemStack stack, MutableQuadView quad) {
-        NbtCompound tag = stack.getTag();
+        NbtCompound tag = stack.getNbt();
         if (tag != null && tag.contains(Constant.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
             CONFIGURATION.fromTag(tag.getCompound(Constant.Nbt.BLOCK_ENTITY_TAG));
             quad.spriteBake(0,

@@ -85,9 +85,9 @@ public class BatteryItem extends Item implements AttributeProviderItem {
 
     @Override
     public void onCraft(@NotNull ItemStack battery, World world, PlayerEntity player) {
-        NbtCompound batteryTag = battery.getOrCreateTag();
+        NbtCompound batteryTag = battery.getOrCreateNbt();
         battery.setDamage(getMaxCapacity());
-        battery.setTag(batteryTag);
+        battery.setNbt(batteryTag);
     }
 
     @Override
@@ -109,14 +109,14 @@ public class BatteryItem extends Item implements AttributeProviderItem {
     public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> itemAttributeList) {
         ItemStack ref = reference.get().copy();
         SimpleCapacitor capacitor = new SimpleCapacitor(DefaultEnergyType.INSTANCE, this.getMaxCapacity());
-        capacitor.fromTag(ref.getOrCreateTag());
-        capacitor.toTag(ref.getOrCreateTag());
+        capacitor.fromTag(ref.getOrCreateNbt());
+        capacitor.toTag(ref.getOrCreateNbt());
         ref.setDamage(capacitor.getMaxCapacity() - capacitor.getEnergy());
         reference.set(ref);
         capacitor.addListener(capacitorView -> {
             ItemStack stack = reference.get().copy();
             stack.setDamage(capacitorView.getMaxCapacity() - capacitorView.getEnergy());
-            capacitor.toTag(stack.getOrCreateTag());
+            capacitor.toTag(stack.getOrCreateNbt());
             reference.set(stack);
         }, () -> {});
         itemAttributeList.offer(capacitor);

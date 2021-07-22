@@ -24,7 +24,6 @@ package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import dev.galacticraft.api.registry.RegistryUtil;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
@@ -96,7 +95,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public void setWorld(World world) {
         super.setWorld(world);
         this.sealCheckTime = SEAL_CHECK_TIME;
-        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = RegistryUtil.getCelestialBodyByDimension(world).orElse(null);
+        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getCelestialBodyByDimension(world).orElse(null);
         this.oxygenWorld = body == null || body.type().atmosphere(body.config()).breathable();
     }
 

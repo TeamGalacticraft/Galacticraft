@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.api.registry.RegistryUtil;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
 import net.minecraft.util.math.BlockPos;
@@ -52,7 +52,7 @@ public abstract class WorldMixin implements WorldOxygenAccessor {
     public boolean isBreathable(BlockPos pos) {
         if (!this.init) {
             this.init = true;
-            RegistryUtil.getCelestialBodyByDimension(((World)(Object)this)).ifPresent(celestialBodyType -> this.breathable = celestialBodyType.type().atmosphere(celestialBodyType.config()).breathable());
+            CelestialBody.getCelestialBodyByDimension(((World)(Object)this)).ifPresent(celestialBodyType -> this.breathable = celestialBodyType.type().atmosphere(celestialBodyType.config()).breathable());
         }
         if (breathable) return true;
         if (isValid(pos)) return false;
@@ -63,7 +63,7 @@ public abstract class WorldMixin implements WorldOxygenAccessor {
     public void setBreathable(BlockPos pos, boolean value) {
         if (!this.init) {
             this.init = true;
-            RegistryUtil.getCelestialBodyByDimension(((World)(Object)this)).ifPresent(celestialBodyType -> this.breathable = celestialBodyType.type().atmosphere(celestialBodyType.config()).breathable());
+            CelestialBody.getCelestialBodyByDimension(((World)(Object)this)).ifPresent(celestialBodyType -> this.breathable = celestialBodyType.type().atmosphere(celestialBodyType.config()).breathable());
         }
         if (isValid(pos) || breathable) return;
         ((ChunkOxygenAccessor) this.getWorldChunk(pos)).setBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15, value);

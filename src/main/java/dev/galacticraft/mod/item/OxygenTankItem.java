@@ -141,14 +141,14 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
         ItemStack ref = reference.get().copy();
         if (this.size > 0) {
             OxygenTankImpl tank = new OxygenTankImpl(this.size);
-            tank.fromTag(ref.getOrCreateTag());
-            tank.toTag(ref.getOrCreateTag());
+            tank.fromTag(ref.getOrCreateNbt());
+            tank.toTag(ref.getOrCreateNbt());
             ref.setDamage(this.size - tank.getAmount());
             reference.set(ref);
             tank.listen((view, previous) -> {
                         ItemStack stack = reference.get().copy();
                         stack.setDamage(this.size - view.getAmount());
-                        tank.toTag(stack.getOrCreateTag());
+                        tank.toTag(stack.getOrCreateNbt());
                         reference.set(stack);
                     }
             );

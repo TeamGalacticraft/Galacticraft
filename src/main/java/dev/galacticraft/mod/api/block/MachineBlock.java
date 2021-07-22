@@ -137,8 +137,8 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
             }
         }
 
-        if (stack != null && stack.getTag() != null && stack.getTag().contains(Constant.Nbt.BLOCK_ENTITY_TAG)) {
-            NbtCompound tag = stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG);
+        if (stack != null && stack.getNbt() != null && stack.getNbt().contains(Constant.Nbt.BLOCK_ENTITY_TAG)) {
+            NbtCompound tag = stack.getNbt().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG);
             tooltip.add(LiteralText.EMPTY);
             if (tag.contains(Constant.Nbt.ENERGY, NbtType.INT)) tooltip.add(new TranslatableText("ui.galacticraft.machine.current_energy", new LiteralText(String.valueOf(tag.getInt(Constant.Nbt.ENERGY))).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.GOLD_STYLE));
             if (tag.contains(Constant.Nbt.SECURITY, NbtType.COMPOUND)) {
@@ -211,12 +211,12 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
     @Environment(EnvType.CLIENT)
     public ItemStack getPickStack(BlockView view, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(view, pos, state);
-        NbtCompound tag = (stack.getTag() != null ? stack.getTag() : new NbtCompound());
+        NbtCompound tag = (stack.getNbt() != null ? stack.getNbt() : new NbtCompound());
         if (view.getBlockEntity(pos) != null) {
             tag.put(Constant.Nbt.BLOCK_ENTITY_TAG, view.getBlockEntity(pos).writeNbt(new NbtCompound()));
         }
 
-        stack.setTag(tag);
+        stack.setNbt(tag);
         return stack;
     }
 
