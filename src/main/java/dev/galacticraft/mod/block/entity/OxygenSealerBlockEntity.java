@@ -24,12 +24,12 @@ package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import dev.galacticraft.api.accessor.WorldOxygenAccessor;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.accessor.WorldOxygenAccessor;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
@@ -95,8 +95,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public void setWorld(World world) {
         super.setWorld(world);
         this.sealCheckTime = SEAL_CHECK_TIME;
-        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getCelestialBodyByDimension(world).orElse(null);
-        this.oxygenWorld = body == null || body.type().atmosphere(body.config()).breathable();
+        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(world).orElse(null);
+        this.oxygenWorld = body == null || body.atmosphere().breathable();
     }
 
     @Override
@@ -113,7 +113,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public void updateComponents() {
         super.updateComponents();
         this.attemptChargeFromStack(BATTERY_SLOT);
-        if (!world.isClient && this.getStatus().getType().isActive()) this.fluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
+        assert this.world != null;
+        if (!this.world.isClient && this.getStatus().getType().isActive()) this.fluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
     }
 
     @Override

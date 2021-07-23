@@ -106,7 +106,7 @@ public class GalacticraftCommand {
         }
         context.getSource().getServer().execute(() -> {
             try {
-                if (CelestialBody.getCelestialBodyByDimension(context.getSource().getRegistryManager(), context.getSource().getWorld().getRegistryKey()).isEmpty()) {
+                if (CelestialBody.getByDimension(context.getSource().getRegistryManager(), context.getSource().getWorld().getRegistryKey()).isEmpty()) {
                     context.getSource().sendError(new TranslatableText("commands.galacticraft.gchouston.cannot_detect_signal").setStyle(Constant.Text.RED_STYLE));
                     retval[0] = -1;
                     return;

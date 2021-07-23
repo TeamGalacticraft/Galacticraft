@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.galacticraft.api.attribute.oxygen.OxygenTank;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;

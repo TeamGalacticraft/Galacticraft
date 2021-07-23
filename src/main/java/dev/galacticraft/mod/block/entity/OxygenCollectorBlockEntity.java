@@ -70,8 +70,8 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     @Override
     public void setWorld(World world) {
         super.setWorld(world);
-        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getCelestialBodyByDimension(world).orElse(null);
-        this.oxygenWorld = body == null || body.type().atmosphere(body.config()).breathable();
+        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(world).orElse(null);
+        this.oxygenWorld = body == null || body.atmosphere().breathable();
     }
 
     @Override

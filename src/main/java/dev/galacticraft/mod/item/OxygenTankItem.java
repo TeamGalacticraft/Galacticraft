@@ -28,12 +28,12 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
+import dev.galacticraft.api.accessor.GearInventoryProvider;
+import dev.galacticraft.api.attribute.GcApiAttributes;
+import dev.galacticraft.api.attribute.oxygen.OxygenTank;
+import dev.galacticraft.api.attribute.oxygen.OxygenTankImpl;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.GearInventoryProvider;
-import dev.galacticraft.mod.attribute.GalacticraftAttribute;
 import dev.galacticraft.mod.attribute.oxygen.InfiniteOxygenTank;
-import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
-import dev.galacticraft.mod.attribute.oxygen.OxygenTankImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -72,7 +72,7 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
             stack[0] = stack[0].copy();
 
             if (this.size > 0) {
-                GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(new Reference<>() {
+                GcApiAttributes.OXYGEN_TANK.getFirst(new Reference<>() {
                     @Override
                     public ItemStack get() {
                         return stack[0];
@@ -113,7 +113,7 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         if (this.size > 0){
-            OxygenTank tank = GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
+            OxygenTank tank = GcApiAttributes.OXYGEN_TANK.getFirst(stack);
             lines.add(new TranslatableText("tooltip.galacticraft.oxygen_remaining", tank.getAmount() + "/" + tank.getCapacity()).setStyle(Constant.Text.getStorageLevelColor(1.0 - ((double)tank.getAmount() / (double)tank.getCapacity()))));
         } else {
             lines.add(new TranslatableText("tooltip.galacticraft.oxygen_remaining", new TranslatableText("tooltip.galacticraft.infinite").setStyle(Constant.Text.getRainbow(++ticks))));
