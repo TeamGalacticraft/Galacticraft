@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.api.screen;
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.screen.property.CapacitorProperty;
 import dev.galacticraft.mod.screen.property.FluidTankPropertyDelegate;
@@ -51,10 +52,10 @@ public abstract class MachineScreenHandler<M extends MachineBlockEntity> extends
         this.machine = machine;
         this.machine.itemInv().createSlots(this);
         this.machine.fluidInv().createTanks(this);
-        this.addProperties(new FluidTankPropertyDelegate(machine.fluidInv()));
 
+        if (machine.fluidInvCapacity().isGreaterThan(FluidAmount.ZERO)) this.addProperties(new FluidTankPropertyDelegate(machine.fluidInv()));
+        if (machine.getEnergyCapacity() > 0) this.addProperty(new CapacitorProperty(machine.capacitor()));
         this.addProperty(new StatusProperty(machine));
-        this.addProperty(new CapacitorProperty(machine.capacitor()));
     }
 
     @Override
