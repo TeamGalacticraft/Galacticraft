@@ -151,7 +151,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 if (state.getBlock() instanceof LeavesBlock && !state.get(LeavesBlock.PERSISTENT)) {
                     if (++leafBlocks >= 2) break;
                 } else if (state.getBlock() instanceof CropBlock) {
-                    if ((leafBlocks += 0.75) >= 2) break;
+                    if ((leafBlocks += 0.75f) >= 2) break;
                 }
             }
             return leafBlocks >= 2;
