@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.item;
 
+import dev.galacticraft.api.item.Schematic;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
-import dev.galacticraft.mod.api.item.SchematicItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
@@ -47,7 +47,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketSchematicItem extends Item implements SchematicItem {
+public class RocketSchematicItem extends Item implements Schematic {
     public RocketSchematicItem(Settings settings) {
         super(settings.maxCount(1).rarity(Rarity.EPIC));
     }
@@ -62,7 +62,7 @@ public class RocketSchematicItem extends Item implements SchematicItem {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        NbtCompound tag = stack.getOrCreateTag();
+        NbtCompound tag = stack.getOrCreateNbt();
         if (Screen.hasShiftDown()) {
             if (tag.contains("red") && tag.contains("cone")) {
 //                tooltip.add(new TranslatableText("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));

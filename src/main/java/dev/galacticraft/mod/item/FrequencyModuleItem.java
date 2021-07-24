@@ -20,23 +20,15 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.accessor;
+package dev.galacticraft.mod.item;
 
-import net.minecraft.util.math.BlockPos;
-
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public interface WorldOxygenAccessor {
-    default boolean isBreathable(int x, int y, int z) {
-        return isBreathable(new BlockPos(x, y, z));
+public class FrequencyModuleItem extends AccessoryItem {
+    public FrequencyModuleItem(Settings settings) {
+        super(settings);
     }
 
-    boolean isBreathable(BlockPos pos);
-
-    default void setBreathable(int x, int y, int z, boolean value) {
-        setBreathable(new BlockPos(x, y, z), value);
+    @Override
+    public boolean enablesHearing() {
+        return true;
     }
-
-    void setBreathable(BlockPos pos, boolean value);
 }

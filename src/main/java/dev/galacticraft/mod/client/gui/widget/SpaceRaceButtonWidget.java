@@ -45,7 +45,7 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
 
     public SpaceRaceButtonWidget(MinecraftClient client, int x, int y, int buttonWidth, int buttonHeight, int screenWidth, int screenHeight) {
         super(x, y, buttonWidth, buttonHeight, LiteralText.EMPTY, (button) -> {
-            client.openScreen(new SpaceRaceScreen());
+            client.setScreen(new SpaceRaceScreen());
             ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "request_scroll"), new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer(0, 0)));
         });
         this.textRenderer = client.textRenderer;

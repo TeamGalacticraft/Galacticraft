@@ -82,7 +82,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
         super(GalacticraftBlockEntityType.ROCKET_DESIGNER_TYPE, pos, state);
 
         this.inventory.addListener((view, slot, prev, cur) -> {
-            if (!previous.getOrCreateTag().equals(inventory.getInvStack(0).getTag())) {
+            if (!previous.getOrCreateNbt().equals(inventory.getInvStack(0).getNbt())) {
                 this.updateSchematic();
             }
             previous = inventory.getInvStack(0).copy();
@@ -247,8 +247,8 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
                 tag.putString("bottom", bottom.toString());
                 tag.putString("upgrade", upgrade.toString());
 
-                stack.setTag(tag);
-                if (!this.inventory.getInvStack(0).getOrCreateTag().equals(tag)) this.inventory.setInvStack(0, stack, Simulation.ACTION);
+                stack.setNbt(tag);
+                if (!this.inventory.getInvStack(0).getOrCreateNbt().equals(tag)) this.inventory.setInvStack(0, stack, Simulation.ACTION);
             }
         }
     }

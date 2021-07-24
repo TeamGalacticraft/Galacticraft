@@ -39,7 +39,7 @@ import net.minecraft.util.math.Matrix4f;
 public class DrawableUtil {
     private DrawableUtil() {}
     
-    public static void drawCenteredString(MatrixStack matrices, TextRenderer textRenderer, Text text, int x, int y, int color) {
+    public static void drawCenteredStringWithoutShadow(MatrixStack matrices, TextRenderer textRenderer, Text text, int x, int y, int color) {
         textRenderer.draw(matrices, text.asOrderedText(), (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
     }
 

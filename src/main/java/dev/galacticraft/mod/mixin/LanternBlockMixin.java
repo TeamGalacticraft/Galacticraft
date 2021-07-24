@@ -50,8 +50,8 @@ public abstract class LanternBlockMixin extends Block {
     @Deprecated
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
         super.onBlockAdded(state, world, pos, oldState, moved);
-        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getCelestialBodyByDimension(world).orElse(null);
-        if (body != null && !body.type().atmosphere(body.config()).breathable()) {
+        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(world).orElse(null);
+        if (body != null && !body.atmosphere().breathable()) {
             if (state.getBlock() == Blocks.LANTERN) {
                 world.setBlockState(pos, GalacticraftBlock.UNLIT_LANTERN.getDefaultState().with(LanternBlock.HANGING, state.get(LanternBlock.HANGING)).with(LanternBlock.WATERLOGGED, state.get(LanternBlock.WATERLOGGED)));
             }

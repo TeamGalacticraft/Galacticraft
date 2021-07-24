@@ -79,7 +79,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
                 builder.addSlot(y * 3 + x, SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 19, y * 18 + 18);
             }
         }
-        builder.addSlot(FUEL_INPUT_SLOT, SlotType.FUEL_OUT, stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null, 79, 49);
+        builder.addSlot(FUEL_INPUT_SLOT, SlotType.SOLID_FUEL, stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null, 79, 49);
         builder.addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 38));
         return builder;
     }

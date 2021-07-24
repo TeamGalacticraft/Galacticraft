@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.item;
 
-import dev.galacticraft.mod.api.item.Accessory;
+import dev.galacticraft.api.item.Accessory;
 import net.minecraft.item.Item;
 
 /**

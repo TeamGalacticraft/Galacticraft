@@ -345,7 +345,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
     }
 
     protected void drawTitle(MatrixStack matrices) {
-        this.textRenderer.draw(matrices, this.title, this.titleX, this.titleY, 0x555555);
+        this.textRenderer.draw(matrices, this.title, this.titleX, this.titleY, 0xFFFFFFFF);
     }
 
     private void drawMachineFace(MatrixStack matrices, int x, int y, MachineBlockEntity machine, BlockFace face) {
@@ -980,7 +980,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
     }
 
     @Override
-    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+    protected final void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
         this.drawTitle(matrices);
     }
 

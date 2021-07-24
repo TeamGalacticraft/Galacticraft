@@ -43,6 +43,12 @@ public class OxygenDecompressorScreen extends MachineHandledScreen<OxygenDecompr
     }
 
     @Override
+    protected void init() {
+        super.init();
+        this.titleX += 20;
+    }
+
+    @Override
     protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         super.renderBackground(matrices, delta, mouseX, mouseY);
         if (this.machine.getStatus().getType().isActive()) {

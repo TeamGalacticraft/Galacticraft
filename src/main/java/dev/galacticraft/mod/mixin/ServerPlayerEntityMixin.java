@@ -22,19 +22,9 @@
 
 package dev.galacticraft.mod.mixin;
 
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
-import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -43,35 +33,8 @@ import org.spongepowered.asm.mixin.Unique;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Mixin(ServerPlayerEntity.class)
-public abstract class ServerPlayerEntityMixin implements GearInventoryProvider, ServerPlayerEntityAccessor {
-    private final @Unique @NotNull FullFixedItemInv gearInv = createGearInv();
+public abstract class ServerPlayerEntityMixin implements ServerPlayerEntityAccessor {
     private @Unique @Nullable RocketData rocketData = null;
-
-    private FullFixedItemInv createGearInv() {
-        FullFixedItemInv inv = new FullFixedItemInv(12);
-        inv.setOwnerListener((invView, slot, prev, cur) -> {
-            ServerPlayNetworking.send(((ServerPlayerEntity) (Object) this), new Identifier(Constant.MOD_ID, "gear_inv_sync"), new PacketByteBuf(Unpooled.buffer().writeInt(((ServerPlayerEntity) (Object) this).getId()).writeByte(slot)).writeItemStack(cur));
-            for (ServerPlayerEntity player : PlayerLookup.tracking(((ServerPlayerEntity) (Object) this))) {
-                ServerPlayNetworking.send(player, new Identifier(Constant.MOD_ID, "gear_inv_sync"), new PacketByteBuf(Unpooled.buffer().writeInt(((ServerPlayerEntity) (Object) this).getId()).writeByte(slot)).writeItemStack(cur));
-            }
-        });
-        return inv;
-    }
-
-    @Override
-    public @NotNull FullFixedItemInv getGearInv() {
-        return this.gearInv;
-    }
-
-    @Override
-    public NbtCompound writeGearToNbt(NbtCompound tag) {
-        return this.getGearInv().toTag(tag);
-    }
-
-    @Override
-    public void readGearFromNbt(NbtCompound tag) {
-        this.getGearInv().fromTag(tag);
-    }
 
     @Override
     public RocketData getCelestialScreenState() {

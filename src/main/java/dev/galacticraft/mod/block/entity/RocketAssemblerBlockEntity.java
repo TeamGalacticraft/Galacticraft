@@ -128,10 +128,10 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         }
 
         if (!current.isEmpty() && current.getItem() == GalacticraftItem.ROCKET_SCHEMATIC) {
-            if (this.data.equals(RocketData.fromNbt(current.getTag()))) {
+            if (this.data.equals(RocketData.fromNbt(current.getNbt()))) {
                 return;
             }
-            this.data = RocketData.fromNbt(current.getTag());
+            this.data = RocketData.fromNbt(current.getNbt());
         }
 
         for (int i = 0; i < extendedInv.getSlotCount(); i++) {
@@ -239,9 +239,9 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         }
 
         if (inventory.getInvStack(SCHEMATIC_INPUT_SLOT).getItem() == GalacticraftItem.ROCKET_SCHEMATIC) {
-            if (!this.data.equals(RocketData.fromNbt(inventory.getInvStack(SCHEMATIC_INPUT_SLOT).copy().getOrCreateTag()))) {
+            if (!this.data.equals(RocketData.fromNbt(inventory.getInvStack(SCHEMATIC_INPUT_SLOT).copy().getOrCreateNbt()))) {
                 ItemStack stack = new ItemStack(GalacticraftItem.ROCKET_SCHEMATIC);
-                data.toNbt(stack.getOrCreateTag());
+                data.toNbt(stack.getOrCreateNbt());
                 schematicUpdate(stack, inventory.getInvStack(SCHEMATIC_INPUT_SLOT));
                 return;
             }
@@ -393,7 +393,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
                     assembler.extendedInv.setInvStack(i, ItemStack.EMPTY, Simulation.ACTION);
                 }
                 ItemStack stack1 = new ItemStack(GalacticraftItem.ROCKET);
-                assembler.data.toNbt(stack1.getOrCreateTag());
+                assembler.data.toNbt(stack1.getOrCreateNbt());
                 assembler.inventory.setInvStack(ROCKET_OUTPUT_SLOT, stack1, Simulation.ACTION);
             }
         } else {

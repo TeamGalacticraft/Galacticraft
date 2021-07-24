@@ -80,7 +80,7 @@ public class RocketItem extends Item {
 
             if (context.getWorld() instanceof ServerWorld) {
                 RocketEntity rocket = new RocketEntity(GalacticraftEntityType.ROCKET, context.getWorld());
-                RocketData data = RocketData.fromNbt(context.getPlayer().getStackInHand(context.getHand()).getTag());
+                RocketData data = RocketData.fromNbt(context.getPlayer().getStackInHand(context.getHand()).getNbt());
                 rocket.setParts(data.parts());
                 rocket.setColor(data.color());
                 rocket.setLinkedPad(pos);
@@ -111,7 +111,7 @@ public class RocketItem extends Item {
             for (RocketPartType type : RocketPartType.values()) {
                 tag.putString(type.asString(), AddonRegistry.ROCKET_PART.getId(GalacticraftRocketParts.getDefaultPartForType(type)).toString());
             }
-            stack.setTag(tag);
+            stack.setNbt(tag);
             stacks.add(stack);
         }
     }
@@ -121,7 +121,7 @@ public class RocketItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        NbtCompound tag = stack.getOrCreateTag();
+        NbtCompound tag = stack.getOrCreateNbt();
         if (Screen.hasShiftDown()) {
             if (tag.contains("color") && tag.contains("cone")) {
 //                tooltip.add(new TranslatableText("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));

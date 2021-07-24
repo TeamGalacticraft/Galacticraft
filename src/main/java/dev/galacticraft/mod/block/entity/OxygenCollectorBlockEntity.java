@@ -70,19 +70,19 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     @Override
     public void setWorld(World world) {
         super.setWorld(world);
-        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getCelestialBodyByDimension(world).orElse(null);
-        this.oxygenWorld = body == null || body.type().atmosphere(body.config()).breathable();
+        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(world).orElse(null);
+        this.oxygenWorld = body == null || body.atmosphere().breathable();
     }
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 13, 69);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
         return builder;
     }
 
     @Override
     protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
-        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_OUT, 36, 13);
+        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_OUT, 31, 8);
         return builder;
     }
 
@@ -151,7 +151,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 if (state.getBlock() instanceof LeavesBlock && !state.get(LeavesBlock.PERSISTENT)) {
                     if (++leafBlocks >= 2) break;
                 } else if (state.getBlock() instanceof CropBlock) {
-                    if ((leafBlocks += 0.75) >= 2) break;
+                    if ((leafBlocks += 0.75f) >= 2) break;
                 }
             }
             return leafBlocks >= 2;

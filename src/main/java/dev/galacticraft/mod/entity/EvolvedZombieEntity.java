@@ -33,4 +33,9 @@ public class EvolvedZombieEntity extends ZombieEntity {
     public EvolvedZombieEntity(EntityType<? extends EvolvedZombieEntity> entityType, World world) {
         super(entityType, world);
     }
+
+    @Override
+    protected boolean isAffectedByDaylight() {
+        return super.isAffectedByDaylight() && this.world.getBiome(this.getBlockPos()).getFogColor() != 0x161616; //mare biome
+    }
 }

@@ -214,7 +214,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                                 aG = false;
                             }
                             int time = (int) (System.currentTimeMillis() % 50000) / 1000;
-                            ItemStack[] msc = stack.getKey().getMatchingStacksClient();
+                            ItemStack[] msc = stack.getKey().getMatchingStacks();
                             itemRenderer.renderGuiItemIcon(msc[time % msc.length], this.x + 13 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * offsetY));
                             itemRenderer.renderGuiItemOverlay(client.textRenderer, msc[time % msc.length], this.x + 13 + (GREEN_BOX_WIDTH + 2) * offsetX, this.y + 13 + (GREEN_BOX_HEIGHT + 2) * offsetY, this.assembler.getExtendedInv().getInvStack(slot).getCount() + "/" + stack.getIntValue());
 

@@ -464,7 +464,7 @@ public class CelestialSelectionScreen extends Screen {
                 try {
                     assert this.client != null;
                     this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "planet_tp"), new PacketByteBuf(Unpooled.buffer()).writeIdentifier(celestialBodyRegistry.getId(this.selectedBody))));
-                    this.client.openScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite) this.selectedBody.type()).getCustomName(this.selectedBody.config()).asString() : this.selectedBody.name().getKey(), ((Landable) this.selectedBody.type()).world(this.selectedBody.config())));
+                    this.client.setScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite) this.selectedBody.type()).getCustomName(this.selectedBody.config()).asString() : this.selectedBody.name().getKey(), ((Landable) this.selectedBody.type()).world(this.selectedBody.config())));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -565,7 +565,7 @@ public class CelestialSelectionScreen extends Screen {
         if (this.mapMode) {
             if (a) {
                 assert this.client != null;
-                this.client.openScreen(null);
+                this.client.setScreen(null);
                 clickHandled = true;
             }
         }
@@ -1426,7 +1426,7 @@ public class CelestialSelectionScreen extends Screen {
                             boolean b = mousePosX >= xPos && mousePosX <= xPos + 16 && mousePosY >= yPos && mousePosY <= yPos + 16;
                             int amount = getAmountInInventory(ingredient);
                             DiffuseLighting.enableGuiDepthLighting();
-                            ItemStack stack = ingredient.getMatchingStacksClient()[(int) (client.world.getTime() % (20 * ingredient.getMatchingStacksClient().length) / 20)];
+                            ItemStack stack = ingredient.getMatchingStacks()[(int) (client.world.getTime() % (20 * ingredient.getMatchingStacks().length) / 20)];
                             this.itemRenderer.renderGuiItemIcon(stack, xPos, yPos);
                             this.itemRenderer.renderGuiItemOverlay(textRenderer, stack, xPos, yPos, null);
                             DiffuseLighting.disableGuiDepthLighting();

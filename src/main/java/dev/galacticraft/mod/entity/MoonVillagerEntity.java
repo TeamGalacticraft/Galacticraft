@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.entity;
 
-import dev.galacticraft.mod.api.entity.attribute.GalacticraftEntityAttribute;
+import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.mod.village.GalacticraftVillagerProfession;
 import dev.galacticraft.mod.village.MoonVillagerType;
 import net.minecraft.entity.EntityType;
@@ -126,6 +126,6 @@ public class MoonVillagerEntity extends VillagerEntity {
     }
 
     public static DefaultAttributeContainer.Builder createMoonVillagerAttributes() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5D).add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48.0D).add(GalacticraftEntityAttribute.CAN_BREATHE_IN_SPACE, 1.0D);
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5D).add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48.0D).add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D);
     }
 }

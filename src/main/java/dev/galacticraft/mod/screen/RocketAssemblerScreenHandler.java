@@ -65,7 +65,7 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.SCHEMATIC_INPUT_SLOT, 235, 19) {
             @Override
             public boolean canInsert(ItemStack stack) {
-                RocketData data = RocketData.fromNbt(stack.getTag());
+                RocketData data = RocketData.fromNbt(stack.getNbt());
                 return this.getStack().isEmpty() || (stack.getItem() == GalacticraftItem.ROCKET_SCHEMATIC
                         && RocketPart.getById(registry, data.cone()).isUnlocked(player)
                         && RocketPart.getById(registry, data.body()).isUnlocked(player)

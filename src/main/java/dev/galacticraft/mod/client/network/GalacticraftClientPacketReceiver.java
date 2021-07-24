@@ -25,8 +25,6 @@ package dev.galacticraft.mod.client.network;
 import com.mojang.authlib.GameProfile;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
-import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
@@ -40,8 +38,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -119,32 +115,13 @@ public class GalacticraftClientPacketReceiver {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "oxygen_update"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-            byte b = packetByteBuf.readByte();
-            ChunkOxygenAccessor accessor = ((ChunkOxygenAccessor) clientPlayNetworkHandler.getWorld().getChunk(packetByteBuf.readInt(), packetByteBuf.readInt()));
-            accessor.readOxygenUpdate(b, packetByteBuf);
-        });
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "open_screen"), (client, handler, buf, responseSender) -> {
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "open_screen"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "gear_inv_sync"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-            int entity = packetByteBuf.readInt();
-            int index = packetByteBuf.readByte();
-            ItemStack stack = packetByteBuf.readItemStack();
-            minecraftClient.execute(() -> ((GearInventoryProvider) minecraftClient.world.getEntityById(entity)).getGearInv().forceSetInvStack(index, stack));
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "gear_inv_sync_full"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-            int entity = packetByteBuf.readInt();
-            NbtCompound tag = packetByteBuf.readNbt();
-            minecraftClient.execute(() -> ((GearInventoryProvider) minecraftClient.world.getEntityById(entity)).readGearFromNbt(tag));
         });
 
         ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "planet_menu_open"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
             RocketData rocketData = RocketData.fromNbt(packetByteBuf.readNbt());
-            minecraftClient.execute(() -> minecraftClient.openScreen(new CelestialSelectionScreen(false, rocketData, true)));
+            minecraftClient.execute(() -> minecraftClient.setScreen(new CelestialSelectionScreen(false, rocketData, true)));
         });
 
         ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "rocket_spawn"), ((client, handler, buf, responseSender) -> {

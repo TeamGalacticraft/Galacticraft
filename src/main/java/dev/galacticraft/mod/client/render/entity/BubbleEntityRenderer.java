@@ -84,6 +84,6 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
 
     @Override
     public Identifier getTexture(BubbleEntity entity) {
-        return bubbleModel.getSprite().getId();
+        return bubbleModel.getParticleSprite().getId();
     }
 }

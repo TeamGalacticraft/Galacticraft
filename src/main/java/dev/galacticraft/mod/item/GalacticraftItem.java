@@ -63,7 +63,6 @@ public class GalacticraftItem {
     public static final Item[] LEAD = registerOreItems(Constant.Item.LEAD);
     public static final Item[] ALUMINUM = registerOreItems(Constant.Item.ALUMINUM);
     public static final Item[] TIN = registerOreItems(Constant.Item.TIN);
-    public static final Item[] STEEL = registerOreItems(Constant.Item.STEEL);
     public static final Item[] TITANIUM = registerOreItems(Constant.Item.TITANIUM);
     public static final Item LUNAR_SAPPHIRE = registerItem(Constant.Item.LUNAR_SAPPHIRE, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_STICK = registerItem(Constant.Item.DESH_STICK, new Item(new Item.Settings().group(ITEMS_GROUP)));
@@ -191,7 +190,7 @@ public class GalacticraftItem {
     public static final Item OXYGEN_MASK = registerItem(Constant.Item.OXYGEN_MASK, new OxygenMaskItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item OXYGEN_GEAR = registerItem(Constant.Item.OXYGEN_GEAR, new OxygenGearItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item SHIELD_CONTROLLER = registerItem(Constant.Item.SHIELD_CONTROLLER, new AccessoryItem(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item FREQUENCY_MODULE = registerItem(Constant.Item.FREQUENCY_MODULE, new AccessoryItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item FREQUENCY_MODULE = registerItem(Constant.Item.FREQUENCY_MODULE, new FrequencyModuleItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item SMALL_OXYGEN_TANK = registerItem(Constant.Item.SMALL_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP), 1620 * 10)); // 16200 ticks
     public static final Item MEDIUM_OXYGEN_TANK = registerItem(Constant.Item.MEDIUM_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP), 1620 * 20)); //32400 ticks
     public static final Item LARGE_OXYGEN_TANK = registerItem(Constant.Item.LARGE_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP), 1620 * 30)); //48600 ticks

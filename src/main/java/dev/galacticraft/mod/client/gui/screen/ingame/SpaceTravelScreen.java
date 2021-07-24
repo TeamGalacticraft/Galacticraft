@@ -83,7 +83,7 @@ public class SpaceTravelScreen extends Screen {
         drawCenteredText(matrices, this.textRenderer, TRAVELLING_TO.append(this.planet), this.width / 2, this.height / 2 - 40, 16777215);
         drawCenteredText(matrices, this.textRenderer, new LiteralText(POSSIBLE_TEXTS[this.text] + dots), this.width / 2, this.height / 2 - 50, 16777215);
         super.render(matrices, mouseX, mouseY, delta);
-        if (client.world.getRegistryKey().equals(this.target)) this.client.openScreen(null);
+        if (client.world.getRegistryKey().equals(this.target)) this.client.setScreen(null);
     }
 
     @Override

@@ -45,7 +45,7 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
         this.stack = stack;
         this.model = model;
         if (model != null) {
-            this.layer = RenderLayer.getEntityTranslucent(model.getSprite().getId());
+            this.layer = RenderLayer.getEntityTranslucent(model.getParticleSprite().getId());
         } else {
             this.layer = null;
         }

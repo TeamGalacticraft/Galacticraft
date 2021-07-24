@@ -153,11 +153,11 @@ public class FluidCanister extends Item implements AttributeProviderItem {
     @Override
     public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> itemAttributeList) {
         SimpleFixedFluidInv inv = new SimpleFixedFluidInv(1, FluidAmount.ONE);
-        inv.fromTag(reference.get().getTag());
+        inv.fromTag(reference.get().getNbt());
         inv.addListener((view, slot, prev, cur) -> {
             ItemStack stack = reference.get().copy();
             stack.setDamage(1620 - inv.getInvFluid(0).getAmount_F().as1620());
-            inv.toTag(stack.getOrCreateTag());
+            inv.toTag(stack.getOrCreateNbt());
             reference.set(stack);
         }, () -> {});
         itemAttributeList.offer(inv);

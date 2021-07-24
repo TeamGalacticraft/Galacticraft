@@ -24,13 +24,13 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.block.entity.CompressorBlockEntity;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
+import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
@@ -39,49 +39,29 @@ import net.minecraft.text.Text;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
+public class CompressorScreen extends MachineHandledScreen<CompressorBlockEntity, CompressorScreenHandler> {
     private static final int PROGRESS_X = 204;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
-    public CompressorScreen(CompressorScreenHandler electricCompressorContainer, PlayerInventory inv, Text title) {
-        super(electricCompressorContainer, inv, title);
+    public CompressorScreen(CompressorScreenHandler handler, PlayerInventory inv, Text title) {
+        super(handler, inv, title, Constant.ScreenTexture.COMPRESSOR_SCREEN);
         this.backgroundWidth = 176;
         this.backgroundHeight = 167;
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        this.renderBackground(matrices);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.COMPRESSOR_SCREEN);
-
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-
+    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        super.renderBackground(matrices, delta, mouseX, mouseY);
         this.drawFuelProgressBar(matrices);
         this.drawCraftProgressBar(matrices);
     }
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-        drawCenteredText(matrices, this.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, 0x404040);
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
-    }
-
-    protected String getContainerDisplayName() {
-        return I18n.translate("block.galacticraft.compressor");
-    }
-
     protected void drawFuelProgressBar(MatrixStack matrices) {
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        int fuelUsageScale;
-
         if (this.handler.machine.getStatus().getType() != MachineStatus.StatusType.MISSING_ENERGY) {
-            fuelUsageScale = getFuelProgress();
-            this.drawTexture(matrices, this.x + 80, this.y + 29 + 12 - fuelUsageScale, 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
+            float fuelUsageScale = getFuelProgress();
+            DrawableUtil.drawProgressTexture(matrices, this.x + 80, (int) (this.y + 29 + 12 - fuelUsageScale), 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
         }
     }
 
@@ -89,19 +69,15 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
         float progressScale = (((float)this.handler.machine.progress()) / ((float)this.handler.machine.maxProgress()));
 
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.COMPRESSOR_SCREEN);
-        this.drawTexture(matrices, this.x + 77, this.y + 28, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
+        DrawableUtil.drawProgressTexture(matrices, this.x + 77, this.y + 28, PROGRESS_X, PROGRESS_Y, PROGRESS_WIDTH * progressScale, PROGRESS_HEIGHT);
     }
 
-    private int getFuelProgress() {
-        int maxFuelTime = this.handler.machine.fuelLength;
+    private float getFuelProgress() {
+        float maxFuelTime = this.handler.machine.fuelLength;
         if (maxFuelTime == 0) {
             maxFuelTime = 200;
         }
 
-        return this.handler.machine.fuelTime * 13 / maxFuelTime;
-    }
-
-    @Override
-    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+        return (this.handler.machine.fuelTime * 13f) / maxFuelTime;
     }
 }
