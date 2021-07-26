@@ -20,29 +20,17 @@
  * SOFTWARE.
  */
 
-//
-//package dev.galacticraft.mod.recipe.rei;
-//
-//import me.shedaniel.rei.api.RecipeDisplay;
-//import net.fabricmc.api.EnvType;
-//import net.fabricmc.api.Environment;
-//import net.minecraft.util.Identifier;
-//import org.jetbrains.annotations.NotNull;
-//
-///**
-// * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
-// */
-//@Environment(EnvType.CLIENT)
-//public interface DefaultCompressingDisplay extends RecipeDisplay {
-//    default @NotNull Identifier getRecipeCategory() {
-//        return GalacticraftREIPlugin.COMPRESSING;
-//    }
-//
-//    default int getWidth() {
-//        return 3;
-//    }
-//
-//    default int getHeight() {
-//        return 3;
-//    }
-//}
+package dev.galacticraft.mod.compat.rei.server;
+
+import dev.galacticraft.mod.api.screen.MachineScreenHandler;
+import dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin;
+import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
+import me.shedaniel.rei.api.common.transfer.info.MenuInfoRegistry;
+
+public class GalacticraftREIServerPlugin implements REIServerPlugin {
+
+    @Override
+    public void registerMenuInfo(MenuInfoRegistry registry) {
+        registry.register(GalacticraftREIClientPlugin.CIRCUIT_FABRICATION, MachineScreenHandler.class, new SimpleMachineMenuInfo<>());
+    }
+}
