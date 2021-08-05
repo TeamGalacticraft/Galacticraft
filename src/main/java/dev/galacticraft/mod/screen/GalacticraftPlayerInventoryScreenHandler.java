@@ -183,9 +183,9 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
             stack = stackFrom.copy();
 
             // Index of Indexes :)
-            // 0-3 (4): GC, armor slots;
-            // 4-5 (2): GC, oxygen tanks slots;
-            // 6-11 (4): GC, slots without any required item;
+            // 0-3 (4): GC, thermal armor slots;
+            // 4-5 (2): GC, oxygen tank slots;
+            // 6-11 (6): GC, accessory slots;
             // 12-38 (27): MC, non-hotbar inventory slots;
             // 39-48 (9): MC, hotbar slots.
             if (index < 12) {
