@@ -51,7 +51,7 @@ val runtimeOptional        = project.property("optional_dependencies.enabled") =
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("0.8-SNAPSHOT")
+    id("fabric-loom") version("0.9-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
 }
 
@@ -68,8 +68,11 @@ base {
 }
 
 loom {
-    refmapName = "galacticraft.refmap.json"
-    accessWidener = rootProject.file("src/main/resources/galacticraft.accesswidener")
+    accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
+    mixin {
+        add(sourceSets.getByName("main"), "galacticraft.refmap.json")
+        defaultRefmapName.set("galacticraft.refmap.json")
+    }
 }
 
 repositories {
