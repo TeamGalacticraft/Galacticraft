@@ -165,7 +165,13 @@ public class GalacticraftClient implements ClientModInitializer {
             return null;
         });
 
+        ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> {
+            out.accept(BubbleEntityRenderer.MODEL);
+        });
+
         SkyPropertiesAccessor.getBY_IDENTIFIER().put(new Identifier(Constant.MOD_ID, "moon"), new MoonSkyProperties());
+
+        GalacticraftRocketPartRenderers.registerModels();
 
         Galacticraft.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

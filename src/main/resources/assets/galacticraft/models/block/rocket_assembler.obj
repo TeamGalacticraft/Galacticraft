@@ -1,6 +1,6 @@
 # Blender v2.76 (sub 0) OBJ File: 'rocket_assembler.blend'
 # www.blender.org
-mtllib rocket_assembler.mtl
+mtllib galacticraft:models/misc/rocket_assembler.mtl
 o Cube
 v 0.000000 0.000000 1.000000
 v 0.000000 1.000000 1.000000

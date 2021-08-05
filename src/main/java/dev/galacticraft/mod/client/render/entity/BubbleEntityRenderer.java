@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.render.entity;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
 import dev.galacticraft.mod.entity.BubbleEntity;
-import dev.monarkhes.myron.api.Myron;
+import dev.onyxstudios.foml.obj.OBJLoader;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
@@ -44,7 +44,7 @@ import net.minecraft.util.Identifier;
  */
 @Environment(EnvType.CLIENT)
 public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
-    private static final Identifier MODEL = new Identifier(Constant.MOD_ID, "models/misc/sphere");
+    public static final Identifier MODEL = new Identifier(Constant.MOD_ID, "misc/sphere.obj");
     public static BakedModel bubbleModel = null;
 
     public BubbleEntityRenderer(EntityRendererFactory.Context context) {
@@ -54,7 +54,7 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
     @Override
     public void render(BubbleEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         if (bubbleModel == null) {
-            bubbleModel = Myron.getModel(MODEL);
+            bubbleModel = OBJLoader.getModel(MODEL);
             assert bubbleModel != null;
         }
         BlockEntity blockEntity = entity.world.getBlockEntity(entity.getBlockPos());
