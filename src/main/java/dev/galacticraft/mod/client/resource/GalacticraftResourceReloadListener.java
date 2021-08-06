@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.resource;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
 import dev.galacticraft.mod.client.render.entity.BubbleEntityRenderer;
-import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -73,7 +72,5 @@ public class GalacticraftResourceReloadListener implements SimpleSynchronousReso
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.FLOWING_FUEL, fuel);
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.LIQUID_OXYGEN, oxygen);
         BubbleEntityRenderer.bubbleModel = null;
-
-        GalacticraftRocketPartRenderers.loadModels();
     }
 }

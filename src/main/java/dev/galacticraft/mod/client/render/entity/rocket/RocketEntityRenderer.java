@@ -50,22 +50,22 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         matrices.push();
         MinecraftClient client = MinecraftClient.getInstance();
-        matrices.translate(0.0D, 2.1875, 0.0D);
+        matrices.translate(0.0D, 1.75, 0.0D);
         if (entity.getStage() == LaunchStage.IGNITED) {
             matrices.translate((entity.world.random.nextDouble() - 0.5D) * 0.1D, 0, (entity.world.random.nextDouble() - 0.5D) * 0.1D);
         }
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(entity.getYaw(tickDelta)));
         matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entity.getPitch(tickDelta)));
 
-        float float_7 = (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - tickDelta;
-        float float_8 = entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_STRENGTH) - tickDelta;
+        float wobbleTicks = (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - tickDelta;
+        float wobbleStrength = entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_STRENGTH) - tickDelta;
 
-        if (float_8 < 0.0F) {
-            float_8 = 0.0F;
+        if (wobbleStrength < 0.0F) {
+            wobbleStrength = 0.0F;
         }
 
-        if (float_7 > 0.0F) {
-            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(MathHelper.sin(float_7) * float_7 * float_8 / 10.0F * (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_SIDE)));
+        if (wobbleTicks > 0.0F) {
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(MathHelper.sin(wobbleTicks) * wobbleTicks * wobbleStrength / 10.0F * (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_SIDE)));
         }
 
         client.getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
