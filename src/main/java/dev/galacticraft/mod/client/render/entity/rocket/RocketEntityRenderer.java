@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.render.entity.rocket;
 import dev.galacticraft.api.client.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.part.RocketPartType;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.entity.RocketEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Frustum;
@@ -123,6 +122,6 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
 
     @Override
     public Identifier getTexture(RocketEntity var1) {
-        return new Identifier(Constant.MOD_ID, "model/rocket/rocket.png");
+        return PlayerScreenHandler.BLOCK_ATLAS_TEXTURE;
     }
 }

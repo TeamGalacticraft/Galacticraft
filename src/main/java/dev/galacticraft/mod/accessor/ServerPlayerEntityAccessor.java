@@ -27,5 +27,6 @@ import org.jetbrains.annotations.Nullable;
 
 public interface ServerPlayerEntityAccessor {
     @Nullable RocketData getCelestialScreenState();
+
     void setCelestialScreenState(@Nullable RocketData data);
 }

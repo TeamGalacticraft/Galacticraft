@@ -43,7 +43,7 @@ val lbaVersion             = project.property("lba.version").toString()
 val energyVersion          = project.property("energy.version").toString()
 val galacticraftApiVersion = project.property("galacticraft.api.version").toString()
 val reiVersion             = project.property("rei.version").toString()
-val fomlVersion            = project.property("foml.version").toString()
+val myronVersion           = project.property("myron.version").toString()
 val bannerppVersion        = project.property("bannerpp.version").toString()
 val wthitVersion           = project.property("wthit.version").toString()
 val runtimeOptional        = project.property("optional_dependencies.enabled") == "true"
@@ -163,7 +163,7 @@ dependencies {
     }
 
     // Mandatory Dependencies (Included with Jar-In-Jar)
-    include(modImplementation("dev.onyxstudios:FOML:$fomlVersion") {
+    include(modImplementation("dev.monarkhes:myron:$myronVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     })
