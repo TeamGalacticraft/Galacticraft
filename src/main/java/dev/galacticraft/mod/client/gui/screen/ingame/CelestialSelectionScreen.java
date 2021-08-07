@@ -111,7 +111,7 @@ public class CelestialSelectionScreen extends Screen {
     protected float ticksTotalF = 0;
     protected int animateGrandchildren = 0;
     protected Vec2f position = Vec2f.ZERO;
-    protected final Map<CelestialBody<?, ?>, Vector3d> planetPosMap = new HashMap<>();
+    protected final Map<CelestialBody<?, ?>, Vector3d> planetPosMap = new IdentityHashMap<>();
     protected @Nullable CelestialBody<?, ?> selectedBody;
     protected @Nullable CelestialBody<?, ?> lastSelectedBody;
     protected int canCreateOffset = 24;
@@ -308,26 +308,13 @@ public class CelestialSelectionScreen extends Screen {
             this.position = new Vec2f(pos3.getX(), pos3.getY());
         }
 
-        Matrix4f matrix4f = new Matrix4f();
-        matrix4f.loadIdentity();
         Vec3f celestialBodyPosition = this.getCelestialBodyPosition(this.selectedBody, delta);
-        matrix4f.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(35));
-        matrix4f.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(55));
-        matrix4f.multiplyByTranslation(celestialBodyPosition.getX(), celestialBodyPosition.getY(), celestialBodyPosition.getZ());
-        float scaleXZ = isChildBody(this.selectedBody) ? 0.23F : 1.0F;
-        matrix4f.multiply(Matrix4f.scale(scaleXZ, scaleXZ, 1.0F));
-        Vector4f vector4f = new Vector4f(1, 1, 1, 1);
-        vector4f.transform(matrix4f);
 
-        return lerpVec2(this.position, new Vec2f(vector4f.getX(), vector4f.getY()), Math.max(0.0F, Math.min((this.ticksSinceSelectionF - 18) / 7.5F, 1.0F)));
+        return lerpVec2(this.position, new Vec2f(celestialBodyPosition.getX(), celestialBodyPosition.getY()), Math.max(0.0F, Math.min((this.ticksSinceSelectionF - 18) / 7.5F, 1.0F)));
     }
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
-        // Override and do nothing, so it isn't possible to exit the GUI
-        if (this.mapMode) {
-            return super.keyPressed(key, scanCode, modifiers);
-        }
 
         if (key == GLFW.GLFW_KEY_ESCAPE) {
             if (this.selectedBody != null) {
@@ -778,7 +765,7 @@ public class CelestialSelectionScreen extends Screen {
 
                 double iconSize = entry.getValue().z; // Z value holds size on-screen
 
-                if (x >= entry.getValue().x - iconSize && x <= entry.getValue().x + iconSize && y >= entry.getValue().y - iconSize && y <= entry.getValue().y + iconSize) {
+                 if (x >= entry.getValue().x && x <= entry.getValue().x + iconSize && y >= entry.getValue().y && y <= entry.getValue().y + iconSize) {
                     if (this.selectedBody != bodyClicked || !this.isZoomed()) {
                         if (this.isSelected() && this.selectedBody != bodyClicked) {
                             /*if (!(this.selectedBody instanceof IChildBody) || ((IChildBody) this.selectedBody).parent(manager) != bodyClicked)
@@ -805,6 +792,10 @@ public class CelestialSelectionScreen extends Screen {
 
                         this.selectedBody = bodyClicked;
                         this.ticksSinceSelectionF = 0;
+                        if (this.selectionState == EnumSelection.UNSELECTED) {
+                            this.preSelectZoom = zoom;
+                            this.preSelectPosition = this.position;
+                        }
                         this.selectionState = EnumSelection.values()[this.selectionState.ordinal() + 1];
 
                         if (isChildBody(bodyClicked)) {
@@ -940,9 +931,9 @@ public class CelestialSelectionScreen extends Screen {
         if (wheel != 0) {
             if (this.selectedBody == null || (this.viewState == EnumView.PREVIEW && !this.isZoomed())) {
                 //Minimum zoom increased from 0.55F to 1F to allow zoom out to see other solar systems
-                this.zoom = (float) Math.min(Math.max(this.zoom + wheel * ((this.zoom + 2.0)) / 10.0, -0.0), 10);
+                this.zoom = (float) Math.min(Math.max(this.zoom + wheel * ((this.zoom + 2.0)) / 10.0, 0.5f), 10.0f);
             } else {
-                this.planetZoom = (float) Math.min(Math.max(this.planetZoom + wheel, -8), 8);
+                this.planetZoom = (float) Math.min(Math.max(this.planetZoom + wheel, -8), 8); //+12 (4x-20x)
             }
             return true;
         }
@@ -952,6 +943,8 @@ public class CelestialSelectionScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        MatrixStack modelViewStack = RenderSystem.getModelViewStack();
+
         this.ticksSinceMenuOpenF += delta;
         this.ticksTotalF += delta;
 
@@ -964,11 +957,13 @@ public class CelestialSelectionScreen extends Screen {
         }
 
         matrices.push();
+        modelViewStack.push();
         {
             RenderSystem.enableBlend();
 
-            RenderSystem.getModelViewStack().loadIdentity();
-            RenderSystem.getModelViewStack().translate(0.0F, 0.0F, -9000.0F);
+            modelViewStack.loadIdentity();
+            modelViewStack.translate(0.0F, 0.0F, -9000.0F);
+            RenderSystem.applyModelViewMatrix();
             RenderSystem.backupProjectionMatrix();
             Matrix4f projectionMatrix = new Matrix4f();
             projectionMatrix.loadIdentity();
@@ -994,28 +989,26 @@ public class CelestialSelectionScreen extends Screen {
                 this.drawGrid(matrices.peek().getModel(), gridSize, height / 3f / 3.5F);
                 this.drawCircles(matrices, delta);
 
-                Map<CelestialBody<?, ?>, Matrix4f> matrixMap = this.drawCelestialBodies(matrices, mouseX, mouseY, delta);
+                this.drawCelestialBodies(matrices, mouseX, mouseY, delta);
 
-                this.planetPosMap.clear();
-
-                for (Map.Entry<CelestialBody<?, ?>, Matrix4f> e : matrixMap.entrySet()) {
-                    Matrix4f planetMatrix = e.getValue();
-                    planetMatrix.multiply(projectionMatrix);
-                    assert this.client != null;
-                    int x = (int) Math.floor((planetMatrix.a30 * 0.5 + 0.5) * this.client.getWindow().getWidth());
-                    int y = (int) Math.floor(this.client.getWindow().getHeight() - (planetMatrix.a31 * 0.5 + 0.5) * this.client.getWindow().getHeight());
-                    double mx = (x * (this.client.getWindow().getScaledWidth() / (double) this.client.getWindow().getWidth()));
-                    double my = (y * (this.client.getWindow().getScaledHeight() / (double) this.client.getWindow().getHeight()));
-                    Vec2f vec = new Vec2f((float) mx, (float) my);
-
-                    Matrix4f scaleVec = new Matrix4f();
-                    scaleVec.loadIdentity();
-                    Vector4f newVec = new Vector4f(2, -2, 0, 0);
-                    newVec.transform(Matrix4f.scale(planetMatrix.a00, planetMatrix.a11, planetMatrix.a22));
-                    float iconSize = (newVec.getY() * (this.client.getWindow().getHeight() / 2.0F)) * (isStar(e.getKey()) ? 2 : 1) * (e.getKey() == this.selectedBody ? 1.5F : 1.0F);
-
-                    this.planetPosMap.put(e.getKey(), new Vector3d(vec.x, vec.y, iconSize)); // Store size on-screen in Z-value for ease
-                }
+//                this.planetPosMap.clear();
+//
+//                for (Map.Entry<CelestialBody<?, ?>, Matrix4f> e : this.matrixMap.entrySet()) {
+//                    Matrix4f planetMatrix = e.getValue();
+//                    planetMatrix.multiply(projectionMatrix);
+//                    assert this.client != null;
+//                    int x = (int) Math.floor((planetMatrix.a03 * 0.5 + 0.5) * this.client.getWindow().getWidth());
+//                    int y = (int) Math.floor(this.client.getWindow().getHeight() - (planetMatrix.a13 * 0.5 + 0.5) * this.client.getWindow().getHeight());
+//                    double mx = (x * (this.client.getWindow().getScaledWidth() / (double) this.client.getWindow().getWidth()));
+//                    double my = (y * (this.client.getWindow().getScaledHeight() / (double) this.client.getWindow().getHeight()));
+//                    Vec2f vec = new Vec2f((float) mx, (float) my);
+//
+//                    Vector4f newVec = new Vector4f(2, -2, 0, 0);
+//                    newVec.transform(Matrix4f.scale(planetMatrix.a00, planetMatrix.a11, planetMatrix.a22));
+//                    float iconSize = (newVec.getY() * (this.client.getWindow().getHeight() / 2.0F)) * (isStar(e.getKey()) ? 2 : 1) * (e.getKey() == this.selectedBody ? 1.5F : 1.0F);
+//
+//                    this.planetPosMap.put(e.getKey(), new Vector3d(vec.x, vec.y, iconSize)); // Store size on-screen in Z-value for ease
+//                }
 
                 this.drawSelectionCursor(matrices, delta);
             }
@@ -1031,7 +1024,8 @@ public class CelestialSelectionScreen extends Screen {
         }
         matrices.pop();
         RenderSystem.restoreProjectionMatrix();
-        RenderSystem.getModelViewStack().loadIdentity();
+        modelViewStack.pop();
+        RenderSystem.applyModelViewMatrix();
     }
 
     protected static void resetShader(Supplier<Shader> supplier) {
@@ -1097,12 +1091,13 @@ public class CelestialSelectionScreen extends Screen {
         }
         assert this.client != null;
         assert this.client.world != null;
-        Vec3f cBodyPos = new Vec3f((float)cBody.position().x(this.client.world.getTime(), delta), (float)cBody.position().y(this.client.world.getTime(), delta), 0);
+        long time = this.client.world.getTime();
+        Vec3f cBodyPos = new Vec3f((float)cBody.position().x(time, delta), (float)cBody.position().y(time, delta), 0);
 
         if (cBody.parent(manager) != null) {
             cBodyPos.add(this.getCelestialBodyPosition(cBody.parent(manager), delta));
         } else {
-            cBodyPos.add((float)this.galaxyRegistry.get(cBody.galaxy()).position().x(this.client.world.getTime(), delta), (float)this.galaxyRegistry.get(cBody.galaxy()).position().y(this.client.world.getTime(), delta), 0);
+            cBodyPos.add((float)this.galaxyRegistry.get(cBody.galaxy()).position().x(time, delta), (float)this.galaxyRegistry.get(cBody.galaxy()).position().y(time, delta), 0);
         }
         return cBodyPos;
     }
@@ -1119,8 +1114,8 @@ public class CelestialSelectionScreen extends Screen {
         return this.mapMode;
     }
 
-    public Map<CelestialBody<?, ?>, Matrix4f> drawCelestialBodies(MatrixStack matrices, double mouseX, double mouseY, float delta) {
-        Map<CelestialBody<?, ?>, Matrix4f> matrixMap = new HashMap<>();
+    public void drawCelestialBodies(MatrixStack matrices, double mouseX, double mouseY, float delta) {
+        this.planetPosMap.clear();
         RenderSystem.enableTexture();
 
         for (CelestialBody<?, ?> body : this.bodiesToRender) {
@@ -1132,13 +1127,13 @@ public class CelestialSelectionScreen extends Screen {
                 matrices.push();
                 this.setupMatrix(body, matrices, moon ? 0.25F : 1.0F, delta);
                 CelestialDisplay<?, ?> display = body.display();
-                display.render(matrices, Tessellator.getInstance().getBuffer(), this.getWidthForCelestialBody(body), mouseX, mouseY, delta, s -> resetAlphaShader(alpha, s));
-                matrixMap.put(body, new Matrix4f(matrices.peek().getModel()));
+                Vector4f vector4f = display.render(matrices, Tessellator.getInstance().getBuffer(), this.getWidthForCelestialBody(body), mouseX, mouseY, delta, s -> resetAlphaShader(alpha, s));
+                matrices.translate(vector4f.getX(), vector4f.getY(), 0);
+                Matrix4f model = matrices.peek().getModel();
+                planetPosMap.put(body, new Vector3d(model.a03, model.a13, vector4f.getZ() * model.a00));
                 matrices.pop();
             }
         }
-
-        return matrixMap;
     }
 
     protected static void resetAlphaShader(float alpha, Supplier<Shader> supplier) {
@@ -1829,14 +1824,14 @@ public class CelestialSelectionScreen extends Screen {
     public void setIsometric(float delta, MatrixStack matrices) {
         matrices.loadIdentity();
         matrices.translate(width / 2.0F, height / 2f, 0);
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(55));
-        matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(45));
+        Vec2f cBodyPos = this.getTranslationAdvanced(delta);
+        this.position = cBodyPos;
         float zoomLocal = this.getZoomAdvanced();
         this.zoom = zoomLocal;
         matrices.scale(1.1f + zoomLocal, 1.1F + zoomLocal, 1.1F + zoomLocal);
-        Vec2f cBodyPos = this.getTranslationAdvanced(delta);
-        this.position = cBodyPos;
+        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(55));
         matrices.translate(-cBodyPos.x, -cBodyPos.y, 0);
+        matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(45));
     }
 
     /**
