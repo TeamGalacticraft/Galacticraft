@@ -22,18 +22,22 @@
 
 package dev.galacticraft.mod.mixin;
 
+import com.google.common.collect.ImmutableMap;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.structure.GalacticraftStructure;
 import dev.galacticraft.mod.world.biome.source.MoonBiomeSource;
 import dev.galacticraft.mod.world.gen.chunk.MoonChunkGenerator;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.chunk.*;
+import net.minecraft.world.gen.feature.StructureFeature;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -41,6 +45,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Optional;
 
 /**
@@ -51,7 +56,13 @@ public abstract class DimensionTypeMixin {
     @Inject(method = "createDefaultDimensionOptions", at = @At(value = "RETURN", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void addGCDimOptions(Registry<DimensionType> registry, Registry<Biome> registry2, Registry<ChunkGeneratorSettings> registry3, long l, CallbackInfoReturnable<SimpleRegistry<DimensionOptions>> cir, SimpleRegistry<DimensionOptions> simpleRegistry) {
         Registry.register(simpleRegistry, new Identifier(Constant.MOD_ID, "moon"), new DimensionOptions(() -> registry.get(new Identifier(Constant.MOD_ID, "moon")), new MoonChunkGenerator(new MoonBiomeSource(l, 4, registry2), l, () -> new ChunkGeneratorSettings(
-                new StructuresConfig(Optional.empty(), Collections.emptyMap()), GenerationShapeConfig.create(
+                new StructuresConfig(Optional.empty(), Util.make(() -> {
+                    ImmutableMap.Builder<StructureFeature<?>, StructureConfig> builder = ImmutableMap.builder();
+                    builder.put(StructureFeature.VILLAGE, new StructureConfig(16, 8, 930573769));
+                    builder.put(GalacticraftStructure.MOON_PILLAGER_BASE_FEATURE, new StructureConfig(32, 16, 56836814));
+                    builder.put(GalacticraftStructure.MOON_RUINS, new StructureConfig(24, 8, 78473257));
+                    return builder.build();
+                })), GenerationShapeConfig.create(
                         0, 256,
                 new NoiseSamplingConfig(0.9999999814507745D, 0.9999999814507745D, 80.0D, 160.0D),
                 new SlideConfig(-10, 3, 0),

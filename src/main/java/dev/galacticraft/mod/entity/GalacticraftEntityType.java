@@ -38,7 +38,6 @@ import net.minecraft.util.registry.Registry;
  */
 public class GalacticraftEntityType {
 
-    public static final EntityType<MoonVillagerEntity> MOON_VILLAGER = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Entity.MOON_VILLAGER), FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, (EntityType.EntityFactory<MoonVillagerEntity>) MoonVillagerEntity::new).dimensions(EntityDimensions.fixed(0.6F, 2.4F)).build());
     public static final EntityType<EvolvedZombieEntity> EVOLVED_ZOMBIE = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Entity.EVOLVED_ZOMBIE), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EvolvedZombieEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.95F)).build());
     public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Entity.EVOLVED_CREEPER), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EvolvedCreeperEntity::new).dimensions(EntityDimensions.changing(0.65F, 1.8F)).build());
     public static final EntityType<EvolvedSkeletonEntity> EVOLVED_SKELETON = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Entity.EVOLVED_SKELETON), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EvolvedSkeletonEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.99F)).build());
@@ -49,7 +48,6 @@ public class GalacticraftEntityType {
     public static final EntityType<BubbleEntity> BUBBLE = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Entity.BUBBLE), FabricEntityTypeBuilder.create(SpawnGroup.MISC, BubbleEntity::new).fireImmune().dimensions(EntityDimensions.fixed(0, 0)).disableSaving().disableSummon().build());
 
     public static void register() {
-        FabricDefaultAttributeRegistry.register(MOON_VILLAGER, MoonVillagerEntity.createMoonVillagerAttributes());
         FabricDefaultAttributeRegistry.register(EVOLVED_ZOMBIE, EvolvedZombieEntity.createZombieAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35D).add(EntityAttributes.GENERIC_MAX_HEALTH, 30.0D));
         FabricDefaultAttributeRegistry.register(EVOLVED_CREEPER, EvolvedCreeperEntity.createCreeperAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D));
         FabricDefaultAttributeRegistry.register(EVOLVED_SKELETON, EvolvedSkeletonEntity.createAbstractSkeletonAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D).add(EntityAttributes.GENERIC_MAX_HEALTH, 25.0D));

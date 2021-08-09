@@ -108,7 +108,6 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenRegistry.register(GalacticraftScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER, OxygenStorageModuleScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerType.OXYGEN_SEALER_HANDLER, OxygenSealerScreen::new);
 
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.MOON_VILLAGER, MoonVillagerEntityRenderer::new);
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_ZOMBIE, EvolvedZombieRenderer::new);
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_CREEPER, EvolvedCreeperEntityRenderer::new);
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_SKELETON, EvolvedSkeletonEntityRenderer::new);

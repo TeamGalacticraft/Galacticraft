@@ -42,11 +42,7 @@
     []
   ],
   "starts": [
-    {
-      "config": {
-      },
-      "type": "galacticraft:moon_ruins"
-    }
+    "galacticraft:moon_ruins"
   ],
   "spawners": {
     "monster": [

@@ -205,7 +205,6 @@ public class GalacticraftItem {
     public static final Item TIER_3_ROCKET_SCHEMATIC = registerItem(Constant.Item.TIER_3_ROCKET_SCHEMATIC, new SchematicItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item ASTRO_MINER_SCHEMATIC = registerItem(Constant.Item.ASTRO_MINER_SCHEMATIC, new SchematicItem(new Item.Settings().group(ITEMS_GROUP)));
     // SPAWN EGGS
-    public static final Item MOON_VILLAGER_SPAWN_EGG = registerItem(Constant.Item.MOON_VILLAGER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.MOON_VILLAGER, 0xC0C9C0, 0x5698D8, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_ZOMBIE_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_ZOMBIE, 0xC0CCC0, 0x99EE99, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item EVOLVED_EVOKER_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_EVOKER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_EVOKER, 0x888888, 0xDDDDDD, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item EVOLVED_VINDICATOR_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_VINDICATOR_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_VINDICATOR, 0x888888, 0xDDDDDD, new Item.Settings().group(ITEMS_GROUP)));
