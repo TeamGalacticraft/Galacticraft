@@ -5,12 +5,12 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "AbstractSkeletonEntityAccessor",
-    "BaseFluidMixin",
     "BucketItemAccessor",
     "BuiltinBiomesAccessor",
     "DimensionTypeMixin",
     "EntityMixin",
     "ExtendedScreenHandlerTypeAccessor",
+    "FlowableFluidMixin",
     "ItemStackMixin",
     "LanternBlockMixin",
     "LootTablesAccessor",

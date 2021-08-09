@@ -48,14 +48,14 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
-
+public interface FluidLoggable extends FluidDrainable, FluidFillable {
+    Identifier INVALID = new Identifier("invalid");
     String DOT_REP = "_gc_dot_";
-    String DASH_REP = "_gc_dash__"; // yes this is bad.... but who's gonna name a mod/fluid something like that
+    String DASH_REP = "_gc_dash_"; // yes this is bad.... but who's gonna name a mod/fluid something like that
     String COLON_REP = "_gc_colon_";
 
     Property<Identifier> FLUID = new Property<Identifier>("fluid", Identifier.class) {
-        private final List<Identifier> VALUES = new LinkedList<>();
+        private static final List<Identifier> VALUES = new LinkedList<>();
 
         @Override
         public Collection<Identifier> getValues() {
@@ -66,6 +66,7 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
                     }
                 }
                 VALUES.add(Constant.Misc.EMPTY);
+                VALUES.add(INVALID);
             }
             return VALUES;
         }
@@ -86,33 +87,45 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
     @Override
     default boolean canFillWithFluid(BlockView view, BlockPos pos, BlockState state, Fluid fluid) {
         if (!(fluid instanceof FlowableFluid)) return false;
-        return state.get(FLUID).equals(Constant.Misc.EMPTY);
+        return this.isEmpty(state);
     }
 
     @Override
     default boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) {
         if (!(fluidState.getFluid() instanceof FlowableFluid)) return false;
-        if (state.get(FLUID).equals(Constant.Misc.EMPTY)) {
+        if (this.isEmpty(state)) {
             if (!world.isClient()) {
-                world.setBlockState(pos, state.with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
+                world.setBlockState(pos, state
+                        .with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
                         .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1)), 3);
                 world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
             }
             return true;
-        } else {
-            return false;
+        } else if (Registry.FLUID.getId(fluidState.getFluid()).equals(state.get(FLUID))) {
+            if (!world.isClient()) {
+                world.setBlockState(pos, state.with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1)), 3);
+                world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
+            }
+            return true;
+        } else if (fluidState.getFluid() == Fluids.EMPTY) {
+            world.setBlockState(pos, state.with(FLUID, Constant.Misc.EMPTY).with(FlowableFluid.LEVEL, 1), 3);
         }
+        return false;
     }
 
     @Override
     default ItemStack tryDrainFluid(WorldAccess world, BlockPos pos, BlockState state) {
-        if (!state.get(FLUID).equals(Constant.Misc.EMPTY)) {
+        if (!this.isEmpty(state)) {
             world.setBlockState(pos, state.with(FLUID, Constant.Misc.EMPTY), 3);
-            if (Registry.FLUID.get(state.get(FLUID)).getDefaultState().isStill()) {
+            if (world.getFluidState(pos).isStill()) {
                 return new ItemStack(Registry.FLUID.get(state.get(FLUID)).getBucketItem());
             }
         }
         return ItemStack.EMPTY;
+    }
+    
+    default boolean isEmpty(BlockState state) {
+        return state.get(FLUID).equals(Constant.Misc.EMPTY) || state.get(FLUID).equals(INVALID);
     }
 
     BlockState getPlacementState(ItemPlacementContext context);

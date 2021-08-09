@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.mod.api.block.FluidLoggable;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.FluidDrainable;
-import net.minecraft.block.FluidFillable;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -36,12 +36,23 @@ import org.spongepowered.asm.mixin.injection.Redirect;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Mixin(FlowableFluid.class)
-public abstract class BaseFluidMixin {
+public abstract class FlowableFluidMixin {
     @Redirect(method = "onScheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 1))
-    private boolean onScheduledTickGC(World world, BlockPos pos, BlockState state, int flags) {
-        if (state.getBlock() instanceof FluidDrainable && state.getBlock() instanceof FluidFillable) {
-            ((FluidDrainable) state.getBlock()).tryDrainFluid(world, pos, state);
-            ((FluidFillable) state.getBlock()).tryFillWithFluid(world, pos, state, state.getFluidState());
+    private boolean onScheduledTickFill_gc(World world, BlockPos pos, BlockState state, int flags) {
+        BlockState blockState = world.getBlockState(pos);
+        if (blockState.getBlock() instanceof FluidLoggable fillable) {
+            fillable.tryFillWithFluid(world, pos, blockState, state.getFluidState());
+            return true;
+        }
+        return world.setBlockState(pos, state, flags);
+    }
+
+    @Redirect(method = "onScheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 0))
+    private boolean onScheduledTickDrain_gc(World world, BlockPos pos, BlockState state, int flags) {
+        BlockState blockState = world.getBlockState(pos);
+        Block block = blockState.getBlock();
+        if (block instanceof FluidLoggable drainable) {
+            drainable.tryDrainFluid(world, pos, blockState);
             return true;
         }
         return world.setBlockState(pos, state, flags);
