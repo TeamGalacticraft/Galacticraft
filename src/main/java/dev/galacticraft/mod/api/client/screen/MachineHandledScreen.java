@@ -41,6 +41,7 @@ import dev.galacticraft.mod.client.gui.widget.machine.AbstractWidget;
 import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
 import dev.galacticraft.mod.item.GalacticraftItem;
+import dev.galacticraft.mod.mixin.SlotAccessor;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.screen.tank.Tank;
 import dev.galacticraft.mod.util.ColorUtil;
@@ -739,9 +740,10 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
         color.defaultReturnValue(-1);
         for (Slot slot : this.handler.slots) {
             if (slot.inventory instanceof InventoryFixedWrapper inv && inv.getWrapped() == this.machine.itemInv()) {
-                if (color.get(slot.index) != -1) {
+                int index = ((SlotAccessor) slot).getIndex();
+                if (color.get(index) != -1) {
                     RenderSystem.disableDepthTest();
-                    int c = color.get(slot.index);
+                    int c = color.get(index);
                     int r = (c >> 16 & 255);
                     int g = (c >> 8 & 255);
                     int b = (c & 255);
@@ -833,8 +835,9 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
 
     private void groupItem(Int2IntMap out, IntList list) {
         for (Slot slot : this.handler.slots) {
-            if (list.contains(slot.index)) {
-                out.put(slot.index, this.machine.itemInv().getTypes()[slot.index].getColor().getRgb());
+            int index = ((SlotAccessor) slot).getIndex();
+            if (list.contains(index)) {
+                out.put(index, this.machine.itemInv().getTypes()[index].getColor().getRgb());
             }
         }
     }
@@ -872,13 +875,15 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
 
     private void groupStack(MatrixStack matrices, IntList list) {
         for (Slot slot : this.handler.slots) {
-            if (list.contains(slot.index)) {
+            int index = ((SlotAccessor) slot).getIndex();
+            if (list.contains(index)) {
                 drawSlotOverlay(matrices, slot);
             }
         }
     }
 
     private void drawSlotOverlay(MatrixStack matrices, Slot slot) {
+        int index = ((SlotAccessor) slot).getIndex();
         RenderSystem.disableDepthTest();
         RenderSystem.colorMask(true, true, true, false);
         RenderSystem.disableTexture();
@@ -889,32 +894,32 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
                 slot.x - 1, slot.y - 1,
                 slot.x - 1, slot.y + 17,
                 this.getZOffset(),
-                this.machine.itemInv().getTypes()[slot.index].getColor().getRgb(),
-                this.machine.itemInv().getTypes()[slot.index].getColor().getRgb());
+                this.machine.itemInv().getTypes()[index].getColor().getRgb(),
+                this.machine.itemInv().getTypes()[index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getModel(), bufferBuilder,
                 slot.x - 1, slot.y + 17,
                 slot.x + 17, slot.y - 1,
                 this.getZOffset(),
-                this.machine.itemInv().getTypes()[slot.index].getColor().getRgb(),
-                this.machine.itemInv().getTypes()[slot.index].getColor().getRgb());
+                this.machine.itemInv().getTypes()[index].getColor().getRgb(),
+                this.machine.itemInv().getTypes()[index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getModel(), bufferBuilder,
                 slot.x + 17, slot.y + 17,
                 slot.x + 17, slot.y - 1,
                 this.getZOffset(),
-                this.machine.itemInv().getTypes()[slot.index].getColor().getRgb(),
-                this.machine.itemInv().getTypes()[slot.index].getColor().getRgb());
+                this.machine.itemInv().getTypes()[index].getColor().getRgb(),
+                this.machine.itemInv().getTypes()[index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getModel(), bufferBuilder,
                 slot.x + 17, slot.y - 1,
                 slot.x - 1, slot.y - 1,
                 this.getZOffset(),
-                this.machine.itemInv().getTypes()[slot.index].getColor().getRgb(),
-                this.machine.itemInv().getTypes()[slot.index].getColor().getRgb());
+                this.machine.itemInv().getTypes()[index].getColor().getRgb(),
+                this.machine.itemInv().getTypes()[index].getColor().getRgb());
         tessellator.draw();
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.enableDepthTest();
@@ -1055,6 +1060,14 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
 
     public CapacitorWidget createCapacitorWidget(int x, int y, int height) {
         return new CapacitorWidget(this.machine.capacitorView(), x, y, height, this::getEnergyTooltipLines, this.machine::getStatus);
+    }
+
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
     }
 
     public enum Tab {

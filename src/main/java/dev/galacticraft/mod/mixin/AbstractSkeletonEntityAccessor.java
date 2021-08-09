@@ -20,17 +20,22 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.biome.source;
+package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.entity.ai.goal.BowAttackGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.mob.AbstractSkeletonEntity;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftBiomeSource {
-    public static void register() {
-        Registry.register(Registry.BIOME_SOURCE, new Identifier(Constant.MOD_ID, "moon"), MoonBiomeSource.CODEC);
-    }
+@Mixin(AbstractSkeletonEntity.class)
+public interface AbstractSkeletonEntityAccessor {
+    @Accessor("meleeAttackGoal")
+    MeleeAttackGoal getMeleeAttackGoal();
+
+    @Accessor("bowAttackGoal")
+    BowAttackGoal<?> getBowAttackGoal();
 }

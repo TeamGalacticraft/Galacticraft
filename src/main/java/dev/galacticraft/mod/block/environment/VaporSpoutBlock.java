@@ -36,7 +36,6 @@ import java.util.Random;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class VaporSpoutBlock extends Block {
-
     public VaporSpoutBlock(Settings settings) {
         super(settings);
     }

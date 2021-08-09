@@ -20,26 +20,17 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin.client;
+package dev.galacticraft.mod.mixin;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.screen.slot.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(HandledScreen.class)
-@Environment(EnvType.CLIENT)
-public interface HandledScreenAccessor {
-    @Accessor("x")
-    int gc_getX();
-
-    @Accessor("y")
-    int gc_getY();
-
-    @Accessor("backgroundWidth")
-    int gc_getBackgroundWidth();
+@Mixin(Slot.class)
+public interface SlotAccessor {
+    @Accessor("index")
+    int getIndex();
 }

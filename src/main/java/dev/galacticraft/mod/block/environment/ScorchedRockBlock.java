@@ -34,7 +34,6 @@ import java.util.Random;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ScorchedRockBlock extends Block {
-
     public ScorchedRockBlock(Settings settings) {
         super(settings);
         settings.strength(0.9F, 2.5F);

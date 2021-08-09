@@ -20,17 +20,24 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.biome.source;
+package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.render.entity.model.AnimalModel;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftBiomeSource {
-    public static void register() {
-        Registry.register(Registry.BIOME_SOURCE, new Identifier(Constant.MOD_ID, "moon"), MoonBiomeSource.CODEC);
-    }
+@Mixin(AnimalModel.class)
+@Environment(EnvType.CLIENT)
+public interface AnimalModelInvoker {
+    @Invoker("getHeadParts")
+    Iterable<ModelPart> callGetHeadParts();
+
+    @Invoker("getHeadParts")
+    Iterable<ModelPart> callGetBodyParts();
 }

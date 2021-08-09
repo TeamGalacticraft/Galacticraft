@@ -28,7 +28,6 @@ import dev.galacticraft.mod.api.block.WireBlock;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SealableAluminumWireBlock extends WireBlock {
-
     public SealableAluminumWireBlock(Settings settings) {
         super(settings);
     }

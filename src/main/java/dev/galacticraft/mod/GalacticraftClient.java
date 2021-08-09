@@ -61,7 +61,6 @@ import java.util.Collections;
  */
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
-
     @Override
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();

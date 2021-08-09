@@ -50,7 +50,6 @@ import java.util.Random;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CrudeOilFluid extends FlowableFluid {
-
     @Override
     public Fluid getFlowing() {
         return GalacticraftFluid.FLOWING_CRUDE_OIL;

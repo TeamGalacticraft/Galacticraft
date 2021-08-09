@@ -48,7 +48,6 @@ import java.util.Optional;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GratingBlock extends Block implements FluidLoggableBlock {
-
     protected static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.of("grating_state", GratingState.class);
 
     public GratingBlock(Settings settings) {

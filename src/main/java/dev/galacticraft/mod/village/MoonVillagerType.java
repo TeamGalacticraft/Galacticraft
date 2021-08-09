@@ -22,15 +22,10 @@
 
 package dev.galacticraft.mod.village;
 
-import com.mojang.serialization.Lifecycle;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.biome.GalacticraftBiome;
 import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerTypeHelper;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.util.registry.SimpleRegistry;
-import net.minecraft.village.VillagerProfession;
 import net.minecraft.village.VillagerType;
 
 import java.util.LinkedList;

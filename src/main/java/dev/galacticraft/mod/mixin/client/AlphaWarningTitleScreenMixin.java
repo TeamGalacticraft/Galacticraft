@@ -45,8 +45,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
 @Mixin(TitleScreen.class)
+@Environment(EnvType.CLIENT)
 public abstract class AlphaWarningTitleScreenMixin extends Screen {
     private boolean warningHidden = false;
     private static final Identifier ALPHA_WARNING_GC_TEXTURE = new Identifier(Constant.MOD_ID, "textures/gui/alpha_warning.png");

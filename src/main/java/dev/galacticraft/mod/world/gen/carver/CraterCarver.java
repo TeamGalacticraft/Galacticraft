@@ -37,6 +37,9 @@ import java.util.BitSet;
 import java.util.Random;
 import java.util.function.Function;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class CraterCarver extends Carver<CraterCarverConfig> {
     public CraterCarver(Codec<CraterCarverConfig> configCodec) {
         super(configCodec);

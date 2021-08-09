@@ -20,17 +20,18 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.biome.source;
+package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.item.BucketItem;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftBiomeSource {
-    public static void register() {
-        Registry.register(Registry.BIOME_SOURCE, new Identifier(Constant.MOD_ID, "moon"), MoonBiomeSource.CODEC);
-    }
+@Mixin(BucketItem.class)
+public interface BucketItemAccessor {
+    @Accessor("fluid")
+    Fluid getFluid();
 }

@@ -39,8 +39,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
 @Mixin(AbstractClientPlayerEntity.class)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractClientPlayerEntityMixin {
     @Shadow @Nullable protected abstract PlayerListEntry getPlayerListEntry();
 

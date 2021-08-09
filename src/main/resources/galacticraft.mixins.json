@@ -4,7 +4,10 @@
   "plugin": "dev.galacticraft.mod.GalacticraftMixinPlugin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "AbstractSkeletonEntityAccessor",
     "BaseFluidMixin",
+    "BucketItemAccessor",
+    "BuiltinBiomesAccessor",
     "DimensionTypeMixin",
     "EntityMixin",
     "ExtendedScreenHandlerTypeAccessor",
@@ -13,19 +16,20 @@
     "LootTablesAccessor",
     "ServerWorldMixin",
     "SkyPropertiesAccessor",
+    "SlotAccessor",
     "StructurePoolGeneratorMixin",
     "TorchBlockMixin"
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",
     "client.AlphaWarningTitleScreenMixin",
-    "client.HandledScreenAccessor",
+    "client.AnimalModelInvoker",
     "client.InGameHudMixin",
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",
     "client.VillagerEntityRendererMixin",
     "client.VillagerResemblingModelMixin",
-    "client.WorldRendererMixin",
+    "client.WorldRendererMoonMixin",
     "client.WorldRendererOverworldMixin"
   ],
   "minVersion": "0.8.0",

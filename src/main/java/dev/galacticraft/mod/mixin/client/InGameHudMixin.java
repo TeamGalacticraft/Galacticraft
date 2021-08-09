@@ -57,7 +57,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
 
     @Shadow @Final private MinecraftClient client;
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderColor(FFFF)V", ordinal = 1))
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderColor(FFFF)V", ordinal = 1, remap = false))
     private void draw(MatrixStack matrices, float delta, CallbackInfo ci) {
         CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(this.client.world).orElse(null);
         if (body != null && !body.atmosphere().breathable()) {

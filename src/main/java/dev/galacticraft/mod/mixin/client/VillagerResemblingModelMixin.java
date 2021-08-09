@@ -45,8 +45,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.NoSuchElementException;
 
-@Environment(EnvType.CLIENT)
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 @Mixin(VillagerResemblingModel.class)
+@Environment(EnvType.CLIENT)
 public abstract class VillagerResemblingModelMixin<T extends Entity> {
     @Shadow public abstract void setHatVisible(boolean visible);
     @Shadow @Final private ModelPart head;
