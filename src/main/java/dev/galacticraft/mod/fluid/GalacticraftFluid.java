@@ -39,6 +39,5 @@ public class GalacticraftFluid {
     public static final Fluid LIQUID_OXYGEN = Registry.register(Registry.FLUID, new Identifier(Constant.MOD_ID, Constant.Fluid.LIQUID_OXYGEN), new OxygenFluid());
 
     public static void register() {
-
     }
 }
