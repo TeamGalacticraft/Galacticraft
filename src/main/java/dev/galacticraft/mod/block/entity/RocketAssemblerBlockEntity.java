@@ -34,6 +34,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.entity.RocketEntity;
 import dev.galacticraft.mod.item.GalacticraftItem;
+import dev.galacticraft.mod.mixin.RecipeManagerInvoker;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.recipe.RocketAssemblerRecipe;
 import dev.galacticraft.mod.util.EnergyUtil;
@@ -113,7 +114,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     private void schematicUpdate(ItemStack prev, ItemStack current) {
         try {
             recipes.clear();
-            for (Recipe<Inventory> recipe : world.getRecipeManager().getAllOfType(GalacticraftRecipe.ROCKET_ASSEMBLER_TYPE).values()) {
+            for (Recipe<Inventory> recipe : ((RecipeManagerInvoker) world.getRecipeManager()).callGetAllOfType(GalacticraftRecipe.ROCKET_ASSEMBLER_TYPE).values()) {
                 if (recipe instanceof RocketAssemblerRecipe) {
                     recipes.put(((RocketAssemblerRecipe) recipe).getPartOutput(), ((RocketAssemblerRecipe) recipe));
                 }
@@ -224,7 +225,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
 
     private void schematicUpdateFromTag() {
         recipes.clear();
-        for (Recipe<Inventory> recipe : world.getRecipeManager().getAllOfType(GalacticraftRecipe.ROCKET_ASSEMBLER_TYPE).values()) {
+        for (Recipe<Inventory> recipe : ((RecipeManagerInvoker) world.getRecipeManager()).callGetAllOfType(GalacticraftRecipe.ROCKET_ASSEMBLER_TYPE).values()) {
             if (recipe instanceof RocketAssemblerRecipe) {
                 recipes.put(((RocketAssemblerRecipe) recipe).getPartOutput(), ((RocketAssemblerRecipe) recipe));
             }

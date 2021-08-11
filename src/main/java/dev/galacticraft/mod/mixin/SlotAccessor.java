@@ -22,28 +22,15 @@
 
 package dev.galacticraft.mod.mixin;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FluidDrainable;
-import net.minecraft.block.FluidFillable;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.screen.slot.Slot;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(FlowableFluid.class)
-public abstract class BaseFluidMixin {
-    @Redirect(method = "onScheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 1))
-    private boolean onScheduledTickGC(World world, BlockPos pos, BlockState state, int flags) {
-        if (state.getBlock() instanceof FluidDrainable && state.getBlock() instanceof FluidFillable) {
-            ((FluidDrainable) state.getBlock()).tryDrainFluid(world, pos, state);
-            ((FluidFillable) state.getBlock()).tryFillWithFluid(world, pos, state, state.getFluidState());
-            return true;
-        }
-        return world.setBlockState(pos, state, flags);
-    }
+@Mixin(Slot.class)
+public interface SlotAccessor {
+    @Accessor("index")
+    int getIndex();
 }

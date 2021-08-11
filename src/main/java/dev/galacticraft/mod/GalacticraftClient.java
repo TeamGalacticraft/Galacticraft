@@ -63,7 +63,6 @@ import java.util.Collections;
  */
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
-
     @Override
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();
@@ -115,7 +114,6 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenRegistry.register(GalacticraftScreenHandlerType.ROCKET_ASSEMBLER_HANDLER, RocketAssemblerScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerType.FUEL_LOADER_HANDLER, FuelLoaderScreen::new);
 
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.MOON_VILLAGER, MoonVillagerEntityRenderer::new);
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_ZOMBIE, EvolvedZombieRenderer::new);
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_CREEPER, EvolvedCreeperEntityRenderer::new);
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityType.EVOLVED_SKELETON, EvolvedSkeletonEntityRenderer::new);

@@ -40,7 +40,6 @@ import java.util.Random;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class UnlitTorchBlock extends TorchBlock {
-
     public UnlitTorchBlock(Settings settings) {
         super(settings, null);
     }

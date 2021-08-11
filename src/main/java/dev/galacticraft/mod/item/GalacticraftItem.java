@@ -203,7 +203,6 @@ public class GalacticraftItem {
     public static final Item ROCKET = Registry.register(Registry.ITEM, new Identifier(Constant.MOD_ID, Constant.Item.ROCKET), new RocketItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item FLUID_CANISTER = Registry.register(Registry.ITEM, new Identifier(Constant.MOD_ID, Constant.Item.FLUID_CANISTER), new FluidCanister(new Item.Settings().group(ITEMS_GROUP).maxCount(1).maxDamage(1000)));
     // SPAWN EGGS
-    public static final Item MOON_VILLAGER_SPAWN_EGG = registerItem(Constant.Item.MOON_VILLAGER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.MOON_VILLAGER, 0xC0C9C0, 0x5698D8, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_ZOMBIE_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_ZOMBIE, 0xC0CCC0, 0x99EE99, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item EVOLVED_EVOKER_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_EVOKER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_EVOKER, 0x888888, 0xDDDDDD, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item EVOLVED_VINDICATOR_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_VINDICATOR_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_VINDICATOR, 0x888888, 0xDDDDDD, new Item.Settings().group(ITEMS_GROUP)));

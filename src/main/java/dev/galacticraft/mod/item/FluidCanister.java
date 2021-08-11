@@ -32,6 +32,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Ref;
 import alexiil.mc.lib.attributes.misc.Reference;
+import dev.galacticraft.mod.mixin.BucketItemAccessor;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -42,7 +43,6 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stat.Stats;
@@ -117,7 +117,7 @@ public class FluidCanister extends Item implements AttributeProviderItem {
                     blockState = world.getBlockState(blockPos);
                     if (blockState.getBlock() instanceof FluidDrainable) {
                         ItemStack s = ((FluidDrainable) blockState.getBlock()).tryDrainFluid(world, blockPos, blockState);
-                        Fluid fluid = s.getItem() instanceof BucketItem ? ((BucketItem) s.getItem()).fluid : Fluids.EMPTY;
+                        Fluid fluid = s.getItem() instanceof BucketItemAccessor ? ((BucketItemAccessor) s.getItem()).getFluid() : Fluids.EMPTY;
                         if (fluid != Fluids.EMPTY) {
                             user.incrementStat(Stats.USED.getOrCreateStat(this));
                             if (fluid.getBucketFillSound().isPresent()) user.playSound(fluid.getBucketFillSound().get(), 1.0F, 1.0F);

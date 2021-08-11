@@ -20,26 +20,22 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin.client;
+package dev.galacticraft.mod.mixin;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.entity.ai.goal.BowAttackGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.mob.AbstractSkeletonEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(HandledScreen.class)
-@Environment(EnvType.CLIENT)
-public interface HandledScreenAccessor {
-    @Accessor("x")
-    int gc_getX();
+@Mixin(AbstractSkeletonEntity.class)
+public interface AbstractSkeletonEntityAccessor {
+    @Accessor("meleeAttackGoal")
+    MeleeAttackGoal getMeleeAttackGoal();
 
-    @Accessor("y")
-    int gc_getY();
-
-    @Accessor("backgroundWidth")
-    int gc_getBackgroundWidth();
+    @Accessor("bowAttackGoal")
+    BowAttackGoal<?> getBowAttackGoal();
 }

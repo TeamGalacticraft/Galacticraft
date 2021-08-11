@@ -35,7 +35,6 @@ import net.minecraft.client.world.ClientWorld;
  */
 @Environment(EnvType.CLIENT)
 public class DrippingCrudeOilParticle extends SpriteBillboardParticle {
-
     public DrippingCrudeOilParticle(ClientWorld world, double x, double y, double z, double velX, double velY, double velZ) {
         super(world, x, y, z, velX, velY, velZ);
         setSprite(MinecraftClient.getInstance().getItemRenderer().getModels().getModelParticleSprite(Blocks.ACACIA_LOG.asItem()));

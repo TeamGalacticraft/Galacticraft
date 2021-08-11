@@ -43,7 +43,6 @@ import net.minecraft.util.registry.Registry;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftScreenHandlerType {
-
     public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<BasicSolarPanelBlockEntity>> BASIC_SOLAR_PANEL_HANDLER =
             Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.BASIC_SOLAR_PANEL_SCREEN_HANDLER),
                     new ExtendedScreenHandlerType<>(

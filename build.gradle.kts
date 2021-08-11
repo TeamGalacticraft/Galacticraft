@@ -75,6 +75,11 @@ loom {
 
 repositories {
     mavenLocal()
+    maven("https://maven.galacticraft.dev") {
+        content {
+            includeGroup("dev.galacticraft")
+        }
+    }
     maven("https://maven.shedaniel.me/") {
         content {
             includeGroup("me.shedaniel.cloth.api")
@@ -108,11 +113,6 @@ repositories {
             includeGroup("mcp.mobius.waila")
         }
     }
-    maven("https://maven.galacticraft.dev") {
-        content {
-            includeGroup("dev.galacticraft")
-        }
-    }
 }
 
 /**
@@ -138,6 +138,7 @@ dependencies {
     // Fabric Api Modules
     listOf(
         "fabric-api-base",
+        "fabric-biome-api-v1",
         "fabric-blockrenderlayer-v1",
         "fabric-command-api-v1",
         "fabric-content-registries-v0",

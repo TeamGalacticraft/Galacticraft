@@ -22,8 +22,11 @@
 
 package dev.galacticraft.mod.entity;
 
+import dev.galacticraft.mod.mixin.AbstractSkeletonEntityAccessor;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.ai.goal.BowAttackGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -48,9 +51,11 @@ public class EvolvedSkeletonEntity extends SkeletonEntity {
 
     @Override
     public void updateAttackType() {
-        if (this.world != null && !this.world.isClient && this.bowAttackGoal != null) {
-            this.goalSelector.remove(this.meleeAttackGoal);
-            this.goalSelector.remove(this.bowAttackGoal);
+        BowAttackGoal<?> bowAttackGoal = ((AbstractSkeletonEntityAccessor) this).getBowAttackGoal();
+        MeleeAttackGoal meleeAttackGoal = ((AbstractSkeletonEntityAccessor) this).getMeleeAttackGoal();
+        if (this.world != null && !this.world.isClient && bowAttackGoal != null) {
+            this.goalSelector.remove(meleeAttackGoal);
+            this.goalSelector.remove(bowAttackGoal);
             ItemStack main = this.getStackInHand(Hand.MAIN_HAND);
             ItemStack off = this.getStackInHand(Hand.OFF_HAND);
             if (main.getItem() == Items.BOW || off.getItem() == Items.BOW) {
@@ -59,10 +64,10 @@ public class EvolvedSkeletonEntity extends SkeletonEntity {
                     i = 25;
                 }
 
-                this.bowAttackGoal.setAttackInterval(i);
-                this.goalSelector.add(4, this.bowAttackGoal);
+                bowAttackGoal.setAttackInterval(i);
+                this.goalSelector.add(4, bowAttackGoal);
             } else {
-                this.goalSelector.add(4, this.meleeAttackGoal);
+                this.goalSelector.add(4, meleeAttackGoal);
             }
         }
     }
