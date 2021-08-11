@@ -1550,7 +1550,7 @@ public class CelestialSelectionScreen extends Screen {
                 str = I18n.translate(this.selectedBody.name().getKey());
 
                 if (isSatellite(this.selectedBody)) {
-                    str = I18n.translate("ui.galacticraft.celestialselection.r").toUpperCase();
+                    str = I18n.translate("ui.galacticraft.celestialselection.rename").toUpperCase();
                 }
 
                 this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f, LHS + 2, WHITE);
@@ -1614,7 +1614,7 @@ public class CelestialSelectionScreen extends Screen {
                     this.blit(width / 2 - 90 + 8, this.height / 2 - 38 + 18, 161, 13, 159, 67, 161, 13, false, false);
                     this.blit(width / 2 - 90 + 17, this.height / 2 - 38 + 59, 72, 12, 159, 80, 72, 12, true, false);
                     this.blit(width / 2, this.height / 2 - 38 + 59, 72, 12, 159, 80, 72, 12, false, false);
-                    str = I18n.translate("ui.galacticraft.celestialselection.assign");
+                    str = I18n.translate("ui.galacticraft.celestialselection.assign_name");
                     this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f, this.height / 2f - 35, WHITE);
                     str = I18n.translate("ui.galacticraft.celestialselection.apply");
                     this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f - 36, this.height / 2f + 23, WHITE);
