@@ -99,6 +99,11 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
+    protected void tickDisabled() {
+
+    }
+
+    @Override
     public FluidAmount fluidInvCapacity() {
         return MAX_OXYGEN;
     }

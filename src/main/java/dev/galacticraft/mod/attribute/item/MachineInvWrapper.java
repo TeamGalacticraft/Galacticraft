@@ -20,40 +20,23 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.attribute.energy;
+package dev.galacticraft.mod.attribute.item;
 
-import alexiil.mc.lib.attributes.ListenerRemovalToken;
-import alexiil.mc.lib.attributes.ListenerToken;
-import dev.galacticraft.energy.api.Capacitor;
-import dev.galacticraft.energy.api.EnergyType;
-import dev.galacticraft.energy.impl.DefaultEnergyType;
-import org.jetbrains.annotations.Nullable;
+import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class InfiniteCapacitor implements Capacitor {
-    @Override
-    public void setEnergy(int amount) {
+public class MachineInvWrapper extends InventoryFixedWrapper {
+    private final MachineBlockEntity machine;
+
+    public MachineInvWrapper(MachineBlockEntity machine, FixedItemInv inv) {
+        super(inv);
+        this.machine = machine;
     }
 
     @Override
-    public EnergyType getEnergyType() {
-        return DefaultEnergyType.INSTANCE;
-    }
-
-    @Override
-    public int getEnergy() {
-        return 1073741823;
-    }
-
-    @Override
-    public int getMaxCapacity() {
-        return 1073741823;
-    }
-
-    @Override
-    public @Nullable ListenerToken addListener(CapacitorListener listener, ListenerRemovalToken removalToken) {
-        return null;
+    public boolean canPlayerUse(PlayerEntity player) {
+        return this.machine.getConfiguration().getSecurity().hasAccess(player);
     }
 }

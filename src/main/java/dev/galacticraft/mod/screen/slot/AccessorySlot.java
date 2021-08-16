@@ -20,40 +20,20 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.attribute.energy;
+package dev.galacticraft.mod.screen.slot;
 
-import alexiil.mc.lib.attributes.ListenerRemovalToken;
-import alexiil.mc.lib.attributes.ListenerToken;
-import dev.galacticraft.energy.api.Capacitor;
-import dev.galacticraft.energy.api.EnergyType;
-import dev.galacticraft.energy.impl.DefaultEnergyType;
-import org.jetbrains.annotations.Nullable;
+import dev.galacticraft.api.item.Accessory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class InfiniteCapacitor implements Capacitor {
-    @Override
-    public void setEnergy(int amount) {
+public class AccessorySlot extends Slot {
+    public AccessorySlot(Inventory inventory, int index, int x, int y) {
+        super(inventory, index, x, y);
     }
 
     @Override
-    public EnergyType getEnergyType() {
-        return DefaultEnergyType.INSTANCE;
-    }
-
-    @Override
-    public int getEnergy() {
-        return 1073741823;
-    }
-
-    @Override
-    public int getMaxCapacity() {
-        return 1073741823;
-    }
-
-    @Override
-    public @Nullable ListenerToken addListener(CapacitorListener listener, ListenerRemovalToken removalToken) {
-        return null;
+    public boolean canInsert(ItemStack stack) {
+        return stack.getItem() instanceof Accessory;
     }
 }

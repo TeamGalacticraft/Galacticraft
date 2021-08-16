@@ -94,6 +94,11 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
+    protected void tickDisabled() {
+
+    }
+
+    @Override
     public @NotNull MachineStatus updateStatus() {
         if (this.fuelLength == 0 && this.itemInv().getInvStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
         if (this.capacitor().getEnergy() >= this.capacitor().getMaxCapacity()) return Status.FULL;

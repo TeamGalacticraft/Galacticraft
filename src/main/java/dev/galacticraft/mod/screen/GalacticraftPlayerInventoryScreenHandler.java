@@ -29,6 +29,7 @@ import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.item.ThermalArmorItem;
+import dev.galacticraft.mod.screen.slot.AccessorySlot;
 import dev.galacticraft.mod.util.OxygenTankUtil;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -100,28 +101,12 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
         this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
         this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_2_SLOT, 80, 8 + 3 * 18));
 
-        this.addSlot(new Slot(inventory, 6, 80, 8) {
-            @Override
-            public boolean canInsert(ItemStack stack) {
-                return stack.getItem() instanceof Accessory;
-            }
-        });
-
-        this.addSlot(new Slot(inventory, 7, 80, 8 + 18) {
-            @Override
-            public boolean canInsert(ItemStack stack) {
-                return stack.getItem() instanceof Accessory;
-            }
-        });
+        this.addSlot(new AccessorySlot(inventory, 6, 80, 8));
+        this.addSlot(new AccessorySlot(inventory, 7, 80, 8 + 18));
 
         int accessorySlot = 0;
         for (int i = 8; i < 12; i++) {
-            this.addSlot(new Slot(inventory, i, 80 + 18, 8 + accessorySlot * 18) {
-                @Override
-                public boolean canInsert(ItemStack stack) {
-                    return stack.getItem() instanceof Accessory;
-                }
-            });
+            this.addSlot(new AccessorySlot(inventory, i, 80 + 18, 8 + accessorySlot * 18));
             accessorySlot++;
         }
 

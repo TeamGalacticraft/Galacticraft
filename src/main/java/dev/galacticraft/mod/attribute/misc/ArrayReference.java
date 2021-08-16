@@ -20,40 +20,29 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.attribute.energy;
+package dev.galacticraft.mod.attribute.misc;
 
-import alexiil.mc.lib.attributes.ListenerRemovalToken;
-import alexiil.mc.lib.attributes.ListenerToken;
-import dev.galacticraft.energy.api.Capacitor;
-import dev.galacticraft.energy.api.EnergyType;
-import dev.galacticraft.energy.impl.DefaultEnergyType;
-import org.jetbrains.annotations.Nullable;
+import alexiil.mc.lib.attributes.misc.Reference;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class InfiniteCapacitor implements Capacitor {
+import java.util.function.Predicate;
+
+public record ArrayReference<T>(T[] array, int index, Predicate<T> predicate) implements Reference<T> {
     @Override
-    public void setEnergy(int amount) {
+    public T get() {
+        return this.array[index];
     }
 
     @Override
-    public EnergyType getEnergyType() {
-        return DefaultEnergyType.INSTANCE;
+    public boolean set(T value) {
+        if (this.isValid(value)) {
+            this.array[index] = value;
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public int getEnergy() {
-        return 1073741823;
-    }
-
-    @Override
-    public int getMaxCapacity() {
-        return 1073741823;
-    }
-
-    @Override
-    public @Nullable ListenerToken addListener(CapacitorListener listener, ListenerRemovalToken removalToken) {
-        return null;
+    public boolean isValid(T value) {
+        return predicate.test(value);
     }
 }

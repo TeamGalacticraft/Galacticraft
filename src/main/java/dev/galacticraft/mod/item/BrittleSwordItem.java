@@ -20,40 +20,27 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.attribute.energy;
+package dev.galacticraft.mod.item;
 
-import alexiil.mc.lib.attributes.ListenerRemovalToken;
-import alexiil.mc.lib.attributes.ListenerToken;
-import dev.galacticraft.energy.api.Capacitor;
-import dev.galacticraft.energy.api.EnergyType;
-import dev.galacticraft.energy.impl.DefaultEnergyType;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
+import net.minecraft.item.ToolMaterial;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class InfiniteCapacitor implements Capacitor {
-    @Override
-    public void setEnergy(int amount) {
+public class BrittleSwordItem extends SwordItem {
+    public BrittleSwordItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings) {
+        super(toolMaterial, attackDamage, attackSpeed, settings);
     }
 
     @Override
-    public EnergyType getEnergyType() {
-        return DefaultEnergyType.INSTANCE;
-    }
-
-    @Override
-    public int getEnergy() {
-        return 1073741823;
-    }
-
-    @Override
-    public int getMaxCapacity() {
-        return 1073741823;
-    }
-
-    @Override
-    public @Nullable ListenerToken addListener(CapacitorListener listener, ListenerRemovalToken removalToken) {
-        return null;
+    public boolean postMine(ItemStack stack, World world, BlockState blockState, BlockPos blockPos, LivingEntity entityLiving) {
+        if (blockState.getHardness(world, blockPos) > 0.2001F) {
+            stack.damage(2, entityLiving, (livingEntity) -> livingEntity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
+        }
+        return true;
     }
 }

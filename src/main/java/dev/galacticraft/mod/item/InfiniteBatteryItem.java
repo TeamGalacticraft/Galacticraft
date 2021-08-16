@@ -30,6 +30,7 @@ import alexiil.mc.lib.attributes.misc.Reference;
 import dev.galacticraft.energy.impl.DefaultEnergyType;
 import dev.galacticraft.energy.impl.SimpleCapacitor;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.attribute.energy.InfiniteCapacitor;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -65,21 +66,6 @@ public class InfiniteBatteryItem extends Item implements AttributeProviderItem {
 
     @Override
     public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> itemAttributeList) {
-        itemAttributeList.offer(new SimpleCapacitor(DefaultEnergyType.INSTANCE, 4096) {
-            @Override
-            public int getEnergy() {
-                return getMaxCapacity();
-            }
-
-            @Override
-            public int insert(int amount, Simulation simulation) {
-                return amount;
-            }
-
-            @Override
-            public int extract(int amount, Simulation simulation) {
-                return amount;
-            }
-        });
+        itemAttributeList.offer(new InfiniteCapacitor());
     }
 }

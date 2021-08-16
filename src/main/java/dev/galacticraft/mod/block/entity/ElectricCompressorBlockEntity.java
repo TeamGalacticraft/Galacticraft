@@ -27,6 +27,7 @@ import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
@@ -56,12 +57,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     public static final int OUTPUT_SLOT = 10;
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
 
-    private final Inventory craftingInv = new InventoryFixedWrapper(this.itemInv().getSubInv(1, 10)) {
-        @Override
-        public boolean canPlayerUse(PlayerEntity player) {
-            return getWrappedInventory().canPlayerUse(player);
-        }
-    };
+    private final Inventory craftingInv = new MachineInvWrapper(this, this.itemInv().getSubInv(1, 10));
 
     private final FixedItemInv outputInv = this.itemInv().getSubInv(OUTPUT_SLOT, SECOND_OUTPUT_SLOT + 1);
 
@@ -135,6 +131,11 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
+    }
+
+    @Override
+    protected void tickDisabled() {
+
     }
 
     @Override
