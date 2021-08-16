@@ -44,12 +44,12 @@ public class InfiniteCapacitor implements Capacitor {
 
     @Override
     public int getEnergy() {
-        return 1_000_000;
+        return 1073741823;
     }
 
     @Override
     public int getMaxCapacity() {
-        return 1_000_000;
+        return 1073741823;
     }
 
     @Override

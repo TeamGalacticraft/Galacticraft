@@ -24,7 +24,9 @@ package dev.galacticraft.mod.api.client.screen;
 
 import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.misc.CallableRef;
 import alexiil.mc.lib.attributes.misc.Reference;
+import com.google.common.base.Predicates;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Either;
@@ -934,23 +936,10 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
             }
             boolean tankMod = false;
             if (this.focusedTank != null && button == 0) {
-                tankMod = this.focusedTank.acceptStack(new Reference<>() {
-                    @Override
-                    public ItemStack get() {
-                        return MachineHandledScreen.this.handler.getCursorStack();
-                    }
-
-                    @Override
-                    public boolean set(ItemStack value) {
-                        MachineHandledScreen.this.handler.setCursorStack(value);
-                        return true;
-                    }
-
-                    @Override
-                    public boolean isValid(ItemStack value) {
-                        return true;
-                    }
-                }, new FixedInventoryVanillaWrapper(this.handler.player.getInventory()).getInsertable());
+                tankMod = this.focusedTank.acceptStack(
+                        new CallableRef<>(this.handler::getCursorStack, this.handler::setCursorStack, Predicates.alwaysTrue()),
+                        new FixedInventoryVanillaWrapper(this.handler.player.getInventory()).getInsertable()
+                );
             }
             return this.checkTabsClick(mouseX, mouseY, button) | super.mouseClicked(mouseX, mouseY, button) | tankMod;
         } else {

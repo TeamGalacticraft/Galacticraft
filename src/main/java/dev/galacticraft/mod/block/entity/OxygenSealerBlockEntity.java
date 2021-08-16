@@ -114,7 +114,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         super.updateComponents();
         this.attemptChargeFromStack(BATTERY_SLOT);
         assert this.world != null;
-        if (!this.world.isClient && this.getStatus().getType().isActive()) this.fluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
+        if (!this.world.isClient && this.getStatus().getType().isActive()) {
+            this.fluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
+        }
     }
 
     @Override
@@ -126,9 +128,15 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
     @Override
     public void tickWork() {
+        if (!this.getStatus().getType().isActive()) {
+            this.sealCheckTime = 0;
+            return;
+        }
+
         if (sealCheckTime > 0) {
             sealCheckTime--;
         }
+
         if (this.getStatus().getType().isActive()) {
             if (sealCheckTime == 0) {
                 sealCheckTime = SEAL_CHECK_TIME;
@@ -169,14 +177,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void idleEnergyDecrement(boolean off) {
-        super.idleEnergyDecrement(off);
-        if (!set.isEmpty()) {
-            for (BlockPos pos1 : set) {
-                ((WorldOxygenAccessor) world).setBreathable(pos1, false);
-            }
-            set.clear();
-        }
+    protected void tickDisabled() {
+
     }
 
     @Override

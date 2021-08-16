@@ -31,6 +31,7 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.item.ItemInsertable;
 import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import alexiil.mc.lib.attributes.misc.CallableRef;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.datafixers.util.Either;
 import dev.galacticraft.api.accessor.SatelliteAccessor;
@@ -78,6 +79,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -177,23 +179,7 @@ public class GalacticraftServerPacketReceiver {
             server.execute(() -> {
                 MachineFluidInv inv = ((MachineScreenHandler<?>) player.currentScreenHandler).machine.fluidInv();
                 ItemInsertable excess = new FixedInventoryVanillaWrapper(player.getInventory()).getInsertable();
-                Reference<ItemStack> reference = new Reference<>() {
-                    @Override
-                    public ItemStack get() {
-                        return player.currentScreenHandler.getCursorStack();
-                    }
-
-                    @Override
-                    public boolean set(ItemStack value) {
-                        player.currentScreenHandler.setCursorStack(value);
-                        return true;
-                    }
-
-                    @Override
-                    public boolean isValid(ItemStack value) {
-                        return true;
-                    }
-                };
+                Reference<ItemStack> reference = new CallableRef<>(player.currentScreenHandler::getCursorStack, player.currentScreenHandler::setCursorStack, Objects::nonNull);
                 FluidExtractable extractable = FluidAttributes.EXTRACTABLE.getFirstOrNull(reference, excess);
                 if (extractable != null && !extractable.attemptExtraction(inv.getFilterForTank(index), FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty()) {
                     if (((Automatable) inv).getTypes()[index].getType().isInput()) {
@@ -223,8 +209,7 @@ public class GalacticraftServerPacketReceiver {
             BlockPos pos = buffer.readBlockPos();
             server.execute(() -> {
                 if (player.world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
-                    if (player.world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity) {
-                        RocketDesignerBlockEntity blockEntity = (RocketDesignerBlockEntity) player.world.getBlockEntity(pos);
+                    if (player.world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity blockEntity) {
                         assert blockEntity != null;
                         byte color = buffer.readByte();
                         blockEntity.setRed(color + 128);
@@ -239,9 +224,7 @@ public class GalacticraftServerPacketReceiver {
             BlockPos pos = buffer.readBlockPos();
             server.execute(() -> {
                 if (player.world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
-                    if (player.world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity) {
-                        RocketDesignerBlockEntity blockEntity = (RocketDesignerBlockEntity) player.world.getBlockEntity(pos);
-                        assert blockEntity != null;
+                    if (player.world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity blockEntity) {
                         byte color = buffer.readByte();
                         blockEntity.setGreen(color + 128);
                         blockEntity.updateSchematic();
@@ -255,9 +238,7 @@ public class GalacticraftServerPacketReceiver {
             BlockPos pos = buffer.readBlockPos();
             server.execute(() -> {
                 if (player.world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
-                    if (player.world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity) {
-                        RocketDesignerBlockEntity blockEntity = (RocketDesignerBlockEntity) player.world.getBlockEntity(pos);
-                        assert blockEntity != null;
+                    if (player.world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity blockEntity) {
                         byte color = buffer.readByte();
                         blockEntity.setBlue(color + 128);
                         blockEntity.updateSchematic();
@@ -271,9 +252,7 @@ public class GalacticraftServerPacketReceiver {
             BlockPos pos = buffer.readBlockPos();
             server.execute(() -> {
                 if (player.world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
-                    if (player.world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity) {
-                        RocketDesignerBlockEntity blockEntity = (RocketDesignerBlockEntity) player.world.getBlockEntity(pos);
-                        assert blockEntity != null;
+                    if (player.world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity blockEntity) {
                         byte color = buffer.readByte();
                         blockEntity.setAlpha(color + 128);
                         blockEntity.updateSchematic();
@@ -287,9 +266,7 @@ public class GalacticraftServerPacketReceiver {
             BlockPos pos = buffer.readBlockPos();
             server.execute(() -> {
                 if (player.world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
-                    if (player.world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity) {
-                        RocketDesignerBlockEntity blockEntity = (RocketDesignerBlockEntity) player.world.getBlockEntity(pos);
-                        assert blockEntity != null;
+                    if (player.world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity blockEntity) {
                         Identifier id = buffer.readIdentifier();
                         RocketPart part = RocketPart.getById(server.getRegistryManager(), id);
                         if (part == null) player.networkHandler.disconnect(new LiteralText("Invalid rocket designer packet received."));

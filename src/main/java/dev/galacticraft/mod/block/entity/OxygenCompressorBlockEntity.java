@@ -90,6 +90,11 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
+    protected void tickDisabled() {
+
+    }
+
+    @Override
     public void updateComponents() {
         super.updateComponents();
         this.attemptChargeFromStack(CHARGE_SLOT);

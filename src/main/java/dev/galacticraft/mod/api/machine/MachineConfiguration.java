@@ -36,10 +36,6 @@ public class MachineConfiguration implements Saveable {
     private final MachineIOConfig configuration = new MachineIOConfig();
     private final SecurityInfo security = new SecurityInfo();
 
-    public MachineConfiguration() {
-
-    }
-
     public void setStatus(MachineStatus status) {
         this.status = status;
     }
@@ -49,19 +45,19 @@ public class MachineConfiguration implements Saveable {
     }
 
     public MachineIOConfig getSideConfiguration() {
-        return configuration;
+        return this.configuration;
     }
 
     public SecurityInfo getSecurity() {
-        return security;
+        return this.security;
     }
 
     public MachineStatus getStatus() {
-        return status;
+        return this.status;
     }
 
     public RedstoneInteractionType getRedstoneInteraction() {
-        return redstone;
+        return this.redstone;
     }
 
     @Override

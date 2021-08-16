@@ -32,6 +32,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Ref;
 import alexiil.mc.lib.attributes.misc.Reference;
+import dev.galacticraft.mod.attribute.misc.ArrayReference;
 import dev.galacticraft.mod.mixin.BucketItemAccessor;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.api.EnvType;
@@ -60,6 +61,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -122,23 +124,7 @@ public class FluidCanister extends Item implements AttributeProviderItem {
                             user.incrementStat(Stats.USED.getOrCreateStat(this));
                             if (fluid.getBucketFillSound().isPresent()) user.playSound(fluid.getBucketFillSound().get(), 1.0F, 1.0F);
                             final ItemStack[] stack1 = {stack.copy()};
-                            FluidUtil.getFixedFluidInv(new Reference<>() {
-                                @Override
-                                public ItemStack get() {
-                                    return stack1[0];
-                                }
-
-                                @Override
-                                public boolean set(ItemStack stack) {
-                                    stack1[0] = stack;
-                                    return true;
-                                }
-
-                                @Override
-                                public boolean isValid(ItemStack stack) {
-                                    return stack != null;
-                                }
-                            }).setInvFluid(0, FluidKeys.get(fluid).withAmount(FluidAmount.ONE), Simulation.ACTION);
+                            FluidUtil.getFixedFluidInv(new ArrayReference<>(stack1, 0, Objects::nonNull)).setInvFluid(0, FluidKeys.get(fluid).withAmount(FluidAmount.ONE), Simulation.ACTION);
                             return TypedActionResult.success(stack1[0], world.isClient());
                         }
                     }

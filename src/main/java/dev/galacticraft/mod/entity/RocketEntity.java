@@ -39,6 +39,7 @@ import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
+import dev.galacticraft.mod.entity.data.GalacticraftTrackedDataHandler;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
@@ -88,22 +89,7 @@ import java.util.Collections;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RocketEntity extends Entity implements Rocket {
-    private static final TrackedData<LaunchStage> STAGE = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<>() {
-        @Override
-        public void write(PacketByteBuf buf, LaunchStage stage) {
-            buf.writeEnumConstant(stage);
-        }
-
-        @Override
-        public LaunchStage read(PacketByteBuf buf) {
-            return buf.readEnumConstant(LaunchStage.class);
-        }
-
-        @Override
-        public LaunchStage copy(LaunchStage stage) {
-            return stage;
-        }
-    });
+    private static final TrackedData<LaunchStage> STAGE = DataTracker.registerData(RocketEntity.class, GalacticraftTrackedDataHandler.LAUNCH_STAGE);
 
     private static final TrackedData<Integer> COLOR = DataTracker.registerData(RocketEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
@@ -111,60 +97,10 @@ public class RocketEntity extends Entity implements Rocket {
     public static final TrackedData<Integer> DAMAGE_WOBBLE_SIDE = DataTracker.registerData(RocketEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public static final TrackedData<Float> DAMAGE_WOBBLE_STRENGTH = DataTracker.registerData(RocketEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
-    public static final TrackedData<Double> SPEED = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<>() {
-        @Override
-        public void write(PacketByteBuf buf, Double speed) {
-            buf.writeDouble(speed);
-        }
+    public static final TrackedData<Double> SPEED = DataTracker.registerData(RocketEntity.class, GalacticraftTrackedDataHandler.DOUBLE);
 
-        @Override
-        public Double read(PacketByteBuf buf) {
-            return buf.readDouble();
-        }
-
-        @Override
-        public Double copy(Double speed) {
-            return speed;
-        }
-    });
-
-    public static final TrackedData<Identifier[]> PARTS = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<>() {
-        @Override
-        public void write(PacketByteBuf buf, Identifier[] parts) {
-            for (byte i = 0; i < RocketPartType.values().length; i++) {
-                buf.writeBoolean(parts[i] != null);
-                if (parts[i] != null) {
-                    buf.writeIdentifier(parts[i]);
-                }
-            }
-        }
-
-        @Override
-        public Identifier[] read(PacketByteBuf buf) {
-            Identifier[] array = new Identifier[RocketPartType.values().length];
-            for (byte i = 0; i < RocketPartType.values().length; i++) {
-                if (buf.readBoolean()) {
-                    array[i] = buf.readIdentifier();
-                }
-            }
-            return array;
-        }
-
-        @Override
-        public Identifier[] copy(Identifier[] buf) {
-            Identifier[] parts = new Identifier[RocketPartType.values().length];
-            System.arraycopy(buf, 0, parts, 0, buf.length);
-            return parts;
-        }
-    });
+    public static final TrackedData<Identifier[]> PARTS = DataTracker.registerData(RocketEntity.class, GalacticraftTrackedDataHandler.ROCKET_PART_IDS);
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
-
-    static {
-        TrackedDataHandlerRegistry.register(STAGE.getType());
-        TrackedDataHandlerRegistry.register(COLOR.getType());
-        TrackedDataHandlerRegistry.register(SPEED.getType());
-        TrackedDataHandlerRegistry.register(PARTS.getType());
-    }
 
     private BlockPos linkedPad = BlockPos.ORIGIN;
     private final SimpleFixedFluidInv tank = new SimpleFixedFluidInv(1, FluidAmount.ofWhole(10));

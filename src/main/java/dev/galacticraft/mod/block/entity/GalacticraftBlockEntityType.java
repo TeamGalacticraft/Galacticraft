@@ -30,6 +30,7 @@ import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
@@ -52,7 +53,7 @@ public class GalacticraftBlockEntityType {
     public static final BlockEntityType<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.OXYGEN_COLLECTOR), FabricBlockEntityTypeBuilder.create(OxygenCollectorBlockEntity::new, GalacticraftBlock.OXYGEN_COLLECTOR).build());
     public static final BlockEntityType<OxygenSealerBlockEntity> OXYGEN_SEALER = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.OXYGEN_SEALER), FabricBlockEntityTypeBuilder.create(OxygenSealerBlockEntity::new, GalacticraftBlock.OXYGEN_SEALER).build());
     public static final BlockEntityType<WireBlockEntity> WIRE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.ALUMINUM_WIRE), FabricBlockEntityTypeBuilder.create(WireBlockEntity::new, GalacticraftBlock.ALUMINUM_WIRE, GalacticraftBlock.SEALABLE_ALUMINUM_WIRE).build());
-    public static final BlockEntityType<PipeBlockEntity> FLUID_PIPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.FLUID_PIPE), FabricBlockEntityTypeBuilder.create(PipeBlockEntity::new, new net.minecraft.block.Block(FabricBlockSettings.of(Material.AIR)) {
+    public static final BlockEntityType<PipeBlockEntity> FLUID_PIPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.FLUID_PIPE), FabricBlockEntityTypeBuilder.create(PipeBlockEntity::new, new Block(FabricBlockSettings.of(Material.AIR)) {
         @Override
         public boolean equals(Object obj) {
             return obj instanceof FluidPipe; //bad stuff

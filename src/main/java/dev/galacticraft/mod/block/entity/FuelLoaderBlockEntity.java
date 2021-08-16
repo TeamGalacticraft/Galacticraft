@@ -98,6 +98,11 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     }
 
     @Override
+    protected void tickDisabled() {
+
+    }
+
+    @Override
     public boolean canInsertEnergy() {
         return true;
     }

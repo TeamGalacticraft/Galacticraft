@@ -54,7 +54,7 @@ public interface FluidLoggable extends FluidDrainable, FluidFillable {
     String DASH_REP = "_gc_dash_"; // yes this is bad.... but who's gonna name a mod/fluid something like that
     String COLON_REP = "_gc_colon_";
 
-    Property<Identifier> FLUID = new Property<Identifier>("fluid", Identifier.class) {
+    Property<Identifier> FLUID = new Property<>("fluid", Identifier.class) {
         private static final List<Identifier> VALUES = new LinkedList<>();
 
         @Override

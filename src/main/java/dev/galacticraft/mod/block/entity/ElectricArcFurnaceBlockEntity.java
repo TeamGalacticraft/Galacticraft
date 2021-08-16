@@ -27,6 +27,7 @@ import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
@@ -52,12 +53,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inventory, BlastingRecipe> {
-    private final @NotNull Inventory craftingInv = new InventoryFixedWrapper(this.itemInv().getSubInv(INPUT_SLOT, INPUT_SLOT + 1)) {
-        @Override
-        public boolean canPlayerUse(PlayerEntity player) {
-            return ElectricArcFurnaceBlockEntity.this.security().hasAccess(player);
-        }
-    };
+    private final @NotNull Inventory craftingInv = new MachineInvWrapper(this, this.itemInv().getSubInv(INPUT_SLOT, INPUT_SLOT + 1));
     private final @NotNull SimpleInventory predicateInv = new SimpleInventory(1);
     private final @NotNull FixedItemInv outputInv = this.itemInv().getSubInv(OUTPUT_SLOT_1, OUTPUT_SLOT_2 + 1);
 
@@ -99,6 +95,11 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
+    }
+
+    @Override
+    protected void tickDisabled() {
+
     }
 
     @Override

@@ -31,6 +31,7 @@ import dev.galacticraft.api.attribute.GcApiAttributes;
 import dev.galacticraft.api.attribute.oxygen.OxygenTank;
 import dev.galacticraft.api.attribute.oxygen.OxygenTankImpl;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.attribute.misc.ArrayReference;
 import dev.galacticraft.mod.attribute.oxygen.InfiniteOxygenTank;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -70,23 +71,7 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
             stack[0] = stack[0].copy();
 
             if (this.size > 0) {
-                GcApiAttributes.OXYGEN_TANK.getFirst(new Reference<>() {
-                    @Override
-                    public ItemStack get() {
-                        return stack[0];
-                    }
-
-                    @Override
-                    public boolean set(ItemStack stack1) {
-                        stack[0] = stack1;
-                        return true;
-                    }
-
-                    @Override
-                    public boolean isValid(ItemStack stack) {
-                        return stack.getItem() instanceof OxygenTankItem;
-                    }
-                }).setAmount(this.size);
+                GcApiAttributes.OXYGEN_TANK.getFirst(new ArrayReference<>(stack, 0, itemStack -> itemStack.getItem() instanceof OxygenTankItem)).setAmount(this.size);
                 list.add(stack[0]);
             }
         }
