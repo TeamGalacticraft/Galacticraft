@@ -105,7 +105,6 @@ public class OxygenTankUtil {
     }
 
     public static FluidVolume oxygenToLOX(int oxygen) {
-        assert oxygen > 0;
         return FluidKeys.get(GalacticraftFluid.LIQUID_OXYGEN).withAmount(FluidAmount.of1620(oxygen));
     }
 

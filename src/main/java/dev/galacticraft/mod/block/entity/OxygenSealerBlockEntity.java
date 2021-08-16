@@ -26,10 +26,9 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.api.accessor.WorldOxygenAccessor;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
-import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.accessor.ServerWorldAccessor;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
@@ -43,6 +42,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -50,6 +50,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,9 +65,13 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public static final int BATTERY_SLOT = 0;
     public static final int LOX_INPUT = 1;
     public static final int OXYGEN_TANK = 0;
-    private final Set<BlockPos> set = new HashSet<>();
-    public static final byte SEAL_CHECK_TIME = 5 * 20;
+    public static final byte SEAL_CHECK_TIME = 20;
+
+    private final Set<BlockPos> breathablePositions = new HashSet<>();
+    private final Set<BlockPos> watching = new HashSet<>();
     private byte sealCheckTime;
+    private boolean updateQueued = true;
+    private boolean disabled = false;
     private boolean oxygenWorld = false;
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
@@ -95,8 +100,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public void setWorld(World world) {
         super.setWorld(world);
         this.sealCheckTime = SEAL_CHECK_TIME;
-        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(world).orElse(null);
-        this.oxygenWorld = body == null || body.atmosphere().breathable();
+        this.oxygenWorld = CelestialBody.getByDimension(world).map(body -> body.atmosphere().breathable()).orElse(true);
+        if (!world.isClient) ((ServerWorldAccessor) world).addSealer(this);
     }
 
     @Override
@@ -115,7 +120,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         this.attemptChargeFromStack(BATTERY_SLOT);
         assert this.world != null;
         if (!this.world.isClient && this.getStatus().getType().isActive()) {
-            this.fluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
+            this.fluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.LOX_ONLY, null, FluidAmount.of1620(breathablePositions.size()), Simulation.ACTION);
         }
     }
 
@@ -128,57 +133,92 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
     @Override
     public void tickWork() {
+        if (this.disabled != (this.disabled = false) && !world.isClient) {
+            ((ServerWorldAccessor) world).addSealer(this);
+        }
+
         if (!this.getStatus().getType().isActive()) {
             this.sealCheckTime = 0;
             return;
         }
 
-        if (sealCheckTime > 0) {
-            sealCheckTime--;
+        if (this.sealCheckTime > 0) {
+            this.sealCheckTime--;
         }
 
-        if (this.getStatus().getType().isActive()) {
-            if (sealCheckTime == 0) {
-                sealCheckTime = SEAL_CHECK_TIME;
-                BlockPos pos = this.getPos();
-                if (this.oxygenWorld || (set.isEmpty() && ((WorldOxygenAccessor) world).isBreathable(pos.up()))) {
+        if (this.updateQueued && this.sealCheckTime == 0) {
+            if (this.getStatus().getType().isActive()) {
+                this.world.getProfiler().push("oxygen_sealer");
+                this.updateQueued = false;
+                this.sealCheckTime = SEAL_CHECK_TIME;
+                BlockPos pos = this.pos.toImmutable();
+                if (this.oxygenWorld || (this.breathablePositions.isEmpty() && ((WorldOxygenAccessor) world).isBreathable(pos.up()))) {
                     this.setStatus(Status.ALREADY_SEALED);
+                    this.world.getProfiler().pop();
                     return;
                 }
-                set.clear();
+                for (BlockPos pos2 : this.breathablePositions) {
+                    ((WorldOxygenAccessor) this.world).setBreathable(pos2, false);
+                }
+                this.breathablePositions.clear();
+                this.watching.clear();
                 Queue<Pair<BlockPos, Direction>> queue = new LinkedList<>();
-                List<BlockPos> checked = new LinkedList<>();
+                Set<Pair<BlockPos, Direction>> checked = new HashSet<>();
+                Set<BlockPos> added = new HashSet<>();
                 BlockPos pos1 = pos.offset(Direction.UP);
                 BlockState state;
                 Pair<BlockPos, Direction> pair;
                 BlockPos.Mutable mutable = new BlockPos.Mutable();
                 queue.add(new Pair<>(pos1, Direction.UP));
-                while (!queue.isEmpty()){
+                checked.add(new Pair<>(pos1, Direction.UP));
+                while (!queue.isEmpty()) {
                     pair = queue.poll();
                     pos1 = pair.getLeft();
                     state = world.getBlockState(pos1);
-                    checked.add(pos1);
-                    if (state.isAir() || !Block.isFaceFullSquare(state.getCollisionShape(world, pos1), pair.getRight().getOpposite())) {
-                        set.add(pos1);
+                    if (state.isAir() || (!Block.isFaceFullSquare(state.getCollisionShape(world, pos1), pair.getRight().getOpposite()))) {
+                        this.breathablePositions.add(pos1);
+                        added.add(pos1);
+                        final BlockPos finalPos = pos1;
+                        queue.removeIf(blockPosDirectionPair -> blockPosDirectionPair.getLeft().equals(finalPos));
+                        if (this.breathablePositions.size() > 1000) {
+                            this.breathablePositions.clear();
+                            this.watching.clear();
+                            this.updateQueued = true;
+                            this.sealCheckTime = SEAL_CHECK_TIME * 5;
+                            setStatus(Status.AREA_TOO_LARGE);
+                            this.world.getProfiler().pop();
+                            return;
+                        }
                         for (Direction direction : Constant.Misc.DIRECTIONS) {
-                            mutable.set(pos1).offset(direction);
-                            if (!checked.contains(mutable)) {
-                                queue.add(new Pair<>(mutable.toImmutable(), direction));
+                            final Pair<BlockPos, Direction> e = new Pair<>(mutable.set(pos1).move(direction).toImmutable(), direction);
+                            if (!added.contains(e.getLeft()) && checked.add(e)) {
+                                if (!Block.isFaceFullSquare(state.getCollisionShape(world, pos1), e.getRight())) {
+                                    queue.add(e);
+                                }
                             }
                         }
+                    } else {
+                        this.watching.add(pos1);
                     }
                 }
-                for (BlockPos pos2 : set) {
-                    ((WorldOxygenAccessor) world).setBreathable(pos2, true);
+                for (BlockPos pos2 : this.breathablePositions) {
+                    ((WorldOxygenAccessor) this.world).setBreathable(pos2, true);
                 }
-                setStatus(Status.SEALED);
+                this.setStatus(Status.SEALED);
+                this.world.getProfiler().pop();
             }
         }
     }
 
     @Override
     protected void tickDisabled() {
-
+        this.disabled = true;
+        if (!world.isClient) ((ServerWorldAccessor) this.world).removeSealer(this);
+        for (BlockPos pos : this.breathablePositions) {
+            ((WorldOxygenAccessor) world).setBreathable(pos, false);
+        }
+        this.breathablePositions.clear();
+        this.watching.clear();
     }
 
     @Override
@@ -189,9 +229,14 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Override
     public void markRemoved() {
         super.markRemoved();
-        for (BlockPos pos : set) {
+        if (!this.world.isClient) {
+            ((ServerWorldAccessor) this.world).removeSealer(this);
+        }
+        for (BlockPos pos : this.breathablePositions) {
             ((WorldOxygenAccessor) world).setBreathable(pos, false);
         }
+        this.breathablePositions.clear();
+        this.watching.clear();
     }
 
     @Nullable
@@ -199,6 +244,12 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
         if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.OXYGEN_SEALER_HANDLER, syncId, inv, this);
         return null;
+    }
+
+    public void enqueueUpdate(BlockPos pos, VoxelShape voxelShape2) {
+        if ((this.watching.contains(pos) && !Block.isShapeFullCube(voxelShape2)) || (this.breathablePositions.contains(pos) && !voxelShape2.isEmpty())) {
+            this.updateQueued = true;
+        }
     }
 
     /**
