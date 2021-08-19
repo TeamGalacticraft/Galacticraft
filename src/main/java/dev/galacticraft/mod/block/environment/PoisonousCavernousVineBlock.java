@@ -40,7 +40,6 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class PoisonousCavernousVineBlock extends CavernousVineBlock {
-
     public PoisonousCavernousVineBlock(Settings settings) {
         super(settings);
     }

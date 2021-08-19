@@ -52,7 +52,7 @@ import java.util.Random;
  */
 @Mixin(WorldRenderer.class)
 @Environment(EnvType.CLIENT)
-public abstract class WorldRendererMixin implements WorldRendererAccessor {
+public abstract class WorldRendererMoonMixin implements WorldRendererAccessor {
     private static final Identifier EARTH_TEXTURE = new Identifier(Constant.MOD_ID, "textures/gui/celestialbodies/earth.png");
     private static final Identifier SUN_TEXTURE = new Identifier(Constant.MOD_ID, "textures/gui/celestialbodies/sun.png");
 

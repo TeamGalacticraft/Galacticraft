@@ -20,26 +20,23 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin.client;
+package dev.galacticraft.mod.attribute.item;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-@Mixin(HandledScreen.class)
-@Environment(EnvType.CLIENT)
-public interface HandledScreenAccessor {
-    @Accessor("x")
-    int gc_getX();
+public class MachineInvWrapper extends InventoryFixedWrapper {
+    private final MachineBlockEntity machine;
 
-    @Accessor("y")
-    int gc_getY();
+    public MachineInvWrapper(MachineBlockEntity machine, FixedItemInv inv) {
+        super(inv);
+        this.machine = machine;
+    }
 
-    @Accessor("backgroundWidth")
-    int gc_getBackgroundWidth();
+    @Override
+    public boolean canPlayerUse(PlayerEntity player) {
+        return this.machine.getConfiguration().getSecurity().hasAccess(player);
+    }
 }

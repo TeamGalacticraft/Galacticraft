@@ -34,7 +34,6 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RecipeInputSlot<I extends Inventory, T extends Recipe<I>> extends Slot {
-
     private final Inventory inventory = new SimpleInventory(1);
     private final RecipeType<T> type;
     private final World world;

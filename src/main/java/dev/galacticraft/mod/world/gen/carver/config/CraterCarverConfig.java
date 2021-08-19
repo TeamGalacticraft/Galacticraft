@@ -30,6 +30,9 @@ import net.minecraft.world.gen.carver.CarverConfig;
 import net.minecraft.world.gen.carver.CarverDebugConfig;
 import net.minecraft.world.gen.heightprovider.HeightProvider;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class CraterCarverConfig extends CarverConfig {
     public static final Codec<CraterCarverConfig> CRATER_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.FLOAT.fieldOf("probability").forGetter(i -> i.probability),

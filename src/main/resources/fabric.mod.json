@@ -145,6 +145,7 @@
     "galacticraftenergy": ">=0.2.1",
 
     "fabric-api-base": "*",
+    "fabric-biome-api-v1": "*",
     "fabric-blockrenderlayer-v1": "*",
     "fabric-command-api-v1": "*",
     "fabric-content-registries-v0": "*",

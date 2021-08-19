@@ -27,6 +27,7 @@ import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
@@ -57,12 +58,7 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Invento
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOT = 2;
     
-    private final @NotNull Inventory craftingInv = new InventoryFixedWrapper(this.itemInv().getSubInv(INPUT_SLOT, INPUT_SLOT + 1)) {
-        @Override
-        public boolean canPlayerUse(PlayerEntity player) {
-            return getWrappedInventory().canPlayerUse(player);
-        }
-    };
+    private final @NotNull Inventory craftingInv = new MachineInvWrapper(this, this.itemInv().getSubInv(INPUT_SLOT, INPUT_SLOT + 1));
     private final @NotNull FixedItemInv outputInv = this.itemInv().getSubInv(OUTPUT_SLOT, OUTPUT_SLOT + 1);
 
     @Override
@@ -114,6 +110,11 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Invento
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
+    }
+
+    @Override
+    protected void tickDisabled() {
+
     }
 
     @Nullable

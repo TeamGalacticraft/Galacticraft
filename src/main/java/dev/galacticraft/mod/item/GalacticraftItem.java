@@ -130,16 +130,7 @@ public class GalacticraftItem {
     public static final Item TITANIUM_BOOTS = registerItem(Constant.Item.TITANIUM_BOOTS, new ArmorItem(GalacticraftArmorMaterial.TITANIUM, EquipmentSlot.FEET, (new Item.Settings().group(ITEMS_GROUP))));
     public static final Item SENSOR_GLASSES = registerItem(Constant.Item.SENSOR_GLASSES, new ArmorItem(GalacticraftArmorMaterial.SENSOR_GLASSES, EquipmentSlot.HEAD, new Item.Settings().group(ITEMS_GROUP)));
     //TOOLS + WEAPONS
-    public static final Item HEAVY_DUTY_SWORD = registerItem(Constant.Item.HEAVY_DUTY_SWORD, new SwordItem(GalacticraftToolMaterial.STEEL, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP)) {
-        @Override
-        public boolean postMine(ItemStack stack, World world, BlockState blockState, BlockPos blockPos, LivingEntity entityLiving) {
-            //Stronger than vanilla
-            if (blockState.getHardness(world, blockPos) > 0.2001F) {
-                stack.damage(2, entityLiving, (livingEntity) -> livingEntity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
-            }
-            return true;
-        }
-    });
+    public static final Item HEAVY_DUTY_SWORD = registerItem(Constant.Item.HEAVY_DUTY_SWORD, new BrittleSwordItem(GalacticraftToolMaterial.STEEL, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HEAVY_DUTY_SHOVEL = registerItem(Constant.Item.HEAVY_DUTY_SHOVEL, new ShovelItem(GalacticraftToolMaterial.STEEL, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HEAVY_DUTY_PICKAXE = registerItem(Constant.Item.HEAVY_DUTY_PICKAXE, new PickaxeItem(GalacticraftToolMaterial.STEEL, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HEAVY_DUTY_AXE = registerItem(Constant.Item.HEAVY_DUTY_AXE, new AxeItem(GalacticraftToolMaterial.STEEL, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
@@ -149,16 +140,7 @@ public class GalacticraftItem {
     public static final Item DESH_PICKAXE = registerItem(Constant.Item.DESH_PICKAXE, new PickaxeItem(GalacticraftToolMaterial.DESH, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_AXE = registerItem(Constant.Item.DESH_AXE, new AxeItem(GalacticraftToolMaterial.DESH, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_HOE = registerItem(Constant.Item.DESH_HOE, new HoeItem(GalacticraftToolMaterial.DESH, -3, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item TITANIUM_SWORD = registerItem(Constant.Item.TITANIUM_SWORD, new SwordItem(GalacticraftToolMaterial.TITANIUM, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP)) {
-        @Override
-        public boolean postMine(ItemStack stack, World world, BlockState blockState, BlockPos blockPos, LivingEntity entityLiving) {
-            //Stronger than vanilla
-            if (blockState.getHardness(world, blockPos) > 0.2001F) {
-                stack.damage(2, entityLiving, (livingEntity) -> livingEntity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
-            }
-            return true;
-        }
-    });
+    public static final Item TITANIUM_SWORD = registerItem(Constant.Item.TITANIUM_SWORD, new BrittleSwordItem(GalacticraftToolMaterial.TITANIUM, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TITANIUM_SHOVEL = registerItem(Constant.Item.TITANIUM_SHOVEL, new ShovelItem(GalacticraftToolMaterial.TITANIUM, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TITANIUM_PICKAXE = registerItem(Constant.Item.TITANIUM_PICKAXE, new PickaxeItem(GalacticraftToolMaterial.TITANIUM, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TITANIUM_AXE = registerItem(Constant.Item.TITANIUM_AXE, new AxeItem(GalacticraftToolMaterial.TITANIUM, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
@@ -205,7 +187,6 @@ public class GalacticraftItem {
     public static final Item TIER_3_ROCKET_SCHEMATIC = registerItem(Constant.Item.TIER_3_ROCKET_SCHEMATIC, new SchematicItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item ASTRO_MINER_SCHEMATIC = registerItem(Constant.Item.ASTRO_MINER_SCHEMATIC, new SchematicItem(new Item.Settings().group(ITEMS_GROUP)));
     // SPAWN EGGS
-    public static final Item MOON_VILLAGER_SPAWN_EGG = registerItem(Constant.Item.MOON_VILLAGER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.MOON_VILLAGER, 0xC0C9C0, 0x5698D8, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_ZOMBIE_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_ZOMBIE, 0xC0CCC0, 0x99EE99, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item EVOLVED_EVOKER_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_EVOKER_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_EVOKER, 0x888888, 0xDDDDDD, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item EVOLVED_VINDICATOR_SPAWN_EGG = registerItem(Constant.Item.EVOLVED_VINDICATOR_SPAWN_EGG, new SpawnEggItem(GalacticraftEntityType.EVOLVED_VINDICATOR, 0x888888, 0xDDDDDD, new Item.Settings().group(ITEMS_GROUP)));
