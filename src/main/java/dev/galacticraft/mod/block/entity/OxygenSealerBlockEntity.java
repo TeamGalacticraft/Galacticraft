@@ -42,7 +42,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -55,7 +54,10 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -133,7 +135,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
     @Override
     public void tickWork() {
-        if (this.disabled != (this.disabled = false) && !world.isClient) {
+        if (this.disabled != (this.disabled = false) && !this.world.isClient) {
             ((ServerWorldAccessor) world).addSealer(this);
         }
 

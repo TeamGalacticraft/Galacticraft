@@ -50,7 +50,7 @@ import java.util.function.BiFunction;
  */
 public class WireNetworkImpl implements WireNetwork {
     private final ServerWorld world;
-    private final Object2ObjectOpenHashMap<BlockPos, EnergyInsertable> insertable = new Object2ObjectOpenHashMap<>(0);
+    private final Object2ObjectOpenHashMap<BlockPos, EnergyInsertable> insertable = new Object2ObjectOpenHashMap<>();
     private final ObjectSet<BlockPos> wires = new ObjectLinkedOpenHashSet<>(1);
     private boolean markedForRemoval = false;
 
@@ -113,7 +113,7 @@ public class WireNetworkImpl implements WireNetwork {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockPos pos1 = pos.offset(direction);
             if (this.wires.contains(pos1)) {
-                if (((Wire) this.world.getBlockEntity(pos1)).canConnect(direction.getOpposite())) list.add(pos1); //dont bother testing if it was unable to connect
+                if (((Wire) this.world.getBlockEntity(pos1)).canConnect(direction.getOpposite())) list.add(pos1); // Don't bother testing if it was unable to connect
             }
         }
         List<List<BlockPos>> mappedWires = new LinkedList<>();

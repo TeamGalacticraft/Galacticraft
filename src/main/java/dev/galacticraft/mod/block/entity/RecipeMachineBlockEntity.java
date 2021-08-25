@@ -204,7 +204,7 @@ public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Re
     @FunctionalInterface
     public interface ItemOutputFunction {
         /**
-         * Be sure to copy the stack (even if you dont change anything else)
+         * Be sure to copy the stack (even if you don't change anything else)
          */
         ItemStack getOutput(ItemStack stack);
     }

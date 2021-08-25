@@ -61,7 +61,7 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
             body = model.body;
         } else if (context.getModel() instanceof AnimalModelInvoker model){
             head = model.callGetHeadParts().iterator().next();
-            body = model.callGetBodyParts().iterator().next();;
+            body = model.callGetBodyParts().iterator().next();
         } else {
             this.mask = null;
             this.tank = null;

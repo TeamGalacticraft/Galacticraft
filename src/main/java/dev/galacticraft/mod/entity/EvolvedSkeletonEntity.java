@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.entity;
 
 import dev.galacticraft.mod.mixin.AbstractSkeletonEntityAccessor;
+import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ai.goal.BowAttackGoal;
@@ -74,6 +75,6 @@ public class EvolvedSkeletonEntity extends SkeletonEntity {
 
     @Override
     protected boolean isAffectedByDaylight() {
-        return super.isAffectedByDaylight() && this.world.getBiome(this.getBlockPos()).getFogColor() != 0x161616; //mare biome
+        return super.isAffectedByDaylight() && GalacticraftTag.MOON_MARE.contains(this.world.getBiome(this.getBlockPos()));
     }
 }

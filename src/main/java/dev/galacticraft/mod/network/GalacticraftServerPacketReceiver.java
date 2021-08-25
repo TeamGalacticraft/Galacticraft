@@ -30,7 +30,6 @@ import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.item.ItemInsertable;
 import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import alexiil.mc.lib.attributes.misc.CallableRef;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.datafixers.util.Either;
@@ -55,13 +54,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
 
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Handles server-bound (C2S) packets.

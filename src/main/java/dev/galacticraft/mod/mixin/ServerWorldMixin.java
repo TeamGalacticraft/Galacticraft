@@ -33,7 +33,6 @@ import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.Spawner;
@@ -44,9 +43,11 @@ import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executor;
 
 /**
@@ -56,7 +57,6 @@ import java.util.concurrent.Executor;
 public abstract class ServerWorldMixin implements ServerWorldAccessor {
     @Shadow @Final @Mutable private List<Spawner> spawners;
     private final @Unique Set<OxygenSealerBlockEntity> sealers = new HashSet<>();
-    private final @Unique List<OxygenSealerBlockEntity> queueRemove = new LinkedList<>();
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void setSpawnersGC(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> registryKey, DimensionType dimensionType, WorldGenerationProgressListener worldGenerationProgressListener, ChunkGenerator chunkGenerator, boolean debugWorld, long l, List<Spawner> list, boolean bl, CallbackInfo ci) {
@@ -67,6 +67,7 @@ public abstract class ServerWorldMixin implements ServerWorldAccessor {
 
     @Inject(method = "updateListeners", at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;", remap = false))
     private void updateSealerListeners_gc(BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci) {
+        List<OxygenSealerBlockEntity> queueRemove = new LinkedList<>();
         for (OxygenSealerBlockEntity sealer : this.sealers) {
             if (sealer.isRemoved()) {
                 queueRemove.add(sealer);
@@ -74,6 +75,7 @@ public abstract class ServerWorldMixin implements ServerWorldAccessor {
             }
             sealer.enqueueUpdate(pos, newState.getCollisionShape(((World)(Object) this), pos));
         }
+        this.sealers.removeAll(queueRemove);
     }
 
     @Override
