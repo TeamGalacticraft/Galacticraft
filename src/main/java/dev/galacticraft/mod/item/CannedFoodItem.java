@@ -32,8 +32,7 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CannedFoodItem extends Item {
-
-    CannedFoodItem(Settings settings) {
+    public CannedFoodItem(Settings settings) {
         super(settings);
     }
 

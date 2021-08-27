@@ -24,10 +24,10 @@ package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
@@ -58,12 +58,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
 
-    private final Inventory craftingInv = new InventoryFixedWrapper(this.itemInv().getSubInv(0, 9)) {
-        @Override
-        public boolean canPlayerUse(PlayerEntity player) {
-            return getWrappedInventory().canPlayerUse(player);
-        }
-    };
+    private final Inventory craftingInv = new MachineInvWrapper(this, this.itemInv().getSubInv(0, 9));
     private final FixedItemInv outputInv = this.itemInv().getSubInv(OUTPUT_SLOT, OUTPUT_SLOT + 1);
     public int fuelTime;
     public int fuelLength;
@@ -79,7 +74,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
                 builder.addSlot(y * 3 + x, SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 19, y * 18 + 18);
             }
         }
-        builder.addSlot(FUEL_INPUT_SLOT, SlotType.FUEL_OUT, stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null, 79, 49);
+        builder.addSlot(FUEL_INPUT_SLOT, SlotType.SOLID_FUEL, stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null, 79, 49);
         builder.addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 38));
         return builder;
     }
@@ -92,6 +87,11 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     @Override
     public int getEnergyCapacity() {
         return 0;
+    }
+
+    @Override
+    protected void tickDisabled() {
+
     }
 
     @Override

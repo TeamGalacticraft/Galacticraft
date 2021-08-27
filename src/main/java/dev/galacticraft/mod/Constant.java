@@ -41,6 +41,8 @@ import net.minecraft.util.math.Direction;
  */
 public interface Constant {
     String MOD_ID = "galacticraft";
+    String ADDON_API_ID = "galacticraft-api";
+    String COMMON_NAMESPACE = "c";
 
     interface Block {
         String ITEM_GROUP_BLOCKS = "blocks";
@@ -385,7 +387,6 @@ public interface Constant {
         String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
         String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";
 
-        String MOON_VILLAGER_SPAWN_EGG = "moon_villager_spawn_egg";
         String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
         String EVOLVED_PILLAGER_SPAWN_EGG = "evolved_pillager_spawn_egg";
         String EVOLVED_VINDICATOR_SPAWN_EGG = "evolved_vindicator_spawn_egg";
@@ -474,7 +475,6 @@ public interface Constant {
     }
 
     interface Entity {
-        String MOON_VILLAGER = "moon_villager";
         String EVOLVED_ZOMBIE = "evolved_zombie";
         String EVOLVED_CREEPER = "evolved_creeper";
         String T1_ROCKET = "t1_rocket";

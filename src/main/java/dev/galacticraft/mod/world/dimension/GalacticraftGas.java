@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.world.dimension;
 
-import dev.galacticraft.api.atmosphere.AtmosphericGas;
+import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.text.TranslatableText;
@@ -33,21 +33,22 @@ import net.minecraft.util.registry.Registry;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftGas {
-    public static final AtmosphericGas NITROGEN_OXIDE =
-            new AtmosphericGas(
+    public static final Identifier NITROGEN_OXIDE_ID = new Identifier(Constant.MOD_ID, "nitrogen_oxide");
+    public static final Gas NITROGEN_OXIDE =
+            new Gas(
                     new TranslatableText("ui.galacticraft.nitrogen_oxide"),
                     "NO"
             );
 
-    public static final AtmosphericGas HYDROGEN_DEUTERIUM_OXYGEN =
-            new AtmosphericGas(
+    public static final Identifier HYDROGEN_DEUTERIUM_OXYGEN_ID = new Identifier(Constant.MOD_ID, "hydrogen_deuterium_oxygen");
+    public static final Gas HYDROGEN_DEUTERIUM_OXYGEN =
+            new Gas(
                     new TranslatableText("ui.galacticraft.hydrogen_deuterium_oxygen"),
                     "HDO"
-
             );
 
     public static void register() {
-        Registry.register(AddonRegistry.ATMOSPHERIC_GAS, new Identifier(Constant.MOD_ID, "hydrogen_deuterium_oxygen"), HYDROGEN_DEUTERIUM_OXYGEN);
-        Registry.register(AddonRegistry.ATMOSPHERIC_GAS, new Identifier(Constant.MOD_ID, "nitrogen_oxide"), NITROGEN_OXIDE);
+        Registry.register(AddonRegistry.GAS, HYDROGEN_DEUTERIUM_OXYGEN_ID, HYDROGEN_DEUTERIUM_OXYGEN);
+        Registry.register(AddonRegistry.GAS, NITROGEN_OXIDE_ID, NITROGEN_OXIDE);
     }
 }

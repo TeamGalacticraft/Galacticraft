@@ -39,7 +39,7 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
     private final int screenHeight;
 
     public SpaceRaceButtonWidget(MinecraftClient minecraft, int x, int y, int buttonWidth, int buttonHeight, int screenWidth, int screenHeight) {
-        super(x, y, buttonWidth, buttonHeight, LiteralText.EMPTY, (button) -> minecraft.openScreen(new SpaceRaceScreen()));
+        super(x, y, buttonWidth, buttonHeight, LiteralText.EMPTY, (button) -> minecraft.setScreen(new SpaceRaceScreen()));
         this.textRenderer = minecraft.textRenderer;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;

@@ -24,8 +24,6 @@ package dev.galacticraft.mod.client.network;
 
 import com.mojang.authlib.GameProfile;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.ChunkOxygenAccessor;
-import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
@@ -36,8 +34,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -115,27 +111,8 @@ public class GalacticraftClientPacketReceiver {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "oxygen_update"), (client, handler, buf, responseSender) -> {
-            byte b = buf.readByte();
-            ChunkOxygenAccessor accessor = ((ChunkOxygenAccessor) handler.getWorld().getChunk(buf.readInt(), buf.readInt()));
-            accessor.readOxygenUpdate(b, buf);
-        });
-
         ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "open_screen"), (client, handler, buf, responseSender) -> {
 
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "gear_inv_sync"), (client, handler, buf, responseSender) -> {
-            int entity = buf.readInt();
-            int index = buf.readByte();
-            ItemStack stack = buf.readItemStack();
-            client.execute(() -> ((GearInventoryProvider) client.world.getEntityById(entity)).getGearInv().forceSetInvStack(index, stack));
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "gear_inv_sync_full"), (client, handler, buf, responseSender) -> {
-            int entity = buf.readInt();
-            NbtCompound tag = buf.readNbt();
-            client.execute(() -> ((GearInventoryProvider) client.world.getEntityById(entity)).readGearFromNbt(tag));
         });
     }
 }

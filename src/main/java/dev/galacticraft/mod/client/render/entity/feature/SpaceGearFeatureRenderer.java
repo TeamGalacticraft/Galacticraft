@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.client.render.entity.feature;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.mixin.client.AnimalModelInvoker;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -30,7 +31,10 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.*;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.entity.model.EntityModelPartNames;
+import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
@@ -55,9 +59,9 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
         } else if (context.getModel() instanceof BipedEntityModel<?> model){
             head = model.head;
             body = model.body;
-        } else if (context.getModel() instanceof AnimalModel<?> model){
-            head = model.getHeadParts().iterator().next();
-            body = model.getBodyParts().iterator().next();;
+        } else if (context.getModel() instanceof AnimalModelInvoker model){
+            head = model.callGetHeadParts().iterator().next();
+            body = model.callGetBodyParts().iterator().next();
         } else {
             this.mask = null;
             this.tank = null;

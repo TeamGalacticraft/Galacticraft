@@ -42,20 +42,8 @@
     []
   ],
   "starts": [
-    {
-      "config": {
-        "start_pool": "galacticraft:moon_village/starts",
-        "size": 6
-      },
-      "type": "minecraft:village"
-    },
-    {
-      "config": {
-        "start_pool": "galacticraft:moon_pillager_base/entrances",
-        "size": 10
-      },
-      "type": "galacticraft:moon_pillager_base"
-    }
+    "galacticraft:moon_village",
+    "galacticraft:moon_pillager_base"
   ],
   "spawners": {
     "monster": [

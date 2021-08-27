@@ -28,15 +28,22 @@ import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerTypeHelper;
 import net.minecraft.util.Identifier;
 import net.minecraft.village.VillagerType;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonVillagerType {
+    public static final List<VillagerType> MOON_VILLAGER_TYPE_REGISTRY = new LinkedList<>();
+
     public static final VillagerType MOON_HIGHLANDS = VillagerTypeHelper.register(new Identifier(Constant.MOD_ID, "moon_highlands"));
     public static final VillagerType MOON_HIGHLANDS_ROCKS = VillagerTypeHelper.register(new Identifier(Constant.MOD_ID, "moon_highlands_edge"));
 
     public static void register() {
         VillagerTypeHelper.addVillagerTypeToBiome(GalacticraftBiome.Moon.HIGHLANDS_PLAINS, MOON_HIGHLANDS);
         VillagerTypeHelper.addVillagerTypeToBiome(GalacticraftBiome.Moon.HIGHLANDS_EDGE, MOON_HIGHLANDS_ROCKS);
+        MOON_VILLAGER_TYPE_REGISTRY.add(MOON_HIGHLANDS);
+        MOON_VILLAGER_TYPE_REGISTRY.add(MOON_HIGHLANDS_ROCKS);
     }
 }

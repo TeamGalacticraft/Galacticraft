@@ -88,6 +88,11 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     }
 
     @Override
+    protected void tickDisabled() {
+
+    }
+
+    @Override
     public @NotNull MachineStatus updateStatus() {
         return MachineStatus.NULL;
     }

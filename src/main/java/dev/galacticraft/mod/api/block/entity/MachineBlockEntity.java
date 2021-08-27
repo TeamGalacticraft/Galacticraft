@@ -54,6 +54,7 @@ import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.*;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
+import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.util.EnergyUtil;
 import net.fabricmc.api.EnvType;
@@ -64,7 +65,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -104,12 +104,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     private final @NotNull FixedFluidInvView fluidInvView = this.fluidInv().getFixedView();
     private final @NotNull FixedItemInvView invView = this.itemInv().getFixedView();
 
-    private final InventoryFixedWrapper wrappedInventory = new InventoryFixedWrapper(this.itemInv()) {
-        @Override
-        public boolean canPlayerUse(PlayerEntity player) {
-            return MachineBlockEntity.this.security().hasAccess(player);
-        }
-    };
+    private final InventoryFixedWrapper wrappedInventory = new MachineInvWrapper(this, this.itemInv());
 
     public MachineBlockEntity(BlockEntityType<? extends MachineBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -353,23 +348,31 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     }
 
     public void tick(World world, BlockPos pos, BlockState state) {
+        assert this.world == world;
+        assert this.pos == pos;
+
+        this.setCachedState(state);
         if (!world.isClient) {
             this.updateComponents();
-            if (disabled()) {
-                idleEnergyDecrement(true);
+            if (this.disabled()) {
+                this.tickDisabled();
                 return;
             }
             this.setStatus(this.updateStatus());
             this.tickWork();
             if (this.getStatus().getType().isActive()) {
                 if (this.getBaseEnergyConsumption() > 0) {
-                    this.capacitor().extract(getEnergyConsumption());
+                    this.capacitor().extract(this.getEnergyConsumption());
                 } else if (this.getBaseEnergyGenerated() > 0) {
-                    this.capacitor().insert(getEnergyGenerated());
+                    this.capacitor().insert(this.getEnergyGenerated());
                 }
+            } else {
+                this.idleEnergyDecrement();
             }
         }
     }
+
+    protected abstract void tickDisabled();
 
     /**
      * Returns the updated machine status
@@ -506,8 +509,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         }
     }
 
-    public void idleEnergyDecrement(boolean off) {
-        if (this.world.random.nextInt(off ? 40 : 20) == 1) {
+    public void idleEnergyDecrement() {
+        if (this.world.random.nextInt(20) == 0) {
             if (this.getBaseEnergyConsumption() > 0) {
                 this.capacitor().extract(this.getBaseEnergyConsumption() / 20);
             }
@@ -576,22 +579,34 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     public void addAllAttributes(AttributeList<?> to) {
         Direction direction = to.getSearchDirection();
         BlockState state = this.getCachedState();
-        MachineBlockEntity machine = (MachineBlockEntity) world.getBlockEntity(pos);
+        MachineBlockEntity machine = (MachineBlockEntity) this.world.getBlockEntity(pos);
         assert machine != null;
         if (direction == null) {
-            if (this.fluidInv().getTankCount() != 0) to.offer(machine.fluidInv());
-            if (this.itemInv().getSlotCount() != 0) to.offer(machine.itemInv()); //expose everything if not given a direction
-            if (this.getEnergyCapacity() > 0) to.offer(machine.capacitor());
+            if (this.fluidInv().getTankCount() != 0) {
+                to.offer(machine.fluidInv());
+            }
+            if (this.itemInv().getSlotCount() != 0) {
+                to.offer(machine.itemInv()); //expose everything if not given a direction
+            }
+            if (this.getEnergyCapacity() > 0) {
+                to.offer(machine.capacitor());
+            }
         } else {
-            if (this.fluidInv().getTankCount() != 0) to.offer(machine.fluidInvView());
-            if (this.itemInv().getSlotCount() != 0) to.offer(machine.itemInvView());
-            if (this.getEnergyCapacity() > 0) to.offer(machine.capacitorView());
-            to.offer(machine.getItemInsertable(state, direction));
-            to.offer(machine.getItemExtractable(state, direction));
-            to.offer(machine.getFluidInsertable(state, direction));
-            to.offer(machine.getFluidExtractable(state, direction));
-            to.offer(machine.getEnergyExtractable(state, direction));
-            to.offer(machine.getEnergyInsertable(state, direction));
+            if (this.fluidInv().getTankCount() != 0) {
+                to.offer(machine.fluidInvView());
+                to.offer(machine.getFluidInsertable(state, direction));
+                to.offer(machine.getFluidExtractable(state, direction));
+            }
+            if (this.itemInv().getSlotCount() != 0) {
+                to.offer(machine.itemInvView());
+                to.offer(machine.getItemInsertable(state, direction));
+                to.offer(machine.getItemExtractable(state, direction));
+            }
+            if (this.getEnergyCapacity() > 0) {
+                to.offer(machine.capacitorView());
+                to.offer(machine.getEnergyExtractable(state, direction));
+                to.offer(machine.getEnergyInsertable(state, direction));
+            }
         }
     }
 

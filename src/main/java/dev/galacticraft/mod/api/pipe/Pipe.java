@@ -53,9 +53,9 @@ public interface Pipe {
     @Nullable PipeNetwork getNetworkNullable();
 
     /**
-     * Returns whether or not this pipe is able to connect to another block on the specified face/direction
+     * Returns whether this pipe is able to connect to another block on the specified face/direction
      * @param direction the direction offset to the block to check adjacency to
-     * @return Whether or not this pipe is able to connect to another block on the specified face/direction
+     * @return Whether this pipe is able to connect to another block on the specified face/direction
      */
     default boolean canConnect(Direction direction) {
         return true;
