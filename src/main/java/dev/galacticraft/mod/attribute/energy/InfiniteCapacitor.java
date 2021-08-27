@@ -24,9 +24,9 @@ package dev.galacticraft.mod.attribute.energy;
 
 import alexiil.mc.lib.attributes.ListenerRemovalToken;
 import alexiil.mc.lib.attributes.ListenerToken;
-import com.hrznstudio.galacticraft.energy.api.Capacitor;
-import com.hrznstudio.galacticraft.energy.api.EnergyType;
-import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
+import dev.galacticraft.energy.api.Capacitor;
+import dev.galacticraft.energy.api.EnergyType;
+import dev.galacticraft.energy.impl.DefaultEnergyType;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -44,12 +44,12 @@ public class InfiniteCapacitor implements Capacitor {
 
     @Override
     public int getEnergy() {
-        return 1_000_000;
+        return 1073741823;
     }
 
     @Override
     public int getMaxCapacity() {
-        return 1_000_000;
+        return 1073741823;
     }
 
     @Override

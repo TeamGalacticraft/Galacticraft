@@ -34,7 +34,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.world.World;
 
@@ -63,11 +63,11 @@ public class EvolvedCreeperEntity extends CreeperEntity {
     }
 
     @Override
-    public void readCustomDataFromTag(CompoundTag tag) {
+    public void readCustomDataFromNbt(NbtCompound tag) {
         this.setBaby(tag.getBoolean(Constant.Nbt.BABY));
         tag.putByte("ExplosionRadius", (byte) (this.isBaby() ? 2 : 4)); //overwrite
         tag.putShort("Fuse", (short) 37); //overwrite
-        super.readCustomDataFromTag(tag);
+        super.readCustomDataFromNbt(tag);
     }
 
     @Override
@@ -76,8 +76,8 @@ public class EvolvedCreeperEntity extends CreeperEntity {
     }
 
     @Override
-    public void writeCustomDataToTag(CompoundTag tag) {
-        super.writeCustomDataToTag(tag);
+    public void writeCustomDataToNbt(NbtCompound tag) {
+        super.writeCustomDataToNbt(tag);
         tag.putBoolean(Constant.Nbt.BABY, isBaby());
         tag.putByte("ExplosionRadius", (byte) (this.isBaby() ? 2 : 4));
         tag.putShort("Fuse", (short) 37); //overwrite

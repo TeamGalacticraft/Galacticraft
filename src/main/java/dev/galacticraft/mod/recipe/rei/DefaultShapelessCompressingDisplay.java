@@ -20,57 +20,58 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.recipe.rei;
-
-import com.google.common.collect.Lists;
-import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
-import me.shedaniel.rei.api.EntryStack;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-@Environment(EnvType.CLIENT)
-public class DefaultShapelessCompressingDisplay implements DefaultCompressingDisplay {
-    private final List<List<EntryStack>> input;
-    private final List<EntryStack> output;
-
-    public DefaultShapelessCompressingDisplay(ShapelessCompressingRecipe recipe) {
-        this.input = Lists.newArrayList();
-        recipe.getPreviewInputs().forEach((ingredient) -> {
-            List<EntryStack> stacks = new ArrayList<>();
-            for (ItemStack stack : ingredient.getMatchingStacksClient()) {
-                stacks.add(EntryStack.create(stack));
-            }
-            this.input.add(stacks);
-        });
-        this.output = Collections.singletonList(EntryStack.create(recipe.getOutput()));
-    }
-
-//    @Override
-//    public Optional getRecipe() {
-//        return Optional.ofNullable(this.display);
+//
+//package dev.galacticraft.mod.recipe.rei;
+//
+//import com.google.common.collect.Lists;
+//import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
+//import me.shedaniel.rei.api.EntryStack;
+//import net.fabricmc.api.EnvType;
+//import net.fabricmc.api.Environment;
+//import net.minecraft.item.ItemStack;
+//import org.jetbrains.annotations.NotNull;
+//
+//import java.util.ArrayList;
+//import java.util.Collections;
+//import java.util.List;
+//
+///**
+// * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+// */
+//@Environment(EnvType.CLIENT)
+//public class DefaultShapelessCompressingDisplay implements DefaultCompressingDisplay {
+//    private final List<List<EntryStack>> input;
+//    private final List<EntryStack> output;
+//
+//    public DefaultShapelessCompressingDisplay(ShapelessCompressingRecipe recipe) {
+//        this.input = Lists.newArrayList();
+//        recipe.getIngredients().forEach((ingredient) -> {
+//            List<EntryStack> stacks = new ArrayList<>();
+//            for (ItemStack stack : ingredient.getMatchingStacksClient()) {
+//                stacks.add(EntryStack.create(stack));
+//            }
+//            this.input.add(stacks);
+//        });
+//        this.output = Collections.singletonList(EntryStack.create(recipe.getOutput()));
 //    }
-
-    @Override
-    public @NotNull List<List<EntryStack>> getRequiredEntries() {
-        return input;
-    }
-
-    @Override
-    public @NotNull List<List<EntryStack>> getInputEntries() {
-        return input;
-    }
-
-    @Override
-    public @NotNull List<EntryStack> getOutputEntries() {
-        return output;
-    }
-}
+//
+////    @Override
+////    public Optional getRecipe() {
+////        return Optional.ofNullable(this.display);
+////    }
+//
+//    @Override
+//    public @NotNull List<List<EntryStack>> getRequiredEntries() {
+//        return input;
+//    }
+//
+//    @Override
+//    public @NotNull List<List<EntryStack>> getInputEntries() {
+//        return input;
+//    }
+//
+//    @Override
+//    public @NotNull List<EntryStack> getOutputEntries() {
+//        return output;
+//    }
+//}

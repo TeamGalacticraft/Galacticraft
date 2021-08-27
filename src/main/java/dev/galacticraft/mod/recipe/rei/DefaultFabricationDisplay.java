@@ -20,59 +20,60 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.recipe.rei;
-
-import com.google.common.collect.Lists;
-import dev.galacticraft.mod.recipe.FabricationRecipe;
-import me.shedaniel.rei.api.EntryStack;
-import me.shedaniel.rei.api.RecipeDisplay;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-@Environment(EnvType.CLIENT)
-public class DefaultFabricationDisplay implements RecipeDisplay {
-    private final List<List<EntryStack>> input;
-    private final List<EntryStack> output;
-
-    public DefaultFabricationDisplay(FabricationRecipe recipe) {
-        this.input = Lists.newArrayList();
-        recipe.getPreviewInputs().forEach((ingredient) -> {
-            List<EntryStack> stacks = new ArrayList<>();
-            for (ItemStack stack : ingredient.getMatchingStacksClient()) {
-                stacks.add(EntryStack.create(stack));
-            }
-            this.input.add(stacks);
-        });
-
-        this.output = Collections.singletonList(EntryStack.create(recipe.getOutput()));
-    }
-
-    @Override
-    public @NotNull List<List<EntryStack>> getInputEntries() {
-        return this.input;
-    }
-
-    @Override
-    public @NotNull List<EntryStack> getOutputEntries() {
-        return this.output;
-    }
-
-    public List<List<EntryStack>> getInput() {
-        return this.input;
-    }
-
-    @Override
-    public @NotNull Identifier getRecipeCategory() {
-        return GalacticraftREIPlugin.CIRCUIT_FABRICATION;
-    }
-}
+//
+//package dev.galacticraft.mod.recipe.rei;
+//
+//import com.google.common.collect.Lists;
+//import dev.galacticraft.mod.recipe.FabricationRecipe;
+//import me.shedaniel.rei.api.EntryStack;
+//import me.shedaniel.rei.api.RecipeDisplay;
+//import net.fabricmc.api.EnvType;
+//import net.fabricmc.api.Environment;
+//import net.minecraft.item.ItemStack;
+//import net.minecraft.util.Identifier;
+//import org.jetbrains.annotations.NotNull;
+//
+//import java.util.ArrayList;
+//import java.util.Collections;
+//import java.util.List;
+//
+///**
+// * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+// */
+//@Environment(EnvType.CLIENT)
+//public class DefaultFabricationDisplay implements RecipeDisplay {
+//    private final List<List<EntryStack>> input;
+//    private final List<EntryStack> output;
+//
+//    public DefaultFabricationDisplay(FabricationRecipe recipe) {
+//        this.input = Lists.newArrayList();
+//        recipe.getIngredients().forEach((ingredient) -> {
+//            List<EntryStack> stacks = new ArrayList<>();
+//            for (ItemStack stack : ingredient.getMatchingStacksClient()) {
+//                stacks.add(EntryStack.create(stack));
+//            }
+//            this.input.add(stacks);
+//        });
+//
+//        this.output = Collections.singletonList(EntryStack.create(recipe.getOutput()));
+//    }
+//
+//    @Override
+//    public @NotNull List<List<EntryStack>> getInputEntries() {
+//        return this.input;
+//    }
+//
+//    @Override
+//    public @NotNull List<EntryStack> getOutputEntries() {
+//        return this.output;
+//    }
+//
+//    public List<List<EntryStack>> getInput() {
+//        return this.input;
+//    }
+//
+//    @Override
+//    public @NotNull Identifier getRecipeCategory() {
+//        return GalacticraftREIPlugin.CIRCUIT_FABRICATION;
+//    }
+//}

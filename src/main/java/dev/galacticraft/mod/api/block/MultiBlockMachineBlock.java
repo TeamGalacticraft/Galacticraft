@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.api.block;
 
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
@@ -33,6 +34,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public abstract class MultiBlockMachineBlock<T extends MachineBlockEntity> extends MachineBlock<T> implements MultiBlockBase {
     protected MultiBlockMachineBlock(Settings settings) {
         super(settings);
@@ -49,7 +53,7 @@ public abstract class MultiBlockMachineBlock<T extends MachineBlockEntity> exten
         super.onBreak(world, pos, state, player);
         for (BlockPos otherPart : this.getOtherParts(state)) {
             otherPart = otherPart.toImmutable().add(pos);
-            world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
+            world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
         }
     }
 

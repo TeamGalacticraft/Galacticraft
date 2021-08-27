@@ -22,12 +22,8 @@
 
 package dev.galacticraft.mod.mixin;
 
-import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.item.impl.EmptyFixedItemInv;
-import dev.galacticraft.mod.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -38,22 +34,21 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Mixin(Entity.class)
-public abstract class EntityMixin implements GearInventoryProvider {
+public abstract class EntityMixin {
     @Shadow
     public abstract Vec3d getVelocity();
 
     @Shadow
-    public float yaw;
+    private float yaw;
 
     @Shadow
-    public float pitch;
+    private float pitch;
 
     @Shadow
     public World world;
@@ -64,29 +59,5 @@ public abstract class EntityMixin implements GearInventoryProvider {
             BlockPos pos = destination.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, destination.getSpawnPos());
             cir.setReturnValue(new TeleportTarget(new Vec3d((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getVelocity(), this.yaw, this.pitch));
         }
-    }
-
-    @Override
-    public FixedItemInv getGearInv() {
-        return EmptyFixedItemInv.INSTANCE;
-    }
-
-    @Inject(method = "toTag", at = @At("HEAD"))
-    private void writeGear_gc(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir) {
-        this.writeGearToNbt(tag);
-    }
-
-    @Inject(method = "fromTag", at = @At("HEAD"))
-    private void readGear_gc(CompoundTag tag, CallbackInfo ci) {
-        this.readGearFromNbt(tag);
-    }
-
-    @Override
-    public CompoundTag writeGearToNbt(CompoundTag tag) {
-        return tag;
-    }
-
-    @Override
-    public void readGearFromNbt(CompoundTag tag) {
     }
 }

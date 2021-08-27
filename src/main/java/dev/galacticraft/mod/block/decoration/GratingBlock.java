@@ -22,16 +22,18 @@
 
 package dev.galacticraft.mod.block.decoration;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.FluidLoggableBlock;
+import dev.galacticraft.mod.api.block.FluidLoggable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -40,23 +42,27 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 
+import java.util.Optional;
+
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GratingBlock extends Block implements FluidLoggableBlock {
-
+public class GratingBlock extends Block implements FluidLoggable {
     protected static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.of("grating_state", GratingState.class);
 
     public GratingBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.getStateManager().getDefaultState().with(FLUID, Constant.Misc.EMPTY)
-                .with(FlowableFluid.LEVEL, 8).with(GRATING_STATE, GratingState.UPPER));
+        this.setDefaultState(this.getStateManager().getDefaultState()
+                .with(FLUID, new Identifier("invalid"))
+                .with(FlowableFluid.LEVEL, 8)
+                .with(GRATING_STATE, GratingState.UPPER));
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
-        BlockState blockState = this.getDefaultState().with(GRATING_STATE, GratingState.LOWER)
+        BlockState blockState = this.getDefaultState()
+                .with(GRATING_STATE, GratingState.LOWER)
                 .with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
                 .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
         BlockPos blockPos = context.getBlockPos();
@@ -73,12 +79,12 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState blockState, Direction direction, BlockState neighborBlockState, WorldAccess world, BlockPos blockPos, BlockPos neighborBlockPos) {
-        if (!blockState.get(FLUID).equals(Constant.Misc.EMPTY)) {
-            world.getFluidTickScheduler().schedule(blockPos, Registry.FLUID.get(blockState.get(FLUID)), Registry.FLUID.get(blockState.get(FLUID)).getTickRate(world));
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborBlockState, WorldAccess world, BlockPos blockPos, BlockPos neighborBlockPos) {
+        if (!this.isEmpty(state)) {
+            world.getFluidTickScheduler().schedule(blockPos, Registry.FLUID.get(state.get(FLUID)), Registry.FLUID.get(state.get(FLUID)).getTickRate(world));
         }
 
-        return super.getStateForNeighborUpdate(blockState, direction, neighborBlockState, world, blockPos, neighborBlockPos);
+        return super.getStateForNeighborUpdate(state, direction, neighborBlockState, world, blockPos, neighborBlockPos);
     }
 
     @Override
@@ -94,6 +100,11 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
             state1 = state1.with(FlowableFluid.LEVEL, state.get(FlowableFluid.LEVEL));
         }
         return state1;
+    }
+
+    @Override
+    public Optional<SoundEvent> getBucketFillSound() {
+        return Fluids.WATER.getBucketFillSound();
     }
 
     public enum GratingState implements StringIdentifiable {

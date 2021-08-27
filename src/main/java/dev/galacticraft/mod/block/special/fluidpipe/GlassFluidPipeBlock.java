@@ -41,6 +41,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
@@ -56,7 +57,6 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GlassFluidPipeBlock extends FluidPipe {
-
     private static final VoxelShape NORTH = createCuboidShape(8 - 2, 8 - 2, 0, 8 + 2, 8 + 2, 8 + 2);
     private static final VoxelShape EAST = createCuboidShape(8 - 2, 8 - 2, 8 - 2, 16, 8 + 2, 8 + 2);
     private static final VoxelShape SOUTH = createCuboidShape(8 - 2, 8 - 2, 8 - 2, 8 + 2, 8 + 2, 16);
@@ -70,7 +70,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
 
     public GlassFluidPipeBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.getStateManager().getDefaultState().with(PULL, false).with(COLOR, DyeColor.WHITE).with(ConnectingBlockUtil.ATTACHED_NORTH, false).with(ConnectingBlockUtil.ATTACHED_EAST, false).with(ConnectingBlockUtil.ATTACHED_SOUTH, false).with(ConnectingBlockUtil.ATTACHED_WEST, false).with(ConnectingBlockUtil.ATTACHED_UP, false).with(ConnectingBlockUtil.ATTACHED_DOWN, false));
+        this.setDefaultState(this.getStateManager().getDefaultState().with(PULL, false).with(COLOR, DyeColor.WHITE).with(Properties.NORTH, false).with(Properties.EAST, false).with(Properties.SOUTH, false).with(Properties.WEST, false).with(Properties.UP, false).with(Properties.DOWN, false));
     }
 
     @Override
@@ -87,9 +87,9 @@ public class GlassFluidPipeBlock extends FluidPipe {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!player.getStackInHand(hand).isEmpty()) {
-            if (player.getStackInHand(hand).getItem() instanceof DyeItem) {
+            if (player.getStackInHand(hand).getItem() instanceof DyeItem dye) {
                 ItemStack stack = player.getStackInHand(hand).copy();
-                DyeColor color = ((DyeItem) stack.getItem()).getColor();
+                DyeColor color = dye.getColor();
                 if (color != state.get(COLOR)) {
                     stack.decrement(1);
                     player.setStackInHand(hand, stack);
@@ -146,13 +146,13 @@ public class GlassFluidPipeBlock extends FluidPipe {
     }
 
     @Override
-    public @Nullable PipeBlockEntity createBlockEntity(BlockView world) {
-        return new PipeBlockEntity(GalacticraftBlockEntityType.GLASS_FLUID_PIPE);
+    public @Nullable PipeBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new PipeBlockEntity(GalacticraftBlockEntityType.GLASS_FLUID_PIPE, pos, state);
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(PULL, COLOR, ConnectingBlockUtil.ATTACHED_NORTH, ConnectingBlockUtil.ATTACHED_EAST, ConnectingBlockUtil.ATTACHED_SOUTH, ConnectingBlockUtil.ATTACHED_WEST, ConnectingBlockUtil.ATTACHED_UP, ConnectingBlockUtil.ATTACHED_DOWN);
+        builder.add(PULL, COLOR, Properties.NORTH, Properties.EAST, Properties.SOUTH, Properties.WEST, Properties.UP, Properties.DOWN);
     }
 }

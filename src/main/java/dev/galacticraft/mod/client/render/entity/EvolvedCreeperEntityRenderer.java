@@ -25,9 +25,10 @@ package dev.galacticraft.mod.client.render.entity;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.EvolvedCreeperEntityModel;
 import dev.galacticraft.mod.client.render.entity.feature.EvolvedCreeperChargeFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLayer;
 import dev.galacticraft.mod.entity.EvolvedCreeperEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -39,9 +40,9 @@ import net.minecraft.util.math.MathHelper;
 public class EvolvedCreeperEntityRenderer extends MobEntityRenderer<EvolvedCreeperEntity, EvolvedCreeperEntityModel> {
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/evolved/creeper.png");
 
-    public EvolvedCreeperEntityRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher, new EvolvedCreeperEntityModel(0.0F), 0.5F);
-        this.addFeature(new EvolvedCreeperChargeFeatureRenderer(this));
+    public EvolvedCreeperEntityRenderer(EntityRendererFactory.Context context) {
+        super(context, new EvolvedCreeperEntityModel(context.getPart(GalacticraftEntityModelLayer.EVOLVED_CREEPER), true), 0.5F);
+        this.addFeature(new EvolvedCreeperChargeFeatureRenderer(this, context.getModelLoader()));
     }
 
     @Override

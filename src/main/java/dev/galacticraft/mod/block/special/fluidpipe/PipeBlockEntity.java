@@ -36,9 +36,11 @@ import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import dev.galacticraft.mod.attribute.fluid.PipeFluidInsertable;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.util.FluidUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,12 +53,12 @@ public class PipeBlockEntity extends BlockEntity implements Pipe, AttributeProvi
     private @Nullable PipeFluidInsertable insertable = null;
     private static final FluidAmount MAX_TRANSFER_RATE = FluidAmount.of(5, 100);
 
-    public PipeBlockEntity() {
-        super(GalacticraftBlockEntityType.FLUID_PIPE);
+    public PipeBlockEntity(BlockPos pos, BlockState state) {
+        this(GalacticraftBlockEntityType.FLUID_PIPE, pos, state);
     }
 
-    public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type) {
-        super(type);
+    public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     @Override
@@ -71,8 +73,8 @@ public class PipeBlockEntity extends BlockEntity implements Pipe, AttributeProvi
             if (!this.world.isClient()) {
                 for (Direction direction : Constant.Misc.DIRECTIONS) {
                     BlockEntity entity = world.getBlockEntity(pos.offset(direction));
-                    if (entity instanceof Pipe && ((Pipe) entity).getNetworkNullable() != null) {
-                        ((Pipe) entity).getNetwork().addPipe(pos, this);
+                    if (entity instanceof Pipe pipe && pipe.getNetworkNullable() != null) {
+                        pipe.getNetwork().addPipe(pos, this);
                     }
                 }
                 if (this.network == null) {
@@ -97,7 +99,7 @@ public class PipeBlockEntity extends BlockEntity implements Pipe, AttributeProvi
     @Override
     public @NotNull PipeConnectionType getConnection(Direction direction, @NotNull BlockEntity entity) {
         if (!this.canConnect(direction)) return PipeConnectionType.NONE;
-        if (entity instanceof Pipe && ((Pipe) entity).canConnect(direction.getOpposite())) return PipeConnectionType.PIPE;
+        if (entity instanceof Pipe pipe && pipe.canConnect(direction.getOpposite())) return PipeConnectionType.PIPE;
         FluidInsertable insertable = FluidUtil.getInsertable(world, entity.getPos(), direction);
         FluidExtractable extractable = FluidUtil.getExtractable(world, entity.getPos(), direction);
         if (insertable != RejectingFluidInsertable.NULL && extractable != EmptyFluidExtractable.NULL) {

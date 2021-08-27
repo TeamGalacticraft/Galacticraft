@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.item;
 
+import com.google.common.base.Suppliers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.EquipmentSlot;
@@ -29,7 +30,6 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Lazy;
 
 import java.util.function.Supplier;
 
@@ -43,7 +43,7 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
             0,
             SoundEvents.ITEM_ARMOR_EQUIP_IRON,
             0.0f,
-            () -> Ingredient.ofItems(GalacticraftItems.METEORIC_IRON_INGOT),
+            () -> Ingredient.ofItems(GalacticraftItem.METEORIC_IRON[1]),
             0.0f
     ), // TODO: add actual functionality
     HEAVY_DUTY(
@@ -53,7 +53,7 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
             9,
             SoundEvents.ITEM_ARMOR_EQUIP_IRON,
             1.0f,
-            () -> Ingredient.ofItems(GalacticraftItems.COMPRESSED_STEEL),
+            () -> Ingredient.ofItems(GalacticraftItem.COMPRESSED_STEEL),
             1.0f
     ),
     DESH("desh", 42,
@@ -61,7 +61,7 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
             12,
             SoundEvents.ITEM_ARMOR_EQUIP_IRON,
             3.0f,
-            () -> Ingredient.ofItems(GalacticraftItems.DESH_INGOT),
+            () -> Ingredient.ofItems(GalacticraftItem.DESH[1]),
             2.0f
     ),
     TITANIUM(
@@ -70,7 +70,7 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
             20,
             SoundEvents.ITEM_ARMOR_EQUIP_IRON,
             1.0f,
-            () -> Ingredient.ofItems(GalacticraftItems.COMPRESSED_TITANIUM),
+            () -> Ingredient.ofItems(GalacticraftItem.COMPRESSED_TITANIUM),
             0.0f
     );
 
@@ -81,7 +81,7 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
     private final int enchantability;
     private final SoundEvent equipSound;
     private final float toughness;
-    private final Lazy<Ingredient> repairIngredient;
+    private final Supplier<Ingredient> repairIngredient;
     private final float knockbackResistance;
 
     GalacticraftArmorMaterial(String name, int durabilityMultiplier, int[] protectionValues, int enchantability, SoundEvent equipSound, float toughness, Supplier<Ingredient> repairIngredient, float knockbackResistance) {
@@ -91,7 +91,7 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
         this.enchantability = enchantability;
         this.equipSound = equipSound;
         this.toughness = toughness;
-        this.repairIngredient = new Lazy<>(repairIngredient);
+        this.repairIngredient = Suppliers.memoize(repairIngredient::get);
         this.knockbackResistance = knockbackResistance;
     }
 

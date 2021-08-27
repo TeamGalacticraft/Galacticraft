@@ -48,6 +48,9 @@ public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
         if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
             return !mixinClassName.equals("dev.galacticraft.mod.mixin.StructurePoolGeneratorMixin");
         }
+        if (mixinClassName.equals("dev.galacticraft.mod.mixin.client.WorldRendererOverworldMixin")) {
+            return Galacticraft.CONFIG_MANAGER.get().areMoreMulticoloredStarsEnabled();
+        }
         return true;
     }
 

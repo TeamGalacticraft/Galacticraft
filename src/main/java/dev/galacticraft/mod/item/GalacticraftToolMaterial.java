@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.item;
 
+import com.google.common.base.Suppliers;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.util.Lazy;
 
 import java.util.function.Supplier;
 
@@ -36,15 +36,15 @@ import java.util.function.Supplier;
 public enum GalacticraftToolMaterial implements ToolMaterial {
 
     STEEL(ToolMaterials.IRON.getMiningLevel(), 768, ToolMaterials.IRON.getMiningSpeedMultiplier(), ToolMaterials.IRON.getAttackDamage(), ToolMaterials.IRON.getEnchantability(), () -> {
-        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.COMPRESSED_STEEL));
+        return Ingredient.ofStacks(new ItemStack(GalacticraftItem.COMPRESSED_STEEL));
     }),
 
     DESH(3, 1024, 5.0F, 2.5F, 10, () -> {
-        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.DESH_INGOT));
+        return Ingredient.ofStacks(new ItemStack(GalacticraftItem.DESH[1]));
     }),
 
     TITANIUM(4, 760, 14.0F, 4.0F, 16, () -> {
-        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.TITANIUM_INGOT));
+        return Ingredient.ofStacks(new ItemStack(GalacticraftItem.TITANIUM[1]));
     });
 
     private final int miningLevel;
@@ -52,7 +52,7 @@ public enum GalacticraftToolMaterial implements ToolMaterial {
     private final float blockBreakSpeed;
     private final float attackDamage;
     private final int enchantability;
-    private final Lazy<Ingredient> repairIngredient;
+    private final Supplier<Ingredient> repairIngredient;
 
     GalacticraftToolMaterial(int miningLevel, int durability, float breakSpeed, float attackDamage, int enchantability, Supplier<Ingredient> repairIngredient) {
         this.miningLevel = miningLevel;
@@ -60,7 +60,7 @@ public enum GalacticraftToolMaterial implements ToolMaterial {
         this.blockBreakSpeed = breakSpeed;
         this.attackDamage = attackDamage;
         this.enchantability = enchantability;
-        this.repairIngredient = new Lazy<>(repairIngredient);
+        this.repairIngredient = Suppliers.memoize(repairIngredient::get);
     }
 
     @Override

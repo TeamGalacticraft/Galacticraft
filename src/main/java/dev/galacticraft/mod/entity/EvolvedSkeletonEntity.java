@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.entity;
 
+import dev.galacticraft.mod.mixin.AbstractSkeletonEntityAccessor;
+import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ai.goal.BowAttackGoal;
@@ -38,25 +40,8 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EvolvedSkeletonEntity extends SkeletonEntity {
-    private final BowAttackGoal<EvolvedSkeletonEntity> rangedAttackGoal;
-    private final MeleeAttackGoal meleeCombatGoal;
-
     public EvolvedSkeletonEntity(EntityType<? extends SkeletonEntity> entityType, World world) {
         super(entityType, world);
-
-        this.rangedAttackGoal = new BowAttackGoal<>(this, 1.0D, 20, 15.0F);
-        this.meleeCombatGoal = new MeleeAttackGoal(this, 1.2D, false) {
-            public void stop() {
-                super.stop();
-                EvolvedSkeletonEntity.this.setAttacking(false);
-            }
-
-            public void start() {
-                super.start();
-                EvolvedSkeletonEntity.this.setAttacking(true);
-            }
-        };
-        updateAttackType();
     }
 
     @Override
@@ -67,9 +52,11 @@ public class EvolvedSkeletonEntity extends SkeletonEntity {
 
     @Override
     public void updateAttackType() {
-        if (this.world != null && !this.world.isClient && rangedAttackGoal != null) {
-            this.goalSelector.remove(this.meleeCombatGoal);
-            this.goalSelector.remove(this.rangedAttackGoal);
+        BowAttackGoal<?> bowAttackGoal = ((AbstractSkeletonEntityAccessor) this).getBowAttackGoal();
+        MeleeAttackGoal meleeAttackGoal = ((AbstractSkeletonEntityAccessor) this).getMeleeAttackGoal();
+        if (this.world != null && !this.world.isClient && bowAttackGoal != null) {
+            this.goalSelector.remove(meleeAttackGoal);
+            this.goalSelector.remove(bowAttackGoal);
             ItemStack main = this.getStackInHand(Hand.MAIN_HAND);
             ItemStack off = this.getStackInHand(Hand.OFF_HAND);
             if (main.getItem() == Items.BOW || off.getItem() == Items.BOW) {
@@ -78,11 +65,16 @@ public class EvolvedSkeletonEntity extends SkeletonEntity {
                     i = 25;
                 }
 
-                this.rangedAttackGoal.setAttackInterval(i);
-                this.goalSelector.add(4, this.rangedAttackGoal);
+                bowAttackGoal.setAttackInterval(i);
+                this.goalSelector.add(4, bowAttackGoal);
             } else {
-                this.goalSelector.add(4, this.meleeCombatGoal);
+                this.goalSelector.add(4, meleeAttackGoal);
             }
         }
+    }
+
+    @Override
+    protected boolean isAffectedByDaylight() {
+        return super.isAffectedByDaylight() && GalacticraftTag.MOON_MARE.contains(this.world.getBiome(this.getBlockPos()));
     }
 }

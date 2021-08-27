@@ -25,7 +25,7 @@ package dev.galacticraft.mod.block.entity;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -34,26 +34,24 @@ import net.minecraft.util.math.BlockPos;
 public class SolarPanelPartBlockEntity extends BlockEntity implements MultiBlockPart {
     public BlockPos basePos = BlockPos.ORIGIN;
 
-    public SolarPanelPartBlockEntity() {
-        super(GalacticraftBlockEntityType.SOLAR_PANEL_PART);
+    public SolarPanelPartBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.SOLAR_PANEL_PART, pos, state);
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         if (this.basePos != BlockPos.ORIGIN) {
-            tag.putInt("baseX", this.basePos.getX());
-            tag.putInt("baseY", this.basePos.getY());
-            tag.putInt("baseZ", this.basePos.getZ());
+            tag.putLong("Base", this.basePos.asLong());
         }
         return tag;
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
-        if (tag.contains("baseX")) {
-            this.basePos = new BlockPos(tag.getInt("baseX"), tag.getInt("baseY"), tag.getInt("baseZ"));
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
+        if (tag.contains("Base")) {
+            this.basePos = BlockPos.fromLong(tag.getLong("Base"));
         }
     }
 

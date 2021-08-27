@@ -24,9 +24,9 @@ package dev.galacticraft.mod.block.special.walkway;
 
 import dev.galacticraft.mod.api.block.FluidPipe;
 import dev.galacticraft.mod.item.StandardWrenchItem;
+import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,7 +35,6 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.*;
@@ -43,7 +42,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
@@ -55,24 +53,18 @@ import static dev.galacticraft.mod.block.special.fluidpipe.GlassFluidPipeBlock.P
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class PipeWalkway extends FluidPipe {
-    public static final BooleanProperty NORTH = Properties.NORTH;
-    public static final BooleanProperty EAST = Properties.EAST;
-    public static final BooleanProperty SOUTH = Properties.SOUTH;
-    public static final BooleanProperty WEST = Properties.WEST;
-    public static final BooleanProperty UP = Properties.UP;
-    public static final BooleanProperty DOWN = Properties.DOWN;
     public static final DirectionProperty FACING = Properties.FACING;
     private static final VoxelShape[] shape = new VoxelShape[64];
 
     public PipeWalkway(Settings settings) {
         super(settings);
         this.setDefaultState(this.getStateManager().getDefaultState()
-                .with(NORTH, false)
-                .with(EAST, false)
-                .with(SOUTH, false)
-                .with(WEST, false)
-                .with(UP, false)
-                .with(DOWN, false)
+                .with(Properties.NORTH, false)
+                .with(Properties.EAST, false)
+                .with(Properties.SOUTH, false)
+                .with(Properties.WEST, false)
+                .with(Properties.UP, false)
+                .with(Properties.DOWN, false)
                 .with(FACING, Direction.UP)
                 .with(PULL, false)
                 .with(COLOR, DyeColor.WHITE));
@@ -80,50 +72,6 @@ public class PipeWalkway extends FluidPipe {
 
     private static int getFacingMask(Direction dir) {
         return 1 << (dir.getId());
-    }
-
-    private static VoxelShape createShape(Direction facing) {
-        VoxelShape base = Block.createCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D);
-        switch (facing) {
-            case UP:
-                base = VoxelShapes.union(
-                        base,
-                        Block.createCuboidShape(6.0D, 10.0D, 6.0D, 10.0D, 14.0D, 10.0D),
-                        Block.createCuboidShape(0.0D, 13.0D, 0.0D, 16.0D, 16.0D, 16.0D));
-                break;
-            case DOWN:
-                base = VoxelShapes.union(
-                        base,
-                        Block.createCuboidShape(6.0D, 2.0D, 6.0D, 10.0D, 6.0D, 10.0D),
-                        Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D));
-                break;
-            case NORTH:
-                base = VoxelShapes.union(
-                        base,
-                        Block.createCuboidShape(6.0D, 6.0D, 2.0D, 10.0D, 10.0D, 6.0D),
-                        Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D));
-                break;
-            case SOUTH:
-                base = VoxelShapes.union(
-                        base,
-                        Block.createCuboidShape(6.0D, 6.0D, 10.0D, 10.0D, 10.0D, 14.0D),
-                        Block.createCuboidShape(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D));
-                break;
-            case EAST:
-                base = VoxelShapes.union(
-                        base,
-                        Block.createCuboidShape(10.0D, 6.0D, 6.0D, 14.0D, 10.0D, 10.0D),
-                        Block.createCuboidShape(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D));
-                break;
-            case WEST:
-                base = VoxelShapes.union(
-                        base,
-                        Block.createCuboidShape(2.0D, 6.0D, 6.0D, 6.0D, 10.0D, 10.0D),
-                        Block.createCuboidShape(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D));
-                break;
-        }
-
-        return base;
     }
 
     @Override
@@ -141,51 +89,17 @@ public class PipeWalkway extends FluidPipe {
         if (shape[index] != null) {
             return shape[index];
         }
-        return shape[index] = createShape(state.get(FACING));
-    }
-
-    private BooleanProperty getPropForDir(Direction direction) {
-        switch (direction) {
-            case NORTH:
-                return NORTH;
-            case WEST:
-                return WEST;
-            case EAST:
-                return EAST;
-            case SOUTH:
-                return SOUTH;
-            case UP:
-                return UP;
-            case DOWN:
-                return DOWN;
-        }
-        throw new IllegalArgumentException();
+        return shape[index] = ConnectingBlockUtil.createWalkwayShape(state.get(FACING));
     }
 
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
-        switch (rotation) {
-            case CLOCKWISE_180:
-                return state.with(NORTH, state.get(SOUTH)).with(EAST, state.get(WEST)).with(SOUTH, state.get(NORTH)).with(WEST, state.get(EAST));
-            case COUNTERCLOCKWISE_90:
-                return state.with(NORTH, state.get(EAST)).with(EAST, state.get(SOUTH)).with(SOUTH, state.get(WEST)).with(WEST, state.get(NORTH));
-            case CLOCKWISE_90:
-                return state.with(NORTH, state.get(WEST)).with(EAST, state.get(NORTH)).with(SOUTH, state.get(EAST)).with(WEST, state.get(SOUTH));
-            default:
-                return state;
-        }
+        return ConnectingBlockUtil.rotateConnections(state, rotation);
     }
 
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
-        switch (mirror) {
-            case LEFT_RIGHT:
-                return state.with(NORTH, state.get(SOUTH)).with(SOUTH, state.get(NORTH));
-            case FRONT_BACK:
-                return state.with(EAST, state.get(WEST)).with(WEST, state.get(EAST));
-            default:
-                return super.mirror(state, mirror);
-        }
+        return ConnectingBlockUtil.mirror(state, mirror);
     }
 
     public boolean canConnect(BlockState state, BlockState neighborState, BlockPos pos, BlockPos neighborPos, WorldAccess world, Direction facing) {
@@ -205,9 +119,9 @@ public class PipeWalkway extends FluidPipe {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!player.getStackInHand(hand).isEmpty()) {
-            if (player.getStackInHand(hand).getItem() instanceof DyeItem) {
+            if (player.getStackInHand(hand).getItem() instanceof DyeItem dye) {
                 ItemStack stack = player.getStackInHand(hand).copy();
-                DyeColor color = ((DyeItem) stack.getItem()).getColor();
+                DyeColor color = dye.getColor();
                 if (color != state.get(COLOR)) {
                     stack.decrement(1);
                     player.setStackInHand(hand, stack);
@@ -232,7 +146,7 @@ public class PipeWalkway extends FluidPipe {
     public BlockState getPlacementState(ItemPlacementContext context) {
         BlockState state = this.getDefaultState();
         for (Direction direction : Direction.values()) {
-            state = state.with(getPropForDir(direction), this.canConnect(state,
+            state = state.with(ConnectingBlockUtil.getBooleanProperty(direction), this.canConnect(state,
                     context.getWorld().getBlockState(context.getBlockPos().offset(direction)),
                     context.getBlockPos(),
                     context.getBlockPos().offset(direction),
@@ -243,16 +157,11 @@ public class PipeWalkway extends FluidPipe {
     }
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return state.with(getPropForDir(facing), this.canConnect(state, neighborState, pos, neighborPos, world, facing));
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+        return state.with(ConnectingBlockUtil.getBooleanProperty(facing), this.canConnect(state, neighborState, pos, neighborPos, world, facing));
     }
 
     @Override
     public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN, FACING, PULL, COLOR);
+        stateBuilder.add(Properties.NORTH, Properties.EAST, Properties.WEST, Properties.SOUTH, Properties.UP, Properties.DOWN, FACING, PULL, COLOR);
     }
 }

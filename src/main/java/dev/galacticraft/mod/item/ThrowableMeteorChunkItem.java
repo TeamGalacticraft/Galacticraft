@@ -28,7 +28,6 @@ import net.minecraft.item.Item;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ThrowableMeteorChunkItem extends Item {
-
     public ThrowableMeteorChunkItem(Settings settings) {
         super(settings);
     }

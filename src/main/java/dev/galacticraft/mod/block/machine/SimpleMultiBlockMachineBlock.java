@@ -30,7 +30,6 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -40,32 +39,34 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
-import java.util.function.Supplier;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class SimpleMultiBlockMachineBlock<T extends MachineBlockEntity, P extends BlockWithEntity> extends MultiBlockMachineBlock<T> {
     private final List<BlockPos> parts;
-    private final Supplier<T> supplier;
+    private final SimpleMachineBlock.BlockEntityFactory<T> factory;
     private final Text information;
     private final BlockState partState;
 
     /**
      * Note: BlockEntity of the partBlock must implement {@link MultiBlockPart}
      */
-    public static <T extends MachineBlockEntity, P extends BlockWithEntity> SimpleMultiBlockMachineBlock<T, P> create(Supplier<BlockEntityType<T>> type, List<BlockPos> parts, P partBlock, String key) {
-        return new SimpleMultiBlockMachineBlock<>(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS), parts, () -> type.get().instantiate(), partBlock, new TranslatableText(key).setStyle(Constant.Text.DARK_GRAY_STYLE));
+    public static <T extends MachineBlockEntity, P extends BlockWithEntity> SimpleMultiBlockMachineBlock<T, P> create(SimpleMachineBlock.BlockEntityFactory<T> type, List<BlockPos> parts, P partBlock, String key) {
+        return new SimpleMultiBlockMachineBlock<>(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS), parts, type, partBlock, new TranslatableText(key).setStyle(Constant.Text.DARK_GRAY_STYLE));
     }
 
-    protected SimpleMultiBlockMachineBlock(Settings settings, List<BlockPos> parts, Supplier<T> supplier, P partBlock, Text information) {
+    protected SimpleMultiBlockMachineBlock(Settings settings, List<BlockPos> parts, SimpleMachineBlock.BlockEntityFactory<T> factory, P partBlock, Text information) {
         super(settings);
         this.parts = parts;
-        this.supplier = supplier;
+        this.factory = factory;
         this.information = information;
         this.partState = partBlock.getDefaultState();
     }
 
     @Override
-    public T createBlockEntity(BlockView view) {
-        return this.supplier.get();
+    public T createBlockEntity(BlockPos pos, BlockState state) {
+        return this.factory.create(pos, state);
     }
 
     @Override

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "galacticraft:cobbled_moon_rock"
+    }
+  },
+  "result": {
+    "item": "galacticraft:cobbled_moon_rock_wall",
+    "amount": 6
+  }
+}

@@ -24,10 +24,10 @@ package dev.galacticraft.mod.api.wire.impl;
 
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
-import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
-import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
+import dev.galacticraft.energy.GalacticraftEnergy;
+import dev.galacticraft.energy.api.EnergyInsertable;
+import dev.galacticraft.energy.impl.DefaultEnergyType;
+import dev.galacticraft.energy.impl.RejectingEnergyInsertable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
@@ -50,7 +50,7 @@ import java.util.function.BiFunction;
  */
 public class WireNetworkImpl implements WireNetwork {
     private final ServerWorld world;
-    private final Object2ObjectOpenHashMap<BlockPos, EnergyInsertable> insertable = new Object2ObjectOpenHashMap<>(0);
+    private final Object2ObjectOpenHashMap<BlockPos, EnergyInsertable> insertable = new Object2ObjectOpenHashMap<>();
     private final ObjectSet<BlockPos> wires = new ObjectLinkedOpenHashSet<>(1);
     private boolean markedForRemoval = false;
 
@@ -69,12 +69,12 @@ public class WireNetworkImpl implements WireNetwork {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockEntity entity = world.getBlockEntity(pos.offset(direction));
             if (entity != null && !entity.isRemoved()) {
-                if (entity instanceof Wire) {
-                    if (((Wire) entity).getNetworkNullable() == null || ((Wire) entity).getNetwork().markedForRemoval()) {
-                        this.addWire(pos.offset(direction), (Wire) entity);
+                if (entity instanceof Wire wire1) {
+                    if (wire1.getNetworkNullable() == null || wire1.getNetwork().markedForRemoval()) {
+                        this.addWire(pos.offset(direction), wire1);
                     } else {
-                        if (((Wire) entity).getNetworkNullable() != this) {
-                            this.takeAll(((Wire) entity).getNetwork());
+                        if (wire1.getNetworkNullable() != this) {
+                            this.takeAll(wire1.getNetwork());
                         }
                     }
                     continue;
@@ -89,9 +89,9 @@ public class WireNetworkImpl implements WireNetwork {
 
     public void takeAll(@NotNull WireNetwork network) {
         for (BlockPos pos : network.getAllWires()) {
-            BlockEntity wire = this.world.getBlockEntity(pos);
-            if (wire instanceof Wire && !wire.isRemoved()) {
-                ((Wire) wire).setNetwork(this);
+            BlockEntity entity = this.world.getBlockEntity(pos);
+            if (entity instanceof Wire wire && !entity.isRemoved()) {
+                wire.setNetwork(this);
                 this.wires.add(pos);
             }
         }
@@ -113,7 +113,7 @@ public class WireNetworkImpl implements WireNetwork {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockPos pos1 = pos.offset(direction);
             if (this.wires.contains(pos1)) {
-                if (((Wire) this.world.getBlockEntity(pos1)).canConnect(direction.getOpposite())) list.add(pos1); //dont bother testing if it was unable to connect
+                if (((Wire) this.world.getBlockEntity(pos1)).canConnect(direction.getOpposite())) list.add(pos1); // Don't bother testing if it was unable to connect
             }
         }
         List<List<BlockPos>> mappedWires = new LinkedList<>();
@@ -191,7 +191,7 @@ public class WireNetworkImpl implements WireNetwork {
     public int insert(@NotNull BlockPos fromWire, int amount, @NotNull Simulation simulate) {
         if (simulate.isSimulate()) {
             for (EnergyInsertable insertable : this.getInsertable().values()) {
-                amount = insertable.tryInsert(DefaultEnergyType.INSTANCE, amount, simulate);
+                amount = insertable.attemptInsertion(DefaultEnergyType.INSTANCE, amount, simulate);
                 if (amount == 0) return 0;
             }
             return amount;
@@ -199,7 +199,7 @@ public class WireNetworkImpl implements WireNetwork {
         List<EnergyInsertable> nonFullInsertables = new ArrayList<>(this.getInsertable().values());
         int requested = 0;
         for (EnergyInsertable insertable : this.getInsertable().values()) {
-            int failed = insertable.tryInsert(DefaultEnergyType.INSTANCE, amount, Simulation.SIMULATE);
+            int failed = insertable.attemptInsertion(DefaultEnergyType.INSTANCE, amount, Simulation.SIMULATE);
             if (failed == amount) nonFullInsertables.remove(insertable);
             else requested += (amount - failed);
         }
@@ -210,7 +210,7 @@ public class WireNetworkImpl implements WireNetwork {
 
         for (EnergyInsertable insertable : nonFullInsertables) {
             int consumed = Math.min(available, (int) (amount * ratio));
-            consumed -= insertable.tryInsert(DefaultEnergyType.INSTANCE, consumed, simulate);
+            consumed -= insertable.attemptInsertion(DefaultEnergyType.INSTANCE, consumed, simulate);
             available -= consumed;
         }
 

@@ -23,24 +23,20 @@
 package dev.galacticraft.mod.client.render.entity.feature;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.model.entity.EvolvedSpiderModel;
 import dev.galacticraft.mod.entity.EvolvedSpiderEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
+import net.minecraft.client.render.entity.feature.EyesFeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.render.entity.model.SpiderEntityModel;
 import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class EvolvedSpiderEyesFeatureRenderer<T extends EvolvedSpiderEntity, M extends EvolvedSpiderModel<T>> extends FeatureRenderer<T, M> {
+public class EvolvedSpiderEyesFeatureRenderer<T extends EvolvedSpiderEntity, M extends SpiderEntityModel<T>> extends EyesFeatureRenderer<T, M> {
     private static final RenderLayer LAYER = RenderLayer.getEyes(new Identifier(Constant.MOD_ID, "textures/entity/evolved/spider_eyes.png"));
 
     public EvolvedSpiderEyesFeatureRenderer(FeatureRendererContext<T, M> featureRendererContext) {
@@ -48,8 +44,7 @@ public class EvolvedSpiderEyesFeatureRenderer<T extends EvolvedSpiderEntity, M e
     }
 
     @Override
-    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(LAYER);
-        this.getContextModel().render(matrices, vertexConsumer, 15728640, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
+    public RenderLayer getEyesTexture() {
+        return LAYER;
     }
 }

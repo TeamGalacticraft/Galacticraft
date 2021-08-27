@@ -39,6 +39,7 @@ import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import dev.galacticraft.mod.util.EnergyUtil;
 import dev.galacticraft.mod.util.FluidUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
@@ -46,14 +47,14 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class RefineryBlockEntity extends MachineBlockEntity implements Tickable {
+public class RefineryBlockEntity extends MachineBlockEntity {
     private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(8);
     public static final int OIL_TANK = 0;
     public static final int FUEL_TANK = 1;
@@ -61,8 +62,8 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
     public static final int FLUID_INPUT_SLOT = 1;
     public static final int FLUID_OUTPUT_SLOT = 2;
 
-    public RefineryBlockEntity() {
-        super(GalacticraftBlockEntityType.REFINERY);
+    public RefineryBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.REFINERY, pos, state);
     }
 
     @Override
@@ -81,7 +82,7 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
     }
 
     @Override
-    public FluidAmount getFluidTankCapacity() {
+    public FluidAmount fluidInvCapacity() {
         return MAX_CAPACITY;
     }
 
@@ -92,7 +93,12 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
 
     @Override
     protected MachineStatus getStatusById(int index) {
-        return null;
+        return Status.values()[index];
+    }
+
+    @Override
+    protected void tickDisabled() {
+
     }
 
     @Override
@@ -104,20 +110,20 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.getFluidInv().getInvFluid(OIL_TANK).amount().compareTo(FluidAmount.ZERO) <= 0) return Status.NOT_ENOUGH_FLUID;
+        if (this.fluidInv().getInvFluid(OIL_TANK).amount().compareTo(FluidAmount.ZERO) <= 0) return Status.NOT_ENOUGH_FLUID;
         if (this.isTankFull(FUEL_TANK)) return Status.FULL;
         return Status.ACTIVE;
     }
 
     @Override
     public void tickWork() {
-        FluidVolumeUtil.move(FluidAttributes.EXTRACTABLE.getFirst(this.getInventory().getSlot(FLUID_INPUT_SLOT)), this.getFluidInv().getTank(OIL_TANK));
-        FluidVolumeUtil.move(this.getFluidInv().getTank(FUEL_TANK), FluidAttributes.INSERTABLE.getFirst(this.getInventory().getSlot(FLUID_OUTPUT_SLOT)));
+        FluidVolumeUtil.move(FluidAttributes.EXTRACTABLE.getFirst(this.itemInv().getSlot(FLUID_INPUT_SLOT)), this.fluidInv().getTank(OIL_TANK));
+        FluidVolumeUtil.move(this.fluidInv().getTank(FUEL_TANK), FluidAttributes.INSERTABLE.getFirst(this.itemInv().getSlot(FLUID_OUTPUT_SLOT)));
 
         if (this.getStatus().getType().isActive()) {
-            FluidAmount amount = this.getFluidInv().extractFluid(OIL_TANK, key -> GalacticraftTag.OIL.contains(key.getRawFluid()), null, FluidAmount.of(5, 1000), Simulation.ACTION).amount();
-            amount = this.getFluidInv().insertFluid(FUEL_TANK, FluidKeys.get(GalacticraftFluid.FUEL).withAmount(amount), Simulation.ACTION).amount();
-            this.getFluidInv().insertFluid(OIL_TANK, this.getFluidInv().getInvFluid(OIL_TANK).getFluidKey().withAmount(amount), Simulation.ACTION);
+            FluidAmount amount = this.fluidInv().extractFluid(OIL_TANK, key -> GalacticraftTag.OIL.contains(key.getRawFluid()), null, FluidAmount.of(5, 1000), Simulation.ACTION).amount();
+            amount = this.fluidInv().insertFluid(FUEL_TANK, FluidKeys.get(GalacticraftFluid.FUEL).withAmount(amount), Simulation.ACTION).amount();
+            this.fluidInv().insertFluid(OIL_TANK, this.fluidInv().getInvFluid(OIL_TANK).getFluidKey().withAmount(amount), Simulation.ACTION);
         }
     }
 
@@ -129,7 +135,7 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.getSecurity().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.REFINERY_HANDLER, syncId, inv, this);
+        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.REFINERY_HANDLER, syncId, inv, this);
         return null;
     }
 

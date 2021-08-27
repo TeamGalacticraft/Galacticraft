@@ -22,9 +22,10 @@
 
 package dev.galacticraft.mod.mixin.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.screen.ingame.GalacticraftPlayerInventoryScreen;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,6 +33,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
@@ -65,15 +67,17 @@ public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen
 
     @Inject(method = "drawBackground", at = @At("TAIL"))
     public void drawBackground(MatrixStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.PLAYER_INVENTORY_TABS);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.PLAYER_INVENTORY_TABS);
         this.drawTexture(matrices, this.x, this.y - 28, 0, 0, 57, 32);
     }
 
     @Inject(method = "render", at = @At("TAIL"))
     public void render(MatrixStack matrices, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
-        DiffuseLighting.enable();
+        DiffuseLighting.enableGuiDepthLighting();
         this.itemRenderer.renderInGuiWithOverrides(Items.CRAFTING_TABLE.getDefaultStack(), this.x + 6, this.y - 20);
-        this.itemRenderer.renderInGuiWithOverrides(GalacticraftItems.OXYGEN_MASK.getDefaultStack(), this.x + 35, this.y - 20);
-        DiffuseLighting.disable();
+        this.itemRenderer.renderInGuiWithOverrides(GalacticraftItem.OXYGEN_MASK.getDefaultStack(), this.x + 35, this.y - 20);
+        DiffuseLighting.disableGuiDepthLighting();
     }
 }

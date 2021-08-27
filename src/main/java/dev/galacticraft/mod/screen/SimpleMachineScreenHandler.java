@@ -29,6 +29,9 @@ import net.minecraft.screen.ScreenHandlerType;
 
 import java.util.function.Supplier;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class SimpleMachineScreenHandler<T extends MachineBlockEntity> extends MachineScreenHandler<T> {
     private final Supplier<ScreenHandlerType<MachineScreenHandler<T>>> type;
 

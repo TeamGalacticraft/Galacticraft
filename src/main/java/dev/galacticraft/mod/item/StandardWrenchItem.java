@@ -51,7 +51,6 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class StandardWrenchItem extends Item {
-
     public StandardWrenchItem(Settings settings) {
         super(settings);
         settings.maxDamage(256);

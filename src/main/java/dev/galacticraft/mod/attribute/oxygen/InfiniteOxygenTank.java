@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.attribute.oxygen;
 
 import alexiil.mc.lib.attributes.ListenerToken;
+import dev.galacticraft.api.attribute.oxygen.OxygenTank;
 import org.jetbrains.annotations.Nullable;
 
 /**

@@ -23,22 +23,24 @@
 package dev.galacticraft.mod.client.render.entity.feature;
 
 import dev.galacticraft.mod.client.model.entity.EvolvedCreeperEntityModel;
+import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLayer;
 import dev.galacticraft.mod.entity.EvolvedCreeperEntity;
 import net.minecraft.client.render.entity.feature.EnergySwirlOverlayFeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.entity.model.EntityModelLoader;
 import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EvolvedCreeperChargeFeatureRenderer extends EnergySwirlOverlayFeatureRenderer<EvolvedCreeperEntity, EvolvedCreeperEntityModel> {
+    private static final Identifier TEXTURE = new Identifier("textures/entity/creeper/creeper_armor.png");
+    private final EvolvedCreeperEntityModel model;
 
-    private static final Identifier TEX = new Identifier("textures/entity/creeper/creeper_armor.png");
-    private final EvolvedCreeperEntityModel model = new EvolvedCreeperEntityModel(2.0F);
-
-    public EvolvedCreeperChargeFeatureRenderer(FeatureRendererContext<EvolvedCreeperEntity, EvolvedCreeperEntityModel> featureRendererContext) {
-        super(featureRendererContext);
+    public EvolvedCreeperChargeFeatureRenderer(FeatureRendererContext<EvolvedCreeperEntity, EvolvedCreeperEntityModel> context, EntityModelLoader loader) {
+        super(context);
+        this.model = new EvolvedCreeperEntityModel(loader.getModelPart(GalacticraftEntityModelLayer.EVOLVED_CREEPER_ARMOR), false);
     }
 
     @Override
@@ -48,7 +50,7 @@ public class EvolvedCreeperChargeFeatureRenderer extends EnergySwirlOverlayFeatu
 
     @Override
     protected Identifier getEnergySwirlTexture() {
-        return TEX;
+        return TEXTURE;
     }
 
     @Override

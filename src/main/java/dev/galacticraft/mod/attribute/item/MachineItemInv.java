@@ -138,30 +138,14 @@ public class MachineItemInv extends FullFixedItemInv implements Automatable {
         Slot create(MachineBlockEntity machineBlockEntity, int index, PlayerEntity player);
     }
 
-    private static class DefaultSlotFunction implements SlotFunction {
-        private final int x;
-        private final int y;
-
-        private DefaultSlotFunction(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
+    private record DefaultSlotFunction(int x, int y) implements SlotFunction {
         @Override
         public Slot create(MachineBlockEntity machineBlockEntity, int index, PlayerEntity player) {
             return new AutoFilteredSlot(machineBlockEntity, index, this.x, this.y);
         }
     }
 
-    public static class OutputSlotFunction implements SlotFunction {
-        private final int x;
-        private final int y;
-
-        public OutputSlotFunction(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
+    public record OutputSlotFunction(int x, int y) implements SlotFunction {
         @Override
         public Slot create(MachineBlockEntity machineBlockEntity, int index, PlayerEntity player) {
             return new OutputSlot(machineBlockEntity.getWrappedInventory(), index, this.x, this.y);

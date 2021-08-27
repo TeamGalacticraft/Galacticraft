@@ -1,0 +1,13 @@
+{
+  "type": "smithing",
+  "base": {
+    "item": "galacticraft:desh_axe"
+  },
+  "addition": {
+    "item": "galacticraft:compressed_titanium"
+  },
+  "result": {
+    "item": "galacticraft:titanium_axe",
+    "count": 1
+  }
+}

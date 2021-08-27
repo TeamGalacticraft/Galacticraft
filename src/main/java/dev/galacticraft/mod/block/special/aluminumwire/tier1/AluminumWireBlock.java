@@ -24,6 +24,7 @@ package dev.galacticraft.mod.block.special.aluminumwire.tier1;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.WireBlock;
+import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.EnergyUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -33,7 +34,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -56,41 +57,35 @@ public class AluminumWireBlock extends WireBlock {
     private static final VoxelShape UP = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 16, 8 + OFFSET);
     private static final VoxelShape DOWN = createCuboidShape(8 - OFFSET, 0, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
     private static final VoxelShape NONE = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);    // 6x6x6 box in the center.
-    private static final BooleanProperty ATTACHED_NORTH = BooleanProperty.of("attached_north");
-    private static final BooleanProperty ATTACHED_EAST = BooleanProperty.of("attached_east");
-    private static final BooleanProperty ATTACHED_SOUTH = BooleanProperty.of("attached_south");
-    private static final BooleanProperty ATTACHED_WEST = BooleanProperty.of("attached_west");
-    private static final BooleanProperty ATTACHED_UP = BooleanProperty.of("attached_up");
-    private static final BooleanProperty ATTACHED_DOWN = BooleanProperty.of("attached_down");
 
     public AluminumWireBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState()
-                .with(ATTACHED_NORTH, false).with(ATTACHED_EAST, false)
-                .with(ATTACHED_SOUTH, false).with(ATTACHED_WEST, false)
-                .with(ATTACHED_UP, false).with(ATTACHED_DOWN, false));
+                .with(Properties.NORTH, false).with(Properties.EAST, false)
+                .with(Properties.SOUTH, false).with(Properties.WEST, false)
+                .with(Properties.UP, false).with(Properties.DOWN, false));
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
         ArrayList<VoxelShape> shapes = new ArrayList<>();
 
-        if (blockState.get(ATTACHED_NORTH)) {
+        if (blockState.get(Properties.NORTH)) {
             shapes.add(NORTH);
         }
-        if (blockState.get(ATTACHED_SOUTH)) {
+        if (blockState.get(Properties.SOUTH)) {
             shapes.add(SOUTH);
         }
-        if (blockState.get(ATTACHED_EAST)) {
+        if (blockState.get(Properties.EAST)) {
             shapes.add(EAST);
         }
-        if (blockState.get(ATTACHED_WEST)) {
+        if (blockState.get(Properties.WEST)) {
             shapes.add(WEST);
         }
-        if (blockState.get(ATTACHED_UP)) {
+        if (blockState.get(Properties.UP)) {
             shapes.add(UP);
         }
-        if (blockState.get(ATTACHED_DOWN)) {
+        if (blockState.get(Properties.DOWN)) {
             shapes.add(DOWN);
         }
         if (shapes.isEmpty()) {
@@ -105,31 +100,12 @@ public class AluminumWireBlock extends WireBlock {
         BlockState state = this.getDefaultState();
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockState block = context.getWorld().getBlockState(context.getBlockPos().offset(direction));
-            state = state.with(getPropForDirection(direction), !block.isAir() && (block.getBlock() instanceof WireBlock
+            state = state.with(ConnectingBlockUtil.getBooleanProperty(direction), !block.isAir() && (block.getBlock() instanceof WireBlock
                     || EnergyUtil.canAccessEnergy(context.getWorld(), context.getBlockPos().offset(direction), direction)));
 
         }
 
         return state;
-    }
-
-    private BooleanProperty getPropForDirection(Direction dir) {
-        switch (dir) {
-            case SOUTH:
-                return ATTACHED_SOUTH;
-            case EAST:
-                return ATTACHED_EAST;
-            case WEST:
-                return ATTACHED_WEST;
-            case NORTH:
-                return ATTACHED_NORTH;
-            case UP:
-                return ATTACHED_UP;
-            case DOWN:
-                return ATTACHED_DOWN;
-            default:
-                throw new IllegalArgumentException("cannot be null");
-        }
     }
 
     @Override
@@ -138,7 +114,7 @@ public class AluminumWireBlock extends WireBlock {
         BlockState neighbor = world.getBlockState(fromPos);
         Direction dir = Direction.fromVector(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
         assert dir != null;
-        world.setBlockState(pos, state.with(getPropForDirection(dir), !neighbor.isAir() && block instanceof WireBlock
+        world.setBlockState(pos, state.with(ConnectingBlockUtil.getBooleanProperty(dir), !neighbor.isAir() && block instanceof WireBlock
                 || EnergyUtil.canAccessEnergy(world, fromPos, dir)
         ));
     }
@@ -146,7 +122,7 @@ public class AluminumWireBlock extends WireBlock {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(ATTACHED_NORTH, ATTACHED_EAST, ATTACHED_SOUTH, ATTACHED_WEST, ATTACHED_UP, ATTACHED_DOWN);
+        builder.add(Properties.NORTH, Properties.EAST, Properties.SOUTH, Properties.WEST, Properties.UP, Properties.DOWN);
     }
 
     @Override

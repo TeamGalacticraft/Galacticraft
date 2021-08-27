@@ -55,14 +55,16 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
    private final ItemStack output;
    private final Identifier id;
    private final String group;
+   private final int time;
 
-   public ShapedCompressingRecipe(Identifier id, String group, int width, int height, DefaultedList<Ingredient> ingredients, ItemStack output) {
+   public ShapedCompressingRecipe(Identifier id, String group, int width, int height, DefaultedList<Ingredient> ingredients, ItemStack output, int time) {
       this.id = id;
       this.group = group;
       this.width = width;
       this.height = height;
       this.inputs = ingredients;
       this.output = output;
+      this.time = time;
    }
 
    @Override
@@ -87,7 +89,7 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
    }
 
    @Override
-   public DefaultedList<Ingredient> getPreviewInputs() {
+   public DefaultedList<Ingredient> getIngredients() {
       return this.inputs;
    }
 
@@ -285,19 +287,25 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
       }
    }
 
+   @Override
+   public int getTime() {
+      return this.time;
+   }
+
    public enum Serializer implements RecipeSerializer<ShapedCompressingRecipe> {
       INSTANCE;
 
       @Override
       public ShapedCompressingRecipe read(Identifier id, JsonObject object) {
          String string = JsonHelper.getString(object, "group", "");
+         int time = JsonHelper.getInt(object, "time", 200);
          Map<String, Ingredient> map = ShapedCompressingRecipe.getComponents(JsonHelper.getObject(object, "key"));
          String[] pattern = ShapedCompressingRecipe.combinePattern(ShapedCompressingRecipe.getPattern(JsonHelper.getArray(object, "pattern")));
          int width = pattern[0].length();
          int height = pattern.length;
          DefaultedList<Ingredient> defaultedList = ShapedCompressingRecipe.getIngredients(pattern, map, width, height);
          ItemStack itemStack = ShapedCompressingRecipe.getItemStack(JsonHelper.getObject(object, "result"));
-         return new ShapedCompressingRecipe(id, string, width, height, defaultedList, itemStack);
+         return new ShapedCompressingRecipe(id, string, width, height, defaultedList, itemStack, time);
       }
 
       @Override
@@ -305,6 +313,7 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
          int width = buf.readVarInt();
          int height = buf.readVarInt();
          String string = buf.readString(Constant.Misc.MAX_STRING_READ);
+         int time = buf.readInt();
          DefaultedList<Ingredient> ingredients = DefaultedList.ofSize(width * height, Ingredient.EMPTY);
 
          for(int k = 0; k < ingredients.size(); ++k) {
@@ -312,7 +321,7 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
          }
 
          ItemStack output = buf.readItemStack();
-         return new ShapedCompressingRecipe(id, string, width, height, ingredients, output);
+         return new ShapedCompressingRecipe(id, string, width, height, ingredients, output, time);
       }
 
       @Override
@@ -320,6 +329,7 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
          buf.writeVarInt(recipe.width);
          buf.writeVarInt(recipe.height);
          buf.writeString(recipe.group);
+         buf.writeInt(recipe.time);
 
          for (Ingredient ingredient : recipe.inputs) {
             ingredient.write(buf);

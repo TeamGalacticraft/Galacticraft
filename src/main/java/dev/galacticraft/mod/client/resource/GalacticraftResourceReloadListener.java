@@ -47,7 +47,6 @@ import java.util.function.Function;
  */
 @Environment(EnvType.CLIENT)
 public class GalacticraftResourceReloadListener implements SimpleSynchronousResourceReloadListener {
-
     @Override
     public Identifier getFabricId() {
         return new Identifier(Constant.MOD_ID, "resource_reload_listener");
@@ -59,7 +58,7 @@ public class GalacticraftResourceReloadListener implements SimpleSynchronousReso
     }
 
     @Override
-    public void apply(ResourceManager resourceManager) {
+    public void reload(ResourceManager resourceManager) {
         Function<Identifier, Sprite> atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
         MachineBakedModel.setSpriteAtlas(atlas);
         FluidRenderHandler oil = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constant.MOD_ID, "block/crude_oil_still")), atlas.apply(new Identifier(Constant.MOD_ID, "block/crude_oil_flowing"))};
