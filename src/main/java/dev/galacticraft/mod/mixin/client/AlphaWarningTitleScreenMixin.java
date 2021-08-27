@@ -91,7 +91,7 @@ public abstract class AlphaWarningTitleScreenMixin extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE && !warningHidden) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             warningHidden = true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
