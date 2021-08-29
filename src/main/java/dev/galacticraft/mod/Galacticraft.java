@@ -22,14 +22,13 @@
 
 package dev.galacticraft.mod;
 
-import com.mojang.serialization.Lifecycle;
-import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.mod.api.config.ConfigManager;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.command.GalacticraftCommand;
 import dev.galacticraft.mod.config.ConfigManagerImpl;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
+import dev.galacticraft.mod.entity.data.GalacticraftTrackedDataHandler;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.log.GalacticraftPrependingMessageFactory;
@@ -54,11 +53,6 @@ import dev.galacticraft.mod.world.gen.surfacebuilder.GalacticraftSurfaceBuilder;
 import dev.galacticraft.mod.world.poi.GalacticraftPointOfInterestType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.util.registry.SimpleRegistry;
-import net.minecraft.village.VillagerProfession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -66,8 +60,6 @@ import org.apache.logging.log4j.Logger;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class Galacticraft implements ModInitializer {
-    public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constant.MOD_ID, "moon_villager_profession")), Lifecycle.stable());
-
     public static final Logger LOGGER = LogManager.getLogger("Galacticraft", new GalacticraftPrependingMessageFactory());
 
     public static final ConfigManager CONFIG_MANAGER = new ConfigManagerImpl();
@@ -82,8 +74,10 @@ public class Galacticraft implements ModInitializer {
         GalacticraftItem.register();
         GalacticraftTag.register();
         GalacticraftRecipe.register();
+        GalacticraftTrackedDataHandler.register();
         GalacticraftEntityType.register();
         GalacticraftLootTable.register();
+        GalacticraftGas.register();
         GalacticraftStructure.register();
         GalacticraftFeature.register();
         GalacticraftSurfaceBuilder.register();
@@ -99,9 +93,6 @@ public class Galacticraft implements ModInitializer {
         GalacticraftPointOfInterestType.register();
         MoonVillagerType.register();
         GalacticraftVillagerProfession.register();
-
-        Registry.register(AddonRegistry.ATMOSPHERIC_GAS, new Identifier(Constant.MOD_ID, "hydrogen_deuterium_oxygen"), GalacticraftGas.HYDROGEN_DEUTERIUM_OXYGEN);
-        Registry.register(AddonRegistry.ATMOSPHERIC_GAS, new Identifier(Constant.MOD_ID, "nitrogen_oxide"), GalacticraftGas.NITROGEN_OXIDE);
 
         if (FabricLoader.getInstance().isModLoaded("bannerpp")) {
             GalacticraftBannerPattern.register();

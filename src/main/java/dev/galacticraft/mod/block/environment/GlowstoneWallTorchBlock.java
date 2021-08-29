@@ -43,7 +43,6 @@ import java.util.Random;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GlowstoneWallTorchBlock extends WallTorchBlock {
-
     public GlowstoneWallTorchBlock(Settings settings) {
         super(settings, null);
     }

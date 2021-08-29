@@ -38,7 +38,6 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class UnlitLanternBlock extends LanternBlock {
-
     public UnlitLanternBlock(Settings settings) {
         super(settings);
     }

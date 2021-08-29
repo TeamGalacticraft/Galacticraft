@@ -24,6 +24,7 @@ package dev.galacticraft.mod.block;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidBlock;
+import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.block.decoration.GratingBlock;
 import dev.galacticraft.mod.block.decoration.LightPanelBlock;
 import dev.galacticraft.mod.block.decoration.LunarCartographyTableBlock;
@@ -186,9 +187,9 @@ public class GalacticraftBlock {
     public static final Block LUNAR_CARTOGRAPHY_TABLE = registerBlock(new LunarCartographyTableBlock(FabricBlockSettings.of(Material.WOOD).strength(2.5F).sounds(BlockSoundGroup.WOOD)), Constant.Block.LUNAR_CARTOGRAPHY_TABLE);
 
     // MISC WORLD GEN
-    public static final Block CAVERNOUS_VINE = registerBlock(new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MapColor.GREEN).dropsNothing().noCollision().lightLevel(0).sounds(BlockSoundGroup.GRASS).ticksRandomly()), Constant.Block.CAVERNOUS_VINE);
-    public static final Block POISONOUS_CAVERNOUS_VINE = registerBlock(new PoisonousCavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MapColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.GRASS).ticksRandomly()), Constant.Block.POISONOUS_CAVERNOUS_VINE);
-    public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MapColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly()), Constant.Block.MOON_BERRY_BUSH);
+    public static final Block CAVERNOUS_VINE = registerBlock(new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MapColor.GREEN).dropsNothing().noCollision().luminance(0).sounds(BlockSoundGroup.GRASS).ticksRandomly()), Constant.Block.CAVERNOUS_VINE);
+    public static final Block POISONOUS_CAVERNOUS_VINE = registerBlock(new PoisonousCavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MapColor.GREEN).dropsNothing().noCollision().luminance(3).sounds(BlockSoundGroup.GRASS).ticksRandomly()), Constant.Block.POISONOUS_CAVERNOUS_VINE);
+    public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MapColor.GREEN).dropsNothing().noCollision().luminance(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly()), Constant.Block.MOON_BERRY_BUSH);
     public static final Block MOON_CHEESE_LEAVES = registerBlock(new LeavesBlock(FabricBlockSettings.of(Material.LEAVES).strength(0.2F, 0.2F).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque()), Constant.Block.MOON_CHEESE_LEAVES);
     public static final Block MOON_CHEESE_LOG = registerBlock(new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MapColor.YELLOW).strength(2.0F).sounds(BlockSoundGroup.WOOD)), Constant.Block.MOON_CHEESE_LOG);
 
@@ -199,7 +200,7 @@ public class GalacticraftBlock {
     public static final Block CIRCUIT_FABRICATOR = registerMachine(SimpleMachineBlock.create(CircuitFabricatorBlockEntity::new, "tooltip.galacticraft.circuit_fabricator"), Constant.Block.CIRCUIT_FABRICATOR);
     public static final Block COMPRESSOR = registerMachine(SimpleMachineBlock.create(CompressorBlockEntity::new, "tooltip.galacticraft.compressor"), Constant.Block.COMPRESSOR);
     public static final Block ELECTRIC_COMPRESSOR = registerMachine(SimpleMachineBlock.create(ElectricCompressorBlockEntity::new,"tooltip.galacticraft.electric_compressor"), Constant.Block.ELECTRIC_COMPRESSOR);
-    public static final Block COAL_GENERATOR = registerMachine(new CoalGeneratorBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS).luminance(state -> state.get(Constant.Property.ACTIVE) ? 13 : 0)), Constant.Block.COAL_GENERATOR);
+    public static final Block COAL_GENERATOR = registerMachine(new CoalGeneratorBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS).luminance(state -> state.get(MachineBlock.ACTIVE) ? 13 : 0)), Constant.Block.COAL_GENERATOR);
     public static final Block BASIC_SOLAR_PANEL = registerMachine(SimpleMultiBlockMachineBlock.create(BasicSolarPanelBlockEntity::new, MultiBlockUtil.generateSolarPanelParts(), GalacticraftBlock.SOLAR_PANEL_PART, "tooltip.galacticraft.basic_solar_panel"), Constant.Block.BASIC_SOLAR_PANEL);
     public static final Block ADVANCED_SOLAR_PANEL = registerMachine(SimpleMultiBlockMachineBlock.create(AdvancedSolarPanelBlockEntity::new, MultiBlockUtil.generateSolarPanelParts(), GalacticraftBlock.SOLAR_PANEL_PART, "tooltip.galacticraft.advanced_solar_panel"), Constant.Block.ADVANCED_SOLAR_PANEL);
     public static final Block ENERGY_STORAGE_MODULE = registerMachine(SimpleMachineBlock.create(EnergyStorageModuleBlockEntity::new, "tooltip.galacticraft.energy_storage_module"), Constant.Block.ENERGY_STORAGE_MODULE);

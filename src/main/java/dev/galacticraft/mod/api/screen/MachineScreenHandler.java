@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.api.screen;
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.screen.property.CapacitorProperty;
 import dev.galacticraft.mod.screen.property.FluidTankPropertyDelegate;
@@ -39,22 +40,22 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public abstract class MachineScreenHandler<T extends MachineBlockEntity> extends ScreenHandler {
+public abstract class MachineScreenHandler<M extends MachineBlockEntity> extends ScreenHandler {
     public final PlayerEntity player;
-    public final T machine;
+    public final M machine;
 
     public final List<Tank> tanks = new ArrayList<>();
 
-    protected MachineScreenHandler(int syncId, PlayerEntity player, T machine, ScreenHandlerType<? extends MachineScreenHandler<T>> handlerType) {
+    protected MachineScreenHandler(int syncId, PlayerEntity player, M machine, ScreenHandlerType<? extends MachineScreenHandler<M>> handlerType) {
         super(handlerType, syncId);
         this.player = player;
         this.machine = machine;
         this.machine.itemInv().createSlots(this);
         this.machine.fluidInv().createTanks(this);
-        this.addProperties(new FluidTankPropertyDelegate(machine.fluidInv()));
 
+        if (machine.fluidInvCapacity().isGreaterThan(FluidAmount.ZERO)) this.addProperties(new FluidTankPropertyDelegate(machine.fluidInv()));
+        if (machine.getEnergyCapacity() > 0) this.addProperty(new CapacitorProperty(machine.capacitor()));
         this.addProperty(new StatusProperty(machine));
-        this.addProperty(new CapacitorProperty(machine.capacitor()));
     }
 
     @Override
@@ -62,7 +63,7 @@ public abstract class MachineScreenHandler<T extends MachineBlockEntity> extends
         ItemStack stack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotId);
 
-        if (slot != null && slot.hasStack()) {
+        if (slot.hasStack()) {
             ItemStack stack1 = slot.getStack();
             stack = stack1.copy();
 
@@ -89,12 +90,12 @@ public abstract class MachineScreenHandler<T extends MachineBlockEntity> extends
     protected void addPlayerInventorySlots(int x, int y) {
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                super.addSlot(new Slot(this.player.getInventory(), j + i * 9 + 9, x + 8 + j * 18, y + i * 18));
+                super.addSlot(new Slot(this.player.getInventory(), j + i * 9 + 9, x + j * 18, y + i * 18));
             }
         }
 
         for (int i = 0; i < 9; ++i) {
-            super.addSlot(new Slot(this.player.getInventory(), i, x + 8 + i * 18, y + 58));
+            super.addSlot(new Slot(this.player.getInventory(), i, x + i * 18, y + 58));
         }
     }
 

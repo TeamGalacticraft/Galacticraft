@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.village;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.structure.GalacticraftStructure;
 import dev.galacticraft.mod.world.poi.GalacticraftPointOfInterestType;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
@@ -42,9 +41,7 @@ public class GalacticraftVillagerProfession {
     public static final VillagerProfession LUNAR_CARTOGRAPHER = VillagerProfessionBuilder.create().id(new Identifier(Constant.MOD_ID, "lunar_cartographer")).workstation(GalacticraftPointOfInterestType.LUNAR_CARTOGRAPHER).workSound(SoundEvents.ENTITY_VILLAGER_WORK_CARTOGRAPHER).build();
 
     public static void register() {
-        Registry.register(Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY, new Identifier("none"), VillagerProfession.NONE);
-        Registry.register(Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY, new Identifier("nitwit"), VillagerProfession.NITWIT);
-        Registry.register(Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY, new Identifier(Constant.MOD_ID, "lunar_cartographer"), LUNAR_CARTOGRAPHER);
+        Registry.register(Registry.VILLAGER_PROFESSION, new Identifier(Constant.MOD_ID, "lunar_cartographer"), LUNAR_CARTOGRAPHER);
 
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 1, factories -> {
             factories.add(new GalacticraftTradeOffer.BuyForOneEmeraldFactory(Items.PAPER, 24, 16, 2));

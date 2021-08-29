@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.item;
 
+import com.google.common.base.Suppliers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.EquipmentSlot;
@@ -29,7 +30,6 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Lazy;
 
 import java.util.function.Supplier;
 
@@ -81,7 +81,7 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
     private final int enchantability;
     private final SoundEvent equipSound;
     private final float toughness;
-    private final Lazy<Ingredient> repairIngredient;
+    private final Supplier<Ingredient> repairIngredient;
     private final float knockbackResistance;
 
     GalacticraftArmorMaterial(String name, int durabilityMultiplier, int[] protectionValues, int enchantability, SoundEvent equipSound, float toughness, Supplier<Ingredient> repairIngredient, float knockbackResistance) {
@@ -91,7 +91,7 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
         this.enchantability = enchantability;
         this.equipSound = equipSound;
         this.toughness = toughness;
-        this.repairIngredient = new Lazy<>(repairIngredient);
+        this.repairIngredient = Suppliers.memoize(repairIngredient::get);
         this.knockbackResistance = knockbackResistance;
     }
 

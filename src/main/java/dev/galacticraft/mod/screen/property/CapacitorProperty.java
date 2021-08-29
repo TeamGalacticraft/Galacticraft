@@ -35,10 +35,6 @@ public class CapacitorProperty extends Property {
         this.capacitor = capacitor;
     }
 
-    public Capacitor getCapacitor() {
-        return capacitor;
-    }
-
     @Override
     public int get() {
         return this.capacitor.getEnergy();

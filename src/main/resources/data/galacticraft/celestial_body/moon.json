@@ -7,7 +7,8 @@
       "type": "galacticraft-api:orbital",
       "config": {
         "orbit_time": 655200,
-        "distance": 1,
+        "distance": 20.0,
+        "phase_shift": 0.2667,
         "planet": false
       }
     },
@@ -21,14 +22,16 @@
     },
     "gravity": 0.166,
     "access_weight": 1,
+    "day_temperature": 105,
+    "night_temperature": -180,
     "display": {
-      "type": "galacticraft-api:static_icon",
+      "type": "galacticraft-api:icon",
       "config": {
-        "texture": "galacticraft:moon",
+        "texture": "galacticraft:textures/gui/celestialbody/moon.png",
         "u": 0,
         "v": 0,
-        "width": 16,
-        "height": 16,
+        "width": 8,
+        "height": 8,
         "scale": 1
       }
     }

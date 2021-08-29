@@ -84,6 +84,11 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
         return 0;
     }
 
+    @Override
+    protected void tickDisabled() {
+
+    }
+
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {

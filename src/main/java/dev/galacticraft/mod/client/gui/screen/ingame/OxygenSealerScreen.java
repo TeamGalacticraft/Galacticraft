@@ -25,31 +25,19 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenSealerScreen extends MachineHandledScreen<SimpleMachineScreenHandler<OxygenSealerBlockEntity>> {
+public class OxygenSealerScreen extends MachineHandledScreen<OxygenSealerBlockEntity, SimpleMachineScreenHandler<OxygenSealerBlockEntity>> {
     public OxygenSealerScreen(SimpleMachineScreenHandler<OxygenSealerBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.OXYGEN_SEALER_SCREEN);
-        this.backgroundWidth = 176;
-        this.backgroundHeight = 166;
-        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
-    }
-
-    @Override
-    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        super.renderBackground(matrices, delta, mouseX, mouseY);
-        drawCenteredText(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_sealer"), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        super(handler, inv, title, Constant.ScreenTexture.OXYGEN_SEALER_SCREEN);
+        this.addWidget(this.createCapacitorWidget(8, 8, 48));
     }
 }

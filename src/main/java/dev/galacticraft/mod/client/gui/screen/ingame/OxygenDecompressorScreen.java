@@ -25,37 +25,37 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.OxygenDecompressorBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenDecompressorScreen extends MachineHandledScreen<SimpleMachineScreenHandler<OxygenDecompressorBlockEntity>> {
+public class OxygenDecompressorScreen extends MachineHandledScreen<OxygenDecompressorBlockEntity, SimpleMachineScreenHandler<OxygenDecompressorBlockEntity>> {
     public OxygenDecompressorScreen(SimpleMachineScreenHandler<OxygenDecompressorBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title, Constant.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
-        this.backgroundWidth = 176;
-        this.backgroundHeight = 166;
-        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        super(handler, inv, title, Constant.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
+        this.addWidget(this.createCapacitorWidget(8, 8, 48));
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.titleX += 20;
     }
 
     @Override
     protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         super.renderBackground(matrices, delta, mouseX, mouseY);
-        if (handler.machine.getStatus().getType().isActive()) {
+        if (this.machine.getStatus().getType().isActive()) {
             int height = (int) (System.currentTimeMillis() % 2250);
             if (height == 0) height = 1; //prevent dividing by zero
             height /= 125;
             this.drawTexture(matrices, this.x + 82, this.y + 46, 176, 0, 11, height);
         }
-        drawCenteredText(matrices, this.textRenderer, I18n.translate("block.galacticraft.oxygen_decompressor"), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
     }
 }

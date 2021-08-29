@@ -23,16 +23,16 @@
 package dev.galacticraft.mod.mixin.client;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.misc.NullVariant;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.galacticraft.api.registry.RegistryUtil;
+import dev.galacticraft.api.accessor.GearInventoryProvider;
+import dev.galacticraft.api.attribute.GcApiAttributes;
+import dev.galacticraft.api.attribute.oxygen.OxygenTank;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.GearInventoryProvider;
-import dev.galacticraft.mod.attribute.GalacticraftAttribute;
 import dev.galacticraft.mod.attribute.oxygen.InfiniteOxygenTank;
-import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -53,29 +53,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(InGameHud.class)
 @Environment(EnvType.CLIENT)
-public abstract class InGameHudMixin extends DrawableHelper implements DrawableUtil {
+public abstract class InGameHudMixin extends DrawableHelper {
 
-    @Shadow
-    @Final
-    private MinecraftClient client;
+    @Shadow @Final private MinecraftClient client;
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderColor(FFFF)V", ordinal = 1))
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderColor(FFFF)V", ordinal = 1, remap = false))
     private void draw(MatrixStack matrices, float delta, CallbackInfo ci) {
-        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = RegistryUtil.getCelestialBodyByDimension(this.client.world).orElse(null);
-        if (body != null && !body.type().atmosphere(body.config()).breathable()) {
+        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(this.client.world).orElse(null);
+        if (body != null && !body.atmosphere().breathable()) {
             fill(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * 2) - 11, 4, this.client.getWindow().getScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 9, 6 + Constant.TextureCoordinate.OVERLAY_HEIGHT, 0);
             fill(matrices, this.client.getWindow().getScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 6, 4, this.client.getWindow().getScaledWidth() - 4, 6 + Constant.TextureCoordinate.OVERLAY_HEIGHT, 0);
 
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f , 1.0f);
             RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
-            FixedItemInv inv = ((GearInventoryProvider) client.player).getGearInv();
-            OxygenTank tank = GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(inv.getSlot(7));
-            if (client.player.isCreative() && tank.getCapacity() == 0) tank = InfiniteOxygenTank.INSTANCE;
-            this.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 5, 5, this.getZOffset(), tank.getAmount(), tank.getCapacity());
-            tank = GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(inv.getSlot(6));
-            if (client.player.isCreative() && tank.getCapacity() == 0) tank = InfiniteOxygenTank.INSTANCE;
-            this.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * 2) - 10, 5, this.getZOffset(), tank.getAmount(), tank.getCapacity());
+            assert this.client.player != null;
+            FixedItemInv inv = ((GearInventoryProvider) this.client.player).getOxygenTanks();
+            for (int i = 0; i < inv.getSlotCount(); i++) {
+                OxygenTank tank = GcApiAttributes.OXYGEN_TANK.getFirst(inv.getSlot(i));
+                if (client.player.isCreative() && tank instanceof NullVariant) tank = InfiniteOxygenTank.INSTANCE;
+                DrawableUtil.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, tank.getAmount(), tank.getCapacity());
+            }
         }
     }
 }

@@ -35,10 +35,9 @@ import net.minecraft.client.world.ClientWorld;
  */
 @Environment(EnvType.CLIENT)
 public class DrippingFuelParticle extends SpriteBillboardParticle {
-
     public DrippingFuelParticle(ClientWorld world, double x, double y, double z, double velX, double velY, double velZ) {
         super(world, x, y, z, velX, velY, velZ);
-        setSprite(MinecraftClient.getInstance().getItemRenderer().getModels().getSprite(Blocks.ACACIA_LOG.asItem()));
+        setSprite(MinecraftClient.getInstance().getItemRenderer().getModels().getModelParticleSprite(Blocks.ACACIA_LOG.asItem()));
         this.scale *= 0.25f;
         this.velocityX = 0.0f;
         this.velocityY = -0.6f;

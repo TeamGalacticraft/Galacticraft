@@ -23,10 +23,8 @@
 package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.block.entity.RefineryBlockEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.text.Text;
@@ -41,8 +39,7 @@ import java.util.Random;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RefineryBlock extends SimpleMachineBlock<RefineryBlockEntity> {
-    private static final Text TOOLTIP_TEXT = new TranslatableText("tooltip.galacticraft.refinery")
-            .setStyle(Constant.Text.DARK_GRAY_STYLE);
+    private static final Text TOOLTIP_TEXT = new TranslatableText("tooltip.galacticraft.refinery").setStyle(Constant.Text.DARK_GRAY_STYLE);
 
     public RefineryBlock(Settings settings) {
         super(settings, RefineryBlockEntity::new, TOOLTIP_TEXT);
@@ -61,8 +58,7 @@ public class RefineryBlock extends SimpleMachineBlock<RefineryBlockEntity> {
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         super.randomDisplayTick(state, world, pos, random);
-        BlockEntity entity = world.getBlockEntity(pos);
-        if (entity instanceof MachineBlockEntity machine && machine.getStatus().getType().isActive()) {
+        if (state.get(ACTIVE)) {
             world.addParticle(ParticleTypes.SMOKE, pos.getX() + random.nextDouble(), pos.getY() + 1, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
         }
     }

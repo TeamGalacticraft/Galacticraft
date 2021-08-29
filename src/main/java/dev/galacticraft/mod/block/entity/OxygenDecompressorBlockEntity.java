@@ -24,13 +24,13 @@ package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import dev.galacticraft.api.attribute.oxygen.EmptyOxygenTank;
+import dev.galacticraft.api.attribute.oxygen.OxygenTank;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.attribute.oxygen.EmptyOxygenTank;
-import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
@@ -89,6 +89,11 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
+    protected void tickDisabled() {
+
+    }
+
+    @Override
     public void updateComponents() {
         super.updateComponents();
         this.attemptChargeFromStack(CHARGE_SLOT);
@@ -109,7 +114,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
             OxygenTank tank = OxygenTankUtil.getOxygenTank(this.itemInv().getSlot(TANK_SLOT));
-            OxygenTankUtil.insertLiquidOxygen(tank, this.fluidInv().insertFluid(0, OxygenTankUtil.extractLiquidOxygen(tank, 1620 / (20 * 5)), Simulation.ACTION));
+            OxygenTankUtil.insertLiquidOxygen(tank, this.fluidInv().insertFluid(0, OxygenTankUtil.extractLiquidOxygen(tank, 1620/* / (20 * 5)*/), Simulation.ACTION));
         }
     }
 

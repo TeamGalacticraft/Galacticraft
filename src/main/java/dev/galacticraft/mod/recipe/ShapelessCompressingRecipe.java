@@ -45,7 +45,7 @@ import net.minecraft.world.World;
  */
 public record ShapelessCompressingRecipe(Identifier id, String group,
                                          ItemStack output,
-                                         DefaultedList<Ingredient> input) implements CompressingRecipe {
+                                         DefaultedList<Ingredient> input, int time) implements CompressingRecipe {
 
    @Override
    public Identifier getId() {
@@ -106,6 +106,7 @@ public record ShapelessCompressingRecipe(Identifier id, String group,
       @Override
       public ShapelessCompressingRecipe read(Identifier identifier, JsonObject jsonObject) {
          String string = JsonHelper.getString(jsonObject, "group", "");
+         int time = JsonHelper.getInt(jsonObject, "time", 200);
          DefaultedList<Ingredient> defaultedList = getIngredients(JsonHelper.getArray(jsonObject, "ingredients"));
          if (defaultedList.isEmpty()) {
             throw new JsonParseException("No ingredients for shapeless recipe");
@@ -113,7 +114,7 @@ public record ShapelessCompressingRecipe(Identifier id, String group,
             throw new JsonParseException("Too many ingredients for shapeless recipe");
          } else {
             ItemStack itemStack = new ItemStack(ShapedRecipe.getItem(JsonHelper.getObject(jsonObject, "result")));
-            return new ShapelessCompressingRecipe(identifier, string, itemStack, defaultedList);
+            return new ShapelessCompressingRecipe(identifier, string, itemStack, defaultedList, time);
          }
       }
 
@@ -133,6 +134,7 @@ public record ShapelessCompressingRecipe(Identifier id, String group,
       @Override
       public ShapelessCompressingRecipe read(Identifier identifier, PacketByteBuf buf) {
          String group = buf.readString(Constant.Misc.MAX_STRING_READ);
+         int time = buf.readInt();
          int size = buf.readVarInt();
          DefaultedList<Ingredient> ingredients = DefaultedList.ofSize(size, Ingredient.EMPTY);
 
@@ -141,12 +143,13 @@ public record ShapelessCompressingRecipe(Identifier id, String group,
          }
 
          ItemStack itemStack = buf.readItemStack();
-         return new ShapelessCompressingRecipe(identifier, group, itemStack, ingredients);
+         return new ShapelessCompressingRecipe(identifier, group, itemStack, ingredients, time);
       }
 
       @Override
       public void write(PacketByteBuf buf, ShapelessCompressingRecipe recipe) {
          buf.writeString(recipe.group);
+         buf.writeInt(recipe.time);
          buf.writeVarInt(recipe.input.size());
 
          for (Ingredient ingredient : recipe.input) {
@@ -155,5 +158,10 @@ public record ShapelessCompressingRecipe(Identifier id, String group,
 
          buf.writeItemStack(recipe.output);
       }
+   }
+
+   @Override
+   public int getTime() {
+      return this.time;
    }
 }

@@ -41,6 +41,8 @@ import net.minecraft.util.math.Direction;
  */
 public interface Constant {
     String MOD_ID = "galacticraft";
+    String ADDON_API_ID = "galacticraft-api";
+    String COMMON_NAMESPACE = "c";
 
     interface Block {
         String ITEM_GROUP_BLOCKS = "blocks";
@@ -385,7 +387,6 @@ public interface Constant {
         String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
         String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";
 
-        String MOON_VILLAGER_SPAWN_EGG = "moon_villager_spawn_egg";
         String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
         String EVOLVED_PILLAGER_SPAWN_EGG = "evolved_pillager_spawn_egg";
         String EVOLVED_VINDICATOR_SPAWN_EGG = "evolved_vindicator_spawn_egg";
@@ -431,6 +432,10 @@ public interface Constant {
         String ENERGY_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_size";
         String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_compressor_energy_consumption_rate";
         String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
+
+        String CLIENT = "config.galacticraft.client";
+        String SKYBOX = "config.galacticraft.client.skybox";
+        String MULTICOLOR_STARS = "config.galacticraft.client.skybox.multicolor_stars";
     }
 
     interface ScreenTexture {
@@ -470,7 +475,6 @@ public interface Constant {
     }
 
     interface Entity {
-        String MOON_VILLAGER = "moon_villager";
         String EVOLVED_ZOMBIE = "evolved_zombie";
         String EVOLVED_CREEPER = "evolved_creeper";
         String T1_ROCKET = "t1_rocket";
@@ -640,6 +644,7 @@ public interface Constant {
         String MAX_SIZE = "MaxSize";
         String GC_DATA = "GCData";
         String FUEL_TIME = "FuelTime";
+        String FUEL_LENGTH = "FuelLength";
         String TEAM = "Team";
         String ACCESSIBILITY = "Accessibility";
         String SECURITY = "Security";
@@ -656,6 +661,7 @@ public interface Constant {
         String REDSTONE_INTERACTION_TYPE = "RedstoneInteraction";
         String MATCH = "Match";
         String INTEGER = "Integer";
+        String MAX_PROGRESS = "MaxProgress";
     }
 
     interface Property {

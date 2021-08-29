@@ -71,6 +71,7 @@ public interface WireNetwork {
     int insert(@NotNull BlockPos fromWire, /*Positive*/ int amount, @NotNull Simulation simulate);
 
     Collection<BlockPos> getAllWires();
+
     Map<BlockPos, EnergyInsertable> getInsertable();
 
     boolean markedForRemoval();

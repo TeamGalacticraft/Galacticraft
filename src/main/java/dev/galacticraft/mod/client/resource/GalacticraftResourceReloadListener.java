@@ -49,7 +49,6 @@ import java.util.function.Function;
  */
 @Environment(EnvType.CLIENT)
 public class GalacticraftResourceReloadListener implements SimpleSynchronousResourceReloadListener {
-
     @Override
     public Identifier getFabricId() {
         return new Identifier(Constant.MOD_ID, "resource_reload_listener");

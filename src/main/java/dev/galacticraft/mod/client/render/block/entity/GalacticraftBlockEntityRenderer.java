@@ -23,15 +23,14 @@
 package dev.galacticraft.mod.client.render.block.entity;
 
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
-
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftBlockEntityRenderer {
     public static void register() {
-        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntityType.BASIC_SOLAR_PANEL, BasicSolarPanelBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntityType.ADVANCED_SOLAR_PANEL, AdvancedSolarPanelBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntityType.GLASS_FLUID_PIPE, FluidPipeBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(GalacticraftBlockEntityType.BASIC_SOLAR_PANEL, BasicSolarPanelBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(GalacticraftBlockEntityType.ADVANCED_SOLAR_PANEL, AdvancedSolarPanelBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(GalacticraftBlockEntityType.GLASS_FLUID_PIPE, FluidPipeBlockEntityRenderer::new);
     }
 }

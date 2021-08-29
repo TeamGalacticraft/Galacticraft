@@ -22,32 +22,13 @@
 
 package dev.galacticraft.mod.item;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.FixedItemInv;
-import dev.galacticraft.mod.accessor.GearInventoryProvider;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import dev.galacticraft.api.item.OxygenGear;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenGearItem extends Item {
+public class OxygenGearItem extends AccessoryItem implements OxygenGear {
     public OxygenGearItem(Settings settings) {
         super(settings);
-    }
-
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        FixedItemInv inv = ((GearInventoryProvider)player).getGearInv();
-        if (inv.getInvStack(5).isEmpty()) {
-            inv.setInvStack(5, player.getStackInHand(hand), Simulation.ACTION);
-            return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
-        }
-        return super.use(world, player, hand);
     }
 }

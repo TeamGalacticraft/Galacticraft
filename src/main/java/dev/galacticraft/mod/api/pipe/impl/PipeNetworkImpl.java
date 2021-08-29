@@ -113,7 +113,7 @@ public class PipeNetworkImpl implements PipeNetwork {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockPos pos1 = pos.offset(direction);
             if (this.pipes.contains(pos1)) {
-                if (((Pipe) this.world.getBlockEntity(pos1)).canConnect(direction.getOpposite())) list.add(pos1); //dont bother testing if it was unable to connect
+                if (((Pipe) this.world.getBlockEntity(pos1)).canConnect(direction.getOpposite())) list.add(pos1); // Don't bother testing if it was unable to connect
             }
         }
         List<List<BlockPos>> mappedPipes = new LinkedList<>();

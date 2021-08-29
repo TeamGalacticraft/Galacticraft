@@ -22,19 +22,17 @@
 
 package dev.galacticraft.mod.api.entry;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.util.math.Position;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EarthReentryPathfinder {
-
     private final Position landingPosition;
     private final Position startingPosition;
-    private final Map<Integer, Position> points = new HashMap<>();
+    private final Int2ObjectMap<Position> points = new Int2ObjectArrayMap<>();
 
     public EarthReentryPathfinder(Position landingPosition, Position startingPosition) {
         this.landingPosition = landingPosition;

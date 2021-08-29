@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.block.special.walkway;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.FluidLoggableBlock;
+import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.EnergyUtil;
@@ -49,7 +49,7 @@ import net.minecraft.world.WorldAccess;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class WireWalkway extends WireBlock implements FluidLoggableBlock {
+public class WireWalkway extends WireBlock implements FluidLoggable {
     public static final DirectionProperty FACING = Properties.FACING;
     private static final VoxelShape[] shape = new VoxelShape[64];
 
@@ -63,7 +63,7 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
                 .with(Properties.UP, false)
                 .with(Properties.DOWN, false)
                 .with(FACING, Direction.UP)
-                .with(FLUID, Constant.Misc.EMPTY)
+                .with(FLUID, INVALID)
                 .with(FlowableFluid.LEVEL, 8));
     }
 
@@ -129,8 +129,9 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
                 .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
     }
 
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-           if (!state.get(FLUID).equals(Constant.Misc.EMPTY)) {
+           if (!this.isEmpty(state)) {
             world.getFluidTickScheduler().schedule(pos, Registry.FLUID.get(state.get(FLUID)), Registry.FLUID.get(state.get(FLUID)).getTickRate(world));
         }
         return state.with(ConnectingBlockUtil.getBooleanProperty(facing), this.canConnect(state, neighborState, pos, neighborPos, world, facing));

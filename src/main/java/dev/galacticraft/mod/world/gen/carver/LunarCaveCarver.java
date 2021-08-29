@@ -23,24 +23,34 @@
 package dev.galacticraft.mod.world.gen.carver;
 
 import com.google.common.collect.ImmutableSet;
+import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.carver.CarverConfig;
 import net.minecraft.world.gen.carver.CarverContext;
 import net.minecraft.world.gen.carver.CaveCarver;
 import net.minecraft.world.gen.carver.CaveCarverConfig;
 import net.minecraft.world.gen.chunk.AquiferSampler;
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.BitSet;
 import java.util.Random;
+import java.util.function.Function;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class LunarCaveCarver extends CaveCarver {
-    public LunarCaveCarver() {
-        super(CaveCarverConfig.CAVE_CODEC);
+    public LunarCaveCarver(Codec<CaveCarverConfig> codec) {
+        super(codec);
         this.alwaysCarvableBlocks = ImmutableSet.<Block>builder().addAll(this.alwaysCarvableBlocks)
                 .add(GalacticraftBlock.MOON_ROCKS[0])
                 .add(GalacticraftBlock.MOON_SURFACE_ROCK)
@@ -52,7 +62,7 @@ public class LunarCaveCarver extends CaveCarver {
 
     @Override
     protected int getMaxCaveCount() {
-        return 17; //slightly longer caves
+        return 13;
     }
 
     @Override
@@ -64,19 +74,58 @@ public class LunarCaveCarver extends CaveCarver {
         return f;
     }
 
-    @Nullable
-    private BlockState getState(CarverContext context, CaveCarverConfig config, BlockPos pos, AquiferSampler sampler) {
-        if (pos.getY() <= config.lavaLevel.getY(context)) {
-            return /*LAVA.getBlockState()*/null;
-        } else/* if (!config.aquifers)*/ {
-            return AIR;
-        }/* else {
-            BlockState blockState = sampler.apply(STONE_SOURCE, pos.getX(), pos.getY(), pos.getZ(), 0.0D);
-            if (blockState == Blocks.STONE.getDefaultState()) {
-                return null;
+    @Override
+    protected boolean carveAtPoint(CarverContext context, CaveCarverConfig config, Chunk chunk, Function<BlockPos, Biome> posToBiome, BitSet carvingMask, Random random, BlockPos.Mutable pos, BlockPos.Mutable downPos, AquiferSampler sampler, MutableBoolean foundSurface) {
+        BlockState blockState = chunk.getBlockState(pos);
+        BlockState blockState2 = chunk.getBlockState(downPos.set(pos, Direction.UP));
+        if (blockState.isOf(GalacticraftBlock.MOON_TURF) || blockState.isOf(GalacticraftBlock.MOON_SURFACE_ROCK)) {
+            foundSurface.setTrue();
+        }
+
+        if (!this.canCarveBlock(blockState, blockState2) && !config.debugConfig.isDebugMode()) {
+            return false;
+        } else {
+            BlockState blockState3 = this.getState(context, config, pos, sampler);
+            if (blockState3 == null) {
+                return false;
             } else {
-                return blockState;
+                chunk.setBlockState(pos, blockState3, false);
+                if (foundSurface.isTrue()) {
+                    downPos.set(pos, Direction.DOWN);
+                    if (chunk.getBlockState(downPos).isOf(GalacticraftBlock.MOON_DIRT)) {
+                        chunk.setBlockState(downPos, posToBiome.apply(pos).getGenerationSettings().getSurfaceConfig().getTopMaterial(), false);
+                    }
+                }
+
+                return true;
             }
-        }*/
+        }
+    }
+    
+    @Nullable
+    private BlockState getState(CarverContext context, CarverConfig config, BlockPos pos, AquiferSampler sampler) {
+        if (pos.getY() <= config.lavaLevel.getY(context)) {
+            return CAVE_AIR;
+        } else if (!config.aquifers) {
+            return config.debugConfig.isDebugMode() ? getDebugState(config, AIR) : AIR;
+        } else {
+            BlockState blockState = sampler.apply(STONE_SOURCE, pos.getX(), pos.getY(), pos.getZ(), 0.0D);
+            if (blockState == GalacticraftBlock.MOON_ROCKS[0].getDefaultState()) {
+                return config.debugConfig.isDebugMode() ? config.debugConfig.getBarrierState() : null;
+            } else {
+                return config.debugConfig.isDebugMode() ? getDebugState(config, blockState) : blockState;
+            }
+        }
+    }
+
+    private static BlockState getDebugState(CarverConfig config, BlockState state) {
+        if (state.isOf(Blocks.AIR)) {
+            return config.debugConfig.getAirState();
+        } else if (state.isOf(Blocks.WATER)) {
+            BlockState blockState = config.debugConfig.getWaterState();
+            return blockState.contains(Properties.WATERLOGGED) ? blockState.with(Properties.WATERLOGGED, true) : blockState;
+        } else {
+            return state.isOf(Blocks.LAVA) ? config.debugConfig.getLavaState() : state;
+        }
     }
 }

@@ -32,7 +32,6 @@ import net.minecraft.state.property.Properties;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class AbstractDirectionalBlock extends Block {
-
     public static final DirectionProperty FACING = Properties.FACING;
 
     public AbstractDirectionalBlock(Settings settings) {

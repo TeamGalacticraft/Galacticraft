@@ -42,7 +42,7 @@ public class SimpleMachineScreenHandlerFactory<B extends MachineBlockEntity, T e
     }
 
     public static <B extends MachineBlockEntity, T extends MachineScreenHandler<B>> SimpleMachineScreenHandlerFactory<B, T> create(Supplier<ScreenHandlerType<T>> type, int invY) {
-        return create(type, 0, invY);
+        return create(type, 8, invY);
     }
 
     public static <B extends MachineBlockEntity, T extends MachineScreenHandler<B>> SimpleMachineScreenHandlerFactory<B, T> create(Supplier<ScreenHandlerType<T>> type) {

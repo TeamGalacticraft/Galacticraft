@@ -34,6 +34,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,6 +47,11 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
 
     public EnergyStorageModuleBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE, pos, state);
+    }
+
+    @Override
+    public void setWorld(World world) {
+        super.setWorld(world);
         this.setStatus(MachineStatus.NULL);
     }
 
@@ -79,6 +85,11 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     @Override
     protected int getBatteryTransferRate() {
         return 100;
+    }
+
+    @Override
+    protected void tickDisabled() {
+
     }
 
     @Override
