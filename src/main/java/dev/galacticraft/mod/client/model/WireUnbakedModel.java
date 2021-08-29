@@ -54,8 +54,7 @@ public class WireUnbakedModel implements UnbakedModel {
     }
 
     @Override
-    public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-        if (WireBakedModel.getInstance() == null) WireBakedModel.setInstance(textureGetter);
-        return WireBakedModel.getInstance();
+    public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> spriteFunction, ModelBakeSettings rotationContainer, Identifier modelId) {
+        return WireBakedModel.getInstance(spriteFunction);
     }
 }

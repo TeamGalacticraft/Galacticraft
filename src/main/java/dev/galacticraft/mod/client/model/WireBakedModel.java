@@ -76,41 +76,41 @@ public class WireBakedModel implements FabricBakedModel, BakedModel {
         this.sprite = textureGetter.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, ALUMINUM_WIRE));
         MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
         QuadEmitter emitter = meshBuilder.getEmitter();
-        emitter.square(Direction.DOWN, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).sprite(0, 0, 12 / 16f, 0.0f).sprite(1, 0, 1.0f, 0.0f).sprite(2, 0, 1.0f, 4 / 16f).sprite(3, 0, 12 / 16.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).cullFace(Direction.DOWN).emit();
-        emitter.square(Direction.WEST, 0.6f, 0.6f, 0.4f, 0.0f, 0.4f).sprite(0, 0, 0.0f, 0.0f).sprite(1, 0, 11 / 16f, 0.0f).sprite(2, 0, 11 / 16f, 4 / 16f).sprite(3, 0, 0.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.EAST, 0.6f, 0.4f, 0.4f, 0.0f, 0.4f).sprite(0, 0, 0.0f, 4 / 16f).sprite(1, 0, 11 / 16f, 4 / 16f).sprite(2, 0, 11 / 16f, 8 / 16f).sprite(3, 0, 0.0f, 8 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.SOUTH, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).sprite(0, 0, 0.0f, 8 / 16f).sprite(1, 0, 11 / 16f, 8 / 16f).sprite(2, 0, 11 / 16f, 12 / 16f).sprite(3, 0, 0.0f, 12 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.NORTH, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).sprite(0, 0, 0.0f, 12 / 16f).sprite(1, 0, 11 / 16f, 12 / 16f).sprite(2, 0, 11 / 16f, 1.0f).sprite(3, 0, 0.0f, 1.0f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
+        emitter.square(Direction.DOWN, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).cullFace(Direction.DOWN).spriteColor(0, -1, -1, -1, -1).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.WEST, 0.6f, 0.6f, 0.4f, 0.0f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 0).sprite(1, 0, 11, 0).sprite(2, 0, 11, 4).sprite(3, 0, 0, 4).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.EAST, 0.6f, 0.4f, 0.4f, 0.0f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 4).sprite(1, 0, 11, 4).sprite(2, 0, 11, 8).sprite(3, 0, 0, 8).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.SOUTH, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 8).sprite(1, 0, 11, 8).sprite(2, 0, 11, 12).sprite(3, 0, 0, 12).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.NORTH, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 12).sprite(1, 0, 11, 12).sprite(2, 0, 11, 16).sprite(3, 0, 0, 16).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
         this.down = meshBuilder.build();
-        emitter.square(Direction.UP, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).sprite(0, 0, 12 / 16f, 0.0f).sprite(1, 0, 1.0f, 0.0f).sprite(2, 0, 1.0f, 4 / 16f).sprite(3, 0, 12 / 16.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).cullFace(Direction.UP).emit();
-        emitter.square(Direction.EAST, 0.6f, 1.0f, 0.4f, 0.6f, 0.4f).sprite(0, 0, 0.0f, 0.0f).sprite(1, 0, 11 / 16f, 0.0f).sprite(2, 0, 11 / 16f, 4 / 16f).sprite(3, 0, 0.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.WEST, 0.6f, 1.0f, 0.4f, 0.6f, 0.4f).sprite(0, 0, 0.0f, 4 / 16f).sprite(1, 0, 11 / 16f, 4 / 16f).sprite(2, 0, 11 / 16f, 8 / 16f).sprite(3, 0, 0.0f, 8 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.NORTH, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).sprite(0, 0, 0.0f, 8 / 16f).sprite(1, 0, 11 / 16f, 8 / 16f).sprite(2, 0, 11 / 16f, 12 / 16f).sprite(3, 0, 0.0f, 12 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.SOUTH, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).sprite(0, 0, 0.0f, 12 / 16f).sprite(1, 0, 11 / 16f, 12 / 16f).sprite(2, 0, 11 / 16f, 1.0f).sprite(3, 0, 0.0f, 1.0f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
+        emitter.square(Direction.UP, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).cullFace(Direction.UP).spriteColor(0, -1, -1, -1, -1).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.EAST, 0.6f, 1.0f, 0.4f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 0).sprite(1, 0, 11, 0).sprite(2, 0, 11, 4).sprite(3, 0, 0, 4).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.WEST, 0.6f, 1.0f, 0.4f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 4).sprite(1, 0, 11, 4).sprite(2, 0, 11, 8).sprite(3, 0, 0, 8).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.NORTH, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 8).sprite(1, 0, 11, 8).sprite(2, 0, 11, 12).sprite(3, 0, 0, 12).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.SOUTH, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 12).sprite(1, 0, 11, 12).sprite(2, 0, 11, 16).sprite(3, 0, 0, 16).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
         this.up = meshBuilder.build();
-        emitter.square(Direction.NORTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).sprite(0, 0, 12 / 16f, 0.0f).sprite(1, 0, 1.0f, 0.0f).sprite(2, 0, 1.0f, 4 / 16f).sprite(3, 0, 12 / 16.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).cullFace(Direction.NORTH).emit();
-        emitter.square(Direction.WEST, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).sprite(0, 0, 0.0f, 0.0f).sprite(1, 0, 11 / 16f, 0.0f).sprite(2, 0, 11 / 16f, 4 / 16f).sprite(3, 0, 0.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.EAST, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).sprite(0, 0, 0.0f, 4 / 16f).sprite(1, 0, 11 / 16f, 4 / 16f).sprite(2, 0, 11 / 16f, 8 / 16f).sprite(3, 0, 0.0f, 8 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.DOWN, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).sprite(0, 0, 0.0f, 8 / 16f).sprite(1, 0, 11 / 16f, 8 / 16f).sprite(2, 0, 11 / 16f, 12 / 16f).sprite(3, 0, 0.0f, 12 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.UP, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).sprite(0, 0, 0.0f, 12 / 16f).sprite(1, 0, 11 / 16f, 12 / 16f).sprite(2, 0, 11 / 16f, 1.0f).sprite(3, 0, 0.0f, 1.0f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
+        emitter.square(Direction.NORTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).cullFace(Direction.NORTH).spriteColor(0, -1, -1, -1, -1).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.WEST, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 0).sprite(1, 0, 11, 0).sprite(2, 0, 11, 4).sprite(3, 0, 0, 4).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.EAST, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 4).sprite(1, 0, 11, 4).sprite(2, 0, 11, 8).sprite(3, 0, 0, 8).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.DOWN, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 8).sprite(1, 0, 11, 8).sprite(2, 0, 11, 12).sprite(3, 0, 0, 12).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.UP, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 12).sprite(1, 0, 11, 12).sprite(2, 0, 11, 16).sprite(3, 0, 0, 16).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
         this.north = meshBuilder.build();
-        emitter.square(Direction.SOUTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).sprite(0, 0, 12 / 16f, 0.0f).sprite(1, 0, 1.0f, 0.0f).sprite(2, 0, 1.0f, 4 / 16f).sprite(3, 0, 12 / 16.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).cullFace(Direction.SOUTH).emit();
-        emitter.square(Direction.EAST, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).sprite(0, 0, 0.0f, 0.0f).sprite(1, 0, 11 / 16f, 0.0f).sprite(2, 0, 11 / 16f, 4 / 16f).sprite(3, 0, 0.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.WEST, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).sprite(0, 0, 0.0f, 4 / 16f).sprite(1, 0, 11 / 16f, 4 / 16f).sprite(2, 0, 11 / 16f, 8 / 16f).sprite(3, 0, 0.0f, 8 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.UP, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).sprite(0, 0, 0.0f, 8 / 16f).sprite(1, 0, 11 / 16f, 8 / 16f).sprite(2, 0, 11 / 16f, 12 / 16f).sprite(3, 0, 0.0f, 12 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.DOWN, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).sprite(0, 0, 0.0f, 12 / 16f).sprite(1, 0, 11 / 16f, 12 / 16f).sprite(2, 0, 11 / 16f, 1.0f).sprite(3, 0, 0.0f, 1.0f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
+        emitter.square(Direction.SOUTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).cullFace(Direction.SOUTH).spriteColor(0, -1, -1, -1, -1).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.EAST, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 0).sprite(1, 0, 11, 0).sprite(2, 0, 11, 4).sprite(3, 0, 0, 4).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.WEST, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 4).sprite(1, 0, 11, 4).sprite(2, 0, 11, 8).sprite(3, 0, 0, 8).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.UP, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 8).sprite(1, 0, 11, 8).sprite(2, 0, 11, 12).sprite(3, 0, 0, 12).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.DOWN, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 12).sprite(1, 0, 11, 12).sprite(2, 0, 11, 16).sprite(3, 0, 0, 16).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
         this.south = meshBuilder.build();
-        emitter.square(Direction.WEST, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).sprite(0, 0, 12 / 16f, 0.0f).sprite(1, 0, 1.0f, 0.0f).sprite(2, 0, 1.0f, 4 / 16f).sprite(3, 0, 12 / 16.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).cullFace(Direction.WEST).emit();
-        emitter.square(Direction.NORTH, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).sprite(0, 0, 0.0f, 0.0f).sprite(1, 0, 11 / 16f, 0.0f).sprite(2, 0, 11 / 16f, 4 / 16f).sprite(3, 0, 0.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.SOUTH, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).sprite(0, 0, 0.0f, 4 / 16f).sprite(1, 0, 11 / 16f, 4 / 16f).sprite(2, 0, 11 / 16f, 8 / 16f).sprite(3, 0, 0.0f, 8 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.UP, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).sprite(0, 0, 0.0f, 8 / 16f).sprite(1, 0, 11 / 16f, 8 / 16f).sprite(2, 0, 11 / 16f, 12 / 16f).sprite(3, 0, 0.0f, 12 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.DOWN, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).sprite(0, 0, 0.0f, 12 / 16f).sprite(1, 0, 11 / 16f, 12 / 16f).sprite(2, 0, 11 / 16f, 1.0f).sprite(3, 0, 0.0f, 1.0f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
+        emitter.square(Direction.WEST, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).cullFace(Direction.WEST).spriteColor(0, -1, -1, -1, -1).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.NORTH, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 0).sprite(1, 0, 11, 0).sprite(2, 0, 11, 4).sprite(3, 0, 0, 4).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.SOUTH, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 4).sprite(1, 0, 11, 4).sprite(2, 0, 11, 8).sprite(3, 0, 0, 8).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.UP, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 8).sprite(1, 0, 11, 8).sprite(2, 0, 11, 12).sprite(3, 0, 0, 12).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.DOWN, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 12).sprite(1, 0, 11, 12).sprite(2, 0, 11, 16).sprite(3, 0, 0, 16).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
         this.west = meshBuilder.build();
-        emitter.square(Direction.EAST, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).sprite(0, 0, 12 / 16f, 0.0f).sprite(1, 0, 1.0f, 0.0f).sprite(2, 0, 1.0f, 4 / 16f).sprite(3, 0, 12 / 16.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).cullFace(Direction.EAST).emit();
-        emitter.square(Direction.SOUTH, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).sprite(0, 0, 0.0f, 0.0f).sprite(1, 0, 11 / 16f, 0.0f).sprite(2, 0, 11 / 16f, 4 / 16f).sprite(3, 0, 0.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.NORTH, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).sprite(0, 0, 0.0f, 4 / 16f).sprite(1, 0, 11 / 16f, 4 / 16f).sprite(2, 0, 11 / 16f, 8 / 16f).sprite(3, 0, 0.0f, 8 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.DOWN, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).sprite(0, 0, 0.0f, 8 / 16f).sprite(1, 0, 11 / 16f, 8 / 16f).sprite(2, 0, 11 / 16f, 12 / 16f).sprite(3, 0, 0.0f, 12 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
-        emitter.square(Direction.UP, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).sprite(0, 0, 0.0f, 12 / 16f).sprite(1, 0, 11 / 16f, 12 / 16f).sprite(2, 0, 11 / 16f, 1.0f).sprite(3, 0, 0.0f, 1.0f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
+        emitter.square(Direction.EAST, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).cullFace(Direction.EAST).spriteColor(0, -1, -1, -1, -1).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.SOUTH, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 0).sprite(1, 0, 11, 0).sprite(2, 0, 11, 4).sprite(3, 0, 0, 4).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.NORTH, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 4).sprite(1, 0, 11, 4).sprite(2, 0, 11, 8).sprite(3, 0, 0, 8).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.DOWN, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 8).sprite(1, 0, 11, 8).sprite(2, 0, 11, 12).sprite(3, 0, 0, 12).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
+        emitter.square(Direction.UP, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 0, 12).sprite(1, 0, 11, 12).sprite(2, 0, 11, 16).sprite(3, 0, 0, 16).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV & MutableQuadView.BAKE_ROTATE_90).emit();
         this.east = meshBuilder.build();
     }
 
@@ -128,39 +128,39 @@ public class WireBakedModel implements FabricBakedModel, BakedModel {
         if (wire.connections()[0]) {
             meshConsumer.accept(this.down);
         } else {
-            emitter.square(Direction.DOWN, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).sprite(0, 0, 12 / 16f, 0.0f).sprite(1, 0, 1.0f, 0.0f).sprite(2, 0, 1.0f, 4 / 16f).sprite(3, 0, 12 / 16.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
+            emitter.square(Direction.DOWN, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         }
         if (wire.connections()[1]) {
             meshConsumer.accept(this.up);
         } else {
-            emitter.square(Direction.UP, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).sprite(0, 0, 12 / 16f, 0.0f).sprite(1, 0, 1.0f, 0.0f).sprite(2, 0, 1.0f, 4 / 16f).sprite(3, 0, 12 / 16.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
+            emitter.square(Direction.UP, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         }
         if (wire.connections()[2]) {
             meshConsumer.accept(this.north);
         } else {
-            emitter.square(Direction.NORTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).sprite(0, 0, 12 / 16f, 0.0f).sprite(1, 0, 1.0f, 0.0f).sprite(2, 0, 1.0f, 4 / 16f).sprite(3, 0, 12 / 16.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
+            emitter.square(Direction.NORTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         }
         if (wire.connections()[3]) {
             meshConsumer.accept(this.south);
         } else {
-            emitter.square(Direction.SOUTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).sprite(0, 0, 12 / 16f, 0.0f).sprite(1, 0, 1.0f, 0.0f).sprite(2, 0, 1.0f, 4 / 16f).sprite(3, 0, 12 / 16.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
+            emitter.square(Direction.SOUTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         }
         if (wire.connections()[4]) {
             meshConsumer.accept(this.west);
         } else {
-            emitter.square(Direction.WEST, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).sprite(0, 0, 12 / 16f, 0.0f).sprite(1, 0, 1.0f, 0.0f).sprite(2, 0, 1.0f, 4 / 16f).sprite(3, 0, 12 / 16.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
+            emitter.square(Direction.WEST, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         }
         if (wire.connections()[5]) {
             meshConsumer.accept(this.east);
         } else {
-            emitter.square(Direction.EAST, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).sprite(0, 0, 12 / 16f, 0.0f).sprite(1, 0, 1.0f, 0.0f).sprite(2, 0, 1.0f, 4 / 16f).sprite(3, 0, 12 / 16.0f, 4 / 16f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
+            emitter.square(Direction.EAST, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         }
     }
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
         QuadEmitter emitter = context.getEmitter();
-        for (Direction direction : Constant.Misc.DIRECTIONS) emitter.square(direction, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteBake(0, this.getSprite(), MutableQuadView.BAKE_ROTATE_NONE).emit();
+        for (Direction direction : Constant.Misc.DIRECTIONS) emitter.square(direction, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteBake(0, this.getParticleSprite(), MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
     }
 
     @Override
@@ -189,7 +189,7 @@ public class WireBakedModel implements FabricBakedModel, BakedModel {
     }
 
     @Override
-    public Sprite getSprite() {
+    public Sprite getParticleSprite() {
         return this.sprite;
     }
 
@@ -203,11 +203,14 @@ public class WireBakedModel implements FabricBakedModel, BakedModel {
         return ModelOverrideList.EMPTY;
     }
 
-    public static WireBakedModel getInstance() {
+    public static WireBakedModel getInstance(Function<SpriteIdentifier, Sprite> spriteFunction) {
+        if (instance == null) {
+            return instance = new WireBakedModel(spriteFunction);
+        }
         return instance;
     }
 
-    public static void setInstance(Function<SpriteIdentifier, Sprite> textureGetter) {
-        WireBakedModel.instance = new WireBakedModel(textureGetter);
+    public static void invalidate() {
+        instance = null;
     }
 }

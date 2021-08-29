@@ -35,7 +35,6 @@ import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
@@ -63,7 +62,7 @@ public class GalacticraftResourceReloadListener implements SimpleSynchronousReso
     public void reload(ResourceManager resourceManager) {
         Function<Identifier, Sprite> atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
         MachineBakedModel.setSpriteAtlas(atlas);
-        WireBakedModel.setInstance(SpriteIdentifier::getSprite);
+        WireBakedModel.invalidate();
         FluidRenderHandler oil = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constant.MOD_ID, "block/crude_oil_still")), atlas.apply(new Identifier(Constant.MOD_ID, "block/crude_oil_flowing"))};
         FluidRenderHandler fuel = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constant.MOD_ID, "block/fuel_still")), atlas.apply(new Identifier(Constant.MOD_ID, "block/fuel_flowing"))};
         FluidRenderHandler oxygen = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constant.MOD_ID, "block/oxygen")), atlas.apply(new Identifier(Constant.MOD_ID, "block/oxygen"))};
