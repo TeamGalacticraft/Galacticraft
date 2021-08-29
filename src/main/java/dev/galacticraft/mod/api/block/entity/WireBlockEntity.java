@@ -24,19 +24,13 @@ package dev.galacticraft.mod.api.block.entity;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProviderBlockEntity;
-import dev.galacticraft.energy.api.EnergyExtractable;
-import dev.galacticraft.energy.api.EnergyInsertable;
-import dev.galacticraft.energy.impl.EmptyEnergyExtractable;
-import dev.galacticraft.energy.impl.RejectingEnergyInsertable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.wire.Wire;
-import dev.galacticraft.mod.api.wire.WireConnectionType;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.attribute.energy.WireEnergyInsertable;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
-import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -48,31 +42,44 @@ import org.jetbrains.annotations.Nullable;
  */
 public class WireBlockEntity extends BlockEntity implements Wire, AttributeProviderBlockEntity {
     private @Nullable WireNetwork network = null;
-    private @Nullable WireEnergyInsertable insertable = null;
-    private static final int MAX_TRANSFER_RATE = 240;
+    private @NotNull WireEnergyInsertable @Nullable[] insertables = null;
+    private final int maxTransferRate;
 
-    public WireBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.WIRE, pos, state);
+    public WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state, int maxTransferRate) {
+        super(type, pos, state);
+        this.maxTransferRate = maxTransferRate;
+    }
+
+    public static WireBlockEntity createT1(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
+        return new WireBlockEntity(type, pos, state, 240);
+    }
+
+    public static WireBlockEntity createT2(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
+        return new WireBlockEntity(type, pos, state, 480);
     }
 
     @Override
     public void setNetwork(@Nullable WireNetwork network) {
         this.network = network;
-        this.getInsertable().setNetwork(network);
+        for (WireEnergyInsertable insertable : this.getInsertables()) {
+            insertable.setNetwork(network);
+        }
     }
 
     @Override
-    public @NotNull WireNetwork getNetwork() {
+    public @NotNull WireNetwork getOrCreateNetwork() {
         if (this.network == null) {
             if (!this.world.isClient()) {
                 for (Direction direction : Constant.Misc.DIRECTIONS) {
                     BlockEntity entity = world.getBlockEntity(pos.offset(direction));
-                    if (entity instanceof Wire wire && wire.getNetworkNullable() != null) {
-                        wire.getNetwork().addWire(pos, this);
+                    if (entity instanceof Wire wire && wire.getNetwork() != null) {
+                        if (wire.getOrCreateNetwork().canAccept(this, direction.getOpposite())) {
+                            wire.getOrCreateNetwork().addWire(pos, this);
+                        }
                     }
                 }
                 if (this.network == null) {
-                    this.setNetwork(WireNetwork.create((ServerWorld) world));
+                    this.setNetwork(WireNetwork.create((ServerWorld) world, this.getMaxTransferRate()));
                     this.network.addWire(pos, this);
                 }
             }
@@ -81,46 +88,37 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     }
 
     @Override
-    public @Nullable WireNetwork getNetworkNullable() {
+    public @Nullable WireNetwork getNetwork() {
         return this.network;
     }
 
-    public WireEnergyInsertable getInsertable() {
-        if (this.insertable == null) this.insertable = new WireEnergyInsertable(this.getMaxTransferRate(), this.pos);
-        return this.insertable;
-    }
-
-    @Override
-    public @NotNull WireConnectionType getConnection(Direction direction, @NotNull BlockEntity entity) {
-        if (!this.canConnect(direction)) return WireConnectionType.NONE;
-        if (entity instanceof Wire wire && wire.canConnect(direction.getOpposite())) return WireConnectionType.WIRE;
-        EnergyInsertable insertable = EnergyUtil.getEnergyInsertable(world, entity.getPos(), direction);
-        EnergyExtractable extractable = EnergyUtil.getEnergyExtractable(world, entity.getPos(), direction);
-        if (insertable != RejectingEnergyInsertable.NULL && extractable != EmptyEnergyExtractable.NULL) {
-            return WireConnectionType.ENERGY_IO;
-        } else if (insertable != RejectingEnergyInsertable.NULL) {
-            return WireConnectionType.ENERGY_INPUT;
-        } else if (extractable != EmptyEnergyExtractable.NULL) {
-            return WireConnectionType.ENERGY_OUTPUT;
+    public @NotNull WireEnergyInsertable @NotNull[] getInsertables() {
+        if (this.insertables == null) {
+            this.insertables = new WireEnergyInsertable[6];
+            for (Direction direction : Constant.Misc.DIRECTIONS) {
+                this.insertables[direction.ordinal()] = new WireEnergyInsertable(direction, this.getMaxTransferRate(), this.pos);
+            }
         }
-        return WireConnectionType.NONE;
+        return this.insertables;
     }
 
     @Override
     public int getMaxTransferRate() {
-        return MAX_TRANSFER_RATE;
+        return maxTransferRate;
     }
 
     @Override
     public void markRemoved() {
         super.markRemoved();
-        if (this.getNetworkNullable() != null) {
-            this.getNetwork().removeWire(this.pos);
+        if (this.getNetwork() != null) {
+            this.getOrCreateNetwork().removeWire(this.pos);
         }
     }
 
     @Override
     public void addAllAttributes(AttributeList<?> to) {
-        to.offer(this.getInsertable());
+        if (to.getSearchDirection() != null) {
+            to.offer(this.getInsertables()[to.getSearchDirection().ordinal()]);
+        }
     }
 }

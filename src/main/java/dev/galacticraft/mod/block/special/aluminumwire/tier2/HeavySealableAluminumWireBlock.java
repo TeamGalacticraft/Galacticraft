@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.block.special.aluminumwire.tier1;
+package dev.galacticraft.mod.block.special.aluminumwire.tier2;
 
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
@@ -32,13 +32,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class SealableAluminumWireBlock extends WireBlock {
-    public SealableAluminumWireBlock(Settings settings) {
+public class HeavySealableAluminumWireBlock extends WireBlock {
+    public HeavySealableAluminumWireBlock(Settings settings) {
         super(settings);
     }
 
     @Override
     public @Nullable WireBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return WireBlockEntity.createT1(GalacticraftBlockEntityType.WIRE_T1, pos, state);
+        return WireBlockEntity.createT2(GalacticraftBlockEntityType.WIRE_T2, pos, state);
     }
 }

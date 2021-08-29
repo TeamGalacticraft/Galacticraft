@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class WireBlock extends Block implements BlockEntityProvider {
+public abstract class WireBlock extends Block implements BlockEntityProvider {
     public WireBlock(Settings settings) {
         super(settings);
     }
@@ -53,7 +53,7 @@ public class WireBlock extends Block implements BlockEntityProvider {
         if (!world.isClient() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof Wire wire) {
-                Galacticraft.LOGGER.info(wire.getNetworkNullable());
+                Galacticraft.LOGGER.info(wire.getNetwork());
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);
@@ -64,7 +64,8 @@ public class WireBlock extends Block implements BlockEntityProvider {
         super.neighborUpdate(state, world, pos, block, fromPos, notify);
         if (!world.isClient()) {
             Wire wire = (Wire) world.getBlockEntity(pos);
-            wire.getNetwork().updateConnections(pos, fromPos);
+            assert wire != null;
+            wire.getOrCreateNetwork().updateConnections(pos, fromPos);
         }
     }
 
@@ -75,7 +76,5 @@ public class WireBlock extends Block implements BlockEntityProvider {
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new WireBlockEntity(pos, state);
-    }
+    public abstract WireBlockEntity createBlockEntity(BlockPos pos, BlockState state);
 }

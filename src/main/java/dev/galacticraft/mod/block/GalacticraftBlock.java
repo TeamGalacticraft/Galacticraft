@@ -36,6 +36,7 @@ import dev.galacticraft.mod.block.special.SolarPanelPartBlock;
 import dev.galacticraft.mod.block.special.TinLadderBlock;
 import dev.galacticraft.mod.block.special.aluminumwire.tier1.AluminumWireBlock;
 import dev.galacticraft.mod.block.special.aluminumwire.tier1.SealableAluminumWireBlock;
+import dev.galacticraft.mod.block.special.aluminumwire.tier2.HeavySealableAluminumWireBlock;
 import dev.galacticraft.mod.block.special.fluidpipe.GlassFluidPipeBlock;
 import dev.galacticraft.mod.block.special.walkway.PipeWalkway;
 import dev.galacticraft.mod.block.special.walkway.Walkway;
@@ -136,6 +137,7 @@ public class GalacticraftBlock {
     // SPECIAL
     public static final Block ALUMINUM_WIRE = registerBlock(new AluminumWireBlock(FabricBlockSettings.copy(Blocks.WHITE_WOOL)), Constant.Block.ALUMINUM_WIRE);
     public static final Block SEALABLE_ALUMINUM_WIRE = registerBlock(new SealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATIONS[0])), Constant.Block.SEALABLE_ALUMINUM_WIRE);
+    public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = registerBlock(new HeavySealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATIONS[0])), Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE);
     public static final Block GLASS_FLUID_PIPE = registerBlock(new GlassFluidPipeBlock(FabricBlockSettings.of(Material.GLASS).breakByHand(true).sounds(BlockSoundGroup.GLASS)), Constant.Block.GLASS_FLUID_PIPE);
 
     // LIGHT PANELS

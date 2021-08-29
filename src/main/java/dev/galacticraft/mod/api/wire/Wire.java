@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.api.wire;
 
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -39,17 +38,17 @@ public interface Wire {
     void setNetwork(@Nullable WireNetwork network);
 
     /**
-     * Returns the associated {@link WireNetwork}
+     * Returns the associated {@link WireNetwork}, or creates one if it is not a part of one yet
      * @return The associated {@link WireNetwork}
      */
-    @NotNull WireNetwork getNetwork();
+    @NotNull WireNetwork getOrCreateNetwork();
 
     /**
      * Returns the associated {@link WireNetwork}
      * @return The associated {@link WireNetwork}
      */
     @Contract(pure = true)
-    @Nullable WireNetwork getNetworkNullable();
+    @Nullable WireNetwork getNetwork();
 
     /**
      * Returns whether this wire is able to connect to another block on the specified face/direction
@@ -57,10 +56,8 @@ public interface Wire {
      * @return Whether this wire is able to connect to another block on the specified face/direction
      */
     default boolean canConnect(Direction direction) {
-        return true;
+        return true; // world.getBlockEntity(pos.offset(direction)) == the caller BE
     }
-
-    @NotNull WireConnectionType getConnection(Direction direction, @NotNull BlockEntity entity);
 
     /**
      * Returns the maximum amount of energy (in gJ) allowed to be transferred through this wire.

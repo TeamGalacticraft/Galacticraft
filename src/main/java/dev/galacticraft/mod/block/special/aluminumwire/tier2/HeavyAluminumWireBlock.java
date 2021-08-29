@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.block.special.aluminumwire.tier1;
+package dev.galacticraft.mod.block.special.aluminumwire.tier2;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.WireBlock;
@@ -50,7 +50,7 @@ import java.util.ArrayList;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class AluminumWireBlock extends WireBlock {
+public class HeavyAluminumWireBlock extends WireBlock {
     // If we start at 8,8,8 and subtract/add to/from 8, we do operations starting from the centre.
     private static final int OFFSET = 2;
     private static final VoxelShape NORTH = createCuboidShape(8 - OFFSET, 8 - OFFSET, 0, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
@@ -61,7 +61,7 @@ public class AluminumWireBlock extends WireBlock {
     private static final VoxelShape DOWN = createCuboidShape(8 - OFFSET, 0, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
     private static final VoxelShape NONE = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);    // 6x6x6 box in the center.
 
-    public AluminumWireBlock(Settings settings) {
+    public HeavyAluminumWireBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState()
                 .with(Properties.NORTH, false).with(Properties.EAST, false)
@@ -105,6 +105,7 @@ public class AluminumWireBlock extends WireBlock {
             BlockState block = context.getWorld().getBlockState(context.getBlockPos().offset(direction));
             state = state.with(ConnectingBlockUtil.getBooleanProperty(direction), !block.isAir() && (block.getBlock() instanceof WireBlock
                     || EnergyUtil.canAccessEnergy(context.getWorld(), context.getBlockPos().offset(direction), direction)));
+
         }
 
         return state;
@@ -140,6 +141,6 @@ public class AluminumWireBlock extends WireBlock {
 
     @Override
     public @Nullable WireBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return WireBlockEntity.createT1(GalacticraftBlockEntityType.WIRE_T1, pos, state);
+        return WireBlockEntity.createT2(GalacticraftBlockEntityType.WIRE_T2, pos, state);
     }
 }

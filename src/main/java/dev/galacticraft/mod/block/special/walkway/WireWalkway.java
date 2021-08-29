@@ -25,6 +25,8 @@ package dev.galacticraft.mod.block.special.walkway;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.WireBlock;
+import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.Block;
@@ -45,6 +47,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -149,5 +152,10 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
     @Override
     public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
         stateBuilder.add(Properties.NORTH, Properties.EAST, Properties.WEST, Properties.SOUTH, Properties.UP, Properties.DOWN, FACING, FLUID, FlowableFluid.LEVEL);
+    }
+
+    @Override
+    public @Nullable WireBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return WireBlockEntity.createT1(GalacticraftBlockEntityType.WIRE_T1, pos, state);
     }
 }

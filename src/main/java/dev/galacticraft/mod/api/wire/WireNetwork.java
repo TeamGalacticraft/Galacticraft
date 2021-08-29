@@ -25,8 +25,10 @@ package dev.galacticraft.mod.api.wire;
 import alexiil.mc.lib.attributes.Simulation;
 import dev.galacticraft.energy.api.EnergyInsertable;
 import dev.galacticraft.mod.api.wire.impl.WireNetworkImpl;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,8 +39,8 @@ import java.util.Map;
  * The basic 'Wire Network' spec
  */
 public interface WireNetwork {
-    static WireNetwork create(ServerWorld world) {
-        return new WireNetworkImpl(world);
+    static WireNetwork create(ServerWorld world, int maxTransferRate) {
+        return new WireNetworkImpl(world, maxTransferRate);
     }
 
     /**
@@ -65,10 +67,17 @@ public interface WireNetwork {
      * Inserts energy into the network
      * @param fromWire The wire that received the energy
      * @param amount The amount of energy to insert
+     * @param direction
      * @param simulate Whether to perform the action or not
      * @return the amount of energy that failed to insert
      */
-    int insert(@NotNull BlockPos fromWire, /*Positive*/ int amount, @NotNull Simulation simulate);
+    int insert(@NotNull BlockPos fromWire, int amount, Direction direction, @NotNull Simulation simulate);
+
+    /**
+     * Returns the maximum amount of energy allowed to pass through this network per tick
+     * @return the maximum amount of energy allowed to pass through this network per tick
+     */
+    int getMaxTransferRate();
 
     Collection<BlockPos> getAllWires();
 
@@ -77,4 +86,6 @@ public interface WireNetwork {
     boolean markedForRemoval();
 
     void markForRemoval();
+
+    boolean canAccept(BlockEntity blockEntity, Direction direction);
 }

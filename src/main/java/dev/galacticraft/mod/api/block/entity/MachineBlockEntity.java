@@ -24,7 +24,6 @@ package dev.galacticraft.mod.api.block.entity;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProviderBlockEntity;
-import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FixedFluidInvView;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
@@ -39,7 +38,6 @@ import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.misc.Reference;
-import dev.galacticraft.energy.GalacticraftEnergy;
 import dev.galacticraft.energy.api.CapacitorView;
 import dev.galacticraft.energy.api.EnergyExtractable;
 import dev.galacticraft.energy.api.EnergyInsertable;
@@ -482,12 +480,12 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     }
 
     public void trySpreadEnergy() {
-        if (this.canExtractEnergy()) {
+        if (this.canExtractEnergy() && this.capacitorView().getEnergy() > 0) {
             for (BlockFace face : Constant.Misc.BLOCK_FACES) {
                 ConfiguredMachineFace option = this.getIOConfig().get(face);
                 if (option.getAutomationType().isEnergy() && option.getAutomationType().isOutput()) {
                     Direction dir = face.toDirection(this.getCachedState().get(Properties.HORIZONTAL_FACING));
-                    EnergyInsertable insertable = GalacticraftEnergy.INSERTABLE.getFirst(world, pos.offset(dir), SearchOptions.inDirection(dir.getOpposite()));
+                    EnergyInsertable insertable = EnergyUtil.getEnergyInsertable(world, pos.offset(dir), dir);
                     if (insertable != RejectingEnergyInsertable.NULL) {
                         this.capacitor().insert(insertable.attemptInsertion(DefaultEnergyType.INSTANCE, this.capacitor().extract(2048), Simulation.ACTION));
                     }
