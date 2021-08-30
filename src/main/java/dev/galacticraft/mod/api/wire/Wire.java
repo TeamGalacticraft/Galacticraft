@@ -52,9 +52,9 @@ public interface Wire {
     @Nullable WireNetwork getNetworkNullable();
 
     /**
-     * Returns whether or not this wire is able to connect to another block on the specified face/direction
+     * Returns whether this wire is able to connect to another block on the specified face/direction
      * @param direction the direction offset to the block to check adjacency to
-     * @return Whether or not this wire is able to connect to another block on the specified face/direction
+     * @return Whether this wire is able to connect to another block on the specified face/direction
      */
     default boolean canConnect(Direction direction) {
         return true;

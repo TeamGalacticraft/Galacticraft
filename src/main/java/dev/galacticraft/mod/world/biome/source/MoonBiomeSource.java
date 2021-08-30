@@ -54,7 +54,7 @@ public class MoonBiomeSource extends BiomeSource {
     private boolean initialized = false;
 
     public MoonBiomeSource(long seed, int biomeSize, Registry<Biome> registry) {
-        super(new ArrayList<>(4)); // its a mutable list, as we want to add biomes in later
+        super(new ArrayList<>(4)); // it is a mutable list, as we want to add biomes in later
                                   // for /locate and other things to work. Will be set in #initialize
         this.biomeSize = biomeSize;
         this.seed = seed;

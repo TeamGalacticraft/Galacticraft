@@ -31,9 +31,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.mob.DrownedEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
@@ -157,20 +154,15 @@ public class MoonRuinsGenerator {
             if (blockEntity instanceof ChestBlockEntity chest) {
                chest.setLootTable(GalacticraftLootTable.BASIC_MOON_RUINS_CHEST, random.nextLong());
             }
-         } else if ("drowned".equals(metadata)) {
+         }/* else if ("drowned".equals(metadata)) {
             DrownedEntity drownedEntity = EntityType.DROWNED.create(world.toServerWorld());
             assert drownedEntity != null;
             drownedEntity.setPersistent();
             drownedEntity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
             drownedEntity.initialize(world, world.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null, null);
             world.spawnEntityAndPassengers(drownedEntity);
-            if (pos.getY() > world.getSeaLevel()) {
-               world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_LISTENERS);
-            } else {
-               world.setBlockState(pos, Blocks.WATER.getDefaultState(), Block.NOTIFY_LISTENERS);
-            }
-         }
-
+            world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_LISTENERS);
+         }*/
       }
 
       @Override

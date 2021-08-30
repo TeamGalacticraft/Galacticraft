@@ -23,25 +23,27 @@
 package dev.galacticraft.mod.tag;
 
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.fabric.api.tag.TagRegistry;
-import net.fabricmc.fabric.mixin.tag.extension.AccessorFluidTags;
+import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.biome.Biome;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftTag {
-    private static final String COMMON_NAMESPACE = "c";
-    public static final Tag.Identified<Fluid> OIL = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "oil"), AccessorFluidTags.getRequiredTags()::getGroup);
-    public static final Tag.Identified<Fluid> FUEL = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "fuel"), AccessorFluidTags.getRequiredTags()::getGroup);
-    public static final Tag.Identified<Fluid> LIQUID_OXYGEN = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "oxygen"), AccessorFluidTags.getRequiredTags()::getGroup);
 
-    public static final Tag.Identified<Block> INFINIBURN_MOON = TagRegistry.create(new Identifier(Constant.MOD_ID, "infiniburn_moon"), BlockTags::getTagGroup);
-    public static final Tag.Identified<Block> MOON_STONE = TagRegistry.create(new Identifier(Constant.MOD_ID, "moon_stone"), BlockTags::getTagGroup);
+    public static final Tag.Identified<Fluid> OIL = TagFactory.FLUID.create(new Identifier(Constant.COMMON_NAMESPACE, "oil"));
+    public static final Tag.Identified<Fluid> FUEL = TagFactory.FLUID.create(new Identifier(Constant.COMMON_NAMESPACE, "fuel"));
+    public static final Tag.Identified<Fluid> LIQUID_OXYGEN = TagFactory.FLUID.create(new Identifier(Constant.COMMON_NAMESPACE, "oxygen"));
+
+    public static final Tag.Identified<Block> INFINIBURN_MOON = TagFactory.BLOCK.create(new Identifier(Constant.MOD_ID, "infiniburn_moon"));
+    public static final Tag.Identified<Block> MOON_STONE = TagFactory.BLOCK.create(new Identifier(Constant.MOD_ID, "moon_stone"));
+
+    public static final Tag.Identified<Biome> MOON = TagFactory.BIOME.create(new Identifier(Constant.MOD_ID, "moon"));
+    public static final Tag.Identified<Biome> MOON_MARE = TagFactory.BIOME.create(new Identifier(Constant.MOD_ID, "moon_mare"));
 
     public static void register() {
     }

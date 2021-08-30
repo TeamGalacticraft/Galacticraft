@@ -81,7 +81,7 @@ public class SpaceRaceScreen extends Screen {
                     if (focused) {
                         this.prevText = this.getText();
                     } else if (this.prevText == null || !this.prevText.equals(this.getText())) {
-                        ClientPlayNetworking.send(new Identifier("galacticraft-api", "team_name"), PacketByteBufs.create().writeString(this.getText()));
+                        ClientPlayNetworking.send(new Identifier(Constant.ADDON_API_ID, "team_name"), PacketByteBufs.create().writeString(this.getText()));
                     }
                 }
                 super.setFocused(focused);
@@ -396,7 +396,7 @@ public class SpaceRaceScreen extends Screen {
                                     array[y * 48 + x] = (finalImage.getPixelColor(x, y) /*& 0x00FFFFFF will be done on server (don't trust clients, so why do extra work?)*/); //ignore alpha channel
                                 }
                             }
-                            ClientPlayNetworking.send(new Identifier("galacticraft-api", "flag_data"), PacketByteBufs.create().writeIntArray(array));
+                            ClientPlayNetworking.send(new Identifier(Constant.ADDON_API_ID, "flag_data"), PacketByteBufs.create().writeIntArray(array));
                         } else {
                             finalImage.close();
                         }
