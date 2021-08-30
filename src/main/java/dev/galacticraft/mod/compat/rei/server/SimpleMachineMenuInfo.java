@@ -22,34 +22,25 @@
 
 package dev.galacticraft.mod.compat.rei.server;
 
-import dev.galacticraft.mod.api.screen.MachineScreenHandler;
-import me.shedaniel.rei.api.common.display.Display;
+import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
-import me.shedaniel.rei.api.common.transfer.RecipeFinderPopulator;
-import me.shedaniel.rei.api.common.transfer.info.MenuInfo;
-import me.shedaniel.rei.api.common.transfer.info.MenuInfoContext;
-import me.shedaniel.rei.api.common.transfer.info.clean.InputCleanHandler;
-import me.shedaniel.rei.api.common.transfer.info.stack.SlotAccessor;
+import me.shedaniel.rei.api.common.transfer.info.simple.SimpleGridMenuInfo;
 
-public class SimpleMachineMenuInfo<T extends MachineScreenHandler, D extends Display> implements MenuInfo {
+public class SimpleMachineMenuInfo<T extends RecipeMachineScreenHandler, D extends SimpleGridMenuDisplay> implements SimpleGridMenuInfo<T,D> {
 
     @Override
-    public RecipeFinderPopulator getRecipeFinderPopulator() {
-        return null;
+    public int getCraftingResultSlotIndex(T menu) {
+        return 9;
     }
 
     @Override
-    public InputCleanHandler getInputCleanHandler() {
-        return null;
+    public int getCraftingWidth(T menu) {
+        return 3;
     }
 
     @Override
-    public Iterable<SlotAccessor> getInventorySlots(MenuInfoContext context) {
-        return null;
+    public int getCraftingHeight(T menu) {
+        return 3;
     }
 
-    @Override
-    public Iterable<SlotAccessor> getInputSlots(MenuInfoContext context) {
-        return null;
-    }
 }

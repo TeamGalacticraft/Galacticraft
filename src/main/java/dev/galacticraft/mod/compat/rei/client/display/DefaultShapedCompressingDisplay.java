@@ -38,29 +38,27 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public class DefaultShapedCompressingDisplay implements DefaultCompressingDisplay {
-    protected List<List<EntryIngredient>> input;
+    protected List<EntryIngredient> input;
     protected List<EntryIngredient> output;
 
     public DefaultShapedCompressingDisplay(ShapedCompressingRecipe recipe) {
         this.input = new ArrayList<>();
         recipe.getIngredients().forEach((ingredient) -> {
-            List<EntryIngredient> stacks = new ArrayList<>();
             for (ItemStack stack : ingredient.getMatchingStacks()) {
-                stacks.add(EntryIngredients.of(stack));
+                input.add(EntryIngredients.of(stack));
             }
-            input.add(stacks);
         });
         this.output = Collections.singletonList(EntryIngredients.of(recipe.getOutput()));
     }
 
     @Override
     public List<EntryIngredient> getRequiredEntries() {
-        return input.get(0);
+        return input;
     }
 
     @Override
     public List<EntryIngredient> getInputEntries() {
-        return input.get(0);
+        return input;
     }
 
     @Override

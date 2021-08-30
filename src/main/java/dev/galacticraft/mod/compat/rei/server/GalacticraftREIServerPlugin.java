@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.compat.rei.server;
 
-import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin;
+import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoRegistry;
 
@@ -31,6 +31,7 @@ public class GalacticraftREIServerPlugin implements REIServerPlugin {
 
     @Override
     public void registerMenuInfo(MenuInfoRegistry registry) {
-        registry.register(GalacticraftREIClientPlugin.CIRCUIT_FABRICATION, MachineScreenHandler.class, new SimpleMachineMenuInfo<>());
+        registry.register(GalacticraftREIClientPlugin.COMPRESSING, RecipeMachineScreenHandler.class, new SimpleMachineMenuInfo<>());
+        registry.register(GalacticraftREIClientPlugin.CIRCUIT_FABRICATION, RecipeMachineScreenHandler.class, new SimpleMachineMenuInfo<>());
     }
 }

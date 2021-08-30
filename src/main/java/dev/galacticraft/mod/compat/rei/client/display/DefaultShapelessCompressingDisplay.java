@@ -41,30 +41,22 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public class DefaultShapelessCompressingDisplay implements DefaultCompressingDisplay {
-    private final List<List<EntryIngredient>> input;
+    private final List<EntryIngredient> input;
     private final List<EntryIngredient> output;
 
     public DefaultShapelessCompressingDisplay(ShapelessCompressingRecipe recipe) {
         this.input = Lists.newArrayList();
         recipe.getIngredients().forEach((ingredient) -> {
-            List<EntryIngredient> stacks = new ArrayList<>();
             for (ItemStack stack : ingredient.getMatchingStacks()) {
-                stacks.add(EntryIngredients.of(stack));
+                input.add(EntryIngredients.of(stack));
             }
-            this.input.add(stacks);
         });
         this.output = Collections.singletonList(EntryIngredients.of(recipe.getOutput()));
     }
 
-//    @Override
-//    public Optional getRecipe() {
-//        return Optional.ofNullable(this.display);
-//    }
-
-
     @Override
     public @NotNull List<EntryIngredient> getInputEntries() {
-        return input.get(0);
+        return input;
     }
 
     @Override

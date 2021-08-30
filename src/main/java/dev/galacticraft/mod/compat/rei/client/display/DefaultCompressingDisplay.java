@@ -25,7 +25,6 @@ package dev.galacticraft.mod.compat.rei.client.display;
 
 import dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
-import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
 import org.jetbrains.annotations.NotNull;
 

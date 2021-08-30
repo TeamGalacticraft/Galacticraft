@@ -25,7 +25,6 @@ package dev.galacticraft.mod.compat.rei.client;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;
 import dev.galacticraft.mod.compat.rei.client.display.DefaultFabricationDisplay;
@@ -33,14 +32,12 @@ import dev.galacticraft.mod.compat.rei.client.display.DefaultShapedCompressingDi
 import dev.galacticraft.mod.compat.rei.client.display.DefaultShapelessCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.client.transfer.DefaultTransferHandler;
 import dev.galacticraft.mod.item.GalacticraftItem;
-import dev.galacticraft.mod.mixin.client.HandledScreenAccessor;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
-import me.shedaniel.rei.api.client.registry.category.ButtonArea;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
@@ -48,11 +45,10 @@ import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
 import me.shedaniel.rei.api.client.registry.transfer.TransferHandlerRegistry;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-
-import net.minecraft.item.Item;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import net.minecraft.item.Item;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -69,8 +65,8 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
         registry.addWorkstations(CIRCUIT_FABRICATION, EntryStacks.of(GalacticraftBlock.CIRCUIT_FABRICATOR));
         registry.addWorkstations(COMPRESSING, EntryStacks.of(GalacticraftBlock.COMPRESSOR), EntryStacks.of(GalacticraftBlock.ELECTRIC_COMPRESSOR));
 
-        registry.setPlusButtonArea(CIRCUIT_FABRICATION, ButtonArea.defaultArea());
-        registry.setPlusButtonArea(COMPRESSING,bounds -> new Rectangle(bounds.getMinX() + 2, bounds.getMaxY() - 16, 10, 10));
+        registry.setPlusButtonArea(CIRCUIT_FABRICATION, bounds -> new Rectangle(bounds.getMinX() + 8, bounds.getMaxY() - 16, 10, 10));
+        registry.setPlusButtonArea(COMPRESSING,bounds -> new Rectangle(bounds.getMaxX() - 16, bounds.getMaxY() - 16, 10, 10));
     }
 
     @Override
@@ -91,13 +87,12 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
     public void registerExclusionZones(ExclusionZones zones) {
         zones.register(MachineHandledScreen.class, provider -> {
             MachineHandledScreen<?,?> machineScreen = provider;
-            HandledScreenAccessor screenHooks = (HandledScreenAccessor) machineScreen;
             List<Rectangle> l = new ArrayList<>();
 
             if (MachineHandledScreen.Tab.STATS.isOpen()) {
-                l.add(new Rectangle(screenHooks.gc_getX() + screenHooks.gc_getBackgroundWidth(), screenHooks.gc_getY(), MachineHandledScreen.PANEL_WIDTH, MachineHandledScreen.PANEL_HEIGHT));
+                l.add(new Rectangle(machineScreen.getX() + machineScreen.width, machineScreen.getY(), MachineHandledScreen.PANEL_WIDTH, MachineHandledScreen.PANEL_HEIGHT));
             } else {
-                l.add(new Rectangle(screenHooks.gc_getX() + screenHooks.gc_getBackgroundWidth(), screenHooks.gc_getY(), MachineHandledScreen.TAB_WIDTH, MachineHandledScreen.TAB_HEIGHT));
+                l.add(new Rectangle(machineScreen.getX() + machineScreen.width, machineScreen.getY(), MachineHandledScreen.TAB_WIDTH, MachineHandledScreen.TAB_HEIGHT));
             }
 
             return l;

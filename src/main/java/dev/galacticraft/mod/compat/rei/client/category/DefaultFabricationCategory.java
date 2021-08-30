@@ -22,11 +22,10 @@
 
 package dev.galacticraft.mod.compat.rei.client.category;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.compat.rei.client.display.DefaultFabricationDisplay;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin;
+import dev.galacticraft.mod.compat.rei.client.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
@@ -38,20 +37,15 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.util.math.MatrixStack;
+import org.jetbrains.annotations.NotNull;
+import java.util.LinkedList;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -79,30 +73,9 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
     public @NotNull List<Widget> setupDisplay(DefaultFabricationDisplay recipeDisplay, Rectangle bounds) {
         final Point startPoint = new Point(bounds.getCenterX() - 81, bounds.getCenterY() - 41);
 
-        class BaseWidget extends Widget {
-            private BaseWidget() {
-            }
-
-            public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-                DiffuseLighting.disableGuiDepthLighting();
-                RenderSystem.setShaderTexture(0, DefaultFabricationCategory.DISPLAY_TEXTURE);
-                this.drawTexture(matrices, startPoint.x, startPoint.y, 0, 0, 162, 82);
-
-                int height = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
-                this.drawTexture(matrices, startPoint.x + 2, startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
-                int width = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D);
-                this.drawTexture(matrices, startPoint.x + 24, startPoint.y + 18, 82, 91, width, 17);
-            }
-
-            @Override
-            public List<? extends Element> children() {
-                return Collections.emptyList();
-            }
-        }
-
         List<Widget> widgets = new LinkedList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(new BaseWidget());
+        widgets.add(Widgets.createTexturedWidget(DISPLAY_TEXTURE, new Rectangle(startPoint.x, startPoint.y, 162, 82)));
 
         // Diamond input
         // Silicon

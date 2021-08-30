@@ -24,7 +24,6 @@ package dev.galacticraft.mod.compat.rei.client.transfer;
 
 import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.compat.rei.client.display.DefaultFabricationDisplay;
-import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import me.shedaniel.rei.api.client.ClientHelper;
 import me.shedaniel.rei.api.client.registry.transfer.TransferHandler;
 import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
@@ -44,7 +43,7 @@ public class DefaultTransferHandler implements TransferHandler {
                 if(display.getOptionalRecipe().isPresent()) {
                     return Result.createSuccessful();
                 }
-                return Result.createNotApplicable();
+                return Result.createSuccessful();
             }
             return Result.createFailed(new LiteralText("Unimplemented"));
         }
