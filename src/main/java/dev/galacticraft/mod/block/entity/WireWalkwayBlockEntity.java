@@ -90,4 +90,9 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
             to.offer(this.getInsertable());
         }
     }
+
+    @Override
+    public boolean canConnect(Direction direction) {
+        return direction != this.direction;
+    }
 }
