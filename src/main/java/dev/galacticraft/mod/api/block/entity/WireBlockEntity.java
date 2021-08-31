@@ -39,6 +39,7 @@ import dev.galacticraft.mod.util.EnergyUtil;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
@@ -58,6 +59,10 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
 
     public WireBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.WIRE, pos, state);
+    }
+
+    protected WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     @Override

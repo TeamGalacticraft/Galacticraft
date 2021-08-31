@@ -24,11 +24,12 @@ package dev.galacticraft.mod.api.block.entity;
 
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.NotNull;
 
 public interface Walkway extends BlockEntityClientSerializable {
     Direction getDirection();
 
     boolean[] getConnections();
 
-    void setDirection(Direction direction);
+    void setDirection(@NotNull Direction direction);
 }

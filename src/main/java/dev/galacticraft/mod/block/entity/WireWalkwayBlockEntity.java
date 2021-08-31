@@ -22,39 +22,35 @@
 
 package dev.galacticraft.mod.block.entity;
 
+import alexiil.mc.lib.attributes.AttributeList;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.block.entity.Walkway;
+import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 
-public class WalkwayBlockEntity extends BlockEntity implements Walkway {
-    private Direction direction = null;
-    private final boolean[] connections = new boolean[6];
+import java.util.Objects;
 
-    public WalkwayBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.WALKWAY, pos, state);
+public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
+    private Direction direction = null;
+
+    public WireWalkwayBlockEntity(BlockPos pos, BlockState state) {
+        super(GalacticraftBlockEntityType.WIRE_WALKWAY, pos, state);
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
-        for (int i = 0; i < 6; i++) {
-            nbt.putBoolean(Constant.Misc.DIRECTIONS[i].asString(), this.connections[i]);
-        }
-        nbt.putByte(Constant.Nbt.DIRECTION, (byte) this.direction.ordinal());
+        nbt.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.direction, Direction.UP).ordinal());
         return super.writeNbt(nbt);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        for (int i = 0; i < 6; i++) {
-            this.connections[i] = nbt.getBoolean(Constant.Misc.DIRECTIONS[i].asString());
-        }
         this.direction = Constant.Misc.DIRECTIONS[nbt.getByte(Constant.Nbt.DIRECTION)];
         super.readNbt(nbt);
     }
@@ -66,22 +62,32 @@ public class WalkwayBlockEntity extends BlockEntity implements Walkway {
 
     @Override
     public boolean[] getConnections() {
-        return this.connections;
+        return this.connections();
     }
 
     @Override
     public void setDirection(@NotNull Direction direction) {
         this.direction = direction;
+        this.connections()[direction.ordinal()] = false;
     }
 
     @Override
     public void fromClientTag(NbtCompound tag) {
-        this.readNbt(tag);
+        super.fromClientTag(tag);
+        this.direction = Constant.Misc.DIRECTIONS[tag.getByte(Constant.Nbt.DIRECTION)];
         ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
     }
 
     @Override
     public NbtCompound toClientTag(NbtCompound tag) {
-        return this.writeNbt(tag);
+        tag.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.direction, Direction.UP).ordinal());
+        return super.toClientTag(tag);
+    }
+
+    @Override
+    public void addAllAttributes(AttributeList<?> to) {
+        if (to.getSearchDirection() != null && to.getSearchDirection().getOpposite() != this.direction) {
+            to.offer(this.getInsertable());
+        }
     }
 }

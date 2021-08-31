@@ -68,7 +68,7 @@ public class WalkwayBlock extends Block implements FluidLoggable, BlockEntityPro
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        if (world.getBlockEntity(pos) instanceof Walkway walkway) {
+        if (world.getBlockEntity(pos) instanceof Walkway walkway && walkway.getDirection() != null) {
             int index = getFacingMask(walkway.getDirection());
             if (SHAPES[index] != null) {
                 return SHAPES[index];

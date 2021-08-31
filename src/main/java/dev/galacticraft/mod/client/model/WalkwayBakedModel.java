@@ -232,7 +232,7 @@ public class WalkwayBakedModel implements FabricBakedModel, BakedModel {
         instance = null;
     }
 
-    private enum Transform implements RenderContext.QuadTransform {
+    public enum Transform implements RenderContext.QuadTransform {
         INSTANCE;
 
         private Quaternion quaternionX;

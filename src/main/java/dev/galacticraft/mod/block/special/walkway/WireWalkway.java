@@ -22,22 +22,23 @@
 
 package dev.galacticraft.mod.block.special.walkway;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.WireBlock;
+import dev.galacticraft.mod.api.block.entity.Walkway;
+import dev.galacticraft.mod.block.entity.WireWalkwayBlockEntity;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
@@ -45,24 +46,19 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class WireWalkway extends WireBlock implements FluidLoggable {
-    public static final DirectionProperty FACING = Properties.FACING;
-    private static final VoxelShape[] shape = new VoxelShape[64];
+public class WireWalkway extends WireBlock implements FluidLoggable, BlockEntityProvider {
+    private static final VoxelShape[] SHAPES = new VoxelShape[64];
 
     public WireWalkway(Settings settings) {
         super(settings);
         this.setDefaultState(this.getStateManager().getDefaultState()
-                .with(Properties.NORTH, false)
-                .with(Properties.EAST, false)
-                .with(Properties.SOUTH, false)
-                .with(Properties.WEST, false)
-                .with(Properties.UP, false)
-                .with(Properties.DOWN, false)
-                .with(FACING, Direction.UP)
                 .with(FLUID, INVALID)
                 .with(FlowableFluid.LEVEL, 8));
     }
@@ -73,68 +69,68 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return getShape(state);
-    }
-
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return getShape(state);
-    }
-
-    private VoxelShape getShape(BlockState state) {
-        int index = getFacingMask(state.get(FACING));
-        if (shape[index] != null) {
-            return shape[index];
+        if (world.getBlockEntity(pos) instanceof Walkway walkway && walkway.getDirection() != null) {
+            int index = getFacingMask(walkway.getDirection());
+            if (SHAPES[index] != null) {
+                return SHAPES[index];
+            }
+            return SHAPES[index] = ConnectingBlockUtil.createWalkwayShape(walkway.getDirection());
         }
-        return shape[index] = ConnectingBlockUtil.createWalkwayShape(state.get(FACING));
-    }
-
-    @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return ConnectingBlockUtil.rotateConnections(state, rotation);
-    }
-
-    @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return ConnectingBlockUtil.mirror(state, mirror);
-    }
-
-    public boolean canConnect(BlockState state, BlockState neighborState, BlockPos pos, BlockPos neighborPos, WorldAccess world, Direction facing) {
-        /* This code tests if the connecting block is on the top of the walkway (it used to be unable to connect there)
-        try {
-            if (pos.offset(state.get(FACING)).equals(neighborPos))
-                return false;
-            if (neighborPos.offset(neighborState.get(FACING)).equals(pos))
-                return false;
-        } catch (IllegalArgumentException ignored) {}
-        */
-        return neighborState.getBlock() instanceof WireBlock || EnergyUtil.canAccessEnergy((World) world, pos.offset(facing), facing.getOpposite());
+        return ConnectingBlockUtil.WALKWAY_TOP;
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        BlockState state = this.getDefaultState();
         FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
-        for (Direction direction : Constant.Misc.DIRECTIONS) {
-            state = state.with(ConnectingBlockUtil.getBooleanProperty(direction), this.canConnect(state,
-                    context.getWorld().getBlockState(context.getBlockPos().offset(direction)),
-                    context.getBlockPos(),
-                    context.getBlockPos().offset(direction),
-                    context.getWorld(),
-                    direction));
-        }
-        return state
-                .with(FACING, context.getPlayerLookDirection().getOpposite())
+        return this.getDefaultState()
                 .with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
                 .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
     }
 
     @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        super.onPlaced(world, pos, state, placer, itemStack);
+        final Walkway blockEntity = (Walkway) world.getBlockEntity(pos);
+        assert placer != null;
+        assert blockEntity != null;
+        blockEntity.setDirection(Direction.getEntityFacingOrder(placer)[0].getOpposite());
+        for (Direction direction : Direction.values()) {
+            if (blockEntity.getDirection() != direction) {
+                if (EnergyUtil.canAccessEnergy(world, pos.offset(direction), direction)) {
+                    blockEntity.getConnections()[direction.ordinal()] = true;
+                    continue;
+                }
+            }
+            blockEntity.getConnections()[direction.ordinal()] = false;
+        }
+        world.updateNeighborsAlways(pos, state.getBlock());
+    }
+
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-           if (!this.isEmpty(state)) {
+        if (!this.isEmpty(state)) {
             world.getFluidTickScheduler().schedule(pos, Registry.FLUID.get(state.get(FLUID)), Registry.FLUID.get(state.get(FLUID)).getTickRate(world));
         }
-        return state.with(ConnectingBlockUtil.getBooleanProperty(facing), this.canConnect(state, neighborState, pos, neighborPos, world, facing));
+        return state;
+    }
+
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        super.neighborUpdate(state, world, pos, block, fromPos, notify);
+        if (fromPos.isWithinDistance(pos, 1.0000000000001)) {
+            final Walkway blockEntity = (Walkway) world.getBlockEntity(pos);
+            assert blockEntity != null;
+            final Direction direction = Direction.fromVector(fromPos.subtract(pos));
+            if (direction != blockEntity.getDirection()) {
+                if (EnergyUtil.canAccessEnergy(world, pos.offset(direction), direction)) {
+                    blockEntity.getConnections()[Objects.requireNonNull(direction).ordinal()] = true;
+                    if (!world.isClient) blockEntity.sync();
+                    return;
+                }
+            }
+            blockEntity.getConnections()[Objects.requireNonNull(direction).ordinal()] = false;
+            if (!world.isClient) blockEntity.sync();
+        }
     }
 
     @Override
@@ -148,6 +144,12 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
 
     @Override
     public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(Properties.NORTH, Properties.EAST, Properties.WEST, Properties.SOUTH, Properties.UP, Properties.DOWN, FACING, FLUID, FlowableFluid.LEVEL);
+        stateBuilder.add(FLUID, FlowableFluid.LEVEL);
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new WireWalkwayBlockEntity(pos, state);
     }
 }
