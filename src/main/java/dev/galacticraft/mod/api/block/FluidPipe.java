@@ -24,7 +24,6 @@ package dev.galacticraft.mod.api.block;
 
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.pipe.Pipe;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
@@ -43,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class FluidPipe extends Block implements BlockEntityProvider {
+public abstract class FluidPipe extends Block implements BlockEntityProvider {
     public FluidPipe(Settings settings) {
         super(settings);
     }
@@ -74,7 +73,5 @@ public class FluidPipe extends Block implements BlockEntityProvider {
     }
 
     @Override
-    public @Nullable PipeBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new PipeBlockEntity(GalacticraftBlockEntityType.FLUID_PIPE, pos, state);
-    }
+    public abstract @Nullable PipeBlockEntity createBlockEntity(BlockPos pos, BlockState state);
 }

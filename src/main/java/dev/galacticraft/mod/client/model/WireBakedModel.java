@@ -129,7 +129,7 @@ public class WireBakedModel implements FabricBakedModel, BakedModel {
         if (wire.connections()[0]) {
             meshConsumer.accept(this.down);
         } else {
-            emitter.square(Direction.DOWN, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, 0/*MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV*/).emit();
+            emitter.square(Direction.DOWN, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         }
         if (wire.connections()[1]) {
             meshConsumer.accept(this.up);

@@ -149,6 +149,8 @@ public class GalacticraftClient implements ClientModInitializer {
                 return WireWalkwayUnbakedModel.INSTANCE;
             } else if (PipeWalkwayBakedModel.PIPE_WALKWAY_MARKER.equals(resourceId)) {
                 return PipeWalkwayUnbakedModel.INSTANCE;
+            } else if (PipeBakedModel.GLASS_FLUID_PIPE_MARKER.equals(resourceId)) {
+                return PipeUnbakedModel.INSTANCE;
             }
             return null;
         });

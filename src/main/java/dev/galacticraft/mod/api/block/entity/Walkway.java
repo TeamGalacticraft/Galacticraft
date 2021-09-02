@@ -26,10 +26,11 @@ import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 
-public interface Walkway extends BlockEntityClientSerializable {
+public interface Walkway extends Connected, BlockEntityClientSerializable {
     Direction getDirection();
 
-    boolean[] getConnections();
+    @Override
+    boolean[/*6*/] getConnections();
 
     void setDirection(@NotNull Direction direction);
 }

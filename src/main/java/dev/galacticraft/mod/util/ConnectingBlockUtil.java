@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.util;
 
+import dev.galacticraft.mod.api.block.entity.Connected;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.BooleanProperty;
@@ -70,6 +71,31 @@ public class ConnectingBlockUtil {
             shape = VoxelShapes.combineAndSimplify(shape, up, BooleanBiFunction.OR);
         }
         if (blockState.get(Properties.DOWN)) {
+            shape = VoxelShapes.combineAndSimplify(shape, down, BooleanBiFunction.OR);
+        }
+        return shape;
+    }
+
+    public static VoxelShape getVoxelShape(Connected connected, VoxelShape north, VoxelShape south, VoxelShape east, VoxelShape west, VoxelShape up, VoxelShape down, VoxelShape none) {
+        VoxelShape shape = none;
+
+        final boolean[] connections = connected.getConnections();
+        if (connections[2]) {
+            shape = VoxelShapes.combineAndSimplify(shape, north, BooleanBiFunction.OR);
+        }
+        if (connections[3]) {
+            shape = VoxelShapes.combineAndSimplify(shape, south, BooleanBiFunction.OR);
+        }
+        if (connections[5]) {
+            shape = VoxelShapes.combineAndSimplify(shape, east, BooleanBiFunction.OR);
+        }
+        if (connections[4]) {
+            shape = VoxelShapes.combineAndSimplify(shape, west, BooleanBiFunction.OR);
+        }
+        if (connections[1]) {
+            shape = VoxelShapes.combineAndSimplify(shape, up, BooleanBiFunction.OR);
+        }
+        if (connections[0]) {
             shape = VoxelShapes.combineAndSimplify(shape, down, BooleanBiFunction.OR);
         }
         return shape;
