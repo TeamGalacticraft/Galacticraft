@@ -29,7 +29,6 @@ import dev.galacticraft.mod.block.entity.WireWalkwayBlockEntity;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
@@ -53,7 +52,7 @@ import java.util.Objects;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class WireWalkway extends WireBlock implements FluidLoggable, BlockEntityProvider {
+public class WireWalkway extends WireBlock implements FluidLoggable {
     private static final VoxelShape[] SHAPES = new VoxelShape[64];
 
     public WireWalkway(Settings settings) {

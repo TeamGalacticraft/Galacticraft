@@ -29,7 +29,6 @@ import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 
 import java.util.Collection;
@@ -45,12 +44,12 @@ public class WalkwayUnbakedModel implements UnbakedModel {
 
     @Override
     public Collection<Identifier> getModelDependencies() {
-        return Collections.emptyList();
+        return Collections.singleton(WalkwayBakedModel.WALKWAY_PLATFORM);
     }
 
     @Override
     public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        return Collections.singleton(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WireBakedModel.ALUMINUM_WIRE));
+        return Collections.emptyList();
     }
 
     @Override

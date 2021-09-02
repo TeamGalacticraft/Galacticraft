@@ -54,6 +54,7 @@ public class GalacticraftBlockEntityType {
     public static final BlockEntityType<WireBlockEntity> WIRE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.ALUMINUM_WIRE), FabricBlockEntityTypeBuilder.create(WireBlockEntity::new, GalacticraftBlock.ALUMINUM_WIRE, GalacticraftBlock.SEALABLE_ALUMINUM_WIRE).build());
     public static final BlockEntityType<WalkwayBlockEntity> WALKWAY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.WALKWAY), FabricBlockEntityTypeBuilder.create(WalkwayBlockEntity::new, GalacticraftBlock.WALKWAY).build());
     public static final BlockEntityType<WireWalkwayBlockEntity> WIRE_WALKWAY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.WIRE_WALKWAY), FabricBlockEntityTypeBuilder.create(WireWalkwayBlockEntity::new, GalacticraftBlock.WIRE_WALKWAY).build());
+    public static final BlockEntityType<PipeWalkwayBlockEntity> PIPE_WALKWAY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.PIPE_WALKWAY), FabricBlockEntityTypeBuilder.create(PipeWalkwayBlockEntity::new, GalacticraftBlock.PIPE_WALKWAY).build());
     public static final BlockEntityType<PipeBlockEntity> FLUID_PIPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.FLUID_PIPE), FabricBlockEntityTypeBuilder.create(PipeBlockEntity::new, new Block(FabricBlockSettings.of(Material.AIR)) {
         @Override
         public boolean equals(Object obj) {

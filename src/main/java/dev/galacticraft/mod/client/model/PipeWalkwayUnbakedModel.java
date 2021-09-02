@@ -29,10 +29,8 @@ import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -41,21 +39,21 @@ import java.util.function.Function;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class WireWalkwayUnbakedModel implements UnbakedModel {
-    public static final WireWalkwayUnbakedModel INSTANCE = new WireWalkwayUnbakedModel();
+public class PipeWalkwayUnbakedModel implements UnbakedModel {
+    public static final PipeWalkwayUnbakedModel INSTANCE = new PipeWalkwayUnbakedModel();
 
     @Override
     public Collection<Identifier> getModelDependencies() {
-        return Collections.singleton(WireWalkwayBakedModel.WALKWAY_PLATFORM);
+        return Collections.singleton(PipeWalkwayBakedModel.WALKWAY_PLATFORM);
     }
 
     @Override
     public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        return Arrays.asList(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WireWalkwayBakedModel.ALUMINUM_WIRE), new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WireWalkwayBakedModel.WALKWAY_TEX));
+        return PipeWalkwayBakedModel.COLOR_SPRITE_ID_MAP.values();
     }
 
     @Override
     public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> spriteFunction, ModelBakeSettings rotationContainer, Identifier modelId) {
-        return WireWalkwayBakedModel.getInstance(loader, spriteFunction, rotationContainer);
+        return PipeWalkwayBakedModel.getInstance(loader, spriteFunction, rotationContainer);
     }
 }
