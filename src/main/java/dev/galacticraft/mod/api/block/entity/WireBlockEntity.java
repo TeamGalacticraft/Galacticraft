@@ -25,12 +25,16 @@ package dev.galacticraft.mod.api.block.entity;
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProviderBlockEntity;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.attribute.energy.WireEnergyInsertable;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -40,10 +44,11 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class WireBlockEntity extends BlockEntity implements Wire, AttributeProviderBlockEntity {
+public class WireBlockEntity extends BlockEntity implements Wire, AttributeProviderBlockEntity, BlockEntityClientSerializable {
     private @Nullable WireNetwork network = null;
     private @NotNull WireEnergyInsertable @Nullable[] insertables = null;
     private final int maxTransferRate;
+    private final boolean[] connections = new boolean[6];
 
     public WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state, int maxTransferRate) {
         super(type, pos, state);
@@ -56,6 +61,10 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
 
     public static WireBlockEntity createT2(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
         return new WireBlockEntity(type, pos, state, 480);
+    }
+
+    protected WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     @Override
@@ -120,5 +129,52 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
         if (to.getSearchDirection() != null) {
             to.offer(this.getInsertables()[to.getSearchDirection().ordinal()]);
         }
+    }
+
+    @Override
+    public boolean[] connections() {
+        return this.connections;
+    }
+
+    @Override
+    public void fromClientTag(NbtCompound tag) {
+        this.readConnections(tag);
+        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
+    }
+
+    @Override
+    public NbtCompound toClientTag(NbtCompound tag) {
+        this.writeConnections(tag);
+        return tag;
+    }
+
+    private void writeConnections(NbtCompound tag) {
+        tag.putBoolean("0", this.connections[0]);
+        tag.putBoolean("1", this.connections[1]);
+        tag.putBoolean("2", this.connections[2]);
+        tag.putBoolean("3", this.connections[3]);
+        tag.putBoolean("4", this.connections[4]);
+        tag.putBoolean("5", this.connections[5]);
+    }
+
+    @Override
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        this.writeConnections(nbt);
+        return super.writeNbt(nbt);
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        this.readConnections(nbt);
+        super.readNbt(nbt);
+    }
+
+    private void readConnections(NbtCompound nbt) {
+        this.connections[0] = nbt.getBoolean("0");
+        this.connections[1] = nbt.getBoolean("1");
+        this.connections[2] = nbt.getBoolean("2");
+        this.connections[3] = nbt.getBoolean("3");
+        this.connections[4] = nbt.getBoolean("4");
+        this.connections[5] = nbt.getBoolean("5");
     }
 }

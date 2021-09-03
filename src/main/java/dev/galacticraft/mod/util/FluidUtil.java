@@ -138,7 +138,7 @@ public class FluidUtil {
         return FluidAttributes.EXTRACTABLE.getFirst(world, pos, SearchOptions.inDirection(direction));
     }
 
-    public static boolean isExtractableOrInsertable(World world, BlockPos pos, Direction direction) {
+    public static boolean canAccessFluid(World world, BlockPos pos, Direction direction) {
         return FluidAttributes.EXTRACTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null
                 || FluidAttributes.INSERTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null;
     }

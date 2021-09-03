@@ -20,22 +20,8 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.render.block.entity;
+package dev.galacticraft.mod.api.block.entity;
 
-import dev.galacticraft.mod.block.entity.GlassFluidPipeBlockEntity;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class FluidPipeBlockEntityRenderer implements BlockEntityRenderer<GlassFluidPipeBlockEntity> {
-    public FluidPipeBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
-    }
-
-    @Override
-    public void render(GlassFluidPipeBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-    }
+public interface Connected {
+    boolean[/*6*/] getConnections();
 }

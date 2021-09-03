@@ -39,7 +39,7 @@ import dev.galacticraft.mod.block.special.aluminumwire.tier1.SealableAluminumWir
 import dev.galacticraft.mod.block.special.aluminumwire.tier2.HeavySealableAluminumWireBlock;
 import dev.galacticraft.mod.block.special.fluidpipe.GlassFluidPipeBlock;
 import dev.galacticraft.mod.block.special.walkway.PipeWalkway;
-import dev.galacticraft.mod.block.special.walkway.Walkway;
+import dev.galacticraft.mod.block.special.walkway.WalkwayBlock;
 import dev.galacticraft.mod.block.special.walkway.WireWalkway;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.util.MultiBlockUtil;
@@ -128,7 +128,7 @@ public class GalacticraftBlock {
     public static final Block VAPOR_SPOUT = registerBlock(new VaporSpoutBlock(FabricBlockSettings.of(Material.STONE, MapColor.BROWN).dropsNothing().strength(1.5F, 2.0F)), Constant.Block.VAPOR_SPOUT);
 
     // MISC DECOR
-    public static final Block WALKWAY = registerBlock(new Walkway(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constant.Block.WALKWAY);
+    public static final Block WALKWAY = registerBlock(new WalkwayBlock(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constant.Block.WALKWAY);
     public static final Block PIPE_WALKWAY = registerBlock(new PipeWalkway(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constant.Block.PIPE_WALKWAY);
     public static final Block WIRE_WALKWAY = registerBlock(new WireWalkway(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constant.Block.WIRE_WALKWAY);
     public static final Block TIN_LADDER = registerBlock(new TinLadderBlock(FabricBlockSettings.of(Material.DECORATION).strength(1.0f, 1.0f).sounds(BlockSoundGroup.METAL)), Constant.Block.TIN_LADDER);

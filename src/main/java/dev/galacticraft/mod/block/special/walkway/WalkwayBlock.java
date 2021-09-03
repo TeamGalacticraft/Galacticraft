@@ -23,27 +23,20 @@
 package dev.galacticraft.mod.block.special.walkway;
 
 import dev.galacticraft.mod.api.block.FluidLoggable;
-import dev.galacticraft.mod.api.block.FluidPipe;
 import dev.galacticraft.mod.api.block.entity.Walkway;
-import dev.galacticraft.mod.api.pipe.Pipe;
-import dev.galacticraft.mod.block.entity.PipeWalkwayBlockEntity;
-import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
+import dev.galacticraft.mod.block.entity.WalkwayBlockEntity;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
-import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
@@ -58,11 +51,15 @@ import java.util.Objects;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class PipeWalkway extends FluidPipe implements FluidLoggable {
+public class WalkwayBlock extends Block implements FluidLoggable, BlockEntityProvider {
     private static final VoxelShape[] SHAPES = new VoxelShape[64];
 
-    public PipeWalkway(Settings settings) {
+    public WalkwayBlock(Settings settings) {
         super(settings);
+
+        this.setDefaultState(this.getStateManager().getDefaultState()
+                .with(FLUID, INVALID)
+                .with(FlowableFluid.LEVEL, 8));
     }
 
     private static int getFacingMask(Direction dir) {
@@ -90,47 +87,20 @@ public class PipeWalkway extends FluidPipe implements FluidLoggable {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        final ItemStack stack = player.getStackInHand(hand);
-        if (!stack.isEmpty() && stack.getItem() instanceof DyeItem dye) {
-            final PipeWalkwayBlockEntity be = ((PipeWalkwayBlockEntity) world.getBlockEntity(pos));
-            assert be != null;
-            if (dye.getColor() != be.getColor()) {
-                be.setColor(dye.getColor());
-                final ItemStack copy = stack.copy();
-                copy.decrement(1);
-                player.setStackInHand(hand, copy);
-            }
-        }
-        return super.onUse(state, world, pos, player, hand, hit);
-    }
-
-    @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
-        final PipeWalkwayBlockEntity blockEntity = (PipeWalkwayBlockEntity) world.getBlockEntity(pos);
+        final Walkway blockEntity = (Walkway) world.getBlockEntity(pos);
         assert placer != null;
         assert blockEntity != null;
-        for (Hand hand : Hand.values()) {
-            final ItemStack stack = placer.getStackInHand(hand);
-            if (stack.getItem() instanceof DyeItem dye && dye.getColor() != blockEntity.getColor()) {
-                blockEntity.setColor(dye.getColor());
-                final ItemStack copy = stack.copy();
-                copy.decrement(1);
-                placer.setStackInHand(hand, copy);
-            }
-        }
         blockEntity.setDirection(Direction.getEntityFacingOrder(placer)[0].getOpposite());
+        BlockPos.Mutable mutable = new BlockPos.Mutable();
         for (Direction direction : Direction.values()) {
             if (blockEntity.getDirection() != direction) {
-                if (world.getBlockEntity(pos.offset(direction)) instanceof Pipe pipe) {
-                    if (pipe.canConnect(direction.getOpposite())) {
+                if (world.getBlockEntity(mutable.set(pos).move(direction)) instanceof Walkway walkway) {
+                    if (walkway.getDirection() != direction.getOpposite()) {
                         blockEntity.getConnections()[direction.ordinal()] = true;
                         continue;
                     }
-                } else if (FluidUtil.canAccessFluid(world, pos.offset(direction), direction)) {
-                    blockEntity.getConnections()[direction.ordinal()] = true;
-                    continue;
                 }
             }
             blockEntity.getConnections()[direction.ordinal()] = false;
@@ -152,22 +122,18 @@ public class PipeWalkway extends FluidPipe implements FluidLoggable {
         if (fromPos.isWithinDistance(pos, 1.0000000000001)) {
             final Walkway blockEntity = (Walkway) world.getBlockEntity(pos);
             assert blockEntity != null;
-            final Direction direction = Direction.fromVector(fromPos.subtract(pos));
-            assert direction != null;
-            if (direction != blockEntity.getDirection()) {
-                if (world.getBlockEntity(pos.offset(direction)) instanceof Pipe pipe) {
-                    if (pipe.canConnect(direction.getOpposite())) {
-                        blockEntity.getConnections()[direction.ordinal()] = true;
-                        if (!world.isClient) blockEntity.sync();
-                        return;
+            if (world.getBlockEntity(fromPos) instanceof Walkway walkway) {
+                if (walkway.getDirection() != null) {
+                    if (!fromPos.offset(walkway.getDirection()).equals(pos)) {
+                        if (!pos.offset(blockEntity.getDirection()).equals(fromPos)) {
+                            blockEntity.getConnections()[Objects.requireNonNull(Direction.fromVector(fromPos.subtract(pos))).ordinal()] = true;
+                            if (!world.isClient) blockEntity.sync();
+                            return;
+                        }
                     }
-                } else if (FluidUtil.canAccessFluid(world, pos.offset(direction), direction)) {
-                    blockEntity.getConnections()[Objects.requireNonNull(direction).ordinal()] = true;
-                    if (!world.isClient) blockEntity.sync();
-                    return;
                 }
             }
-            blockEntity.getConnections()[Objects.requireNonNull(direction).ordinal()] = false;
+            blockEntity.getConnections()[Objects.requireNonNull(Direction.fromVector(fromPos.subtract(pos))).ordinal()] = false;
             if (!world.isClient) blockEntity.sync();
         }
     }
@@ -186,8 +152,9 @@ public class PipeWalkway extends FluidPipe implements FluidLoggable {
         stateBuilder.add(FLUID, FlowableFluid.LEVEL);
     }
 
+    @Nullable
     @Override
-    public @Nullable PipeBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new PipeWalkwayBlockEntity(pos, state);
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new WalkwayBlockEntity(pos, state);
     }
 }

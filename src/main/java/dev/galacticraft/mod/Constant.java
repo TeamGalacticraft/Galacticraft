@@ -663,6 +663,8 @@ public interface Constant {
         String MATCH = "Match";
         String INTEGER = "Integer";
         String MAX_PROGRESS = "MaxProgress";
+        String COLOR = "Color";
+        String PULL = "pull";
     }
 
     interface Property {
