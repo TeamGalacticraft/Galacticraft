@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.AttributeList;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.block.entity.Walkway;
@@ -70,6 +69,7 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     public void setDirection(@NotNull Direction direction) {
         this.direction = direction;
         this.connections()[direction.ordinal()] = false;
+        world.updateNeighborsAlways(pos, this.getCachedState().getBlock());
     }
 
     @Override
@@ -86,14 +86,8 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     }
 
     @Override
-    public void addAllAttributes(AttributeList<?> to) {
-        if (to.getSearchDirection() != null && to.getSearchDirection().getOpposite() != this.direction) {
-            super.addAllAttributes(to);
-        }
-    }
-
-    @Override
     public boolean canConnect(Direction direction) {
+        if (this.direction == null) return false;
         return direction != this.direction;
     }
 }

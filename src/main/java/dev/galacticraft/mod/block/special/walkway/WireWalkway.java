@@ -26,12 +26,14 @@ import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
+import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.block.entity.WireWalkwayBlockEntity;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
@@ -95,7 +97,13 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
         blockEntity.setDirection(Direction.getEntityFacingOrder(placer)[0].getOpposite());
         for (Direction direction : Direction.values()) {
             if (blockEntity.getDirection() != direction) {
-                if (EnergyUtil.canAccessEnergy(world, pos.offset(direction), direction)) {
+                final BlockEntity blockEntity1 = world.getBlockEntity(pos.offset(direction));
+                if (blockEntity1 instanceof Wire wire) {
+                    if (wire.canConnect(direction.getOpposite())) {
+                        blockEntity.getConnections()[direction.ordinal()] = true;
+                        continue;
+                    }
+                } else if (EnergyUtil.canAccessEnergy(world, pos.offset(direction), direction)) {
                     blockEntity.getConnections()[direction.ordinal()] = true;
                     continue;
                 }
@@ -121,7 +129,14 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
             assert blockEntity != null;
             final Direction direction = Direction.fromVector(fromPos.subtract(pos));
             if (direction != blockEntity.getDirection()) {
-                if (EnergyUtil.canAccessEnergy(world, pos.offset(direction), direction)) {
+                final BlockEntity blockEntity1 = world.getBlockEntity(pos.offset(direction));
+                if (blockEntity1 instanceof Wire wire) {
+                    if (wire.canConnect(direction.getOpposite())) {
+                        blockEntity.getConnections()[direction.ordinal()] = true;
+                        if (!world.isClient) blockEntity.sync();
+                        return;
+                    }
+                } else if (EnergyUtil.canAccessEnergy(world, pos.offset(direction), direction)) {
                     blockEntity.getConnections()[Objects.requireNonNull(direction).ordinal()] = true;
                     if (!world.isClient) blockEntity.sync();
                     return;

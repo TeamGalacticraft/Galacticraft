@@ -25,7 +25,7 @@ package dev.galacticraft.mod.api.wire;
 import alexiil.mc.lib.attributes.Simulation;
 import dev.galacticraft.energy.api.EnergyInsertable;
 import dev.galacticraft.mod.api.wire.impl.WireNetworkImpl;
-import net.minecraft.block.entity.BlockEntity;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -47,21 +47,23 @@ public interface WireNetwork {
      * Adds a wire to the network
      * @param pos The position of the wire being added
      * @param wire The data container of the wire being connected (can be null)
+     * @return
      */
-    void addWire(@NotNull BlockPos pos, @Nullable Wire wire);
+    boolean addWire(@NotNull BlockPos pos, @Nullable Wire wire);
 
     /**
      * Removes a wire from the network
-     * @param pos The position of the wire being removed
+     * @param removedPos The position of the wire being removed
      */
-    void removeWire(@NotNull BlockPos pos);
+    void removeWire(Wire wire, @NotNull BlockPos removedPos);
 
     /**
      * Updates the wire's connection to the updated block
      * @param adjacentToUpdated The wire that is adjacent to the updated pos
      * @param updatedPos The position of the block that was updated
+     * @return
      */
-    void updateConnections(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos);
+    boolean updateConnection(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos);
 
     /**
      * Inserts energy into the network
@@ -72,6 +74,10 @@ public interface WireNetwork {
      * @return the amount of energy that failed to insert
      */
     int insert(@NotNull BlockPos fromWire, int amount, Direction direction, @NotNull Simulation simulate);
+
+    int insertInternal(int amount, double ratio, int available, Simulation simulate);
+
+    void getNonFullInsertables(Object2IntMap<WireNetwork> energyRequirement, BlockPos source, int amount);
 
     /**
      * Returns the maximum amount of energy allowed to pass through this network per tick
@@ -87,5 +93,5 @@ public interface WireNetwork {
 
     void markForRemoval();
 
-    boolean canAccept(BlockEntity blockEntity, Direction direction);
+    boolean isCompatibleWith(Wire wire);
 }

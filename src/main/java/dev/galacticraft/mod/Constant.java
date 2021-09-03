@@ -664,7 +664,8 @@ public interface Constant {
         String INTEGER = "Integer";
         String MAX_PROGRESS = "MaxProgress";
         String COLOR = "Color";
-        String PULL = "pull";
+        String PULL = "Pull";
+        String HEAT = "Heat";
     }
 
     interface Property {

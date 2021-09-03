@@ -76,10 +76,14 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
         if (this.network == null) {
             if (!this.world.isClient()) {
                 for (Direction direction : Constant.Misc.DIRECTIONS) {
-                    BlockEntity entity = world.getBlockEntity(pos.offset(direction));
-                    if (entity instanceof Wire wire && wire.getNetwork() != null) {
-                        if (wire.getOrCreateNetwork().canAccept(this, direction.getOpposite())) {
-                            wire.getOrCreateNetwork().addWire(pos, this);
+                    if (this.canConnect(direction)) {
+                        BlockEntity entity = world.getBlockEntity(pos.offset(direction));
+                        if (entity instanceof Wire wire && wire.getNetwork() != null) {
+                            if (wire.canConnect(direction.getOpposite())) {
+                                if (wire.getOrCreateNetwork().isCompatibleWith(this)) {
+                                    wire.getNetwork().addWire(pos, this);
+                                }
+                            }
                         }
                     }
                 }
@@ -116,13 +120,13 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     public void markRemoved() {
         super.markRemoved();
         if (this.getNetwork() != null) {
-            this.getOrCreateNetwork().removeWire(this.pos);
+            this.getOrCreateNetwork().removeWire(this, this.pos);
         }
     }
 
     @Override
     public void addAllAttributes(AttributeList<?> to) {
-        if (to.getSearchDirection() != null) {
+        if (to.getSearchDirection() != null && this.canConnect(to.getSearchDirection().getOpposite())) {
             to.offer(this.getInsertables()[to.getSearchDirection().ordinal()]);
         }
     }

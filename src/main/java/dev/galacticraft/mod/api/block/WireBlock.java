@@ -25,6 +25,7 @@ package dev.galacticraft.mod.api.block;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.api.wire.Wire;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -36,6 +37,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,10 +65,48 @@ public abstract class WireBlock extends Block implements BlockEntityProvider {
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborUpdate(state, world, pos, block, fromPos, notify);
         if (!world.isClient()) {
-            Wire wire = (Wire) world.getBlockEntity(pos);
+            final BlockEntity blockEntity = world.getBlockEntity(pos);
+            Wire wire = (Wire) blockEntity;
             assert wire != null;
-            wire.getOrCreateNetwork().updateConnections(pos, fromPos);
+            final BlockEntity blockEntityAdj = world.getBlockEntity(fromPos);
+            if (wire.canConnect(Direction.fromVector(fromPos.subtract(pos)))) {
+                if (blockEntityAdj instanceof Wire wire1) {
+                    if (wire1.canConnect(Direction.fromVector(fromPos.subtract(pos)).getOpposite())) {
+                        wire.getOrCreateNetwork().addWire(fromPos, wire1);
+                    }
+                } else {
+                    if (EnergyUtil.canAccessEnergy(world, fromPos, Direction.fromVector(fromPos.subtract(pos)))) {
+                        wire.getOrCreateNetwork().updateConnection(pos, fromPos);
+                    } else if (wire.getNetwork() != null) {
+                        wire.getNetwork().updateConnection(pos, fromPos);
+                    }
+                }
+            }
         }
+    }
+
+    @Override
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+        super.onBlockAdded(state, world, pos, oldState, notify);
+//        if (!world.isClient()) {
+//            final BlockEntity blockEntity = world.getBlockEntity(pos);
+//            Wire wire = (Wire) blockEntity;
+//            assert wire != null;
+//            for (Direction direction : Constant.Misc.DIRECTIONS) {
+//                if (wire.canConnect(direction)) {
+//                    BlockPos fromPos = pos.offset(direction);
+//                    final BlockEntity blockEntityAdj = world.getBlockEntity(fromPos);
+//                    if (blockEntityAdj instanceof Wire) {
+//                        wire.getOrCreateNetwork();
+//                        world.updateNeighbor(fromPos, state.getBlock(), pos);
+//                        return;
+//                    } else if (EnergyUtil.canAccessEnergy(world, fromPos, Direction.fromVector(fromPos.subtract(pos)))) {
+//                        wire.getOrCreateNetwork();
+//                        return;
+//                    }
+//                }
+//            }
+//        }
     }
 
     @Override

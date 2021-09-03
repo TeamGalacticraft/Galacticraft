@@ -33,6 +33,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.util.EnergyUtil;
+import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.objects.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -41,10 +42,7 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
 
 /**
@@ -54,6 +52,7 @@ public class WireNetworkImpl implements WireNetwork {
     private final @NotNull ServerWorld world;
     private final @NotNull Object2ObjectOpenHashMap<BlockPos, EnergyInsertable> insertable = new Object2ObjectOpenHashMap<>();
     private final @NotNull ObjectSet<BlockPos> wires = new ObjectLinkedOpenHashSet<>(1);
+    private final @NotNull ObjectSet<WireNetwork> peerNetworks = new ObjectLinkedOpenHashSet<>(0);
     private boolean markedForRemoval = false;
     private final int maxTransferRate;
     private int tickId;
@@ -66,38 +65,47 @@ public class WireNetworkImpl implements WireNetwork {
     }
 
     @Override
-    public void addWire(@NotNull BlockPos pos, @Nullable Wire wire) {
+    public boolean addWire(@NotNull BlockPos pos, @Nullable Wire wire) {
         assert !this.markedForRemoval();
         if (wire == null) {
             wire = (Wire) world.getBlockEntity(pos);
         }
         assert wire != null : "Attempted to add wire that does not exist!";
-        assert wire.getMaxTransferRate() == this.getMaxTransferRate();
-        wire.setNetwork(this);
-        this.wires.add(pos);
-        for (Direction direction : Constant.Misc.DIRECTIONS) {
-            BlockEntity entity = world.getBlockEntity(pos.offset(direction));
-            if (entity != null && !entity.isRemoved()) {
-                if (entity instanceof Wire wire1) {
-                    if (wire1.getMaxTransferRate() == this.getMaxTransferRate()) {
-                        if (wire1.getNetwork() == null) {
-                            this.addWire(pos.offset(direction), wire1);
-                        } else {
-                            assert !wire1.getNetwork().markedForRemoval();
-                            assert wire1.getNetwork().getMaxTransferRate() == this.getMaxTransferRate();
-                            if (wire1.getNetwork() != this) {
-                                this.takeAll(wire1.getNetwork());
+        assert pos.equals(((BlockEntity) wire).getPos());
+        if (this.isCompatibleWith(wire)) {
+            wire.setNetwork(this);
+            this.wires.add(pos);
+            for (Direction direction : Constant.Misc.DIRECTIONS) {
+                if (wire.canConnect(direction)) {
+                    BlockEntity blockEntity = world.getBlockEntity(pos.offset(direction));
+                    if (blockEntity != null && !blockEntity.isRemoved()) {
+                        if (blockEntity instanceof Wire adjacentWire) {
+                            if (adjacentWire.canConnect(direction.getOpposite())) {
+                                if (this.isCompatibleWith(adjacentWire)) {
+                                    if (adjacentWire.getNetwork() == null || adjacentWire.getNetwork().markedForRemoval()) {
+                                        this.addWire(pos.offset(direction), adjacentWire);
+                                    } else {
+                                        assert adjacentWire.getNetwork().getMaxTransferRate() == this.getMaxTransferRate();
+                                        if (adjacentWire.getNetwork() != this) {
+                                            this.takeAll(adjacentWire.getNetwork());
+                                        }
+                                    }
+                                } else {
+                                    this.peerNetworks.add(adjacentWire.getOrCreateNetwork());
+                                }
                             }
+                            continue;
                         }
-                        continue;
+                    }
+                    EnergyInsertable insertable = EnergyUtil.getEnergyInsertable(world, pos.offset(direction), direction);
+                    if (insertable != RejectingEnergyInsertable.NULL) {
+                        this.insertable.put(pos.offset(direction), insertable);
                     }
                 }
             }
-            EnergyInsertable insertable = EnergyUtil.getEnergyInsertable(world, pos.offset(direction), direction);
-            if (insertable != RejectingEnergyInsertable.NULL) {
-                this.insertable.put(pos.offset(direction), insertable);
-            }
+            return true;
         }
+        return false;
     }
 
     public void takeAll(@NotNull WireNetwork network) {
@@ -114,7 +122,7 @@ public class WireNetworkImpl implements WireNetwork {
     }
 
     @Override
-    public void removeWire(@NotNull BlockPos removedPos) {
+    public void removeWire(Wire wire, @NotNull BlockPos removedPos) {
         if (this.markedForRemoval()) {
             this.wires.clear();
             Galacticraft.LOGGER.warn("Tried to remove wire from removed network!");
@@ -122,17 +130,22 @@ public class WireNetworkImpl implements WireNetwork {
         }
         assert this.wires.contains(removedPos) : "Tried to remove wire that does not exist!";
         this.wires.remove(removedPos);
-        if (this.wires.isEmpty()) return;
+        if (this.wires.isEmpty()) {
+            this.markForRemoval();
+            return;
+        }
 
         List<BlockPos> adjacent = new LinkedList<>();
         this.reattachAdjacent(removedPos, this.insertable, (blockPos, direction) -> GalacticraftEnergy.INSERTABLE.getFirst(this.world, blockPos, SearchOptions.inDirection(direction)), adjacent);
         adjacent.clear();
 
         for (Direction direction : Constant.Misc.DIRECTIONS) {
-            BlockPos adjacentWirePos = removedPos.offset(direction);
-            if (this.wires.contains(adjacentWirePos)) {
-                if (this.canAccept(this.world.getBlockEntity(adjacentWirePos), direction.getOpposite())) {
-                    adjacent.add(adjacentWirePos); // Don't bother testing if it was unable to connect
+            if (wire.canConnect(direction)) {
+                BlockPos adjacentWirePos = removedPos.offset(direction);
+                if (this.wires.contains(adjacentWirePos)) {
+                    if (((Wire) Objects.requireNonNull(this.world.getBlockEntity(adjacentWirePos))).canConnect(direction.getOpposite())) {
+                        adjacent.add(adjacentWirePos); // Don't bother testing if it was unable to connect
+                    }
                 }
             }
         }
@@ -151,24 +164,30 @@ public class WireNetworkImpl implements WireNetwork {
             mappedWires.add(list1);
         }
 
-        assert mappedWires.size() > 0;
+        assert mappedWires.size() > 0 : "A wire was added that should never have been accepted (see L135)";
         if (mappedWires.size() == 1) return;
+        this.markForRemoval();
         for (List<BlockPos> positions : mappedWires) {
             WireNetwork network = WireNetwork.create(this.world, this.getMaxTransferRate());
             network.addWire(positions.get(0), null);
+            assert network.getAllWires().containsAll(positions);
         }
-        this.markForRemoval();
     }
 
     private void traverse(List<BlockPos> list, BlockPos pos, @Nullable Direction ignore) {
         BlockPos pos1;
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             if (direction.getOpposite() == ignore) continue;
-            pos1 = pos.offset(direction);
-            if (this.wires.contains(pos1)) {
-                if (!list.contains(pos1)) {
-                    list.add(pos1);
-                    this.traverse(list, pos1, direction);
+            Wire wire = (Wire) world.getBlockEntity(pos);
+            if (wire.canConnect(direction)) {
+                pos1 = pos.offset(direction);
+                if (this.wires.contains(pos1)) {
+                    if (world.getBlockEntity(pos1) instanceof Wire wire1 && wire1.canConnect(direction.getOpposite())) {
+                        if (!list.contains(pos1)) {
+                            list.add(pos1);
+                            this.traverse(list, pos1, direction);
+                        }
+                    }
                 }
             }
         }
@@ -176,16 +195,16 @@ public class WireNetworkImpl implements WireNetwork {
 
     private <T> void reattachAdjacent(BlockPos pos, Object2ObjectOpenHashMap<BlockPos, T> map, BiFunction<BlockPos, Direction, T> function, List<BlockPos> optionalList) {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
-            BlockPos pos1 = pos.offset(direction);
-            if (map.remove(pos1) != null) {
+            BlockPos adjacentPos = pos.offset(direction);
+            if (map.remove(adjacentPos) != null) {
                 for (Direction direction1 : Constant.Misc.DIRECTIONS) {
                     if (direction1 == direction.getOpposite()) continue;
-                    if (this.wires.contains(pos1.offset(direction1))) {
-                        if (this.canAccept(this.world.getBlockEntity(pos1), direction1.getOpposite())) {
-                            T value = function.apply(pos1, direction1);
+                    if (this.wires.contains(adjacentPos.offset(direction1))) {
+                        if (((Wire) world.getBlockEntity(adjacentPos.offset(direction1))).canConnect(direction1.getOpposite())) {
+                            T value = function.apply(adjacentPos, direction1);
                             if (value != null) {
-                                optionalList.add(pos1);
-                                map.put(pos1, value);
+                                optionalList.add(adjacentPos);
+                                map.put(adjacentPos, value);
                                 break;
                             }
                         }
@@ -196,18 +215,17 @@ public class WireNetworkImpl implements WireNetwork {
     }
 
     @Override
-    public void updateConnections(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos) {
-        if (world.getBlockEntity(updatedPos) instanceof Wire wire && !this.canAccept(((BlockEntity) wire), Direction.fromVector(updatedPos.subtract(adjacentToUpdated)))) {
-            wire.getOrCreateNetwork();
-            return;
-        }; //add/removeWire should've been called
+    public boolean updateConnection(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos) {
+        assert !(world.getBlockEntity(updatedPos) instanceof Wire);
         this.insertable.remove(updatedPos);
         BlockPos vector = updatedPos.subtract(adjacentToUpdated);
         Direction direction = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
         EnergyInsertable insertable = EnergyUtil.getEnergyInsertable(world, updatedPos, direction);
         if (insertable != RejectingEnergyInsertable.NULL) {
             this.insertable.put(updatedPos, insertable);
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -218,39 +236,68 @@ public class WireNetworkImpl implements WireNetwork {
         }
         amount = Math.min(amount, this.getMaxTransferRate() - this.transferred);
         if (amount <= 0) return amount;
-        if (simulate.isSimulate()) {
-            for (ObjectIterator<Object2ObjectMap.Entry<BlockPos, EnergyInsertable>> it = this.getInsertable().object2ObjectEntrySet().fastIterator(); it.hasNext(); ) {
-                Map.Entry<BlockPos, EnergyInsertable> entry = it.next();
-                if (entry.getKey().equals(source)) continue;
-                amount = entry.getValue().attemptInsertion(DefaultEnergyType.INSTANCE, amount, simulate);
-                if (amount == 0) return 0;
-            }
-            return amount;
-        }
-        List<EnergyInsertable> nonFullInsertables = new LinkedList<>();
+
+        Object2IntArrayMap<WireNetwork> nonFullInsertables = new Object2IntArrayMap<>(1 + this.peerNetworks.size());
+        nonFullInsertables.defaultReturnValue(-1);
+        this.getNonFullInsertables(nonFullInsertables, source, amount);
         int requested = 0;
-        for (ObjectIterator<Object2ObjectMap.Entry<BlockPos, EnergyInsertable>> it = this.getInsertable().object2ObjectEntrySet().fastIterator(); it.hasNext(); ) {
-            Map.Entry<BlockPos, EnergyInsertable> entry = it.next();
-            if (entry.getKey().equals(source)) continue;
-            int failed = entry.getValue().attemptInsertion(DefaultEnergyType.INSTANCE, amount, Simulation.SIMULATE);
-            if (failed != amount) {
-                nonFullInsertables.add(entry.getValue());
-                requested += (amount - failed);
-            }
+        for (IntIterator it = nonFullInsertables.values().iterator(); it.hasNext(); ) {
+            requested += it.nextInt();
         }
         if (requested == 0) return amount;
-        int available = amount;
+        var ref = new Object() {
+            int available = 0;
+        };
+        ref.available = amount;
         double ratio = (double)amount / (double)requested;
         if (ratio > 1) ratio = 1;
 
-        for (EnergyInsertable insertable : nonFullInsertables) {
+        int finalAmount = amount;
+        double finalRatio = ratio;
+        nonFullInsertables.forEach((wireNetwork, integer) -> ref.available = wireNetwork.insertInternal(finalAmount, finalRatio, ref.available, simulate));
+
+        return ref.available;
+    }
+
+    @Override
+    public int insertInternal(int amount, double ratio, int available, Simulation simulate) {
+        if (this.tickId != (this.tickId = world.getServer().getTicks())) {
+            this.transferred = 0;
+        }
+        amount = Math.min(amount, this.maxTransferRate - this.transferred);
+        for (EnergyInsertable insertable : this.insertable.values()) {
             int consumed = Math.min(Math.min(available, (int) (amount * ratio)), this.getMaxTransferRate() - this.transferred);
+            if (consumed == 0) continue;
             consumed -= insertable.attemptInsertion(DefaultEnergyType.INSTANCE, consumed, simulate);
             available -= consumed;
             this.transferred += consumed;
         }
-
         return available;
+    }
+
+    @Override
+    public void getNonFullInsertables(Object2IntMap<WireNetwork> energyRequirement, BlockPos source, int amount) {
+        if (this.tickId != (this.tickId = world.getServer().getTicks())) {
+            this.transferred = 0;
+        }
+        amount = Math.min(amount, this.maxTransferRate - this.transferred);
+        if (energyRequirement.putIfAbsent(this, 0) == -1) {
+            int requested = 0;
+            for (ObjectIterator<Object2ObjectMap.Entry<BlockPos, EnergyInsertable>> it = this.getInsertable().object2ObjectEntrySet().fastIterator(); it.hasNext(); ) {
+                Map.Entry<BlockPos, EnergyInsertable> entry = it.next();
+                if (entry.getKey().equals(source)) continue;
+                int failed = entry.getValue().attemptInsertion(DefaultEnergyType.INSTANCE, amount, Simulation.SIMULATE);
+                if (failed != amount) {
+                    requested += (amount - failed);
+                }
+            }
+            for (WireNetwork peerNetwork : this.peerNetworks) {
+                if (!energyRequirement.containsKey(peerNetwork)) {
+                    peerNetwork.getNonFullInsertables(energyRequirement, source, amount);
+                }
+            }
+            energyRequirement.put(this, requested);
+        }
     }
 
     @Override
@@ -279,8 +326,8 @@ public class WireNetworkImpl implements WireNetwork {
     }
 
     @Override
-    public boolean canAccept(BlockEntity blockEntity, Direction direction) {  // world.getBlockEntity(pos.offset(direction)) == the wire BE (not caller)
-        return blockEntity instanceof Wire wire && wire.getMaxTransferRate() == this.getMaxTransferRate() && wire.canConnect(direction.getOpposite());
+    public boolean isCompatibleWith(Wire wire) {
+        return this.getMaxTransferRate() == wire.getMaxTransferRate();
     }
 
     @Override

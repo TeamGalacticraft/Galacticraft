@@ -56,7 +56,7 @@ public interface Wire {
      * @return Whether this wire is able to connect to another block on the specified face/direction
      */
     default boolean canConnect(Direction direction) {
-        return true; // world.getBlockEntity(pos.offset(direction)) == the caller BE
+        return true; // CALLERS: ((Wire)world.getBlockEntity(pos.offset(direction)).canConnect(direction.getOpposite());
     }
 
     /**
