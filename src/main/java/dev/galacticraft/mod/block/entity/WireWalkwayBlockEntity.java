@@ -40,11 +40,12 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     private Direction direction = null;
 
     public WireWalkwayBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.WIRE_WALKWAY, pos, state);
+        super(GalacticraftBlockEntityType.WIRE_WALKWAY, pos, state, 240);
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
+        nbt.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.direction, Direction.UP).ordinal());
         nbt.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.direction, Direction.UP).ordinal());
         return super.writeNbt(nbt);
     }
@@ -87,7 +88,7 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     @Override
     public void addAllAttributes(AttributeList<?> to) {
         if (to.getSearchDirection() != null && to.getSearchDirection().getOpposite() != this.direction) {
-            to.offer(this.getInsertable());
+            super.addAllAttributes(to);
         }
     }
 

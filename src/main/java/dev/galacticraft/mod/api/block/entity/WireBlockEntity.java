@@ -63,10 +63,6 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
         return new WireBlockEntity(type, pos, state, 480);
     }
 
-    protected WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
-    }
-
     @Override
     public void setNetwork(@Nullable WireNetwork network) {
         this.network = network;

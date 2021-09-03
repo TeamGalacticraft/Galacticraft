@@ -47,7 +47,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class PipeBlockEntity extends BlockEntity implements Pipe, AttributeProviderBlockEntity {
+public abstract class PipeBlockEntity extends BlockEntity implements Pipe, AttributeProviderBlockEntity {
     private @Nullable PipeNetwork network = null;
     private @Nullable PipeFluidInsertable insertable = null;
     private static final FluidAmount MAX_TRANSFER_RATE = FluidAmount.of(5, 100);

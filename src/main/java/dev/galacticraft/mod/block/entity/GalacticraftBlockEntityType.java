@@ -25,7 +25,6 @@ package dev.galacticraft.mod.block.entity;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
@@ -49,7 +48,6 @@ public class GalacticraftBlockEntityType {
     public static final BlockEntityType<OxygenSealerBlockEntity> OXYGEN_SEALER = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.OXYGEN_SEALER), FabricBlockEntityTypeBuilder.create(OxygenSealerBlockEntity::new, GalacticraftBlock.OXYGEN_SEALER).build());
     public static final BlockEntityType<WireBlockEntity> WIRE_T1 = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.ALUMINUM_WIRE), FabricBlockEntityTypeBuilder.create((pos, state) -> WireBlockEntity.createT1(GalacticraftBlockEntityType.WIRE_T1, pos, state), GalacticraftBlock.ALUMINUM_WIRE, GalacticraftBlock.SEALABLE_ALUMINUM_WIRE, GalacticraftBlock.WIRE_WALKWAY).build());
     public static final BlockEntityType<WireBlockEntity> WIRE_T2 = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.HEAVY_ALUMINUM_WIRE), FabricBlockEntityTypeBuilder.create((pos, state) -> WireBlockEntity.createT2(GalacticraftBlockEntityType.WIRE_T2, pos, state)).build());
-    public static final BlockEntityType<PipeBlockEntity> FLUID_PIPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.FLUID_PIPE), FabricBlockEntityTypeBuilder.create(PipeBlockEntity::new, GalacticraftBlock.GLASS_FLUID_PIPE).build());
     public static final BlockEntityType<WalkwayBlockEntity> WALKWAY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.WALKWAY), FabricBlockEntityTypeBuilder.create(WalkwayBlockEntity::new, GalacticraftBlock.WALKWAY).build());
     public static final BlockEntityType<WireWalkwayBlockEntity> WIRE_WALKWAY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.WIRE_WALKWAY), FabricBlockEntityTypeBuilder.create(WireWalkwayBlockEntity::new, GalacticraftBlock.WIRE_WALKWAY).build());
     public static final BlockEntityType<PipeWalkwayBlockEntity> PIPE_WALKWAY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.PIPE_WALKWAY), FabricBlockEntityTypeBuilder.create(PipeWalkwayBlockEntity::new, GalacticraftBlock.PIPE_WALKWAY).build());
