@@ -18,8 +18,8 @@ body:
   - type: dropdown
     id: modloader
     attributes:
-      label: Mod loader
-      description: What modloader are you using?
+      label: Mod Loader
+      description: Which mod loader are you using?
       options:
         - Fabric
         - Forge (NYI)
