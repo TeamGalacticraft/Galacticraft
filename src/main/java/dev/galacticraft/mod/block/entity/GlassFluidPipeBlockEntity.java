@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.block.entity;
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.block.entity.ColoredBlockEntity;
@@ -43,7 +44,7 @@ public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colore
     private boolean pull = false;
 
     public GlassFluidPipeBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.GLASS_FLUID_PIPE, pos, state);
+        super(GalacticraftBlockEntityType.GLASS_FLUID_PIPE, pos, state, FluidAmount.of(1, 50)); //0.4B/s
     }
 
     @Override

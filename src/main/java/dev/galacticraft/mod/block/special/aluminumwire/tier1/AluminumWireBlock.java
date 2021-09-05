@@ -26,8 +26,6 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
-import dev.galacticraft.mod.util.ConnectingBlockUtil;
-import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

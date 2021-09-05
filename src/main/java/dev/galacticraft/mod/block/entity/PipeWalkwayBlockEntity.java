@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.block.entity;
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.block.entity.ColoredBlockEntity;
@@ -43,7 +44,7 @@ public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, 
     private final boolean[] connections = new boolean[6];
 
     public PipeWalkwayBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.PIPE_WALKWAY, pos, state);
+        super(GalacticraftBlockEntityType.PIPE_WALKWAY, pos, state, FluidAmount.of(1, 50));
     }
 
     @Override

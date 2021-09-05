@@ -84,7 +84,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
         }
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             final BlockEntity otherBlockEntity = world.getBlockEntity(pos.offset(direction));
-            blockEntity.getConnections()[direction.ordinal()] = (otherBlockEntity instanceof Pipe pipe && pipe.canConnect(direction))
+            blockEntity.getConnections()[direction.ordinal()] = (otherBlockEntity instanceof Pipe pipe && pipe.canConnect(direction.getOpposite()))
                     || FluidUtil.canAccessFluid(world, pos.offset(direction), direction);
         }
         world.updateNeighborsAlways(pos, state.getBlock());
@@ -126,7 +126,8 @@ public class GlassFluidPipeBlock extends FluidPipe {
         assert dir != null;
         final GlassFluidPipeBlockEntity blockEntity = (GlassFluidPipeBlockEntity) world.getBlockEntity(pos);
         final BlockEntity otherBlockEntity = world.getBlockEntity(fromPos);
-        blockEntity.getConnections()[dir.ordinal()] = !neighbor.isAir() && ((otherBlockEntity instanceof Pipe pipe && pipe.canConnect(dir))
+        assert blockEntity != null;
+        blockEntity.getConnections()[dir.ordinal()] = !neighbor.isAir() && ((otherBlockEntity instanceof Pipe pipe && pipe.canConnect(dir.getOpposite()))
                 || FluidUtil.canAccessFluid(world, fromPos, dir));
         if (!world.isClient) blockEntity.sync();
     }

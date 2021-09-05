@@ -264,7 +264,8 @@ public class WireNetworkImpl implements WireNetwork {
         if (this.tickId != (this.tickId = world.getServer().getTicks())) {
             this.transferred = 0;
         }
-        amount = Math.min(amount, this.maxTransferRate - this.transferred);
+        int removed = amount - Math.min(amount, this.maxTransferRate - this.transferred);
+        amount -= removed;
         for (EnergyInsertable insertable : this.insertable.values()) {
             int consumed = Math.min(Math.min(available, (int) (amount * ratio)), this.getMaxTransferRate() - this.transferred);
             if (consumed == 0) continue;
@@ -272,7 +273,7 @@ public class WireNetworkImpl implements WireNetwork {
             available -= consumed;
             this.transferred += consumed;
         }
-        return available;
+        return available + removed;
     }
 
     @Override

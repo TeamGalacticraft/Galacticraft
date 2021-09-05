@@ -24,6 +24,7 @@ package dev.galacticraft.mod.api.block.entity;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProviderBlockEntity;
+import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FixedFluidInvView;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
@@ -500,8 +501,10 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
                 ConfiguredMachineFace option = this.getIOConfig().get(face);
                 if (option.getAutomationType().isFluid() && option.getAutomationType().isOutput()) {
                     Direction dir = face.toDirection(this.getCachedState().get(Properties.HORIZONTAL_FACING));
-                    FluidInsertable insertable = FluidAttributes.INSERTABLE.getFromNeighbour(this, dir);
-                    this.fluidInv().insertFluid(tank, insertable.attemptInsertion(this.fluidInv().extractFluid(tank, ConstantFluidFilter.ANYTHING, null, FluidAmount.ONE, Simulation.ACTION), Simulation.ACTION), Simulation.ACTION);
+                    FluidInsertable insertable = FluidAttributes.INSERTABLE.getFirstOrNull(this.world, this.pos.offset(dir), SearchOptions.inDirection(dir));
+                    if (insertable != null) {
+                        this.fluidInv().insertFluid(tank, insertable.attemptInsertion(this.fluidInv().extractFluid(tank, ConstantFluidFilter.ANYTHING, null, FluidAmount.ONE, Simulation.ACTION), Simulation.ACTION), Simulation.ACTION);
+                    }
                 }
             }
         }

@@ -86,30 +86,6 @@ public abstract class WireBlock extends Block implements BlockEntityProvider {
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        super.onBlockAdded(state, world, pos, oldState, notify);
-//        if (!world.isClient()) {
-//            final BlockEntity blockEntity = world.getBlockEntity(pos);
-//            Wire wire = (Wire) blockEntity;
-//            assert wire != null;
-//            for (Direction direction : Constant.Misc.DIRECTIONS) {
-//                if (wire.canConnect(direction)) {
-//                    BlockPos fromPos = pos.offset(direction);
-//                    final BlockEntity blockEntityAdj = world.getBlockEntity(fromPos);
-//                    if (blockEntityAdj instanceof Wire) {
-//                        wire.getOrCreateNetwork();
-//                        world.updateNeighbor(fromPos, state.getBlock(), pos);
-//                        return;
-//                    } else if (EnergyUtil.canAccessEnergy(world, fromPos, Direction.fromVector(fromPos.subtract(pos)))) {
-//                        wire.getOrCreateNetwork();
-//                        return;
-//                    }
-//                }
-//            }
-//        }
-    }
-
-    @Override
     public PistonBehavior getPistonBehavior(BlockState state) {
         return PistonBehavior.BLOCK;
     }

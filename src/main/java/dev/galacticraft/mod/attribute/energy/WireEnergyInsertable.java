@@ -50,10 +50,6 @@ public class WireEnergyInsertable implements EnergyInsertable {
     public int attemptInsertion(EnergyType type, int amount, Simulation simulation) {
         if (amount <= 0) return amount;
         if (this.network != null) {
-            if (this.maxTransfer < amount) {
-                int over = amount - this.maxTransfer;
-                return this.network.insert(this.pos, type.convertTo(DefaultEnergyType.INSTANCE, amount), direction, simulation) + over;
-            }
             return this.network.insert(this.pos, type.convertTo(DefaultEnergyType.INSTANCE, amount), direction, simulation);
         }
         return amount;
@@ -74,7 +70,7 @@ public class WireEnergyInsertable implements EnergyInsertable {
                 "dir=" + direction +
                 ", maxTransfer=" + maxTransfer +
                 ", pos=" + pos +
-//                ", network=" + network +
+                ", network=" + network +
                 '}';
     }
 }

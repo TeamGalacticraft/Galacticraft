@@ -25,6 +25,7 @@ package dev.galacticraft.mod.api.block;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
+import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -36,6 +37,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,11 +50,12 @@ public abstract class FluidPipe extends Block implements BlockEntityProvider {
     }
 
     @Override
+    @Deprecated
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof Pipe pipe) {
-                Galacticraft.LOGGER.info(pipe.getNetworkNullable());
+                Galacticraft.LOGGER.info(pipe.getNetwork());
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);
@@ -62,8 +65,23 @@ public abstract class FluidPipe extends Block implements BlockEntityProvider {
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborUpdate(state, world, pos, block, fromPos, notify);
         if (!world.isClient()) {
-            Pipe pipe = (Pipe) world.getBlockEntity(pos);
-            pipe.getNetwork().updateConnections(pos, fromPos);
+            final BlockEntity blockEntity = world.getBlockEntity(pos);
+            Pipe pipe = (Pipe) blockEntity;
+            assert pipe != null;
+            final BlockEntity blockEntityAdj = world.getBlockEntity(fromPos);
+            if (pipe.canConnect(Direction.fromVector(fromPos.subtract(pos)))) {
+                if (blockEntityAdj instanceof Pipe pipe1) {
+                    if (pipe1.canConnect(Direction.fromVector(fromPos.subtract(pos)).getOpposite())) {
+                        pipe.getOrCreateNetwork().addPipe(fromPos, pipe1);
+                    }
+                } else {
+                    if (FluidUtil.canAccessFluid(world, fromPos, Direction.fromVector(fromPos.subtract(pos)))) {
+                        pipe.getOrCreateNetwork().updateConnection(pos, fromPos);
+                    } else if (pipe.getNetwork() != null) {
+                        pipe.getNetwork().updateConnection(pos, fromPos);
+                    }
+                }
+            }
         }
     }
 
@@ -72,6 +90,7 @@ public abstract class FluidPipe extends Block implements BlockEntityProvider {
         return PistonBehavior.BLOCK;
     }
 
+    @Nullable
     @Override
-    public abstract @Nullable PipeBlockEntity createBlockEntity(BlockPos pos, BlockState state);
+    public abstract PipeBlockEntity createBlockEntity(BlockPos pos, BlockState state);
 }
