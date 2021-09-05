@@ -1,0 +1,23 @@
+name: "Feature Request"
+description: "Request a feature. NOTE: Before submitting a feature request on GitHub, it is recommended to post it to the Galacticraft Central Discord to see if there is demand it first."
+labels: ["status: triage", "type: feature"]
+body:
+  - type: markdown
+    attributes:
+      value: "Please note that requests for more planets are not accepted at this time."
+  - type: textarea
+    id: feature
+    attributes:
+      label: "Feature"
+      description: "Please explain the new feature in detail"
+      placeholder: "Add more lead tools! ..."
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: "Rationale"
+      description: "Please explain why this feature would be useful, or why it is needed"
+      placeholder: "There should be more reasons to travel to Venus. ..."
+    validations:
+      required: true
