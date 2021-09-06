@@ -55,22 +55,39 @@ plugins {
     id("org.cadixdev.licenser") version("0.6.1")
 }
 
-configure<JavaPluginExtension> {
+java {
     sourceCompatibility = JavaVersion.VERSION_16
     targetCompatibility = JavaVersion.VERSION_16
+    withSourcesJar()
 }
 
 group = modGroup
 version = modVersion + getVersionDecoration()
 
-base {
-    archivesName.set(modName)
+base.archivesName.set(modName)
+
+val gametestSourceSet = sourceSets.create("gametest") {
+    compileClasspath += sourceSets.main.get().compileClasspath
+    runtimeClasspath += sourceSets.main.get().runtimeClasspath
+    java.srcDir("src/gametest/java")
+    resources.srcDir("src/gametest/resources")
 }
 
 loom {
     accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
     mixin {
-        add("main", "galacticraft.refmap.json")
+        add(sourceSets.main.get(), "galacticraft.refmap.json")
+    }
+
+    runs {
+        register("gametest") {
+            server()
+            name("Game Test")
+            source(gametestSourceSet)
+            property("fabric.log.level", "debug")
+            vmArg("-Dfabric-api.gametest=true")
+            vmArg("-ea")
+        }
     }
 }
 
@@ -135,6 +152,8 @@ fun DependencyHandler.includedDependency(dependencyNotation: String, dependencyC
     include(modApi(dependencyNotation, dependencyConfiguration), dependencyConfiguration)
 }
 
+val gametestCompile = configurations.create("gametestCompile").extendsFrom(configurations.runtimeOnly.get())
+
 dependencies {
     // Minecraft, Mappings, Loader
     minecraft("com.mojang:minecraft:$minecraftVersion")
@@ -148,6 +167,7 @@ dependencies {
         "fabric-blockrenderlayer-v1",
         "fabric-command-api-v1",
         "fabric-content-registries-v0",
+        "fabric-gametest-api-v1",
         "fabric-item-groups-v0",
         "fabric-models-v0",
         "fabric-networking-blockentity-v0",
@@ -206,13 +226,15 @@ dependencies {
 
     // Other Dependencies
     modRuntime("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
+
+    gametestCompile(sourceSets.main.get().output)
 }
 
 tasks.processResources {
     inputs.property("version", project.version)
 
     filesMatching("fabric.mod.json") {
-        expand(mutableMapOf("version" to project.version))
+        expand("version" to project.version)
     }
 
     // Minify json resources
@@ -224,25 +246,25 @@ tasks.processResources {
     }
 }
 
-java {
-    withSourcesJar()
-}
-
 tasks.create<Jar>("javadocJar") {
     from(tasks.javadoc)
     archiveClassifier.set("javadoc")
 }
 
+tasks.named<ProcessResources>("processGametestResources") {
+    duplicatesStrategy = DuplicatesStrategy.WARN
+}
+
 tasks.jar {
     from("LICENSE")
     manifest {
-        attributes(mapOf(
+        attributes(
             "Implementation-Title"     to modName,
             "Implementation-Version"   to project.version,
             "Implementation-Vendor"    to "Team Galacticraft",
             "Implementation-Timestamp" to DateTimeFormatter.ISO_DATE_TIME,
             "Maven-Artifact"           to "$modGroup:$modName:$project.version"
-        ))
+        )
     }
 }
 
@@ -282,6 +304,8 @@ tasks.withType(JavaCompile::class) {
     options.encoding = "UTF-8"
     options.release.set(16)
 }
+
+tasks.getByName("gametestClasses").dependsOn("classes")
 
 // inspired by https://github.com/TerraformersMC/GradleScripts/blob/2.0/ferry.gradle
 fun getVersionDecoration(): String {
