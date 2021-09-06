@@ -68,7 +68,9 @@ base.archivesName.set(modName)
 
 val gametestSourceSet = sourceSets.create("gametest") {
     compileClasspath += sourceSets.main.get().compileClasspath
+    compileClasspath += sourceSets.main.get().output
     runtimeClasspath += sourceSets.main.get().runtimeClasspath
+    runtimeClasspath += sourceSets.main.get().output
     java.srcDir("src/gametest/java")
     resources.srcDir("src/gametest/resources")
 }
@@ -152,8 +154,6 @@ fun DependencyHandler.includedDependency(dependencyNotation: String, dependencyC
     include(modApi(dependencyNotation, dependencyConfiguration), dependencyConfiguration)
 }
 
-val gametestCompile = configurations.create("gametestCompile").extendsFrom(configurations.runtimeOnly.get())
-
 dependencies {
     // Minecraft, Mappings, Loader
     minecraft("com.mojang:minecraft:$minecraftVersion")
@@ -226,8 +226,6 @@ dependencies {
 
     // Other Dependencies
     modRuntime("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
-
-    gametestCompile(sourceSets.main.get().output)
 }
 
 tasks.processResources {
