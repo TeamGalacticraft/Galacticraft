@@ -61,14 +61,9 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     }
 
     @Override
-    public boolean[] getConnections() {
-        return this.connections();
-    }
-
-    @Override
     public void setDirection(@NotNull Direction direction) {
         this.direction = direction;
-        this.connections()[direction.ordinal()] = false;
+        this.getConnections()[direction.ordinal()] = false;
         world.updateNeighborsAlways(pos, this.getCachedState().getBlock());
     }
 

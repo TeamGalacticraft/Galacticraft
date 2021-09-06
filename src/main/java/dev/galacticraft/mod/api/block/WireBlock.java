@@ -55,7 +55,7 @@ public abstract class WireBlock extends Block implements BlockEntityProvider {
         if (!world.isClient() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof Wire wire) {
-                Galacticraft.LOGGER.info(wire.getNetwork());
+                Galacticraft.LOGGER.debug(wire.getNetwork());
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);

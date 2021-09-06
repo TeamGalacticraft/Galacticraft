@@ -22,15 +22,24 @@
 
 package dev.galacticraft.mod.api.block.entity;
 
+import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public interface Walkway extends Connected, BlockEntityClientSerializable {
     Direction getDirection();
 
-    @Override
-    boolean[/*6*/] getConnections();
-
     void setDirection(@NotNull Direction direction);
+
+    default void writeWalkwayNbt(NbtCompound nbt) {
+        nbt.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.getDirection(), Direction.UP).ordinal());
+    }
+
+    default void readWalkwayNbt(NbtCompound nbt) {
+        this.setDirection(Direction.values()[nbt.getByte(Constant.Nbt.DIRECTION)]);
+    }
 }

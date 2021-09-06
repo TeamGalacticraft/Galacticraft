@@ -132,49 +132,31 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     }
 
     @Override
-    public boolean[] connections() {
+    public boolean[] getConnections() {
         return this.connections;
     }
 
     @Override
     public void fromClientTag(NbtCompound tag) {
-        this.readConnections(tag);
+        this.readConnectionNbt(tag);
         ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
     }
 
     @Override
     public NbtCompound toClientTag(NbtCompound tag) {
-        this.writeConnections(tag);
+        this.writeConnectionNbt(tag);
         return tag;
-    }
-
-    private void writeConnections(NbtCompound tag) {
-        tag.putBoolean("0", this.connections[0]);
-        tag.putBoolean("1", this.connections[1]);
-        tag.putBoolean("2", this.connections[2]);
-        tag.putBoolean("3", this.connections[3]);
-        tag.putBoolean("4", this.connections[4]);
-        tag.putBoolean("5", this.connections[5]);
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
-        this.writeConnections(nbt);
+        this.writeConnectionNbt(nbt);
         return super.writeNbt(nbt);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        this.readConnections(nbt);
+        this.readConnectionNbt(nbt);
         super.readNbt(nbt);
-    }
-
-    private void readConnections(NbtCompound nbt) {
-        this.connections[0] = nbt.getBoolean("0");
-        this.connections[1] = nbt.getBoolean("1");
-        this.connections[2] = nbt.getBoolean("2");
-        this.connections[3] = nbt.getBoolean("3");
-        this.connections[4] = nbt.getBoolean("4");
-        this.connections[5] = nbt.getBoolean("5");
     }
 }

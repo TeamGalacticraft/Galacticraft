@@ -119,21 +119,25 @@ public class WalkwayBlock extends Block implements FluidLoggable, BlockEntityPro
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborUpdate(state, world, pos, block, fromPos, notify);
-        if (fromPos.isWithinDistance(pos, 1.0000000000001)) {
+        final BlockPos distance = fromPos.subtract(pos);
+        if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1) {
             final Walkway blockEntity = (Walkway) world.getBlockEntity(pos);
             assert blockEntity != null;
+            final Direction direction = Direction.fromVector(distance);
             if (world.getBlockEntity(fromPos) instanceof Walkway walkway) {
                 if (walkway.getDirection() != null) {
                     if (!fromPos.offset(walkway.getDirection()).equals(pos)) {
                         if (!pos.offset(blockEntity.getDirection()).equals(fromPos)) {
-                            blockEntity.getConnections()[Objects.requireNonNull(Direction.fromVector(fromPos.subtract(pos))).ordinal()] = true;
-                            if (!world.isClient) blockEntity.sync();
+                            if (blockEntity.getConnections()[direction.ordinal()] != (blockEntity.getConnections()[direction.ordinal()] = true)) {
+                                world.updateNeighbor(pos.offset(direction), state.getBlock(), pos);
+                                if (!world.isClient) blockEntity.sync();
+                            }
                             return;
                         }
                     }
                 }
             }
-            blockEntity.getConnections()[Objects.requireNonNull(Direction.fromVector(fromPos.subtract(pos))).ordinal()] = false;
+            blockEntity.getConnections()[Objects.requireNonNull(direction).ordinal()] = false;
             if (!world.isClient) blockEntity.sync();
         }
     }

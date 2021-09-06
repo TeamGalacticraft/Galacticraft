@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.api.pipe;
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import dev.galacticraft.mod.api.block.entity.Colored;
+import dev.galacticraft.mod.api.block.entity.Connected;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public interface Pipe {
+public interface Pipe extends Connected, Colored {
     /**
      * Sets the {@link PipeNetwork} associated with this pipe
      * @param network The network to associate with

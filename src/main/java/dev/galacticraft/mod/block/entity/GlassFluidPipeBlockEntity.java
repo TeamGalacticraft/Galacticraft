@@ -25,8 +25,9 @@ package dev.galacticraft.mod.block.entity;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.WorldRendererAccessor;
-import dev.galacticraft.mod.api.block.entity.ColoredBlockEntity;
+import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.api.block.entity.Pullable;
 import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
@@ -38,9 +39,7 @@ import net.minecraft.util.math.Direction;
 
 import java.util.Objects;
 
-public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements ColoredBlockEntity, Connected, BlockEntityClientSerializable {
-    private DyeColor color = DyeColor.WHITE;
-    private final boolean[] connections = new boolean[6];
+public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colored, Connected, Pullable, BlockEntityClientSerializable {
     private boolean pull = false;
 
     public GlassFluidPipeBlockEntity(BlockPos pos, BlockState state) {
@@ -48,64 +47,36 @@ public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colore
     }
 
     @Override
-    public DyeColor getColor() {
-        return this.color;
-    }
-
-    @Override
-    public void setColor(DyeColor color) {
-        this.color = color;
-    }
-
-    @Override
-    public boolean[] getConnections() {
-        return this.connections;
-    }
-
-    @Override
     public void readNbt(NbtCompound nbt) {
-        this.readNbtCommon(nbt);
         super.readNbt(nbt);
+        this.readPullNbt(nbt);
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
-        this.writeNbtCommon(nbt);
+        this.writePullNbt(nbt);
         return super.writeNbt(nbt);
     }
 
     @Override
     public void fromClientTag(NbtCompound tag) {
-        this.readNbtCommon(tag);
+        super.fromClientTag(tag);
+        this.readPullNbt(tag);
         ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
     }
 
     @Override
     public NbtCompound toClientTag(NbtCompound tag) {
-        this.writeNbtCommon(tag);
-        return tag;
+        this.writePullNbt(tag);
+        return super.toClientTag(tag);
     }
 
-    public void writeNbtCommon(NbtCompound nbt) {
-        nbt.putByte(Constant.Nbt.COLOR, (byte) Objects.requireNonNullElse(this.color, DyeColor.WHITE).ordinal());
-        for (Direction direction : Constant.Misc.DIRECTIONS) {
-            nbt.putBoolean(direction.asString(), this.connections[direction.ordinal()]);
-        }
-        nbt.putBoolean(Constant.Nbt.PULL, this.pull);
-    }
-
-    public void readNbtCommon(NbtCompound nbt) {
-        this.color = DyeColor.values()[nbt.getByte(Constant.Nbt.COLOR)];
-        for (Direction direction : Constant.Misc.DIRECTIONS) {
-            this.connections[direction.ordinal()] = nbt.getBoolean(direction.asString());
-        }
-        this.pull = nbt.getBoolean(Constant.Nbt.PULL);
-    }
-
+    @Override
     public boolean isPull() {
         return this.pull;
     }
 
+    @Override
     public void setPull(boolean pull) {
         this.pull = pull;
     }

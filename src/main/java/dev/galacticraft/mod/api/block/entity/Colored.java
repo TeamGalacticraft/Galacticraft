@@ -23,21 +23,23 @@
 package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
 
-public interface Connected {
-    boolean[/*6*/] getConnections();
+import java.util.Objects;
 
-    default void writeConnectionNbt(NbtCompound nbt) {
-        for (Direction direction : Constant.Misc.DIRECTIONS) {
-            nbt.putBoolean(direction.asString(), this.getConnections()[direction.ordinal()]);
-        }
+public interface Colored extends BlockEntityClientSerializable {
+    DyeColor getColor();
+
+    void setColor(DyeColor color);
+
+    default void writeColorNbt(NbtCompound nbt) {
+        nbt.putByte(Constant.Nbt.COLOR, (byte) Objects.requireNonNullElse(this.getColor(), DyeColor.WHITE).ordinal());
     }
 
-    default void readConnectionNbt(NbtCompound nbt) {
-        for (Direction direction : Constant.Misc.DIRECTIONS) {
-            this.getConnections()[direction.ordinal()] = nbt.getBoolean(direction.asString());
-        }
+    default void readColorNbt(NbtCompound nbt) {
+        this.setColor(DyeColor.values()[nbt.getByte(Constant.Nbt.COLOR)]);
     }
 }

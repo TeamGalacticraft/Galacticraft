@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.api.wire;
 
+import dev.galacticraft.mod.api.block.entity.Connected;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public interface Wire {
+public interface Wire extends Connected {
     /**
      * Sets the {@link WireNetwork} associated with this wire
      * @param network The network to associate with
@@ -64,6 +65,4 @@ public interface Wire {
      * @return the maximum amount of energy (in gJ) allowed to be transferred through this wire.
      */
     int getMaxTransferRate();
-
-    boolean[] connections();
 }

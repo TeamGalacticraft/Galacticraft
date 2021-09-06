@@ -22,11 +22,20 @@
 
 package dev.galacticraft.mod.api.block.entity;
 
+import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.util.DyeColor;
+import net.minecraft.nbt.NbtCompound;
 
-public interface ColoredBlockEntity extends BlockEntityClientSerializable {
-    DyeColor getColor();
+public interface Pullable extends BlockEntityClientSerializable {
+    boolean isPull();
 
-    void setColor(DyeColor color);
+    void setPull(boolean pull);
+
+    default void writePullNbt(NbtCompound nbt) {
+        nbt.putBoolean(Constant.Nbt.PULL, this.isPull());
+    }
+
+    default void readPullNbt(NbtCompound nbt) {
+        this.setPull(nbt.getBoolean(Constant.Nbt.PULL));
+    }
 }

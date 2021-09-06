@@ -126,32 +126,32 @@ public class WireBakedModel implements FabricBakedModel, BakedModel {
         QuadEmitter emitter = context.getEmitter();
         assert wire != null;
 
-        if (wire.connections()[0]) {
+        if (wire.getConnections()[0]) {
             meshConsumer.accept(this.down);
         } else {
             emitter.square(Direction.DOWN, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         }
-        if (wire.connections()[1]) {
+        if (wire.getConnections()[1]) {
             meshConsumer.accept(this.up);
         } else {
             emitter.square(Direction.UP, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         }
-        if (wire.connections()[2]) {
+        if (wire.getConnections()[2]) {
             meshConsumer.accept(this.north);
         } else {
             emitter.square(Direction.NORTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         }
-        if (wire.connections()[3]) {
+        if (wire.getConnections()[3]) {
             meshConsumer.accept(this.south);
         } else {
             emitter.square(Direction.SOUTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         }
-        if (wire.connections()[4]) {
+        if (wire.getConnections()[4]) {
             meshConsumer.accept(this.west);
         } else {
             emitter.square(Direction.WEST, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         }
-        if (wire.connections()[5]) {
+        if (wire.getConnections()[5]) {
             meshConsumer.accept(this.east);
         } else {
             emitter.square(Direction.EAST, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();

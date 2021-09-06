@@ -65,22 +65,22 @@ public class AluminumWireBlock extends WireBlock {
         if (wire != null) {
             List<VoxelShape> shapes = new ArrayList<>();
 
-            if (wire.connections()[2]) {
+            if (wire.getConnections()[2]) {
                 shapes.add(NORTH);
             }
-            if (wire.connections()[3]) {
+            if (wire.getConnections()[3]) {
                 shapes.add(SOUTH);
             }
-            if (wire.connections()[5]) {
+            if (wire.getConnections()[5]) {
                 shapes.add(EAST);
             }
-            if (wire.connections()[4]) {
+            if (wire.getConnections()[4]) {
                 shapes.add(WEST);
             }
-            if (wire.connections()[1]) {
+            if (wire.getConnections()[1]) {
                 shapes.add(UP);
             }
-            if (wire.connections()[0]) {
+            if (wire.getConnections()[0]) {
                 shapes.add(DOWN);
             }
             if (!shapes.isEmpty()) {
@@ -97,7 +97,7 @@ public class AluminumWireBlock extends WireBlock {
         assert wire != null;
         boolean b = false;
         for (Direction dir : Constant.Misc.DIRECTIONS) {
-            b |= (wire.connections()[dir.ordinal()] = EnergyUtil.canAccessEnergy(world, pos.offset(dir), dir) && wire.canConnect(dir));
+            b |= (wire.getConnections()[dir.ordinal()] = EnergyUtil.canAccessEnergy(world, pos.offset(dir), dir) && wire.canConnect(dir));
         }
         if (b) wire.sync();
     }
@@ -109,7 +109,7 @@ public class AluminumWireBlock extends WireBlock {
         Direction dir = Direction.fromVector(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
         assert dir != null;
         assert wire != null;
-        if (wire.connections()[dir.ordinal()] != (wire.connections()[dir.ordinal()] = EnergyUtil.canAccessEnergy(world, fromPos, dir) && wire.canConnect(dir))) {
+        if (wire.getConnections()[dir.ordinal()] != (wire.getConnections()[dir.ordinal()] = EnergyUtil.canAccessEnergy(world, fromPos, dir) && wire.canConnect(dir))) {
             wire.sync();
         }
     }

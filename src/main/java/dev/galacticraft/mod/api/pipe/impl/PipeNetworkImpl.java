@@ -169,7 +169,7 @@ public class PipeNetworkImpl implements PipeNetwork {
             mappedPipes.add(list1);
         }
 
-        assert mappedPipes.size() > 0 : "A pipe was added that should never have been accepted (see L135)";
+        assert mappedPipes.size() > 0 : "A pipe was added that should never have been accepted";
         if (mappedPipes.size() == 1) return;
         this.markForRemoval();
         for (List<BlockPos> positions : mappedPipes) {

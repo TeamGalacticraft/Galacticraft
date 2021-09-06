@@ -164,7 +164,7 @@ public class WireNetworkImpl implements WireNetwork {
             mappedWires.add(list1);
         }
 
-        assert mappedWires.size() > 0 : "A wire was added that should never have been accepted (see L135)";
+        assert mappedWires.size() > 0 : "A wire was added that should never have been accepted";
         if (mappedWires.size() == 1) return;
         this.markForRemoval();
         for (List<BlockPos> positions : mappedWires) {

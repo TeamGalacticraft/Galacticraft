@@ -32,7 +32,9 @@ import dev.galacticraft.mod.attribute.fluid.PipeFluidInsertable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +46,10 @@ import org.jetbrains.annotations.Nullable;
 public abstract class PipeBlockEntity extends BlockEntity implements Pipe, AttributeProviderBlockEntity {
     private @NotNull PipeFluidInsertable @Nullable[] insertables = null;
     private @Nullable PipeNetwork network = null;
+    private DyeColor color = DyeColor.WHITE;
     private final FluidAmount maxTransferRate; // 1 bucket per second
+    private final boolean[] connections = new boolean[6];
+
 
     public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type, BlockPos pos, BlockState state, FluidAmount maxTransferRate) {
         super(type, pos, state);
@@ -102,6 +107,48 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Attri
     @Override
     public FluidAmount getMaxTransferRate() {
         return maxTransferRate;
+    }
+
+    @Override
+    public boolean[] getConnections() {
+        return this.connections;
+    }
+
+    @Override
+    public DyeColor getColor() {
+        return this.color;
+    }
+
+    @Override
+    public void setColor(DyeColor color) {
+        this.color = color;
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        this.readColorNbt(nbt);
+        this.readConnectionNbt(nbt);
+    }
+
+    @Override
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        this.writeColorNbt(nbt);
+        this.writeConnectionNbt(nbt);
+        return super.writeNbt(nbt);
+    }
+
+    @Override
+    public NbtCompound toClientTag(NbtCompound tag) {
+        this.writeColorNbt(tag);
+        this.writeConnectionNbt(tag);
+        return tag;
+    }
+
+    @Override
+    public void fromClientTag(NbtCompound tag) {
+        this.readColorNbt(tag);
+        this.readConnectionNbt(tag);
     }
 
     @Override
