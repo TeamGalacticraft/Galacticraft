@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.render.block.entity;
 
-import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
+import dev.galacticraft.mod.block.entity.GlassFluidPipeBlockEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -31,11 +31,11 @@ import net.minecraft.client.util.math.MatrixStack;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class FluidPipeBlockEntityRenderer implements BlockEntityRenderer<PipeBlockEntity> {
+public class FluidPipeBlockEntityRenderer implements BlockEntityRenderer<GlassFluidPipeBlockEntity> {
     public FluidPipeBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
     }
 
     @Override
-    public void render(PipeBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(GlassFluidPipeBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
     }
 }
