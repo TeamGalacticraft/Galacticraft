@@ -39,6 +39,11 @@ jobs:
           arguments: checkLicenses build
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
+          
+      - name: Notify Discord
+        uses: TeamGalacticraft/discord-build-notify@main
+        with:
+          webhook: ${{ secrets.WEBHOOK }}
 
       - name: Capture build artifacts
         if: ${{ runner.os == 'Linux' && matrix.java == '16' }}
