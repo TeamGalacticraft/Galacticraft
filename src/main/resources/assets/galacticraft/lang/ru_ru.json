@@ -388,7 +388,7 @@
     "ui.galacticraft.machine.status.not_enough_oxygen": "Не достаточно кислорода",
     "ui.galacticraft.machine.status.not_enough_items": "Не достаточно предметов",
     "ui.galacticraft.machine.redstone": "Редстоун",
-    "ui.galacticraft.machine.redstone.redstone": "RРедстоун: %s",
+    "ui.galacticraft.machine.redstone.redstone": "Редстоун: %s",
     "ui.galacticraft.machine.redstone.state": "Состояние: %s",
     "ui.galacticraft.machine.redstone.status": "Статус: %s",
     "ui.galacticraft.machine.redstone.status.disabled": "отключено",
