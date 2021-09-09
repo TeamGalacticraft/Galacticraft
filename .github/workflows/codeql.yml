@@ -32,7 +32,6 @@ jobs:
           java-version: '16'
       
       - name: Make Gradle wrapper executable
-        if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
 
       - name: Build 
