@@ -43,7 +43,7 @@ jobs:
       - name: Notify Discord
         uses: TeamGalacticraft/discord-build-notify@main
         with:
-          webhook: ${{ secrets.WEBHOOK }}
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
       - name: Capture build artifacts
         if: ${{ runner.os == 'Linux' && matrix.java == '16' }}
