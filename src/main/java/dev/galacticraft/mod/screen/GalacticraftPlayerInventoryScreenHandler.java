@@ -26,7 +26,6 @@ import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
-import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.item.ThermalArmorItem;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;

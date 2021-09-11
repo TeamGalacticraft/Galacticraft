@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.item;
 
+import com.google.common.base.Suppliers;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.util.Lazy;
 
 import java.util.function.Supplier;
 
@@ -51,7 +51,7 @@ public enum GalacticraftToolMaterial implements ToolMaterial {
     private final float blockBreakSpeed;
     private final float attackDamage;
     private final int enchantability;
-    private final Lazy<Ingredient> repairIngredient;
+    private final Supplier<Ingredient> repairIngredient;
 
     GalacticraftToolMaterial(int miningLevel, int durability, float breakSpeed, float attackDamage, int enchantability, Supplier<Ingredient> repairIngredient) {
         this.miningLevel = miningLevel;
@@ -59,7 +59,7 @@ public enum GalacticraftToolMaterial implements ToolMaterial {
         this.blockBreakSpeed = breakSpeed;
         this.attackDamage = attackDamage;
         this.enchantability = enchantability;
-        this.repairIngredient = new Lazy<>(repairIngredient);
+        this.repairIngredient = Suppliers.memoize(repairIngredient::get);
     }
 
     @Override

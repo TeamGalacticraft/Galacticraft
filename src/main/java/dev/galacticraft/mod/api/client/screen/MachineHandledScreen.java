@@ -25,8 +25,6 @@ package dev.galacticraft.mod.api.client.screen;
 import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.misc.CallableRef;
-import alexiil.mc.lib.attributes.misc.Reference;
-import com.google.common.base.Predicates;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Either;
@@ -670,6 +668,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
             if (configuredFace.getMatching().left().isPresent()) {
                 tooltipCache.add(new TranslatableText("ui.galacticraft.machine.configuration.matches", new LiteralText(String.valueOf(configuredFace.getMatching().left().get())).setStyle(Constant.Text.AQUA_STYLE)).setStyle(Constant.Text.GRAY_STYLE));
             } else {
+                assert configuredFace.getMatching().right().isPresent();
                 tooltipCache.add(new TranslatableText("ui.galacticraft.machine.configuration.matches", configuredFace.getMatching().right().get().getName()).setStyle(Constant.Text.GRAY_STYLE));
             }
         }
@@ -937,7 +936,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
             boolean tankMod = false;
             if (this.focusedTank != null && button == 0) {
                 tankMod = this.focusedTank.acceptStack(
-                        new CallableRef<>(this.handler::getCursorStack, this.handler::setCursorStack, Predicates.alwaysTrue()),
+                        new CallableRef<>(this.handler::getCursorStack, this.handler::setCursorStack, stack -> true),
                         new FixedInventoryVanillaWrapper(this.handler.player.getInventory()).getInsertable()
                 );
             }

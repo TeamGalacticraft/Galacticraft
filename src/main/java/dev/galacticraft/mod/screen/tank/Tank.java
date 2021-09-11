@@ -147,10 +147,9 @@ public class Tank {
             return FLUID_TANK_3_6_DATA;
         } else if (size == 2) {
             return FLUID_TANK_2_4_DATA;
-        } else if (size == 1) {
+        } else {
             return FLUID_TANK_1_2_DATA;
         }
-        throw new AssertionError();
     }
 
     @Environment(EnvType.CLIENT)

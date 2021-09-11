@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.render.entity.model;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.EvolvedCreeperEntityModel;
 import dev.galacticraft.mod.client.render.block.entity.BasicSolarPanelBlockEntityRenderer;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.minecraft.client.model.Dilation;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;

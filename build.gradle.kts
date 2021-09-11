@@ -35,7 +35,7 @@ val modVersion             = project.property("mod.version").toString()
 val modName                = project.property("mod.name").toString()
 val modGroup               = project.property("mod.group").toString()
 
-// Dependency Version
+// Dependency Versions
 val fabricVersion          = project.property("fabric.version").toString()
 val clothConfigVersion     = project.property("cloth.config.version").toString()
 val modMenuVersion         = project.property("modmenu.version").toString()
@@ -68,8 +68,7 @@ base.archivesName.set(modName)
 loom {
     accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
     mixin {
-        add(sourceSets.getByName("main"), "galacticraft.refmap.json")
-        defaultRefmapName.set("galacticraft.refmap.json")
+        add("main", "galacticraft.refmap.json")
     }
 }
 
@@ -98,7 +97,7 @@ repositories {
             includeGroup("alexiil.mc.lib")
         }
     }
-    maven("https://maven.terraformersmc.com/") {
+    maven("https://maven.terraformersmc.com/releases/") {
         content {
             includeGroup("com.terraformersmc")
         }
@@ -119,14 +118,19 @@ repositories {
  * From:
  * @see net.fabricmc.loom.configuration.FabricApiExtension.getDependencyNotation
  */
-fun getFabricApiModule(moduleName: String, fabricApiVersion: String): String {
-    return String.format("net.fabricmc.fabric-api:%s:%s", moduleName,
-        fabricApi.moduleVersion(moduleName, fabricApiVersion))
+fun getFabricApiModule(moduleName: String): String {
+    return "net.fabricmc.fabric-api:${moduleName}:${fabricApi.moduleVersion(moduleName, fabricVersion)}"
 }
 
-fun optionalImplementation(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
-    project.dependencies.modCompileOnly(dependencyNotation, dependencyConfiguration)
-    if (!net.fabricmc.loom.util.OperatingSystem.isCIBuild() && runtimeOptional) project.dependencies.modRuntime(dependencyNotation, dependencyConfiguration)
+fun DependencyHandler.optionalDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
+    modCompileOnly(dependencyNotation, dependencyConfiguration)
+    if (!net.fabricmc.loom.util.OperatingSystem.isCIBuild() && runtimeOptional) {
+        modRuntime(dependencyNotation, dependencyConfiguration)
+    }
+}
+
+fun DependencyHandler.includedDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
+    include(modApi(dependencyNotation, dependencyConfiguration), dependencyConfiguration)
 }
 
 dependencies {
@@ -153,40 +157,49 @@ dependencies {
         "fabric-renderer-indigo",
         "fabric-renderer-registries-v1",
         "fabric-rendering-fluids-v1",
+        "fabric-rendering-v1",
         "fabric-resource-loader-v0",
         "fabric-screen-handler-api-v1",
         "fabric-structure-api-v1",
         "fabric-tag-extensions-v0",
         "fabric-textures-v0",
         "fabric-tool-attribute-api-v1"
-    ).forEach {
-        modImplementation(getFabricApiModule(it, fabricVersion)) { isTransitive = false }
+    ).forEach { module ->
+        modImplementation(getFabricApiModule(module)) { isTransitive = false }
     }
 
     // Mandatory Dependencies (Included with Jar-In-Jar)
-    include(modImplementation("dev.monarkhes:myron:$myronVersion") {
+    includedDependency("dev.monarkhes:myron:$myronVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
-    })
-    include(modImplementation("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion") {
+    }
+    includedDependency("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
-    })
-    include(modApi("dev.galacticraft:GalacticraftEnergy:$energyVersion") { isTransitive = false })
-    include(modApi("dev.galacticraft:GalacticraftAPI:$galacticraftApiVersion") { isTransitive = false })
-    include(modApi("alexiil.mc.lib:libblockattributes-core:$lbaVersion") { isTransitive = false })
-    include(modApi("alexiil.mc.lib:libblockattributes-items:$lbaVersion") { isTransitive = false })
-    include(modApi("alexiil.mc.lib:libblockattributes-fluids:$lbaVersion") { isTransitive = false })
+    }
+    includedDependency("dev.galacticraft:GalacticraftEnergy:$energyVersion") {
+        exclude(group = "net.fabricmc")
+        exclude(group = "net.fabricmc.fabric-api")
+        exclude(group = "alexiil.mc.lib")
+    }
+    includedDependency("dev.galacticraft:GalacticraftAPI:$galacticraftApiVersion") {
+        exclude(group = "net.fabricmc")
+        exclude(group = "net.fabricmc.fabric-api")
+        exclude(group = "alexiil.mc.lib")
+    }
+    includedDependency("alexiil.mc.lib:libblockattributes-all:$lbaVersion") {
+        exclude(group = "net.fabricmc")
+        exclude(group = "net.fabricmc.fabric-api")
+    }
 
     // Optional Dependencies
-    optionalImplementation("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
-    optionalImplementation("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
-    optionalImplementation("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false }
-    optionalImplementation("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
+    optionalDependency("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
+    optionalDependency("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
+    optionalDependency("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false }
+    optionalDependency("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
-        exclude(group = "org.jetbrains")
     }
 
     // Other Dependencies
@@ -234,8 +247,8 @@ tasks.jar {
 publishing {
     publications {
         register("mavenJava", MavenPublication::class) {
-            groupId = "dev.galacticraft"
-            artifactId = "Galacticraft"
+            groupId = modGroup
+            artifactId = modName
 
             artifact(tasks.remapJar) { builtBy(tasks.remapJar) }
             artifact(tasks.getByName("sourcesJar", Jar::class)) { builtBy(tasks.remapSourcesJar) }

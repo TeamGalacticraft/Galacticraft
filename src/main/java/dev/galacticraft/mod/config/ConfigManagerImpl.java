@@ -50,7 +50,7 @@ import java.nio.file.Paths;
  */
 public class ConfigManagerImpl implements ConfigManager {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private final File file = new File(FabricLoader.getInstance().getConfigDirectory(), "galacticraft/config.json");
+    private final File file = new File(FabricLoader.getInstance().getConfigDir().toFile(), "galacticraft/config.json");
     private Config config = new ConfigImpl();
 
     public ConfigManagerImpl() {

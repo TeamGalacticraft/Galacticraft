@@ -24,11 +24,8 @@ package dev.galacticraft.mod.item;
 
 import alexiil.mc.lib.attributes.AttributeProviderItem;
 import alexiil.mc.lib.attributes.ItemAttributeList;
-import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
-import dev.galacticraft.energy.impl.DefaultEnergyType;
-import dev.galacticraft.energy.impl.SimpleCapacitor;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.attribute.energy.InfiniteCapacitor;
 import net.minecraft.client.item.TooltipContext;

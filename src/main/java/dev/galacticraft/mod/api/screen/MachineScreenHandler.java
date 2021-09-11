@@ -63,7 +63,7 @@ public abstract class MachineScreenHandler<M extends MachineBlockEntity> extends
         ItemStack stack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotId);
 
-        if (slot != null && slot.hasStack()) {
+        if (slot.hasStack()) {
             ItemStack stack1 = slot.getStack();
             stack = stack1.copy();
 
