@@ -59,7 +59,6 @@ import java.util.stream.Collectors;
  */
 @Environment(EnvType.CLIENT)
 public class DefaultCompressingCategory implements DisplayCategory<DefaultCompressingDisplay> {
-    private static final Identifier DISPLAY_TEXTURE = new Identifier(Constant.MOD_ID, "textures/gui/rei_display.png");
 
     @Override
     public CategoryIdentifier<? extends DefaultCompressingDisplay> getCategoryIdentifier() {
@@ -85,7 +84,7 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
 
             public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
                 DiffuseLighting.disableGuiDepthLighting();
-                RenderSystem.setShaderTexture(0, DefaultCompressingCategory.DISPLAY_TEXTURE);
+                RenderSystem.setShaderTexture(0, Constant.ScreenTexture.REI_DISPLAY_TEXTURE);
                 this.drawTexture(matrices, startPoint.x, startPoint.y, 0, 83, 137, 157);
 
                 int height = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);

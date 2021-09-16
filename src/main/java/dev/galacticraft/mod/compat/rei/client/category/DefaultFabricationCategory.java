@@ -45,14 +45,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class DefaultFabricationCategory implements DisplayCategory<DefaultFabricationDisplay> {
-    private static final Identifier DISPLAY_TEXTURE = new Identifier(Constant.MOD_ID, "textures/gui/rei_display.png");
 
     @Override
     public CategoryIdentifier<? extends DefaultFabricationDisplay> getCategoryIdentifier() {
@@ -75,7 +73,7 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
         List<Widget> widgets = new LinkedList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(DISPLAY_TEXTURE, new Rectangle(startPoint.x, startPoint.y, 162, 82)));
+        widgets.add(Widgets.createTexturedWidget(Constant.ScreenTexture.REI_DISPLAY_TEXTURE, new Rectangle(startPoint.x, startPoint.y, 162, 82)));
 
         // Diamond input
         // Silicon
