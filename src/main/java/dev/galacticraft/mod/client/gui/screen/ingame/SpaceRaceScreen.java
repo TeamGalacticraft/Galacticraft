@@ -393,7 +393,7 @@ public class SpaceRaceScreen extends Screen {
                             int[] array = new int[48 * 32];
                             for (int y = 0; y < 32; y++) {
                                 for (int x = 0; x < 48; x++) {
-                                    array[y * 48 + x] = (finalImage.getPixelColor(x, y) /*& 0x00FFFFFF will be done on server (don't trust clients, so why do extra work?)*/); //ignore alpha channel
+                                    array[y * 48 + x] = (finalImage.getColor(x, y) /*& 0x00FFFFFF will be done on server (don't trust clients, so why do extra work?)*/); //ignore alpha channel
                                 }
                             }
                             ClientPlayNetworking.send(new Identifier(Constant.ADDON_API_ID, "flag_data"), PacketByteBufs.create().writeIntArray(array));
