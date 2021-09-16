@@ -463,6 +463,7 @@ public interface Constant {
         Identifier OXYGEN_STORAGE_MODULE_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_storage_module_screen.png");
         Identifier OXYGEN_SEALER_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_sealer_screen.png");
 
+        Identifier REI_DISPLAY_TEXTURE = new Identifier(MOD_ID, "textures/gui/rei_display.png");
     }
 
     interface SlotSprite {
