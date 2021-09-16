@@ -49,6 +49,7 @@ import java.util.Optional;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface FluidLoggable extends FluidDrainable, FluidFillable {
+    FluidState EMPTY_STATE = Fluids.EMPTY.getDefaultState();
     Identifier INVALID = new Identifier("invalid");
     String DOT_REP = "_gc_dot_";
     String DASH_REP = "_gc_dash_"; // yes this is bad.... but who's going to name a mod/fluid something like that
