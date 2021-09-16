@@ -199,7 +199,7 @@ dependencies {
     }
 
     // Mandatory Dependencies (Included with Jar-In-Jar)
-    includedDependency("dev.monarkhes:myron:$myronVersion") {
+    includedDependency("dev.monarkhes:myron-1.17.1:$myronVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     }
