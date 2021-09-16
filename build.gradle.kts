@@ -90,6 +90,14 @@ loom {
             vmArg("-Dfabric-api.gametest=true")
             vmArg("-ea")
         }
+        register("gametestClient") {
+            client()
+            name("Game Test Client")
+            source(gametestSourceSet)
+            property("fabric.log.level", "debug")
+            vmArg("-Dfabric-api.gametest=true")
+            vmArg("-ea")
+        }
     }
 }
 
