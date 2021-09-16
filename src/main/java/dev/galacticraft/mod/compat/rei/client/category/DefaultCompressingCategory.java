@@ -77,31 +77,9 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
 
     public @NotNull List<Widget> setupDisplay(DefaultCompressingDisplay recipeDisplay, Rectangle bounds) {
         final Point startPoint = new Point(bounds.getCenterX() - 68, bounds.getCenterY() - 37);
-
-        class BaseWidget extends Widget {
-            BaseWidget() {
-            }
-
-            public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-                DiffuseLighting.disableGuiDepthLighting();
-                RenderSystem.setShaderTexture(0, Constant.ScreenTexture.REI_DISPLAY_TEXTURE);
-                this.drawTexture(matrices, startPoint.x, startPoint.y, 0, 83, 137, 157);
-
-                int height = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
-                this.drawTexture(matrices, startPoint.x + 2, startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
-                int width = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D);
-                this.drawTexture(matrices, startPoint.x + 24, startPoint.y + 18, 82, 91, width, 17);
-            }
-
-            @Override
-            public List<? extends Element> children() {
-                return Collections.emptyList();
-            }
-        }
-
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(new BaseWidget());
+        widgets.add(new BaseWidget(startPoint));
         List<EntryIngredient> input = recipeDisplay.getInputEntries();
         List<Slot> slots = Lists.newArrayList();
 
