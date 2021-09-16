@@ -25,6 +25,7 @@ package dev.galacticraft.mod.api.block;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.api.wire.Wire;
+import dev.galacticraft.mod.util.EnergyUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -36,13 +37,14 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class WireBlock extends Block implements BlockEntityProvider {
+public abstract class WireBlock extends Block implements BlockEntityProvider {
     public WireBlock(Settings settings) {
         super(settings);
     }
@@ -53,7 +55,7 @@ public class WireBlock extends Block implements BlockEntityProvider {
         if (!world.isClient() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof Wire wire) {
-                Galacticraft.LOGGER.info(wire.getNetworkNullable());
+                Galacticraft.LOGGER.debug(wire.getNetwork());
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);
@@ -63,8 +65,23 @@ public class WireBlock extends Block implements BlockEntityProvider {
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborUpdate(state, world, pos, block, fromPos, notify);
         if (!world.isClient()) {
-            Wire wire = (Wire) world.getBlockEntity(pos);
-            wire.getNetwork().updateConnections(pos, fromPos);
+            final BlockEntity blockEntity = world.getBlockEntity(pos);
+            Wire wire = (Wire) blockEntity;
+            assert wire != null;
+            final BlockEntity blockEntityAdj = world.getBlockEntity(fromPos);
+            if (wire.canConnect(Direction.fromVector(fromPos.subtract(pos)))) {
+                if (blockEntityAdj instanceof Wire wire1) {
+                    if (wire1.canConnect(Direction.fromVector(fromPos.subtract(pos)).getOpposite())) {
+                        wire.getOrCreateNetwork().addWire(fromPos, wire1);
+                    }
+                } else {
+                    if (EnergyUtil.canAccessEnergy(world, fromPos, Direction.fromVector(fromPos.subtract(pos)))) {
+                        wire.getOrCreateNetwork().updateConnection(pos, fromPos);
+                    } else if (wire.getNetwork() != null) {
+                        wire.getNetwork().updateConnection(pos, fromPos);
+                    }
+                }
+            }
         }
     }
 
@@ -75,7 +92,5 @@ public class WireBlock extends Block implements BlockEntityProvider {
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new WireBlockEntity(pos, state);
-    }
+    public abstract WireBlockEntity createBlockEntity(BlockPos pos, BlockState state);
 }

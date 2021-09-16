@@ -35,6 +35,7 @@ import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -662,12 +663,16 @@ public interface Constant {
         String MATCH = "Match";
         String INTEGER = "Integer";
         String MAX_PROGRESS = "MaxProgress";
+        String COLOR = "Color";
+        String PULL = "Pull";
+        String HEAT = "Heat";
     }
 
     interface Property {
         BooleanProperty ACTIVE = BooleanProperty.of("active");
     }
 
+    @ApiStatus.Internal
     interface Misc {
         Identifier EMPTY = new Identifier("empty");
         Direction[] DIRECTIONS = Direction.values();
