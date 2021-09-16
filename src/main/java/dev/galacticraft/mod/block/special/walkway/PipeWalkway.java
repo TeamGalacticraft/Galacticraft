@@ -179,6 +179,7 @@ public class PipeWalkway extends FluidPipe implements FluidLoggable {
 
     @Override
     public FluidState getFluidState(BlockState state) {
+        if (this.isEmpty(state)) return EMPTY_STATE;
         FluidState state1 = Registry.FLUID.get(state.get(FLUID)).getDefaultState();
         if (state1.getEntries().containsKey(FlowableFluid.LEVEL)) {
             state1 = state1.with(FlowableFluid.LEVEL, state.get(FlowableFluid.LEVEL));

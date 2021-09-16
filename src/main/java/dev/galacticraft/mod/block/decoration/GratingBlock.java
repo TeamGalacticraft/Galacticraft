@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.block.decoration;
 
+import com.google.common.annotations.VisibleForTesting;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -48,7 +49,10 @@ import java.util.Optional;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GratingBlock extends Block implements FluidLoggable {
-    protected static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.of("grating_state", GratingState.class);
+    @VisibleForTesting
+    public static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.of("grating_state", GratingState.class);
+    private static final VoxelShape UPPER_SHAPE = Block.createCuboidShape(0.0D, 14.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    private static final VoxelShape LOWER_SHAPE = Block.createCuboidShape(0.0D, 6.0D, 0.0D, 16.0D, 8.0D, 16.0D);
 
     public GratingBlock(Settings settings) {
         super(settings);
@@ -73,9 +77,7 @@ public class GratingBlock extends Block implements FluidLoggable {
 
     @Override
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
-        return blockState.get(GRATING_STATE) == GratingState.UPPER ?
-                Block.createCuboidShape(0.0D, 14.0D, 0.0D, 16.0D, 16.0D, 16.0D) :
-                Block.createCuboidShape(0.0D, 6.0D, 0.0D, 16.0D, 8.0D, 16.0D);
+        return blockState.get(GRATING_STATE) == GratingState.UPPER ? UPPER_SHAPE : LOWER_SHAPE;
     }
 
     @Override
@@ -95,6 +97,7 @@ public class GratingBlock extends Block implements FluidLoggable {
 
     @Override
     public FluidState getFluidState(BlockState state) {
+        if (this.isEmpty(state)) return EMPTY_STATE;
         FluidState state1 = Registry.FLUID.get(state.get(FLUID)).getDefaultState();
         if (state1.getEntries().containsKey(FlowableFluid.LEVEL)) {
             state1 = state1.with(FlowableFluid.LEVEL, state.get(FlowableFluid.LEVEL));
@@ -107,6 +110,7 @@ public class GratingBlock extends Block implements FluidLoggable {
         return Fluids.WATER.getBucketFillSound();
     }
 
+    @VisibleForTesting
     public enum GratingState implements StringIdentifiable {
         UPPER("upper"),
         LOWER("lower");
