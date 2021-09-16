@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-
 package dev.galacticraft.mod.compat.rei.client.display;
 
 import dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin;
