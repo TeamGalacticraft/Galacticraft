@@ -33,3 +33,6 @@ jobs:
           arguments: publish
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
+        env:
+          ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USER }}
+          ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASS }}
