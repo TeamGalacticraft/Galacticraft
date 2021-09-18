@@ -477,6 +477,8 @@ public interface Constant {
         Identifier ROCKET_ASSEMBLER_SCREEN = new Identifier(MOD_ID, "textures/gui/rocket_assembler_screen.png");
         Identifier RESEARCH_PANELS = new Identifier(MOD_ID, "textures/gui/research_panels.png");
         Identifier FUEL_LOADER_SCREEN = new Identifier(MOD_ID, "textures/gui/fuel_loader_screen.png");
+
+        Identifier REI_DISPLAY_TEXTURE = new Identifier(MOD_ID, "textures/gui/rei_display.png");
     }
 
     interface SlotSprite {

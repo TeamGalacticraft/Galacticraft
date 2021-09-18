@@ -20,29 +20,26 @@
  * SOFTWARE.
  */
 
-//
-//package dev.galacticraft.mod.recipe.rei;
-//
-//import me.shedaniel.rei.api.RecipeDisplay;
-//import net.fabricmc.api.EnvType;
-//import net.fabricmc.api.Environment;
-//import net.minecraft.util.Identifier;
-//import org.jetbrains.annotations.NotNull;
-//
-///**
-// * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
-// */
-//@Environment(EnvType.CLIENT)
-//public interface DefaultCompressingDisplay extends RecipeDisplay {
-//    default @NotNull Identifier getRecipeCategory() {
-//        return GalacticraftREIPlugin.COMPRESSING;
-//    }
-//
-//    default int getWidth() {
-//        return 3;
-//    }
-//
-//    default int getHeight() {
-//        return 3;
-//    }
-//}
+package dev.galacticraft.mod.compat.rei.client.display;
+
+import dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin;
+import me.shedaniel.rei.api.common.category.CategoryIdentifier;
+import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
+public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
+    default @NotNull CategoryIdentifier<?> getCategoryIdentifier() {
+        return GalacticraftREIClientPlugin.COMPRESSING;
+    }
+
+    default int getWidth() {
+        return 3;
+    }
+
+    default int getHeight() {
+        return 3;
+    }
+}

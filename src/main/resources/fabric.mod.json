@@ -119,7 +119,11 @@
   "entrypoints": {
     "main": [ "dev.galacticraft.mod.Galacticraft" ],
     "client": [ "dev.galacticraft.mod.GalacticraftClient" ],
-    "modmenu": [ "dev.galacticraft.mod.compat.modmenu.ModMenuApiImpl" ]
+    "modmenu": [ "dev.galacticraft.mod.compat.modmenu.ModMenuApiImpl" ],
+    "rei": [
+      "dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin",
+      "dev.galacticraft.mod.compat.rei.server.GalacticraftREIServerPlugin"
+    ]
   },
   "mixins": [
     "galacticraft.mixins.json"
