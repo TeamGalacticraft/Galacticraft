@@ -25,7 +25,7 @@ package dev.galacticraft.mod.api.machine;
 import alexiil.mc.lib.attributes.misc.Saveable;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -36,10 +36,6 @@ public class MachineConfiguration implements Saveable {
     private final MachineIOConfig configuration = new MachineIOConfig();
     private final SecurityInfo security = new SecurityInfo();
 
-    public MachineConfiguration() {
-
-    }
-
     public void setStatus(MachineStatus status) {
         this.status = status;
     }
@@ -49,46 +45,46 @@ public class MachineConfiguration implements Saveable {
     }
 
     public MachineIOConfig getSideConfiguration() {
-        return configuration;
+        return this.configuration;
     }
 
     public SecurityInfo getSecurity() {
-        return security;
+        return this.security;
     }
 
     public MachineStatus getStatus() {
-        return status;
+        return this.status;
     }
 
     public RedstoneInteractionType getRedstoneInteraction() {
-        return redstone;
+        return this.redstone;
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        tag.put(Constant.Nbt.SECURITY, this.getSecurity().toTag(new CompoundTag()));
-        tag.put(Constant.Nbt.CONFIGURATION, this.getSideConfiguration().toTag(new CompoundTag()));
+    public NbtCompound toTag(NbtCompound tag) {
+        tag.put(Constant.Nbt.SECURITY, this.getSecurity().toTag(new NbtCompound()));
+        tag.put(Constant.Nbt.CONFIGURATION, this.getSideConfiguration().toTag(new NbtCompound()));
         this.redstone.toTag(tag);
         return tag;
     }
 
-    public CompoundTag toClientTag(CompoundTag tag, PlayerEntity player) {
+    public NbtCompound toClientTag(NbtCompound tag, PlayerEntity player) {
         if (security.hasAccess(player)) {
-            tag.put(Constant.Nbt.SECURITY, this.getSecurity().toTag(new CompoundTag()));
-            tag.put(Constant.Nbt.CONFIGURATION, this.getSideConfiguration().toTag(new CompoundTag()));
+            tag.put(Constant.Nbt.SECURITY, this.getSecurity().toTag(new NbtCompound()));
+            tag.put(Constant.Nbt.CONFIGURATION, this.getSideConfiguration().toTag(new NbtCompound()));
             this.redstone.toTag(tag);
         }
         return tag;
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
+    public void fromTag(NbtCompound tag) {
         this.getSecurity().fromTag(tag.getCompound(Constant.Nbt.SECURITY));
         this.getSideConfiguration().fromTag(tag.getCompound(Constant.Nbt.CONFIGURATION));
         this.redstone = RedstoneInteractionType.fromTag(tag);
     }
 
-    public static MachineConfiguration fromClientTag(CompoundTag tag) {
+    public static MachineConfiguration fromClientTag(NbtCompound tag) {
         MachineConfiguration configuration = new MachineConfiguration();
         if (tag.contains(Constant.Nbt.REDSTONE_INTERACTION_TYPE)) {
             configuration.setRedstone(RedstoneInteractionType.fromTag(tag));

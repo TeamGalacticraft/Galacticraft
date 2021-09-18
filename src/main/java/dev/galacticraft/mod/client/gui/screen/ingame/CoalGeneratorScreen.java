@@ -25,43 +25,20 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.CoalGeneratorBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class CoalGeneratorScreen extends MachineHandledScreen<SimpleMachineScreenHandler<CoalGeneratorBlockEntity>> {
+public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorBlockEntity, SimpleMachineScreenHandler<CoalGeneratorBlockEntity>> {
     public CoalGeneratorScreen(SimpleMachineScreenHandler<CoalGeneratorBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
+        super(handler, inv, title, Constant.ScreenTexture.COAL_GENERATOR_SCREEN);
         this.backgroundHeight = 176;
-        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 28, 42, this::getEnergyTooltipLines, handler.machine::getStatus));
-    }
-
-    @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.COAL_GENERATOR_SCREEN);
-
-        int leftPos = this.x;
-        int topPos = this.y;
-
-        this.drawTexture(matrices, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        super.drawBackground(matrices, delta, mouseX, mouseY);
-    }
-
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-        drawCenteredString(matrices, this.textRenderer, I18n.translate("block.galacticraft.coal_generator"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+        this.addWidget(this.createCapacitorWidget(8, 28, 42));
     }
 }

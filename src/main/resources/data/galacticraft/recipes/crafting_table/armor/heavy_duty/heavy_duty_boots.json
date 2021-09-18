@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S S",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    }
+  },
+  "result": {
+    "item": "galacticraft:heavy_duty_boots",
+    "count": 1
+  }
+}

@@ -26,40 +26,47 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
-import java.util.function.Supplier;
-
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class SimpleMachineBlock<T extends MachineBlockEntity> extends MachineBlock<T> {
     public static final Settings MACHINE_DEFAULT_SETTINGS = FabricBlockSettings.of(Material.METAL)
             .strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL);
 
-    private final Supplier<T> supplier;
+    private final BlockEntityFactory<T> factory;
     private final Text information;
 
-    public static <T extends MachineBlockEntity> SimpleMachineBlock<T> create(Supplier<BlockEntityType<T>> type, String key) {
-        return new SimpleMachineBlock<>(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS), () -> type.get().instantiate(), new TranslatableText(key).setStyle(Constant.Text.DARK_GRAY_STYLE));
+    public static <T extends MachineBlockEntity> SimpleMachineBlock<T> create(BlockEntityFactory<T> factory, String key) {
+        return new SimpleMachineBlock<>(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS), factory, new TranslatableText(key).setStyle(Constant.Text.DARK_GRAY_STYLE));
     }
 
-    protected SimpleMachineBlock(Settings settings, Supplier<T> supplier, Text information) {
+    protected SimpleMachineBlock(Settings settings, BlockEntityFactory<T> factory, Text information) {
         super(settings);
-        this.supplier = supplier;
+        this.factory = factory;
         this.information = information;
     }
 
     @Override
-    public T createBlockEntity(BlockView view) {
-        return this.supplier.get();
+    public T createBlockEntity(BlockPos pos, BlockState state) {
+        return this.factory.create(pos, state);
     }
 
     @Override
     public Text machineInfo(ItemStack stack, BlockView view, boolean advanced) {
         return this.information;
+    }
+
+    @FunctionalInterface
+    public interface BlockEntityFactory<T extends MachineBlockEntity> {
+        T create(BlockPos pos, BlockState state);
     }
 }

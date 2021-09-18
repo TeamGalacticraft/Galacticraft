@@ -23,33 +23,28 @@
 package dev.galacticraft.mod.fluid;
 
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.particle.GalacticraftParticle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
 
 import java.util.Random;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class FuelFluid extends FlowableFluid {
+public abstract class FuelFluid extends BasicFluid {
+    public FuelFluid() {
+        super(false, true, 4, 1, 7, 100);
+    }
+
     @Override
     public Fluid getFlowing() {
         return GalacticraftFluid.FLOWING_FUEL;
@@ -60,24 +55,14 @@ public class FuelFluid extends FlowableFluid {
         return GalacticraftFluid.FUEL;
     }
 
-    @Override
-    protected boolean isInfinite() {
-        return false;
-    }
-
-    @Override
-    public Item getBucketItem() {
-        return GalacticraftItems.FUEL_BUCKET;
-    }
-
     @Environment(EnvType.CLIENT)
     public ParticleEffect getParticle() {
         return GalacticraftParticle.DRIPPING_FUEL_PARTICLE;
     }
 
     @Override
-    public boolean canBeReplacedWith(FluidState fluidState, BlockView blockView, BlockPos blockPos, Fluid fluid, Direction direction) {
-        return direction == Direction.DOWN && !fluid.matchesType(GalacticraftFluid.FUEL);
+    public Item getBucketItem() {
+        return GalacticraftItem.FUEL_BUCKET;
     }
 
     @Override
@@ -93,92 +78,21 @@ public class FuelFluid extends FlowableFluid {
     }
 
     @Override
-    public int getTickRate(WorldView WorldView) {
-        return 7;
-    }
-
-    @Override
-    public boolean matchesType(Fluid fluid) {
-        return fluid == getStill() || fluid == getFlowing();
-    }
-
-    @Override
-    public void beforeBreakingBlock(WorldAccess iWorld, BlockPos blockPos, BlockState blockState) {
-        BlockEntity blockEntity = blockState.getBlock().hasBlockEntity() ? iWorld.getBlockEntity(blockPos) : null;
-        Block.dropStacks(blockState, iWorld, blockPos, blockEntity);
-    }
-
-    @Override
-    public int getFlowSpeed(WorldView WorldView) {
-        return 4;
-    }
-
-    @Override
-    public int getLevelDecreasePerBlock(WorldView WorldView) {
-        return 1;
-    }
-
-    @Override
-    public boolean hasRandomTicks() {
-        return true;
-    }
-
-    @Override
-    public float getBlastResistance() {
-        return 100.f;
-    }
-
-    @Override
-    public BlockState toBlockState(FluidState fluidState) {
-        return GalacticraftBlock.FUEL.getDefaultState().with(FluidBlock.LEVEL, method_15741(fluidState));
-    }
-
-    @Override
-    public boolean isStill(FluidState fluidState) {
-        return false;
-    }
-
-    @Override
-    public int getLevel(FluidState fluidState) {
-        return 0;
-    }
-
-    public static class Flowing extends FuelFluid {
-
-        public Flowing() {
-
-        }
-
-        @Override
-        protected void appendProperties(StateManager.Builder<Fluid, FluidState> stateBuilder) {
-            super.appendProperties(stateBuilder);
-            stateBuilder.add(LEVEL);
-        }
-
-        @Override
-        public int getLevel(FluidState fluidState) {
-            return fluidState.get(LEVEL);
-        }
-
-        @Override
-        public boolean isStill(FluidState fluidState) {
-            return false;
-        }
+    protected FluidBlock getBlock() {
+        return GalacticraftBlock.FUEL;
     }
 
     public static class Still extends FuelFluid {
-
-        public Still() {
-        }
-
         @Override
-        public int getLevel(FluidState fluidState) {
-            return 8;
-        }
-
-        @Override
-        public boolean isStill(FluidState fluidState) {
+        public boolean isStill() {
             return true;
+        }
+    }
+
+    public static class Flowing extends FuelFluid {
+        @Override
+        public boolean isStill() {
+            return false;
         }
     }
 }

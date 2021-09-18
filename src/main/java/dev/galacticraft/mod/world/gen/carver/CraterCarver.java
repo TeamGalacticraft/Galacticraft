@@ -23,20 +23,15 @@
 package dev.galacticraft.mod.world.gen.carver;
 
 import com.mojang.serialization.Codec;
-import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.block.GalacticraftBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.ChunkRandom;
-import net.minecraft.world.gen.ProbabilityConfig;
 import net.minecraft.world.gen.carver.Carver;
+import net.minecraft.world.gen.carver.CarverContext;
+import net.minecraft.world.gen.chunk.AquiferSampler;
 
 import java.util.BitSet;
 import java.util.Random;
@@ -45,90 +40,70 @@ import java.util.function.Function;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CraterCarver extends Carver<ProbabilityConfig> {
-    public CraterCarver(int heightLimit) {
-        this(ProbabilityConfig.CODEC, heightLimit);
-    }
-
-    public CraterCarver(Codec<ProbabilityConfig> codec, int heightLimit) {
-        super(codec, heightLimit);
+public class CraterCarver extends Carver<CraterCarverConfig> {
+    public CraterCarver(Codec<CraterCarverConfig> configCodec) {
+        super(configCodec);
     }
 
     @Override
-    public boolean carve(Chunk chunk, Function<BlockPos, Biome> posToBiome, Random random, int seaLevel, int chunkX, int chunkZ, int mainChunkX, int mainChunkZ, BitSet carvingMask, ProbabilityConfig carverConfig) {
-        boolean carved = false;
-        for (int cX = -1; cX < 2; cX++) {
-            for (int cZ = -1; cZ < 2; cZ++) {
-                if (carvingMask.get((cX + 1) | (cZ + 1) << 4)) continue;
-                Random random1 = new ChunkRandom(ChunkPos.toLong(chunk.getPos().x + cX, chunk.getPos().z + cZ));
-                if (random1.nextFloat() < carverConfig.probability) {
-//                    BlockState block = Registry.BLOCK.get(random1.nextInt(10)).getDefaultState();
-                    BlockPos craterCenter = new BlockPos(cX * 16 + random1.nextInt(15), 75, cZ * 16 + random1.nextInt(15));
-                    BlockPos.Mutable mutable = craterCenter.mutableCopy();
-//                    if (cX == 0 && cZ == 0) chunk.setBlockState(mutable, block, false);
-                    double radius = skewRandom(4, 15, random1.nextGaussian(), 1.2, -0.5);
-                    double depthMultiplier = skewRandom(0.4, 1.4, random1.nextGaussian(), 2, 0);
-                    boolean fresh = random1.nextInt(15) == 1;
-                    for (int innerChunkX = 0; innerChunkX < 16; innerChunkX++) { //iterate through positions in chunk
-                        for (int innerChunkZ = 0; innerChunkZ < 16; innerChunkZ++) {
-                            double toDig = 0;
+    public boolean carve(CarverContext context, CraterCarverConfig config, Chunk chunk, Function<BlockPos, Biome> posToBiome, Random random, AquiferSampler aquiferSampler, ChunkPos pos, BitSet carvingMask) {
+        int y = 127;//config.y.get(random, context);
+        //pos = center chunk pos
+        BlockPos craterCenter = pos.getBlockPos(random.nextInt(16), y, random.nextInt(16));
+        BlockPos.Mutable mutable = craterCenter.mutableCopy();
 
-                            double xDev = Math.abs(innerChunkX - craterCenter.getX());
-                            double zDev = Math.abs(innerChunkZ - craterCenter.getZ());
-                            if (xDev >= 0 && xDev < 16 && zDev >= 0 && zDev < 16) {
-                                if (xDev * xDev + zDev * zDev < radius * radius) { //distance to crater and depth
-                                    xDev /= radius;
-                                    zDev /= radius;
-                                    final double sqrtY = xDev * xDev + zDev * zDev;
-                                    double yDev = sqrtY * sqrtY * 6;
-                                    double craterDepth = 5 - yDev;
-                                    craterDepth *= depthMultiplier;
-                                    if (craterDepth > 0.0) {
-                                        toDig = craterDepth;
-                                    }
-                                }
+        double radius = 8 + (random.nextDouble() * (config.maxRadius - config.minRadius));
+        if (random.nextBoolean() && radius < (config.minRadius + config.idealRangeOffset) || radius > (config.maxRadius - config.idealRangeOffset))
+            radius = 8 + (random.nextDouble() * (config.maxRadius - config.minRadius));
+        double depthMultiplier = 1 - ((random.nextDouble() - 0.5) * 0.3);
+        boolean fresh = random.nextInt(16) == 1;
+        for (int innerChunkX = 0; innerChunkX < 16; innerChunkX++) { //iterate through positions in chunk
+            for (int innerChunkZ = 0; innerChunkZ < 16; innerChunkZ++) {
+                double toDig = 0;
 
-                                if (toDig > 0) carved = true;
-                                else continue;
+                double xDev = Math.abs((chunk.getPos().getOffsetX(innerChunkX)) - craterCenter.getX());
+                double zDev = Math.abs((chunk.getPos().getOffsetZ(innerChunkZ)) - craterCenter.getZ());
+                if (xDev >= 0 && xDev < 32 && zDev >= 0 && zDev < 32) {
+                    if (xDev * xDev + zDev * zDev < radius * radius) { //distance to crater and depth
+                        xDev /= radius;
+                        zDev /= radius;
+                        final double sqrtY = xDev * xDev + zDev * zDev;
+                        double yDev = sqrtY * sqrtY * 6;
+                        double craterDepth = 5 - yDev;
+                        craterDepth *= depthMultiplier;
+                        if (craterDepth > 0.0) {
+                            toDig = craterDepth;
+                        }
+                    }
 
-                                if (toDig > 0) toDig++; // Increase crater depth, but for sum, not each crater
-                                if (fresh) toDig++; // Dig one more block, because we're not replacing the top with turf
-
-                                mutable.set(innerChunkX, this.heightLimit, innerChunkZ);
-                                carvingMask.set((cX + 1) | (cZ + 1) << 4);
-                                for (int dug = 0; dug < toDig; dug++) {
-                                    mutable.move(Direction.DOWN);
-                                    if (!chunk.getBlockState(mutable).isAir() || dug > 0) {
-//                                        Galacticraft.LOGGER.info("X: " + mutable.getX() + " Y: " + mutable.getY() + " Z: " + mutable.getZ() + " Dug: " + dug + " Max: " + toDig + "Block: " + chunk.getBlockState(mutable));
-                                        chunk.setBlockState(mutable, CAVE_AIR, false);
-                                        if (!fresh && dug + 1 >= toDig)
-                                            chunk.setBlockState(mutable.move(Direction.DOWN), GalacticraftBlock.MOON_TURF.getDefaultState(), false);
-                                    } else {
-                                        dug--;
-                                    }
-                                }
+                    if (toDig >= 1) {
+                        toDig++; // Increase crater depth, but for sum, not each crater
+                        if (fresh) toDig++; // Dig one more block, because we're not replacing the top with turf
+                    }
+                    BlockPos.Mutable copy = new BlockPos.Mutable();
+                    mutable.set(innerChunkX, y, innerChunkZ);
+                    for (int dug = 0; dug < toDig; dug++) {
+                        mutable.move(Direction.DOWN);
+                        if (!chunk.getBlockState(mutable).isAir() || carvingMask.get(innerChunkX + (innerChunkZ << 4) + ((mutable.getY() + 128) << 8)) || dug > 0) {
+                            chunk.setBlockState(mutable, CAVE_AIR, false);
+                            if (dug == 0) {
+                                carvingMask.set(innerChunkX + (innerChunkZ << 4) + ((mutable.getY() + 128) << 8), true);
                             }
+                            if (!fresh && dug + 1 >= toDig && !chunk.getBlockState(copy.set(mutable).move(Direction.DOWN, 2)).isAir()) {
+                                chunk.setBlockState(mutable.move(Direction.DOWN), posToBiome.apply(chunk.getPos().getBlockPos(mutable.getX(), mutable.getY(), mutable.getZ())).getGenerationSettings().getSurfaceConfig().getTopMaterial(), false);
+                            }
+                        } else {
+                            dug--;
                         }
                     }
                 }
             }
         }
-        return carved;
-    }
-
-    @Override
-    public boolean shouldCarve(Random random, int chunkX, int chunkZ, ProbabilityConfig config) {
-        return true;// random.nextFloat() < config.probability && random.nextBoolean() && random.nextBoolean() && random.nextBoolean() && random.nextBoolean();
-    }
-
-    @Override
-    protected boolean isPositionExcluded(double scaledRelativeX, double scaledRelativeY, double scaledRelativeZ, int y) {
         return false;
     }
 
-    private static double skewRandom(double min, double max, double gaussian, double skew, double bias) {
-        double range = max - min;
-        double biasFactor = Math.exp(bias);
-        return (min + range / 2.0) + (range * (biasFactor / (biasFactor + Math.exp(-gaussian / skew)) - 0.5));
+    @Override
+    public boolean shouldCarve(CraterCarverConfig config, Random random) {
+        return random.nextFloat() <= config.probability;
     }
 }

@@ -30,6 +30,9 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public class MachineScreenHandlerFactory<B extends MachineBlockEntity, T extends MachineScreenHandler<B>> implements ScreenHandlerRegistry.ExtendedClientHandlerFactory<T> {
     private final MachineScreenHandlerSupplier<B, T> supplier;
 

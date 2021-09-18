@@ -28,17 +28,20 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class PipeFluidInsertable implements FluidInsertable {
+    private final Direction direction;
     private final FluidAmount maxTransfer;
     private final BlockPos pipe;
     private @Nullable PipeNetwork network;
 
-    public PipeFluidInsertable(FluidAmount maxTransfer, BlockPos pipe) {
+    public PipeFluidInsertable(Direction direction, FluidAmount maxTransfer, BlockPos pipe) {
+        this.direction = direction;
         this.maxTransfer = maxTransfer;
         this.pipe = pipe;
     }
@@ -46,12 +49,7 @@ public class PipeFluidInsertable implements FluidInsertable {
     @Override
     public FluidVolume attemptInsertion(FluidVolume volume, Simulation simulation) {
         if (this.network != null) {
-            if (this.maxTransfer.isLessThan(volume.amount())) {
-                FluidAmount over = volume.amount().sub(this.maxTransfer);
-                volume = this.network.insert(this.pipe, volume, simulation);
-                return volume.withAmount(volume.amount().add(over));
-            }
-            return this.network.insert(this.pipe, volume, simulation);
+            return this.network.insert(this.pipe, volume, direction, simulation);
         }
         return volume;
     }
@@ -63,5 +61,15 @@ public class PipeFluidInsertable implements FluidInsertable {
 
     public void setNetwork(@Nullable PipeNetwork network) {
         this.network = network;
+    }
+
+    @Override
+    public String toString() {
+        return "PipeFluidInsertable{" +
+                "direction=" + direction +
+                ", maxTransfer=" + maxTransfer +
+                ", pipe=" + pipe +
+                ", network=" + network +
+                '}';
     }
 }

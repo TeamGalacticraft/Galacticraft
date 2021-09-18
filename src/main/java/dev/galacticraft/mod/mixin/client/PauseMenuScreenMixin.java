@@ -52,6 +52,6 @@ public abstract class PauseMenuScreenMixin extends Screen {
         int x = screenWidth - buttonWidth;
         int y = screenHeight - buttonHeight;
 
-        addButton(new SpaceRaceButtonWidget(this.client, x, y, buttonWidth, buttonHeight, screenWidth, screenHeight));
+        this.addDrawableChild(new SpaceRaceButtonWidget(this.client, x, y, buttonWidth, buttonHeight, screenWidth, screenHeight));
     }
 }

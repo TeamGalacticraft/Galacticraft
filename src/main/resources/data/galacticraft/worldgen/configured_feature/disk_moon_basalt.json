@@ -6,22 +6,33 @@
           "config": {
             "feature": {
               "config": {
-                "target": {
-                  "tag": "galacticraft:moon_stone",
-                  "predicate_type": "minecraft:tag_match"
-                },
-                "state": {
-                  "Name": "galacticraft:moon_basalt"
-                },
-                "size": 32
+                "targets": [
+                  {
+                    "target": {
+                      "tag": "galacticraft:moon_stone",
+                      "predicate_type": "minecraft:tag_match"
+                    },
+                    "state": {
+                      "Name": "galacticraft:moon_basalt"
+                    }
+                  }
+                ],
+                "size": 33,
+                "discard_chance_on_air_exposure": 0.0
               },
               "type": "minecraft:ore"
             },
             "decorator": {
               "config": {
-                "bottom_offset": 0,
-                "top_offset": 0,
-                "maximum": 256
+                "height": {
+                  "min_inclusive": {
+                    "absolute": 0
+                  },
+                  "max_inclusive": {
+                    "below_top": 0
+                  },
+                  "type": "minecraft:uniform"
+                }
               },
               "type": "minecraft:range"
             }
@@ -37,7 +48,7 @@
     },
     "decorator": {
       "config": {
-        "count": 12
+        "count": 10
       },
       "type": "minecraft:count"
     }

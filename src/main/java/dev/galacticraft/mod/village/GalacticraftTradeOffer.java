@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.village;
 
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
@@ -43,7 +43,6 @@ import java.util.Random;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftTradeOffer {
-
     public static class BuyForOneEmeraldFactory implements TradeOffers.Factory {
         private final Item buy;
         private final int price;
@@ -61,7 +60,7 @@ public class GalacticraftTradeOffer {
 
         public TradeOffer create(Entity entity, Random random) {
             ItemStack itemStack = new ItemStack(this.buy, this.price);
-            return new TradeOffer(itemStack, new ItemStack(GalacticraftItems.LUNAR_SAPPHIRE), this.maxUses, this.experience, this.multiplier);
+            return new TradeOffer(itemStack, new ItemStack(GalacticraftItem.LUNAR_SAPPHIRE), this.maxUses, this.experience, this.multiplier);
         }
     }
 
@@ -82,17 +81,16 @@ public class GalacticraftTradeOffer {
 
         @Nullable
         public TradeOffer create(Entity entity, Random random) {
-            if (!(entity.world instanceof ServerWorld)) {
+            if (!(entity.world instanceof ServerWorld world)) {
                 return null;
             } else {
-                ServerWorld serverWorld = (ServerWorld) entity.world;
-                BlockPos blockPos = serverWorld.locateStructure(this.structure, entity.getBlockPos(), 100, true);
+                BlockPos blockPos = world.locateStructure(this.structure, entity.getBlockPos(), 100, true);
                 if (blockPos != null) {
-                    ItemStack itemStack = FilledMapItem.createMap(serverWorld, blockPos.getX(), blockPos.getZ(), (byte) 2, true, true);
-                    FilledMapItem.fillExplorationMap(serverWorld, itemStack);
-                    MapState.addDecorationsTag(itemStack, blockPos, "+", this.iconType);
+                    ItemStack itemStack = FilledMapItem.createMap(world, blockPos.getX(), blockPos.getZ(), (byte) 2, true, true);
+                    FilledMapItem.fillExplorationMap(world, itemStack);
+                    MapState.addDecorationsNbt(itemStack, blockPos, "+", this.iconType);
                     itemStack.setCustomName(new TranslatableText("filled_map." + this.structure.getName().toLowerCase(Locale.ROOT)));
-                    return new TradeOffer(new ItemStack(GalacticraftItems.LUNAR_SAPPHIRE, this.price), new ItemStack(Items.COMPASS), itemStack, this.maxUses, this.experience, 0.2F);
+                    return new TradeOffer(new ItemStack(GalacticraftItem.LUNAR_SAPPHIRE, this.price), new ItemStack(Items.COMPASS), itemStack, this.maxUses, this.experience, 0.2F);
                 } else {
                     return null;
                 }
@@ -134,7 +132,7 @@ public class GalacticraftTradeOffer {
         }
 
         public TradeOffer create(Entity entity, Random random) {
-            return new TradeOffer(new ItemStack(GalacticraftItems.LUNAR_SAPPHIRE, this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
+            return new TradeOffer(new ItemStack(GalacticraftItem.LUNAR_SAPPHIRE, this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
         }
     }
 }

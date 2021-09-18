@@ -32,15 +32,9 @@ import java.util.Objects;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BlockStateWithChance implements Comparable<BlockStateWithChance> {
+public record BlockStateWithChance(BlockState state, int chance /*out of 100, the lower the more common*/) implements Comparable<BlockStateWithChance> {
     public static final Codec<BlockStateWithChance> CODEC = RecordCodecBuilder.create((instance) -> instance.group(BlockState.CODEC.fieldOf("state").forGetter((stateWithChance) -> stateWithChance.state), Codec.INT.fieldOf("chance").forGetter((stateWithChance) -> stateWithChance.chance)).apply(instance, BlockStateWithChance::new));
-    private final BlockState state;
-    private final int chance;
 
-    public BlockStateWithChance(BlockState state, int chance) { // out of 100, the lower the more common
-        this.state = state;
-        this.chance = chance;
-    }
 
     public int getChance() {
         return chance;

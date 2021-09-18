@@ -39,13 +39,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
 @Mixin(AbstractClientPlayerEntity.class)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractClientPlayerEntityMixin {
     @Shadow @Nullable protected abstract PlayerListEntry getPlayerListEntry();
 
     @Inject(method = "getCapeTexture", at = @At("RETURN"), cancellable = true)
-    private void getCapeTexture(CallbackInfoReturnable<Identifier> info) {
+    private void getCapeTexture_gc(CallbackInfoReturnable<Identifier> info) {
         if(CapesLoader.PLAYERS != null) {
             if(CapesLoader.PLAYERS.containsKey(this.getPlayerListEntry().getProfile().getId().toString())) {
                 info.setReturnValue(new Identifier(

@@ -62,6 +62,8 @@ public class ConfigImpl implements Config {
     private int oxygenDecompressorEnergyConsumptionRate = EnergyUtil.Values.T1_MACHINE_ENERGY_USAGE;
     @Expose
     private boolean hide_alpha_warning = false;
+    @Expose
+    private boolean moreMulticolorStars = false;
 
     @Override
     public boolean isAlphaWarningHidden() {
@@ -71,6 +73,16 @@ public class ConfigImpl implements Config {
     @Override
     public void setAlphaWarningHidden(boolean flag) {
         this.hide_alpha_warning = flag;
+    }
+
+    @Override
+    public boolean areMoreMulticoloredStarsEnabled() {
+        return this.moreMulticolorStars;
+    }
+
+    @Override
+    public void setMoreMulticolorStars(boolean flag) {
+        this.moreMulticolorStars = flag;
     }
 
     @Override

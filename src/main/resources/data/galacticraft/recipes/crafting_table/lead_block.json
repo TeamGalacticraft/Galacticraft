@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LLL",
+    "LLL",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "item": "galacticraft:lead_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraft:lead_block",
+    "count": 1
+  }
+}

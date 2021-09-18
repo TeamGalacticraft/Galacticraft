@@ -59,7 +59,7 @@ public interface MachineStatus {
          */
         WORKING(true),
         /**
-         * THe machine is active, but at reduced efficiency.
+         * The machine is active, but at reduced efficiency.
          */
         PARTIALLY_WORKING(true),
         /**
@@ -91,11 +91,11 @@ public interface MachineStatus {
          */
         OUTPUT_FULL(false),
         /**
-         *
+         * Everything else
          */
         OTHER(false);
 
-        final boolean active;
+        private final boolean active;
 
         StatusType(boolean active) {
             this.active = active;

@@ -34,7 +34,6 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ItemSpecificSlot extends Slot {
-
     private final List<Item> items;
 
     public ItemSpecificSlot(Inventory inventory, int slotId, int x, int y, Item... items) {

@@ -39,7 +39,7 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
     private final int screenHeight;
 
     public SpaceRaceButtonWidget(MinecraftClient minecraft, int x, int y, int buttonWidth, int buttonHeight, int screenWidth, int screenHeight) {
-        super(x, y, buttonWidth, buttonHeight, LiteralText.EMPTY, (button) -> minecraft.openScreen(new SpaceRaceScreen()));
+        super(x, y, buttonWidth, buttonHeight, LiteralText.EMPTY, (button) -> minecraft.setScreen(new SpaceRaceScreen()));
         this.textRenderer = minecraft.textRenderer;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
@@ -62,7 +62,7 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
         this.drawHorizontalLine(matrices, x, screenWidth, y, 0xFF000000);
         this.drawVerticalLine(matrices, x, screenHeight, y, 0xFF000000);
 
-        drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.space_race_manager.button"), x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
-        drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft.space_race_manager.button_2"), x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
+        drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.space_race_manager.button"), x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
+        drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.space_race_manager.button_2"), x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
     }
 }

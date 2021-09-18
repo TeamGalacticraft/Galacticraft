@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "HSH",
+    "H H"
+  ],
+  "key": {
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    },
+    "H": {
+      "item": "galacticraft:heavy_plating"
+    }
+  },
+  "result": {
+    "item": "galacticraft:rocket_fins",
+    "count": 1
+  }
+}

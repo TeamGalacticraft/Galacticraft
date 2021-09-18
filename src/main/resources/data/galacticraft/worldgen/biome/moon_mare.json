@@ -1,8 +1,8 @@
 {
-  "depth": -0.8,
-  "scale": 0.03,
-  "downfall": 0.01,
-  "temperature": -100,
+  "depth": -0.05,
+  "scale": -0.05,
+  "downfall": 0.0,
+  "temperature": 2.0,
   "precipitation": "none",
   "category": "none",
   "effects": {
@@ -20,8 +20,8 @@
   "surface_builder": "galacticraft:moon_mare",
   "carvers": {
     "air": [
+      "galacticraft:moon_craters",
       "galacticraft:moon_mare_cave",
-      "galacticraft:moon_crater",
       "galacticraft:canyon"
     ]
   },
@@ -34,7 +34,6 @@
     [],
     [
       "galacticraft:disk_moon_basalt",
-      "galacticraft:ore_copper_moon",
       "galacticraft:ore_tin_moon",
       "galacticraft:ore_cheese_moon"
     ],
@@ -43,11 +42,7 @@
     []
   ],
   "starts": [
-    {
-      "config": {
-      },
-      "type": "galacticraft:moon_ruins"
-    }
+    "galacticraft:moon_ruins"
   ],
   "spawners": {
     "monster": [

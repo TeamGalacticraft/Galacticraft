@@ -25,18 +25,21 @@ package dev.galacticraft.mod.world.biome.source;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.galacticraft.mod.mixin.BuiltinBiomesAccessor;
 import dev.galacticraft.mod.world.biome.GalacticraftBiome;
 import dev.galacticraft.mod.world.biome.layer.MoonBiomeLayer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.dynamic.RegistryLookupCodec;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryLookupCodec;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BuiltinBiomes;
 import net.minecraft.world.biome.source.BiomeLayerSampler;
 import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.gen.feature.StructureFeature;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -51,17 +54,17 @@ public class MoonBiomeSource extends BiomeSource {
     private boolean initialized = false;
 
     public MoonBiomeSource(long seed, int biomeSize, Registry<Biome> registry) {
-        super(new ArrayList<>(4)); // its a mutable list, as we want to add biomes in later
-                                  // for /locate and other things to work. Will be set in #getBiomeForNoiseGen
+        super(new ArrayList<>(4)); // it is a mutable list, as we want to add biomes in later
+                                  // for /locate and other things to work. Will be set in #initialize
         this.biomeSize = biomeSize;
         this.seed = seed;
         this.registry = registry;
         this.sampler = MoonBiomeLayer.build(seed, biomeSize, registry);
-        if (!BuiltinBiomes.BY_RAW_ID.containsValue(GalacticraftBiome.Moon.HIGHLANDS_PLAINS)) {
-            BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_PLAINS)), GalacticraftBiome.Moon.HIGHLANDS_PLAINS);
-            BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_EDGE)), GalacticraftBiome.Moon.HIGHLANDS_EDGE);
-            BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_PLAINS)), GalacticraftBiome.Moon.MARE_PLAINS);
-            BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_EDGE)), GalacticraftBiome.Moon.MARE_EDGE);
+        if (!BuiltinBiomesAccessor.getRawIdMap().containsValue(GalacticraftBiome.Moon.HIGHLANDS_PLAINS)) {
+            BuiltinBiomesAccessor.getRawIdMap().put(registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_PLAINS)), GalacticraftBiome.Moon.HIGHLANDS_PLAINS);
+            BuiltinBiomesAccessor.getRawIdMap().put(registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_EDGE)), GalacticraftBiome.Moon.HIGHLANDS_EDGE);
+            BuiltinBiomesAccessor.getRawIdMap().put(registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_PLAINS)), GalacticraftBiome.Moon.MARE_PLAINS);
+            BuiltinBiomesAccessor.getRawIdMap().put(registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_EDGE)), GalacticraftBiome.Moon.MARE_EDGE);
         }
     }
 
@@ -77,14 +80,31 @@ public class MoonBiomeSource extends BiomeSource {
     }
 
     @Override
+    public boolean hasStructureFeature(StructureFeature<?> feature) {
+        this.initialize();
+        return super.hasStructureFeature(feature);
+    }
+
+    @Override
+    public Set<BlockState> getTopMaterials() {
+        this.initialize();
+        return super.getTopMaterials();
+    }
+
+    @Override
     public Biome getBiomeForNoiseGen(int biomeX, int biomeY, int biomeZ) {
+        this.initialize();
+        return this.sampler.sample(registry, biomeX, biomeZ);
+    }
+
+    private void initialize() {
         if (!this.initialized) {
-            if (BuiltinBiomes.BY_RAW_ID.containsValue(GalacticraftBiome.Moon.HIGHLANDS_PLAINS)) {
+            if (BuiltinBiomesAccessor.getRawIdMap().containsValue(GalacticraftBiome.Moon.HIGHLANDS_PLAINS)) {
                 if (registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_PLAINS)) != -1) {
-                    BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_PLAINS)), GalacticraftBiome.Moon.HIGHLANDS_PLAINS);
-                    BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_EDGE)), GalacticraftBiome.Moon.HIGHLANDS_EDGE);
-                    BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_PLAINS)), GalacticraftBiome.Moon.MARE_PLAINS);
-                    BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_EDGE)), GalacticraftBiome.Moon.MARE_EDGE);
+                    BuiltinBiomesAccessor.getRawIdMap().put(registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_PLAINS)), GalacticraftBiome.Moon.HIGHLANDS_PLAINS);
+                    BuiltinBiomesAccessor.getRawIdMap().put(registry.getRawId(registry.get(GalacticraftBiome.Moon.HIGHLANDS_EDGE)), GalacticraftBiome.Moon.HIGHLANDS_EDGE);
+                    BuiltinBiomesAccessor.getRawIdMap().put(registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_PLAINS)), GalacticraftBiome.Moon.MARE_PLAINS);
+                    BuiltinBiomesAccessor.getRawIdMap().put(registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_EDGE)), GalacticraftBiome.Moon.MARE_EDGE);
 
                     this.biomes.clear();
                     this.biomes.add(registry.get(GalacticraftBiome.Moon.HIGHLANDS_PLAINS));
@@ -99,6 +119,5 @@ public class MoonBiomeSource extends BiomeSource {
                 throw new AssertionError("Galacticraft biomes not registered!");
             }
         }
-        return this.sampler.sample(registry, biomeX, biomeZ);
     }
 }

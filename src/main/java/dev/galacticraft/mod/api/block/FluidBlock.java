@@ -28,7 +28,6 @@ import net.minecraft.fluid.FlowableFluid;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class FluidBlock extends net.minecraft.block.FluidBlock {
-
     public FluidBlock(FlowableFluid baseFluid, Settings settings) {
         super(baseFluid, settings);
     }

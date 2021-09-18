@@ -23,13 +23,22 @@
 package dev.galacticraft.mod.block.special.aluminumwire.tier1;
 
 import dev.galacticraft.mod.api.block.WireBlock;
+import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SealableAluminumWireBlock extends WireBlock {
-
     public SealableAluminumWireBlock(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    public @Nullable WireBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return WireBlockEntity.createT1(GalacticraftBlockEntityType.WIRE_T1, pos, state);
     }
 }
