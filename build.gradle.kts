@@ -270,7 +270,7 @@ tasks.jar {
             "Implementation-Version"   to project.version,
             "Implementation-Vendor"    to "Team Galacticraft",
             "Implementation-Timestamp" to DateTimeFormatter.ISO_DATE_TIME,
-            "Maven-Artifact"           to "$modGroup:$modName:$project.version"
+            "Maven-Artifact"           to "$modGroup:$modName:${project.version}"
         )
     }
 }
