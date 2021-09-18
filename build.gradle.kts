@@ -53,6 +53,7 @@ plugins {
     `maven-publish`
     id("fabric-loom") version("0.9-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
+    id("io.github.juuxel.loom-quiltflower") version("1.3.0")
 }
 
 java {
