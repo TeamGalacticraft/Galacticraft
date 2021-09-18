@@ -287,10 +287,11 @@ publishing {
         }
     }
     repositories {
-        maven {
-            setUrl("s3://maven.galacticraft.dev")
+        maven("https://maven.galacticraft.dev/") {
+            name = "maven"
+            credentials(PasswordCredentials::class)
             authentication {
-                register("awsIm", AwsImAuthentication::class)
+                register("basic", BasicAuthentication::class)
             }
         }
     }
