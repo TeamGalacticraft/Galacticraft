@@ -684,6 +684,12 @@ public interface Constant {
         int MAX_STRING_READ = 32767;
     }
 
+    @ApiStatus.Internal
+    interface Mixin {
+        String STRUCTURE_POOL_DEBUG = "StructurePoolGeneratorMixin";
+        String OVERWORLD_SKY_OVERRIDE = "client.WorldRendererOverworldMixin";
+    }
+
     interface Recipe {
         String FABRICATION = "fabrication";
         String COMPRESSING = "compressing";
