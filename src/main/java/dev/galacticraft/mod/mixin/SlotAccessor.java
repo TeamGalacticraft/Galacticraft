@@ -22,15 +22,27 @@
 
 package dev.galacticraft.mod.mixin;
 
+<<<<<<<< HEAD:src/main/java/dev/galacticraft/mod/mixin/SlotAccessor.java
 import net.minecraft.screen.slot.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
+========
+import dev.galacticraft.api.item.Schematic;
+import net.minecraft.item.Item;
+>>>>>>>> main:src/main/java/dev/galacticraft/mod/item/SchematicItem.java
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
+<<<<<<<< HEAD:src/main/java/dev/galacticraft/mod/mixin/SlotAccessor.java
 @Mixin(Slot.class)
 public interface SlotAccessor {
     @Accessor("index")
     int getIndex();
+========
+public class SchematicItem extends Item implements Schematic {
+    public SchematicItem(Settings settings) {
+        super(settings);
+    }
+>>>>>>>> main:src/main/java/dev/galacticraft/mod/item/SchematicItem.java
 }
