@@ -282,6 +282,7 @@ public interface Constant {
         String ISOTHERMAL_FABRIC = "thermal_cloth_t2";
         String ORION_DRIVE = "orion_drive";
         String ATMOSPHERIC_VALVE = "atmospheric_valve";
+        String AMBIENT_THERMAL_CONTROLLER = "ambient_thermal_controller";
         String LIQUID_CANISTER = "liquid_canister";
         //FOOD
         String MOON_BERRIES = "moon_berries";
@@ -699,6 +700,12 @@ public interface Constant {
         String LOGGER_PREFIX = "[Galacticraft] ";
         boolean DEBUG = false;
         int MAX_STRING_READ = 32767;
+    }
+
+    @ApiStatus.Internal
+    interface Mixin {
+        String STRUCTURE_POOL_DEBUG = "StructurePoolGeneratorMixin";
+        String OVERWORLD_SKY_OVERRIDE = "client.WorldRendererOverworldMixin";
     }
 
     interface Recipe {

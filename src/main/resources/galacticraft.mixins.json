@@ -19,7 +19,6 @@
     "ServerWorldMixin",
     "SkyPropertiesAccessor",
     "SlotAccessor",
-    "StructurePoolGeneratorMixin",
     "TorchBlockMixin"
   ],
   "client": [
@@ -33,8 +32,7 @@
     "client.PlayerInventoryScreenMixin",
     "client.VillagerEntityRendererMixin",
     "client.VillagerResemblingModelMixin",
-    "client.WorldRendererMoonMixin",
-    "client.WorldRendererOverworldMixin"
+    "client.WorldRendererMoonMixin"
   ],
   "minVersion": "0.8.0",
   "injectors": {

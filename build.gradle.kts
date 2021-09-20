@@ -53,6 +53,7 @@ plugins {
     `maven-publish`
     id("fabric-loom") version("0.9-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
+    id("io.github.juuxel.loom-quiltflower") version("1.3.0")
 }
 
 java {
@@ -269,7 +270,7 @@ tasks.jar {
             "Implementation-Version"   to project.version,
             "Implementation-Vendor"    to "Team Galacticraft",
             "Implementation-Timestamp" to DateTimeFormatter.ISO_DATE_TIME,
-            "Maven-Artifact"           to "$modGroup:$modName:$project.version"
+            "Maven-Artifact"           to "$modGroup:$modName:${project.version}"
         )
     }
 }
@@ -286,10 +287,11 @@ publishing {
         }
     }
     repositories {
-        maven {
-            setUrl("s3://maven.galacticraft.dev")
+        maven("https://maven.galacticraft.dev/") {
+            name = "maven"
+            credentials(PasswordCredentials::class)
             authentication {
-                register("awsIm", AwsImAuthentication::class)
+                register("basic", BasicAuthentication::class)
             }
         }
     }
