@@ -45,10 +45,10 @@ import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
 import me.shedaniel.rei.api.client.registry.transfer.TransferHandlerRegistry;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
+import net.minecraft.item.ItemConvertible;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.item.Item;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -78,7 +78,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
 
     @Override
     public void registerEntries(EntryRegistry registry) {
-        for (Item item : GalacticraftItem.HIDDEN_ITEMS) {
+        for (ItemConvertible item : GalacticraftItem.HIDDEN_ITEMS) {
             registry.removeEntry(EntryStacks.of(item));
         }
     }
