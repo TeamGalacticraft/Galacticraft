@@ -64,7 +64,7 @@ java {
 
 group = modGroup
 version = modVersion + getVersionDecoration()
-
+println("Galacticraft: $version")
 base.archivesName.set(modName)
 
 val gametestSourceSet = sourceSets.create("gametest") {
@@ -287,7 +287,9 @@ publishing {
         }
     }
     repositories {
-        maven("https://maven.galacticraft.dev/") {
+        val isSnapshot: Boolean = System.getenv("SNAPSHOT")?.equals("true") ?: true
+        val mavenBase = "https://maven.galacticraft.dev/"
+        maven(if(isSnapshot) "$mavenBase/snapshots" else mavenBase) {
             name = "maven"
             credentials(PasswordCredentials::class)
             authentication {
