@@ -127,7 +127,7 @@ public class ConfiguredMachineFace {
         tag.putString(Constant.Nbt.AUTOMATION_TYPE, automationType.name());
         tag.putBoolean(Constant.Nbt.MATCH, this.matching != null);
         if (this.matching != null) {
-            tag.putBoolean(Constant.Nbt.INTEGER, this.matching.left().isPresent());
+            tag.putBoolean(Constant.Nbt.IS_SLOT_ID, this.matching.left().isPresent());
             if (this.matching.left().isPresent()) {
                 tag.putInt(Constant.Nbt.VALUE, this.matching.left().get());
             } else {
@@ -140,7 +140,7 @@ public class ConfiguredMachineFace {
     public void fromTag(NbtCompound tag) {
         this.automationType = AutomationType.valueOf(tag.getString(Constant.Nbt.AUTOMATION_TYPE));
         if (tag.getBoolean(Constant.Nbt.MATCH)) {
-            if (tag.getBoolean(Constant.Nbt.INTEGER)) {
+            if (tag.getBoolean(Constant.Nbt.IS_SLOT_ID)) {
                 this.matching = Either.left(tag.getInt(Constant.Nbt.VALUE));
             } else {
                 this.matching = Either.right(SlotType.SLOT_TYPES.get(new Identifier(tag.getString(Constant.Nbt.VALUE))));
