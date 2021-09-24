@@ -78,7 +78,7 @@ import java.util.List;
  */
 public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWithEntity {
     public static final BooleanProperty ARBITRARY_BOOLEAN_PROPERTY = BooleanProperty.of("update");
-    public static final BooleanProperty ACTIVE = BooleanProperty.of("active");
+    public static final BooleanProperty ACTIVE = Constant.Property.ACTIVE;
 
     protected MachineBlock(Settings settings) {
         super(settings);

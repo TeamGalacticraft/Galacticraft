@@ -33,9 +33,11 @@ import net.minecraft.world.gen.carver.CaveCarverConfig;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftCarver {
-    public static final Carver<CaveCarverConfig> LUNAR_CAVE = Registry.register(Registry.CARVER, new Identifier(Constant.MOD_ID, "lunar_cave"), new LunarCaveCarver(CaveCarverConfig.CAVE_CODEC));
-    public static final Carver<CraterCarverConfig> CRATERS = Registry.register(Registry.CARVER, new Identifier(Constant.MOD_ID, "craters"), new CraterCarver(CraterCarverConfig.CRATER_CODEC));
+    public static final Carver<CaveCarverConfig> LUNAR_CAVE = new LunarCaveCarver(CaveCarverConfig.CAVE_CODEC);
+    public static final Carver<CraterCarverConfig> CRATERS = new CraterCarver(CraterCarverConfig.CRATER_CODEC);
 
     public static void register() {
+        Registry.register(Registry.CARVER, new Identifier(Constant.MOD_ID, "lunar_cave"), LUNAR_CAVE);
+        Registry.register(Registry.CARVER, new Identifier(Constant.MOD_ID, "craters"), CRATERS);
     }
 }

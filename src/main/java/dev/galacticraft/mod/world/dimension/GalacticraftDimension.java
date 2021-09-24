@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.world.dimension;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.world.gen.chunk.MoonChunkGenerator;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -34,8 +33,4 @@ import net.minecraft.world.World;
  */
 public class GalacticraftDimension {
     public static final RegistryKey<World> MOON = RegistryKey.of(Registry.WORLD_KEY, new Identifier(Constant.MOD_ID, "moon"));
-
-    public static void register() {
-        Registry.register(Registry.CHUNK_GENERATOR, new Identifier(Constant.MOD_ID, "moon"), MoonChunkGenerator.CODEC);
-    }
 }
