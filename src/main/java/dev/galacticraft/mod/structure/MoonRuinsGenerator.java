@@ -63,8 +63,8 @@ import java.util.Random;
  */
 public class MoonRuinsGenerator {
    private static final Identifier[] PIECES = new Identifier[]{
-           //new Identifier(Constants.MOD_ID, "moon_ruins/ruin_1"),
-           //new Identifier(Constants.MOD_ID, "moon_ruins/ruin_2"),
+           //new Identifier(Constant.MOD_ID, "moon_ruins/ruin_1"),
+           //new Identifier(Constant.MOD_ID, "moon_ruins/ruin_2"),
            new Identifier(Constant.MOD_ID, "moon_ruins/ruin_3"),
            new Identifier(Constant.MOD_ID, "moon_ruins/ruin_4"),
            new Identifier(Constant.MOD_ID, "moon_ruins/ruin_5"),

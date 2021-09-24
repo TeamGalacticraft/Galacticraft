@@ -31,6 +31,7 @@ import net.fabricmc.fabric.api.structure.v1.FabricStructureBuilder;
 import net.minecraft.structure.StructurePieceType;
 import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
@@ -39,14 +40,20 @@ import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftStructure {
-    public static final Codec<StructurePoolFeatureConfig> STRUCTURE_POOL_CONFIG_CODEC_UNCAPPED_SIZE = RecordCodecBuilder.create((instance) -> instance.group(StructurePool.REGISTRY_CODEC.fieldOf("start_pool").forGetter(StructurePoolFeatureConfig::getStartPool), Codec.INT.fieldOf("size").forGetter(StructurePoolFeatureConfig::getSize)).apply(instance, StructurePoolFeatureConfig::new));
+    private static final Codec<StructurePoolFeatureConfig> SPFC_CODEC_UNCAPPED = RecordCodecBuilder.create((instance) -> instance.group(
+            StructurePool.REGISTRY_CODEC.fieldOf("start_pool").forGetter(StructurePoolFeatureConfig::getStartPool),
+            Codec.INT.fieldOf("size").forGetter(StructurePoolFeatureConfig::getSize)
+    ).apply(instance, StructurePoolFeatureConfig::new));
 
-    public static final MoonPillagerBaseFeature MOON_PILLAGER_BASE_FEATURE = new MoonPillagerBaseFeature(STRUCTURE_POOL_CONFIG_CODEC_UNCAPPED_SIZE);
+    public static final StructurePieceType MOON_RUINS_PIECE = MoonRuinsGenerator.Piece::new;
+
+    public static final MoonPillagerBaseFeature MOON_PILLAGER_BASE_FEATURE = new MoonPillagerBaseFeature(SPFC_CODEC_UNCAPPED);
     public static final MoonRuinsFeature MOON_RUINS = new MoonRuinsFeature(DefaultFeatureConfig.CODEC);
 
-    public static final StructurePieceType MOON_RUINS_PIECE = StructurePieceType.register(MoonRuinsGenerator.Piece::new, Constant.MOD_ID + ":moon_ruins_piece");
 
     public static void register() {
+        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(Constant.MOD_ID, "moon_ruins_piece"), MOON_RUINS_PIECE);
+
         FabricStructureBuilder.create(new Identifier(Constant.MOD_ID, "moon_pillager_base"), MOON_PILLAGER_BASE_FEATURE)
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
                 .defaultConfig(32, 16, 23789482).adjustsSurface()

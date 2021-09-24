@@ -31,13 +31,18 @@ import net.minecraft.util.registry.Registry;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftRecipe {
-    public static final RecipeType<FabricationRecipe> FABRICATION_TYPE = Registry.register(Registry.RECIPE_TYPE, new Identifier(Constant.MOD_ID, Constant.Recipe.FABRICATION), new GalacticraftRecipeType<>());
-    public static final RecipeType<CompressingRecipe> COMPRESSING_TYPE = Registry.register(Registry.RECIPE_TYPE, new Identifier(Constant.MOD_ID, Constant.Recipe.COMPRESSING), new GalacticraftRecipeType<>());
+    public static final RecipeType<FabricationRecipe> FABRICATION_TYPE = new GalacticraftRecipeType<>();
+    public static final RecipeType<CompressingRecipe> COMPRESSING_TYPE = new GalacticraftRecipeType<>();
 
-    public static final FabricationRecipe.Serializer FABRICATION_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.FABRICATION), FabricationRecipe.Serializer.INSTANCE);
-    public static final ShapelessCompressingRecipe.Serializer SHAPELESS_COMPRESSING_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPELESS), ShapelessCompressingRecipe.Serializer.INSTANCE);
-    public static final ShapedCompressingRecipe.Serializer SHAPED_COMPRESSING_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPED), ShapedCompressingRecipe.Serializer.INSTANCE);
+    public static final FabricationRecipe.Serializer FABRICATION_SERIALIZER = FabricationRecipe.Serializer.INSTANCE;
+    public static final ShapelessCompressingRecipe.Serializer SHAPELESS_COMPRESSING_SERIALIZER = ShapelessCompressingRecipe.Serializer.INSTANCE;
+    public static final ShapedCompressingRecipe.Serializer SHAPED_COMPRESSING_SERIALIZER = ShapedCompressingRecipe.Serializer.INSTANCE;
 
     public static void register() {
+        Registry.register(Registry.RECIPE_TYPE, new Identifier(Constant.MOD_ID, Constant.Recipe.FABRICATION), FABRICATION_TYPE);
+        Registry.register(Registry.RECIPE_TYPE, new Identifier(Constant.MOD_ID, Constant.Recipe.COMPRESSING), COMPRESSING_TYPE);
+        Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.Serializer.FABRICATION), FABRICATION_SERIALIZER);
+        Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPELESS), SHAPELESS_COMPRESSING_SERIALIZER);
+        Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPED), SHAPED_COMPRESSING_SERIALIZER);
     }
 }

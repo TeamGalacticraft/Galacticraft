@@ -35,6 +35,6 @@ public class GalacticraftRecipeType<C extends Inventory, T extends Recipe<C>> im
     @Override
     public String toString() {
         Identifier id = Registry.RECIPE_TYPE.getId(this);
-        return id == null ? "Unregistered RecipeType" : id.toString();
+        return id == null ? "Unregistered GCRecipeType" : id.toString();
     }
 }
