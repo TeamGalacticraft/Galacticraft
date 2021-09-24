@@ -352,6 +352,7 @@
   "tooltip.galacticraft.energy_remaining": "Energy Remaining: %s",
   "tooltip.galacticraft.infinite": "Infinite",
   "tooltip.galacticraft.creative_only": "Creative Only",
+  "death.attack.gc.oilBoom": "%s tried to put out fire with a very flammable material",
   "death.attack.gc.suffocation": "%s died from lack of oxygen",
   "ui.galacticraft.alpha_warning.header": "WARNING",
   "ui.galacticraft.alpha_warning.content1": "Galacticraft is currently in ALPHA.",

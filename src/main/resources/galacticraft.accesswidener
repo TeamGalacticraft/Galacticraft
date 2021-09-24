@@ -1,16 +1,20 @@
 accessWidener v1 named
 
 # constructors
-accessible method net/minecraft/block/CakeBlock                                <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible method net/minecraft/block/FluidBlock                               <init> (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible method net/minecraft/block/LadderBlock                              <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible method net/minecraft/block/StairsBlock                              <init> (Lnet/minecraft/block/BlockState;Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible method net/minecraft/item/AxeItem                                   <init> (Lnet/minecraft/item/ToolMaterial;FFLnet/minecraft/item/Item$Settings;)V
-accessible method net/minecraft/item/HoeItem                                   <init> (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
-accessible method net/minecraft/item/MusicDiscItem                             <init> (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V
-accessible method net/minecraft/item/PickaxeItem                               <init> (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
-accessible method net/minecraft/world/gen/chunk/ChunkGeneratorSettings         <init> (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;IIIIZZZZZZ)V
-accessible method net/minecraft/world/gen/stateprovider/BlockStateProviderType <init> (Lcom/mojang/serialization/Codec;)V
+accessible method net/minecraft/block/CakeBlock                                <init>           (Lnet/minecraft/block/AbstractBlock$Settings;)V
+accessible method net/minecraft/block/FluidBlock                               <init>           (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V
+accessible method net/minecraft/block/LadderBlock                              <init>           (Lnet/minecraft/block/AbstractBlock$Settings;)V
+accessible method net/minecraft/block/StairsBlock                              <init>           (Lnet/minecraft/block/BlockState;Lnet/minecraft/block/AbstractBlock$Settings;)V
+accessible method net/minecraft/item/AxeItem                                   <init>           (Lnet/minecraft/item/ToolMaterial;FFLnet/minecraft/item/Item$Settings;)V
+accessible method net/minecraft/item/HoeItem                                   <init>           (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
+accessible method net/minecraft/item/MusicDiscItem                             <init>           (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V
+accessible method net/minecraft/item/PickaxeItem                               <init>           (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
+accessible method net/minecraft/world/gen/chunk/ChunkGeneratorSettings         <init>           (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;IIIIZZZZZZ)V
+accessible method net/minecraft/world/gen/stateprovider/BlockStateProviderType <init>           (Lcom/mojang/serialization/Codec;)V
+accessible method net/minecraft/entity/damage/DamageSource                     <init>           (Ljava/lang/String;)V
+
+# protected methods
+accessible method net/minecraft/entity/damage/DamageSource                     setBypassesArmor ()Lnet/minecraft/entity/damage/DamageSource;
 
 # private classes
 
