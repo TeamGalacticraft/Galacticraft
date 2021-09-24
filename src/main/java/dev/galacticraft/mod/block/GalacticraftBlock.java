@@ -55,12 +55,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.ApiStatus;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @SuppressWarnings("unused")
 public class GalacticraftBlock {
+    @ApiStatus.Internal
+    public static final Map<Identifier, Block> BLOCKS = new HashMap<>();
     //ITEM GROUPS
     public static final ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constant.MOD_ID, Constant.Block.ITEM_GROUP_BLOCKS))
@@ -79,11 +85,11 @@ public class GalacticraftBlock {
     public static final Block UNLIT_LANTERN = registerBlockWithoutItem(new UnlitLanternBlock(FabricBlockSettings.copy(Blocks.LANTERN).luminance(state -> 0)), Constant.Block.UNLIT_LANTERN);
 
     // LIQUIDS
-    public static final dev.galacticraft.mod.api.block.FluidBlock CRUDE_OIL = registerBlockWithoutItem(new CrudeOilBlock(GalacticraftFluid.CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MapColor.BLACK)
+    public static final FluidBlock CRUDE_OIL = registerBlockWithoutItem(new CrudeOilBlock(GalacticraftFluid.CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MapColor.BLACK)
             .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
             .strength(100.0F, 1000.0F).dropsNothing()), Constant.Block.CRUDE_OIL);
 
-    public static final dev.galacticraft.mod.api.block.FluidBlock FUEL = registerBlockWithoutItem(new FluidBlock(GalacticraftFluid.FUEL, FabricBlockSettings.of(new FabricMaterialBuilder(MapColor.YELLOW)
+    public static final FluidBlock FUEL = registerBlockWithoutItem(new FluidBlock(GalacticraftFluid.FUEL, FabricBlockSettings.of(new FabricMaterialBuilder(MapColor.YELLOW)
             .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
             .strength(50.0F, 50.0F).dropsNothing()), Constant.Block.FUEL);
 
@@ -135,7 +141,7 @@ public class GalacticraftBlock {
     public static final Block GRATING = registerBlock(new GratingBlock(FabricBlockSettings.of(Material.METAL, MapColor.STONE_GRAY).strength(2.5f, 6.0f).sounds(BlockSoundGroup.METAL)), Constant.Block.GRATING);
 
     // SPECIAL
-    public static final Block ALUMINUM_WIRE = registerBlock(new AluminumWireBlock(FabricBlockSettings.copy(Blocks.WHITE_WOOL)), Constant.Block.ALUMINUM_WIRE);
+    public static final Block ALUMINUM_WIRE = registerBlock(new AluminumWireBlock(FabricBlockSettings.copy(Blocks.WHITE_WOOL)), Constant.Block.WIRE_T1);
     public static final Block SEALABLE_ALUMINUM_WIRE = registerBlock(new SealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATIONS[0])), Constant.Block.SEALABLE_ALUMINUM_WIRE);
     public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = registerBlock(new HeavySealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATIONS[0])), Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE);
     public static final Block GLASS_FLUID_PIPE = registerBlock(new GlassFluidPipeBlock(FabricBlockSettings.of(Material.GLASS).breakByHand(true).sounds(BlockSoundGroup.GLASS)), Constant.Block.GLASS_FLUID_PIPE);
@@ -219,6 +225,7 @@ public class GalacticraftBlock {
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);
         FlammableBlockRegistry.getDefaultInstance().add(CRUDE_OIL, 60, 100);
+        BLOCKS.forEach((identifier, block) -> Registry.register(Registry.BLOCK, identifier, block));
     }
 
     private static Block[] createDecorationBlocks(String baseId, AbstractBlock.Settings settings, boolean detailedVariant) {
@@ -258,25 +265,30 @@ public class GalacticraftBlock {
 
     private static <T extends Block> T registerBlock(T block, String id, ItemGroup group) {
         Identifier identifier = new Identifier(Constant.MOD_ID, id);
-        Registry.register(Registry.BLOCK, identifier, block);
+        BLOCKS.put(identifier, block);
         BlockItem item = Registry.register(Registry.ITEM, identifier, new BlockItem(block, new Item.Settings().group(group)));
         item.appendBlocks(Item.BLOCK_ITEMS, item);
         return block;
     }
 
     private static <T extends Block> T registerBlockWithoutItem(T block, String id) {
-        return Registry.register(Registry.BLOCK, new Identifier(Constant.MOD_ID, id), block);
+        BLOCKS.put(new Identifier(Constant.MOD_ID, id), block);
+        return block;
     }
 
     private static Block[] registerOres(String id, boolean overworld, boolean moon) {
         Block[] blocks = new Block[(overworld ? 2 : 0) + (moon ? 2 : 0)];
         if (overworld) {
-            blocks[0] = Registry.register(Registry.BLOCK, new Identifier(Constant.MOD_ID, id + "_ore"), new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)));
-            blocks[1] = Registry.register(Registry.BLOCK, new Identifier(Constant.MOD_ID, "deepslate_" + id + "_ore"), new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)));
+            blocks[0] = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F));
+            BLOCKS.put(new Identifier(Constant.MOD_ID, id + "_ore"), blocks[0]);
+            blocks[1] = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F));
+            BLOCKS.put(new Identifier(Constant.MOD_ID, "deepslate_" + id + "_ore"), blocks[1]);
         }
         if (moon) {
-            blocks[overworld ? 2 : 0] = Registry.register(Registry.BLOCK, new Identifier(Constant.MOD_ID, "moon_" + id + "_ore"), new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)));
-            blocks[overworld ? 3 : 1] = Registry.register(Registry.BLOCK, new Identifier(Constant.MOD_ID, "moon_basalt_" + id + "_ore"), new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)));
+            blocks[overworld ? 2 : 0] = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F));
+            BLOCKS.put(new Identifier(Constant.MOD_ID, "moon_" + id + "_ore"), blocks[overworld ? 2 : 0]);
+            blocks[overworld ? 3 : 1] = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F));
+            BLOCKS.put(new Identifier(Constant.MOD_ID, "moon_basalt_" + id + "_ore"), blocks[overworld ? 3 : 1]);
         }
         return blocks;
     }

@@ -20,19 +20,15 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.loot;
+package dev.galacticraft.mod.world.gen.chunk;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.mixin.LootTablesAccessor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class GalacticraftLootTable {
-    public static final Identifier BASIC_MOON_RUINS_CHEST = new Identifier(Constant.MOD_ID, Constant.LootTable.BASIC_MOON_RUINS_CHEST);
+public class GalacticraftChunkGenerator {
 
     public static void register() {
-        LootTablesAccessor.callRegisterLootTable(BASIC_MOON_RUINS_CHEST);
+        Registry.register(Registry.CHUNK_GENERATOR, new Identifier(Constant.MOD_ID, "moon"), MoonChunkGenerator.CODEC);
     }
 }
