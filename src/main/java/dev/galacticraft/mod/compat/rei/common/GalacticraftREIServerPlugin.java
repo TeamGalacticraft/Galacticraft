@@ -20,18 +20,26 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.compat.rei.server;
+package dev.galacticraft.mod.compat.rei.common;
 
-import dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.compat.rei.common.display.DefaultCompressingDisplay;
+import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
+import dev.galacticraft.mod.compat.rei.common.transfer.info.FabricationMenuInfo;
+import dev.galacticraft.mod.compat.rei.common.transfer.info.SimpleMachineMenuInfo;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
+import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoRegistry;
 
 public class GalacticraftREIServerPlugin implements REIServerPlugin {
+    public static final CategoryIdentifier<DefaultFabricationDisplay> CIRCUIT_FABRICATION = CategoryIdentifier.of(Constant.MOD_ID, "plugins/circuit_fabricator");
+    public static final CategoryIdentifier<DefaultCompressingDisplay> COMPRESSING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/compressing");
+//    public static final CategoryIdentifier<DefaultCompressingDisplay> COAL_GENERATOR_FUEL = CategoryIdentifier.of(Constant.MOD_ID, "plugins/coal_generator_fuel");
 
     @Override
     public void registerMenuInfo(MenuInfoRegistry registry) {
-        registry.register(GalacticraftREIClientPlugin.COMPRESSING, RecipeMachineScreenHandler.class, new SimpleMachineMenuInfo<>());
-        registry.register(GalacticraftREIClientPlugin.CIRCUIT_FABRICATION, RecipeMachineScreenHandler.class, new SimpleMachineMenuInfo<>());
+        registry.register(COMPRESSING, RecipeMachineScreenHandler.class, new SimpleMachineMenuInfo<>(3, 3, 9));
+        registry.register(CIRCUIT_FABRICATION, RecipeMachineScreenHandler.class, new FabricationMenuInfo<>());
     }
 }

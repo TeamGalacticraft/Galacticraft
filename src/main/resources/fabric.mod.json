@@ -122,7 +122,7 @@
     "modmenu": [ "dev.galacticraft.mod.compat.modmenu.ModMenuApiImpl" ],
     "rei": [
       "dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin",
-      "dev.galacticraft.mod.compat.rei.server.GalacticraftREIServerPlugin"
+      "dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin"
     ]
   },
   "mixins": [

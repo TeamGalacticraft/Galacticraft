@@ -20,26 +20,29 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.compat.rei.client.display;
+package dev.galacticraft.mod.compat.rei.common.transfer.info;
 
-import dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin;
-import me.shedaniel.rei.api.common.category.CategoryIdentifier;
+import dev.galacticraft.mod.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
-import org.jetbrains.annotations.NotNull;
+import me.shedaniel.rei.api.common.transfer.info.simple.SimpleGridMenuInfo;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.recipe.Recipe;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
-    default @NotNull CategoryIdentifier<?> getCategoryIdentifier() {
-        return GalacticraftREIClientPlugin.COMPRESSING;
+public record SimpleMachineMenuInfo<T extends RecipeMachineScreenHandler<? extends RecipeMachineBlockEntity<? extends Inventory, ? extends Recipe<?>>>, D extends SimpleGridMenuDisplay>(int width, int height, int resultIndex) implements SimpleGridMenuInfo<T, D> {
+
+    @Override
+    public int getCraftingResultSlotIndex(T menu) {
+        return this.resultIndex();
     }
 
-    default int getWidth() {
-        return 3;
+    @Override
+    public int getCraftingWidth(T menu) {
+        return this.width();
     }
 
-    default int getHeight() {
-        return 3;
+    @Override
+    public int getCraftingHeight(T menu) {
+        return this.height();
     }
 }

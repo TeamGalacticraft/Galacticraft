@@ -42,7 +42,7 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class InfiniteBatteryItem extends Item implements AttributeProviderItem {
-    private int ticks = 0;
+    private int ticks = (int) (Math.random() * 500.0);
 
     public InfiniteBatteryItem(Settings settings) {
         super(settings.maxCount(1));

@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.compat.rei.client.display;
+package dev.galacticraft.mod.compat.rei.common.display;
 
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
