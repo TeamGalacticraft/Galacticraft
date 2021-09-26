@@ -52,6 +52,11 @@ public class DefaultShapelessCompressingDisplay implements DefaultCompressingDis
         this.output = Collections.singletonList(EntryIngredients.of(recipe.getOutput()));
     }
 
+    public DefaultShapelessCompressingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs) {
+        this.input = inputs;
+        this.output = outputs;
+    }
+
     @Override
     public @NotNull List<EntryIngredient> getInputEntries() {
         return input;

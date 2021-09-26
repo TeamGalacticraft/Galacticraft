@@ -32,7 +32,7 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.Items;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -45,15 +45,18 @@ import java.util.Optional;
  */
 @Environment(EnvType.CLIENT)
 public class DefaultFabricationDisplay extends BasicDisplay {
-    private final @Nullable FabricationRecipe recipe;
+
+    protected DefaultFabricationDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<Identifier> location) {
+        super(inputs, outputs, location);
+    }
 
     public DefaultFabricationDisplay(@Nullable FabricationRecipe recipe) {
         super(getInputs(recipe), recipe == null ? Collections.emptyList() : Collections.singletonList(EntryIngredients.of(recipe.getOutput())));
-        this.recipe = recipe;
     }
 
-    public @NotNull Optional<FabricationRecipe> getOptionalRecipe() {
-        return Optional.ofNullable(this.recipe);
+
+    public static DefaultFabricationDisplay createRaw(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<Identifier> location) {
+        return new DefaultFabricationDisplay(inputs, outputs, location);
     }
 
     @Override

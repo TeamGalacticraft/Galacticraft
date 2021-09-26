@@ -29,6 +29,8 @@ import dev.galacticraft.mod.compat.rei.common.transfer.info.FabricationMenuInfo;
 import dev.galacticraft.mod.compat.rei.common.transfer.info.SimpleMachineMenuInfo;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
+import me.shedaniel.rei.api.common.display.DisplaySerializerRegistry;
+import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoRegistry;
 
@@ -39,7 +41,13 @@ public class GalacticraftREIServerPlugin implements REIServerPlugin {
 
     @Override
     public void registerMenuInfo(MenuInfoRegistry registry) {
-        registry.register(COMPRESSING, RecipeMachineScreenHandler.class, new SimpleMachineMenuInfo<>(3, 3, 9));
+        registry.register(COMPRESSING, RecipeMachineScreenHandler.class, new SimpleMachineMenuInfo<>(3, 3, 10, 0));
         registry.register(CIRCUIT_FABRICATION, RecipeMachineScreenHandler.class, new FabricationMenuInfo<>());
+    }
+
+    @Override
+    public void registerDisplaySerializer(DisplaySerializerRegistry registry) {
+        registry.register(CIRCUIT_FABRICATION, BasicDisplay.Serializer.ofSimple(DefaultFabricationDisplay::createRaw));
+        registry.register(COMPRESSING, DefaultCompressingDisplay.Serializer.INSTANCE);
     }
 }

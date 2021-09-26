@@ -59,8 +59,9 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
 
         registry.addWorkstations(GalacticraftREIServerPlugin.CIRCUIT_FABRICATION, EntryStacks.of(GalacticraftBlock.CIRCUIT_FABRICATOR));
         registry.addWorkstations(GalacticraftREIServerPlugin.COMPRESSING, EntryStacks.of(GalacticraftBlock.COMPRESSOR), EntryStacks.of(GalacticraftBlock.ELECTRIC_COMPRESSOR));
-        registry.addWorkstations(BuiltinPlugin.BLASTING, EntryStacks.of(GalacticraftBlock.ELECTRIC_FURNACE), EntryStacks.of(GalacticraftBlock.ELECTRIC_ARC_FURNACE));
-        registry.addWorkstations(BuiltinPlugin.SMELTING, EntryStacks.of(GalacticraftBlock.ELECTRIC_FURNACE), EntryStacks.of(GalacticraftBlock.ELECTRIC_ARC_FURNACE));
+        registry.addWorkstations(BuiltinPlugin.BLASTING, EntryStacks.of(GalacticraftBlock.ELECTRIC_ARC_FURNACE));
+        registry.addWorkstations(BuiltinPlugin.SMELTING, EntryStacks.of(GalacticraftBlock.ELECTRIC_FURNACE));
+        registry.addWorkstations(BuiltinPlugin.FUEL, EntryStacks.of(GalacticraftBlock.COMPRESSOR));
 
         registry.setPlusButtonArea(GalacticraftREIServerPlugin.CIRCUIT_FABRICATION, bounds -> new Rectangle(bounds.getMinX() + 8, bounds.getMaxY() - 16, 10, 10));
         registry.setPlusButtonArea(GalacticraftREIServerPlugin.COMPRESSING, bounds -> new Rectangle(bounds.getMaxX() - 16, bounds.getMaxY() - 16, 10, 10));

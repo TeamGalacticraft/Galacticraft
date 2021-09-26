@@ -41,6 +41,11 @@ public class DefaultShapedCompressingDisplay implements DefaultCompressingDispla
     protected List<EntryIngredient> input;
     protected List<EntryIngredient> output;
 
+    public DefaultShapedCompressingDisplay(List<EntryIngredient> input, List<EntryIngredient> output) {
+        this.input = input;
+        this.output = output;
+    }
+
     public DefaultShapedCompressingDisplay(ShapedCompressingRecipe recipe) {
         this.input = new ArrayList<>();
         recipe.getIngredients().forEach((ingredient) -> {

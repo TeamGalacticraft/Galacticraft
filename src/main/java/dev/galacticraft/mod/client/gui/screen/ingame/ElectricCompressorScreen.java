@@ -26,25 +26,27 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.ElectricCompressorBlockEntity;
+import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.text.Text;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompressorBlockEntity, RecipeMachineScreenHandler<ElectricCompressorBlockEntity>> {
+public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompressorBlockEntity, RecipeMachineScreenHandler<Inventory, CompressingRecipe, ElectricCompressorBlockEntity>> {
     private static final int PROGRESS_X = 177;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
-    public ElectricCompressorScreen(RecipeMachineScreenHandler<ElectricCompressorBlockEntity> handler, PlayerInventory inv, Text title) {
+    public ElectricCompressorScreen(RecipeMachineScreenHandler<Inventory, CompressingRecipe, ElectricCompressorBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
         this.addWidget(this.createCapacitorWidget(8, 9, 48));
     }
