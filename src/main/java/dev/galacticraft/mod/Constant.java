@@ -664,6 +664,9 @@ public interface Constant {
         String COLOR = "Color";
         String PULL = "Pull";
         String HEAT = "Heat";
+        String INPUTS = "Inputs";
+        String OUTPUTS = "Outputs";
+        String SHAPED = "Shaped";
     }
 
     interface Property {
