@@ -78,12 +78,12 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
         // User input
         // Output
         widgets.add(Widgets.createSlot(new Point(startPoint.x + 1, startPoint.y + 1)).entries(recipeDisplay.getInputEntries().get(0)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 3) + 1, startPoint.y + 47)).entries(recipeDisplay.getInputEntries().get(1)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 3) + 1, startPoint.y + 47 + 18)).entries(recipeDisplay.getInputEntries().get(2)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 6) + 1, startPoint.y + 47)).entries(recipeDisplay.getInputEntries().get(3)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 7) + 1, startPoint.y + 1)).markOutput().entries(recipeDisplay.getInputEntries().get(4)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 55, startPoint.y + 47)).entries(recipeDisplay.getInputEntries().get(1)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 55, startPoint.y + 65)).entries(recipeDisplay.getInputEntries().get(2)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 109, startPoint.y + 47)).entries(recipeDisplay.getInputEntries().get(3)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 127, startPoint.y + 1)).markOutput().entries(recipeDisplay.getInputEntries().get(4)));
 
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 8) + 1, startPoint.y + 47 + 18)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 145, startPoint.y + 65)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
         return widgets;
     }
 
