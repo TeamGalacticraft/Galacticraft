@@ -27,6 +27,8 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.block.entity.*;
 import dev.galacticraft.mod.mixin.ExtendedScreenHandlerTypeAccessor;
+import dev.galacticraft.mod.recipe.CompressingRecipe;
+import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.screen.factory.MachineScreenHandlerFactory;
 import dev.galacticraft.mod.screen.factory.RecipeMachineScreenHandlerFactory;
 import dev.galacticraft.mod.screen.factory.SimpleMachineScreenHandlerFactory;
@@ -34,7 +36,10 @@ import io.netty.buffer.ByteBufAllocator;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.recipe.BlastingRecipe;
+import net.minecraft.recipe.SmeltingRecipe;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -56,21 +61,21 @@ public class GalacticraftScreenHandlerType {
             SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.ADVANCED_SOLAR_PANEL_HANDLER)
     );
 
-    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<CircuitFabricatorBlockEntity>> CIRCUIT_FABRICATOR_HANDLER = new ExtendedScreenHandlerType<>(
+    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<Inventory, FabricationRecipe, CircuitFabricatorBlockEntity>> CIRCUIT_FABRICATOR_HANDLER = new ExtendedScreenHandlerType<>(
             RecipeMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.CIRCUIT_FABRICATOR_HANDLER, 94)
     );
 
     public static final ScreenHandlerType<CompressorScreenHandler> COMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(CompressorScreenHandler::new);
 
-    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(
+    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<Inventory, CompressingRecipe, ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(
             RecipeMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.ELECTRIC_COMPRESSOR_HANDLER)
     );
 
-    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE_HANDLER = new ExtendedScreenHandlerType<>(
+    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<Inventory, SmeltingRecipe, ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE_HANDLER = new ExtendedScreenHandlerType<>(
             RecipeMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.ELECTRIC_FURNACE_HANDLER)
     );
 
-    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<ElectricArcFurnaceBlockEntity>> ELECTRIC_ARC_FURNACE_HANDLER = new ExtendedScreenHandlerType<>(
+    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<Inventory, BlastingRecipe, ElectricArcFurnaceBlockEntity>> ELECTRIC_ARC_FURNACE_HANDLER = new ExtendedScreenHandlerType<>(
             RecipeMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER)
     );
 

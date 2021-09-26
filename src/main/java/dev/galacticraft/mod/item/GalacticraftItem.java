@@ -47,13 +47,12 @@ import java.util.Map;
 public class GalacticraftItem {
     @ApiStatus.Internal
     public static final Map<Identifier, Item> ITEMS = new HashMap<>();
-    public static final List<Item> HIDDEN_ITEMS = new LinkedList<>();
+    public static final List<ItemConvertible> HIDDEN_ITEMS = new LinkedList<>();
 
     public static final Item GLOWSTONE_TORCH = registerItem(Constant.Block.GLOWSTONE_TORCH, new WallStandingBlockItem(GalacticraftBlock.GLOWSTONE_TORCH, GalacticraftBlock.GLOWSTONE_WALL_TORCH, (new Item.Settings())/*.group(GalacticraftBlocks.BLOCKS_GROUP)*/));
     public static final Item UNLIT_TORCH = registerItem(Constant.Block.UNLIT_TORCH, new WallStandingBlockItem(GalacticraftBlock.UNLIT_TORCH, GalacticraftBlock.UNLIT_WALL_TORCH, (new Item.Settings())/*.group(GalacticraftBlocks.BLOCKS_GROUP)*/));
 
-    public static final ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(
-            new Identifier(Constant.MOD_ID, Constant.Item.ITEM_GROUP))
+    public static final ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(new Identifier(Constant.MOD_ID, Constant.Item.ITEM_GROUP))
             .icon(() -> new ItemStack(GalacticraftItem.CANVAS))
             .build();
 

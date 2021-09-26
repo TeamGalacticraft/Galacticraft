@@ -46,6 +46,7 @@ import dev.galacticraft.mod.village.MoonVillagerType;
 import dev.galacticraft.mod.world.biome.source.GalacticraftBiomeSource;
 import dev.galacticraft.mod.world.dimension.GalacticraftGas;
 import dev.galacticraft.mod.world.gen.carver.GalacticraftCarver;
+import dev.galacticraft.mod.world.gen.chunk.GalacticraftChunkGenerator;
 import dev.galacticraft.mod.world.gen.feature.GalacticraftFeature;
 import dev.galacticraft.mod.world.gen.surfacebuilder.GalacticraftSurfaceBuilder;
 import dev.galacticraft.mod.world.poi.GalacticraftPointOfInterestType;
@@ -81,6 +82,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftSurfaceBuilder.register();
         GalacticraftCarver.register();
         GalacticraftBiomeSource.register();
+        GalacticraftChunkGenerator.register();
         GalacticraftScreenHandlerType.register();
         GalacticraftParticle.register();
         GalacticraftCommand.register();

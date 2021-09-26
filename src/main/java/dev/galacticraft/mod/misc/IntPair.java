@@ -20,27 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.compat.rei.server;
+package dev.galacticraft.mod.misc;
 
-import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
-import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
-import me.shedaniel.rei.api.common.transfer.info.simple.SimpleGridMenuInfo;
-
-public class SimpleMachineMenuInfo<T extends RecipeMachineScreenHandler, D extends SimpleGridMenuDisplay> implements SimpleGridMenuInfo<T,D> {
-
-    @Override
-    public int getCraftingResultSlotIndex(T menu) {
-        return 9;
+public record IntPair<B>(int a, B b) {
+    public static <B> IntPair<B> of(int a, B b) {
+        return new IntPair<>(a, b);
     }
-
-    @Override
-    public int getCraftingWidth(T menu) {
-        return 3;
-    }
-
-    @Override
-    public int getCraftingHeight(T menu) {
-        return 3;
-    }
-
 }
