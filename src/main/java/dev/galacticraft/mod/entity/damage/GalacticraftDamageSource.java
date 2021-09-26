@@ -28,6 +28,7 @@ import net.minecraft.entity.damage.DamageSource;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftDamageSource extends DamageSource {
+    public static final DamageSource OIL_BOOM = new GalacticraftDamageSource("gc.oilBoom").setBypassesArmor();
     public static final DamageSource VINE_POISON = new GalacticraftDamageSource("gc.vine_poison");
     public static final DamageSource SUFFOCATION = new GalacticraftDamageSource("gc.suffocation");
 
