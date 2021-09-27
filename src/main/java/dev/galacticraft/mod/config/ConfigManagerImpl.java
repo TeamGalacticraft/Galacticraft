@@ -49,8 +49,8 @@ import java.nio.file.Paths;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ConfigManagerImpl implements ConfigManager {
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private final File file = new File(FabricLoader.getInstance().getConfigDirectory(), "galacticraft/config.json");
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    private final File file = new File(FabricLoader.getInstance().getConfigDir().toFile(), "galacticraft/config.json");
     private Config config = new ConfigImpl();
 
     public ConfigManagerImpl() {
@@ -239,8 +239,20 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
+        SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constant.Config.SKYBOX));
+
+        skybox.add(new BooleanToggleBuilder(
+                new TranslatableText(Constant.Config.RESET),
+                new TranslatableText(Constant.Config.MULTICOLOR_STARS),
+                this.config.areMoreMulticoloredStarsEnabled())
+                .setSaveConsumer(flag -> this.config.setMoreMulticolorStars(flag))
+                .setDefaultValue(false)
+                .build()
+        );
+
         b.getOrCreateCategory(new TranslatableText(Constant.Config.DEBUG)).addEntry(dB.build());
         b.getOrCreateCategory(new TranslatableText(Constant.Config.ENERGY)).addEntry(wires.build()).addEntry(machines.build());
+        b.getOrCreateCategory(new TranslatableText(Constant.Config.CLIENT)).addEntry(skybox.build());
 
         return b.build();
     }

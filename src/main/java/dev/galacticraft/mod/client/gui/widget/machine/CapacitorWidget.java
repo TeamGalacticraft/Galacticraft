@@ -22,10 +22,13 @@
 
 package dev.galacticraft.mod.client.gui.widget.machine;
 
-import com.hrznstudio.galacticraft.energy.api.CapacitorView;
+import com.mojang.blaze3d.systems.RenderSystem;
+import dev.galacticraft.energy.api.CapacitorView;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.EnergyUtil;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -71,7 +74,9 @@ public class CapacitorWidget extends AbstractWidget {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.OVERLAY);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
         double scale = ((double) this.getView().getEnergy()) / ((double) this.getView().getMaxCapacity());
 
         int height = this.height;
@@ -83,8 +88,8 @@ public class CapacitorWidget extends AbstractWidget {
     }
 
     private void render(MatrixStack matrices, int height, double scale) {
-        this.drawTexture(matrices, this.x, this.y, Constant.TextureCoordinate.ENERGY_DARK_X, Constant.TextureCoordinate.ENERGY_DARK_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, height);
-        this.drawTexture(matrices, this.x, (int) ((this.y - (height * scale)) + height), Constant.TextureCoordinate.ENERGY_LIGHT_X, Constant.TextureCoordinate.ENERGY_LIGHT_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, (int) (height * scale));
+        DrawableUtil.drawProgressTexture(matrices, this.x, this.y, this.getZOffset(), Constant.TextureCoordinate.ENERGY_DARK_X, Constant.TextureCoordinate.ENERGY_DARK_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, height, 128, 128);
+        DrawableUtil.drawProgressTexture(matrices, this.x, (int) ((this.y - (height * scale)) + height), this.getZOffset(), Constant.TextureCoordinate.ENERGY_LIGHT_X, Constant.TextureCoordinate.ENERGY_LIGHT_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, (float) (height * scale), 128, 128);
     }
 
     @Override

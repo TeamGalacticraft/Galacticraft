@@ -24,12 +24,10 @@ package dev.galacticraft.mod.item;
 
 import alexiil.mc.lib.attributes.AttributeProviderItem;
 import alexiil.mc.lib.attributes.ItemAttributeList;
-import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
-import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
-import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.attribute.energy.InfiniteCapacitor;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -44,7 +42,7 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class InfiniteBatteryItem extends Item implements AttributeProviderItem {
-    private int ticks = 0;
+    private int ticks = (int) (Math.random() * 500.0);
 
     public InfiniteBatteryItem(Settings settings) {
         super(settings.maxCount(1));
@@ -65,21 +63,6 @@ public class InfiniteBatteryItem extends Item implements AttributeProviderItem {
 
     @Override
     public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> itemAttributeList) {
-        itemAttributeList.offer(new SimpleCapacitor(DefaultEnergyType.INSTANCE, 4096) {
-            @Override
-            public int getEnergy() {
-                return getMaxCapacity();
-            }
-
-            @Override
-            public int insert(int amount, Simulation simulation) {
-                return amount;
-            }
-
-            @Override
-            public int extract(int amount, Simulation simulation) {
-                return amount;
-            }
-        });
+        itemAttributeList.offer(new InfiniteCapacitor());
     }
 }

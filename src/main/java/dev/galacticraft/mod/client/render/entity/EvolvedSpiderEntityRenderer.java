@@ -23,24 +23,25 @@
 package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.model.entity.EvolvedSpiderModel;
 import dev.galacticraft.mod.client.render.entity.feature.EvolvedSpiderEyesFeatureRenderer;
 import dev.galacticraft.mod.entity.EvolvedSpiderEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.entity.model.EntityModelLayers;
+import net.minecraft.client.render.entity.model.SpiderEntityModel;
 import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class EvolvedSpiderEntityRenderer extends MobEntityRenderer<EvolvedSpiderEntity, EvolvedSpiderModel<EvolvedSpiderEntity>> {
+public class EvolvedSpiderEntityRenderer extends MobEntityRenderer<EvolvedSpiderEntity, SpiderEntityModel<EvolvedSpiderEntity>> {
     public static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/evolved/spider.png");
 
-    public EvolvedSpiderEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
-        super(entityRenderDispatcher, new EvolvedSpiderModel<>(0.0F), 1.0F);
+    public EvolvedSpiderEntityRenderer(EntityRendererFactory.Context context) {
+        super(context, new SpiderEntityModel<>(context.getPart(EntityModelLayers.SPIDER)), 0.8f);
         this.addFeature(new EvolvedSpiderEyesFeatureRenderer<>(this));
     }
 

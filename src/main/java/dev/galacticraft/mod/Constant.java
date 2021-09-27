@@ -27,18 +27,27 @@ import alexiil.mc.lib.attributes.fluid.filter.RawFluidTagFilter;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import dev.galacticraft.mod.util.ColorUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface Constant {
     String MOD_ID = "galacticraft";
+    String ADDON_API_ID = "galacticraft-api";
+    String COMMON_NAMESPACE = "c";
+
+    static Identifier id(String id) {
+        return new Identifier(MOD_ID, id);  
+    }
 
     interface Block {
         String ITEM_GROUP_BLOCKS = "blocks";
@@ -67,17 +76,20 @@ public interface Constant {
         String VAPOR_SPOUT = "vapor_spout";
 
         // Ore
-        String ASTEROID_ALUMINUM_ORE = "asteroid_aluminum_ore";
         String MOON_CHEESE_ORE = "moon_cheese_ore";
+        String MOON_BASALT_CHEESE_ORE = "moon_basalt_cheese_ore";
         String MOON_COPPER_ORE = "moon_copper_ore";
-        String MARS_COPPER_ORE = "mars_copper_ore";
+        String MOON_BASALT_COPPER_ORE = "moon_basalt_copper_ore";
         String DESH_ORE = "desh_ore";
         String ILMENITE_ORE = "ilmenite_ore";
-        String MARS_IRON_ORE = "mars_iron_ore";
-        String ASTEROID_IRON_ORE = "asteroid_iron_ore";
         String SILICON_ORE = "silicon_ore";
+        String DEEPSLATE_SILICON_ORE = "deepslate_silicon_ore";
+        String TIN_ORE = "tin_ore";
+        String DEEPSLATE_TIN_ORE = "deepslate_tin_ore";
         String MOON_TIN_ORE = "moon_tin_ore";
-        String MARS_TIN_ORE = "mars_tin_ore";
+        String MOON_BASALT_TIN_ORE = "moon_basalt_tin_ore";
+        String ALUMINUM_ORE = "aluminum_ore";
+        String DEEPSLATE_ALUMINUM_ORE = "deepslate_aluminum_ore";
         String GALENA_ORE = "galena_ore";
 
         // Solid Blocks
@@ -196,8 +208,8 @@ public interface Constant {
         String GEOTHERMAL_GENERATOR = "geothermal_generator";
         String ENERGY_STORAGE_MODULE = "energy_storage_module";
         String ENERGY_STORAGE_CLUSTER = "energy_storage_cluster";
-        String ALUMINUM_WIRE = "aluminum_wire";
-        String HEAVY_ALUMINUM_WIRE = "heavy_aluminum_wire";
+        String WIRE_T1 = "wire";
+        String WIRE_T2 = "heavy_wire";
         String SWITCHABLE_ALUMINUM_WIRE = "switchable_aluminum_wire";
         String SEALABLE_ALUMINUM_WIRE = "sealable_aluminum_wire";
         String HEAVY_SEALABLE_ALUMINUM_WIRE = "heavy_sealable_aluminum_wire";
@@ -223,26 +235,25 @@ public interface Constant {
         String OXYGEN_GAS = "oxygen_gas";
         String LIQUID_OXYGEN = "liquid_oxygen";
 
-        static Identifier getIdentifier(String s) {
+        static Identifier getId(String s) {
             return new Identifier(Constant.MOD_ID, "block/" + s);
         }
     }
 
     interface Item {
         String ITEM_GROUP = "items";
-        String LEAD_INGOT = "lead_ingot";
         String RAW_SILICON = "raw_silicon";
-        String RAW_METEORIC_IRON = "raw_meteoric_iron";
-        String METEORIC_IRON_INGOT = "meteoric_iron_ingot";
+        String METEORIC_IRON = "meteoric_iron";
+        String DESH = "desh";
+        String LEAD = "lead";
+        String ALUMINUM = "aluminum";
+        String TIN = "tin";
+        String STEEL = "steel";
+        String TITANIUM = "titanium";
         String LUNAR_SAPPHIRE = "lunar_sapphire";
-        String UNREFINED_DESH = "raw_desh";
-        String DESH_INGOT = "desh_ingot";
         String DESH_STICK = "desh_stick";
         String CARBON_FRAGMENTS = "carbon_fragments";
         String IRON_SHARD = "iron_shard";
-        String TITANIUM_SHARD = "titanium_shard";
-        String TITANIUM_INGOT = "titanium_ingot";
-        String TITANIUM_DUST = "titanium_dust";
         String SOLAR_DUST = "solar_dust";
         String BASIC_WAFER = "basic_wafer";
         String ADVANCED_WAFER = "advanced_wafer";
@@ -273,6 +284,7 @@ public interface Constant {
         String ISOTHERMAL_FABRIC = "thermal_cloth_t2";
         String ORION_DRIVE = "orion_drive";
         String ATMOSPHERIC_VALVE = "atmospheric_valve";
+        String AMBIENT_THERMAL_CONTROLLER = "ambient_thermal_controller";
         String LIQUID_CANISTER = "liquid_canister";
         //FOOD
         String MOON_BERRIES = "moon_berries";
@@ -381,7 +393,6 @@ public interface Constant {
         String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
         String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";
 
-        String MOON_VILLAGER_SPAWN_EGG = "moon_villager_spawn_egg";
         String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
         String EVOLVED_PILLAGER_SPAWN_EGG = "evolved_pillager_spawn_egg";
         String EVOLVED_VINDICATOR_SPAWN_EGG = "evolved_vindicator_spawn_egg";
@@ -427,32 +438,37 @@ public interface Constant {
         String ENERGY_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_size";
         String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_compressor_energy_consumption_rate";
         String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
+
+        String CLIENT = "config.galacticraft.client";
+        String SKYBOX = "config.galacticraft.client.skybox";
+        String MULTICOLOR_STARS = "config.galacticraft.client.skybox.multicolor_stars";
     }
 
     interface ScreenTexture {
-        Identifier COAL_GENERATOR_SCREEN = new Identifier(MOD_ID, "textures/gui/coal_generator_screen.png");
-        Identifier SOLAR_PANEL_SCREEN = new Identifier(MOD_ID, "textures/gui/solar_panel_screen.png");
-        Identifier CIRCUIT_FABRICATOR_SCREEN = new Identifier(MOD_ID, "textures/gui/circuit_fabricator_screen.png");
-        Identifier REFINERY_SCREEN = new Identifier(MOD_ID, "textures/gui/refinery_screen.png");
-        Identifier ELECTRIC_FURNACE_SCREEN = new Identifier(MOD_ID, "textures/gui/electric_furnace_screen.png");
-        Identifier ELECTRIC_ARC_FURNACE_SCREEN = new Identifier(MOD_ID, "textures/gui/electric_arc_furnace_screen.png");
-        Identifier COMPRESSOR_SCREEN = new Identifier(MOD_ID, "textures/gui/compressor_screen.png");
-        Identifier ELECTRIC_COMPRESSOR_SCREEN = new Identifier(MOD_ID, "textures/gui/electric_compressor_screen.png");
-        Identifier ENERGY_STORAGE_MODULE_SCREEN = new Identifier(MOD_ID, "textures/gui/energy_storage_module_screen.png");
-        Identifier OXYGEN_COLLECTOR_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_collector_screen.png");
+        Identifier COAL_GENERATOR_SCREEN = id("textures/gui/coal_generator_screen.png");
+        Identifier SOLAR_PANEL_SCREEN = id("textures/gui/solar_panel_screen.png");
+        Identifier CIRCUIT_FABRICATOR_SCREEN = id("textures/gui/circuit_fabricator_screen.png");
+        Identifier REFINERY_SCREEN = id("textures/gui/refinery_screen.png");
+        Identifier ELECTRIC_FURNACE_SCREEN = id("textures/gui/electric_furnace_screen.png");
+        Identifier ELECTRIC_ARC_FURNACE_SCREEN = id("textures/gui/electric_arc_furnace_screen.png");
+        Identifier COMPRESSOR_SCREEN = id("textures/gui/compressor_screen.png");
+        Identifier ELECTRIC_COMPRESSOR_SCREEN = id("textures/gui/electric_compressor_screen.png");
+        Identifier ENERGY_STORAGE_MODULE_SCREEN = id("textures/gui/energy_storage_module_screen.png");
+        Identifier OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
 
-        Identifier MACHINE_CONFIG_PANELS = new Identifier(MOD_ID, "textures/gui/machine_config.png");
-        Identifier PLAYER_INVENTORY_SCREEN = new Identifier(MOD_ID, "textures/gui/player_inventory_screen.png");
-        Identifier PLAYER_INVENTORY_TABS = new Identifier(MOD_ID, "textures/gui/player_inventory_switch_tabs.png");
-        Identifier OVERLAY = new Identifier(MOD_ID, "textures/gui/overlay.png");
+        Identifier MACHINE_CONFIG_PANELS = id("textures/gui/machine_config.png");
+        Identifier PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
+        Identifier PLAYER_INVENTORY_TABS = id("textures/gui/player_inventory_switch_tabs.png");
+        Identifier OVERLAY = id("textures/gui/overlay.png");
 
-        Identifier MAP_SCREEN = new Identifier(MOD_ID, "textures/gui/map.png");
-        Identifier PLANET_ICONS = new Identifier(MOD_ID, "textures/gui/planet_icons.png");
-        Identifier BUBBLE_DISTRIBUTOR_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_bubble_distributor_screen.png");
-        Identifier OXYGEN_COMPRESSOR_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_compressor_screen.png");
-        Identifier OXYGEN_STORAGE_MODULE_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_storage_module_screen.png");
-        Identifier OXYGEN_SEALER_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_sealer_screen.png");
+        Identifier MAP_SCREEN = id("textures/gui/map.png");
+        Identifier PLANET_ICONS = id("textures/gui/planet_icons.png");
+        Identifier BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
+        Identifier OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
+        Identifier OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
+        Identifier OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
 
+        Identifier REI_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
     }
 
     interface SlotSprite {
@@ -466,7 +482,6 @@ public interface Constant {
     }
 
     interface Entity {
-        String MOON_VILLAGER = "moon_villager";
         String EVOLVED_ZOMBIE = "evolved_zombie";
         String EVOLVED_CREEPER = "evolved_creeper";
         String T1_ROCKET = "t1_rocket";
@@ -590,7 +605,6 @@ public interface Constant {
             String MARE = "moon_mare";
             String MARE_EDGE = "moon_mare_edge";
         }
-
     }
 
     interface LootTable {
@@ -628,36 +642,38 @@ public interface Constant {
     interface Nbt {
         String BLOCK_ENTITY_TAG = "BlockEntityTag";
         String NO_DROP = "NoDrop";
-        String TOTAL_OXYGEN = "TotalOxygen";
-        String OXYGEN = "Oxygen";
         String OWNER = "Owner";
         String PROGRESS = "Progress";
         String SIZE = "Size";
         String MAX_SIZE = "MaxSize";
-        String GC_DATA = "GCData";
         String FUEL_TIME = "FuelTime";
+        String FUEL_LENGTH = "FuelLength";
         String TEAM = "Team";
         String ACCESSIBILITY = "Accessibility";
         String SECURITY = "Security";
         String CONFIGURATION = "Configuration";
-        String AMOUNT = "Amount";
-        String PATH = "Path";
-        String HAS_DIRECTION = "HasDirection";
         String VALUE = "Value";
         String ENERGY = "Energy";
         String AUTOMATION_TYPE = "AutomationType";
         String BABY = "Baby";
         String DIRECTION = "Direction";
-        String SOURCE = "Source";
         String REDSTONE_INTERACTION_TYPE = "RedstoneInteraction";
         String MATCH = "Match";
-        String INTEGER = "Integer";
+        String IS_SLOT_ID = "IsSlotId";
+        String MAX_PROGRESS = "MaxProgress";
+        String COLOR = "Color";
+        String PULL = "Pull";
+        String HEAT = "Heat";
+        String INPUTS = "Inputs";
+        String OUTPUTS = "Outputs";
+        String SHAPED = "Shaped";
     }
 
     interface Property {
         BooleanProperty ACTIVE = BooleanProperty.of("active");
     }
 
+    @ApiStatus.Internal
     interface Misc {
         Identifier EMPTY = new Identifier("empty");
         Direction[] DIRECTIONS = Direction.values();
@@ -667,12 +683,36 @@ public interface Constant {
         int MAX_STRING_READ = 32767;
     }
 
+    @ApiStatus.Internal
+    interface Mixin {
+        String STRUCTURE_POOL_DEBUG = "StructurePoolGeneratorMixin";
+        String OVERWORLD_SKY_OVERRIDE = "client.WorldRendererOverworldMixin";
+    }
+
     interface Recipe {
         String FABRICATION = "fabrication";
         String COMPRESSING = "compressing";
         interface Serializer {
+            String FABRICATION = "fabrication";
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
         }
+    }
+
+    @Environment(EnvType.CLIENT)
+    interface ModelPartName {
+        String OXYGEN_MASK = "oxygen_mask";
+        String OXYGEN_TANK = "oxygen_tank";
+        String OXYGEN_PIPE = "oxygen_pipe";
+        String MOON_VILLAGER_BRAIN = "moon_villager_brain";
+        String SOLAR_PANEL_POLE = "solar_panel_pole";
+        String SOLAR_PANEL_PANEL = "solar_panel_panel";
+        String SOLAR_PANEL_PANEL_HORIZONTAL_1 = "solar_panel_panel_horizontal_1";
+        String SOLAR_PANEL_PANEL_HORIZONTAL_2 = "solar_panel_panel_horizontal_2";
+        String SOLAR_PANEL_PANEL_HORIZONTAL_3 = "solar_panel_panel_horizontal_3";
+        String SOLAR_PANEL_PANEL_HORIZONTAL_4 = "solar_panel_panel_horizontal_4";
+        String SOLAR_PANEL_PANEL_VERTICAL_1 = "solar_panel_panel_vertical_1";
+        String SOLAR_PANEL_PANEL_VERTICAL_2 = "solar_panel_panel_vertical_2";
+        String SOLAR_PANEL_PANEL_VERTICAL_3 = "solar_panel_panel_vertical_3";
     }
 }

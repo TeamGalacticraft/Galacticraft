@@ -4,42 +4,42 @@
       "config": {
         "feature": {
           "config": {
-            "feature": {
-              "config": {
+            "targets": [
+              {
                 "target": {
                   "tag": "galacticraft:moon_stone",
                   "predicate_type": "minecraft:tag_match"
                 },
                 "state": {
                   "Name": "galacticraft:moon_cheese_ore"
-                },
-                "size": 4
-              },
-              "type": "minecraft:ore"
-            },
-            "decorator": {
-              "config": {
-                "bottom_offset": 0,
-                "top_offset": 0,
-                "maximum": 128
-              },
-              "type": "minecraft:range"
-            }
+                }
+              }
+            ],
+            "size": 8,
+            "discard_chance_on_air_exposure": 0.0
           },
-          "type": "minecraft:decorated"
+          "type": "minecraft:ore"
         },
         "decorator": {
-          "config": {},
-          "type": "minecraft:square"
+          "config": {
+            "height": {
+              "min_inclusive": {
+                "above_bottom": 0
+              },
+              "max_inclusive": {
+                "absolute": 16
+              },
+              "type": "minecraft:uniform"
+            }
+          },
+          "type": "minecraft:range"
         }
       },
       "type": "minecraft:decorated"
     },
     "decorator": {
-      "config": {
-        "count": 12
-      },
-      "type": "minecraft:count"
+      "config": {},
+      "type": "minecraft:square"
     }
   },
   "type": "minecraft:decorated"

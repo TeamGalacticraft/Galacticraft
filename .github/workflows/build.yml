@@ -1,47 +1,52 @@
 name: Build
+
 on:
   push:
     branches:
       - main
 
 jobs:
-  build:
+  Build:
     strategy:
       matrix:
-        java: [
-          8, # Minimum
-          11,  # LTS
-          16,  # Latest
-        ]
+        java: [16]
         os: [ubuntu-20.04]
+
     runs-on: ${{ matrix.os }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
-        with:
-          languages: java
+
       - name: Setup JDK ${{ matrix.java }}
         uses: actions/setup-java@v2
         with:
           java-version: ${{ matrix.java }}
           distribution: 'adopt'
-      - name: Make Gradle wrapper executable
-        if: ${{ runner.os != 'Windows' }}
-        run: chmod +x ./gradlew
+
       - name: Build
         uses: eskatos/gradle-command-action@v1
         with:
-          arguments: checkLicenses build
-          wrapper-cache-enabled: true
+          arguments: checkLicenses build publish
+          distributions-cache-enabled: true
           dependencies-cache-enabled: true
+        env:
+          SNAPSHOT: true
+          ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USER }}
+          ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASS }}
+          
+      - name: Notify Discord
+        uses: TeamGalacticraft/discord-build-notify@main
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
       - name: Capture build artifacts
-        if: ${{ runner.os == 'Linux' && matrix.java == '8' }}
+        if: ${{ runner.os == 'Linux' && matrix.java == '16' }}
         uses: actions/upload-artifact@v2
         with:
           name: Galacticraft
@@ -49,6 +54,3 @@ jobs:
             build/libs/
             !build/libs/*-sources.jar
             !build/libs/*-dev.jar
-      - name: Perform CodeQL Analysis
-        if: ${{ runner.os == 'Linux' && matrix.java == '8' }}
-        uses: github/codeql-action/analyze@v1

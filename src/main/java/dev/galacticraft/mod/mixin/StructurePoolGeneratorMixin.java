@@ -24,8 +24,8 @@ package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.mod.Galacticraft;
 import net.minecraft.structure.PoolStructurePiece;
-import net.minecraft.structure.pool.StructurePoolBasedGenerator;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.HeightLimitView;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,10 +35,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(StructurePoolBasedGenerator.StructurePoolGenerator.class)
+@Mixin(targets = "net/minecraft/structure/pool/StructurePoolBasedGenerator$StructurePoolGenerator")
 public abstract class StructurePoolGeneratorMixin {
-    @Inject(at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "generatePiece")
-    public void extraDebugInfoGC(PoolStructurePiece piece, MutableObject<VoxelShape> mutableObject, int minY, int currentSize, boolean bl, CallbackInfo ci) {
+    @SuppressWarnings("UnnecessaryQualifiedMemberReference") // MCDev doesn't realize that it is required since it is targeting a private class
+    @Inject(method = "Lnet/minecraft/structure/pool/StructurePoolBasedGenerator$StructurePoolGenerator;generatePiece(Lnet/minecraft/structure/PoolStructurePiece;Lorg/apache/commons/lang3/mutable/MutableObject;IIZLnet/minecraft/world/HeightLimitView;)V", at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), require = 0)
+    public void extraDebugInfoGC(PoolStructurePiece piece, MutableObject<VoxelShape> pieceShape, int minY, int currentSize, boolean bl, HeightLimitView world, CallbackInfo ci) {
         if (Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled()) {
             Galacticraft.LOGGER.warn("Pool referencer: {}", piece.toString());
         }

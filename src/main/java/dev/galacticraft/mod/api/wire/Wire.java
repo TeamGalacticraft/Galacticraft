@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.api.wire;
 
-import net.minecraft.block.entity.BlockEntity;
+import dev.galacticraft.mod.api.block.entity.Connected;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public interface Wire {
+public interface Wire extends Connected {
     /**
      * Sets the {@link WireNetwork} associated with this wire
      * @param network The network to associate with
@@ -39,28 +39,26 @@ public interface Wire {
     void setNetwork(@Nullable WireNetwork network);
 
     /**
-     * Returns the associated {@link WireNetwork}
+     * Returns the associated {@link WireNetwork}, or creates one if it is not a part of one yet
      * @return The associated {@link WireNetwork}
      */
-    @NotNull WireNetwork getNetwork();
+    @NotNull WireNetwork getOrCreateNetwork();
 
     /**
      * Returns the associated {@link WireNetwork}
      * @return The associated {@link WireNetwork}
      */
     @Contract(pure = true)
-    @Nullable WireNetwork getNetworkNullable();
+    @Nullable WireNetwork getNetwork();
 
     /**
-     * Returns whether or not this wire is able to connect to another block on the specified face/direction
+     * Returns whether this wire is able to connect to another block on the specified face/direction
      * @param direction the direction offset to the block to check adjacency to
-     * @return Whether or not this wire is able to connect to another block on the specified face/direction
+     * @return Whether this wire is able to connect to another block on the specified face/direction
      */
     default boolean canConnect(Direction direction) {
-        return true;
+        return true; // CALLERS: ((Wire)world.getBlockEntity(pos.offset(direction)).canConnect(direction.getOpposite());
     }
-
-    @NotNull WireConnectionType getConnection(Direction direction, @NotNull BlockEntity entity);
 
     /**
      * Returns the maximum amount of energy (in gJ) allowed to be transferred through this wire.

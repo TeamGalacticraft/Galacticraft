@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "galacticraft:moon_highlands",
+    "galacticraft:moon_highlands_edge",
+    "galacticraft:moon_mare",
+    "galacticraft:moon_mare_edge"
+  ]
+}

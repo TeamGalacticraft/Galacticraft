@@ -25,16 +25,12 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.AdvancedSolarPanelBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -45,42 +41,18 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class AdvancedSolarPanelScreen extends MachineHandledScreen<SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity>> {
+public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolarPanelBlockEntity, SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity>> {
     public AdvancedSolarPanelScreen(SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
-        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
-    }
-
-    @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
-
-        int leftPos = this.x;
-        int topPos = this.y;
-
-        this.drawTexture(matrices, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        super.drawBackground(matrices, delta, mouseX, mouseY);
-    }
-
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-        drawCenteredString(matrices, this.textRenderer, I18n.translate("block.galacticraft.advanced_solar_panel"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+        super(handler, inv, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
+        this.addWidget(this.createCapacitorWidget(8, 8, 48));
     }
 
     @Override
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
         List<Text> lines = new LinkedList<>();
-        if (this.handler.machine.getStatus().getType().isActive()) {
-            long time = world.getTimeOfDay() % 24000;
-            if (time > 6000) {
-                time = 6000 - (time - 6000);
-            }
-
-            lines.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", (int) this.handler.machine.getEnergyConsumption()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
+        if (this.machine.getStatus().getType().isActive()) {
+            lines.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", this.machine.getEnergyConsumption()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
         }
         return lines;
     }

@@ -29,7 +29,7 @@ import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +64,7 @@ public class ConfiguredMachineFace {
         if (machine.canInsertEnergy()) if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.POWER_INPUT)) list.add(AutomationType.POWER_INPUT);
         if (machine.canExtractEnergy()) if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.POWER_OUTPUT)) list.add(AutomationType.POWER_OUTPUT);
 
-        for (SlotType type : machine.getFluidInv().getTypes()) {
+        for (SlotType type : machine.fluidInv().getTypes()) {
             if (type.getType().isBidirectional()) {
                 if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.FLUID_INPUT)) list.add(AutomationType.FLUID_INPUT);
                 if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.FLUID_OUTPUT)) list.add(AutomationType.FLUID_OUTPUT);
@@ -73,7 +73,7 @@ public class ConfiguredMachineFace {
             }
         }
 
-        for (SlotType type : machine.getInventory().getTypes()) {
+        for (SlotType type : machine.itemInv().getTypes()) {
             if (type.getType().isBidirectional()) {
                 if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.ITEM_INPUT)) list.add(AutomationType.ITEM_INPUT);
                 if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.ITEM_OUTPUT)) list.add(AutomationType.ITEM_OUTPUT);
@@ -123,11 +123,11 @@ public class ConfiguredMachineFace {
         return intList.toIntArray();
     }
 
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound toTag(NbtCompound tag) {
         tag.putString(Constant.Nbt.AUTOMATION_TYPE, automationType.name());
         tag.putBoolean(Constant.Nbt.MATCH, this.matching != null);
         if (this.matching != null) {
-            tag.putBoolean(Constant.Nbt.INTEGER, this.matching.left().isPresent());
+            tag.putBoolean(Constant.Nbt.IS_SLOT_ID, this.matching.left().isPresent());
             if (this.matching.left().isPresent()) {
                 tag.putInt(Constant.Nbt.VALUE, this.matching.left().get());
             } else {
@@ -137,10 +137,10 @@ public class ConfiguredMachineFace {
         return tag;
     }
 
-    public void fromTag(CompoundTag tag) {
+    public void fromTag(NbtCompound tag) {
         this.automationType = AutomationType.valueOf(tag.getString(Constant.Nbt.AUTOMATION_TYPE));
         if (tag.getBoolean(Constant.Nbt.MATCH)) {
-            if (tag.getBoolean(Constant.Nbt.INTEGER)) {
+            if (tag.getBoolean(Constant.Nbt.IS_SLOT_ID)) {
                 this.matching = Either.left(tag.getInt(Constant.Nbt.VALUE));
             } else {
                 this.matching = Either.right(SlotType.SLOT_TYPES.get(new Identifier(tag.getString(Constant.Nbt.VALUE))));

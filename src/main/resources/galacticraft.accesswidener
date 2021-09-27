@@ -1,39 +1,17 @@
-accessWidener	v1	 named
+accessWidener v1 named
 
-accessible      method   net/minecraft/world/dimension/DimensionType                          <init>            (Ljava/util/OptionalLong;ZZZZZZZZZZILnet/minecraft/world/biome/source/BiomeAccessType;Lnet/minecraft/util/Identifier;F)V
-accessible      method   net/minecraft/world/gen/stateprovider/BlockStateProviderType         <init>            (Lcom/mojang/serialization/Codec;)V
-accessible      method   net/minecraft/world/gen/chunk/ChunkGeneratorSettings                 <init>            (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;IIIZ)V
-accessible      method   net/minecraft/structure/pool/LegacySinglePoolElement                 <init>            (Lcom/mojang/datafixers/util/Either;Ljava/util/List;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
-accessible      method   net/minecraft/structure/pool/FeaturePoolElement                      <init>            (Lnet/minecraft/world/gen/feature/ConfiguredFeature;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
-accessible      method   net/minecraft/item/PickaxeItem                                       <init>            (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
-accessible      method   net/minecraft/item/AxeItem                                           <init>            (Lnet/minecraft/item/ToolMaterial;FFLnet/minecraft/item/Item$Settings;)V
-accessible      method   net/minecraft/item/HoeItem                                           <init>            (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
-accessible      method   net/minecraft/block/LadderBlock                                      <init>            (Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible      method   net/minecraft/block/StairsBlock                                      <init>            (Lnet/minecraft/block/BlockState;Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible      method   net/minecraft/block/CakeBlock                                        <init>            (Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible      method   net/minecraft/block/FluidBlock                                       <init>            (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible      field    net/minecraft/item/BucketItem                                        fluid             Lnet/minecraft/fluid/Fluid;
+# constructors
+accessible method net/minecraft/block/CakeBlock                                <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
+accessible method net/minecraft/block/FluidBlock                               <init> (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V
+accessible method net/minecraft/block/LadderBlock                              <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
+accessible method net/minecraft/block/StairsBlock                              <init> (Lnet/minecraft/block/BlockState;Lnet/minecraft/block/AbstractBlock$Settings;)V
+accessible method net/minecraft/item/AxeItem                                   <init> (Lnet/minecraft/item/ToolMaterial;FFLnet/minecraft/item/Item$Settings;)V
+accessible method net/minecraft/item/HoeItem                                   <init> (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
+accessible method net/minecraft/item/MusicDiscItem                             <init> (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V
+accessible method net/minecraft/item/PickaxeItem                               <init> (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
+accessible method net/minecraft/world/gen/chunk/ChunkGeneratorSettings         <init> (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;IIIIZZZZZZ)V
 
-accessible      method   net/minecraft/world/poi/PointOfInterestType                          <init>            (Ljava/lang/String;Ljava/util/Set;ILjava/util/function/Predicate;I)V
-accessible      method   net/minecraft/world/poi/PointOfInterestType                          <init>            (Ljava/lang/String;Ljava/util/Set;II)V
-accessible      method   net/minecraft/world/poi/PointOfInterestType                          setup             (Lnet/minecraft/world/poi/PointOfInterestType;)Lnet/minecraft/world/poi/PointOfInterestType;
-accessible      method   net/minecraft/village/VillagerType                                   <init>            (Ljava/lang/String;)V
-accessible      method   net/minecraft/village/VillagerProfession                             <init>            (Ljava/lang/String;Lnet/minecraft/world/poi/PointOfInterestType;Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;Lnet/minecraft/sound/SoundEvent;)V
-accessible      method   net/minecraft/entity/LivingEntity                                    getEyeHeight      (Lnet/minecraft/entity/EntityPose;Lnet/minecraft/entity/EntityDimensions;)F
-accessible      class    net/minecraft/village/TradeOffers$BuyForOneEmeraldFactory
-accessible      class    net/minecraft/village/TradeOffers$SellItemFactory
-accessible      class    net/minecraft/village/TradeOffers$SellMapFactory
-accessible      class    net/minecraft/structure/pool/StructurePoolBasedGenerator$StructurePoolGenerator
+# private classes
 
-accessible      field    net/minecraft/world/biome/BuiltinBiomes                              BY_RAW_ID         Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
-mutable         field    net/minecraft/client/render/entity/model/VillagerResemblingModel     field_17142       Lnet/minecraft/client/model/ModelPart;
-accessible      field    net/minecraft/village/VillagerType                                   BIOME_TO_TYPE     Ljava/util/Map;
-accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator                    NOISE_WEIGHT_TABLE [F
-accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator                    BIOME_WEIGHT_TABLE [F
-accessible      field    net/minecraft/screen/slot/Slot                                       index              I
-accessible      field    net/minecraft/client/sound/SoundManager                              soundSystem        Lnet/minecraft/client/sound/SoundSystem;
-extendable      class    net/minecraft/world/gen/chunk/NoiseChunkGenerator
-
-accessible      method  net/minecraft/item/MusicDiscItem                                      <init>            (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V
-accessible      method  net/minecraft/world/gen/chunk/NoiseChunkGenerator                     sampleNoiseColumn ([DII)V
-extendable      method  net/minecraft/world/gen/chunk/NoiseChunkGenerator                     sampleNoiseColumn ([DII)V
+# final classes
+extendable class  net/minecraft/world/gen/chunk/NoiseChunkGenerator

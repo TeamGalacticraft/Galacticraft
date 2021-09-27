@@ -24,21 +24,18 @@ package dev.galacticraft.mod.block.special.fluidpipe;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProviderBlockEntity;
-import alexiil.mc.lib.attributes.fluid.FluidExtractable;
-import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
-import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.pipe.Pipe;
-import dev.galacticraft.mod.api.pipe.PipeConnectionType;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import dev.galacticraft.mod.attribute.fluid.PipeFluidInsertable;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
-import dev.galacticraft.mod.util.FluidUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.DyeColor;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,37 +43,45 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class PipeBlockEntity extends BlockEntity implements Pipe, AttributeProviderBlockEntity {
+public abstract class PipeBlockEntity extends BlockEntity implements Pipe, AttributeProviderBlockEntity {
+    private @NotNull PipeFluidInsertable @Nullable[] insertables = null;
     private @Nullable PipeNetwork network = null;
-    private @Nullable PipeFluidInsertable insertable = null;
-    private static final FluidAmount MAX_TRANSFER_RATE = FluidAmount.of(5, 100);
+    private DyeColor color = DyeColor.WHITE;
+    private final FluidAmount maxTransferRate; // 1 bucket per second
+    private final boolean[] connections = new boolean[6];
 
-    public PipeBlockEntity() {
-        super(GalacticraftBlockEntityType.FLUID_PIPE);
+
+    public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type, BlockPos pos, BlockState state, FluidAmount maxTransferRate) {
+        super(type, pos, state);
+        this.maxTransferRate = maxTransferRate;
     }
-
-    public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type) {
-        super(type);
-    }
-
+    
     @Override
     public void setNetwork(@Nullable PipeNetwork network) {
         this.network = network;
-        this.getInsertable().setNetwork(network);
+        for (PipeFluidInsertable insertable : this.getInsertables()) {
+            insertable.setNetwork(network);
+        }
     }
 
     @Override
-    public @NotNull PipeNetwork getNetwork() {
+    public @NotNull PipeNetwork getOrCreateNetwork() {
         if (this.network == null) {
             if (!this.world.isClient()) {
                 for (Direction direction : Constant.Misc.DIRECTIONS) {
-                    BlockEntity entity = world.getBlockEntity(pos.offset(direction));
-                    if (entity instanceof Pipe && ((Pipe) entity).getNetworkNullable() != null) {
-                        ((Pipe) entity).getNetwork().addPipe(pos, this);
+                    if (this.canConnect(direction)) {
+                        BlockEntity entity = world.getBlockEntity(pos.offset(direction));
+                        if (entity instanceof Pipe pipe && pipe.getNetwork() != null) {
+                            if (pipe.canConnect(direction.getOpposite())) {
+                                if (pipe.getOrCreateNetwork().isCompatibleWith(this)) {
+                                    pipe.getNetwork().addPipe(pos, this);
+                                }
+                            }
+                        }
                     }
                 }
                 if (this.network == null) {
-                    this.setNetwork(PipeNetwork.create((ServerWorld) world));
+                    this.setNetwork(PipeNetwork.create((ServerWorld) world, this.getMaxTransferRate()));
                     this.network.addPipe(pos, this);
                 }
             }
@@ -85,46 +90,81 @@ public class PipeBlockEntity extends BlockEntity implements Pipe, AttributeProvi
     }
 
     @Override
-    public @Nullable PipeNetwork getNetworkNullable() {
+    public @Nullable PipeNetwork getNetwork() {
         return this.network;
     }
 
-    public PipeFluidInsertable getInsertable() {
-        if (this.insertable == null) this.insertable = new PipeFluidInsertable(this.getMaxTransferRate(), this.pos);
-        return this.insertable;
-    }
-
-    @Override
-    public @NotNull PipeConnectionType getConnection(Direction direction, @NotNull BlockEntity entity) {
-        if (!this.canConnect(direction)) return PipeConnectionType.NONE;
-        if (entity instanceof Pipe && ((Pipe) entity).canConnect(direction.getOpposite())) return PipeConnectionType.PIPE;
-        FluidInsertable insertable = FluidUtil.getInsertable(world, entity.getPos(), direction);
-        FluidExtractable extractable = FluidUtil.getExtractable(world, entity.getPos(), direction);
-        if (insertable != RejectingFluidInsertable.NULL && extractable != EmptyFluidExtractable.NULL) {
-            return PipeConnectionType.FLUID_IO;
-        } else if (insertable != RejectingFluidInsertable.NULL) {
-            return PipeConnectionType.FLUID_INPUT;
-        } else if (extractable != EmptyFluidExtractable.NULL) {
-            return PipeConnectionType.FLUID_OUTPUT;
+    public @NotNull PipeFluidInsertable[] getInsertables() {
+        if (this.insertables == null) {
+            this.insertables = new PipeFluidInsertable[6];
+            for (Direction direction : Constant.Misc.DIRECTIONS) {
+                this.insertables[direction.ordinal()] = new PipeFluidInsertable(direction, this.getMaxTransferRate(), this.pos);
+            }
         }
-        return PipeConnectionType.NONE;
+        return this.insertables;
     }
 
     @Override
     public FluidAmount getMaxTransferRate() {
-        return MAX_TRANSFER_RATE;
+        return maxTransferRate;
+    }
+
+    @Override
+    public boolean[] getConnections() {
+        return this.connections;
+    }
+
+    @Override
+    public DyeColor getColor() {
+        return this.color;
+    }
+
+    @Override
+    public void setColor(DyeColor color) {
+        this.color = color;
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        this.readColorNbt(nbt);
+        this.readConnectionNbt(nbt);
+    }
+
+    @Override
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        this.writeColorNbt(nbt);
+        this.writeConnectionNbt(nbt);
+        return super.writeNbt(nbt);
+    }
+
+    @Override
+    public NbtCompound toClientTag(NbtCompound tag) {
+        this.writeColorNbt(tag);
+        this.writeConnectionNbt(tag);
+        return tag;
+    }
+
+    @Override
+    public void fromClientTag(NbtCompound tag) {
+        this.readColorNbt(tag);
+        this.readConnectionNbt(tag);
     }
 
     @Override
     public void markRemoved() {
         super.markRemoved();
-        if (this.getNetworkNullable() != null) {
-            this.getNetwork().removePipe(this.pos);
+        if (this.getNetwork() != null) {
+            this.getNetwork().removePipe(this, this.pos);
         }
     }
 
     @Override
     public void addAllAttributes(AttributeList<?> to) {
-        to.offer(this.getInsertable());
+        if (to.getSearchDirection() != null) {
+            if (this.canConnect(to.getSearchDirection().getOpposite())) {
+                to.offer(this.getInsertables()[to.getSearchDirection().ordinal()]);
+            }
+        }
     }
 }

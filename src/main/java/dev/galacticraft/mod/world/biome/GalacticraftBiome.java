@@ -31,19 +31,15 @@ import net.minecraft.world.biome.Biome;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftBiome {
-
-    public static class Moon {
-        public static final RegistryKey<Biome> HIGHLANDS_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.HIGHLANDS));
-        public static final RegistryKey<Biome> HIGHLANDS_EDGE = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.HIGHLANDS_EDGE));
-        public static final RegistryKey<Biome> MARE_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.MARE));
-        public static final RegistryKey<Biome> MARE_EDGE = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, Constant.Biome.Moon.MARE_EDGE));
-
-        private static void init() {
-        }
+public interface GalacticraftBiome {
+    interface Moon {
+        RegistryKey<Biome> HIGHLANDS_PLAINS = key(Constant.Biome.Moon.HIGHLANDS);
+        RegistryKey<Biome> HIGHLANDS_EDGE = key(Constant.Biome.Moon.HIGHLANDS_EDGE);
+        RegistryKey<Biome> MARE_PLAINS = key(Constant.Biome.Moon.MARE);
+        RegistryKey<Biome> MARE_EDGE = key(Constant.Biome.Moon.MARE_EDGE);
     }
 
-    public static void register() {
-        Moon.init();
+    private static RegistryKey<Biome> key(String id) {
+        return RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, id));
     }
 }

@@ -23,18 +23,15 @@
 package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.client.render.entity.feature.SpaceGearFeatureRenderer;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.ZombieEntityRenderer;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EvolvedZombieRenderer extends ZombieEntityRenderer {
-    public EvolvedZombieRenderer(EntityRenderDispatcher entityRenderDispatcher) {
-        super(entityRenderDispatcher);
-        this.addFeature(new SpaceGearFeatureRenderer<>(this, 0.0F, (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
-            stack.translate(0.0D, -0.4D, 0.0D);
-        }, (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
-        }));
+    public EvolvedZombieRenderer(EntityRendererFactory.Context context) {
+        super(context);
+        this.addFeature(new SpaceGearFeatureRenderer<>(this));
     }
 }

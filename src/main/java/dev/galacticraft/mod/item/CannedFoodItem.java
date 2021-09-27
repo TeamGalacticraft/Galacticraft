@@ -32,17 +32,15 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CannedFoodItem extends Item {
-
-    CannedFoodItem(Settings settings) {
+    public CannedFoodItem(Settings settings) {
         super(settings);
     }
 
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity entity) {
-        if (entity instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) entity;
+        if (entity instanceof PlayerEntity player) {
             player.eatFood(world, stack);
-            player.dropStack(new ItemStack(GalacticraftItems.TIN_CANISTER));
+            player.dropStack(new ItemStack(GalacticraftItem.TIN_CANISTER));
         }
         stack.decrement(1);
         return stack;

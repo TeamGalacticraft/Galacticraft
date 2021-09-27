@@ -22,16 +22,15 @@
 
 package dev.galacticraft.mod;
 
-import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
-import com.mojang.serialization.Lifecycle;
 import dev.galacticraft.mod.api.config.ConfigManager;
 import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.command.GalacticraftCommand;
 import dev.galacticraft.mod.config.ConfigManagerImpl;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
+import dev.galacticraft.mod.entity.data.GalacticraftTrackedDataHandler;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
-import dev.galacticraft.mod.item.GalacticraftItems;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.log.GalacticraftPrependingMessageFactory;
 import dev.galacticraft.mod.loot.GalacticraftLootTable;
 import dev.galacticraft.mod.misc.banner.GalacticraftBannerPattern;
@@ -44,21 +43,15 @@ import dev.galacticraft.mod.structure.GalacticraftStructure;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import dev.galacticraft.mod.village.GalacticraftVillagerProfession;
 import dev.galacticraft.mod.village.MoonVillagerType;
-import dev.galacticraft.mod.world.biome.GalacticraftBiome;
 import dev.galacticraft.mod.world.biome.source.GalacticraftBiomeSource;
-import dev.galacticraft.mod.world.dimension.GalacticraftCelestialBodyType;
-import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
 import dev.galacticraft.mod.world.dimension.GalacticraftGas;
 import dev.galacticraft.mod.world.gen.carver.GalacticraftCarver;
+import dev.galacticraft.mod.world.gen.chunk.GalacticraftChunkGenerator;
 import dev.galacticraft.mod.world.gen.feature.GalacticraftFeature;
 import dev.galacticraft.mod.world.gen.surfacebuilder.GalacticraftSurfaceBuilder;
 import dev.galacticraft.mod.world.poi.GalacticraftPointOfInterestType;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.util.registry.SimpleRegistry;
-import net.minecraft.village.VillagerProfession;
+import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -66,8 +59,6 @@ import org.apache.logging.log4j.Logger;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class Galacticraft implements ModInitializer {
-    public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constant.MOD_ID, "moon_villager_profession")), Lifecycle.stable());
-
     public static final Logger LOGGER = LogManager.getLogger("Galacticraft", new GalacticraftPrependingMessageFactory());
 
     public static final ConfigManager CONFIG_MANAGER = new ConfigManagerImpl();
@@ -79,36 +70,31 @@ public class Galacticraft implements ModInitializer {
         GalacticraftFluid.register();
         GalacticraftBlock.register();
         GalacticraftBlockEntityType.register();
-        GalacticraftItems.register();
+        GalacticraftItem.register();
         GalacticraftTag.register();
         GalacticraftRecipe.register();
+        GalacticraftTrackedDataHandler.register();
         GalacticraftEntityType.register();
         GalacticraftLootTable.register();
+        GalacticraftGas.register();
         GalacticraftStructure.register();
         GalacticraftFeature.register();
         GalacticraftSurfaceBuilder.register();
         GalacticraftCarver.register();
-        GalacticraftBiome.register();
         GalacticraftBiomeSource.register();
-        GalacticraftDimension.register();
+        GalacticraftChunkGenerator.register();
         GalacticraftScreenHandlerType.register();
         GalacticraftParticle.register();
         GalacticraftCommand.register();
         GalacticraftServerPacketReceiver.register();
         GalacticraftSound.register();
-        GalacticraftBannerPattern.register();
         GalacticraftPointOfInterestType.register();
         MoonVillagerType.register();
         GalacticraftVillagerProfession.register();
 
-//        AtmosphericGasRegistryCallback.EVENT.register(registry -> {
-            Registry.register(AddonRegistry.ATMOSPHERIC_GASES, GalacticraftGas.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGas.HYDROGEN_DEUTERIUM_OXYGEN);
-            Registry.register(AddonRegistry.ATMOSPHERIC_GASES, GalacticraftGas.NITROGEN_OXIDE.getId(), GalacticraftGas.NITROGEN_OXIDE);
-//        });
-
-//        CelestialBodyRegistryCallback.EVENT.register(registry -> {
-            Registry.register(AddonRegistry.CELESTIAL_BODIES, GalacticraftCelestialBodyType.THE_MOON.getId(), GalacticraftCelestialBodyType.THE_MOON);
-//        });
+        if (FabricLoader.getInstance().isModLoaded("bannerpp")) {
+            GalacticraftBannerPattern.register();
+        }
         LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

@@ -101,8 +101,8 @@ public class SolarPanelPartBlock extends BlockWithEntity {
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView var1) {
-        return new SolarPanelPartBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new SolarPanelPartBlockEntity(pos, state);
     }
 
     @Environment(EnvType.CLIENT)

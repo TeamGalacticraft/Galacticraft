@@ -34,4 +34,6 @@ public interface CompressingRecipe extends Recipe<Inventory> {
     default RecipeType<? extends CompressingRecipe> getType() {
         return GalacticraftRecipe.COMPRESSING_TYPE;
     }
+
+    int getTime();
 }

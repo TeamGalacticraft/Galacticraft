@@ -46,7 +46,7 @@ public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCol
                 machine.collectionAmount = value;
             }
         });
-        this.addPlayerInventorySlots(0, 99);
+        this.addPlayerInventorySlots(8, 84);
     }
 
     public OxygenCollectorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {

@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.render;
 
+import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -44,7 +45,7 @@ public class MoonSkyProperties extends SkyProperties {
 
     @Override
     public boolean useThickFog(int camX, int camY) {
-        return MinecraftClient.getInstance().world.getBiome(MinecraftClient.getInstance().cameraEntity.getBlockPos()).getFogColor() == 0x161616;
+        return GalacticraftTag.MOON_MARE.contains(MinecraftClient.getInstance().world.getBiome(MinecraftClient.getInstance().cameraEntity.getBlockPos()));
     }
 
     @Override

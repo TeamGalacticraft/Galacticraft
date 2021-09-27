@@ -23,7 +23,8 @@
 package dev.galacticraft.mod.api.pipe;
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import net.minecraft.block.entity.BlockEntity;
+import dev.galacticraft.mod.api.block.entity.Colored;
+import dev.galacticraft.mod.api.block.entity.Connected;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public interface Pipe {
+public interface Pipe extends Connected, Colored {
     /**
      * Sets the {@link PipeNetwork} associated with this pipe
      * @param network The network to associate with
@@ -43,25 +44,23 @@ public interface Pipe {
      * Returns the associated {@link PipeNetwork}
      * @return The associated {@link PipeNetwork}
      */
-    @NotNull PipeNetwork getNetwork();
+    @NotNull PipeNetwork getOrCreateNetwork();
 
     /**
      * Returns the associated {@link PipeNetwork}
      * @return The associated {@link PipeNetwork}
      */
     @Contract(pure = true)
-    @Nullable PipeNetwork getNetworkNullable();
+    @Nullable PipeNetwork getNetwork();
 
     /**
-     * Returns whether or not this pipe is able to connect to another block on the specified face/direction
+     * Returns whether this pipe is able to connect to another block on the specified face/direction
      * @param direction the direction offset to the block to check adjacency to
-     * @return Whether or not this pipe is able to connect to another block on the specified face/direction
+     * @return Whether this pipe is able to connect to another block on the specified face/direction
      */
     default boolean canConnect(Direction direction) {
         return true;
     }
-
-    @NotNull PipeConnectionType getConnection(Direction direction, @NotNull BlockEntity entity);
 
     /**
      * Returns the maximum amount of fluid allowed to be transferred through this pipe.

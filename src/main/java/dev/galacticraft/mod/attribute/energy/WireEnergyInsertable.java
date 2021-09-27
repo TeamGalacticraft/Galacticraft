@@ -23,44 +23,54 @@
 package dev.galacticraft.mod.attribute.energy;
 
 import alexiil.mc.lib.attributes.Simulation;
-import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
-import com.hrznstudio.galacticraft.energy.api.EnergyType;
-import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
+import dev.galacticraft.energy.api.EnergyInsertable;
+import dev.galacticraft.energy.api.EnergyType;
+import dev.galacticraft.energy.impl.DefaultEnergyType;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class WireEnergyInsertable implements EnergyInsertable {
+    private final Direction direction;
     private final int maxTransfer;
-    private final BlockPos wire;
+    private final BlockPos pos;
     private @Nullable WireNetwork network;
 
-    public WireEnergyInsertable(int maxTransfer, BlockPos wire) {
+    public WireEnergyInsertable(Direction direction, int maxTransfer, BlockPos pos) {
+        this.direction = direction;
         this.maxTransfer = maxTransfer;
-        this.wire = wire;
+        this.pos = pos;
     }
 
     @Override
-    public int tryInsert(EnergyType type, int amount, Simulation simulation) {
+    public int attemptInsertion(EnergyType type, int amount, Simulation simulation) {
+        if (amount <= 0) return amount;
         if (this.network != null) {
-            if (this.maxTransfer < amount) {
-                int over = amount - this.maxTransfer;
-                return this.network.insert(this.wire, type.convertTo(DefaultEnergyType.INSTANCE, amount), simulation) + over;
-            }
-            return this.network.insert(this.wire, type.convertTo(DefaultEnergyType.INSTANCE, amount), simulation);
+            return this.network.insert(this.pos, type.convertTo(DefaultEnergyType.INSTANCE, amount), direction, simulation);
         }
         return amount;
     }
 
     @Override
-    public EnergyInsertable asPureInsertable() {
+    public EnergyInsertable getPureInsertable() {
         return this;
     }
 
     public void setNetwork(@Nullable WireNetwork network) {
         this.network = network;
+    }
+
+    @Override
+    public String toString() {
+        return "WireEnergyInsertable{" +
+                "dir=" + direction +
+                ", maxTransfer=" + maxTransfer +
+                ", pos=" + pos +
+                ", network=" + network +
+                '}';
     }
 }

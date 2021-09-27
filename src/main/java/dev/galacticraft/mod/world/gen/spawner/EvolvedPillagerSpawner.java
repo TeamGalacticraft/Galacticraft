@@ -129,7 +129,7 @@ public class EvolvedPillagerSpawner implements Spawner {
                patrolEntity.setRandomPatrolTarget();
             }
 
-            patrolEntity.updatePosition(pos.getX(), pos.getY(), pos.getZ());
+            patrolEntity.setPosition(pos.getX(), pos.getY(), pos.getZ());
             patrolEntity.initialize(world, world.getLocalDifficulty(pos), SpawnReason.PATROL, null, null);
             world.spawnEntityAndPassengers(patrolEntity);
             return true;

@@ -24,7 +24,7 @@ package dev.galacticraft.mod.item;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
-import dev.galacticraft.mod.accessor.GearInventoryProvider;
+import dev.galacticraft.api.accessor.GearInventoryProvider;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -51,26 +51,22 @@ public class ThermalArmorItem extends Item {
 
     @Override //should sync with server
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        FixedItemInv inv = ((GearInventoryProvider)player).getGearInv();
-        ItemStack thermalPiece = inv.getInvStack(getSlotIdForType(getSlotType()));
+        FixedItemInv inv = ((GearInventoryProvider)player).getThermalArmor();
+        ItemStack thermalPiece = inv.getInvStack(this.getSlotIdForType(this.getSlotType()));
         if (thermalPiece.isEmpty()) {
-            inv.setInvStack(getSlotIdForType(getSlotType()), player.getStackInHand(hand), Simulation.ACTION);
+            inv.setInvStack(this.getSlotIdForType(getSlotType()), player.getStackInHand(hand), Simulation.ACTION);
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world, player, hand);
     }
 
     public int getSlotIdForType(EquipmentSlot slotType) {
-        switch (slotType) {
-            case HEAD:
-                return 0;
-            case CHEST:
-                return 1;
-            case LEGS:
-                return 2;
-            case FEET:
-                return 3;
-        }
-        return -128; //oh no
+        return switch (slotType) {
+            case HEAD -> 0;
+            case CHEST -> 1;
+            case LEGS -> 2;
+            case FEET -> 3;
+            default -> throw new IllegalArgumentException();
+        };
     }
 }

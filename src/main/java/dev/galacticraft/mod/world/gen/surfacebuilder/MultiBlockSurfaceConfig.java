@@ -63,42 +63,28 @@ public class MultiBlockSurfaceConfig extends TernarySurfaceConfig {
 
     @Override
     public BlockState getTopMaterial() {
-        if (topMaterials.length == 1) return topMaterials[0].getState();
-
-        for (int a = 0; a < 5; a++) {
-            for (BlockStateWithChance topMaterial : topMaterials) {
-                if (topMaterial.getChance() < random.nextInt(100)) {
-                    return topMaterial.getState();
-                }
-            }
-        }
-        return topMaterials[random.nextInt(topMaterials.length)].getState();
+        return this.getState(topMaterials);
     }
 
     @Override
     public BlockState getUnderMaterial() {
-        if (underMaterials.length == 1) return underMaterials[0].getState();
-
-        for (int a = 0; a < 5; a++) {
-            for (BlockStateWithChance underMaterial : underMaterials) {
-                if (underMaterial.getChance() < random.nextInt(100)) {
-                    return underMaterial.getState();
-                }
-            }
-        }
-        return underMaterials[random.nextInt(underMaterials.length)].getState();
+        return this.getState(underMaterials);
     }
 
     public BlockState getUnderwaterMaterial() {
-        if (underwaterMaterials.length == 1) return underwaterMaterials[0].getState();
+        return this.getState(underwaterMaterials);
+    }
+
+    public BlockState getState(BlockStateWithChance[] states) {
+        if (states.length == 1) return states[0].getState();
 
         for (int a = 0; a < 5; a++) {
-            for (BlockStateWithChance underwaterMaterial : underwaterMaterials) {
-                if (underwaterMaterial.getChance() < random.nextInt(100)) {
-                    return underwaterMaterial.getState();
+            for (BlockStateWithChance state : states) {
+                if (state.getChance() < random.nextInt(100)) {
+                    return state.getState();
                 }
             }
         }
-        return underwaterMaterials[random.nextInt(underwaterMaterials.length)].getState();
+        return states[random.nextInt(states.length)].getState();
     }
 }

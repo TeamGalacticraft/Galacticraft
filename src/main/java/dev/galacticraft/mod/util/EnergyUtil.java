@@ -27,9 +27,9 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.misc.Ref;
 import alexiil.mc.lib.attributes.misc.Reference;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.energy.api.*;
-import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
+import dev.galacticraft.energy.GalacticraftEnergy;
+import dev.galacticraft.energy.api.*;
+import dev.galacticraft.energy.impl.DefaultEnergyType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.math.BlockPos;
@@ -192,27 +192,27 @@ public class EnergyUtil {
     }
 
     public static EnergyTransferable getTransferable(EnergyInsertable insertable, EnergyExtractable extractable) {
-        if (insertable instanceof EnergyTransferable) return (EnergyTransferable) insertable;
-        if (extractable instanceof EnergyTransferable) return (EnergyTransferable) extractable;
+        if (insertable instanceof EnergyTransferable transferable) return transferable;
+        if (extractable instanceof EnergyTransferable transferable) return transferable;
         return new EnergyTransferable() {
             @Override
-            public int tryExtract(EnergyType type, int amount, Simulation simulation) {
-                return extractable.tryExtract(type, amount, simulation);
+            public int attemptExtraction(EnergyType type, int amount, Simulation simulation) {
+                return extractable.attemptExtraction(type, amount, simulation);
             }
 
             @Override
-            public int tryInsert(EnergyType type, int amount, Simulation simulation) {
-                return insertable.tryInsert(type, amount, simulation);
+            public int attemptInsertion(EnergyType type, int amount, Simulation simulation) {
+                return insertable.attemptInsertion(type, amount, simulation);
             }
 
             @Override
-            public EnergyExtractable asPureExtractable() {
-                return extractable.asPureExtractable();
+            public EnergyExtractable getPureExtractable() {
+                return extractable.getPureExtractable();
             }
 
             @Override
-            public EnergyInsertable asPureInsertable() {
-                return insertable.asPureInsertable();
+            public EnergyInsertable getPureInsertable() {
+                return insertable.getPureInsertable();
             }
         };
     }

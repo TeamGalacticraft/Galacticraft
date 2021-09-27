@@ -27,6 +27,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -45,9 +46,6 @@ public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            return !mixinClassName.equals("dev.galacticraft.mod.mixin.StructurePoolGeneratorMixin");
-        }
         return true;
     }
 
@@ -57,7 +55,14 @@ public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public List<String> getMixins() {
-        return null;
+        List<String> optionalMixins = new LinkedList<>();
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            optionalMixins.add(Constant.Mixin.STRUCTURE_POOL_DEBUG);
+        }
+        if (Galacticraft.CONFIG_MANAGER.get().areMoreMulticoloredStarsEnabled()) {
+            optionalMixins.add(Constant.Mixin.OVERWORLD_SKY_OVERRIDE);
+        }
+        return optionalMixins;
     }
 
     @Override

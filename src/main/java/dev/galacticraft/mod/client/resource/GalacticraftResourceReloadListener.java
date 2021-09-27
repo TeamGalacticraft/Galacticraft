@@ -24,6 +24,8 @@ package dev.galacticraft.mod.client.resource;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
+import dev.galacticraft.mod.client.model.WalkwayBakedModel;
+import dev.galacticraft.mod.client.model.WireBakedModel;
 import dev.galacticraft.mod.client.render.entity.BubbleEntityRenderer;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import net.fabricmc.api.EnvType;
@@ -47,7 +49,6 @@ import java.util.function.Function;
  */
 @Environment(EnvType.CLIENT)
 public class GalacticraftResourceReloadListener implements SimpleSynchronousResourceReloadListener {
-
     @Override
     public Identifier getFabricId() {
         return new Identifier(Constant.MOD_ID, "resource_reload_listener");
@@ -59,9 +60,11 @@ public class GalacticraftResourceReloadListener implements SimpleSynchronousReso
     }
 
     @Override
-    public void apply(ResourceManager resourceManager) {
+    public void reload(ResourceManager resourceManager) {
         Function<Identifier, Sprite> atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
         MachineBakedModel.setSpriteAtlas(atlas);
+        WireBakedModel.invalidate();
+        WalkwayBakedModel.invalidate();
         FluidRenderHandler oil = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constant.MOD_ID, "block/crude_oil_still")), atlas.apply(new Identifier(Constant.MOD_ID, "block/crude_oil_flowing"))};
         FluidRenderHandler fuel = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constant.MOD_ID, "block/fuel_still")), atlas.apply(new Identifier(Constant.MOD_ID, "block/fuel_flowing"))};
         FluidRenderHandler oxygen = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constant.MOD_ID, "block/oxygen")), atlas.apply(new Identifier(Constant.MOD_ID, "block/oxygen"))};

@@ -39,13 +39,15 @@ import java.util.Random;
  */
 public class MoonSurfaceBuilder<C extends TernarySurfaceConfig> extends SurfaceBuilder<C> {
     private static final BlockState MOON_ROCK = GalacticraftBlock.MOON_ROCKS[0].getDefaultState();
+
     public MoonSurfaceBuilder(Codec<C> codec) {
         super(codec);
     }
 
-    public void generate(Random random, Chunk chunk, Biome biome, int x, int z, int height, double noise, BlockState defaultBlock, BlockState fluidBlock, int seaLevel, long seed, TernarySurfaceConfig ternarySurfaceConfig) {
-        BlockState blockState = ternarySurfaceConfig.getTopMaterial();
-        BlockState blockState2 = ternarySurfaceConfig.getUnderMaterial();
+    @Override
+    public void generate(Random random, Chunk chunk, Biome biome, int x, int z, int height, double noise, BlockState defaultBlock, BlockState defaultFluid, int seaLevel, int h, long seed, C surfaceConfig) {
+        BlockState blockState = surfaceConfig.getTopMaterial();
+        BlockState blockState2 = surfaceConfig.getUnderMaterial();
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         int i = -1;
         int j = (int) (noise / 3.0D + 3.0D + random.nextDouble() * 0.25D);
@@ -63,15 +65,15 @@ public class MoonSurfaceBuilder<C extends TernarySurfaceConfig> extends SurfaceB
                         blockState = Blocks.AIR.getDefaultState();
                         blockState2 = defaultBlock;
                     } else if (m >= seaLevel - 4 && m <= seaLevel + 1) {
-                        blockState = ternarySurfaceConfig.getTopMaterial();
-                        blockState2 = ternarySurfaceConfig.getUnderMaterial();
+                        blockState = surfaceConfig.getTopMaterial();
+                        blockState2 = surfaceConfig.getUnderMaterial();
                     }
 
                     if (m < seaLevel && (blockState == null || blockState.isAir())) {
                         if (biome.getTemperature(mutable.set(x, m, z)) < 0.15F) {
                             blockState = Blocks.ICE.getDefaultState();
                         } else {
-                            blockState = fluidBlock;
+                            blockState = Blocks.WATER.getDefaultState();
                         }
 
                         mutable.set(k, m, l);
@@ -83,7 +85,7 @@ public class MoonSurfaceBuilder<C extends TernarySurfaceConfig> extends SurfaceB
                     } else if (m < seaLevel - 7 - j) {
                         blockState = Blocks.AIR.getDefaultState();
                         blockState2 = defaultBlock;
-                        chunk.setBlockState(mutable, ternarySurfaceConfig.getUnderwaterMaterial(), false);
+                        chunk.setBlockState(mutable, surfaceConfig.getUnderwaterMaterial(), false);
                     } else {
                         chunk.setBlockState(mutable, blockState2, false);
                     }
