@@ -28,7 +28,6 @@ import dev.galacticraft.mod.world.biome.layer.moon.MoonEdgeBiomeLayer;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.layer.ScaleLayer;
-import net.minecraft.world.biome.layer.type.ParentedLayer;
 import net.minecraft.world.biome.layer.util.*;
 import net.minecraft.world.biome.source.BiomeLayerSampler;
 

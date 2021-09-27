@@ -24,11 +24,10 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
+import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
 import dev.galacticraft.mod.screen.OxygenCollectorScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
@@ -39,37 +38,24 @@ import net.minecraft.util.Formatting;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorScreenHandler> {
+public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorBlockEntity, OxygenCollectorScreenHandler> {
     public OxygenCollectorScreen(OxygenCollectorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
+        super(handler, inv, title, Constant.ScreenTexture.OXYGEN_COLLECTOR_SCREEN);
         this.backgroundHeight = 181;
 
-        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 13, 13, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(this.createCapacitorWidget(8, 8, 48));
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(Constant.ScreenTexture.OXYGEN_COLLECTOR_SCREEN);
-
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        super.drawBackground(matrices, delta, mouseX, mouseY);
+    protected void init() {
+        super.init();
+        this.titleX += 15;
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-        drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft.oxygen_collector"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        String statusText = I18n.translate("ui.galacticraft.machine.status");
-
-        int statusX = this.x + 38;
-        int statusY = this.y + 64;
-
-        this.textRenderer.draw(matrices, statusText, statusX, statusY, Formatting.DARK_GRAY.getColorValue());
-
-        this.textRenderer.draw(matrices, handler.machine.getStatus().getName(), statusX + this.textRenderer.getWidth(statusText), statusY, 0);
-
-        drawCenteredString(matrices, this.textRenderer, new TranslatableText("ui.galacticraft.machine.collecting", this.handler.machine.collectionAmount).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        super.renderBackground(matrices, delta, mouseX, mouseY);
+        this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.machine.collecting", this.machine.collectionAmount).getString(), this.x + 55, this.y + 56, Formatting.DARK_GRAY.getColorValue());
+        this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.machine.status").append(this.machine.getStatus().getName()), this.x + 32, this.y + 66, Formatting.DARK_GRAY.getColorValue());
     }
 }

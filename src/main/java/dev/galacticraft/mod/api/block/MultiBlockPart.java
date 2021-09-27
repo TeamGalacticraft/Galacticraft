@@ -24,6 +24,9 @@ package dev.galacticraft.mod.api.block;
 
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public interface MultiBlockPart {
     void setBasePos(BlockPos pos);
 }

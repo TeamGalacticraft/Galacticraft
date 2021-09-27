@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "TGT",
+    "GGG",
+    "TGT"
+  ],
+  "key": {
+    "T": {
+      "tag": "c:tin_ingots"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    }
+  },
+  "result": {
+    "item": "galacticraft:vacuum_glass",
+    "count": 5
+  }
+}

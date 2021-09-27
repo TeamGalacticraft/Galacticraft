@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LLL",
+    "LLL",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "item": "galacticraft:lunar_sapphire"
+    }
+  },
+  "result": {
+    "item": "galacticraft:lunar_sapphire_block"
+  }
+}

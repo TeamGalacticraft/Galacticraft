@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "SSS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "galacticraft:raw_silicon"
+    }
+  },
+  "result": {
+    "item": "galacticraft:silicon_block",
+    "count": 1
+  }
+}

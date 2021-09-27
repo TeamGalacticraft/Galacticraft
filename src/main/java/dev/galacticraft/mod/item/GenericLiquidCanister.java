@@ -33,7 +33,6 @@ import net.minecraft.util.Rarity;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GenericLiquidCanister extends Item {
-
     private final Fluid allowedFluid;
 
     public GenericLiquidCanister(Settings settings, Fluid allowedFluid) {

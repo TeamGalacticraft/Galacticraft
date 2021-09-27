@@ -20,6 +20,8 @@
  * SOFTWARE.
  */
 
+import java.io.ByteArrayOutputStream
+import java.io.OutputStream
 import java.time.Year
 import java.time.format.DateTimeFormatter
 
@@ -33,7 +35,7 @@ val modVersion             = project.property("mod.version").toString()
 val modName                = project.property("mod.name").toString()
 val modGroup               = project.property("mod.group").toString()
 
-// Dependency Version
+// Dependency Versions
 val fabricVersion          = project.property("fabric.version").toString()
 val clothConfigVersion     = project.property("cloth.config.version").toString()
 val modMenuVersion         = project.property("modmenu.version").toString()
@@ -41,47 +43,82 @@ val lbaVersion             = project.property("lba.version").toString()
 val energyVersion          = project.property("energy.version").toString()
 val galacticraftApiVersion = project.property("galacticraft.api.version").toString()
 val reiVersion             = project.property("rei.version").toString()
-val cottonResourcesVersion = project.property("cotton.resources.version").toString()
 val myronVersion           = project.property("myron.version").toString()
 val bannerppVersion        = project.property("bannerpp.version").toString()
 val wthitVersion           = project.property("wthit.version").toString()
+val runtimeOptional        = project.property("optional_dependencies.enabled") == "true"
 
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("0.7-SNAPSHOT")
-    id("org.cadixdev.licenser") version("0.5.1")
+    id("fabric-loom") version("0.9-SNAPSHOT")
+    id("org.cadixdev.licenser") version("0.6.1")
+    id("io.github.juuxel.loom-quiltflower") version("1.3.0")
 }
 
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+java {
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
+    withSourcesJar()
 }
 
 group = modGroup
 version = modVersion + getVersionDecoration()
+println("Galacticraft: $version")
+base.archivesName.set(modName)
 
-base {
-    archivesBaseName = modName
+val gametestSourceSet = sourceSets.create("gametest") {
+    compileClasspath += sourceSets.main.get().compileClasspath
+    compileClasspath += sourceSets.main.get().output
+    runtimeClasspath += sourceSets.main.get().runtimeClasspath
+    runtimeClasspath += sourceSets.main.get().output
+    java.srcDir("src/gametest/java")
+    resources.srcDir("src/gametest/resources")
 }
 
 loom {
-    refmapName = "galacticraft.refmap.json"
-    accessWidener = rootProject.file("src/main/resources/galacticraft.accesswidener")
+    accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
+    mixin {
+        add(sourceSets.main.get(), "galacticraft.refmap.json")
+    }
+
+    runs {
+        register("gametest") {
+            server()
+            name("Game Test")
+            source(gametestSourceSet)
+            property("fabric.log.level", "debug")
+            vmArg("-Dfabric-api.gametest=true")
+            vmArg("-ea")
+        }
+        register("gametestClient") {
+            client()
+            name("Game Test Client")
+            source(gametestSourceSet)
+            property("fabric.log.level", "debug")
+            vmArg("-Dfabric-api.gametest=true")
+            vmArg("-ea")
+        }
+    }
 }
 
 repositories {
     mavenLocal()
+    maven("https://maven.galacticraft.dev") {
+        content {
+            includeGroup("dev.galacticraft")
+        }
+    }
     maven("https://maven.shedaniel.me/") {
         content {
             includeGroup("me.shedaniel.cloth.api")
             includeGroup("me.shedaniel.cloth")
             includeGroup("me.shedaniel")
+            includeGroup("dev.architectury")
         }
     }
     maven("https://server.bbkr.space/artifactory/libs-release/") {
         content {
-            includeGroup("io.github.cottonmc")
             includeGroup("io.github.fablabsmc")
         }
     }
@@ -90,7 +127,7 @@ repositories {
             includeGroup("alexiil.mc.lib")
         }
     }
-    maven("https://maven.terraformersmc.com/") {
+    maven("https://maven.terraformersmc.com/releases/") {
         content {
             includeGroup("com.terraformersmc")
         }
@@ -105,30 +142,25 @@ repositories {
             includeGroup("mcp.mobius.waila")
         }
     }
-    maven ("https://cdn.hrzn.studio/maven/") {
-        content {
-            includeGroup("com.hrznstudio")
-        }
-    }
-    maven("https://maven.galacticraft.dev") {
-        content {
-            includeGroup("dev.galacticraft")
-        }
-    }
 }
 
 /**
  * From:
- * @see net.fabricmc.loom.util.FabricApiExtension.getDependencyNotation
+ * @see net.fabricmc.loom.configuration.FabricApiExtension.getDependencyNotation
  */
-fun getFabricApiModule(moduleName: String, fabricApiVersion: String): String {
-    return String.format("net.fabricmc.fabric-api:%s:%s", moduleName,
-        fabricApi.moduleVersion(moduleName, fabricApiVersion))
+fun getFabricApiModule(moduleName: String): String {
+    return "net.fabricmc.fabric-api:${moduleName}:${fabricApi.moduleVersion(moduleName, fabricVersion)}"
 }
 
-fun optionalImplementation(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
-    project.dependencies.modCompileOnly(dependencyNotation, dependencyConfiguration)
-    project.dependencies.modRuntime(dependencyNotation, dependencyConfiguration)
+fun DependencyHandler.optionalDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
+    modCompileOnly(dependencyNotation, dependencyConfiguration)
+    if (!net.fabricmc.loom.util.OperatingSystem.isCIBuild() && runtimeOptional) {
+        modRuntime(dependencyNotation, dependencyConfiguration)
+    }
+}
+
+fun DependencyHandler.includedDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
+    include(modApi(dependencyNotation, dependencyConfiguration), dependencyConfiguration)
 }
 
 dependencies {
@@ -140,9 +172,11 @@ dependencies {
     // Fabric Api Modules
     listOf(
         "fabric-api-base",
+        "fabric-biome-api-v1",
         "fabric-blockrenderlayer-v1",
         "fabric-command-api-v1",
         "fabric-content-registries-v0",
+        "fabric-gametest-api-v1",
         "fabric-item-groups-v0",
         "fabric-models-v0",
         "fabric-networking-blockentity-v0",
@@ -154,44 +188,49 @@ dependencies {
         "fabric-renderer-indigo",
         "fabric-renderer-registries-v1",
         "fabric-rendering-fluids-v1",
+        "fabric-rendering-v1",
         "fabric-resource-loader-v0",
         "fabric-screen-handler-api-v1",
         "fabric-structure-api-v1",
         "fabric-tag-extensions-v0",
         "fabric-textures-v0",
         "fabric-tool-attribute-api-v1"
-    ).forEach {
-        modImplementation(getFabricApiModule(it, fabricVersion)) { isTransitive = false }
+    ).forEach { module ->
+        modImplementation(getFabricApiModule(module)) { isTransitive = false }
     }
 
     // Mandatory Dependencies (Included with Jar-In-Jar)
-    include(modImplementation("dev.monarkhes:myron:$myronVersion") {
+    includedDependency("dev.monarkhes:myron-1.17.1:$myronVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
-    })
-    include(modImplementation("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion") {
+    }
+    includedDependency("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
-    })
-    include(modImplementation("com.hrznstudio:Galacticraft-Energy:$energyVersion") {
+    }
+    includedDependency("dev.galacticraft:GalacticraftEnergy:$energyVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
-    })
-    include(modApi("com.hrznstudio:GalacticraftAPI:$galacticraftApiVersion") { isTransitive = false })
-    include(modImplementation("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false })
-    include(modApi("io.github.cottonmc:cotton-resources:$cottonResourcesVersion") { isTransitive = false })
-    include(modApi("alexiil.mc.lib:libblockattributes-core:$lbaVersion") { isTransitive = false })
-    include(modApi("alexiil.mc.lib:libblockattributes-items:$lbaVersion") { isTransitive = false })
-    include(modApi("alexiil.mc.lib:libblockattributes-fluids:$lbaVersion") { isTransitive = false })
+        exclude(group = "alexiil.mc.lib")
+    }
+    includedDependency("dev.galacticraft:GalacticraftAPI:$galacticraftApiVersion") {
+        exclude(group = "net.fabricmc")
+        exclude(group = "net.fabricmc.fabric-api")
+        exclude(group = "alexiil.mc.lib")
+    }
+    includedDependency("alexiil.mc.lib:libblockattributes-all:$lbaVersion") {
+        exclude(group = "net.fabricmc")
+        exclude(group = "net.fabricmc.fabric-api")
+    }
 
     // Optional Dependencies
-    optionalImplementation("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
-    optionalImplementation("mcp.mobius.waila:wthit-fabric:$wthitVersion") { isTransitive = false }
-    optionalImplementation("me.shedaniel:RoughlyEnoughItems:$reiVersion") {
+    optionalDependency("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
+    optionalDependency("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
+    optionalDependency("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false }
+    optionalDependency("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
-        exclude(group = "org.jetbrains")
     }
 
     // Other Dependencies
@@ -202,7 +241,7 @@ tasks.processResources {
     inputs.property("version", project.version)
 
     filesMatching("fabric.mod.json") {
-        expand(mutableMapOf("version" to project.version))
+        expand("version" to project.version)
     }
 
     // Minify json resources
@@ -214,33 +253,33 @@ tasks.processResources {
     }
 }
 
-java {
-    withSourcesJar()
-}
-
 tasks.create<Jar>("javadocJar") {
     from(tasks.javadoc)
     archiveClassifier.set("javadoc")
 }
 
+tasks.named<ProcessResources>("processGametestResources") {
+    duplicatesStrategy = DuplicatesStrategy.WARN
+}
+
 tasks.jar {
     from("LICENSE")
     manifest {
-        attributes(mapOf(
+        attributes(
             "Implementation-Title"     to modName,
             "Implementation-Version"   to project.version,
             "Implementation-Vendor"    to "Team Galacticraft",
             "Implementation-Timestamp" to DateTimeFormatter.ISO_DATE_TIME,
-            "Maven-Artifact"           to "$modGroup:$modName:$project.version"
-        ))
+            "Maven-Artifact"           to "$modGroup:$modName:${project.version}"
+        )
     }
 }
 
 publishing {
     publications {
         register("mavenJava", MavenPublication::class) {
-            groupId = "dev.galacticraft"
-            artifactId = "Galacticraft"
+            groupId = modGroup
+            artifactId = modName
 
             artifact(tasks.remapJar) { builtBy(tasks.remapJar) }
             artifact(tasks.getByName("sourcesJar", Jar::class)) { builtBy(tasks.remapSourcesJar) }
@@ -248,17 +287,20 @@ publishing {
         }
     }
     repositories {
-        maven {
-            setUrl("s3://maven.galacticraft.dev")
+        val isSnapshot: Boolean = System.getenv("SNAPSHOT")?.equals("true") ?: true
+        val mavenBase = "https://maven.galacticraft.dev/"
+        maven(if(isSnapshot) "$mavenBase/snapshots" else mavenBase) {
+            name = "maven"
+            credentials(PasswordCredentials::class)
             authentication {
-                register("awsIm", AwsImAuthentication::class)
+                register("basic", BasicAuthentication::class)
             }
         }
     }
 }
 
 license {
-    header = project.file("LICENSE_HEADER.txt")
+    setHeader(project.file("LICENSE_HEADER.txt"))
     include("**/dev/galacticraft/**/*.java")
     include("build.gradle.kts")
     ext {
@@ -267,32 +309,59 @@ license {
     }
 }
 
+tasks.withType(JavaCompile::class) {
+    dependsOn(tasks.checkLicenses)
+    options.encoding = "UTF-8"
+    options.release.set(16)
+}
+
+tasks.getByName("gametestClasses").dependsOn("classes")
+
 // inspired by https://github.com/TerraformersMC/GradleScripts/blob/2.0/ferry.gradle
 fun getVersionDecoration(): String {
-    if((System.getenv("DISABLE_VERSION_DECORATION") ?: "false") == "true") return ""
-    if(project.hasProperty("release")) return ""
+    if ((System.getenv("DISABLE_VERSION_DECORATION") ?: "false") == "true") return ""
+    if (project.hasProperty("release")) return ""
 
     var version = "+build"
-    val branch = "git branch --show-current".execute()
-    if(branch.isNotEmpty() && branch != "main") {
-        version += ".${branch}"
-    }
-    val commitHashLines = "git rev-parse --short HEAD".execute()
-    if(commitHashLines.isNotEmpty()) {
-        version += ".${commitHashLines}"
+    if ("git".exitValue() != 1) {
+        version += ".unknown"
+    } else {
+        val branch = "git branch --show-current".execute()
+        if (branch.isNotEmpty() && branch != "main") {
+            version += ".${branch}"
+        }
+        val commitHashLines = "git rev-parse --short HEAD".execute()
+        if (commitHashLines.isNotEmpty()) {
+            version += ".${commitHashLines}"
+        }
+        val dirty = "git diff-index --quiet HEAD".exitValue()
+        if (dirty != 0) {
+            version += "-modified"
+        }
     }
     return version
 }
 
-// from https://discuss.gradle.org/t/how-to-run-execute-string-as-a-shell-command-in-kotlin-dsl/32235/5
-fun String.execute(workingDir: File = project.file("./")): String {
-    val parts = this.split("\\s".toRegex())
-    val proc = ProcessBuilder(*parts.toTypedArray())
-        .directory(workingDir)
-        .redirectOutput(ProcessBuilder.Redirect.PIPE)
-        .redirectError(ProcessBuilder.Redirect.PIPE)
-        .start()
+// from https://discuss.gradle.org/t/how-to-run-execute-string-as-a-shell-command-in-kotlin-dsl/32235/9
+fun String.execute(): String {
+    val output = ByteArrayOutputStream()
+    rootProject.exec {
+        commandLine(split("\\s".toRegex()))
+        workingDir = rootProject.projectDir
+        isIgnoreExitValue = true
+        standardOutput = output
+        errorOutput = OutputStream.nullOutputStream()
+    }
 
-    proc.waitFor(1, TimeUnit.MINUTES)
-    return proc.inputStream.bufferedReader().readText().trim()
+    return String(output.toByteArray()).trim()
+}
+
+fun String.exitValue(): Int {
+    return rootProject.exec {
+        commandLine(split("\\s".toRegex()))
+        workingDir = rootProject.projectDir
+        isIgnoreExitValue = true
+        standardOutput = OutputStream.nullOutputStream()
+        errorOutput = OutputStream.nullOutputStream()
+    }.exitValue
 }

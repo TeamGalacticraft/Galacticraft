@@ -29,15 +29,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
 import dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen;
+import dev.galacticraft.mod.util.DrawableUtil;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
@@ -62,7 +60,7 @@ public class OxygenTank extends Tank {
     @Override
     @Environment(EnvType.CLIENT)
     public void render(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY, boolean colorize, Int2IntMap color) {
-        drawOxygenBuffer(matrices.peek().getModel(), this.x, this.y, (float) inv.getInvFluid(this.index).amount().div(inv.getMaxAmount_F(this.index)).asInexactDouble(), colorize);
+        drawOxygenBuffer(matrices, this.x, this.y, (float) inv.getInvFluid(this.index).amount().div(inv.getMaxAmount_F(this.index)).asInexactDouble(), colorize);
     }
 
     @Override
@@ -76,24 +74,24 @@ public class OxygenTank extends Tank {
         }
     }
 
-    void drawOxygenBuffer(Matrix4f matrices, int x, int y, float scale, boolean colorize) {
+    void drawOxygenBuffer(MatrixStack matrices, int x, int y, float scale, boolean colorize) {
         if (colorize) {
             RenderSystem.disableTexture();
             BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-            bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE);
-            bufferBuilder.vertex(matrices, x - 1, y + Constant.TextureCoordinate.OVERLAY_HEIGHT + 1, (float) 0).texture(0, 0).next();
-            bufferBuilder.vertex(matrices, x + Constant.TextureCoordinate.OVERLAY_WIDTH + 1, y + Constant.TextureCoordinate.OVERLAY_HEIGHT + 1, (float) 0).texture(0, 0).next();
-            bufferBuilder.vertex(matrices, x + Constant.TextureCoordinate.OVERLAY_WIDTH + 1, y - 1, (float) 0).texture(0, 0).next();
-            bufferBuilder.vertex(matrices, x - 1, y - 1, (float) 0).texture(0, 0).next();
+            bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+            Matrix4f model = matrices.peek().getModel();
+            bufferBuilder.vertex(model, x - 1, y + Constant.TextureCoordinate.OVERLAY_HEIGHT + 1, (float) 0).texture(0, 0).next();
+            bufferBuilder.vertex(model, x + Constant.TextureCoordinate.OVERLAY_WIDTH + 1, y + Constant.TextureCoordinate.OVERLAY_HEIGHT + 1, (float) 0).texture(0, 0).next();
+            bufferBuilder.vertex(model, x + Constant.TextureCoordinate.OVERLAY_WIDTH + 1, y - 1, (float) 0).texture(0, 0).next();
+            bufferBuilder.vertex(model, x - 1, y - 1, (float) 0).texture(0, 0).next();
             bufferBuilder.end();
-            RenderSystem.enableAlphaTest();
             BufferRenderer.draw(bufferBuilder);
             RenderSystem.enableTexture();
         }
 
-        MinecraftClient.getInstance().getTextureManager().bindTexture(Constant.ScreenTexture.OVERLAY);
-        texturedQuad(matrices, x, y, Constant.TextureCoordinate.OXYGEN_DARK_X, Constant.TextureCoordinate.OXYGEN_DARK_Y, Constant.TextureCoordinate.OVERLAY_HEIGHT);
-        texturedQuad(matrices, x, y + Constant.TextureCoordinate.OVERLAY_HEIGHT - (Constant.TextureCoordinate.OVERLAY_HEIGHT * scale), Constant.TextureCoordinate.OXYGEN_LIGHT_X, Constant.TextureCoordinate.OXYGEN_LIGHT_Y, Constant.TextureCoordinate.OVERLAY_HEIGHT * scale);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
+        DrawableUtil.drawProgressTexture(matrices, x, y, 0, Constant.TextureCoordinate.OXYGEN_DARK_X, Constant.TextureCoordinate.OXYGEN_DARK_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT, 128, 128);
+        DrawableUtil.drawProgressTexture(matrices, x, (int) (y + Constant.TextureCoordinate.OVERLAY_HEIGHT - (Constant.TextureCoordinate.OVERLAY_HEIGHT * scale)), 0, Constant.TextureCoordinate.OXYGEN_LIGHT_X, Constant.TextureCoordinate.OXYGEN_LIGHT_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT * scale, 128, 128);
     }
 
     @Override
@@ -109,23 +107,4 @@ public class OxygenTank extends Tank {
     public boolean isHoveredOverTank(int mouseX, int mouseY) {
         return SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT);
     }
-
-    void texturedQuad(Matrix4f matrices, float x, float y, float u, float v, float height) {
-        float x1 = x + (float) Constant.TextureCoordinate.OVERLAY_WIDTH;
-        float y1 = y + height;
-        float u0 = u / 128f;
-        float v0 = v / 128f;
-        float u1 = (u + (float) Constant.TextureCoordinate.OVERLAY_WIDTH) / 128f;
-        float v1 = (v + height) / 128f;
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE);
-        bufferBuilder.vertex(matrices, x, y1, (float) 0).texture(u0, v1).next();
-        bufferBuilder.vertex(matrices, x1, y1, (float) 0).texture(u1, v1).next();
-        bufferBuilder.vertex(matrices, x1, y, (float) 0).texture(u1, v0).next();
-        bufferBuilder.vertex(matrices, x, y, (float) 0).texture(u0, v0).next();
-        bufferBuilder.end();
-        RenderSystem.enableAlphaTest();
-        BufferRenderer.draw(bufferBuilder);
-    }
-
 }

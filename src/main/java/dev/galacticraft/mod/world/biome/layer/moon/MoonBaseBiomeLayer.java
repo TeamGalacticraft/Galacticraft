@@ -33,7 +33,7 @@ public enum MoonBaseBiomeLayer implements InitLayer {
     INSTANCE;
 
     public int sample(LayerRandomnessSource context, int x, int y) {
-        if (context.getNoiseSampler().sample((double)x / 8.0D, (double)y / 8.0D, 0.0D, 0.0D, 0.0D) <= -0.2D) {
+        if (context.getNoiseSampler().sample((double)x / 8.0D, (double)y / 8.0D, 0.0D) <= -0.2D) {
             return MoonBiomeLayer.MOON_MARE_ID;
         } else {
             return MoonBiomeLayer.MOON_HIGHLANDS_ID;

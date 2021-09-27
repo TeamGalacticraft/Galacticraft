@@ -25,11 +25,10 @@ package dev.galacticraft.mod.screen;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.mojang.datafixers.util.Pair;
+import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.GearInventoryProvider;
-import dev.galacticraft.mod.item.GalacticraftItems;
 import dev.galacticraft.mod.item.ThermalArmorItem;
-import dev.galacticraft.mod.screen.slot.ItemSpecificSlot;
+import dev.galacticraft.mod.screen.slot.AccessorySlot;
 import dev.galacticraft.mod.util.OxygenTankUtil;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -51,14 +50,15 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
             new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_BOOTS),
             new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_PANTS),
             new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_CHEST),
-            new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_HEAD)};
+            new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_HEAD)
+    };
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
-    public static final int OXYGEN_TANK_1_SLOT = 6;
-    public static final int OXYGEN_TANK_2_SLOT = 7;
+    public static final int OXYGEN_TANK_1_SLOT = 4;
+    public static final int OXYGEN_TANK_2_SLOT = 5;
 
     public final FixedItemInv inventory;
 
-    private final PlayerEntity player;
+    public final PlayerEntity player;
 
     public GalacticraftPlayerInventoryScreenHandler(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         super(GalacticraftScreenHandlerType.PLAYER_INV_GC_HANDLER, syncId);
@@ -98,35 +98,15 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
             });
         }
 
-        this.addSlot(new ItemSpecificSlot(inventory, 4, 80, 8, GalacticraftItems.OXYGEN_MASK) {
-            @Override
-            public Pair<Identifier, Identifier> getBackgroundSprite() {
-                return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_MASK));
-            }
-
-            @Override
-            public boolean canTakeItems(PlayerEntity player) {
-                return GalacticraftPlayerInventoryScreenHandler.this.player == player;
-            }
-        });
-
-        this.addSlot(new ItemSpecificSlot(inventory, 5, 80, 8 + 18, GalacticraftItems.OXYGEN_GEAR) {
-            @Override
-            public Pair<Identifier, Identifier> getBackgroundSprite() {
-                return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_GEAR));
-            }
-
-            @Override
-            public boolean canTakeItems(PlayerEntity player) {
-                return GalacticraftPlayerInventoryScreenHandler.this.player == player;
-            }
-        });
         this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
         this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_2_SLOT, 80, 8 + 3 * 18));
 
+        this.addSlot(new AccessorySlot(inventory, 6, 80, 8));
+        this.addSlot(new AccessorySlot(inventory, 7, 80, 8 + 18));
+
         int accessorySlot = 0;
         for (int i = 8; i < 12; i++) {
-            this.addSlot(new Slot(inventory, i, 80 + 18, 8 + accessorySlot * 18));
+            this.addSlot(new AccessorySlot(inventory, i, 80 + 18, 8 + accessorySlot * 18));
             accessorySlot++;
         }
 
@@ -183,16 +163,14 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
     public ItemStack transferSlot(PlayerEntity player, int index) {
         ItemStack stack = ItemStack.EMPTY;
         Slot slotFrom = this.slots.get(index);
-        if (slotFrom != null && slotFrom.hasStack()) {
+        if (slotFrom.hasStack()) {
             ItemStack stackFrom = slotFrom.getStack();
             stack = stackFrom.copy();
 
             // Index of Indexes :)
-            // 0-3 (4): GC, armor slots;
-            // 4: GC, mask slot;
-            // 5: GC, oxygen gear;
-            // 6-7 (2): GC, oxygen tanks slots;
-            // 8-11 (4): GC, slots without any required item;
+            // 0-3 (4): GC, thermal armor slots;
+            // 4-5 (2): GC, oxygen tank slots;
+            // 6-11 (6): GC, accessory slots;
             // 12-38 (27): MC, non-hotbar inventory slots;
             // 39-48 (9): MC, hotbar slots.
             if (index < 12) {
@@ -211,7 +189,7 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
                 }
             }
 
-            slotFrom.onStackChanged(stackFrom, stack);
+            slotFrom.onQuickTransfer(stackFrom, stack);
 
             if (stackFrom.isEmpty()) {
                 slotFrom.setStack(ItemStack.EMPTY);
@@ -223,9 +201,9 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
                 return ItemStack.EMPTY;
             }
 
-            ItemStack itemStack3 = slotFrom.onTakeItem(player, stackFrom);
+            slotFrom.onTakeItem(player, stackFrom);
             if (index == 0) {
-                player.dropItem(itemStack3, false);
+                player.dropItem(stackFrom, false);
             }
         }
 

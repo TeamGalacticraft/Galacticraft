@@ -48,15 +48,15 @@ import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.render.model.json.Transformation;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.ApiStatus;
@@ -85,11 +85,21 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     public static final Identifier MACHINE_FLUID_OUT = new Identifier(Constant.MOD_ID, "block/machine_fluid_output");
     public static final Identifier MACHINE_ITEM_IN = new Identifier(Constant.MOD_ID, "block/machine_item_input");
     public static final Identifier MACHINE_ITEM_OUT = new Identifier(Constant.MOD_ID, "block/machine_item_output");
+    private static final ModelTransformation TRANSFORMATION = new ModelTransformation(
+            new Transformation(new Vec3f(75, 45, 0), new Vec3f(0, 0.25f, 0), new Vec3f(0.375f, 0.375f, 0.375f)),
+            new Transformation(new Vec3f(75, 45, 0), new Vec3f(0, 0.25f, 0), new Vec3f(0.375f, 0.375f, 0.375f)),
+            new Transformation(new Vec3f(0, 225, 0), new Vec3f(0, 0, 0), new Vec3f(0.40f, 0.40f, 0.40f)),
+            new Transformation(new Vec3f(0, 45, 0), new Vec3f(0, 0, 0), new Vec3f(0.40f, 0.40f, 0.40f)),
+            Transformation.IDENTITY,
+            new Transformation(new Vec3f(30, 225, 0), new Vec3f(0, 0, 0), new Vec3f(0.625f, 0.625f, 0.625f)),
+            new Transformation(new Vec3f(0, 0, 0), new Vec3f(0, 0.2f, 0), new Vec3f(0.25f, 0.25f, 0.25f)),
+            new Transformation(new Vec3f(0, 0, 0), new Vec3f(0, 0, 0), new Vec3f(0.5f, 0.5f, 0.5f))
+    );
 
     @ApiStatus.Internal
     public static final CachingSpriteAtlas CACHING_SPRITE_ATLAS = new CachingSpriteAtlas(null);
     @ApiStatus.Internal
-    public static final Map<Block, SpriteProvider> SPRITE_PROVIDERS = new HashMap<>();
+    public static final Map<Block, SpriteProvider> SPRITE_PROVIDERS = new IdentityHashMap<>();
     @ApiStatus.Internal
     public static final Map<String, Set<String>> IDENTIFIERS = new HashMap<>();
     public static final List<Identifier> TEXTURE_DEPENDENCIES = new LinkedList<>();
@@ -119,10 +129,10 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
             if (face == BlockFace.FRONT || face == BlockFace.BACK) {
                 double energy;
                 if (machine != null) {
-                    energy = machine.getCapacitor().getEnergy();
+                    energy = machine.capacitor().getEnergy();
                 } else {
-                    if (stack.getTag() != null && stack.getTag().contains(Constant.Nbt.ENERGY, NbtType.COMPOUND)) {
-                        energy = stack.getTag().getInt(Constant.Nbt.ENERGY);
+                    if (stack.getNbt() != null && stack.getNbt().contains(Constant.Nbt.ENERGY, NbtType.COMPOUND)) {
+                        energy = stack.getNbt().getInt(Constant.Nbt.ENERGY);
                     } else {
                         energy = 0;
                     }
@@ -142,11 +152,11 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
             if (face == BlockFace.FRONT || face == BlockFace.BACK) {
                 FluidVolume volume;
                 if (machine != null) {
-                    volume = machine.getFluidInv().getInvFluid(0);
+                    volume = machine.fluidInv().getInvFluid(0);
                 } else {
-                    if (stack.getTag() != null && stack.getTag().contains(Constant.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
-                        if (stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).contains("tanks", NbtType.LIST)) {
-                            ListTag tag1 = stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).getList("tanks", NbtType.COMPOUND);
+                    if (stack.getNbt() != null && stack.getNbt().contains(Constant.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
+                        if (stack.getNbt().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).contains("tanks", NbtType.LIST)) {
+                            NbtList tag1 = stack.getNbt().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).getList("tanks", NbtType.COMPOUND);
                             if (tag1.size() > 0) {
                                 volume = FluidVolume.fromTag(tag1.getCompound(0));
                             } else {
@@ -168,7 +178,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
 
         register(GalacticraftBlock.OXYGEN_SEALER, (machine, stack, face, atlas, view, pos) -> {
             if (face == BlockFace.TOP) return atlas.apply(new Identifier(Constant.MOD_ID, "block/oxygen_sealer_top"));
-            if (face.isHorizontal()) atlas.apply(MACHINE_SIDE);
+            if (face.horizontal()) atlas.apply(MACHINE_SIDE);
             return atlas.apply(MACHINE);
         });
 
@@ -235,22 +245,13 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     }
 
     @Override
-    public Sprite getSprite() {
+    public Sprite getParticleSprite() {
         return CACHING_SPRITE_ATLAS.apply(MACHINE);
     }
 
     @Override
     public ModelTransformation getTransformation() {
-        return new ModelTransformation(
-                new Transformation(new Vector3f(75, 45, 0), new Vector3f(0, 0.25f, 0), new Vector3f(0.375f, 0.375f, 0.375f)),
-                new Transformation(new Vector3f(75, 45, 0), new Vector3f(0, 0.25f, 0), new Vector3f(0.375f, 0.375f, 0.375f)),
-                new Transformation(new Vector3f(0, 225, 0), new Vector3f(0, 0, 0), new Vector3f(0.40f, 0.40f, 0.40f)),
-                new Transformation(new Vector3f(0, 45, 0), new Vector3f(0, 0, 0), new Vector3f(0.40f, 0.40f, 0.40f)),
-                Transformation.IDENTITY,
-                new Transformation(new Vector3f(30, 225, 0), new Vector3f(0, 0, 0), new Vector3f(0.625f, 0.625f, 0.625f)),
-                new Transformation(new Vector3f(0, 0, 0), new Vector3f(0, 0.2f, 0), new Vector3f(0.25f, 0.25f, 0.25f)),
-                new Transformation(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(0.5f, 0.5f, 0.5f))
-        );
+        return TRANSFORMATION;
     }
 
     @Override
@@ -261,7 +262,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     @FunctionalInterface
     public interface SpriteProvider {
         SpriteProvider DEFAULT = (machine, stack, face, atlas, view, pos) -> {
-            if (face.isHorizontal()) return atlas.apply(MACHINE_SIDE);
+            if (face.horizontal()) return atlas.apply(MACHINE_SIDE);
             return atlas.apply(MACHINE);
         };
 
@@ -292,7 +293,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     }
 
     public static boolean transformItem(ItemStack stack, MutableQuadView quad) {
-        CompoundTag tag = stack.getTag();
+        NbtCompound tag = stack.getNbt();
         if (tag != null && tag.contains(Constant.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
             CONFIGURATION.fromTag(tag.getCompound(Constant.Nbt.BLOCK_ENTITY_TAG));
             quad.spriteBake(0,
@@ -311,50 +312,41 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     }
 
     public static Sprite getSprite(BlockFace face, MachineBlockEntity machine, ItemStack stack, SpriteProvider provider, AutomationType type) {
-        switch (type) {
-            case FLUID_INPUT:
-                return CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_IN);
-            case POWER_INPUT:
-                return CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_IN);
-            case POWER_OUTPUT:
-                return CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_OUT);
-            case FLUID_OUTPUT:
-                return CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_OUT);
-            case ITEM_INPUT:
-                return CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_IN);
-            case ITEM_OUTPUT:
-                return CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_OUT);
-            default:
-                return provider.getSpritesForState(machine, stack, face, CACHING_SPRITE_ATLAS, null, null);
-        }
+        return switch (type) {
+            case FLUID_INPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_IN);
+            case POWER_INPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_IN);
+            case POWER_OUTPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_OUT);
+            case FLUID_OUTPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_OUT);
+            case ITEM_INPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_IN);
+            case ITEM_OUTPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_OUT);
+            default -> provider.getSpritesForState(machine, stack, face, CACHING_SPRITE_ATLAS, null, null);
+        };
     }
 
-    public static class FrontFaceSpriteProvider implements SpriteProvider {
-        private final Identifier sprite;
-
+    public record FrontFaceSpriteProvider(Identifier sprite) implements SpriteProvider {
         public FrontFaceSpriteProvider(Identifier sprite) {
             this.sprite = sprite;
             TEXTURE_DEPENDENCIES.add(sprite);
         }
 
         @Override
-        public @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos) {
+        public @NotNull
+        Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos) {
             if (face == BlockFace.FRONT) return atlas.apply(sprite);
-            if (face.isHorizontal()) return atlas.apply(MACHINE_SIDE);
+            if (face.horizontal()) return atlas.apply(MACHINE_SIDE);
             return atlas.apply(MACHINE);
         }
     }
 
-    public static class SingleSpriteProvider implements SpriteProvider {
-        private final Identifier sprite;
-
+    public record SingleSpriteProvider(Identifier sprite) implements SpriteProvider {
         public SingleSpriteProvider(Identifier sprite) {
             this.sprite = sprite;
             TEXTURE_DEPENDENCIES.add(sprite);
         }
 
         @Override
-        public @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos) {
+        public @NotNull
+        Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos) {
             return atlas.apply(sprite);
         }
     }
@@ -380,7 +372,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
         public @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos) {
             if (face == BlockFace.FRONT) return atlas.apply(this.front);
             if (face == BlockFace.BACK) return atlas.apply(this.back);
-            if (this.sided && face.isHorizontal()) return atlas.apply(MACHINE_SIDE);
+            if (this.sided && face.horizontal()) return atlas.apply(MACHINE_SIDE);
             return atlas.apply(MACHINE);
         }
     }

@@ -25,7 +25,9 @@ package dev.galacticraft.mod.world.gen.feature;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
+import net.minecraft.util.collection.Pool;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.biome.source.BiomeSource;
@@ -36,28 +38,22 @@ import net.minecraft.world.gen.feature.JigsawFeature;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
-import java.util.List;
-
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonPillagerBaseFeature extends JigsawFeature {
-    private static final List<SpawnSettings.SpawnEntry> MONSTER_SPAWNS = ImmutableList.<SpawnSettings.SpawnEntry>builder().add(new SpawnSettings.SpawnEntry(GalacticraftEntityType.EVOLVED_PILLAGER, 1, 1, 2)).build();
+    private static final Pool<SpawnSettings.SpawnEntry> MONSTER_SPAWNS = Pool.of(ImmutableList.<SpawnSettings.SpawnEntry>builder().add(new SpawnSettings.SpawnEntry(GalacticraftEntityType.EVOLVED_PILLAGER, 1, 1, 2)).build());
 
     public MoonPillagerBaseFeature(Codec<StructurePoolFeatureConfig> codec) {
         super(codec, 0, true, true);
     }
 
     @Override
-    protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long l, ChunkRandom chunkRandom, int i, int j, Biome biome, ChunkPos chunkPos, StructurePoolFeatureConfig structurePoolFeatureConfig) {
-        int k = i >> 4;
-        int m = j >> 4;
-        chunkRandom.setSeed((long)(k ^ m << 4) ^ l);
-        chunkRandom.nextInt();
-        if (chunkRandom.nextInt(5) != 0) {
+    protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long worldSeed, ChunkRandom random, ChunkPos pos, Biome biome, ChunkPos chunkPos, StructurePoolFeatureConfig config, HeightLimitView world) {
+        if (random.nextInt(5) != 0) {
             return false;
         } else {
-            return !this.ensureNoVillage(chunkGenerator, l, chunkRandom, i, j);
+            return !this.ensureNoVillage(chunkGenerator, worldSeed, random, chunkPos.x, chunkPos.z);
         }
     }
 
@@ -78,7 +74,7 @@ public class MoonPillagerBaseFeature extends JigsawFeature {
     }
 
     @Override
-    public List<SpawnSettings.SpawnEntry> getMonsterSpawns() {
+    public Pool<SpawnSettings.SpawnEntry> getMonsterSpawns() {
         return MONSTER_SPAWNS;
     }
 }

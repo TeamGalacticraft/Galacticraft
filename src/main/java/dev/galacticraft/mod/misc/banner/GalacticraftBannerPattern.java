@@ -32,8 +32,9 @@ import net.minecraft.util.registry.Registry;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftBannerPattern {
-    public static final LoomPattern ROCKET = Registry.register(LoomPatterns.REGISTRY, new Identifier(Constant.MOD_ID, "rocket"), new LoomPattern(false));
+    public static final LoomPattern ROCKET = new LoomPattern(false);
 
     public static void register() {
+        Registry.register(LoomPatterns.REGISTRY, new Identifier(Constant.MOD_ID, "rocket"), ROCKET);
     }
 }

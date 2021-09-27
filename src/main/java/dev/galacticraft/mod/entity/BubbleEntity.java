@@ -32,7 +32,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
@@ -57,11 +57,11 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    protected void readCustomDataFromTag(CompoundTag tag) {
+    protected void readCustomDataFromNbt(NbtCompound tag) {
     }
 
     @Override
-    protected void writeCustomDataToTag(CompoundTag tag) {
+    protected void writeCustomDataToNbt(NbtCompound tag) {
     }
 
     @Override
@@ -79,20 +79,20 @@ public class BubbleEntity extends Entity {
         if (this.hasVehicle()) {
             this.stopRiding();
         }
-        this.yaw = 0;
-        this.pitch = 0;
+        this.setYaw(0);
+        this.setPitch(0);
         this.prevPitch = 0;
         this.prevYaw = 0;
 
         if (this.getY() < -64.0D) {
-            this.destroy();
+            this.tickInVoid();
         }
     }
 
     @Override
     public boolean damage(DamageSource source, float amount) {
         if (source == DamageSource.OUT_OF_WORLD) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
             return true;
         } else {
             return false;
@@ -124,11 +124,6 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    protected boolean canClimb() {
-        return false;
-    }
-
-    @Override
     public boolean canBeSpectated(ServerPlayerEntity spectator) {
         return false;
     }
@@ -139,7 +134,7 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public boolean canFly() {
+    public boolean isPushedByFluids() {
         return false;
     }
 
@@ -149,7 +144,7 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    protected void setOnFireFromLava() {
+    public void setOnFireFromLava() {
     }
 
     @Override
@@ -203,11 +198,6 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public boolean isAlive() {
-        return !removed;
-    }
-
-    @Override
     public boolean isOnFire() {
         return false;
     }
@@ -241,8 +231,8 @@ public class BubbleEntity extends Entity {
     @Environment(EnvType.CLIENT)
     public boolean shouldRender(double distance) {
         BlockEntity entity = world.getBlockEntity(getBlockPos());
-        if (entity instanceof BubbleDistributorBlockEntity) {
-            double d = Math.abs(((BubbleDistributorBlockEntity) entity).getSize() * 2D + 1D);
+        if (entity instanceof BubbleDistributorBlockEntity machine) {
+            double d = Math.abs(machine.getSize() * 2D + 1D);
             if (Double.isNaN(d)) {
                 d = 1.0D;
             }
@@ -250,7 +240,6 @@ public class BubbleEntity extends Entity {
             d *= 64.0D * getRenderDistanceMultiplier();
             return distance < d * d;
         }
-        this.remove();
         return false;
     }
 
@@ -262,14 +251,14 @@ public class BubbleEntity extends Entity {
     @Override
     public Packet<ClientPlayPacketListener> createSpawnPacket() {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        buf.writeVarInt(this.getEntityId());
+        buf.writeVarInt(this.getId());
         buf.writeUuid(this.getUuid());
         buf.writeVarInt(Registry.ENTITY_TYPE.getRawId(this.getType()));
         buf.writeDouble(this.getX());
         buf.writeDouble(this.getY());
         buf.writeDouble(this.getZ());
-        buf.writeByte((byte) ((int) (this.yaw * 256.0F / 360.0F)));
-        buf.writeByte((byte) ((int) (this.pitch * 256.0F / 360.0F)));
+        buf.writeByte((byte) ((int) (this.getYaw() * 256.0F / 360.0F)));
+        buf.writeByte((byte) ((int) (this.getPitch() * 256.0F / 360.0F)));
         Vec3d vec3d = this.getVelocity();
         double e = MathHelper.clamp(vec3d.x, -3.9D, 3.9D);
         double f = MathHelper.clamp(vec3d.y, -3.9D, 3.9D);

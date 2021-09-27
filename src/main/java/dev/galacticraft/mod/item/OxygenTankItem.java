@@ -24,16 +24,15 @@ package dev.galacticraft.mod.item;
 
 import alexiil.mc.lib.attributes.AttributeProviderItem;
 import alexiil.mc.lib.attributes.ItemAttributeList;
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
+import dev.galacticraft.api.accessor.GearInventoryProvider;
+import dev.galacticraft.api.attribute.GcApiAttributes;
+import dev.galacticraft.api.attribute.oxygen.OxygenTank;
+import dev.galacticraft.api.attribute.oxygen.OxygenTankImpl;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.GearInventoryProvider;
-import dev.galacticraft.mod.attribute.GalacticraftAttribute;
+import dev.galacticraft.mod.attribute.misc.ArrayReference;
 import dev.galacticraft.mod.attribute.oxygen.InfiniteOxygenTank;
-import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
-import dev.galacticraft.mod.attribute.oxygen.OxygenTankImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -55,7 +54,7 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenTankItem extends Item implements AttributeProviderItem {
-    private int ticks = 0;
+    private int ticks = (int) (Math.random() * 500.0);
     private final int size;
 
     public OxygenTankItem(Settings settings, int size) {
@@ -72,23 +71,7 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
             stack[0] = stack[0].copy();
 
             if (this.size > 0) {
-                GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(new Reference<ItemStack>() {
-                    @Override
-                    public ItemStack get() {
-                        return stack[0];
-                    }
-
-                    @Override
-                    public boolean set(ItemStack stack1) {
-                        stack[0] = stack1;
-                        return true;
-                    }
-
-                    @Override
-                    public boolean isValid(ItemStack stack) {
-                        return stack.getItem() instanceof OxygenTankItem;
-                    }
-                }).setAmount(this.size);
+                GcApiAttributes.OXYGEN_TANK.getFirst(new ArrayReference<>(stack, 0, itemStack -> itemStack.getItem() instanceof OxygenTankItem)).setAmount(this.size);
                 list.add(stack[0]);
             }
         }
@@ -113,7 +96,7 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         if (this.size > 0){
-            OxygenTank tank = GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
+            OxygenTank tank = GcApiAttributes.OXYGEN_TANK.getFirst(stack);
             lines.add(new TranslatableText("tooltip.galacticraft.oxygen_remaining", tank.getAmount() + "/" + tank.getCapacity()).setStyle(Constant.Text.getStorageLevelColor(1.0 - ((double)tank.getAmount() / (double)tank.getCapacity()))));
         } else {
             lines.add(new TranslatableText("tooltip.galacticraft.oxygen_remaining", new TranslatableText("tooltip.galacticraft.infinite").setStyle(Constant.Text.getRainbow(++ticks))));
@@ -124,16 +107,11 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) { //should sync with server
-        FixedItemInv inv = ((GearInventoryProvider)player).getGearInv();
-        if (inv.getInvStack(6).isEmpty()) {
-            inv.setInvStack(6, player.getStackInHand(hand).copy(), Simulation.ACTION);
-            return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
-        } else if (inv.getInvStack(7).isEmpty()) {
-            inv.setInvStack(7, player.getStackInHand(hand).copy(), Simulation.ACTION);
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) { //should sync with server
+        if (((GearInventoryProvider) user).getOxygenTanks().getInsertable().insert(user.getStackInHand(hand).copy()).isEmpty()) {
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
-        return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
+        return super.use(world, user, hand);
     }
 
     @Override
@@ -141,14 +119,14 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
         ItemStack ref = reference.get().copy();
         if (this.size > 0) {
             OxygenTankImpl tank = new OxygenTankImpl(this.size);
-            tank.fromTag(ref.getOrCreateTag());
-            tank.toTag(ref.getOrCreateTag());
+            tank.fromTag(ref.getOrCreateNbt());
+            tank.toTag(ref.getOrCreateNbt());
             ref.setDamage(this.size - tank.getAmount());
             reference.set(ref);
             tank.listen((view, previous) -> {
                         ItemStack stack = reference.get().copy();
                         stack.setDamage(this.size - view.getAmount());
-                        tank.toTag(stack.getOrCreateTag());
+                        tank.toTag(stack.getOrCreateNbt());
                         reference.set(stack);
                     }
             );

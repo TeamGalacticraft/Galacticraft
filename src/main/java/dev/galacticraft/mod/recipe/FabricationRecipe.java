@@ -43,12 +43,14 @@ public class FabricationRecipe implements Recipe<Inventory> {
     private final String group;
     private final ItemStack output;
     private final DefaultedList<Ingredient> input = DefaultedList.ofSize(1, Ingredient.EMPTY);
+    private final int time;
 
-    public FabricationRecipe(Identifier id, String group, Ingredient input, ItemStack output) {
+    public FabricationRecipe(Identifier id, String group, Ingredient input, ItemStack output, int time) {
         this.id = id;
         this.group = group;
         this.input.set(0, input);
         this.output = output;
+        this.time = time;
     }
 
     @Override
@@ -62,7 +64,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public DefaultedList<Ingredient> getPreviewInputs() {
+    public DefaultedList<Ingredient> getIngredients() {
         return this.input;
     }
 
@@ -97,20 +99,25 @@ public class FabricationRecipe implements Recipe<Inventory> {
         return this.group;
     }
 
+    public int getProcessingTime() {
+        return this.time;
+    }
+
     public enum Serializer implements RecipeSerializer<FabricationRecipe> {
         INSTANCE;
 
         @Override
         public FabricationRecipe read(Identifier id, JsonObject json) {
             String group = JsonHelper.getString(json, "group", "");
+            int time = JsonHelper.getInt(json, "time", 300);
             Ingredient ingredient = Ingredient.fromJson(JsonHelper.getObject(json, "ingredient"));
-            ItemStack result = ShapedRecipe.getItemStack(JsonHelper.getObject(json, "result"));
-            return new FabricationRecipe(id, group, ingredient, result);
+            ItemStack result = new ItemStack(ShapedRecipe.getItem(JsonHelper.getObject(json, "result")));
+            return new FabricationRecipe(id, group, ingredient, result, time);
         }
 
         @Override
         public FabricationRecipe read(Identifier id, PacketByteBuf buf) {
-            return new FabricationRecipe(id, buf.readString(Constant.Misc.MAX_STRING_READ), Ingredient.fromPacket(buf), buf.readItemStack());
+            return new FabricationRecipe(id, buf.readString(Constant.Misc.MAX_STRING_READ), Ingredient.fromPacket(buf), buf.readItemStack(), buf.readInt());
         }
 
         @Override
@@ -118,6 +125,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
             buf.writeString(recipe.group);
             recipe.input.get(0).write(buf);
             buf.writeItemStack(recipe.output);
+            buf.writeInt(recipe.time);
         }
     }
 }

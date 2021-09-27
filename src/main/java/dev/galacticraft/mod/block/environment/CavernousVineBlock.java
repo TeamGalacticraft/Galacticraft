@@ -74,18 +74,18 @@ public class CavernousVineBlock extends Block implements Waterloggable {
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (!(entity instanceof LivingEntity) || (entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.flying)) {
+        if (!(entity instanceof LivingEntity living) || (entity instanceof PlayerEntity player && player.getAbilities().flying)) {
             return;
         }
 
-        onCollided((LivingEntity) entity);
+        this.onCollided(living);
     }
 
     public void onCollided(LivingEntity entity) {
-        dragEntityUp(entity);
+        this.dragEntityUp(entity);
     }
 
-    void dragEntityUp(LivingEntity entity) {
+    private void dragEntityUp(LivingEntity entity) {
         entity.setVelocity(entity.getVelocity().x, 0.1D, entity.getVelocity().z);
     }
 
@@ -173,15 +173,9 @@ public class CavernousVineBlock extends Block implements Waterloggable {
 
         if (stateAbove.getBlock() == GalacticraftBlock.CAVERNOUS_VINE || stateAbove.getBlock() == GalacticraftBlock.POISONOUS_CAVERNOUS_VINE) {
             switch (stateAbove.get(VINES).getMeta()) {
-                case 0:
-                    world.setBlockState(blockPos, this.getStateManager().getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_1));
-                    break;
-                case 1:
-                    world.setBlockState(blockPos, this.getStateManager().getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_2));
-                    break;
-                default:
-                    world.setBlockState(blockPos, this.getStateManager().getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_0));
-                    break;
+                case 0 -> world.setBlockState(blockPos, this.getStateManager().getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_1));
+                case 1 -> world.setBlockState(blockPos, this.getStateManager().getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_2));
+                default -> world.setBlockState(blockPos, this.getStateManager().getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_0));
             }
         }
     }

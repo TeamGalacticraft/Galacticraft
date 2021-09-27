@@ -30,9 +30,9 @@ import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen;
+import dev.galacticraft.mod.util.DrawableUtil;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import net.fabricmc.api.EnvType;
@@ -42,10 +42,6 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
@@ -56,7 +52,6 @@ import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.text.WordUtils;
@@ -152,20 +147,19 @@ public class Tank {
             return FLUID_TANK_3_6_DATA;
         } else if (size == 2) {
             return FLUID_TANK_2_4_DATA;
-        } else if (size == 1) {
+        } else {
             return FLUID_TANK_1_2_DATA;
         }
-        throw new AssertionError();
     }
 
     @Environment(EnvType.CLIENT)
     public void render(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY, boolean coloured, Int2IntMap color) {
         if (this.scale == 0) return;
         int[] data = this.getPositionData();
-        MinecraftClient.getInstance().getTextureManager().bindTexture(Constant.ScreenTexture.OVERLAY);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
         if (coloured) {
             int c = color.get(this.index);
-            MachineHandledScreen.drawTextureColor(matrices, this.x, this.y, 0, data[0], data[1] + Constant.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constant.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128, c >> 16 & 0xFF, c >> 8 & 0xFF, c & 0xFF, 80);
+            DrawableUtil.drawTextureColor(matrices, this.x, this.y, 0, data[0], data[1] + Constant.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constant.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128, c >> 16 & 0xFF, c >> 8 & 0xFF, c & 0xFF, 80);
         } else {
             DrawableHelper.drawTexture(matrices, this.x, this.y, 0, data[0], data[1] + Constant.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constant.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128);
         }
@@ -175,10 +169,10 @@ public class Tank {
         matrices.push();
         double scale = content.amount().div(this.inv.getMaxAmount_F(this.index)).asInexactDouble();
         Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getRawFluid()).getFluidSprites(world, pos, content.getRawFluid().getDefaultState())[0];
-        client.getTextureManager().bindTexture(sprite.getAtlas().getId());
+        RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
         drawSprite(matrices, this.x + 1, this.y + (float)(-(data[2] - 1) * scale) + data[2] - 1, 0, Constant.TextureCoordinate.FLUID_TANK_WIDTH - 1, (float)((data[2] - 1) * scale), sprite);
         matrices.pop();
-        client.getTextureManager().bindTexture(Constant.ScreenTexture.OVERLAY);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
         DrawableHelper.drawTexture(matrices, this.x, this.y, 0, data[0], data[1], Constant.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128);
     }
 
@@ -228,10 +222,10 @@ public class Tank {
     }
 
     public boolean acceptStack(Reference<ItemStack> stack, LimitedConsumer<ItemStack> excess) {
-        if (this.inv instanceof Automatable) {
+        if (this.inv instanceof Automatable automatable) {
             FluidExtractable extractable = FluidAttributes.EXTRACTABLE.getFirstOrNull(stack, excess);
             if (extractable != null && !extractable.attemptExtraction(this.inv.getFilterForTank(this.index), FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty()) {
-                if (((Automatable) this.inv).getTypes()[this.index].getType().isInput()) {
+                if (automatable.getTypes()[this.index].getType().isInput()) {
                     FluidVolumeUtil.move(extractable, this.inv.getTank(this.index));
                     ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(this.index)));
                     return true;
@@ -239,7 +233,7 @@ public class Tank {
             } else {
                 FluidInsertable insertable = FluidAttributes.INSERTABLE.getFirstOrNull(stack, excess);
                 if (insertable != null) {
-                    if (((Automatable) this.inv).getTypes()[this.index].getType().isOutput()) {
+                    if (automatable.getTypes()[this.index].getType().isOutput()) {
                         FluidVolumeUtil.move(this.inv.getTank(this.index), insertable);
                         ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(this.index)));
                         return true;
@@ -252,18 +246,6 @@ public class Tank {
     }
 
     public static void drawSprite(MatrixStack matrices, float x, float y, float z, float width, float height, Sprite sprite) {
-        drawTexturedQuad(matrices.peek().getModel(), x, x + width, y, y + height, z, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
-    }
-
-    private static void drawTexturedQuad(Matrix4f matrices, float x0, float x1, float y0, float y1, float z, float u0, float u1, float v0, float v1) {
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE);
-        bufferBuilder.vertex(matrices, x0, y1, z).texture(u0, v1).next();
-        bufferBuilder.vertex(matrices, x1, y1, z).texture(u1, v1).next();
-        bufferBuilder.vertex(matrices, x1, y0, z).texture(u1, v0).next();
-        bufferBuilder.vertex(matrices, x0, y0, z).texture(u0, v0).next();
-        bufferBuilder.end();
-        RenderSystem.enableAlphaTest();
-        BufferRenderer.draw(bufferBuilder);
+        DrawableUtil.drawTexturedQuad_F(matrices.peek().getModel(), x, x + width, y, y + height, z, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
     }
 }

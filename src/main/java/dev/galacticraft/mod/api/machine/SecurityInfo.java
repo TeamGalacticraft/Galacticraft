@@ -22,16 +22,12 @@
 
 package dev.galacticraft.mod.api.machine;
 
-import com.hrznstudio.galacticraft.api.internal.data.ClientWorldTeamsGetter;
-import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
-import com.hrznstudio.galacticraft.api.teams.Teams;
-import com.hrznstudio.galacticraft.api.teams.data.Team;
 import com.mojang.authlib.GameProfile;
 import dev.galacticraft.mod.Constant;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -74,14 +70,7 @@ public class SecurityInfo {
             return true;
         } else if (accessibility == Accessibility.TEAM) {
             if (this.isOwner(player)) return true;
-            Team team;
-            if (!player.world.isClient()) {
-                team = ((MinecraftServerTeamsGetter) player.world.getServer()).getSpaceRaceTeams().getTeam(this.owner.getId());
-            } else {
-                team = ((ClientWorldTeamsGetter) player.world).getSpaceRaceTeams().getTeam(this.owner.getId());
-            }
-            if (team == null) return false;
-            return team.players.containsKey(player.getUuid());
+            return false; //todo: teams
         } else if (accessibility == Accessibility.PRIVATE) {
             return this.isOwner(player);
         }
@@ -100,14 +89,14 @@ public class SecurityInfo {
         return this.owner;
     }
 
-    public void setOwner(@NotNull Teams teams, @NotNull PlayerEntity owner) {
-        this.setOwner(teams, owner.getGameProfile());
+    public void setOwner(/*@NotNull Teams teams, */@NotNull PlayerEntity owner) { //todo: teams
+        this.setOwner(/*teams, */owner.getGameProfile());
     }
 
-    public void setOwner(@NotNull Teams teams, @NotNull GameProfile owner) {
+    public void setOwner(/*@NotNull Teams teams, */@NotNull GameProfile owner) {
         if (this.getOwner() == null) {
             this.owner = owner;
-            if (teams.getTeam(owner.getId()) != null) this.team = teams.getTeam(owner.getId()).id;
+//            if (teams.getTeam(owner.getId()) != null) this.team = teams.getTeam(owner.getId()).id;  //todo: teams
         }
     }
 
@@ -115,9 +104,9 @@ public class SecurityInfo {
         return team;
     }
 
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound toTag(NbtCompound tag) {
         if (this.getOwner() != null) {
-            tag.put(Constant.Nbt.OWNER, NbtHelper.fromGameProfile(new CompoundTag(), this.getOwner()));
+            tag.put(Constant.Nbt.OWNER, NbtHelper.writeGameProfile(new NbtCompound(), this.getOwner()));
         }
         tag.putString(Constant.Nbt.ACCESSIBILITY, this.accessibility.name());
         if (this.getTeam() != null) {
@@ -126,7 +115,7 @@ public class SecurityInfo {
         return tag;
     }
 
-    public void fromTag(CompoundTag tag) {
+    public void fromTag(NbtCompound tag) {
         if (tag.contains(Constant.Nbt.OWNER)) {
             this.owner = NbtHelper.toGameProfile(tag.getCompound(Constant.Nbt.OWNER));
         }
@@ -143,7 +132,7 @@ public class SecurityInfo {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBlockPos(pos);
         buf.writeByte(this.accessibility.ordinal());
-        buf.writeCompoundTag(NbtHelper.fromGameProfile(new CompoundTag(), this.owner));
+        buf.writeNbt(NbtHelper.writeGameProfile(new NbtCompound(), this.owner));
         ServerPlayNetworking.send(player, new Identifier(Constant.MOD_ID, "security_update"), buf);
     }
 

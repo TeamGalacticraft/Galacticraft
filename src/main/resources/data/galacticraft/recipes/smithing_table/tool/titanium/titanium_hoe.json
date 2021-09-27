@@ -1,0 +1,13 @@
+{
+  "type": "smithing",
+  "base": {
+    "item": "galacticraft:desh_hoe"
+  },
+  "addition": {
+    "item": "galacticraft:compressed_titanium"
+  },
+  "result": {
+    "item": "galacticraft:titanium_hoe",
+    "count": 1
+  }
+}
