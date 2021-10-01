@@ -12,9 +12,6 @@ accessible method net/minecraft/item/MusicDiscItem                             <
 accessible method net/minecraft/item/PickaxeItem                               <init>           (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
 accessible method net/minecraft/world/gen/chunk/ChunkGeneratorSettings         <init>           (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;IIIIZZZZZZ)V
 
-# protected methods
-accessible method net/minecraft/entity/damage/DamageSource                     setBypassesArmor ()Lnet/minecraft/entity/damage/DamageSource;
-
 # private classes
 
 # final classes
