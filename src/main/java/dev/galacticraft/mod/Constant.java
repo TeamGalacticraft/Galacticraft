@@ -710,7 +710,7 @@ public interface Constant {
     interface Recipe {
         String FABRICATION = "fabrication";
         String COMPRESSING = "compressing";
-        String ROCKET_ASSEMBLER = "rocket_assembler";
+        String ASSEMBLING = "rocket_assembler";
 
         interface Serializer {
             String FABRICATION = "fabrication";

@@ -38,7 +38,7 @@ public class GalacticraftRecipe {
     public static final FabricationRecipe.Serializer FABRICATION_SERIALIZER = FabricationRecipe.Serializer.INSTANCE;
     public static final ShapelessCompressingRecipe.Serializer SHAPELESS_COMPRESSING_SERIALIZER = ShapelessCompressingRecipe.Serializer.INSTANCE;
     public static final ShapedCompressingRecipe.Serializer SHAPED_COMPRESSING_SERIALIZER = ShapedCompressingRecipe.Serializer.INSTANCE;
-    public static final RocketAssemblerRecipe.Serializer ROCKET_ASSEMBLER_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.ROCKET_ASSEMBLER), RocketAssemblerRecipe.Serializer.INSTANCE);
+    public static final RocketAssemblerRecipe.Serializer ROCKET_ASSEMBLER_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.ASSEMBLING), RocketAssemblerRecipe.Serializer.INSTANCE);
 
     public static void register() {
         Registry.register(Registry.RECIPE_TYPE, new Identifier(Constant.MOD_ID, Constant.Recipe.ASSEMBLING), ROCKET_ASSEMBLER_TYPE);

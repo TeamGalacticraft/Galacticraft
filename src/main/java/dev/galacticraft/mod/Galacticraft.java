@@ -85,7 +85,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftBiomeSource.register();
         GalacticraftChunkGenerator.register();
         GalacticraftScreenHandlerType.register();
-        GalacticraftParticle.register();
+        //GalacticraftParticle.register();
         GalacticraftCommand.register();
         GalacticraftServerPacketReceiver.register();
         GalacticraftSound.register();
