@@ -143,7 +143,8 @@ public class GalacticraftScreenHandlerType {
                     FuelLoaderScreenHandler::new
             );
 
-    public static void register() {Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.COAL_GENERATOR_SCREEN_HANDLER), COAL_GENERATOR_HANDLER);
+    public static void register() {
+        Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.COAL_GENERATOR_SCREEN_HANDLER), COAL_GENERATOR_HANDLER);
         Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.BASIC_SOLAR_PANEL_SCREEN_HANDLER), BASIC_SOLAR_PANEL_HANDLER);
         Registry.register(Registry.SCREEN_HANDLER, new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ADVANCED_SOLAR_PANEL_SCREEN_HANDLER), ADVANCED_SOLAR_PANEL_HANDLER);
 

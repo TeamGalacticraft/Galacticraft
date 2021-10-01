@@ -45,7 +45,7 @@ public class GalacticraftEntityType {
     public static final EntityType<EvolvedEvokerEntity> EVOLVED_EVOKER = FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EvolvedEvokerEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.95F)).build();
     public static final EntityType<EvolvedVindicatorEntity> EVOLVED_VINDICATOR = FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EvolvedVindicatorEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.95F)).build();
     public static final EntityType<BubbleEntity> BUBBLE = FabricEntityTypeBuilder.create(SpawnGroup.MISC, BubbleEntity::new).fireImmune().dimensions(EntityDimensions.fixed(0, 0)).disableSaving().disableSummon().build();
-    public static final EntityType<RocketEntity> ROCKET = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Entity.ROCKET), FabricEntityTypeBuilder.create(SpawnGroup.MISC, RocketEntity::new).trackable(32, 2, false).dimensions(EntityDimensions.fixed(2.3F, 5.25F)).build()); //PLAYER VALUES
+    public static final EntityType<RocketEntity> ROCKET = FabricEntityTypeBuilder.create(SpawnGroup.MISC, RocketEntity::new).trackable(32, 2, false).dimensions(EntityDimensions.fixed(2.3F, 5.25F)).build(); //PLAYER VALUES
 
     public static void register() {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Entity.EVOLVED_ZOMBIE), EVOLVED_ZOMBIE);
@@ -56,6 +56,7 @@ public class GalacticraftEntityType {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Entity.EVOLVED_EVOKER), EVOLVED_EVOKER);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Entity.EVOLVED_VINDICATOR), EVOLVED_VINDICATOR);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Entity.BUBBLE), BUBBLE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Entity.ROCKET), ROCKET);
 
         FabricDefaultAttributeRegistry.register(EVOLVED_ZOMBIE, EvolvedZombieEntity.createZombieAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35D).add(EntityAttributes.GENERIC_MAX_HEALTH, 30.0D));
         FabricDefaultAttributeRegistry.register(EVOLVED_CREEPER, EvolvedCreeperEntity.createCreeperAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D));

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "galacticraft:block/landing_pad",
-		"particle": "galacticraft:block/landing_pad"
+		"0": "galacticraft:block/rocket_launch_pad",
+		"particle": "galacticraft:block/rocket_launch_pad"
 	},
 	"elements": [
 		{
