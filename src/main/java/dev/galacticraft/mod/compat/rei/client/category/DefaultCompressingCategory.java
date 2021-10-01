@@ -23,11 +23,9 @@
 package dev.galacticraft.mod.compat.rei.client.category;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin;
-import dev.galacticraft.mod.compat.rei.client.display.DefaultCompressingDisplay;
+import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
+import dev.galacticraft.mod.compat.rei.common.display.DefaultCompressingDisplay;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -41,17 +39,13 @@ import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -62,7 +56,7 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
 
     @Override
     public CategoryIdentifier<? extends DefaultCompressingDisplay> getCategoryIdentifier() {
-        return GalacticraftREIClientPlugin.COMPRESSING;
+        return GalacticraftREIServerPlugin.COMPRESSING;
     }
 
     @Override

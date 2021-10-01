@@ -20,26 +20,27 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.compat.rei.client.display;
+package dev.galacticraft.mod.compat.rei.common.transfer.info.stack;
 
-import dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin;
-import me.shedaniel.rei.api.common.category.CategoryIdentifier;
-import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
-import org.jetbrains.annotations.NotNull;
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import me.shedaniel.rei.api.common.transfer.info.stack.SlotAccessor;
+import net.minecraft.item.ItemStack;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
-    default @NotNull CategoryIdentifier<?> getCategoryIdentifier() {
-        return GalacticraftREIClientPlugin.COMPRESSING;
+public record LBASlotAccessor(FixedItemInv inv, int index) implements SlotAccessor {
+    @Override
+    public ItemStack getItemStack() {
+        return inv.getInvStack(index);
     }
 
-    default int getWidth() {
-        return 3;
+    @Override
+    public void setItemStack(ItemStack stack) {
+        inv.setInvStack(index, stack, Simulation.ACTION);
     }
 
-    default int getHeight() {
-        return 3;
+    @Override
+    public ItemStack takeStack(int amount) {
+        return inv.extractStack(index, ConstantItemFilter.ANYTHING, ItemStack.EMPTY, amount, Simulation.ACTION);
     }
 }

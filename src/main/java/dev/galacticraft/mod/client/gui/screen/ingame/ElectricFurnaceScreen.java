@@ -28,12 +28,14 @@ import dev.galacticraft.mod.block.entity.ElectricFurnaceBlockEntity;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.recipe.SmeltingRecipe;
 import net.minecraft.text.Text;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceBlockEntity, RecipeMachineScreenHandler<ElectricFurnaceBlockEntity>> {
+public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceBlockEntity, RecipeMachineScreenHandler<Inventory, SmeltingRecipe, ElectricFurnaceBlockEntity>> {
     private static final int ARROW_X = 78;
     private static final int ARROW_Y = 24;
 
@@ -43,7 +45,7 @@ public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceB
     private static final int ARROW_WIDTH = 22;
     private static final int ARROW_HEIGHT = 15;
 
-    public ElectricFurnaceScreen(RecipeMachineScreenHandler<ElectricFurnaceBlockEntity> handler, PlayerInventory inv, Text title) {
+    public ElectricFurnaceScreen(RecipeMachineScreenHandler<Inventory, SmeltingRecipe, ElectricFurnaceBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_FURNACE_SCREEN);
         this.addWidget(this.createCapacitorWidget(8, 29, 48));
     }

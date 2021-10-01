@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.mod.entity.damage.GalacticraftDamageSource;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
 import net.minecraft.entity.Entity;
@@ -43,8 +44,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.UUID;
-
-import static dev.galacticraft.mod.entity.damage.GalacticraftDamageSource.OIL_BOOM;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -96,20 +95,14 @@ public abstract class EntityMixin {
     @Shadow
     public abstract boolean damage(DamageSource source, float amount);
 
-    // kill anyone trying to use fuel to extinguish fire. you'd be better off using lava.
     @Inject(method = "checkWaterState", at = @At("TAIL"), cancellable = true)
     private void checkWaterStateGC(CallbackInfo ci) {
-        // check if the entity is in the fluid
-        if (this.updateMovementInFluid(GalacticraftTag.OIL, 0.014D/5D) || this.updateMovementInFluid(GalacticraftTag.FUEL, 0.014D/5D)) {
-            // why would you die from touching something not dangerous
+        if (this.updateMovementInFluid(GalacticraftTag.OIL, 0.0028d) || this.updateMovementInFluid(GalacticraftTag.FUEL, 0.0028d)) {
             if (this.isOnFire())
             {
-                // harmless little explosion for the sound and particles
-                world.createExplosion(world.getEntityById(id),pos.x,pos.y,pos.z,0.0f, Explosion.DestructionType.NONE);
-                // check if entity is player before checking for creative mode to avoid an exception
+                world.createExplosion(world.getEntityById(id), pos.x, pos.y, pos.z, 0f, Explosion.DestructionType.NONE);
                 if ((this.isPlayer() && !world.getPlayerByUuid(uuid).isCreative()) || !this.isInvulnerable()) {
-                    // do the actual damage
-                    this.damage(OIL_BOOM, 20.0f);
+                    this.damage(GalacticraftDamageSource.OIL_BOOM, 20.0f);
                 }
             }
         }
