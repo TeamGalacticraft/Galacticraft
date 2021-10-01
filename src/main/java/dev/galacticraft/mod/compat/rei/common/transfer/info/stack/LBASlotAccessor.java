@@ -20,27 +20,27 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.compat.rei.server;
+package dev.galacticraft.mod.compat.rei.common.transfer.info.stack;
 
-import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
-import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
-import me.shedaniel.rei.api.common.transfer.info.simple.SimpleGridMenuInfo;
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import me.shedaniel.rei.api.common.transfer.info.stack.SlotAccessor;
+import net.minecraft.item.ItemStack;
 
-public class SimpleMachineMenuInfo<T extends RecipeMachineScreenHandler, D extends SimpleGridMenuDisplay> implements SimpleGridMenuInfo<T,D> {
-
+public record LBASlotAccessor(FixedItemInv inv, int index) implements SlotAccessor {
     @Override
-    public int getCraftingResultSlotIndex(T menu) {
-        return 9;
+    public ItemStack getItemStack() {
+        return inv.getInvStack(index);
     }
 
     @Override
-    public int getCraftingWidth(T menu) {
-        return 3;
+    public void setItemStack(ItemStack stack) {
+        inv.setInvStack(index, stack, Simulation.ACTION);
     }
 
     @Override
-    public int getCraftingHeight(T menu) {
-        return 3;
+    public ItemStack takeStack(int amount) {
+        return inv.extractStack(index, ConstantItemFilter.ANYTHING, ItemStack.EMPTY, amount, Simulation.ACTION);
     }
-
 }

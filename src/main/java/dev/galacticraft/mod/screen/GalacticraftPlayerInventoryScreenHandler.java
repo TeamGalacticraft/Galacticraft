@@ -50,7 +50,8 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
             new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_BOOTS),
             new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_PANTS),
             new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_CHEST),
-            new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_HEAD)};
+            new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_HEAD)
+    };
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public static final int OXYGEN_TANK_1_SLOT = 4;
     public static final int OXYGEN_TANK_2_SLOT = 5;

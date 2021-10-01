@@ -33,22 +33,26 @@ import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.ApiStatus;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @SuppressWarnings("unused")
 public class GalacticraftItem {
+    @ApiStatus.Internal
+    public static final Map<Identifier, Item> ITEMS = new HashMap<>();
     public static final List<ItemConvertible> HIDDEN_ITEMS = new LinkedList<>();
 
     public static final Item GLOWSTONE_TORCH = registerItem(Constant.Block.GLOWSTONE_TORCH, new WallStandingBlockItem(GalacticraftBlock.GLOWSTONE_TORCH, GalacticraftBlock.GLOWSTONE_WALL_TORCH, (new Item.Settings())/*.group(GalacticraftBlock.BLOCKS_GROUP)*/));
     public static final Item UNLIT_TORCH = registerItem(Constant.Block.UNLIT_TORCH, new WallStandingBlockItem(GalacticraftBlock.UNLIT_TORCH, GalacticraftBlock.UNLIT_WALL_TORCH, (new Item.Settings())/*.group(GalacticraftBlock.BLOCKS_GROUP)*/));
 
-    public static final ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(
-            new Identifier(Constant.MOD_ID, Constant.Item.ITEM_GROUP))
+    public static final ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(new Identifier(Constant.MOD_ID, Constant.Item.ITEM_GROUP))
             .icon(() -> new ItemStack(GalacticraftItem.CANVAS))
             .build();
 
@@ -199,17 +203,22 @@ public class GalacticraftItem {
     public static final Item LEGACY_MUSIC_DISC_SPACERACE = registerItem(Constant.Item.LEGACY_MUSIC_DISC_SPACERACE, new MusicDiscItem(15, GalacticraftSound.MUSIC_LEGACY_SPACERACE, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
 
     private static <T extends Item> T registerItem(String id, T item) {
-        return Registry.register(Registry.ITEM, new Identifier(Constant.MOD_ID, id), item);
+        ITEMS.put(new Identifier(Constant.MOD_ID, id), item);
+        return item;
     }
 
     private static Item[] registerOreItems(String id) {
         Item[] items = new Item[3];
-        items[0] = Registry.register(Registry.ITEM, new Identifier(Constant.MOD_ID, "raw_" + id), new Item(new Item.Settings().group(ITEMS_GROUP)));
-        items[1] = Registry.register(Registry.ITEM, new Identifier(Constant.MOD_ID, id + "_ingot"), new Item(new Item.Settings().group(ITEMS_GROUP)));
-        items[2] = Registry.register(Registry.ITEM, new Identifier(Constant.MOD_ID, id + "_nugget"), new Item(new Item.Settings().group(ITEMS_GROUP)));
+        items[0] = new Item(new Item.Settings().group(ITEMS_GROUP));
+        ITEMS.put(new Identifier(Constant.MOD_ID, "raw_" + id), items[0]);
+        items[1] = new Item(new Item.Settings().group(ITEMS_GROUP));
+        ITEMS.put(new Identifier(Constant.MOD_ID, id + "_ingot"), items[1]);
+        items[2] = new Item(new Item.Settings().group(ITEMS_GROUP));
+        ITEMS.put(new Identifier(Constant.MOD_ID, id + "_nugget"), items[2]);
         return items;
     }
     
     public static void register() {
+        ITEMS.forEach((identifier, item) -> Registry.register(Registry.ITEM, identifier, item));
     }
 }

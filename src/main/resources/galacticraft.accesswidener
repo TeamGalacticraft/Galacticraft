@@ -10,7 +10,6 @@ accessible method net/minecraft/item/HoeItem                                   <
 accessible method net/minecraft/item/MusicDiscItem                             <init> (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V
 accessible method net/minecraft/item/PickaxeItem                               <init> (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
 accessible method net/minecraft/world/gen/chunk/ChunkGeneratorSettings         <init> (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;IIIIZZZZZZ)V
-accessible method net/minecraft/world/gen/stateprovider/BlockStateProviderType <init> (Lcom/mojang/serialization/Codec;)V
 
 # private classes
 

@@ -3,7 +3,7 @@
   "textures": {
     "up": "galacticraft:block/machine",
     "down": "galacticraft:block/machine",
-    "north": "galacticraft:block/electric_furnace",
+    "north": "galacticraft:block/electric_arc_furnace",
     "south": "galacticraft:block/machine_side",
     "east": "galacticraft:block/machine_side",
     "west": "galacticraft:block/machine_side",

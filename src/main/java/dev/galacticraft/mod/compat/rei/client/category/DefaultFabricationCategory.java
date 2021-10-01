@@ -24,9 +24,8 @@ package dev.galacticraft.mod.compat.rei.client.category;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin;
-import dev.galacticraft.mod.compat.rei.client.display.DefaultFabricationDisplay;
-import dev.galacticraft.mod.item.GalacticraftItem;
+import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
+import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -37,24 +36,21 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import org.jetbrains.annotations.NotNull;
-import java.util.LinkedList;
-import java.util.List;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class DefaultFabricationCategory implements DisplayCategory<DefaultFabricationDisplay> {
-
     @Override
     public CategoryIdentifier<? extends DefaultFabricationDisplay> getCategoryIdentifier() {
-        return GalacticraftREIClientPlugin.CIRCUIT_FABRICATION;
+        return GalacticraftREIServerPlugin.CIRCUIT_FABRICATION;
     }
 
     @Override
@@ -81,14 +77,13 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
         // Redstone
         // User input
         // Output
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + 1, startPoint.y + 1)).entry(EntryStacks.of(new ItemStack(Items.DIAMOND))));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 7) + 1, startPoint.y + 1)).markOutput().entries(recipeDisplay.getInputEntries().get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 1, startPoint.y + 1)).entries(recipeDisplay.getInputEntries().get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 55, startPoint.y + 47)).entries(recipeDisplay.getInputEntries().get(1)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 55, startPoint.y + 65)).entries(recipeDisplay.getInputEntries().get(2)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 109, startPoint.y + 47)).entries(recipeDisplay.getInputEntries().get(3)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 127, startPoint.y + 1)).markOutput().entries(recipeDisplay.getInputEntries().get(4)));
 
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 3) + 1, startPoint.y + 47)).entry(EntryStacks.of(new ItemStack(GalacticraftItem.RAW_SILICON))));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 3) + 1, startPoint.y + 47 + 18)).entry(EntryStacks.of(new ItemStack(GalacticraftItem.RAW_SILICON))));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 6) + 1, startPoint.y + 47)).entry(EntryStacks.of(new ItemStack(Items.REDSTONE))));
-
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 8) + 1, startPoint.y + 47 + 18)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 145, startPoint.y + 65)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
         return widgets;
     }
 

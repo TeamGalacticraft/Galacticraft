@@ -54,7 +54,7 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenTankItem extends Item implements AttributeProviderItem {
-    private int ticks = 0;
+    private int ticks = (int) (Math.random() * 500.0);
     private final int size;
 
     public OxygenTankItem(Settings settings, int size) {

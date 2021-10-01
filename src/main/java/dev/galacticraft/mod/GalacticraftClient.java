@@ -86,10 +86,10 @@ public class GalacticraftClient implements ClientModInitializer {
             registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_GEAR));
             registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_TANK));
 
-            registry.register(Constant.Fluid.getIdentifier(Constant.Fluid.CRUDE_OIL_STILL));
-            registry.register(Constant.Fluid.getIdentifier(Constant.Fluid.CRUDE_OIL_FLOWING));
-            registry.register(Constant.Fluid.getIdentifier(Constant.Fluid.FUEL_STILL));
-            registry.register(Constant.Fluid.getIdentifier(Constant.Fluid.FUEL_FLOWING));
+            registry.register(Constant.Fluid.getId(Constant.Fluid.CRUDE_OIL_STILL));
+            registry.register(Constant.Fluid.getId(Constant.Fluid.CRUDE_OIL_FLOWING));
+            registry.register(Constant.Fluid.getId(Constant.Fluid.FUEL_STILL));
+            registry.register(Constant.Fluid.getId(Constant.Fluid.FUEL_FLOWING));
         });
 
         ScreenRegistry.register(GalacticraftScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER, BasicSolarPanelScreen::new);
@@ -142,6 +142,8 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.UNLIT_WALL_TORCH, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLOWSTONE_LANTERN, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.UNLIT_LANTERN, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.POISONOUS_CAVERNOUS_VINE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.CAVERNOUS_VINE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.ROCKET_LAUNCH_PAD, RenderLayer.getCutout());
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new GalacticraftResourceReloadListener());

@@ -20,39 +20,55 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.compat.rei.client.display;
+package dev.galacticraft.mod.compat.rei.common.display;
 
-import dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin;
-import dev.galacticraft.mod.recipe.FabricationRecipe;
-
-import me.shedaniel.rei.api.common.category.CategoryIdentifier;
-import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
+import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
+import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Optional;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class DefaultFabricationDisplay extends BasicDisplay {
+public class DefaultShapedCompressingDisplay implements DefaultCompressingDisplay {
+    protected List<EntryIngredient> input;
+    protected List<EntryIngredient> output;
 
-    private final Optional<FabricationRecipe> recipe;
-
-    public DefaultFabricationDisplay(FabricationRecipe recipe) {
-        super(EntryIngredients.ofIngredients(recipe.getIngredients()), Collections.singletonList(EntryIngredients.of(recipe.getOutput())), Optional.empty());
-        this.recipe = Optional.of(recipe);
+    public DefaultShapedCompressingDisplay(List<EntryIngredient> input, List<EntryIngredient> output) {
+        this.input = input;
+        this.output = output;
     }
 
-    public Optional<FabricationRecipe> getOptionalRecipe() {
-        return recipe;
+    public DefaultShapedCompressingDisplay(ShapedCompressingRecipe recipe) {
+        this.input = new ArrayList<>();
+        recipe.getIngredients().forEach((ingredient) -> {
+            for (ItemStack stack : ingredient.getMatchingStacks()) {
+                input.add(EntryIngredients.of(stack));
+            }
+        });
+        this.output = Collections.singletonList(EntryIngredients.of(recipe.getOutput()));
     }
 
     @Override
-    public CategoryIdentifier<?> getCategoryIdentifier() {
-        return GalacticraftREIClientPlugin.CIRCUIT_FABRICATION;
+    public List<EntryIngredient> getRequiredEntries() {
+        return input;
     }
+
+    @Override
+    public List<EntryIngredient> getInputEntries() {
+        return input;
+    }
+
+    @Override
+    public List<EntryIngredient> getOutputEntries() {
+        return output;
+    }
+
 }

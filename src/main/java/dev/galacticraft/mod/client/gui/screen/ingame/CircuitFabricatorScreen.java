@@ -26,19 +26,21 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.CircuitFabricatorBlockEntity;
+import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.text.Text;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabricatorBlockEntity, RecipeMachineScreenHandler<CircuitFabricatorBlockEntity>> {
+public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabricatorBlockEntity, RecipeMachineScreenHandler<Inventory, FabricationRecipe, CircuitFabricatorBlockEntity>> {
     private static final int PROGRESS_SIZE = 4;
     private static final int INITIAL_PROGRESS_U = 0;
     private static final int INITIAL_PROGRESS_V = 186;
@@ -74,7 +76,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     private static final int SENARY_PROGRESS_X = 158;
     private static final int SENARY_PROGRESS_Y = 55;
 
-    public CircuitFabricatorScreen(RecipeMachineScreenHandler<CircuitFabricatorBlockEntity> handler, PlayerInventory inv, Text title) {
+    public CircuitFabricatorScreen(RecipeMachineScreenHandler<Inventory, FabricationRecipe, CircuitFabricatorBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         this.backgroundHeight = 176;
         this.addWidget(this.createCapacitorWidget(8, 15, 48));

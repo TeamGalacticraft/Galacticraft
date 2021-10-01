@@ -20,26 +20,15 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.compat.rei.client.display;
+package dev.galacticraft.mod.world.gen.chunk;
 
-import dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin;
-import me.shedaniel.rei.api.common.category.CategoryIdentifier;
-import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
-import org.jetbrains.annotations.NotNull;
+import dev.galacticraft.mod.Constant;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
-    default @NotNull CategoryIdentifier<?> getCategoryIdentifier() {
-        return GalacticraftREIClientPlugin.COMPRESSING;
-    }
+public class GalacticraftChunkGenerator {
 
-    default int getWidth() {
-        return 3;
-    }
-
-    default int getHeight() {
-        return 3;
+    public static void register() {
+        Registry.register(Registry.CHUNK_GENERATOR, new Identifier(Constant.MOD_ID, "moon"), MoonChunkGenerator.CODEC);
     }
 }
