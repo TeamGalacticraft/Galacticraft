@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "SS ",
-    "SS ",
-    " T "
+    " D ",
+    "DSD",
+    " D "
   ],
   "key": {
     "S": {
-      "item": "minecraft:stone"
+      "item": "galacticraft:moon_basalt"
     },
-    "T": {
-      "item": "galacticraft:compressed_desh"
+    "D": {
+      "item": "galacticraft:desh_ingot"
     }
   },
   "result": {
