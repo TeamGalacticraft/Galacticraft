@@ -97,10 +97,10 @@ public abstract class EntityMixin {
     private static final DamageSource OIL_BOOM = (new DamageSource("gc.oilBoom")).setBypassesArmor();
     @Inject(method = "checkWaterState", at = @At("TAIL"), cancellable = true)
     private void checkWaterStateGC(CallbackInfo ci) {
-        if (this.updateMovementInFluid(GalacticraftTag.OIL, 0.014D/5D) || this.updateMovementInFluid(GalacticraftTag.FUEL, 0.014D/5D)) {
+        if (this.updateMovementInFluid(GalacticraftTag.OIL, 0.0028d) || this.updateMovementInFluid(GalacticraftTag.FUEL, 0.0028d)) {
             if (this.isOnFire())
             {
-                world.createExplosion(world.getEntityById(id),pos.x,pos.y,pos.z,0.0f, Explosion.DestructionType.NONE);
+                world.createExplosion(world.getEntityById(id), pos.x, pos.y, pos.z, 0f, Explosion.DestructionType.NONE);
                 if (this.isPlayer() && !world.getPlayerByUuid(uuid).isCreative() || this.isInvulnerable()) {
                     this.damage(OIL_BOOM, 20.0f);
                 }
