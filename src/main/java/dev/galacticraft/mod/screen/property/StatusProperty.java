@@ -29,19 +29,19 @@ import net.minecraft.screen.Property;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class StatusProperty extends Property {
-    private final MachineBlockEntity blockEntity;
+    private final MachineBlockEntity machine;
 
-    public StatusProperty(MachineBlockEntity blockEntity) {
-        this.blockEntity = blockEntity;
+    public StatusProperty(MachineBlockEntity machine) {
+        this.machine = machine;
     }
 
     @Override
     public int get() {
-        return blockEntity.getStatus().getIndex();
+        return machine.getStatus().getIndex();
     }
 
     @Override
     public void set(int value) {
-        blockEntity.setStatusById(value);
+        machine.setStatusById(value);
     }
 }

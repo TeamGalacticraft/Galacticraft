@@ -1,8 +1,11 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
 contact_links:
-  - name: Galacticraft Developemnt Discord
+  - name: Feature Request
+    url: https://github.com/TeamGalacticraft/Galacticraft/discussions/categories/feature-requests
+    about: Please use GitHub discussions for feature requests.
+  - name: Galacticraft Central Discord
+    url: http://discord.galacticraftcentral.com/
+    about: Please use this discord for general Galacticraft help and support.
+  - name: Galacticraft Development Discord
     url: https://discord.gg/n3QqhMYyFK
-    about: General development of the mod and mod support.
-  - name: Galacticraft Community Discord
-    url: https://discord.gg/bSZR3bdRW8
-    about: Support for addons and a general home of space modding.
+    about: Please use this discord to discuss the development of, and help develop Galacticraft.

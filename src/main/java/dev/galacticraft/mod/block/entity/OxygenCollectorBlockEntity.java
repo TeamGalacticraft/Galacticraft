@@ -25,7 +25,6 @@ package dev.galacticraft.mod.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import dev.galacticraft.api.registry.RegistryUtil;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
@@ -71,8 +70,8 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     @Override
     public void setWorld(World world) {
         super.setWorld(world);
-        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = RegistryUtil.getCelestialBodyByDimension(world).orElse(null);
-        this.oxygenWorld = body == null || body.type().atmosphere(body.config()).breathable();
+        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(world).orElse(null);
+        this.oxygenWorld = body == null || body.atmosphere().breathable();
     }
 
     @Override
@@ -95,6 +94,11 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
+    }
+
+    @Override
+    protected void tickDisabled() {
+
     }
 
     @Override
@@ -152,7 +156,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 if (state.getBlock() instanceof LeavesBlock && !state.get(LeavesBlock.PERSISTENT)) {
                     if (++leafBlocks >= 2) break;
                 } else if (state.getBlock() instanceof CropBlock) {
-                    if ((leafBlocks += 0.75) >= 2) break;
+                    if ((leafBlocks += 0.75f) >= 2) break;
                 }
             }
             return leafBlocks >= 2;

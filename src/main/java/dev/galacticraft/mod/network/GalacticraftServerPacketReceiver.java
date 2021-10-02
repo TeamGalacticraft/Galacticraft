@@ -30,6 +30,7 @@ import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.item.ItemInsertable;
 import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
+import alexiil.mc.lib.attributes.misc.CallableRef;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.datafixers.util.Either;
 import dev.galacticraft.mod.Constant;
@@ -53,6 +54,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
+
+import java.util.Objects;
 
 /**
  * Handles server-bound (C2S) packets.
@@ -151,23 +154,7 @@ public class GalacticraftServerPacketReceiver {
             server.execute(() -> {
                 MachineFluidInv inv = ((MachineScreenHandler<?>) player.currentScreenHandler).machine.fluidInv();
                 ItemInsertable excess = new FixedInventoryVanillaWrapper(player.getInventory()).getInsertable();
-                Reference<ItemStack> reference = new Reference<>() {
-                    @Override
-                    public ItemStack get() {
-                        return player.currentScreenHandler.getCursorStack();
-                    }
-
-                    @Override
-                    public boolean set(ItemStack value) {
-                        player.currentScreenHandler.setCursorStack(value);
-                        return true;
-                    }
-
-                    @Override
-                    public boolean isValid(ItemStack value) {
-                        return true;
-                    }
-                };
+                Reference<ItemStack> reference = new CallableRef<>(player.currentScreenHandler::getCursorStack, player.currentScreenHandler::setCursorStack, Objects::nonNull);
                 FluidExtractable extractable = FluidAttributes.EXTRACTABLE.getFirstOrNull(reference, excess);
                 if (extractable != null && !extractable.attemptExtraction(inv.getFilterForTank(index), FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty()) {
                     if (((Automatable) inv).getTypes()[index].getType().isInput()) {

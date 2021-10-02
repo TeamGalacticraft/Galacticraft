@@ -38,6 +38,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -91,6 +92,11 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
+    }
+
+    @Override
+    protected void tickDisabled() {
+
     }
 
     @Override
@@ -150,6 +156,22 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
 
     public double getHeat() {
         return this.heat;
+    }
+
+    @Override
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
+        this.fuelLength = tag.getInt(Constant.Nbt.FUEL_LENGTH);
+        this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
+        this.heat = tag.getDouble(Constant.Nbt.HEAT);
+    }
+
+    @Override
+    public NbtCompound writeNbt(NbtCompound tag) {
+        tag.putInt(Constant.Nbt.FUEL_LENGTH, this.fuelLength);
+        tag.putInt(Constant.Nbt.FUEL_TIME, this.fuelTime);
+        tag.putDouble(Constant.Nbt.HEAT, this.heat);
+        return super.writeNbt(tag);
     }
 
     /**

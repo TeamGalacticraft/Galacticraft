@@ -22,12 +22,13 @@
 
 package dev.galacticraft.mod.item;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class FrequencyModuleItem extends AccessoryItem {
-    // note: this exists to make rendering on a head easier
     public FrequencyModuleItem(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    public boolean enablesHearing() {
+        return true;
     }
 }

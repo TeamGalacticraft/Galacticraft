@@ -77,7 +77,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     private double prevSize;
 
     public BubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.BUBBLE_DISTRIBUTOR, pos, state);
+        super(GalacticraftBlockEntityType.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state);
     }
 
     @Override
@@ -96,6 +96,11 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
+    }
+
+    @Override
+    protected void tickDisabled() {
+
     }
 
     @Override

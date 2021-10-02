@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  
+  "id": "gc-test",
+  "version": "$version",
+  "name": "Galacticraft Test Mod",
+  "description": "The test mod for the FabricMC port of Galacticraft.",
+  "license": "MIT",
+
+  "contact": {
+    "homepage": "https://galacticraft.team/",
+    "sources": "https://github.com/TeamGalacticraft/Galacticraft/",
+    "issues": "https://github.com/TeamGalacticraft/Galacticraft/issues/"
+  },
+  "authors": [
+    {
+      "name": "Team Galacticraft",
+      "contact": {
+        "homepage": "https://github.com/TeamGalacticraft/",
+        "discord": "https://discord.gg/n3QqhMYyFK"
+      }
+    }
+  ],
+  "contributors": [
+    {
+      "name": "marcus8448",
+      "contact": {
+        "homepage": "https://github.com/marcus8448"
+      }
+    },
+    {
+      "name": "Blayyke",
+      "contact": {
+        "homepage": "https://github.com/Blayyke"
+      }
+    },
+    {
+      "name": "craftablescience",
+      "contact": {
+        "homepage": "https://github.com/craftablescience"
+      }
+    },
+    {
+      "name": "JoeZwet",
+      "contact": {
+        "homepage": "https://github.com/JoeZwet"
+      }
+    },
+    {
+      "name": "Sarinsa",
+      "contact": {
+        "homepage": "https://github.com/Sarinsa"
+      }
+    },
+    {
+      "name": "Boundarybreaker",
+      "contact": {
+        "homepage": "https://github.com/Boundarybreaker"
+      }
+    },
+    {
+      "name": "vos6434",
+      "contact": {
+        "homepage": "https://github.com/vos6434"
+      }
+    },
+    {
+      "name": "hYdos",
+      "contact": {
+        "homepage": "https://github.com/hYdos"
+      }
+    },
+    {
+      "name": "SebaSphere",
+      "contact": {
+        "homepage": "https://github.com/SebaSphere"
+      }
+    },
+    {
+      "name": "Littledog1229",
+      "contact": {
+        "homepage": "https://github.com/Littledog1229"
+      }
+    },
+    {
+      "name": "AlexIIL",
+      "contact": {
+        "homepage": "https://github.com/AlexIIL"
+      }
+    },
+    {
+      "name": "BeyondTheHorizons",
+      "contact": {
+        "homepage": "https://github.com/BeyondTheHorizons"
+      }
+    },
+    {
+      "name": "SteveKunG",
+      "contact": {
+        "homepage": "https://github.com/SteveKunG"
+      }
+    },
+    {
+      "name": "ChipWolf",
+      "contact": {
+        "homepage": "https://github.com/ChipWolf"
+      }
+    },
+    {
+      "name": "BeetMacol",
+      "contact": {
+        "homepage": "https://github.com/BeetMacol"
+      }
+    }
+  ],
+
+  "environment": "*",
+  "entrypoints": {
+    "fabric-gametest": [ "dev.galacticraft.mod.gametest.GalacticraftTestSuite" ]
+  },
+  "mixins": [],
+  "depends": {
+    "minecraft": ">=1.17.1",
+    "fabricloader": ">=0.11.6",
+    "galacticraft": "*"
+  }
+}

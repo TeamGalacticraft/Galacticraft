@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.item;
 
+import com.google.common.base.Suppliers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.EquipmentSlot;
@@ -29,7 +30,6 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Lazy;
 
 import java.util.function.Supplier;
 
@@ -37,6 +37,15 @@ import java.util.function.Supplier;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public enum GalacticraftArmorMaterial implements ArmorMaterial {
+    SENSOR_GLASSES("sensor_glasses",
+            0,
+            new int[]{0, 0, 0, 0},
+            0,
+            SoundEvents.ITEM_ARMOR_EQUIP_IRON,
+            0.0f,
+            () -> Ingredient.ofItems(GalacticraftItem.METEORIC_IRON[1]),
+            0.0f
+    ), // TODO: add actual functionality
     HEAVY_DUTY(
             "heavy_duty",
             30,
@@ -72,7 +81,7 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
     private final int enchantability;
     private final SoundEvent equipSound;
     private final float toughness;
-    private final Lazy<Ingredient> repairIngredient;
+    private final Supplier<Ingredient> repairIngredient;
     private final float knockbackResistance;
 
     GalacticraftArmorMaterial(String name, int durabilityMultiplier, int[] protectionValues, int enchantability, SoundEvent equipSound, float toughness, Supplier<Ingredient> repairIngredient, float knockbackResistance) {
@@ -82,7 +91,7 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
         this.enchantability = enchantability;
         this.equipSound = equipSound;
         this.toughness = toughness;
-        this.repairIngredient = new Lazy<>(repairIngredient);
+        this.repairIngredient = Suppliers.memoize(repairIngredient::get);
         this.knockbackResistance = knockbackResistance;
     }
 

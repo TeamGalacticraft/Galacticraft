@@ -22,6 +22,8 @@
     },
     "gravity": 0.166,
     "access_weight": 1,
+    "day_temperature": 105,
+    "night_temperature": -180,
     "display": {
       "type": "galacticraft-api:icon",
       "config": {

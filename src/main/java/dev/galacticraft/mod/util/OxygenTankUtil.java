@@ -28,9 +28,9 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.misc.Reference;
-import dev.galacticraft.mod.attribute.GalacticraftAttribute;
-import dev.galacticraft.mod.attribute.oxygen.EmptyOxygenTank;
-import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
+import dev.galacticraft.api.attribute.GcApiAttributes;
+import dev.galacticraft.api.attribute.oxygen.EmptyOxygenTank;
+import dev.galacticraft.api.attribute.oxygen.OxygenTank;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.minecraft.item.ItemStack;
@@ -84,19 +84,19 @@ public class OxygenTankUtil {
     }
 
     public static boolean isOxygenTank(ItemStack stack) {
-        return GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(stack) != EmptyOxygenTank.NULL;
+        return GcApiAttributes.OXYGEN_TANK.getFirst(stack) != EmptyOxygenTank.NULL;
     }
 
     public static OxygenTank getOxygenTank(ItemStack stack) {
-        return GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
+        return GcApiAttributes.OXYGEN_TANK.getFirst(stack);
     }
 
     public static boolean isOxygenTank(Reference<ItemStack> stack) {
-        return GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(stack) != EmptyOxygenTank.NULL;
+        return GcApiAttributes.OXYGEN_TANK.getFirst(stack) != EmptyOxygenTank.NULL;
     }
 
     public static OxygenTank getOxygenTank(Reference<ItemStack> stack) {
-        return GalacticraftAttribute.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
+        return GcApiAttributes.OXYGEN_TANK.getFirst(stack);
     }
 
     public static int loxToOxygen(FluidVolume volume) {
@@ -105,7 +105,6 @@ public class OxygenTankUtil {
     }
 
     public static FluidVolume oxygenToLOX(int oxygen) {
-        assert oxygen > 0;
         return FluidKeys.get(GalacticraftFluid.LIQUID_OXYGEN).withAmount(FluidAmount.of1620(oxygen));
     }
 

@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.galacticraft.api.attribute.oxygen.OxygenTank;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.attribute.oxygen.OxygenTank;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
@@ -67,9 +67,6 @@ public class GalacticraftPlayerInventoryScreen extends HandledScreen<Galacticraf
     }
 
     @Override
-    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {}
-
-    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         super.render(matrices, mouseX, mouseY, delta);
@@ -84,9 +81,10 @@ public class GalacticraftPlayerInventoryScreen extends HandledScreen<Galacticraf
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseX), this.x, this.x + 29)
                 && GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseY), this.y - 26, this.y)) {
-            this.client.openScreen(new InventoryScreen(this.handler.player));
+            this.client.setScreen(new InventoryScreen(this.handler.player));
             return true;
         }
+
         return super.mouseClicked(mouseX, mouseY, button);
     }
 

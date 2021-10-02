@@ -28,12 +28,14 @@ import dev.galacticraft.mod.block.entity.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.recipe.BlastingRecipe;
 import net.minecraft.text.Text;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFurnaceBlockEntity, RecipeMachineScreenHandler<ElectricArcFurnaceBlockEntity>> {
+public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFurnaceBlockEntity, RecipeMachineScreenHandler<Inventory, BlastingRecipe, ElectricArcFurnaceBlockEntity>> {
     private static final int ARROW_X = 78;
     private static final int ARROW_Y = 24;
 
@@ -43,7 +45,7 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
     private static final int ARROW_WIDTH = 22;
     private static final int ARROW_HEIGHT = 15;
 
-    public ElectricArcFurnaceScreen(RecipeMachineScreenHandler<ElectricArcFurnaceBlockEntity> handler, PlayerInventory inv, Text title) {
+    public ElectricArcFurnaceScreen(RecipeMachineScreenHandler<Inventory, BlastingRecipe, ElectricArcFurnaceBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
         addWidget(this.createCapacitorWidget(8, 29, 48));
     }

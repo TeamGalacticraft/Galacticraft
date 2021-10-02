@@ -67,6 +67,11 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity {
     }
 
     @Override
+    protected void tickDisabled() {
+
+    }
+
+    @Override
     public boolean canExtractEnergy() {
         return true;
     }

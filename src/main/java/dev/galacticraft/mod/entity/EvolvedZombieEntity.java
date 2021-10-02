@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.entity;
 
+import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.world.World;
@@ -32,5 +33,10 @@ import net.minecraft.world.World;
 public class EvolvedZombieEntity extends ZombieEntity {
     public EvolvedZombieEntity(EntityType<? extends EvolvedZombieEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    @Override
+    protected boolean isAffectedByDaylight() {
+        return super.isAffectedByDaylight() && GalacticraftTag.MOON_MARE.contains(this.world.getBiome(this.getBlockPos()));
     }
 }

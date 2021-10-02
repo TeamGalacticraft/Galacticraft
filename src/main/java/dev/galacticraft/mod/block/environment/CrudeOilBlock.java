@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.block.environment;
 
 import dev.galacticraft.mod.api.block.FluidBlock;
+import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -41,14 +42,17 @@ public class CrudeOilBlock extends FluidBlock {
         super(fluid, settings);
     }
 
+    @Override
     public void onEntityCollision(BlockState blockState, World world, BlockPos blockPos, Entity entity) {
-        if (entity instanceof LivingEntity && this.getFluidState(blockState).getFluid().isStill(this.getFluidState(blockState))) {
-            if (entity instanceof PlayerEntity) {
-                if (((PlayerEntity) entity).isCreative()) {
-                    return;
+        if (GalacticraftTag.OIL.contains(world.getBlockState(entity.getBlockPos().add(0, (int) Math.floor(entity.getEyeHeight(entity.getPose())), 0)).getFluidState().getFluid())) {
+            if (entity instanceof LivingEntity living) {
+                if (living instanceof PlayerEntity player) {
+                    if (player.isCreative()) {
+                        return;
+                    }
                 }
+                living.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 3 * 20));
             }
-            ((LivingEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 6 * 20));
         }
     }
 }

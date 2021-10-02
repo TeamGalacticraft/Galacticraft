@@ -41,7 +41,7 @@ public class EvolvedCreeperEntityRenderer extends MobEntityRenderer<EvolvedCreep
     private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/evolved/creeper.png");
 
     public EvolvedCreeperEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new EvolvedCreeperEntityModel(context.getPart(GalacticraftEntityModelLayer.EVOLVED_CREEPER)), 0.5F);
+        super(context, new EvolvedCreeperEntityModel(context.getPart(GalacticraftEntityModelLayer.EVOLVED_CREEPER), true), 0.5F);
         this.addFeature(new EvolvedCreeperChargeFeatureRenderer(this, context.getModelLoader()));
     }
 

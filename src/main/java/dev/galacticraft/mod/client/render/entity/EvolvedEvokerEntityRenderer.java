@@ -22,13 +22,10 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenMaskFeatureRenderer;
-import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenTankFeatureRenderer;
-import dev.galacticraft.mod.client.render.entity.feature.gear.OxygenTankTextureOffset;
+import dev.galacticraft.mod.client.render.entity.feature.SpaceGearFeatureRenderer;
 import dev.galacticraft.mod.entity.EvolvedEvokerEntity;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.EvokerEntityRenderer;
-import net.minecraft.client.render.entity.IllagerEntityRenderer;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -36,8 +33,6 @@ import net.minecraft.client.render.entity.IllagerEntityRenderer;
 public class EvolvedEvokerEntityRenderer extends EvokerEntityRenderer<EvolvedEvokerEntity> {
     public EvolvedEvokerEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
-        // todo: figure out why oxygen masks break with Evokers
-        //this.addFeature(new OxygenMaskFeatureRenderer<>( context, null));
-        this.addFeature(new OxygenTankFeatureRenderer<>(this, OxygenTankTextureOffset.MEDIUM_TANK, OxygenTankTextureOffset.MEDIUM_TANK));
+        this.addFeature(new SpaceGearFeatureRenderer<>(this));
     }
 }

@@ -85,6 +85,16 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     public static final Identifier MACHINE_FLUID_OUT = new Identifier(Constant.MOD_ID, "block/machine_fluid_output");
     public static final Identifier MACHINE_ITEM_IN = new Identifier(Constant.MOD_ID, "block/machine_item_input");
     public static final Identifier MACHINE_ITEM_OUT = new Identifier(Constant.MOD_ID, "block/machine_item_output");
+    private static final ModelTransformation TRANSFORMATION = new ModelTransformation(
+            new Transformation(new Vec3f(75, 45, 0), new Vec3f(0, 0.25f, 0), new Vec3f(0.375f, 0.375f, 0.375f)),
+            new Transformation(new Vec3f(75, 45, 0), new Vec3f(0, 0.25f, 0), new Vec3f(0.375f, 0.375f, 0.375f)),
+            new Transformation(new Vec3f(0, 225, 0), new Vec3f(0, 0, 0), new Vec3f(0.40f, 0.40f, 0.40f)),
+            new Transformation(new Vec3f(0, 45, 0), new Vec3f(0, 0, 0), new Vec3f(0.40f, 0.40f, 0.40f)),
+            Transformation.IDENTITY,
+            new Transformation(new Vec3f(30, 225, 0), new Vec3f(0, 0, 0), new Vec3f(0.625f, 0.625f, 0.625f)),
+            new Transformation(new Vec3f(0, 0, 0), new Vec3f(0, 0.2f, 0), new Vec3f(0.25f, 0.25f, 0.25f)),
+            new Transformation(new Vec3f(0, 0, 0), new Vec3f(0, 0, 0), new Vec3f(0.5f, 0.5f, 0.5f))
+    );
 
     @ApiStatus.Internal
     public static final CachingSpriteAtlas CACHING_SPRITE_ATLAS = new CachingSpriteAtlas(null);
@@ -121,8 +131,8 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
                 if (machine != null) {
                     energy = machine.capacitor().getEnergy();
                 } else {
-                    if (stack.getTag() != null && stack.getTag().contains(Constant.Nbt.ENERGY, NbtType.COMPOUND)) {
-                        energy = stack.getTag().getInt(Constant.Nbt.ENERGY);
+                    if (stack.getNbt() != null && stack.getNbt().contains(Constant.Nbt.ENERGY, NbtType.COMPOUND)) {
+                        energy = stack.getNbt().getInt(Constant.Nbt.ENERGY);
                     } else {
                         energy = 0;
                     }
@@ -144,9 +154,9 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
                 if (machine != null) {
                     volume = machine.fluidInv().getInvFluid(0);
                 } else {
-                    if (stack.getTag() != null && stack.getTag().contains(Constant.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
-                        if (stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).contains("tanks", NbtType.LIST)) {
-                            NbtList tag1 = stack.getTag().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).getList("tanks", NbtType.COMPOUND);
+                    if (stack.getNbt() != null && stack.getNbt().contains(Constant.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
+                        if (stack.getNbt().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).contains("tanks", NbtType.LIST)) {
+                            NbtList tag1 = stack.getNbt().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).getList("tanks", NbtType.COMPOUND);
                             if (tag1.size() > 0) {
                                 volume = FluidVolume.fromTag(tag1.getCompound(0));
                             } else {
@@ -235,22 +245,13 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     }
 
     @Override
-    public Sprite getSprite() {
+    public Sprite getParticleSprite() {
         return CACHING_SPRITE_ATLAS.apply(MACHINE);
     }
 
     @Override
     public ModelTransformation getTransformation() {
-        return new ModelTransformation(
-                new Transformation(new Vec3f(75, 45, 0), new Vec3f(0, 0.25f, 0), new Vec3f(0.375f, 0.375f, 0.375f)),
-                new Transformation(new Vec3f(75, 45, 0), new Vec3f(0, 0.25f, 0), new Vec3f(0.375f, 0.375f, 0.375f)),
-                new Transformation(new Vec3f(0, 225, 0), new Vec3f(0, 0, 0), new Vec3f(0.40f, 0.40f, 0.40f)),
-                new Transformation(new Vec3f(0, 45, 0), new Vec3f(0, 0, 0), new Vec3f(0.40f, 0.40f, 0.40f)),
-                Transformation.IDENTITY,
-                new Transformation(new Vec3f(30, 225, 0), new Vec3f(0, 0, 0), new Vec3f(0.625f, 0.625f, 0.625f)),
-                new Transformation(new Vec3f(0, 0, 0), new Vec3f(0, 0.2f, 0), new Vec3f(0.25f, 0.25f, 0.25f)),
-                new Transformation(new Vec3f(0, 0, 0), new Vec3f(0, 0, 0), new Vec3f(0.5f, 0.5f, 0.5f))
-        );
+        return TRANSFORMATION;
     }
 
     @Override
@@ -292,7 +293,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     }
 
     public static boolean transformItem(ItemStack stack, MutableQuadView quad) {
-        NbtCompound tag = stack.getTag();
+        NbtCompound tag = stack.getNbt();
         if (tag != null && tag.contains(Constant.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
             CONFIGURATION.fromTag(tag.getCompound(Constant.Nbt.BLOCK_ENTITY_TAG));
             quad.spriteBake(0,

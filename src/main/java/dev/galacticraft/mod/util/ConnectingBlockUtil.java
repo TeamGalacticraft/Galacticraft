@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.util;
 
+import dev.galacticraft.mod.api.block.entity.Connected;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.BooleanProperty;
@@ -37,6 +38,7 @@ import net.minecraft.util.shape.VoxelShapes;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ConnectingBlockUtil {
+    public static final VoxelShape WALKWAY_TOP = Block.createCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D);
     private ConnectingBlockUtil() {}
 
     public static BooleanProperty getBooleanProperty(Direction dir) {
@@ -74,30 +76,55 @@ public class ConnectingBlockUtil {
         return shape;
     }
 
+    public static VoxelShape getVoxelShape(Connected connected, VoxelShape north, VoxelShape south, VoxelShape east, VoxelShape west, VoxelShape up, VoxelShape down, VoxelShape none) {
+        VoxelShape shape = none;
+
+        final boolean[] connections = connected.getConnections();
+        if (connections[2]) {
+            shape = VoxelShapes.combineAndSimplify(shape, north, BooleanBiFunction.OR);
+        }
+        if (connections[3]) {
+            shape = VoxelShapes.combineAndSimplify(shape, south, BooleanBiFunction.OR);
+        }
+        if (connections[5]) {
+            shape = VoxelShapes.combineAndSimplify(shape, east, BooleanBiFunction.OR);
+        }
+        if (connections[4]) {
+            shape = VoxelShapes.combineAndSimplify(shape, west, BooleanBiFunction.OR);
+        }
+        if (connections[1]) {
+            shape = VoxelShapes.combineAndSimplify(shape, up, BooleanBiFunction.OR);
+        }
+        if (connections[0]) {
+            shape = VoxelShapes.combineAndSimplify(shape, down, BooleanBiFunction.OR);
+        }
+        return shape;
+    }
+
     public static VoxelShape createWalkwayShape(Direction facing) {
         return switch (facing) {
             case UP -> VoxelShapes.union(
-                    Block.createCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D),
+                    WALKWAY_TOP,
                     Block.createCuboidShape(6.0D, 10.0D, 6.0D, 10.0D, 14.0D, 10.0D),
                     Block.createCuboidShape(0.0D, 13.0D, 0.0D, 16.0D, 16.0D, 16.0D));
             case DOWN -> VoxelShapes.union(
-                    Block.createCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D),
+                    WALKWAY_TOP,
                     Block.createCuboidShape(6.0D, 2.0D, 6.0D, 10.0D, 6.0D, 10.0D),
                     Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D));
             case NORTH -> VoxelShapes.union(
-                    Block.createCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D),
+                    WALKWAY_TOP,
                     Block.createCuboidShape(6.0D, 6.0D, 2.0D, 10.0D, 10.0D, 6.0D),
                     Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D));
             case SOUTH -> VoxelShapes.union(
-                    Block.createCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D),
+                    WALKWAY_TOP,
                     Block.createCuboidShape(6.0D, 6.0D, 10.0D, 10.0D, 10.0D, 14.0D),
                     Block.createCuboidShape(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D));
             case EAST -> VoxelShapes.union(
-                    Block.createCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D),
+                    WALKWAY_TOP,
                     Block.createCuboidShape(10.0D, 6.0D, 6.0D, 14.0D, 10.0D, 10.0D),
                     Block.createCuboidShape(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D));
             case WEST -> VoxelShapes.union(
-                    Block.createCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D),
+                    WALKWAY_TOP,
                     Block.createCuboidShape(2.0D, 6.0D, 6.0D, 6.0D, 10.0D, 10.0D),
                     Block.createCuboidShape(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D));
         };
