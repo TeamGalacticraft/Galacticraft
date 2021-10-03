@@ -80,7 +80,7 @@ public class GalacticraftScreenHandlerType {
     );
 
     public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<RefineryBlockEntity>> REFINERY_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.REFINERY_HANDLER)
+            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.REFINERY_HANDLER, 86)
     );
 
     public static final ScreenHandlerType<OxygenCollectorScreenHandler> OXYGEN_COLLECTOR_HANDLER = new ExtendedScreenHandlerType<>(OxygenCollectorScreenHandler::new);

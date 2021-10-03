@@ -69,7 +69,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
         builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 7);
-        builder.addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtil.canExtractFluids(stack, GalacticraftTag.OIL), 123, 7);
+        builder.addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtil.canExtractFluids(stack, GalacticraftTag.OIL) || FluidUtil.isEmpty(stack), 123, 7);
         builder.addSlot(FLUID_OUTPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtil.canInsertFluids(stack, GalacticraftFluid.FUEL), 153, 7);
         return builder;
     }
@@ -105,6 +105,9 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     public void updateComponents() {
         super.updateComponents();
         this.attemptChargeFromStack(CHARGE_SLOT);
+
+        FluidVolumeUtil.move(FluidAttributes.EXTRACTABLE.getFirst(this.itemInv().getSlot(FLUID_INPUT_SLOT)), this.fluidInv().getTank(OIL_TANK));
+        FluidVolumeUtil.move(this.fluidInv().getTank(FUEL_TANK), FluidAttributes.INSERTABLE.getFirst(this.itemInv().getSlot(FLUID_OUTPUT_SLOT)));
     }
 
     @Override
@@ -117,11 +120,8 @@ public class RefineryBlockEntity extends MachineBlockEntity {
 
     @Override
     public void tickWork() {
-        FluidVolumeUtil.move(FluidAttributes.EXTRACTABLE.getFirst(this.itemInv().getSlot(FLUID_INPUT_SLOT)), this.fluidInv().getTank(OIL_TANK));
-        FluidVolumeUtil.move(this.fluidInv().getTank(FUEL_TANK), FluidAttributes.INSERTABLE.getFirst(this.itemInv().getSlot(FLUID_OUTPUT_SLOT)));
-
         if (this.getStatus().getType().isActive()) {
-            FluidAmount amount = this.fluidInv().extractFluid(OIL_TANK, key -> GalacticraftTag.OIL.contains(key.getRawFluid()), null, FluidAmount.of(5, 1000), Simulation.ACTION).amount();
+            FluidAmount amount = this.fluidInv().extractFluid(OIL_TANK, key -> GalacticraftTag.OIL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(5, 1000), Simulation.ACTION).amount();
             amount = this.fluidInv().insertFluid(FUEL_TANK, FluidKeys.get(GalacticraftFluid.FUEL).withAmount(amount), Simulation.ACTION).amount();
             this.fluidInv().insertFluid(OIL_TANK, this.fluidInv().getInvFluid(OIL_TANK).getFluidKey().withAmount(amount), Simulation.ACTION);
         }
@@ -183,7 +183,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
 
         @Override
         public int getIndex() {
-            return 0;
+            return this.ordinal();
         }
     }
 }
