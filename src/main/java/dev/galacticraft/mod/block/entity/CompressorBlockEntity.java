@@ -138,7 +138,6 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
 
     @Override
     protected void craft(CompressingRecipe recipe) {
-        super.craft(recipe);
         recipe = this.recipe();
         if (this.canCraft(recipe)) {
             super.craft(recipe);
