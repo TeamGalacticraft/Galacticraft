@@ -111,7 +111,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
             String group = JsonHelper.getString(json, "group", "");
             int time = JsonHelper.getInt(json, "time", 300);
             Ingredient ingredient = Ingredient.fromJson(JsonHelper.getObject(json, "ingredient"));
-            ItemStack result = new ItemStack(ShapedRecipe.getItem(JsonHelper.getObject(json, "result")));
+            ItemStack result = new ItemStack(ShapedRecipe.getItem(JsonHelper.getObject(json, "result")), JsonHelper.getInt(JsonHelper.getObject(json, "result"), "count"));
             return new FabricationRecipe(id, group, ingredient, result, time);
         }
 
