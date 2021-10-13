@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.gametest;
+package dev.galacticraft.mod.gametest.test;
 
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.wire.Wire;
