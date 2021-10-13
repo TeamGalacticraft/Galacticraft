@@ -235,6 +235,10 @@ dependencies {
 
     // Other Dependencies
     modRuntime("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
+
+    // Test Dependencies
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 }
 
 tasks.processResources {
@@ -251,6 +255,10 @@ tasks.processResources {
                 file: File -> file.writeText(groovy.json.JsonOutput.toJson(groovy.json.JsonSlurper().parse(file)))
         }
     }
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.create<Jar>("javadocJar") {
