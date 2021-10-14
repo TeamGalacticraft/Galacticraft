@@ -116,9 +116,11 @@
 
   "environment": "*",
   "entrypoints": {
-    "fabric-gametest": [ "dev.galacticraft.mod.gametest.GalacticraftTestSuite" ]
+    "fabric-gametest": [
+      "dev.galacticraft.mod.gametest.test.GalacticraftTestSuite"
+    ]
   },
-  "mixins": [],
+  "mixins": ["gc-test.mixins.json"],
   "depends": {
     "minecraft": ">=1.17.1",
     "fabricloader": ">=0.11.6",

@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "dev.galacticraft.mod.gametest.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "TestServerMixin"
+  ],
+  "client": [],
+  "minVersion": "0.8.0",
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
