@@ -29,6 +29,9 @@ jobs:
           arguments: checkLicenses build test runGametest
           gradle-version: current
 
+      - name: Copy GameTest Results
+        run: cp run/TEST-gametest.xml build/test-results/test/
+
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v2
         if: always()
