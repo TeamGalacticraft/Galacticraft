@@ -28,7 +28,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: checkLicenses build test runGametest publish
-          gradle-version: current
+          gradle-version: wrapper
         env:
           SNAPSHOT: true
           ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USER }}
