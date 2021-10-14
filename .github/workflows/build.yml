@@ -29,7 +29,6 @@ jobs:
         with:
           arguments: checkLicenses build test runGametest publish
           gradle-version: current
-          cache-disabled: true
         env:
           SNAPSHOT: true
           ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USER }}
