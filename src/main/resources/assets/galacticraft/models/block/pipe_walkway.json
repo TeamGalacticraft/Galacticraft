@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "galacticraft:block/walkway",
-		"2": "galacticraft:block/glass_fluid_pipe/pipe_walkway",
+		"2": "galacticraft:block/glass_fluid_pipe/white",
 		"missing": "galacticraft:block/helper_invisible",
 		"particle": "galacticraft:block/walkway"
 	},
