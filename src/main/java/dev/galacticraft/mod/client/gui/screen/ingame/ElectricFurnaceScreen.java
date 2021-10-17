@@ -52,7 +52,7 @@ public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceB
     @Override
     protected void init() {
         super.init();
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 29, 48));
+        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
     }
 
     @Override
