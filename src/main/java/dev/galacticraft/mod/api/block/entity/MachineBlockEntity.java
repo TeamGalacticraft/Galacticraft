@@ -368,10 +368,14 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             } else {
                 this.idleEnergyDecrement();
             }
+        } else {
+            this.clientTick();
         }
     }
 
     protected abstract void tickDisabled();
+
+    protected void clientTick() {}
 
     /**
      * Returns the updated machine status

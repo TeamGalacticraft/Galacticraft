@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.BasicSolarPanelBlockEntity;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
@@ -31,29 +30,22 @@ import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelBlockEntity, SimpleMachineScreenHandler<BasicSolarPanelBlockEntity>> {
+public class BasicSolarPanelScreen extends SolarPanelScreen<BasicSolarPanelBlockEntity, SimpleMachineScreenHandler<BasicSolarPanelBlockEntity>> {
     public BasicSolarPanelScreen(SimpleMachineScreenHandler<BasicSolarPanelBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
-        this.addWidget(this.createCapacitorWidget(8, 8, 48));
+        super(handler, inv, title);
     }
 
     @Override
-    @NotNull
-    protected Collection<? extends Text> getEnergyTooltipLines() {
-        List<Text> lines = new LinkedList<>();
+    public void appendEnergyTooltip(List<Text> list) {
         if (this.machine.getStatus().getType().isActive()) {
-            lines.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", this.machine.getEnergyGenerated()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
+            list.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", this.machine.getEnergyGenerated()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
         }
-        return lines;
     }
 }

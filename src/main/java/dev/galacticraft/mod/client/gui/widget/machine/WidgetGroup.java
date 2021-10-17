@@ -20,30 +20,53 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.gui.screen.ingame;
+package dev.galacticraft.mod.client.gui.widget.machine;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
-import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
-import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
+
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenSealerScreen extends MachineHandledScreen<OxygenSealerBlockEntity, SimpleMachineScreenHandler<OxygenSealerBlockEntity>> {
-    public OxygenSealerScreen(SimpleMachineScreenHandler<OxygenSealerBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, title, Constant.ScreenTexture.OXYGEN_SEALER_SCREEN);
+public abstract class WidgetGroup<T extends AbstractWidget> extends AbstractWidget {
+    protected WidgetGroup(int x, int y) {
+        super(x, y, 0, 0);
+    }
+
+    public abstract List<T> getWidgets();
+
+    @Override
+    public int getWidth() {
+        int minX = 0;
+        int maxX = 0;
+        for (T widget : this.getWidgets()) {
+            minX = Math.min(widget.getX(), minX);
+            maxX = Math.max(widget.getX() + widget.getWidth(), minX);
+        }
+        return minX - maxX;
     }
 
     @Override
-    protected void init() {
-        super.init();
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
+    public int getHeight() {
+        int minY = 0;
+        int maxY = 0;
+        for (T widget : this.getWidgets()) {
+            minY = Math.min(widget.getY(), minY);
+            maxY = Math.max(widget.getY() + widget.getHeight(), minY);
+        }
+        return minY - maxY;
+    }
+
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        for (T widget : this.getWidgets()) {
+            if (widget.isMouseOver(mouseX, mouseY)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

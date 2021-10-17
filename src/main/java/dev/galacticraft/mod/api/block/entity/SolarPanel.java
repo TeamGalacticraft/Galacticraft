@@ -20,26 +20,23 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen.slot;
+package dev.galacticraft.mod.api.block.entity;
 
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class AutoFilteredSlot extends Slot {
-    private final ItemFilter filter;
+public interface SolarPanel {
+    boolean @NotNull [/*9*/] getBlockage();
 
-    public AutoFilteredSlot(MachineBlockEntity machine, int index, int x, int y) {
-        super(machine.getWrappedInventory(), index, x, y);
-        this.filter = machine.getFilterForSlot(index);
-    }
+    boolean followsSun();
 
-    @Override
-    public boolean canInsert(ItemStack stack) {
-        return this.filter.matches(stack);
+    boolean nightCollection();
+
+    SolarPanelSource getSource();
+
+    enum SolarPanelSource {
+        DAY,
+        NIGHT,
+        OVERCAST,
+        NO_LIGHT_SOURCE
     }
 }

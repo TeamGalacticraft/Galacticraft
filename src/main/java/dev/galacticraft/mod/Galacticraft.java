@@ -38,6 +38,7 @@ import dev.galacticraft.mod.network.GalacticraftServerPacketReceiver;
 import dev.galacticraft.mod.particle.GalacticraftParticle;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.solarpanel.GalacticraftLightSource;
 import dev.galacticraft.mod.sound.GalacticraftSound;
 import dev.galacticraft.mod.structure.GalacticraftStructure;
 import dev.galacticraft.mod.tag.GalacticraftTag;
@@ -86,6 +87,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftScreenHandlerType.register();
         GalacticraftParticle.register();
         GalacticraftCommand.register();
+        GalacticraftLightSource.register();
         GalacticraftServerPacketReceiver.register();
         GalacticraftSound.register();
         GalacticraftPointOfInterestType.register();

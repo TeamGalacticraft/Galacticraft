@@ -22,61 +22,37 @@
 
 package dev.galacticraft.mod.screen.slot;
 
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import net.minecraft.client.gui.Drawable;
+import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+public class IconSlot extends FilteredSlot {
+    private final Pair<Identifier, Identifier> icon;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class MachineComponent<T> {
-    private final T component;
-    private final int x;
-    private final int y;
-
-    public MachineComponent(T component, int x, int y) {
-        this.component = component;
-        this.x = x;
-        this.y = y;
+    public IconSlot(MachineBlockEntity machine, int index, int x, int y, Identifier icon) {
+        this(machine, index, x, y, PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, icon);
     }
 
-    public int getX() {
-        return x;
+    public IconSlot(MachineBlockEntity machine, int index, int x, int y, ItemFilter filter, Identifier icon) {
+        this(machine, index, x, y, filter, PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, icon);
     }
 
-    public int getY() {
-        return y;
+    public IconSlot(MachineBlockEntity machine, int index, int x, int y, Identifier atlas, Identifier icon) {
+        super(machine, index, x, y);
+        this.icon = new Pair<>(atlas, icon);
     }
 
-    public T getComponent() {
-        return component;
+    public IconSlot(MachineBlockEntity machine, int index, int x, int y, ItemFilter filter, Identifier atlas, Identifier icon) {
+        super(machine, index, x, y, filter);
+        this.icon = new Pair<>(atlas, icon);
     }
 
+    @Nullable
     @Override
-    public String toString() {
-        return "MachineComponent{" +
-                "component=" + component +
-                ", x=" + x +
-                ", y=" + y +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MachineComponent<?> that = (MachineComponent<?>) o;
-        return getX() == that.getX() && getY() == that.getY() && getComponent().equals(that.getComponent());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getComponent(), getX(), getY());
-    }
-
-    public @Nullable Drawable createWidget(MachineBlockEntity machine) {
-        return null;
+    public Pair<Identifier, Identifier> getBackgroundSprite() {
+        return this.icon;
     }
 }

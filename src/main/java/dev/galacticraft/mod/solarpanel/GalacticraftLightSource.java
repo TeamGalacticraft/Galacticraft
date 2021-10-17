@@ -20,32 +20,24 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.gui.screen.ingame;
+package dev.galacticraft.mod.solarpanel;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.AdvancedSolarPanelBlockEntity;
-import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
+import dev.galacticraft.mod.api.solarpanel.LightSource;
+import dev.galacticraft.mod.api.solarpanel.SolarPanelRegistry;
+import dev.galacticraft.mod.api.solarpanel.WorldLightSources;
+import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
 import net.minecraft.text.TranslatableText;
 
-import java.util.List;
+public class GalacticraftLightSource {
+    private static final WorldLightSources MOON = new WorldLightSources(
+            Constant.ScreenTexture.MOON_LIGHT_SOURCES,
+            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.sun").setStyle(Constant.Text.YELLOW_STYLE), 1.0, 1.0),
+            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.earth").setStyle(Constant.Text.GREEN_STYLE), 0.07, 1.0),
+            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.invalid").setStyle(Constant.Text.BLUE_STYLE), 0.0, 1.0),
+            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.unknown").setStyle(Constant.Text.WHITE_STYLE), 0.0, 1.0));
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-@Environment(EnvType.CLIENT)
-public class AdvancedSolarPanelScreen extends SolarPanelScreen<AdvancedSolarPanelBlockEntity, SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity>> {
-    public AdvancedSolarPanelScreen(SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, title);
-    }
-
-    @Override
-    public void appendEnergyTooltip(List<Text> list) {
-        if (this.machine.getStatus().getType().isActive()) {
-            list.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", this.machine.getEnergyGenerated()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
-        }
+    public static void register() {
+        SolarPanelRegistry.registerLightSources(GalacticraftDimension.MOON, MOON);
     }
 }

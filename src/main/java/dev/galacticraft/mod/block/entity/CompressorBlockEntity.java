@@ -71,11 +71,11 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                builder.addSlot(y * 3 + x, SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 19, y * 18 + 18);
+                builder.addSlot(y * 3 + x, SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 17, y * 18 + 17);
             }
         }
-        builder.addSlot(FUEL_INPUT_SLOT, SlotType.SOLID_FUEL, stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null, 79, 49);
-        builder.addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 38));
+        builder.addSlot(FUEL_INPUT_SLOT, SlotType.SOLID_FUEL, stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null, 83, 47);
+        builder.addOutputSlot(OUTPUT_SLOT, SlotType.OUTPUT, 143, 36);
         return builder;
     }
 
@@ -91,7 +91,6 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
 
     @Override
     protected void tickDisabled() {
-
     }
 
     @Override

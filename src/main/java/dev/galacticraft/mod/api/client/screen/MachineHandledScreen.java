@@ -37,8 +37,6 @@ import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
 import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.client.gui.widget.machine.AbstractWidget;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.mixin.SlotAccessor;
@@ -78,12 +76,12 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -209,8 +207,6 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
     protected final M machine;
     protected Tank focusedTank = null;
 
-    private final List<AbstractWidget> widgets = new LinkedList<>();
-
     private @NotNull Identifier ownerSkin = new Identifier("textures/entity/steve.png");
     private final MachineBakedModel.SpriteProvider spriteProvider;
     private final List<Text> tooltipCache = new LinkedList<>();
@@ -238,9 +234,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
         this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
     }
 
-    @NotNull
-    protected Collection<? extends Text> getEnergyTooltipLines() {
-        return Collections.emptyList();
+    public void appendEnergyTooltip(List<Text> list) {
     }
 
     public void drawConfigTabs(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -687,13 +681,6 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
 
         super.render(matrices, mouseX, mouseY, delta);
 
-        matrices.push();
-        matrices.translate(this.x, this.y, 0);
-        for (AbstractWidget widget : this.widgets) {
-            widget.render(matrices, mouseX - this.x, mouseY - this.y, delta);
-        }
-        matrices.pop();
-
         this.renderForeground(matrices, mouseX, mouseY, delta);
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
@@ -930,9 +917,6 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (isAllowed()) {
-            for (AbstractWidget widget : widgets) {
-                widget.mouseClicked(mouseX - this.x, mouseY - this.y, button);
-            }
             boolean tankMod = false;
             if (this.focusedTank != null && button == 0) {
                 tankMod = this.focusedTank.acceptStack(
@@ -950,13 +934,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
     protected void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
         if (isAllowed()) {
             super.drawMouseoverTooltip(matrices, mouseX, mouseY);
-            drawTabTooltips(matrices, mouseX, mouseY);
-            matrices.push();
-            matrices.translate(this.x, this.y, 0);
-            for (AbstractWidget widget : widgets) {
-                widget.drawMouseoverTooltip(matrices, mouseX - this.x, mouseY - this.y);
-            }
-            matrices.pop();
+            this.drawTabTooltips(matrices, mouseX, mouseY);
         }
     }
 
@@ -975,79 +953,6 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
     @Override
     protected final void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
         this.drawTitle(matrices);
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        boolean b = false;
-        for (AbstractWidget widget : widgets) {
-            b |= widget.mouseScrolled(mouseX - this.x, mouseY - this.y, amount);
-        }
-        return b;
-    }
-
-    @Override
-    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-        boolean b = false;
-        for (AbstractWidget widget : widgets) {
-            b |= widget.keyReleased(keyCode, scanCode, modifiers);
-        }
-        return b;
-    }
-
-    @Override
-    public boolean charTyped(char chr, int keyCode) {
-        boolean b = false;
-        for (AbstractWidget widget : widgets) {
-            b |= widget.charTyped(chr, keyCode);
-        }
-        return b;
-    }
-
-    @Override
-    public void mouseMoved(double mouseX, double mouseY) {
-        for (AbstractWidget widget : widgets) {
-            widget.mouseMoved(mouseX - this.x, mouseY - this.y);
-        }
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        boolean b = false;
-        for (AbstractWidget widget : widgets) {
-            b |= widget.mouseDragged(mouseX - this.x, mouseY - this.y, button, deltaX, deltaY);
-        }
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY) || b;
-    }
-
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        boolean b = false;
-        for (AbstractWidget widget : widgets) {
-            b |= widget.mouseReleased(mouseX - this.x, mouseY - this.y, button);
-        }
-        return super.mouseReleased(mouseX, mouseY, button) || b;
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        boolean b = false;
-        for (AbstractWidget widget : widgets) {
-            b |= widget.keyPressed(keyCode, scanCode, modifiers);
-        }
-        return super.keyPressed(keyCode, scanCode, modifiers) || b;
-    }
-
-    @Nullable
-    @Contract("null -> null")
-    public <T extends AbstractWidget> T addWidget(@Nullable T widget) {
-        if (widget == null) return null;
-        this.widgets.add(widget);
-        return widget;
-    }
-
-    public CapacitorWidget createCapacitorWidget(int x, int y, int height) {
-        return new CapacitorWidget(this.machine.capacitorView(), x, y, height, this::getEnergyTooltipLines, this.machine::getStatus);
     }
 
     public int getX() {

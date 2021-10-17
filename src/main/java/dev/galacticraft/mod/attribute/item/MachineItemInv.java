@@ -28,7 +28,7 @@ import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.attribute.Automatable;
-import dev.galacticraft.mod.screen.slot.AutoFilteredSlot;
+import dev.galacticraft.mod.screen.slot.FilteredSlot;
 import dev.galacticraft.mod.screen.slot.OutputSlot;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -91,11 +91,24 @@ public class MachineItemInv extends FullFixedItemInv implements Automatable {
             return new Builder();
         }
 
+        public Builder addSlot(int index, SlotType type, SlotFunction slotFunction) {
+            return addSlot(index, type, ConstantItemFilter.ANYTHING, slotFunction);
+        }
+
+        public Builder addSlot(int index, SlotType type, int x, int y) {
+            return addSlot(index, type, ConstantItemFilter.ANYTHING, x, y);
+        }
+
         public Builder addSlot(int index, SlotType type, ItemFilter filter, int x, int y) {
-            this.slotFunctions.add(index, new DefaultSlotFunction(x, y));
-            this.slotTypes.add(index, type);
-            this.filters.add(index, filter.or(EMPTY_FILTER));
-            return this;
+            return addSlot(index, type, filter, new DefaultSlotFunction(x, y, filter));
+        }
+
+        public Builder addSlotWithIcon(int index, SlotType type, ItemFilter filter, int x, int y) {
+            return addSlot(index, type, filter, new DefaultSlotFunction(x, y, filter));
+        }
+
+        public Builder addOutputSlot(int index, SlotType type, int x, int y) {
+            return addSlot(index, type, new OutputSlotFunction(x, y));
         }
 
         public Builder addSlot(int index, SlotType type, ItemFilter filter, SlotFunction slotFunction) {
@@ -105,18 +118,8 @@ public class MachineItemInv extends FullFixedItemInv implements Automatable {
             return this;
         }
 
-        public Builder addSlot(int index, SlotType type, int x, int y) {
-            this.slotFunctions.add(index, new DefaultSlotFunction(x, y));
-            this.slotTypes.add(index, type);
-            this.filters.add(index, ConstantItemFilter.ANYTHING);
-            return this;
-        }
-
-        public Builder addSlot(int index, SlotType type, SlotFunction slotFunction) {
-            this.slotFunctions.add(index, slotFunction);
-            this.slotTypes.add(index, type);
-            this.filters.add(index, ConstantItemFilter.ANYTHING);
-            return this;
+        public Builder addSlot(int index, SlotType type, ItemFilter invFilter, ItemFilter playerFilter, int x, int y) {
+            return addSlot(index, type, invFilter, new DefaultSlotFunction(x, y, playerFilter.and(invFilter)));
         }
 
         public MachineItemInv build() {
@@ -138,10 +141,17 @@ public class MachineItemInv extends FullFixedItemInv implements Automatable {
         Slot create(MachineBlockEntity machineBlockEntity, int index, PlayerEntity player);
     }
 
-    private record DefaultSlotFunction(int x, int y) implements SlotFunction {
+    private record DefaultSlotFunction(int x, int y, ItemFilter filter) implements SlotFunction {
         @Override
         public Slot create(MachineBlockEntity machineBlockEntity, int index, PlayerEntity player) {
-            return new AutoFilteredSlot(machineBlockEntity, index, this.x, this.y);
+            return new FilteredSlot(machineBlockEntity, index, this.x, this.y, filter);
+        }
+    }
+
+    private record IconSlotFunction(int x, int y, ItemFilter filter) implements SlotFunction {
+        @Override
+        public Slot create(MachineBlockEntity machineBlockEntity, int index, PlayerEntity player) {
+            return new FilteredSlot(machineBlockEntity, index, this.x, this.y, filter);
         }
     }
 
