@@ -52,27 +52,6 @@ public class MoonBiomeLayer {
     public static int MOON_MARE_EDGE_ID = -1;
     public static int MOON_MARE_VALLEY_ID = -1;
 
-//    public static int MOON_HIGHLANDS_MOUNTAIN_ONE = -1;
-//    public static int MOON_HIGHLANDS_MOUNTAIN_TWO = -1;
-//    public static int MOON_HIGHLANDS_MOUNTAIN_THREE = -1;
-//    public static int MOON_HIGHLANDS_MOUNTAIN_FOUR = -1;
-//    public static int MOON_HIGHLANDS_MOUNTAIN_FIVE = -1;
-//    public static int MOON_HIGHLANDS_MOUNTAIN_SIX = -1;
-//    public static int MOON_HIGHLANDS_MOUNTAIN_SEVEN = -1;
-//    public static int MOON_HIGHLANDS_MOUNTAIN_EIGHT = -1;
-//
-//    public static int MOON_MARE_MOUNTAIN_ONE = -1;
-//    public static int MOON_MARE_MOUNTAIN_TWO = -1;
-//    public static int MOON_MARE_MOUNTAIN_THREE = -1;
-//    public static int MOON_MARE_MOUNTAIN_FOUR = -1;
-//    public static int MOON_MARE_MOUNTAIN_FIVE = -1;
-//    public static int MOON_MARE_MOUNTAIN_SIX = -1;
-//    public static int MOON_MARE_MOUNTAIN_SEVEN = -1;
-//    public static int MOON_MARE_MOUNTAIN_EIGHT = -1;
-
-//    public static int MOON_MOUNTAIN = -1;
-//    public static int MOON_INVALID = -1;
-
     public static Registry<Biome> registry;
 
     private static <T extends LayerSampler, C extends LayerSampleContext<T>> LayerFactory<T> build(int biomeSize, LongFunction<C> contextProvider) {

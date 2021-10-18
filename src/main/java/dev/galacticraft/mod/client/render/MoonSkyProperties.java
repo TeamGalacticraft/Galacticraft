@@ -43,7 +43,7 @@ public class MoonSkyProperties extends SkyProperties {
 
     @Override
     public boolean useThickFog(int camX, int camY) {
-        return false;//GalacticraftTag.MOON_MARE.contains(MinecraftClient.getInstance().world.getBiome(MinecraftClient.getInstance().cameraEntity.getBlockPos()));
+        return false;
     }
 
     @Override
