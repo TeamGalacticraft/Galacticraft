@@ -66,17 +66,16 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                builder.addSlot(y * 3 + x, SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 33, y * 18 + 18);
+                builder.addSlot(y * 3 + x, SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 30, y * 18 + 17);
             }
         }
 
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 61);
 
-        builder.addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(152, 29));
-        builder.addSlot(SECOND_OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(152, 47));
+        builder.addOutputSlot(OUTPUT_SLOT, SlotType.OUTPUT, 148, 22);
+        builder.addOutputSlot(SECOND_OUTPUT_SLOT, SlotType.OUTPUT, 148, 48);
         return builder;
     }
 

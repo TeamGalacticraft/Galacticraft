@@ -28,7 +28,6 @@ import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
-import dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen;
 import dev.galacticraft.mod.util.DrawableUtil;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import net.fabricmc.api.EnvType;
@@ -65,7 +64,7 @@ public class OxygenTank extends Tank {
 
     @Override
     public void drawTooltip(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY) {
-        if (SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
+        if (DrawableUtil.isWithin(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
             List<Text> lines = new ArrayList<>(2);
             lines.add(new TranslatableText("ui.galacticraft.machine.current_oxygen", new LiteralText(Screen.hasShiftDown() ? this.inv.getInvFluid(this.index).amount().toString() + "B" : (this.inv.getInvFluid(this.index).amount().asInt(1000, RoundingMode.HALF_DOWN) + "mB")).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.GOLD_STYLE));
             lines.add(new TranslatableText("ui.galacticraft.machine.max_oxygen", new LiteralText(String.valueOf(OxygenCollectorBlockEntity.MAX_OXYGEN.asInt(1000, RoundingMode.HALF_DOWN))).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.RED_STYLE));
@@ -105,6 +104,6 @@ public class OxygenTank extends Tank {
 
     @Override
     public boolean isHoveredOverTank(int mouseX, int mouseY) {
-        return SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT);
+        return DrawableUtil.isWithin(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT);
     }
 }

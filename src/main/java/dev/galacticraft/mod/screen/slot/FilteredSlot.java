@@ -20,30 +20,30 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.gui.screen.ingame;
+package dev.galacticraft.mod.screen.slot;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
-import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
-import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
-public class OxygenSealerScreen extends MachineHandledScreen<OxygenSealerBlockEntity, SimpleMachineScreenHandler<OxygenSealerBlockEntity>> {
-    public OxygenSealerScreen(SimpleMachineScreenHandler<OxygenSealerBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, title, Constant.ScreenTexture.OXYGEN_SEALER_SCREEN);
+public class FilteredSlot extends Slot {
+    private final ItemFilter filter;
+
+    public FilteredSlot(MachineBlockEntity machine, int index, int x, int y) {
+        this(machine, index, x, y, machine.getFilterForSlot(index));
+    }
+
+    public FilteredSlot(MachineBlockEntity machine, int index, int x, int y, ItemFilter filter) {
+        super(machine.getWrappedInventory(), index, x, y);
+        this.filter = filter;
     }
 
     @Override
-    protected void init() {
-        super.init();
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
+    public boolean canInsert(ItemStack stack) {
+        return this.filter.matches(stack);
     }
 }

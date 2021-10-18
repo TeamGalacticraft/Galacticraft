@@ -24,7 +24,6 @@ package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.machine.MachineStatus;
@@ -86,7 +85,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
             assert this.world != null;
             return this.world.getRecipeManager().getFirstMatch(this.recipeType(), this.predicateInv, this.world).isPresent();
         }, 134, 15);
-        builder.addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(152, 70));
+        builder.addOutputSlot(OUTPUT_SLOT, SlotType.OUTPUT, 152, 70);
         return builder;
     }
 
@@ -102,7 +101,6 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
 
     @Override
     protected void tickDisabled() {
-
     }
 
     @Override
@@ -114,7 +112,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.recipe() == null || !this.canCraft(Simulation.SIMULATE)) return Status.NOT_ENOUGH_RESOURCES;
+        if (this.recipe() == null || !this.canCraft()) return Status.NOT_ENOUGH_RESOURCES;
         if (!super.canCraft(this.recipe())) return Status.FULL;
         return Status.PROCESSING;
     }
@@ -131,19 +129,22 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
 
     @Override
     protected boolean canCraft(@Nullable FabricationRecipe recipe) {
-        return this.canCraft(Simulation.SIMULATE) && super.canCraft(recipe);
+        return this.canCraft() && super.canCraft(recipe);
     }
 
-    private boolean canCraft(Simulation simulation) {
-        return !this.itemInv().extractStack(INPUT_SLOT_DIAMOND, this.getFilterForSlot(INPUT_SLOT_DIAMOND), ItemStack.EMPTY, 1, simulation).isEmpty()
-                && !this.itemInv().extractStack(INPUT_SLOT_SILICON, this.getFilterForSlot(INPUT_SLOT_SILICON), ItemStack.EMPTY, 1, simulation).isEmpty()
-                && !this.itemInv().extractStack(INPUT_SLOT_SILICON_2, this.getFilterForSlot(INPUT_SLOT_SILICON_2), ItemStack.EMPTY, 1, simulation).isEmpty()
-                && !this.itemInv().extractStack(INPUT_SLOT_REDSTONE, this.getFilterForSlot(INPUT_SLOT_REDSTONE), ItemStack.EMPTY, 1, simulation).isEmpty();
+    private boolean canCraft() {
+        return !this.itemInv().extractStack(INPUT_SLOT_DIAMOND, this.getFilterForSlot(INPUT_SLOT_DIAMOND), ItemStack.EMPTY, 1, Simulation.SIMULATE).isEmpty()
+                && !this.itemInv().extractStack(INPUT_SLOT_SILICON, this.getFilterForSlot(INPUT_SLOT_SILICON), ItemStack.EMPTY, 1, Simulation.SIMULATE).isEmpty()
+                && !this.itemInv().extractStack(INPUT_SLOT_SILICON_2, this.getFilterForSlot(INPUT_SLOT_SILICON_2), ItemStack.EMPTY, 1, Simulation.SIMULATE).isEmpty()
+                && !this.itemInv().extractStack(INPUT_SLOT_REDSTONE, this.getFilterForSlot(INPUT_SLOT_REDSTONE), ItemStack.EMPTY, 1, Simulation.SIMULATE).isEmpty();
     }
 
     @Override
     protected void craft(FabricationRecipe recipe) {
-        assert this.canCraft(Simulation.ACTION);
+        this.itemInv().extractStack(INPUT_SLOT_DIAMOND, this.getFilterForSlot(INPUT_SLOT_DIAMOND), ItemStack.EMPTY, 1, Simulation.ACTION);
+        this.itemInv().extractStack(INPUT_SLOT_SILICON, this.getFilterForSlot(INPUT_SLOT_SILICON), ItemStack.EMPTY, 1, Simulation.ACTION);
+        this.itemInv().extractStack(INPUT_SLOT_SILICON_2, this.getFilterForSlot(INPUT_SLOT_SILICON_2), ItemStack.EMPTY, 1, Simulation.ACTION);
+        this.itemInv().extractStack(INPUT_SLOT_REDSTONE, this.getFilterForSlot(INPUT_SLOT_REDSTONE), ItemStack.EMPTY, 1, Simulation.ACTION);
         super.craft(recipe);
     }
 

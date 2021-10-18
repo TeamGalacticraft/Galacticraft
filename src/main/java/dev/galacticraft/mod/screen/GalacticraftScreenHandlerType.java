@@ -49,9 +49,7 @@ import net.minecraft.util.registry.Registry;
  */
 public class GalacticraftScreenHandlerType {
 
-    public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<CoalGeneratorBlockEntity>> COAL_GENERATOR_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.COAL_GENERATOR_HANDLER, 94)
-    );
+    public static final ScreenHandlerType<CoalGeneratorScreenHandler> COAL_GENERATOR_HANDLER = new ExtendedScreenHandlerType<>(CoalGeneratorScreenHandler::new);
 
     public static final ExtendedScreenHandlerType<SimpleMachineScreenHandler<BasicSolarPanelBlockEntity>> BASIC_SOLAR_PANEL_HANDLER = new ExtendedScreenHandlerType<>(
             SimpleMachineScreenHandlerFactory.create(() -> GalacticraftScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER)

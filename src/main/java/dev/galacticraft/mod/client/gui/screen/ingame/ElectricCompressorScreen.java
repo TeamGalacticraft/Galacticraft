@@ -26,11 +26,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.ElectricCompressorBlockEntity;
+import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -41,18 +42,21 @@ import net.minecraft.text.Text;
  */
 @Environment(EnvType.CLIENT)
 public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompressorBlockEntity, RecipeMachineScreenHandler<Inventory, CompressingRecipe, ElectricCompressorBlockEntity>> {
-    private static final int PROGRESS_X = 177;
-    private static final int PROGRESS_Y = 0;
+    private static final int PROGRESS_U = 177;
+    private static final int PROGRESS_V = 0;
+    private static final int PROGRESS_X = 87;
+    private static final int PROGRESS_Y = 28;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
     public ElectricCompressorScreen(RecipeMachineScreenHandler<Inventory, CompressingRecipe, ElectricCompressorBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
-        this.addWidget(this.createCapacitorWidget(8, 9, 48));
     }
 
-    private String getContainerDisplayName() {
-        return I18n.translate("block.galacticraft.electric_compressor");
+    @Override
+    protected void init() {
+        super.init();
+        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
     }
 
     @Override
@@ -65,6 +69,6 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
         float progressScale = (((float)this.machine.progress()) / ((float)this.machine.maxProgress()));
 
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
-        this.drawTexture(matrices, this.x + 91, this.y + 31, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
+        DrawableUtil.drawProgressTexture(matrices, this.x + PROGRESS_X, this.y + PROGRESS_Y, PROGRESS_U, PROGRESS_V, (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 }
