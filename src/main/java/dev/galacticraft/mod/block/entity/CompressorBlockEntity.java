@@ -91,7 +91,6 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
 
     @Override
     protected void tickDisabled() {
-
     }
 
     @Override

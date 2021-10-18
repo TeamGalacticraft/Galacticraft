@@ -42,7 +42,7 @@ import java.util.Random;
  */
 public abstract class FuelFluid extends BasicFluid {
     public FuelFluid() {
-        super(false, true, 4, 1, 7, 100);
+        super(false, true, 3, 1, 10, 100);
     }
 
     @Override

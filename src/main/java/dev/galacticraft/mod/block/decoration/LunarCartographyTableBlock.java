@@ -22,7 +22,16 @@
 
 package dev.galacticraft.mod.block.decoration;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.CartographyTableBlock;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -30,5 +39,16 @@ import net.minecraft.block.CartographyTableBlock;
 public class LunarCartographyTableBlock extends CartographyTableBlock {
     public LunarCartographyTableBlock(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        return ActionResult.PASS;
+    }
+
+    @Nullable
+    @Override
+    public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
+        return null;
     }
 }

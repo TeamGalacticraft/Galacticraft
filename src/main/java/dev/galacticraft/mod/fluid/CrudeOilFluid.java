@@ -42,7 +42,7 @@ import java.util.Random;
  */
 public abstract class CrudeOilFluid extends BasicFluid {
     protected CrudeOilFluid() {
-        super(false, true, 5, 1, 7, 100);
+        super(false, true, 2, 1, 30, 100);
     }
 
     @Override

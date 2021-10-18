@@ -107,7 +107,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     @Override
     public void tickWork() {
         super.tickWork();
-        if (this.getStatus().getType().isActive()) {
+        if (this.getStatus().getType().isActive() && this.maxProgress() > 0) {
             if (this.progress() % (this.maxProgress() / 5) == 0 && this.progress() > this.maxProgress() / 2) {
                 this.world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
             }
