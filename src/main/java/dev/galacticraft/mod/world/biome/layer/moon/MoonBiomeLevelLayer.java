@@ -23,21 +23,36 @@
 package dev.galacticraft.mod.world.biome.layer.moon;
 
 import dev.galacticraft.mod.world.biome.layer.MoonBiomeLayer;
-import net.minecraft.world.biome.layer.type.InitLayer;
-import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
+import net.minecraft.world.biome.layer.type.ParentedLayer;
+import net.minecraft.world.biome.layer.util.IdentityCoordinateTransformer;
+import net.minecraft.world.biome.layer.util.LayerSampleContext;
+import net.minecraft.world.biome.layer.util.LayerSampler;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public enum MoonBaseBiomeLayer implements InitLayer {
+public enum MoonBiomeLevelLayer implements ParentedLayer, IdentityCoordinateTransformer {
     INSTANCE;
 
     @Override
-    public int sample(LayerRandomnessSource context, int x, int y) {
-        if (context.getNoiseSampler().sample(x / 16.0, y / 16.0, 0) <= -0.38D) {
-            return MoonBiomeLayer.MOON_MARE_ID;
+    public int sample(LayerSampleContext<?> context, LayerSampler parent, int x, int z) {
+        double sample = context.getNoiseSampler().sample(x / 32.0, 0, z / 32.0); //~ 0.7 - -0.7
+        if (parent.sample(x, z) == MoonBiomeLayer.MOON_MARE_ID) {
+            if (sample >= 0.5) {
+                return MoonBiomeLayer.MOON_MARE_HILLS_ID;
+            } else if (sample <= -0.45) {
+                return MoonBiomeLayer.MOON_MARE_FLAT_ID;
+            } else { //+0.49 - -0.44
+                return MoonBiomeLayer.MOON_MARE_ID;
+            }
         } else {
-            return MoonBiomeLayer.MOON_HIGHLANDS_ID;
+            if (sample >= 0.5) {
+                return MoonBiomeLayer.MOON_HIGHLANDS_HILLS_ID;
+            } else if (sample <= -0.45) {
+                return MoonBiomeLayer.MOON_HIGHLANDS_FLAT_ID;
+            } else { //+0.49 - -0.44
+                return MoonBiomeLayer.MOON_HIGHLANDS_ID;
+            }
         }
     }
 }
