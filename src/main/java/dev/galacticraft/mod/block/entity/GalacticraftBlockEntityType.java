@@ -106,6 +106,7 @@ public class GalacticraftBlockEntityType {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR), OXYGEN_BUBBLE_DISTRIBUTOR);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
 
+         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.ROCKET_DESIGNER), ROCKET_DESIGNER_TYPE);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.ROCKET_ASSEMBLER), ROCKET_ASSEMBLER_TYPE);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.ROCKET_LAUNCH_PAD), LAUNCH_PAD_TYPE);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.FUEL_LOADER), FUEL_LOADER_TYPE);
