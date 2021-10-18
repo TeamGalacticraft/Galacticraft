@@ -27,6 +27,7 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import alexiil.mc.lib.attributes.misc.Ref;
 import alexiil.mc.lib.attributes.misc.Reference;
 import dev.galacticraft.api.attribute.GcApiAttributes;
 import dev.galacticraft.api.attribute.oxygen.EmptyOxygenTank;
@@ -72,6 +73,14 @@ public class OxygenTankUtil {
         return extractLiquidOxygen(stackRef, loxToOxygen(amount));
     }
 
+    public static FluidVolume extractLiquidOxygen(ItemStack stack, FluidAmount amount) {
+        return extractLiquidOxygen(new Ref<>(stack), amount);
+    }
+
+    public static FluidVolume extractLiquidOxygen(Reference<ItemStack> stackRef, FluidAmount amount) {
+        return extractLiquidOxygen(stackRef, loxToOxygen(amount));
+    }
+
     public static FluidVolume extractLiquidOxygen(OxygenTank tank, int amount) {
         if (tank.getAmount() == 0 || amount == 0) return FluidVolumeUtil.EMPTY;
         amount = Math.min(amount, tank.getAmount());
@@ -80,6 +89,10 @@ public class OxygenTankUtil {
     }
 
     public static FluidVolume extractLiquidOxygen(OxygenTank tank, FluidVolume amount) {
+        return extractLiquidOxygen(tank, loxToOxygen(amount));
+    }
+
+    public static FluidVolume extractLiquidOxygen(OxygenTank tank, FluidAmount amount) {
         return extractLiquidOxygen(tank, loxToOxygen(amount));
     }
 
@@ -102,6 +115,10 @@ public class OxygenTankUtil {
     public static int loxToOxygen(FluidVolume volume) {
         assert GalacticraftTag.LIQUID_OXYGEN.contains(volume.getFluidKey().getRawFluid());
         return volume.amount().as1620();
+    }
+
+    public static int loxToOxygen(FluidAmount amount) {
+        return amount.as1620();
     }
 
     public static FluidVolume oxygenToLOX(int oxygen) {

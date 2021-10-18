@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
-import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.block.entity.CompressorBlockEntity;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
@@ -40,15 +39,22 @@ import net.minecraft.text.Text;
  */
 @Environment(EnvType.CLIENT)
 public class CompressorScreen extends MachineHandledScreen<CompressorBlockEntity, CompressorScreenHandler> {
-    private static final int PROGRESS_X = 204;
-    private static final int PROGRESS_Y = 0;
+    private static final int PROGRESS_U = 204;
+    private static final int PROGRESS_V = 0;
+    private static final int PROGRESS_X = 77;
+    private static final int PROGRESS_Y = 28;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
+    private static final int FIRE_U = 204;
+    private static final int FIRE_V = 25;
+    private static final int FIRE_WIDTH = 14;
+    private static final int FIRE_HEIGHT = 14;
+    private static final int FIRE_X = 84;
+    private static final int FIRE_Y = 26;
+
     public CompressorScreen(CompressorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.COMPRESSOR_SCREEN);
-        this.backgroundWidth = 176;
-        this.backgroundHeight = 167;
     }
 
     @Override
@@ -59,9 +65,9 @@ public class CompressorScreen extends MachineHandledScreen<CompressorBlockEntity
     }
 
     protected void drawFuelProgressBar(MatrixStack matrices) {
-        if (this.handler.machine.getStatus().getType() != MachineStatus.StatusType.MISSING_ENERGY) {
-            float fuelUsageScale = getFuelProgress();
-            DrawableUtil.drawProgressTexture(matrices, this.x + 80, (int) (this.y + 29 + 12 - fuelUsageScale), 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
+        if (this.handler.machine.fuelLength > 0) {
+            float fuelUsageScale = (float)((double)(this.handler.machine.fuelLength - this.handler.machine.fuelTime) / (double)this.handler.machine.fuelLength);
+            DrawableUtil.drawProgressTexture(matrices, this.x + FIRE_X, (this.y + FIRE_Y + (FIRE_HEIGHT - (fuelUsageScale * FIRE_HEIGHT))), FIRE_U, FIRE_V - (FIRE_HEIGHT - (fuelUsageScale * FIRE_HEIGHT)), FIRE_WIDTH, (fuelUsageScale * FIRE_HEIGHT));
         }
     }
 
@@ -69,15 +75,6 @@ public class CompressorScreen extends MachineHandledScreen<CompressorBlockEntity
         float progressScale = (((float)this.handler.machine.progress()) / ((float)this.handler.machine.maxProgress()));
 
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.COMPRESSOR_SCREEN);
-        DrawableUtil.drawProgressTexture(matrices, this.x + 77, this.y + 28, PROGRESS_X, PROGRESS_Y, PROGRESS_WIDTH * progressScale, PROGRESS_HEIGHT);
-    }
-
-    private float getFuelProgress() {
-        float maxFuelTime = this.handler.machine.fuelLength;
-        if (maxFuelTime == 0) {
-            maxFuelTime = 200;
-        }
-
-        return (this.handler.machine.fuelTime * 13f) / maxFuelTime;
+        DrawableUtil.drawProgressTexture(matrices, this.x + PROGRESS_X, this.y + PROGRESS_Y, PROGRESS_U, PROGRESS_V, PROGRESS_WIDTH * progressScale, PROGRESS_HEIGHT);
     }
 }

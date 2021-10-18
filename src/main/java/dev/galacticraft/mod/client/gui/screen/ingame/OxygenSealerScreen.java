@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
+import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -38,6 +39,11 @@ import net.minecraft.text.Text;
 public class OxygenSealerScreen extends MachineHandledScreen<OxygenSealerBlockEntity, SimpleMachineScreenHandler<OxygenSealerBlockEntity>> {
     public OxygenSealerScreen(SimpleMachineScreenHandler<OxygenSealerBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.OXYGEN_SEALER_SCREEN);
-        this.addWidget(this.createCapacitorWidget(8, 8, 48));
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
     }
 }

@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
@@ -63,13 +62,13 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 7);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 61);
         builder.addSlot(INPUT_SLOT, SlotType.INPUT, stack -> {
             predicateInv.setStack(0, stack);
             return this.world.getRecipeManager().getFirstMatch(this.recipeType(), this.predicateInv, this.world).isPresent();
-        }, 56, 25);
-        builder.addSlot(OUTPUT_SLOT_1, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(109, 25));
-        builder.addSlot(OUTPUT_SLOT_2, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(127, 25));
+        }, 44, 35);
+        builder.addOutputSlot(OUTPUT_SLOT_1, SlotType.OUTPUT, 108, 35);
+        builder.addOutputSlot(OUTPUT_SLOT_2, SlotType.OUTPUT, 134, 35);
         return builder;
     }
 

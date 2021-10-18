@@ -467,6 +467,9 @@ public interface Constant {
         Identifier OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
         Identifier OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         Identifier OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
+        Identifier DEFAULT_SOLAR_PANELS = id("textures/solar_panel/default_solar_panels.png");
+        Identifier DEFAULT_LIGHT_SOURCES = id("textures/solar_panel/default_light_sources.png");
+        Identifier MOON_LIGHT_SOURCES = id("textures/solar_panel/moon_light_sources.png");
 
         Identifier REI_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
     }

@@ -24,6 +24,7 @@ package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
@@ -48,8 +49,9 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity {
+public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements SolarPanel {
     public static final int CHARGE_SLOT = 0;
+    private final boolean[] blockage = new boolean[9];
     
     public AdvancedSolarPanelBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.ADVANCED_SOLAR_PANEL, pos, state);
@@ -68,7 +70,6 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity {
 
     @Override
     protected void tickDisabled() {
-
     }
 
     @Override
@@ -94,10 +95,12 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity {
         }
 
         byte panels = 0;
-        for (int z = -1; z < 2; z++) {
+        for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
-                if (this.world.isSkyVisible(pos.add(z, 2, y))) {
+                blockage[(y + 1) * 3 + (x + 1)] = true;
+                if (this.world.isSkyVisible(pos.add(x, 2, y))) {
                     panels++;
+                    blockage[(y + 1) * 3 + (x + 1)] = false;
                 }
             }
         }
@@ -113,6 +116,16 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity {
 
     @Override
     public void tickWork() {
+    }
+
+    @Override
+    protected void clientTick() {
+        super.clientTick();
+        for (int x = -1; x < 2; x++) {
+            for (int y = -1; y < 2; y++) {
+                blockage[(y + 1) * 3 + (x + 1)] = !this.world.isSkyVisible(pos.add(x, 2, y));
+            }
+        }
     }
 
     @Override
@@ -152,6 +165,26 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity {
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
         if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.ADVANCED_SOLAR_PANEL_HANDLER, syncId, inv, this);
         return null;
+    }
+
+    @Override
+    public boolean @NotNull [] getBlockage() {
+        return this.blockage;
+    }
+
+    @Override
+    public boolean followsSun() {
+        return true;
+    }
+
+    @Override
+    public boolean nightCollection() {
+        return false;
+    }
+
+    @Override
+    public SolarPanelSource getSource() {
+        return this.world.getDimension().hasCeiling() ? SolarPanelSource.NO_LIGHT_SOURCE : this.world.isDay() ? this.world.isRaining() ? SolarPanelSource.OVERCAST : SolarPanelSource.DAY : SolarPanelSource.NIGHT;
     }
 
     /**

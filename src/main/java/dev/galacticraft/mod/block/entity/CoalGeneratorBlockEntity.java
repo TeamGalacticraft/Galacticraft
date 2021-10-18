@@ -28,7 +28,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
@@ -80,8 +80,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 8);
-        builder.addSlot(FUEL_SLOT, SlotType.COAL, stack -> FUEL_MAP.containsKey(stack.getItem()), 8, 74);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
+        builder.addSlot(FUEL_SLOT, SlotType.COAL, stack -> FUEL_MAP.containsKey(stack.getItem()), 71, 53);
         return builder;
     }
 
@@ -104,8 +104,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     public @NotNull MachineStatus updateStatus() {
         if (this.fuelLength == 0 && this.itemInv().getInvStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
         if (this.capacitor().getEnergy() >= this.capacitor().getMaxCapacity()) return Status.FULL;
-        if (this.heat < 1 && this.fuelLength > 0) return Status.WARMING;
-        if (this.heat > 0 && this.fuelLength == 0) return Status.COOLING;
+        if (this.heat < 1.0 && this.fuelLength > 0) return Status.WARMING;
+        if (this.heat > 0.0 && this.fuelLength == 0) return Status.COOLING;
         return Status.ACTIVE;
     }
 
@@ -151,7 +151,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.COAL_GENERATOR_HANDLER, syncId, inv, this);
+        if (this.security().hasAccess(player)) return new CoalGeneratorScreenHandler(syncId, player, this);
         return null;
     }
 
