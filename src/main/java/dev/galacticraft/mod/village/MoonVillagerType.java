@@ -41,7 +41,7 @@ public class MoonVillagerType {
     public static final VillagerType MOON_HIGHLANDS_ROCKS = VillagerTypeHelper.register(new Identifier(Constant.MOD_ID, "moon_highlands_edge"));
 
     public static void register() {
-        VillagerTypeHelper.addVillagerTypeToBiome(GalacticraftBiome.Moon.HIGHLANDS_PLAINS, MOON_HIGHLANDS);
+        VillagerTypeHelper.addVillagerTypeToBiome(GalacticraftBiome.Moon.HIGHLANDS, MOON_HIGHLANDS);
         VillagerTypeHelper.addVillagerTypeToBiome(GalacticraftBiome.Moon.HIGHLANDS_EDGE, MOON_HIGHLANDS_ROCKS);
         MOON_VILLAGER_TYPE_REGISTRY.add(MOON_HIGHLANDS);
         MOON_VILLAGER_TYPE_REGISTRY.add(MOON_HIGHLANDS_ROCKS);

@@ -23,21 +23,29 @@
 package dev.galacticraft.mod.world.biome.layer.moon;
 
 import dev.galacticraft.mod.world.biome.layer.MoonBiomeLayer;
-import net.minecraft.world.biome.layer.type.InitLayer;
-import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
+import net.minecraft.world.biome.layer.type.ParentedLayer;
+import net.minecraft.world.biome.layer.util.IdentityCoordinateTransformer;
+import net.minecraft.world.biome.layer.util.LayerSampleContext;
+import net.minecraft.world.biome.layer.util.LayerSampler;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public enum MoonBaseBiomeLayer implements InitLayer {
+public enum MoonInnerLayer implements ParentedLayer, IdentityCoordinateTransformer {
     INSTANCE;
 
     @Override
-    public int sample(LayerRandomnessSource context, int x, int y) {
-        if (context.getNoiseSampler().sample(x / 16.0, y / 16.0, 0) <= -0.38D) {
-            return MoonBiomeLayer.MOON_MARE_ID;
-        } else {
-            return MoonBiomeLayer.MOON_HIGHLANDS_ID;
+    public int sample(LayerSampleContext<?> context, LayerSampler parent, int x, int z) {
+        int sample = parent.sample(x, z);
+        double noise = context.getNoiseSampler().sample(x / 4.0, 0, z / 4.0);
+        if (Math.abs(noise) >= 0.65) {
+            if (isMare(sample)) {
+                return MoonBiomeLayer.MOON_MARE_VALLEY_ID;
+            } else {
+                return MoonBiomeLayer.MOON_HIGHLANDS_VALLEY_ID;
+            }
         }
+        return sample;
+    }
+
+    private static boolean isMare(int id) {
+        return id == MoonBiomeLayer.MOON_MARE_ID || id == MoonBiomeLayer.MOON_MARE_FLAT_ID || id == MoonBiomeLayer.MOON_MARE_HILLS_ID || id == MoonBiomeLayer.MOON_MARE_EDGE_ID;
     }
 }

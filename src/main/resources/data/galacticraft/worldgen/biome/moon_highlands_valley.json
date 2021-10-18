@@ -1,5 +1,5 @@
 {
-  "depth": 0.7,
+  "depth": -0.4,
   "scale": 0.0,
   "downfall": 0.0,
   "temperature": 2.0,
@@ -21,8 +21,7 @@
   "carvers": {
     "air": [
       "galacticraft:moon_craters",
-      "galacticraft:moon_highlands_cave",
-      "galacticraft:moon_canyon"
+      "galacticraft:moon_highlands_cave"
     ]
   },
   "features": [

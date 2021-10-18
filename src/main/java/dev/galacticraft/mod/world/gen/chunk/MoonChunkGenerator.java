@@ -31,16 +31,18 @@ import net.fabricmc.api.Environment;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import net.minecraft.world.gen.chunk.NoiseChunkGenerator;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 /**
@@ -72,13 +74,8 @@ public final class MoonChunkGenerator extends NoiseChunkGenerator {
     }
 
     @Override
-    public int getSeaLevel() {
-        return Integer.MIN_VALUE;
-    }
-
-    @Override
-    public int getSpawnHeight(HeightLimitView world) {
-        return 80;
+    public CompletableFuture<Chunk> populateNoise(Executor executor, StructureAccessor accessor, Chunk chunk) {
+        return super.populateNoise(executor, accessor, chunk);
     }
 
     @Override
