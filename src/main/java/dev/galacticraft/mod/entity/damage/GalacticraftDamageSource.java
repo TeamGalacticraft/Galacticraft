@@ -22,14 +22,16 @@
 
 package dev.galacticraft.mod.entity.damage;
 
+import dev.galacticraft.mod.mixin.DamageSourceAccessor;
 import net.minecraft.entity.damage.DamageSource;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftDamageSource extends DamageSource {
-    public static final DamageSource VINE_POISON = new GalacticraftDamageSource("gc.vine_poison");
-    public static final DamageSource SUFFOCATION = new GalacticraftDamageSource("gc.suffocation");
+    public static final DamageSource OIL_BOOM = ((DamageSourceAccessor)new GalacticraftDamageSource("galacticraft.oil_boom")).invokeSetBypassesArmor();
+    public static final DamageSource VINE_POISON = new GalacticraftDamageSource("galacticraft.vine_poison");
+    public static final DamageSource SUFFOCATION = new GalacticraftDamageSource("galacticraft.suffocation");
 
     private GalacticraftDamageSource(String string_1) {
         super(string_1);

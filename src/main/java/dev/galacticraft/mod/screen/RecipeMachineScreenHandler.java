@@ -25,6 +25,8 @@ package dev.galacticraft.mod.screen;
 import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.block.entity.RecipeMachineBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandlerType;
 
@@ -33,8 +35,8 @@ import java.util.function.Supplier;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class RecipeMachineScreenHandler<T extends RecipeMachineBlockEntity<?, ?>> extends MachineScreenHandler<T> {
-    private final Supplier<ScreenHandlerType<? extends MachineScreenHandler<T>>> type;
+public class RecipeMachineScreenHandler<C extends Inventory, R extends Recipe<C>, T extends RecipeMachineBlockEntity<C, R>> extends MachineScreenHandler<T> {
+    private final Supplier<ScreenHandlerType<? extends RecipeMachineScreenHandler<C, R, T>>> type;
 
     public final Property progress = new Property() {
         @Override
@@ -60,7 +62,7 @@ public class RecipeMachineScreenHandler<T extends RecipeMachineBlockEntity<?, ?>
         }
     };
 
-    protected RecipeMachineScreenHandler(int syncId, PlayerEntity player, T machine, Supplier<ScreenHandlerType<? extends MachineScreenHandler<T>>> type, int invX, int invY) {
+    protected RecipeMachineScreenHandler(int syncId, PlayerEntity player, T machine, Supplier<ScreenHandlerType<? extends RecipeMachineScreenHandler<C, R, T>>> type, int invX, int invY) {
         super(syncId, player, machine, null);
         this.type = type;
         this.addProperty(this.progress);
@@ -68,12 +70,12 @@ public class RecipeMachineScreenHandler<T extends RecipeMachineBlockEntity<?, ?>
         this.addPlayerInventorySlots(invX, invY);
     }
 
-    public static <T extends RecipeMachineBlockEntity<?, ?>> RecipeMachineScreenHandler<T> create(int syncId, PlayerEntity playerEntity, T machine, Supplier<ScreenHandlerType<? extends MachineScreenHandler<T>>> handlerType, int invX, int invY) {
+    public static <C extends Inventory, R extends Recipe<C>, T extends RecipeMachineBlockEntity<C, R>> RecipeMachineScreenHandler<C, R, T> create(int syncId, PlayerEntity playerEntity, T machine, Supplier<ScreenHandlerType<? extends RecipeMachineScreenHandler<C, R, T>>> handlerType, int invX, int invY) {
         return new RecipeMachineScreenHandler<>(syncId, playerEntity, machine, handlerType, invX, invY);
     }
 
     @Override
-    public ScreenHandlerType<?> getType() {
+    public ScreenHandlerType<? extends RecipeMachineScreenHandler<C, R, T>> getType() {
         return this.type.get();
     }
 }

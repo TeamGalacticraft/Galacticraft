@@ -20,18 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.compat.rei.server;
+package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin;
-import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
-import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
-import me.shedaniel.rei.api.common.transfer.info.MenuInfoRegistry;
+import net.minecraft.entity.damage.DamageSource;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
-public class GalacticraftREIServerPlugin implements REIServerPlugin {
-
-    @Override
-    public void registerMenuInfo(MenuInfoRegistry registry) {
-        registry.register(GalacticraftREIClientPlugin.COMPRESSING, RecipeMachineScreenHandler.class, new SimpleMachineMenuInfo<>());
-        registry.register(GalacticraftREIClientPlugin.CIRCUIT_FABRICATION, RecipeMachineScreenHandler.class, new SimpleMachineMenuInfo<>());
-    }
+@Mixin(DamageSource.class)
+public interface DamageSourceAccessor {
+    @Invoker("setBypassesArmor")
+    DamageSource invokeSetBypassesArmor();
 }

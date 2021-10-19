@@ -30,9 +30,6 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '16'
-      
-      - name: Make Gradle wrapper executable
-        run: chmod +x ./gradlew
 
       - name: Build 
         uses: eskatos/gradle-command-action@v1

@@ -23,15 +23,17 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.mod.block.entity.CompressorBlockEntity;
+import dev.galacticraft.mod.recipe.CompressingRecipe;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CompressorScreenHandler extends RecipeMachineScreenHandler<CompressorBlockEntity> {
+public class CompressorScreenHandler extends RecipeMachineScreenHandler<Inventory, CompressingRecipe, CompressorBlockEntity> {
     public final Property fuelTime = new Property() {
         @Override
         public int get() {

@@ -30,7 +30,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -48,7 +48,7 @@ public class CapesLoader {
                 PLAYERS = gson.fromJson(
                         IOUtils.toString(
                                 new URL("https://raw.githubusercontent.com/TeamGalacticraft/Galacticraft/main/capes.json"),
-                                Charset.defaultCharset()
+                                StandardCharsets.UTF_8
                         ),
                         Map.class
                 );

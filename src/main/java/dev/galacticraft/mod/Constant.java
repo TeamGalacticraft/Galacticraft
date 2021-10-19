@@ -45,6 +45,10 @@ public interface Constant {
     String ADDON_API_ID = "galacticraft-api";
     String COMMON_NAMESPACE = "c";
 
+    static Identifier id(String id) {
+        return new Identifier(MOD_ID, id);
+    }
+
     interface Block {
         String ITEM_GROUP_BLOCKS = "blocks";
         String ITEM_GROUP_MACHINES = "machines";
@@ -204,8 +208,8 @@ public interface Constant {
         String GEOTHERMAL_GENERATOR = "geothermal_generator";
         String ENERGY_STORAGE_MODULE = "energy_storage_module";
         String ENERGY_STORAGE_CLUSTER = "energy_storage_cluster";
-        String ALUMINUM_WIRE = "aluminum_wire";
-        String HEAVY_ALUMINUM_WIRE = "heavy_aluminum_wire";
+        String WIRE_T1 = "wire";
+        String WIRE_T2 = "heavy_wire";
         String SWITCHABLE_ALUMINUM_WIRE = "switchable_aluminum_wire";
         String SEALABLE_ALUMINUM_WIRE = "sealable_aluminum_wire";
         String HEAVY_SEALABLE_ALUMINUM_WIRE = "heavy_sealable_aluminum_wire";
@@ -233,7 +237,7 @@ public interface Constant {
         String OXYGEN_GAS = "oxygen_gas";
         String LIQUID_OXYGEN = "liquid_oxygen";
 
-        static Identifier getIdentifier(String s) {
+        static Identifier getId(String s) {
             return new Identifier(Constant.MOD_ID, "block/" + s);
         }
     }
@@ -452,34 +456,34 @@ public interface Constant {
     }
 
     interface ScreenTexture {
-        Identifier COAL_GENERATOR_SCREEN = new Identifier(MOD_ID, "textures/gui/coal_generator_screen.png");
-        Identifier SOLAR_PANEL_SCREEN = new Identifier(MOD_ID, "textures/gui/solar_panel_screen.png");
-        Identifier CIRCUIT_FABRICATOR_SCREEN = new Identifier(MOD_ID, "textures/gui/circuit_fabricator_screen.png");
-        Identifier REFINERY_SCREEN = new Identifier(MOD_ID, "textures/gui/refinery_screen.png");
-        Identifier ELECTRIC_FURNACE_SCREEN = new Identifier(MOD_ID, "textures/gui/electric_furnace_screen.png");
-        Identifier ELECTRIC_ARC_FURNACE_SCREEN = new Identifier(MOD_ID, "textures/gui/electric_arc_furnace_screen.png");
-        Identifier COMPRESSOR_SCREEN = new Identifier(MOD_ID, "textures/gui/compressor_screen.png");
-        Identifier ELECTRIC_COMPRESSOR_SCREEN = new Identifier(MOD_ID, "textures/gui/electric_compressor_screen.png");
-        Identifier ENERGY_STORAGE_MODULE_SCREEN = new Identifier(MOD_ID, "textures/gui/energy_storage_module_screen.png");
-        Identifier OXYGEN_COLLECTOR_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_collector_screen.png");
+        Identifier COAL_GENERATOR_SCREEN = id("textures/gui/coal_generator_screen.png");
+        Identifier SOLAR_PANEL_SCREEN = id("textures/gui/solar_panel_screen.png");
+        Identifier CIRCUIT_FABRICATOR_SCREEN = id("textures/gui/circuit_fabricator_screen.png");
+        Identifier REFINERY_SCREEN = id("textures/gui/refinery_screen.png");
+        Identifier ELECTRIC_FURNACE_SCREEN = id("textures/gui/electric_furnace_screen.png");
+        Identifier ELECTRIC_ARC_FURNACE_SCREEN = id("textures/gui/electric_arc_furnace_screen.png");
+        Identifier COMPRESSOR_SCREEN = id("textures/gui/compressor_screen.png");
+        Identifier ELECTRIC_COMPRESSOR_SCREEN = id("textures/gui/electric_compressor_screen.png");
+        Identifier ENERGY_STORAGE_MODULE_SCREEN = id("textures/gui/energy_storage_module_screen.png");
+        Identifier OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
 
-        Identifier MACHINE_CONFIG_PANELS = new Identifier(MOD_ID, "textures/gui/machine_config.png");
-        Identifier PLAYER_INVENTORY_SCREEN = new Identifier(MOD_ID, "textures/gui/player_inventory_screen.png");
-        Identifier PLAYER_INVENTORY_TABS = new Identifier(MOD_ID, "textures/gui/player_inventory_switch_tabs.png");
-        Identifier OVERLAY = new Identifier(MOD_ID, "textures/gui/overlay.png");
+        Identifier MACHINE_CONFIG_PANELS = id("textures/gui/machine_config.png");
+        Identifier PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
+        Identifier PLAYER_INVENTORY_TABS = id("textures/gui/player_inventory_switch_tabs.png");
+        Identifier OVERLAY = id("textures/gui/overlay.png");
 
-        Identifier MAP_SCREEN = new Identifier(MOD_ID, "textures/gui/map.png");
-        Identifier PLANET_ICONS = new Identifier(MOD_ID, "textures/gui/planet_icons.png");
-        Identifier BUBBLE_DISTRIBUTOR_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_bubble_distributor_screen.png");
-        Identifier OXYGEN_COMPRESSOR_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_compressor_screen.png");
-        Identifier OXYGEN_STORAGE_MODULE_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_storage_module_screen.png");
-        Identifier OXYGEN_SEALER_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_sealer_screen.png");
-        Identifier ROCKET_DESIGNER_SCREEN = new Identifier(MOD_ID, "textures/gui/rocket_designer_screen.png");
-        Identifier ROCKET_ASSEMBLER_SCREEN = new Identifier(MOD_ID, "textures/gui/rocket_assembler_screen.png");
-        Identifier RESEARCH_PANELS = new Identifier(MOD_ID, "textures/gui/research_panels.png");
-        Identifier FUEL_LOADER_SCREEN = new Identifier(MOD_ID, "textures/gui/fuel_loader_screen.png");
+        Identifier MAP_SCREEN = id("textures/gui/map.png");
+        Identifier PLANET_ICONS = id("textures/gui/planet_icons.png");
+        Identifier BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
+        Identifier OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
+        Identifier OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
+        Identifier OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
+        Identifier ROCKET_DESIGNER_SCREEN = id("textures/gui/rocket_designer_screen.png");
+        Identifier ROCKET_ASSEMBLER_SCREEN = id("textures/gui/rocket_assembler_screen.png");
+        Identifier RESEARCH_PANELS = id("textures/gui/research_panels.png");
+        Identifier FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
 
-        Identifier REI_DISPLAY_TEXTURE = new Identifier(MOD_ID, "textures/gui/rei_display.png");
+        Identifier REI_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
     }
 
     interface SlotSprite {
@@ -619,7 +623,6 @@ public interface Constant {
             String MARE = "moon_mare";
             String MARE_EDGE = "moon_mare_edge";
         }
-
     }
 
     interface LootTable {
@@ -657,35 +660,31 @@ public interface Constant {
     interface Nbt {
         String BLOCK_ENTITY_TAG = "BlockEntityTag";
         String NO_DROP = "NoDrop";
-        String TOTAL_OXYGEN = "TotalOxygen";
-        String OXYGEN = "Oxygen";
         String OWNER = "Owner";
         String PROGRESS = "Progress";
         String SIZE = "Size";
         String MAX_SIZE = "MaxSize";
-        String GC_DATA = "GCData";
         String FUEL_TIME = "FuelTime";
         String FUEL_LENGTH = "FuelLength";
         String TEAM = "Team";
         String ACCESSIBILITY = "Accessibility";
         String SECURITY = "Security";
         String CONFIGURATION = "Configuration";
-        String AMOUNT = "Amount";
-        String PATH = "Path";
-        String HAS_DIRECTION = "HasDirection";
         String VALUE = "Value";
         String ENERGY = "Energy";
         String AUTOMATION_TYPE = "AutomationType";
         String BABY = "Baby";
         String DIRECTION = "Direction";
-        String SOURCE = "Source";
         String REDSTONE_INTERACTION_TYPE = "RedstoneInteraction";
         String MATCH = "Match";
-        String INTEGER = "Integer";
+        String IS_SLOT_ID = "IsSlotId";
         String MAX_PROGRESS = "MaxProgress";
         String COLOR = "Color";
         String PULL = "Pull";
         String HEAT = "Heat";
+        String INPUTS = "Inputs";
+        String OUTPUTS = "Outputs";
+        String SHAPED = "Shaped";
     }
 
     interface Property {
@@ -711,9 +710,10 @@ public interface Constant {
     interface Recipe {
         String FABRICATION = "fabrication";
         String COMPRESSING = "compressing";
-        String ROCKET_ASSEMBLER = "rocket_assembler";
+        String ASSEMBLING = "rocket_assembler";
 
         interface Serializer {
+            String FABRICATION = "fabrication";
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
         }

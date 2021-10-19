@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.compat.rei.client.display;
+package dev.galacticraft.mod.compat.rei.common.display;
 
 import com.google.common.collect.Lists;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
@@ -31,7 +31,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,6 +50,11 @@ public class DefaultShapelessCompressingDisplay implements DefaultCompressingDis
             }
         });
         this.output = Collections.singletonList(EntryIngredients.of(recipe.getOutput()));
+    }
+
+    public DefaultShapelessCompressingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs) {
+        this.input = inputs;
+        this.output = outputs;
     }
 
     @Override
