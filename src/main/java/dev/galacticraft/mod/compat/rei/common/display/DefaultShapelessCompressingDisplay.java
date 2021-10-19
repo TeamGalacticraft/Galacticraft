@@ -26,8 +26,6 @@ import com.google.common.collect.Lists;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +35,6 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
 public class DefaultShapelessCompressingDisplay implements DefaultCompressingDisplay {
     private final List<EntryIngredient> input;
     private final List<EntryIngredient> output;

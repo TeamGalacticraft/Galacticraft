@@ -58,7 +58,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
 
-    private final Inventory craftingInv = new MachineInvWrapper(this, this.itemInv().getSubInv(0, 9));
+    private final Inventory craftingInv = new MachineInvWrapper(this, this.itemInv().getSubInv(0, FUEL_INPUT_SLOT));
     private final FixedItemInv outputInv = this.itemInv().getSubInv(OUTPUT_SLOT, OUTPUT_SLOT + 1);
     public int fuelTime;
     public int fuelLength;

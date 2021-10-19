@@ -20,31 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.item;
+package dev.galacticraft.mod.gametest;
 
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Rarity;
+import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class GenericLiquidCanister extends Item {
-    private final Fluid allowedFluid;
-
-    public GenericLiquidCanister(Settings settings, Fluid allowedFluid) {
-        super(settings);
-        this.allowedFluid = allowedFluid;
-    }
-
-    @Override
-    public int getEnchantability() {
-        return -1;
-    }
-
-    @Override
-    public Rarity getRarity(ItemStack par1ItemStack) {
-        return Rarity.RARE;
-    }
+public interface GalacticraftGameTest extends FabricGameTest {
+    String SINGLE_BLOCK = "gc-test:single_block";
 }

@@ -23,8 +23,6 @@
 package dev.galacticraft.mod.block.environment;
 
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.WallTorchBlock;
 import net.minecraft.client.gui.screen.Screen;
@@ -48,12 +46,10 @@ public class GlowstoneWallTorchBlock extends WallTorchBlock {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public void randomDisplayTick(BlockState blockState, World world, BlockPos blockPos, Random random) {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
             list.add(new TranslatableText("tooltip.galacticraft.glowstone_torch").setStyle(Constant.Text.GRAY_STYLE));

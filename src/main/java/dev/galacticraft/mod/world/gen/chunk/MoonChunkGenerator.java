@@ -26,8 +26,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.structure.GalacticraftStructure;
 import dev.galacticraft.mod.world.biome.source.MoonBiomeSource;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.math.BlockPos;
@@ -68,7 +66,6 @@ public final class MoonChunkGenerator extends NoiseChunkGenerator {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public ChunkGenerator withSeed(long seed) {
         return new MoonChunkGenerator(this.biomeSource.withSeed(seed), seed, this.settings);
     }

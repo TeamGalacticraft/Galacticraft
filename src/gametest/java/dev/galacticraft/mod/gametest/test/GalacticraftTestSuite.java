@@ -26,7 +26,7 @@ import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.decoration.GratingBlock;
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import dev.galacticraft.mod.gametest.GalacticraftGameTest;
 import net.minecraft.block.Blocks;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.test.GameTest;
@@ -34,7 +34,7 @@ import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
-public class GalacticraftTestSuite implements FabricGameTest {
+public class GalacticraftTestSuite implements GalacticraftGameTest {
 	@GameTest(structureName = EMPTY_STRUCTURE)
 	public void wireConnectionTest(TestContext context) {
         final var pos0 = new BlockPos(0, 0, 0);

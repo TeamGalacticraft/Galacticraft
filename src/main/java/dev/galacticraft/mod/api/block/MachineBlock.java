@@ -29,8 +29,6 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
 import dev.galacticraft.mod.block.entity.MachineBlockEntityTicker;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -112,7 +110,6 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public final void appendTooltip(ItemStack stack, BlockView view, List<Text> tooltip, TooltipContext context) {
         Text text = machineInfo(stack, view, context.isAdvanced());
         if (text != null) {
@@ -208,7 +205,6 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public ItemStack getPickStack(BlockView view, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(view, pos, state);
         NbtCompound tag = (stack.getNbt() != null ? stack.getNbt() : new NbtCompound());

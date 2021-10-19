@@ -129,7 +129,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     @Override
     public void tickWork() {
         if (this.heat > 0 && this.fuelLength == 0) {
-            this.heat = Math.max(0, this.heat - 0.04d);
+            this.heat = Math.max(0, this.heat - 0.02d);
         }
         if (this.getStatus().getType().isActive()) {
             if (this.fuelTime++ >= this.fuelLength) {

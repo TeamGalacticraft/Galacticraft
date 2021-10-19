@@ -28,8 +28,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.mixin.BuiltinBiomesAccessor;
 import dev.galacticraft.mod.world.biome.GalacticraftBiome;
 import dev.galacticraft.mod.world.biome.layer.MoonBiomeLayer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.dynamic.RegistryLookupCodec;
 import net.minecraft.util.registry.Registry;
@@ -67,7 +65,6 @@ public class MoonBiomeSource extends BiomeSource {
         return CODEC;
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
     public BiomeSource withSeed(long seed) {
         return new MoonBiomeSource(seed, this.biomeSize, registry);

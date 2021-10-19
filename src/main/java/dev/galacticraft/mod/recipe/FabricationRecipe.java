@@ -24,8 +24,6 @@ package dev.galacticraft.mod.recipe;
 
 import com.google.gson.JsonObject;
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -94,7 +92,6 @@ public class FabricationRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public String getGroup() {
         return this.group;
     }

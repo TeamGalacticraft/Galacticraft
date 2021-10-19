@@ -68,10 +68,6 @@ println("Galacticraft: $version")
 base.archivesName.set(modName)
 
 val gametestSourceSet = sourceSets.create("gametest") {
-    compileClasspath += sourceSets.main.get().compileClasspath
-    compileClasspath += sourceSets.main.get().output
-    runtimeClasspath += sourceSets.main.get().runtimeClasspath
-    runtimeClasspath += sourceSets.main.get().output
     java.srcDir("src/gametest/java")
     resources.srcDir("src/gametest/resources")
 }
@@ -88,16 +84,14 @@ loom {
             name("Game Test")
             source(gametestSourceSet)
             property("fabric.log.level", "debug")
-            vmArg("-Dfabric-api.gametest=true")
-            vmArg("-ea")
+            vmArg("-Dfabric-api.gametest")
         }
         register("gametestClient") {
             client()
             name("Game Test Client")
             source(gametestSourceSet)
             property("fabric.log.level", "debug")
-            vmArg("-Dfabric-api.gametest=true")
-            vmArg("-ea")
+            vmArg("-Dfabric-api.gametest")
         }
     }
 }
@@ -373,3 +367,6 @@ fun String.exitValue(): Int {
         errorOutput = OutputStream.nullOutputStream()
     }.exitValue
 }
+
+gametestSourceSet.compileClasspath += sourceSets.main.get().compileClasspath + sourceSets.main.get().output
+gametestSourceSet.runtimeClasspath += sourceSets.main.get().runtimeClasspath + sourceSets.main.get().output

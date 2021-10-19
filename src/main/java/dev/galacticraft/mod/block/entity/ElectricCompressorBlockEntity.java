@@ -56,7 +56,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     public static final int OUTPUT_SLOT = 10;
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
 
-    private final Inventory craftingInv = new MachineInvWrapper(this, this.itemInv().getSubInv(1, 10));
+    private final Inventory craftingInv = new MachineInvWrapper(this, this.itemInv().getSubInv(0, CHARGE_SLOT));
 
     private final FixedItemInv outputInv = this.itemInv().getSubInv(OUTPUT_SLOT, SECOND_OUTPUT_SLOT + 1);
 
