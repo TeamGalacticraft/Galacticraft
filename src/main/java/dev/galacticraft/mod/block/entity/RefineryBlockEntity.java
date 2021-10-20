@@ -121,7 +121,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     @Override
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
-            FluidAmount amount = this.fluidInv().extractFluid(OIL_TANK, key -> GalacticraftTag.OIL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(5, 1000), Simulation.ACTION).amount();
+            FluidAmount amount = this.fluidInv().extractFluid(OIL_TANK, key -> GalacticraftTag.OIL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 200), Simulation.ACTION).amount();
             amount = this.fluidInv().insertFluid(FUEL_TANK, FluidKeys.get(GalacticraftFluid.FUEL).withAmount(amount), Simulation.ACTION).amount();
             this.fluidInv().insertFluid(OIL_TANK, this.fluidInv().getInvFluid(OIL_TANK).getFluidKey().withAmount(amount), Simulation.ACTION);
         }

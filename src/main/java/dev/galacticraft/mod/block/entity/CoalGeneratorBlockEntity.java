@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
+import com.google.common.annotations.VisibleForTesting;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
@@ -54,7 +55,9 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CoalGeneratorBlockEntity extends MachineBlockEntity {
-    private static final Object2IntMap<Item> FUEL_MAP = Util.make(new Object2IntArrayMap<>(3), (map) -> {
+    @VisibleForTesting
+    public static final Object2IntMap<Item> FUEL_MAP = Util.make(new Object2IntArrayMap<>(3), (map) -> {
+        map.defaultReturnValue(0);
         map.put(Items.COAL_BLOCK, 320 * 10);
         map.put(Items.COAL, 320);
         map.put(Items.CHARCOAL, 310);
@@ -129,7 +132,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     @Override
     public void tickWork() {
         if (this.heat > 0 && this.fuelLength == 0) {
-            this.heat = Math.max(0, this.heat - 0.04d);
+            this.setHeat(Math.max(0, this.heat - 0.02d));
         }
         if (this.getStatus().getType().isActive()) {
             if (this.fuelTime++ >= this.fuelLength) {
@@ -138,12 +141,12 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
             }
             if (this.fuelLength == 0) {
                 this.fuelTime = 0;
-                this.fuelLength = FUEL_MAP.getOrDefault(itemInv().extractStack(FUEL_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem(), 0);
+                this.fuelLength = FUEL_MAP.getInt(itemInv().extractStack(FUEL_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem());
                 if (this.fuelLength == 0) return;
             }
 
             if (this.heat < 1) {
-                this.heat = Math.min(1, this.heat + 0.004);
+                this.setHeat(Math.min(1, this.heat + 0.004));
             }
         }
     }
@@ -159,12 +162,17 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         return this.heat;
     }
 
+    @VisibleForTesting
+    public void setHeat(double heat) {
+        this.heat = heat;
+    }
+
     @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
         this.fuelLength = tag.getInt(Constant.Nbt.FUEL_LENGTH);
         this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
-        this.heat = tag.getDouble(Constant.Nbt.HEAT);
+        this.setHeat(tag.getDouble(Constant.Nbt.HEAT));
     }
 
     @Override
@@ -178,7 +186,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     /**
      * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
      */
-    private enum Status implements MachineStatus {
+    @VisibleForTesting
+    public enum Status implements MachineStatus {
         /**
          * The generator is active and is generating energy.
          */

@@ -25,8 +25,6 @@ package dev.galacticraft.mod.compat.rei.common.display;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -36,7 +34,6 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
 public class DefaultShapedCompressingDisplay implements DefaultCompressingDisplay {
     protected List<EntryIngredient> input;
     protected List<EntryIngredient> output;

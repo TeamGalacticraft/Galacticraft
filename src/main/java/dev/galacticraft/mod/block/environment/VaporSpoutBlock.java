@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.block.environment;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.particle.ParticleTypes;
@@ -45,14 +43,8 @@ public class VaporSpoutBlock extends Block {
         return true;
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        spawnSmokeParticle(world, pos);
-    }
-
-    public void spawnSmokeParticle(World world, BlockPos pos) {
-        Random random = world.getRandom();
         world.addImportantParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, true, (double) pos.getX() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1), (double) pos.getY() + random.nextDouble() + random.nextDouble(), (double) pos.getZ() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1), 0.0D, 0.07D, 0.0D);
     }
 }

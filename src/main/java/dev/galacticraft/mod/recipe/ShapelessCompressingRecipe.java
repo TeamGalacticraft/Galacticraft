@@ -58,7 +58,6 @@ public record ShapelessCompressingRecipe(Identifier id, String group,
    }
 
    @Override
-   @Environment(EnvType.CLIENT)
    public String getGroup() {
       return this.group;
    }

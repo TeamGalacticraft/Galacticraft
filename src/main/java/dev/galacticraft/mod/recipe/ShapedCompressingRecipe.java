@@ -78,7 +78,6 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
    }
 
    @Override
-   @Environment(EnvType.CLIENT)
    public String getGroup() {
       return this.group;
    }

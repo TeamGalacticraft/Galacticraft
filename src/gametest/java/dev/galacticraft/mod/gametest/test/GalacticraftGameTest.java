@@ -20,31 +20,42 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.item;
+package dev.galacticraft.mod.gametest.test;
 
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
+import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Rarity;
+import net.minecraft.test.TestContext;
+import net.minecraft.util.registry.Registry;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GenericLiquidCanister extends Item {
-    private final Fluid allowedFluid;
+public interface GalacticraftGameTest extends FabricGameTest {
+    String SINGLE_BLOCK = "gc-test:single_block";
 
-    public GenericLiquidCanister(Settings settings, Fluid allowedFluid) {
-        super(settings);
-        this.allowedFluid = allowedFluid;
+    default void runNext(TestContext context, Runnable runnable) {
+        context.runAtTick(context.getTick() + 1, runnable);
     }
 
-    @Override
-    public int getEnchantability() {
-        return -1;
+    default void runAt(TestContext context, int tick, Runnable runnable) {
+        context.runAtTick(context.getTick() + tick, runnable);
     }
 
-    @Override
-    public Rarity getRarity(ItemStack par1ItemStack) {
-        return Rarity.RARE;
+    default void runFinalTaskNext(TestContext context, Runnable runnable) {
+        context.runAtTick(context.getTick() + 1, () -> context.addInstantFinalTask(runnable));
+    }
+
+    default void runFinalTaskAt(TestContext context, int time, Runnable runnable) {
+        context.runAtTick(context.getTick() + time, () -> context.addInstantFinalTask(runnable));
+    }
+
+    default String formatItemStack(ItemStack stack) {
+        if (stack == null) {
+            return "null";
+        } else if (stack.isEmpty()) {
+            return "empty";
+        } else {
+            return String.format("%s %s", stack.getCount(), Registry.ITEM.getId(stack.getItem()));
+        }
     }
 }
