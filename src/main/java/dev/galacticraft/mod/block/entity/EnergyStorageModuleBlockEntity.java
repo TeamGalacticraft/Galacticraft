@@ -41,8 +41,8 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
-    public static final int CHARGE_BATTERY_SLOT = 0;
-    public static final int DRAIN_BATTERY_SLOT = 1;
+    public static final int CHARGE_TO_BATTERY_SLOT = 0;
+    public static final int DRAIN_FROM_BATTERY_SLOT = 1;
 
     public EnergyStorageModuleBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE, pos, state);
@@ -50,8 +50,8 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_BATTERY_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 102, 24);
-        builder.addSlot(DRAIN_BATTERY_SLOT, SlotType.CHARGE, EnergyUtil.IS_INSERTABLE, 102, 48);
+        builder.addSlot(CHARGE_TO_BATTERY_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 102, 24);
+        builder.addSlot(DRAIN_FROM_BATTERY_SLOT, SlotType.CHARGE, EnergyUtil.IS_INSERTABLE, 102, 48);
         return builder;
     }
 
@@ -97,8 +97,8 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     @Override
     public void updateComponents() {
         super.updateComponents();
-        this.attemptChargeFromStack(DRAIN_BATTERY_SLOT);
-        this.attemptDrainPowerToStack(CHARGE_BATTERY_SLOT);
+        this.attemptChargeFromStack(DRAIN_FROM_BATTERY_SLOT);
+        this.attemptDrainPowerToStack(CHARGE_TO_BATTERY_SLOT);
     }
 
     @Nullable

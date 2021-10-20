@@ -20,10 +20,42 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.gametest;
+package dev.galacticraft.mod.gametest.test;
 
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.minecraft.item.ItemStack;
+import net.minecraft.test.TestContext;
+import net.minecraft.util.registry.Registry;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public interface GalacticraftGameTest extends FabricGameTest {
     String SINGLE_BLOCK = "gc-test:single_block";
+
+    default void runNext(TestContext context, Runnable runnable) {
+        context.runAtTick(context.getTick() + 1, runnable);
+    }
+
+    default void runAt(TestContext context, int tick, Runnable runnable) {
+        context.runAtTick(context.getTick() + tick, runnable);
+    }
+
+    default void runFinalTaskNext(TestContext context, Runnable runnable) {
+        context.runAtTick(context.getTick() + 1, () -> context.addInstantFinalTask(runnable));
+    }
+
+    default void runFinalTaskAt(TestContext context, int time, Runnable runnable) {
+        context.runAtTick(context.getTick() + time, () -> context.addInstantFinalTask(runnable));
+    }
+
+    default String formatItemStack(ItemStack stack) {
+        if (stack == null) {
+            return "null";
+        } else if (stack.isEmpty()) {
+            return "empty";
+        } else {
+            return String.format("%s %s", stack.getCount(), Registry.ITEM.getId(stack.getItem()));
+        }
+    }
 }
