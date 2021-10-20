@@ -20,21 +20,6 @@
  * SOFTWARE.
  */
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeManager;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Invoker;
-
-import java.util.Map;
-
-@Mixin(RecipeManager.class)
-public interface RecipeManagerInvoker {
-    @Invoker("getAllOfType")
-    <C extends Inventory, T extends Recipe<C>> Map<Identifier, Recipe<C>> callGetAllOfType(RecipeType<T> type);
-=======
 package dev.galacticraft.mod.world.gen.chunk;
 
 import dev.galacticraft.mod.Constant;
@@ -42,9 +27,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class GalacticraftChunkGenerator {
-
     public static void register() {
         Registry.register(Registry.CHUNK_GENERATOR, new Identifier(Constant.MOD_ID, "moon"), MoonChunkGenerator.CODEC);
     }
->>>>>>> main:src/main/java/dev/galacticraft/mod/world/gen/chunk/GalacticraftChunkGenerator.java
 }

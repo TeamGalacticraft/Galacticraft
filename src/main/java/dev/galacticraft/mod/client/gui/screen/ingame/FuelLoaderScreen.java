@@ -74,7 +74,12 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderBlockEntity
 
     public FuelLoaderScreen(FuelLoaderScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.FUEL_LOADER_SCREEN);
-        this.addWidget(new CapacitorWidget(handler.machine.capacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
     }
 
     @Override
