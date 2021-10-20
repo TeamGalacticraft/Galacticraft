@@ -1,6 +1,6 @@
 {
-  "depth": 0.05,
-  "scale": 0.05,
+  "depth": 0.7,
+  "scale": 0.0,
   "downfall": 0.0,
   "temperature": 2.0,
   "precipitation": "none",
@@ -22,7 +22,7 @@
     "air": [
       "galacticraft:moon_craters",
       "galacticraft:moon_highlands_cave",
-      "galacticraft:canyon"
+      "galacticraft:moon_canyon"
     ]
   },
   "features": [

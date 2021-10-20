@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.screen.slot;
 
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.AbstractWidget;
+import net.minecraft.client.gui.Drawable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -76,8 +76,7 @@ public class MachineComponent<T> {
         return Objects.hash(getComponent(), getX(), getY());
     }
 
-    @Nullable
-    public AbstractWidget createWidget(MachineBlockEntity machine) {
+    public @Nullable Drawable createWidget(MachineBlockEntity machine) {
         return null;
     }
 }

@@ -88,7 +88,7 @@ public abstract class WorldRendererMoonMixin implements WorldRendererAccessor {
 
             matrices.push();
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngleRadians(delta) * 360.0F));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngle(delta)));
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-19.0F));
             RenderSystem.setShaderColor(1.0F, 0.95F, 0.9F, starBrightness);
             RenderSystem.disableTexture();
@@ -101,7 +101,7 @@ public abstract class WorldRendererMoonMixin implements WorldRendererAccessor {
             matrices.push();
 
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngleRadians(delta) * 360.0F));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngle(delta)));
 
             Matrix4f matrix = matrices.peek().getModel();
             RenderSystem.enableTexture();

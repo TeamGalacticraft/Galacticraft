@@ -43,8 +43,6 @@ import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
 import me.shedaniel.rei.api.client.registry.transfer.TransferHandlerRegistry;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import net.minecraft.item.ItemConvertible;
-
 import me.shedaniel.rei.plugin.common.BuiltinPlugin;
 import net.minecraft.item.ItemConvertible;
 

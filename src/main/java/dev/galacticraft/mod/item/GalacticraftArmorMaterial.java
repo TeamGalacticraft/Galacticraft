@@ -23,8 +23,6 @@
 package dev.galacticraft.mod.item;
 
 import com.google.common.base.Suppliers;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.recipe.Ingredient;
@@ -126,7 +124,6 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public String getName() {
         return this.name;
     }

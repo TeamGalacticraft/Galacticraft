@@ -25,7 +25,9 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.OxygenDecompressorBlockEntity;
+import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
@@ -39,23 +41,23 @@ import net.minecraft.text.Text;
 public class OxygenDecompressorScreen extends MachineHandledScreen<OxygenDecompressorBlockEntity, SimpleMachineScreenHandler<OxygenDecompressorBlockEntity>> {
     public OxygenDecompressorScreen(SimpleMachineScreenHandler<OxygenDecompressorBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
-        this.addWidget(this.createCapacitorWidget(8, 8, 48));
     }
 
     @Override
     protected void init() {
         super.init();
         this.titleX += 20;
+        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
     }
 
     @Override
     protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         super.renderBackground(matrices, delta, mouseX, mouseY);
         if (this.machine.getStatus().getType().isActive()) {
-            int height = (int) (System.currentTimeMillis() % 2250);
-            if (height == 0) height = 1; //prevent dividing by zero
-            height /= 125;
-            this.drawTexture(matrices, this.x + 82, this.y + 46, 176, 0, 11, height);
+            double height = (int) (System.currentTimeMillis() % 2250);
+            if (height == 0) return; //prevent dividing by zero
+            height /= 125.0;
+            DrawableUtil.drawProgressTexture(matrices, this.x + 82, this.y + 46, 176, 0, 11, (float)height);
         }
     }
 }

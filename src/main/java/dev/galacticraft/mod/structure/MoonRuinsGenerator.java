@@ -62,7 +62,7 @@ import java.util.Random;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonRuinsGenerator {
-   private static final Identifier[] PIECES = new Identifier[] {
+   private static final Identifier[] PIECES = new Identifier[]{
            //new Identifier(Constant.MOD_ID, "moon_ruins/ruin_1"),
            //new Identifier(Constant.MOD_ID, "moon_ruins/ruin_2"),
            new Identifier(Constant.MOD_ID, "moon_ruins/ruin_3"),

@@ -49,7 +49,7 @@ public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Re
     private final ItemOutputFunction itemOutputFunction;
     private @Nullable R activeRecipe;
     private int progress;
-    private int maxProgress = -1;
+    private int maxProgress = 0;
 
     public RecipeMachineBlockEntity(BlockEntityType<? extends RecipeMachineBlockEntity<C, R>> type, BlockPos pos, BlockState state, @NotNull RecipeType<R> recipeType, @NotNull RecipeTimeFunction<C, R> recipeTimeFunction) {
         this(type, pos, state, recipeType, recipeTimeFunction, ItemStack::copy);
@@ -79,7 +79,7 @@ public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Re
     }
 
     public boolean active() {
-        return this.maxProgress >= 0;
+        return this.maxProgress > 0;
     }
     
     public abstract @NotNull C craftingInv();
@@ -122,7 +122,8 @@ public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Re
                 this.craftingInv().removeStack(i, 1);
             }
         }
-        assert this.outputInv().getInsertable().insert(output).isEmpty();
+        ItemStack leftover = this.outputInv().getInsertable().insert(output);
+        assert leftover.isEmpty();
 
         recipe = this.recipe();
         if (recipe == null) this.resetRecipe();
@@ -132,7 +133,7 @@ public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Re
     protected void resetRecipe() {
         this.activeRecipe(null);
         this.progress(0);
-        this.maxProgress(-1);
+        this.maxProgress(0);
     }
 
     protected void recipe(@NotNull R recipe) {
@@ -194,9 +195,9 @@ public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Re
     @FunctionalInterface
     public interface RecipeTimeFunction<C extends Inventory, R extends Recipe<C>> {
         /**
-         * Returns the process length of the recipe, or {@code 0} if it should be instantly processed.
+         * Returns the process length of the recipe.
          * @param recipe The recipe to get the process length of
-         * @return the process length of the recipe, or {@code 0} if it should be instantly processed.
+         * @return the process length of the recipe.
          */
         int getRecipeLength(R recipe);
     }

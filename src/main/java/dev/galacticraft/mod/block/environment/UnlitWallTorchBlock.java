@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.block.environment;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.WallTorchBlock;
@@ -59,7 +57,6 @@ public class UnlitWallTorchBlock extends WallTorchBlock {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public void randomDisplayTick(BlockState blockState, World world, BlockPos blockPos, Random random) {
         // stop particles from spawning
     }

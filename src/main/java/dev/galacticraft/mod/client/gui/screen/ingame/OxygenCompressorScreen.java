@@ -25,7 +25,9 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.OxygenCompressorBlockEntity;
+import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
@@ -39,13 +41,13 @@ import net.minecraft.text.Text;
 public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompressorBlockEntity, SimpleMachineScreenHandler<OxygenCompressorBlockEntity>> {
     public OxygenCompressorScreen(SimpleMachineScreenHandler<OxygenCompressorBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
-        this.addWidget(this.createCapacitorWidget(8, 8, 48));
     }
 
     @Override
     protected void init() {
         super.init();
         this.titleX += 18;
+        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
     }
 
     @Override
@@ -53,9 +55,9 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
         super.renderBackground(matrices, delta, mouseX, mouseY);
         if (this.machine.getStatus().getType().isActive()) {
             double height = (System.currentTimeMillis() % 2250);
-            if (height == 0) height = 1; //prevent dividing by zero
-            height /= -125D;
-            this.drawTexture(matrices, this.x + 93, this.y + 64, 187, 18, -11, (int) height);
+            if (height == 0) return; //prevent dividing by zero
+            height /= -125.0;
+            DrawableUtil.drawProgressTexture(matrices, this.x + 93, this.y + 64, 187, 18, -11, (float) height);
         }
     }
 }

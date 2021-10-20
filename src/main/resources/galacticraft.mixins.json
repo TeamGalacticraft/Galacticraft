@@ -28,6 +28,7 @@
     "client.AnimalModelInvoker",
     "client.BipedEntityModelMixin",
     "client.ClientPlayerEntityMixin",
+    "client.ClientWorldMixin",
     "client.InGameHudMixin",
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",

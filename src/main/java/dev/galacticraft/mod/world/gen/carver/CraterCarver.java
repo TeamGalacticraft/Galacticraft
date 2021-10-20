@@ -24,18 +24,23 @@ package dev.galacticraft.mod.world.gen.carver;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
+import net.minecraft.structure.StructureStart;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.carver.Carver;
 import net.minecraft.world.gen.carver.CarverContext;
 import net.minecraft.world.gen.chunk.AquiferSampler;
+import net.minecraft.world.gen.feature.StructureFeature;
 
 import java.util.BitSet;
 import java.util.Random;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -50,6 +55,11 @@ public class CraterCarver extends Carver<CraterCarverConfig> {
         int y = 127;//config.y.get(random, context);
         //pos = center chunk pos
         BlockPos craterCenter = pos.getBlockPos(random.nextInt(16), y, random.nextInt(16));
+
+        if (!chunk.getStructureReferences(StructureFeature.VILLAGE).isEmpty()) {
+            return false;
+        }
+
         BlockPos.Mutable mutable = craterCenter.mutableCopy();
 
         double radius = 8 + (random.nextDouble() * (config.maxRadius - config.minRadius));
@@ -99,7 +109,11 @@ public class CraterCarver extends Carver<CraterCarverConfig> {
                 }
             }
         }
-        return false;
+        return true;
+    }
+
+    public Stream<? extends StructureStart<?>> getStructuresWithChildren(Chunk chunk, ChunkRegion region, StructureFeature<?> feature) {
+        return chunk.getStructureReferences(feature).stream().map(l -> ChunkSectionPos.from(new ChunkPos(l), chunk.getBottomSectionCoord())).map(posx -> chunk.getStructureStart(feature)).filter(structureStart -> structureStart != null && structureStart.hasChildren());
     }
 
     @Override

@@ -152,11 +152,27 @@ public class FluidUtil {
     }
 
     public static FluidInsertable getInsertable(World world, BlockPos pos, Direction direction) {
-        return FluidAttributes.INSERTABLE.getFirst(world, pos, SearchOptions.inDirection(direction));
+        return FluidAttributes.INSERTABLE.get(world, pos, SearchOptions.inDirection(direction));
     }
 
     public static FluidExtractable getExtractable(World world, BlockPos pos, Direction direction) {
-        return FluidAttributes.EXTRACTABLE.getFirst(world, pos, SearchOptions.inDirection(direction));
+        return FluidAttributes.EXTRACTABLE.get(world, pos, SearchOptions.inDirection(direction));
+    }
+
+    public static FluidInsertable getInsertable(ItemStack stack) {
+        return getInsertable(new Ref<>(stack));
+    }
+
+    public static FluidInsertable getInsertable(Ref<ItemStack> stack) {
+        return FluidAttributes.INSERTABLE.get(stack);
+    }
+
+    public static FluidExtractable getExtractable(ItemStack stack) {
+        return getExtractable(new Ref<>(stack));
+    }
+
+    public static FluidExtractable getExtractable(Ref<ItemStack> stack) {
+        return FluidAttributes.EXTRACTABLE.get(stack);
     }
 
     public static boolean canAccessFluid(World world, BlockPos pos, Direction direction) {
@@ -181,5 +197,13 @@ public class FluidUtil {
                 list.add(new TranslatableText("tooltip.galacticraft.buckets", fraction.asInexactDouble()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
             }
         }
+    }
+
+    public static boolean isEmpty(ItemStack stack) {
+        return isEmpty(new Ref<>(stack));
+    }
+
+    public static boolean isEmpty(Ref<ItemStack> stack) {
+        return FluidAttributes.EXTRACTABLE.get(stack).attemptAnyExtraction(FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty();
     }
 }

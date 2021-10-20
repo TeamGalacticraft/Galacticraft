@@ -368,10 +368,14 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             } else {
                 this.idleEnergyDecrement();
             }
+        } else {
+            this.clientTick();
         }
     }
 
     protected abstract void tickDisabled();
+
+    protected void clientTick() {}
 
     /**
      * Returns the updated machine status
@@ -511,8 +515,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     }
 
     public void idleEnergyDecrement() {
-        if (this.world.random.nextInt(20) == 0) {
-            if (this.getBaseEnergyConsumption() > 0) {
+        if (this.getBaseEnergyConsumption() > 0) {
+            if (this.world.random.nextInt(20) == 0) {
                 this.capacitor().extract(this.getBaseEnergyConsumption() / 20);
             }
         }

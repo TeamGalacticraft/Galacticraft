@@ -179,6 +179,11 @@ public class EnergyUtil {
         getEnergyHandler(new Ref<>(stack)).setEnergy(amount);
     }
 
+    public static void setEnergy(Reference<ItemStack> ref, int amount) {
+        assert isCapacitor(ref);
+        getEnergyHandler(ref).setEnergy(amount);
+    }
+
     public static Capacitor getEnergyHandler(Reference<ItemStack> stackReference) {
         return GalacticraftEnergy.CAPACITOR.getFirst(stackReference);
     }
