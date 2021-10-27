@@ -7,12 +7,7 @@ on:
 
 jobs:
   Build:
-    strategy:
-      matrix:
-        java: [16]
-        os: [ubuntu-20.04]
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout repository
@@ -23,30 +18,34 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
 
-      - name: Setup JDK ${{ matrix.java }}
+      - name: Setup JDK 16
         uses: actions/setup-java@v2
         with:
-          java-version: ${{ matrix.java }}
-          distribution: 'adopt'
+          java-version: 16
+          distribution: temurin
 
       - name: Build
-        uses: eskatos/gradle-command-action@v1
+        id: build
+        uses: gradle/gradle-build-action@v2
         with:
-          arguments: checkLicenses build publish
-          distributions-cache-enabled: true
-          dependencies-cache-enabled: true
+          arguments: checkLicenses build test runGametest publish
+          gradle-version: wrapper
         env:
           SNAPSHOT: true
           ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USER }}
           ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASS }}
-          
+
+      - name: Copy GameTest Results
+        run: cp run/TEST-gametest.xml build/test-results/test/
+
       - name: Notify Discord
-        uses: TeamGalacticraft/discord-build-notify@main
+        uses: TeamGalacticraft/discord-reporter@main
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          outcome: ${{ steps.build.outcome }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Capture build artifacts
-        if: ${{ runner.os == 'Linux' && matrix.java == '16' }}
         uses: actions/upload-artifact@v2
         with:
           name: Galacticraft

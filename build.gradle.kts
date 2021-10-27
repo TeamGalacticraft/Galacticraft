@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 HRZN LTD
+ * Copyright (c) 2019-2021 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -68,10 +68,6 @@ println("Galacticraft: $version")
 base.archivesName.set(modName)
 
 val gametestSourceSet = sourceSets.create("gametest") {
-    compileClasspath += sourceSets.main.get().compileClasspath
-    compileClasspath += sourceSets.main.get().output
-    runtimeClasspath += sourceSets.main.get().runtimeClasspath
-    runtimeClasspath += sourceSets.main.get().output
     java.srcDir("src/gametest/java")
     resources.srcDir("src/gametest/resources")
 }
@@ -88,16 +84,14 @@ loom {
             name("Game Test")
             source(gametestSourceSet)
             property("fabric.log.level", "debug")
-            vmArg("-Dfabric-api.gametest=true")
-            vmArg("-ea")
+            vmArg("-Dfabric-api.gametest")
         }
         register("gametestClient") {
             client()
             name("Game Test Client")
             source(gametestSourceSet)
             property("fabric.log.level", "debug")
-            vmArg("-Dfabric-api.gametest=true")
-            vmArg("-ea")
+            vmArg("-Dfabric-api.gametest")
         }
     }
 }
@@ -235,6 +229,10 @@ dependencies {
 
     // Other Dependencies
     modRuntime("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
+
+    // Test Dependencies
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 }
 
 tasks.processResources {
@@ -251,6 +249,10 @@ tasks.processResources {
                 file: File -> file.writeText(groovy.json.JsonOutput.toJson(groovy.json.JsonSlurper().parse(file)))
         }
     }
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.create<Jar>("javadocJar") {
@@ -365,3 +367,6 @@ fun String.exitValue(): Int {
         errorOutput = OutputStream.nullOutputStream()
     }.exitValue
 }
+
+gametestSourceSet.compileClasspath += sourceSets.main.get().compileClasspath + sourceSets.main.get().output
+gametestSourceSet.runtimeClasspath += sourceSets.main.get().runtimeClasspath + sourceSets.main.get().output

@@ -63,17 +63,17 @@ public class AdvancedSolarPanelBlockEntityRenderer implements BlockEntityRendere
         matrices.push();
         matrices.translate(0.5F, 1.0F, 0.5F);
         RenderSystem.setShaderTexture(0, AdvancedSolarPanelBlockEntityRenderer.TEXTURE);
-        this.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(TEXTURE)), light, overlay, blockEntity.getWorld());
+        this.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(TEXTURE)), light, overlay, blockEntity.getWorld(), tickDelta);
         matrices.pop();
     }
 
-    public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, World world) {
+    public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, World world, float tickDelta) {
         this.pole.render(matrices, vertexConsumer, light, overlay);
         matrices.translate(0.0F, 1.5F, 0.0F);
 
         matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F));
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(world.getSkyAngleRadians(1.0F)));
+        matrices.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(world.getSkyAngleRadians(tickDelta)));
 
         this.panel.render(matrices, vertexConsumer, light, overlay);
     }

@@ -23,8 +23,6 @@
 package dev.galacticraft.mod.block.environment;
 
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.LanternBlock;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
@@ -44,7 +42,6 @@ public class GlowstoneLanternBlock extends LanternBlock {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
             list.add(new TranslatableText("tooltip.galacticraft.glowstone_lantern").setStyle(Constant.Text.GRAY_STYLE));

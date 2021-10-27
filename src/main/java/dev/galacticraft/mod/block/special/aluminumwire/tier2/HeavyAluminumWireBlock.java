@@ -28,8 +28,6 @@ import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.EnergyUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -133,7 +131,6 @@ public class HeavyAluminumWireBlock extends WireBlock {
         return BlockRenderType.MODEL;
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView view, BlockPos pos) {
         return 1.0F;

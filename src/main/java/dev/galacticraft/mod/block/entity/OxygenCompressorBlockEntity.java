@@ -114,7 +114,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
             OxygenTank tank = OxygenTankUtil.getOxygenTank(this.itemInv().getSlot(1));
-            this.fluidInv().insertFluid(OXYGEN_TANK, OxygenTankUtil.insertLiquidOxygen(tank, this.fluidInv().attemptExtraction(Constant.Filter.LOX_ONLY, FluidAmount.of1620(1620 / 60), Simulation.ACTION)), Simulation.ACTION);
+            this.fluidInv().insertFluid(OXYGEN_TANK, OxygenTankUtil.insertLiquidOxygen(tank, this.fluidInv().attemptExtraction(Constant.Filter.LOX_ONLY, FluidAmount.of(1, 400), Simulation.ACTION)), Simulation.ACTION);
         }
     }
 

@@ -4,7 +4,7 @@
   "id": "gc-test",
   "version": "$version",
   "name": "Galacticraft Test Mod",
-  "description": "The test mod for the FabricMC port of Galacticraft.",
+  "description": "The test mod for Galacticraft 5.",
   "license": "MIT",
 
   "contact": {
@@ -116,9 +116,21 @@
 
   "environment": "*",
   "entrypoints": {
-    "fabric-gametest": [ "dev.galacticraft.mod.gametest.GalacticraftTestSuite" ]
+    "fabric-gametest": [
+      "dev.galacticraft.mod.gametest.test.GalacticraftTestSuite",
+      "dev.galacticraft.mod.gametest.test.machine.CircuitFabricatorTestSuite",
+      "dev.galacticraft.mod.gametest.test.machine.CoalGeneratorTestSuite",
+      "dev.galacticraft.mod.gametest.test.machine.CompressorTestSuite",
+      "dev.galacticraft.mod.gametest.test.machine.ElectricArcFurnaceTestSuite",
+      "dev.galacticraft.mod.gametest.test.machine.ElectricCompressorTestSuite",
+      "dev.galacticraft.mod.gametest.test.machine.ElectricFurnaceTestSuite",
+      "dev.galacticraft.mod.gametest.test.machine.EnergyStorageModuleTestSuite",
+      "dev.galacticraft.mod.gametest.test.machine.RefineryTestSuite",
+      "dev.galacticraft.mod.gametest.test.PipeTestSuite",
+      "dev.galacticraft.mod.gametest.test.WireTestSuite"
+    ]
   },
-  "mixins": [],
+  "mixins": ["gc-test.mixins.json"],
   "depends": {
     "minecraft": ">=1.17.1",
     "fabricloader": ">=0.11.6",

@@ -23,12 +23,13 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
+import com.google.common.annotations.VisibleForTesting;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.EnergyUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
@@ -54,7 +55,9 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CoalGeneratorBlockEntity extends MachineBlockEntity {
-    private static final Object2IntMap<Item> FUEL_MAP = Util.make(new Object2IntArrayMap<>(3), (map) -> {
+    @VisibleForTesting
+    public static final Object2IntMap<Item> FUEL_MAP = Util.make(new Object2IntArrayMap<>(3), (map) -> {
+        map.defaultReturnValue(0);
         map.put(Items.COAL_BLOCK, 320 * 10);
         map.put(Items.COAL, 320);
         map.put(Items.CHARCOAL, 310);
@@ -80,8 +83,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 8);
-        builder.addSlot(FUEL_SLOT, SlotType.COAL, stack -> FUEL_MAP.containsKey(stack.getItem()), 8, 74);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
+        builder.addSlot(FUEL_SLOT, SlotType.COAL, stack -> FUEL_MAP.containsKey(stack.getItem()), 71, 53);
         return builder;
     }
 
@@ -104,8 +107,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     public @NotNull MachineStatus updateStatus() {
         if (this.fuelLength == 0 && this.itemInv().getInvStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
         if (this.capacitor().getEnergy() >= this.capacitor().getMaxCapacity()) return Status.FULL;
-        if (this.heat < 1 && this.fuelLength > 0) return Status.WARMING;
-        if (this.heat > 0 && this.fuelLength == 0) return Status.COOLING;
+        if (this.heat < 1.0 && this.fuelLength > 0) return Status.WARMING;
+        if (this.heat > 0.0 && this.fuelLength == 0) return Status.COOLING;
         return Status.ACTIVE;
     }
 
@@ -129,7 +132,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     @Override
     public void tickWork() {
         if (this.heat > 0 && this.fuelLength == 0) {
-            this.heat = Math.max(0, this.heat - 0.04d);
+            this.setHeat(Math.max(0, this.heat - 0.02d));
         }
         if (this.getStatus().getType().isActive()) {
             if (this.fuelTime++ >= this.fuelLength) {
@@ -138,12 +141,12 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
             }
             if (this.fuelLength == 0) {
                 this.fuelTime = 0;
-                this.fuelLength = FUEL_MAP.getOrDefault(itemInv().extractStack(FUEL_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem(), 0);
+                this.fuelLength = FUEL_MAP.getInt(itemInv().extractStack(FUEL_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem());
                 if (this.fuelLength == 0) return;
             }
 
             if (this.heat < 1) {
-                this.heat = Math.min(1, this.heat + 0.004);
+                this.setHeat(Math.min(1, this.heat + 0.004));
             }
         }
     }
@@ -151,7 +154,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.COAL_GENERATOR_HANDLER, syncId, inv, this);
+        if (this.security().hasAccess(player)) return new CoalGeneratorScreenHandler(syncId, player, this);
         return null;
     }
 
@@ -159,12 +162,17 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         return this.heat;
     }
 
+    @VisibleForTesting
+    public void setHeat(double heat) {
+        this.heat = heat;
+    }
+
     @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
         this.fuelLength = tag.getInt(Constant.Nbt.FUEL_LENGTH);
         this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
-        this.heat = tag.getDouble(Constant.Nbt.HEAT);
+        this.setHeat(tag.getDouble(Constant.Nbt.HEAT));
     }
 
     @Override
@@ -178,7 +186,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     /**
      * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
      */
-    private enum Status implements MachineStatus {
+    @VisibleForTesting
+    public enum Status implements MachineStatus {
         /**
          * The generator is active and is generating energy.
          */
