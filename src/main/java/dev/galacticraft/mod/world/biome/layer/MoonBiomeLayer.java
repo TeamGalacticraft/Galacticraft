@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.world.biome.layer;
 
+import dev.galacticraft.mod.mixin.BuiltinBiomesAccessor;
 import dev.galacticraft.mod.world.biome.GalacticraftBiome;
 import dev.galacticraft.mod.world.biome.layer.moon.MoonBaseBiomeLayer;
 import dev.galacticraft.mod.world.biome.layer.moon.MoonBiomeLevelLayer;
@@ -92,6 +93,17 @@ public class MoonBiomeLayer {
         MOON_MARE_HILLS_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_HILLS));
         MOON_MARE_EDGE_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_EDGE));
         MOON_MARE_VALLEY_ID = registry.getRawId(registry.get(GalacticraftBiome.Moon.MARE_VALLEY));
+
+        BuiltinBiomesAccessor.getRawIdMap().put(MOON_HIGHLANDS_ID, GalacticraftBiome.Moon.HIGHLANDS);
+        BuiltinBiomesAccessor.getRawIdMap().put(MOON_HIGHLANDS_FLAT_ID, GalacticraftBiome.Moon.HIGHLANDS_FLAT);
+        BuiltinBiomesAccessor.getRawIdMap().put(MOON_HIGHLANDS_HILLS_ID, GalacticraftBiome.Moon.HIGHLANDS_HILLS);
+        BuiltinBiomesAccessor.getRawIdMap().put(MOON_HIGHLANDS_EDGE_ID, GalacticraftBiome.Moon.HIGHLANDS_EDGE);
+        BuiltinBiomesAccessor.getRawIdMap().put(MOON_HIGHLANDS_VALLEY_ID, GalacticraftBiome.Moon.HIGHLANDS_VALLEY);
+        BuiltinBiomesAccessor.getRawIdMap().put(MOON_MARE_ID, GalacticraftBiome.Moon.MARE);
+        BuiltinBiomesAccessor.getRawIdMap().put(MOON_MARE_FLAT_ID, GalacticraftBiome.Moon.MARE_FLAT);
+        BuiltinBiomesAccessor.getRawIdMap().put(MOON_MARE_HILLS_ID, GalacticraftBiome.Moon.MARE_HILLS);
+        BuiltinBiomesAccessor.getRawIdMap().put(MOON_MARE_EDGE_ID, GalacticraftBiome.Moon.MARE_EDGE);
+        BuiltinBiomesAccessor.getRawIdMap().put(MOON_MARE_VALLEY_ID, GalacticraftBiome.Moon.MARE_VALLEY);
 
         LayerFactory<CachingLayerSampler> layerFactory = build(biomeSize, (salt) -> new CachingLayerContext(25, seed, salt + 1));
         MoonBiomeLayer.registry = registry;

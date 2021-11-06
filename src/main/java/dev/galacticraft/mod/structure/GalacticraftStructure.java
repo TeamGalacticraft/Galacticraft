@@ -36,6 +36,8 @@ import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
+import java.util.Collections;
+
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
@@ -53,14 +55,16 @@ public class GalacticraftStructure {
 
     public static void register() {
         Registry.register(Registry.STRUCTURE_PIECE, new Identifier(Constant.MOD_ID, "moon_ruins_piece"), MOON_RUINS_PIECE);
-
         FabricStructureBuilder.create(new Identifier(Constant.MOD_ID, "moon_pillager_base"), MOON_PILLAGER_BASE_FEATURE)
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
-                .defaultConfig(32, 16, 23789482).adjustsSurface()
+                .defaultConfig(32, 16, 23789482)
+                .adjustsSurface()
+                .superflatFeature(new StructurePoolFeatureConfig(() -> new StructurePool(Constant.Misc.EMPTY, Constant.Misc.EMPTY, Collections.emptyList()), 0))
                 .register();
         FabricStructureBuilder.create(new Identifier(Constant.MOD_ID, "moon_ruins"), MOON_RUINS)
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
                 .defaultConfig(24, 8, 1903453)
+                .superflatFeature(DefaultFeatureConfig.INSTANCE)
                 .register();
     }
 }
