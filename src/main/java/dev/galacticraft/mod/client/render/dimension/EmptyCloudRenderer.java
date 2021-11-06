@@ -20,21 +20,15 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.mod.client.render.dimension;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import net.minecraft.client.render.SkyProperties;
-import net.minecraft.util.Identifier;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-@Mixin(SkyProperties.class)
-public interface SkyPropertiesAccessor {
-    @Accessor
-    static Object2ObjectMap<Identifier, SkyProperties> getBY_IDENTIFIER() {
-        throw new UnsupportedOperationException("Untransformed accessor");
+public enum EmptyCloudRenderer implements DimensionRenderingRegistry.CloudRenderer {
+    INSTANCE;
+
+    @Override
+    public void render(WorldRenderContext context) {
     }
 }
