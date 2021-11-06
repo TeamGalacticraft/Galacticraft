@@ -695,7 +695,6 @@ public interface Constant {
     @ApiStatus.Internal
     interface Mixin {
         String STRUCTURE_POOL_DEBUG = "StructurePoolGeneratorMixin";
-        String OSHI_CONFIG_MIXIN = "FileUtilMixin";
         String OVERWORLD_SKY_OVERRIDE = "client.WorldRendererOverworldMixin";
     }
 
