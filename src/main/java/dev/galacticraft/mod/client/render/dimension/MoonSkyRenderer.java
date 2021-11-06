@@ -105,9 +105,10 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         final BufferBuilder buffer = Tessellator.getInstance().getBuffer();
         float starBrightness = this.getStarBrightness(context.world(), context.tickDelta());
 
+        context.profiler().push("stars");
         matrices.push();
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(context.world().getSkyAngle(context.tickDelta())));
+        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(context.world().getSkyAngle(context.tickDelta()) * 360.0f));
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-19.0F));
         RenderSystem.setShaderColor(1.0F, 0.95F, 0.9F, starBrightness);
         RenderSystem.disableTexture();
@@ -117,10 +118,13 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         VertexBuffer.unbind();
 
         matrices.pop();
+        context.profiler().pop();
+
+        context.profiler().push("sun");
         matrices.push();
 
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(context.world().getSkyAngle(context.tickDelta())));
+        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(context.world().getSkyAngle(context.tickDelta()) * 360.0f));
 
         Matrix4f matrix = matrices.peek().getModel();
         RenderSystem.enableTexture();
@@ -137,7 +141,9 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         BufferRenderer.draw(buffer);
 
         matrices.pop();
+        context.profiler().pop();
 
+        context.profiler().push("earth");
         matrices.push();
         matrix = matrices.peek().getModel();
 
@@ -158,6 +164,7 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         buffer.end();
         BufferRenderer.draw(buffer);
 
+        context.profiler().pop();
         matrices.pop();
 
         RenderSystem.disableTexture();
