@@ -1,0 +1,8 @@
+files:
+  - source: /src/main/resources/assets/galacticraft/lang/en_US.json
+    translation: /src/main/resources/assets/galacticraft/lang/%locale_with_underscore%.json
+pull_request_title: 'feat: updated translations from crowdin'
+pull_request_labels:
+  - 'priority: medium'
+  - 'status: ready for review'
+  - 'type: translation'
