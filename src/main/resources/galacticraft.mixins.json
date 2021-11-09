@@ -16,7 +16,6 @@
     "LanternBlockMixin",
     "LootTablesAccessor",
     "ServerWorldMixin",
-    "SkyPropertiesAccessor",
     "SlotAccessor",
     "TorchBlockMixin"
   ],
@@ -24,12 +23,13 @@
     "client.AbstractClientPlayerEntityMixin",
     "client.AlphaWarningTitleScreenMixin",
     "client.AnimalModelInvoker",
+    "client.ClientWorldMixin",
     "client.InGameHudMixin",
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",
     "client.VillagerEntityRendererMixin",
     "client.VillagerResemblingModelMixin",
-    "client.WorldRendererMoonMixin"
+    "client.WorldRendererMixin"
   ],
   "minVersion": "0.8.0",
   "injectors": {

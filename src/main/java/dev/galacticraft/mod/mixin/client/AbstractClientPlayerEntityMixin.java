@@ -46,10 +46,8 @@ public abstract class AbstractClientPlayerEntityMixin {
 
     @Inject(method = "getCapeTexture", at = @At("RETURN"), cancellable = true)
     private void getCapeTexture_gc(CallbackInfoReturnable<Identifier> info) {
-        if (CapesLoader.PLAYERS != null) {
-            if (CapesLoader.PLAYERS.containsKey(this.getPlayerListEntry().getProfile().getId().toString())) {
-                info.setReturnValue(new Identifier(Constant.MOD_ID, "textures/cape/cape_" + CapesLoader.PLAYERS.get(this.getPlayerListEntry().getProfile().getId()) + ".png"));
-            }
+        if (CapesLoader.UUID_CAPE_MAP != null && this.getPlayerListEntry() != null && CapesLoader.UUID_CAPE_MAP.containsKey(this.getPlayerListEntry().getProfile().getId().toString())) {
+            info.setReturnValue(new Identifier(Constant.MOD_ID, "textures/cape/cape_" + CapesLoader.UUID_CAPE_MAP.get(this.getPlayerListEntry().getProfile().getId().toString()) + ".png"));
         }
     }
 }

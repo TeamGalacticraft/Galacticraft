@@ -32,8 +32,9 @@ import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
 public enum MoonBaseBiomeLayer implements InitLayer {
     INSTANCE;
 
+    @Override
     public int sample(LayerRandomnessSource context, int x, int y) {
-        if (context.getNoiseSampler().sample((double)x / 8.0D, (double)y / 8.0D, 0.0D) <= -0.2D) {
+        if (context.getNoiseSampler().sample(x / 16.0, y / 16.0, 0) <= -0.38D) {
             return MoonBiomeLayer.MOON_MARE_ID;
         } else {
             return MoonBiomeLayer.MOON_HIGHLANDS_ID;

@@ -20,26 +20,18 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen.slot;
+package dev.galacticraft.mod.client.gui.widget.machine;
 
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+public interface Positioned {
+    int getX();
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class AutoFilteredSlot extends Slot {
-    private final ItemFilter filter;
+    int getY();
 
-    public AutoFilteredSlot(MachineBlockEntity machine, int index, int x, int y) {
-        super(machine.getWrappedInventory(), index, x, y);
-        this.filter = machine.getFilterForSlot(index);
+    default int getWidth() {
+        return 0;
     }
 
-    @Override
-    public boolean canInsert(ItemStack stack) {
-        return this.filter.matches(stack);
+    default int getHeight() {
+        return 0;
     }
 }

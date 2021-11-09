@@ -24,8 +24,6 @@ package dev.galacticraft.mod.block.environment;
 
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.item.GalacticraftItem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PlantBlock;
@@ -65,11 +63,12 @@ public class MoonBerryBushBlock extends PlantBlock {
         this.setDefaultState(this.getStateManager().getDefaultState().with(AGE, 0));
     }
 
-    @Environment(EnvType.CLIENT)
+    @Override
     public ItemStack getPickStack(BlockView view, BlockPos pos, BlockState state) {
         return new ItemStack(GalacticraftItem.MOON_BERRIES);
     }
 
+    @Override
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
         if (blockState.get(AGE) == 0) {
             return SMALL_SHAPE;
@@ -119,7 +118,6 @@ public class MoonBerryBushBlock extends PlantBlock {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public void randomDisplayTick(BlockState blockState, World world, BlockPos blockPos, Random random) {
         if (blockState.get(AGE) == 3) {
 

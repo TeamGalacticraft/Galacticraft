@@ -31,14 +31,13 @@ import dev.galacticraft.energy.impl.DefaultEnergyType;
 import dev.galacticraft.energy.impl.SimpleCapacitor;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.EnergyUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
@@ -62,7 +61,6 @@ public class BatteryItem extends Item implements AttributeProviderItem {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         CapacitorView view = EnergyUtil.getCapacitorView(stack);
         lines.add(new TranslatableText("tooltip.galacticraft.energy_remaining", EnergyUtil.getDisplay(view.getEnergy())).setStyle(Constant.Text.getStorageLevelColor(1.0 - ((double)view.getEnergy()) / ((double)view.getMaxCapacity()))));
@@ -109,7 +107,7 @@ public class BatteryItem extends Item implements AttributeProviderItem {
     public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> itemAttributeList) {
         ItemStack ref = reference.get().copy();
         SimpleCapacitor capacitor = new SimpleCapacitor(DefaultEnergyType.INSTANCE, this.getMaxCapacity());
-        capacitor.fromTag(ref.getOrCreateNbt());
+        if (ref.getOrCreateNbt().contains("Energy", NbtElement.INT_TYPE)) capacitor.fromTag(ref.getOrCreateNbt());
         capacitor.toTag(ref.getOrCreateNbt());
         ref.setDamage(capacitor.getMaxCapacity() - capacitor.getEnergy());
         reference.set(ref);

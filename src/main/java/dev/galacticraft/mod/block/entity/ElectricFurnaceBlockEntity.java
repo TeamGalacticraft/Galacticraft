@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
@@ -62,9 +61,9 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Invento
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 7);
-        builder.addSlot(INPUT_SLOT, SlotType.INPUT, stack -> this.getRecipe(RecipeType.SMELTING, new SimpleInventory(stack)).isPresent(), 56, 25);
-        builder.addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(109, 25));
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 61);
+        builder.addSlot(INPUT_SLOT, SlotType.INPUT, stack -> this.getRecipe(RecipeType.SMELTING, new SimpleInventory(stack)).isPresent(), 52, 35);
+        builder.addOutputSlot(OUTPUT_SLOT, SlotType.OUTPUT, 113, 35);
         return builder;
     }
 

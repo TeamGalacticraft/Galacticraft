@@ -60,16 +60,20 @@ public class DrawableUtil {
         return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
     }
 
-    public static void drawProgressTexture(MatrixStack matrices, int x, int y, float u, float v, float width, float height) {
+    public static void drawProgressTexture(MatrixStack matrices, float x, float y, float u, float v, float width, float height) {
         DrawableUtil.drawProgressTexture(matrices, x, y, 0, u, v, width, height, 256, 256);
     }
 
-    public static void drawProgressTexture(MatrixStack matrices, int x, int y, int z, float u, float v, float width, float height, int textureHeight, int textureWidth) {
+    public static void drawProgressTexture(MatrixStack matrices, float x, float y, float z, float u, float v, float width, float height, int textureHeight, int textureWidth) {
         DrawableUtil.drawProgressTexture(matrices, x, x + width, y, y + height, z, width, height, u, v, textureWidth, textureHeight);
     }
 
-    public static void drawProgressTexture(MatrixStack matrices, float x0, float x1, float y0, float y1, float z, float regionWidth, float regionHeight, float u, float v, int textureWidth, int textureHeight) {
-        DrawableUtil.drawTexturedQuad_F(matrices.peek().getModel(), x0, x1, y0, y1, z, (u + 0.0F) / (float)textureWidth, (u + regionWidth) / (float)textureWidth, (v + 0.0F) / (float)textureHeight, (v + regionHeight) / (float)textureHeight);
+    public static void drawProgressTexture(MatrixStack matrices, float x, float y, float z, float u, float v, float width, float height) {
+        DrawableUtil.drawProgressTexture(matrices, x, x + width, y, y + height, z, width, height, u, v, 256, 256);
+    }
+
+    public static void drawProgressTexture(MatrixStack matrices, float x0, float x1, float y0, float y1, float z, float regionWidth, float regionHeight, float u, float v, float textureWidth, float textureHeight) {
+        DrawableUtil.drawTexturedQuad_F(matrices.peek().getModel(), x0, x1, y0, y1, z, (u + 0.0F) / textureWidth, (u + regionWidth) / textureWidth, (v) / textureHeight, (v + regionHeight) / textureHeight);
     }
 
     public static void drawTexturedQuad_F(Matrix4f matrices, float x0, float x1, float y0, float y1, float z, float u0, float u1, float v0, float v1) {

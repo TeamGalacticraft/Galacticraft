@@ -24,8 +24,6 @@ package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.CoalGeneratorBlockEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
@@ -52,7 +50,6 @@ public class CoalGeneratorBlock extends SimpleMachineBlock<CoalGeneratorBlockEnt
         super(settings, CoalGeneratorBlockEntity::new, TOOLTIP_INFO);
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random rand) {
         if (state.get(ACTIVE) && world.getBlockEntity(pos) instanceof CoalGeneratorBlockEntity machine && machine.getHeat() > 0) {

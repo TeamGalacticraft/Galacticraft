@@ -24,6 +24,7 @@ package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
@@ -44,8 +45,9 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BasicSolarPanelBlockEntity extends MachineBlockEntity {
+public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements SolarPanel {
     public static final int CHARGE_SLOT = 0;
+    private final boolean[] blockage = new boolean[9];
 
     public BasicSolarPanelBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.BASIC_SOLAR_PANEL, pos, state);
@@ -65,6 +67,16 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity {
     @Override
     protected void tickDisabled() {
 
+    }
+
+    @Override
+    protected void clientTick() {
+        super.clientTick();
+        for (int x = -1; x < 2; x++) {
+            for (int y = -1; y < 2; y++) {
+                blockage[(y + 1) * 3 + (x + 1)] = !this.world.isSkyVisible(pos.add(x, 2, y));
+            }
+        }
     }
 
     @Override
@@ -90,10 +102,12 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity {
         }
 
         byte panels = 0;
-        for (int z = -1; z < 2; z++) {
+        for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
-                if (this.world.isSkyVisible(pos.add(z, 2, y))) {
+                blockage[(y + 1) * 3 + (x + 1)] = true;
+                if (this.world.isSkyVisible(pos.add(x, 2, y))) {
                     panels++;
+                    blockage[(y + 1) * 3 + (x + 1)] = false;
                 }
             }
         }
@@ -143,6 +157,33 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity {
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
         if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER, syncId, inv, this);
         return null;
+    }
+
+    @Override
+    public boolean @NotNull [] getBlockage() {
+        return this.blockage;
+    }
+
+    @Override
+    public boolean followsSun() {
+        return false;
+    }
+
+    @Override
+    public boolean nightCollection() {
+        return false;
+    }
+
+    @Override
+    public SolarPanelSource getSource() {
+        assert this.world != null;
+        if (this.world.getDimension().hasCeiling()) return SolarPanelSource.NO_LIGHT_SOURCE;
+        if (this.world.isDay()) {
+            if (this.world.isRaining()) return SolarPanelSource.OVERCAST;
+            return SolarPanelSource.DAY;
+        } else {
+            return SolarPanelSource.NIGHT;
+        }
     }
 
     /**

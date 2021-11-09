@@ -20,21 +20,23 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.mod.api.block.entity;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import net.minecraft.client.render.SkyProperties;
-import net.minecraft.util.Identifier;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-@Mixin(SkyProperties.class)
-public interface SkyPropertiesAccessor {
-    @Accessor
-    static Object2ObjectMap<Identifier, SkyProperties> getBY_IDENTIFIER() {
-        throw new UnsupportedOperationException("Untransformed accessor");
+public interface SolarPanel {
+    boolean @NotNull [/*9*/] getBlockage();
+
+    boolean followsSun();
+
+    boolean nightCollection();
+
+    SolarPanelSource getSource();
+
+    enum SolarPanelSource {
+        DAY,
+        NIGHT,
+        OVERCAST,
+        NO_LIGHT_SOURCE
     }
 }

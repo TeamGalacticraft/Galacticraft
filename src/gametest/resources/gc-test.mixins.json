@@ -5,7 +5,6 @@
   "mixins": [
     "TestServerMixin"
   ],
-  "client": [],
   "minVersion": "0.8.0",
   "injectors": {
     "defaultRequire": 1

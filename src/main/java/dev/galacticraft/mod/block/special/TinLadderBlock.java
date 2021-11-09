@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.block.special;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
@@ -115,7 +113,6 @@ public class TinLadderBlock extends Block {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
         return 1.0F;
     }

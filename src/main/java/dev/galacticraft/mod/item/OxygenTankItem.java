@@ -33,8 +33,6 @@ import dev.galacticraft.api.attribute.oxygen.OxygenTankImpl;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.attribute.misc.ArrayReference;
 import dev.galacticraft.mod.attribute.oxygen.InfiniteOxygenTank;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -93,7 +91,6 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         if (this.size > 0){
             OxygenTank tank = GcApiAttributes.OXYGEN_TANK.getFirst(stack);

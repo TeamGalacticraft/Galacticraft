@@ -20,36 +20,30 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.render;
+package dev.galacticraft.mod.screen.slot;
 
-import dev.galacticraft.mod.tag.GalacticraftTag;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.SkyProperties;
-import net.minecraft.util.math.Vec3d;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
-public class MoonSkyProperties extends SkyProperties {
-    public MoonSkyProperties() {
-        super(Float.NaN, false, SkyType.NORMAL, true, true);
+public class FilteredSlot extends Slot {
+    private final ItemFilter filter;
+
+    public FilteredSlot(MachineBlockEntity machine, int index, int x, int y) {
+        this(machine, index, x, y, machine.getFilterForSlot(index));
+    }
+
+    public FilteredSlot(MachineBlockEntity machine, int index, int x, int y, ItemFilter filter) {
+        super(machine.getWrappedInventory(), index, x, y);
+        this.filter = filter;
     }
 
     @Override
-    public Vec3d adjustFogColor(Vec3d color, float sunHeight) {
-        return Vec3d.ZERO;
-    }
-
-    @Override
-    public boolean useThickFog(int camX, int camY) {
-        return GalacticraftTag.MOON_MARE.contains(MinecraftClient.getInstance().world.getBiome(MinecraftClient.getInstance().cameraEntity.getBlockPos()));
-    }
-
-    @Override
-    public float[] getFogColorOverride(float skyAngle, float tickDelta) {
-        return new float[]{0.0F, 0.0F, 0.0F, 0.0F};
+    public boolean canInsert(ItemStack stack) {
+        return this.filter.matches(stack);
     }
 }
