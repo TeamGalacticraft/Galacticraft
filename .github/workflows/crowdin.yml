@@ -25,5 +25,5 @@ jobs:
           pull_request_base_branch_name: 'main'
           project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
           token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
-          source: '/src/main/resources/assets/galacticraft/lang/en_US.json'
-          translation: '/src/main/resources/assets/galacticraft/lang/%locale_with_underscore%.json'
+          source: 'src/main/resources/assets/galacticraft/lang/en_US.json'
+          translation: 'src/main/resources/assets/galacticraft/lang/%locale_with_underscore%.json'
