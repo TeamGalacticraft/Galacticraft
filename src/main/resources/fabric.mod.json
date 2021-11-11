@@ -136,7 +136,7 @@
     }
   },
   "depends": {
-    "minecraft": ">=1.18-alpha.21.44.a",
+    "minecraft": ">=1.18-beta.1",
     "fabricloader": ">=0.11.3",
     "galacticraft-api": ">=0.4.0-prealpha.14+1.17",
     "libblockattributes_core": ">=0.9",
@@ -145,7 +145,6 @@
     "galacticraftenergy": ">=0.2.1",
 
     "fabric-api-base": "*",
-    "fabric-biome-api-v1": "*",
     "fabric-blockrenderlayer-v1": "*",
     "fabric-command-api-v1": "*",
     "fabric-content-registries-v0": "*",

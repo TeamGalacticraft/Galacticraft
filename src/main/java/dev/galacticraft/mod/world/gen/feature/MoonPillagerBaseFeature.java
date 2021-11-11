@@ -35,8 +35,8 @@ import net.minecraft.world.gen.chunk.StructureConfig;
 import net.minecraft.world.gen.feature.JigsawFeature;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
+import net.minecraft.world.gen.random.AtomicSimpleRandom;
 import net.minecraft.world.gen.random.ChunkRandom;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -49,21 +49,29 @@ public class MoonPillagerBaseFeature extends JigsawFeature {
     }
 
     @Override
-    protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long worldSeed, @NotNull ChunkRandom random, ChunkPos pos, ChunkPos chunkPos, StructurePoolFeatureConfig featureConfig, HeightLimitView heightLimitView) {
-        if (random.nextInt(5) != 0) {
+    protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long seed, ChunkPos chunkPos, StructurePoolFeatureConfig featureConfig, HeightLimitView heightLimitView) {
+        int i = chunkPos.x >> 4;
+        int j = chunkPos.z >> 4;
+        ChunkRandom chunkRandom = new ChunkRandom(new AtomicSimpleRandom(0L));
+        chunkRandom.setSeed((long)(i ^ j << 4) ^ seed);
+        chunkRandom.nextInt();
+        if (chunkRandom.nextInt(5) != 0) {
             return false;
         } else {
-            return !this.ensureNoVillage(chunkGenerator, worldSeed, random, chunkPos.x, chunkPos.z);
+            return !this.isVillageNearby(chunkGenerator, seed, chunkPos);
         }
     }
 
-    private boolean ensureNoVillage(@NotNull ChunkGenerator chunkGenerator, long l, ChunkRandom chunkRandom, int i, int j) {
-        StructureConfig structureConfig = chunkGenerator.getStructuresConfig().getForType(StructureFeature.VILLAGE);
+    private boolean isVillageNearby(ChunkGenerator generator, long worldSeed, ChunkPos chunkPos) {
+        StructureConfig structureConfig = generator.getStructuresConfig().getForType(StructureFeature.VILLAGE);
         if (structureConfig != null) {
-            for (int x = i - 10; x <= i + 10; ++x) {
-                for (int z = j - 10; z <= j + 10; ++z) {
-                    ChunkPos chunkPos = StructureFeature.VILLAGE.getStartChunk(structureConfig, l, chunkRandom, x, z);
-                    if (x == chunkPos.x && z == chunkPos.z) {
+            int i = chunkPos.x;
+            int j = chunkPos.z;
+
+            for (int k = i - 10; k <= i + 10; ++k) {
+                for (int l = j - 10; l <= j + 10; ++l) {
+                    ChunkPos chunkPos2 = StructureFeature.VILLAGE.getStartChunk(structureConfig, worldSeed, k, l);
+                    if (k == chunkPos2.x && l == chunkPos2.z) {
                         return true;
                     }
                 }

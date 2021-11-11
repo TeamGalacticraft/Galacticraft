@@ -30,8 +30,6 @@ import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil.ParameterRange;
 
-import java.util.Optional;
-
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
@@ -64,7 +62,7 @@ public class GalacticraftBiomeNoisePreset {
     private static final ParameterRange WEIRDNESS_H_PLAINS = MultiNoiseUtil.ParameterRange.of(0.4F, 0.56666666F);
     private static final ParameterRange WEIRDNESS_H_MOUNTAINS = MultiNoiseUtil.ParameterRange.of(0.56666666F, 0.7666667F);
 
-    public static final MultiNoiseBiomeSource.Preset MOON = new MultiNoiseBiomeSource.Preset(Constant.id("moon"), (preset, biomeRegistry) -> new MultiNoiseBiomeSource(new MultiNoiseUtil.Entries<>(
+    public static final MultiNoiseBiomeSource.Preset MOON = new MultiNoiseBiomeSource.Preset(Constant.id("moon"), (biomeRegistry) -> new MultiNoiseUtil.Entries<>(
             ImmutableList.of(
                     // HIGHLANDS
 
@@ -161,6 +159,6 @@ public class GalacticraftBiomeNoisePreset {
                             WEIRDNESS_RIVER,
                             0L
                     ), () -> biomeRegistry.getOrThrow(GalacticraftBiome.Moon.MARE_EDGE))
-            )), Optional.of(Pair.of(biomeRegistry, preset))));
+            )));
 }
 
