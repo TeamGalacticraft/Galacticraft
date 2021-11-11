@@ -6,7 +6,6 @@
   "mixins": [
     "AbstractSkeletonEntityAccessor",
     "BucketItemAccessor",
-    "BuiltinBiomesAccessor",
     "DamageSourceAccessor",
     "DimensionTypeMixin",
     "EntityMixin",

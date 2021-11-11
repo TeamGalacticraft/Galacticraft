@@ -44,7 +44,6 @@ import dev.galacticraft.mod.structure.GalacticraftStructure;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import dev.galacticraft.mod.village.GalacticraftVillagerProfession;
 import dev.galacticraft.mod.village.MoonVillagerType;
-import dev.galacticraft.mod.world.biome.source.GalacticraftBiomeNoisePresets;
 import dev.galacticraft.mod.world.dimension.GalacticraftGas;
 import dev.galacticraft.mod.world.gen.carver.GalacticraftCarver;
 import dev.galacticraft.mod.world.gen.feature.GalacticraftFeature;
@@ -79,7 +78,6 @@ public class Galacticraft implements ModInitializer {
         GalacticraftStructure.register();
         GalacticraftFeature.register();
         GalacticraftCarver.register();
-        GalacticraftBiomeNoisePresets.register();
         GalacticraftScreenHandlerType.register();
         GalacticraftParticleType.register();
         GalacticraftCommand.register();

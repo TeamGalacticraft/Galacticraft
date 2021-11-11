@@ -1,23 +1,58 @@
 {
-  "depth": 0.6,
-  "scale": 0.0,
-  "downfall": 0.0,
   "temperature": 2.0,
+  "downfall": 0,
   "precipitation": "none",
+  "temperature_modifier": "none",
   "category": "none",
+  "player_spawn_friendly": true,
   "effects": {
+    "sky_color": 0,
+    "fog_color": 1447445,
+    "water_color": 4013374,
+    "water_fog_color": 4802890,
     "music": {
       "sound": "galacticraft:music.music_moon",
       "min_delay": 1200,
       "max_delay": 3600,
       "replace_current_music": true
-    },
-    "sky_color": 0,
-    "fog_color": 1447445,
-    "water_color": 4013374,
-    "water_fog_color": 4802890
+    }
   },
-  "surface_builder": "galacticraft:moon_highlands",
+  "spawners": {
+    "monster": [
+      {
+        "type": "galacticraft:evolved_zombie",
+        "weight": 95,
+        "minCount": 4,
+        "maxCount": 5
+      },
+      {
+        "type": "galacticraft:evolved_creeper",
+        "weight": 100,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "galacticraft:evolved_skeleton",
+        "weight": 100,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "galacticraft:evolved_spider",
+        "weight": 100,
+        "minCount": 4,
+        "maxCount": 4
+      }
+    ],
+    "creature": [],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {},
   "carvers": {
     "air": [
       "galacticraft:moon_craters",
@@ -28,8 +63,13 @@
   "features": [
     [],
     [],
-    [],
-    [],
+    [
+      "minecraft:amethyst_geode"
+    ],
+    [
+      "minecraft:monster_room",
+      "minecraft:monster_room_deep"
+    ],
     [],
     [],
     [
@@ -39,32 +79,7 @@
     ],
     [],
     [],
+    [],
     []
-  ],
-  "starts": [
-    "galacticraft:moon_village",
-    "galacticraft:moon_pillager_base"
-  ],
-  "spawners": {
-    "monster": [
-      {
-        "type": "galacticraft:evolved_zombie",
-        "weight": 100,
-        "minCount": 4,
-        "maxCount": 5
-      },
-      {
-        "type": "galacticraft:evolved_creeper",
-        "weight": 100,
-        "minCount": 4,
-        "maxCount": 5
-      }
-    ],
-    "creature": [],
-    "water_creature": [],
-    "water_ambient": [],
-    "misc": []
-  },
-  "spawn_costs": {},
-  "player_spawn_friendly": true
+  ]
 }

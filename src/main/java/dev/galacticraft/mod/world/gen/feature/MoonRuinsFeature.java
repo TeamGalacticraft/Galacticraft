@@ -24,14 +24,11 @@ package dev.galacticraft.mod.world.gen.feature;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.structure.MoonRuinsGenerator;
-import net.minecraft.structure.StructureManager;
-import net.minecraft.structure.StructureStart;
+import net.minecraft.class_6622;
+import net.minecraft.class_6626;
 import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.registry.DynamicRegistryManager;
-import net.minecraft.world.HeightLimitView;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 
@@ -40,19 +37,13 @@ import net.minecraft.world.gen.feature.StructureFeature;
  */
 public class MoonRuinsFeature extends StructureFeature<DefaultFeatureConfig> {
    public MoonRuinsFeature(Codec<DefaultFeatureConfig> codec) {
-      super(codec);
+      super(codec, MoonRuinsFeature::method_38700);
    }
-
-   public static class Start extends StructureStart<DefaultFeatureConfig> {
-      public Start(StructureFeature<DefaultFeatureConfig> structureFeature, ChunkPos chunkPos, int i, long l) {
-         super(structureFeature, chunkPos, i, l);
-      }
-
-      @Override
-      public void init(DynamicRegistryManager registryManager, ChunkGenerator chunkGenerator, StructureManager manager, ChunkPos pos, Biome biome, DefaultFeatureConfig config, HeightLimitView world) {
-         BlockRotation blockRotation = BlockRotation.random(this.random);
-         MoonRuinsGenerator.addPieces(manager, pos.getBlockPos(0, 90, 0), blockRotation, this, this.random, config);
-         this.setBoundingBoxFromChildren();
+   private static void method_38700(class_6626 arg, DefaultFeatureConfig featureConfig, class_6622.class_6623 arg2) {
+      if (arg2.method_38707(Heightmap.Type.WORLD_SURFACE_WG)) {
+         BlockPos blockPos = new BlockPos(arg2.chunkPos().getStartX(), 90, arg2.chunkPos().getStartZ());
+         BlockRotation blockRotation = BlockRotation.random(arg2.random());
+         MoonRuinsGenerator.addPieces(arg2.structureManager(), blockPos, blockRotation, arg, arg2.random(), featureConfig);
       }
    }
 }

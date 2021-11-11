@@ -48,7 +48,7 @@ public class CraterCarver extends Carver<CraterCarverConfig> {
 
     @Override
     public boolean carve(CarverContext context, CraterCarverConfig config, Chunk chunk, Function<BlockPos, Biome> posToBiome, Random random, AquiferSampler aquiferSampler, ChunkPos pos, CarvingMask carvingMask) {
-        int y = 127;//config.y.get(random, context);
+        int y = config.y.get(random, context);
         //pos = center chunk pos
         BlockPos craterCenter = pos.getBlockPos(random.nextInt(16), y, random.nextInt(16));
 
