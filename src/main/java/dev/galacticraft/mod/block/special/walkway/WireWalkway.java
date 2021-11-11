@@ -39,6 +39,7 @@ import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -116,7 +117,7 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (!this.isEmpty(state)) {
-            world.getFluidTickScheduler().schedule(pos, Registry.FLUID.get(state.get(FLUID)), Registry.FLUID.get(state.get(FLUID)).getTickRate(world));
+            world.createAndScheduleFluidTick(pos, Registry.FLUID.get(state.get(FLUID)), Registry.FLUID.get(state.get(FLUID)).getTickRate(world));
         }
         return state;
     }
@@ -135,20 +136,20 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
                     if (wire.canConnect(direction.getOpposite())) {
                         if (blockEntity.getConnections()[direction.ordinal()] != (blockEntity.getConnections()[direction.ordinal()] = true)) {
                             world.updateNeighbor(pos.offset(direction), state.getBlock(), pos);
-                            if (!world.isClient) blockEntity.sync();
+                            if (!world.isClient) ((ServerWorld) world).getChunkManager().markForUpdate(pos);
                         }
                         return;
                     }
                 } else if (EnergyUtil.canAccessEnergy(world, pos.offset(direction), direction)) {
                     if (blockEntity.getConnections()[direction.ordinal()] != (blockEntity.getConnections()[direction.ordinal()] = true)) {
                         world.updateNeighbor(pos.offset(direction), state.getBlock(), pos);
-                        if (!world.isClient) blockEntity.sync();
+                        if (!world.isClient) ((ServerWorld) world).getChunkManager().markForUpdate(pos);
                     }
                     return;
                 }
             }
             blockEntity.getConnections()[Objects.requireNonNull(direction).ordinal()] = false;
-            if (!world.isClient) blockEntity.sync();
+            if (!world.isClient) ((ServerWorld) world).getChunkManager().markForUpdate(pos);
         }
     }
 

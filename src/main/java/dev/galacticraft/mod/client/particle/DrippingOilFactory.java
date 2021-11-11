@@ -20,37 +20,30 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.particle.fluid;
+package dev.galacticraft.mod.client.particle;
 
+import dev.galacticraft.mod.fluid.GalacticraftFluid;
+import dev.galacticraft.mod.particle.GalacticraftParticleType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.particle.ParticleTextureSheet;
-import net.minecraft.client.particle.SpriteBillboardParticle;
+import net.minecraft.client.particle.BlockLeakParticle;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleFactory;
+import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.particle.DefaultParticleType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class DrippingCrudeOilParticle extends SpriteBillboardParticle {
-    public DrippingCrudeOilParticle(ClientWorld world, double x, double y, double z, double velX, double velY, double velZ) {
-        super(world, x, y, z, velX, velY, velZ);
-        setSprite(MinecraftClient.getInstance().getItemRenderer().getModels().getModelParticleSprite(Blocks.ACACIA_LOG.asItem()));
-        this.scale *= 0.25f;
-        this.velocityX = 0.0f;
-        this.velocityY = -0.6f;
-        this.velocityZ = 0.0f;
-        this.colorRed = 42f / 255f;
-        this.colorGreen = 42f / 255f;
-        this.colorBlue = 42f / 255f;
-        this.colorAlpha = 229f / 255f;
-        this.maxAge = (int) (64.0D / (Math.random() * 0.8D + 0.2D));
-    }
-
+public record DrippingOilFactory(SpriteProvider spriteProvider) implements ParticleFactory<DefaultParticleType> {
     @Override
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+    public @NotNull Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        BlockLeakParticle particle = new BlockLeakParticle.Dripping(world, x, y, z, GalacticraftFluid.CRUDE_OIL, GalacticraftParticleType.DRIPPING_CRUDE_OIL_PARTICLE);
+        particle.setColor(42f / 255f, 42f / 255f, 42f / 255f);
+        particle.setSprite(this.spriteProvider);
+        return particle;
     }
 }

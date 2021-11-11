@@ -20,17 +20,30 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.biome.source;
+package dev.galacticraft.mod.client.particle;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import dev.galacticraft.mod.fluid.GalacticraftFluid;
+import dev.galacticraft.mod.particle.GalacticraftParticleType;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.particle.BlockLeakParticle;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleFactory;
+import net.minecraft.client.particle.SpriteProvider;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.particle.DefaultParticleType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftBiomeSource {
-    public static void register() {
-        Registry.register(Registry.BIOME_SOURCE, new Identifier(Constant.MOD_ID, "moon"), MoonBiomeSource.CODEC);
+@Environment(EnvType.CLIENT)
+public record DrippingFuelFactory(SpriteProvider spriteProvider) implements ParticleFactory<DefaultParticleType> {
+    @Override
+    public @NotNull Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        BlockLeakParticle particle = new BlockLeakParticle.Dripping(world, x, y, z, GalacticraftFluid.FUEL, GalacticraftParticleType.DRIPPING_FUEL_PARTICLE);
+        particle.setColor(146f / 255f, 140f / 255f, 74f / 255f);
+        particle.setSprite(this.spriteProvider);
+        return particle;
     }
 }

@@ -56,9 +56,6 @@ import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.util.EnergyUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -71,6 +68,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -87,7 +85,7 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, ExtendedScreenHandlerFactory, AttributeProviderBlockEntity {
+public abstract class MachineBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, AttributeProviderBlockEntity {
     private final MachineConfiguration configuration = new MachineConfiguration();
 
     private boolean noDrop = false;
@@ -329,6 +327,10 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         return this.configuration.getSideConfiguration();
     }
 
+    public boolean noDrops() {
+        return noDrop;
+    }
+
     protected ItemStack decrement(int slot, int amount) {
         return this.itemInv().extractStack(slot, ConstantItemFilter.ANYTHING, ItemStack.EMPTY, amount, Simulation.ACTION);
     }
@@ -434,14 +436,13 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
         if (this.getEnergyCapacity() > 0) this.capacitor().toTag(tag);
         if (this.itemInv().getSlotCount()> 0) this.itemInv().toTag(tag);
         if (this.fluidInv().getTankCount() > 0) this.fluidInv().toTag(tag);
         this.configuration.toTag(tag);
         tag.putBoolean(Constant.Nbt.NO_DROP, this.noDrop);
-        return tag;
     }
 
     @Override
@@ -452,24 +453,15 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         if (this.fluidInv().getTankCount() > 0) this.fluidInv().fromTag(tag);
         this.configuration.fromTag(tag);
         this.noDrop = tag.getBoolean(Constant.Nbt.NO_DROP);
-        if (loaded && !world.isClient) {
-            this.sync();
+        if (!this.world.isClient) {
+            if (loaded) {
+                this.sync();
+            } else {
+                loaded = true;
+            }
         } else {
-            loaded = true;
+            ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(pos);
         }
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public void fromClientTag(NbtCompound tag) {
-        this.getIOConfig().fromTag(tag);
-        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(pos);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        this.getIOConfig().toTag(tag);
-        return tag;
     }
 
     public boolean canInsert(int slot, ItemStack stack) {
@@ -563,9 +555,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         return this.wrappedInventory;
     }
 
-    @Override
     public void sync() {
-        BlockEntityClientSerializable.super.sync();
+        ((ServerWorld) world).getChunkManager().markForUpdate(getPos());
         BlockState state = this.getCachedState();
         this.world.setBlockState(this.pos, state.with(MachineBlock.ARBITRARY_BOOLEAN_PROPERTY, !state.get(MachineBlock.ARBITRARY_BOOLEAN_PROPERTY)), 11);
     }

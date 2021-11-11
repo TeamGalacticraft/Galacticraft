@@ -99,13 +99,13 @@ public interface FluidLoggable extends FluidDrainable, FluidFillable {
                 world.setBlockState(pos, state
                         .with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
                         .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1)), 3);
-                world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
+                world.createAndScheduleFluidTick(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
             }
             return true;
         } else if (Registry.FLUID.getId(fluidState.getFluid()).equals(state.get(FLUID))) {
             if (!world.isClient()) {
                 world.setBlockState(pos, state.with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1)), 3);
-                world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
+                world.createAndScheduleFluidTick(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
             }
             return true;
         } else if (fluidState.getFluid() == Fluids.EMPTY) {

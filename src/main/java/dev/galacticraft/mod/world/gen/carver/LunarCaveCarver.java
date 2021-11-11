@@ -33,15 +33,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.carver.CarverConfig;
-import net.minecraft.world.gen.carver.CarverContext;
-import net.minecraft.world.gen.carver.CaveCarver;
-import net.minecraft.world.gen.carver.CaveCarverConfig;
+import net.minecraft.world.gen.carver.*;
 import net.minecraft.world.gen.chunk.AquiferSampler;
+import net.minecraft.world.tick.OrderedTick;
 import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.BitSet;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -75,25 +73,28 @@ public class LunarCaveCarver extends CaveCarver {
     }
 
     @Override
-    protected boolean carveAtPoint(CarverContext context, CaveCarverConfig config, Chunk chunk, Function<BlockPos, Biome> posToBiome, BitSet carvingMask, Random random, BlockPos.Mutable pos, BlockPos.Mutable downPos, AquiferSampler sampler, MutableBoolean foundSurface) {
-        BlockState blockState = chunk.getBlockState(pos);
-        BlockState blockState2 = chunk.getBlockState(downPos.set(pos, Direction.UP));
-        if (blockState.isOf(GalacticraftBlock.MOON_TURF) || blockState.isOf(GalacticraftBlock.MOON_SURFACE_ROCK)) {
-            foundSurface.setTrue();
+    protected boolean carveAtPoint(CarverContext context, CaveCarverConfig config, @NotNull Chunk chunk, Function<BlockPos, Biome> posToBiome, CarvingMask carvingMask, BlockPos.Mutable mutable, BlockPos.Mutable mutable2, AquiferSampler aquiferSampler, MutableBoolean mutableBoolean) {
+        BlockState blockState = chunk.getBlockState(mutable);
+        if (blockState.isOf(Blocks.GRASS_BLOCK) || blockState.isOf(Blocks.MYCELIUM)) {
+            mutableBoolean.setTrue();
         }
 
-        if (!this.canCarveBlock(blockState, blockState2) && !config.debugConfig.isDebugMode()) {
+        if (!this.canAlwaysCarveBlock(blockState) && !isDebug(config)) {
             return false;
         } else {
-            BlockState blockState3 = this.getState(context, config, pos, sampler);
-            if (blockState3 == null) {
+            BlockState blockState2 = this.getState(context, config, mutable, aquiferSampler);
+            if (blockState2 == null) {
                 return false;
             } else {
-                chunk.setBlockState(pos, blockState3, false);
-                if (foundSurface.isTrue()) {
-                    downPos.set(pos, Direction.DOWN);
-                    if (chunk.getBlockState(downPos).isOf(GalacticraftBlock.MOON_DIRT)) {
-                        chunk.setBlockState(downPos, posToBiome.apply(pos).getGenerationSettings().getSurfaceConfig().getTopMaterial(), false);
+                chunk.setBlockState(mutable, blockState2, false);
+                if (aquiferSampler.needsFluidTick() && !blockState2.getFluidState().isEmpty()) {
+                    chunk.getFluidTickScheduler().scheduleTick(OrderedTick.create(blockState2.getFluidState().getFluid(), mutable, 0L));
+                }
+
+                if (mutableBoolean.isTrue()) {
+                    mutable2.set(mutable, Direction.DOWN);
+                    if (chunk.getBlockState(mutable2).isOf(Blocks.DIRT)) {
+                        context.method_39114(posToBiome, chunk, mutable2, !blockState2.getFluidState().isEmpty()).ifPresent(blockStatex -> chunk.setBlockState(mutable2, blockStatex, false));
                     }
                 }
 
@@ -101,21 +102,23 @@ public class LunarCaveCarver extends CaveCarver {
             }
         }
     }
-    
+
     @Nullable
-    private BlockState getState(CarverContext context, CarverConfig config, BlockPos pos, AquiferSampler sampler) {
+    private BlockState getState(CarverContext context, CaveCarverConfig config, BlockPos pos, AquiferSampler sampler) {
         if (pos.getY() <= config.lavaLevel.getY(context)) {
-            return CAVE_AIR;
-        } else if (!config.aquifers) {
-            return config.debugConfig.isDebugMode() ? getDebugState(config, AIR) : AIR;
+            return CAVE_AIR; //LAVA.getBlockState();
         } else {
-            BlockState blockState = sampler.apply(STONE_SOURCE, pos.getX(), pos.getY(), pos.getZ(), 0.0D);
-            if (blockState == GalacticraftBlock.MOON_ROCKS[0].getDefaultState()) {
-                return config.debugConfig.isDebugMode() ? config.debugConfig.getBarrierState() : null;
+            BlockState blockState = sampler.apply(pos.getX(), pos.getY(), pos.getZ(), 0.0, 0.0);
+            if (blockState == null) {
+                return isDebug(config) ? config.debugConfig.getBarrierState() : null;
             } else {
-                return config.debugConfig.isDebugMode() ? getDebugState(config, blockState) : blockState;
+                return isDebug(config) ? getDebugState(config, blockState) : blockState;
             }
         }
+    }
+
+    private static boolean isDebug(CarverConfig config) {
+        return config.debugConfig.isDebugMode();
     }
 
     private static BlockState getDebugState(CarverConfig config, BlockState state) {

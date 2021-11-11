@@ -43,16 +43,17 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
         nbt.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.direction, Direction.UP).ordinal());
         nbt.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.direction, Direction.UP).ordinal());
-        return super.writeNbt(nbt);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         this.direction = Constant.Misc.DIRECTIONS[nbt.getByte(Constant.Nbt.DIRECTION)];
         super.readNbt(nbt);
+        if (!world.isClient) ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
     }
 
     @Override
@@ -65,19 +66,6 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
         this.direction = direction;
         this.getConnections()[direction.ordinal()] = false;
         world.updateNeighborsAlways(pos, this.getCachedState().getBlock());
-    }
-
-    @Override
-    public void fromClientTag(NbtCompound tag) {
-        super.fromClientTag(tag);
-        this.direction = Constant.Misc.DIRECTIONS[tag.getByte(Constant.Nbt.DIRECTION)];
-        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        tag.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.direction, Direction.UP).ordinal());
-        return super.toClientTag(tag);
     }
 
     @Override

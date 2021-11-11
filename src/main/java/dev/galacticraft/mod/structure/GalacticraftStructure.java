@@ -36,8 +36,6 @@ import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
-import java.util.Collections;
-
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
@@ -47,7 +45,7 @@ public class GalacticraftStructure {
             Codec.INT.fieldOf("size").forGetter(StructurePoolFeatureConfig::getSize)
     ).apply(instance, StructurePoolFeatureConfig::new));
 
-    public static final StructurePieceType MOON_RUINS_PIECE = MoonRuinsGenerator.Piece::new;
+    public static final StructurePieceType MOON_RUINS_PIECE = (StructurePieceType.class_6616)MoonRuinsGenerator.Piece::new;
 
     public static final MoonPillagerBaseFeature MOON_PILLAGER_BASE_FEATURE = new MoonPillagerBaseFeature(SPFC_CODEC_UNCAPPED);
     public static final MoonRuinsFeature MOON_RUINS = new MoonRuinsFeature(DefaultFeatureConfig.CODEC);
@@ -59,12 +57,10 @@ public class GalacticraftStructure {
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
                 .defaultConfig(32, 16, 23789482)
                 .adjustsSurface()
-                .superflatFeature(new StructurePoolFeatureConfig(() -> new StructurePool(Constant.Misc.EMPTY, Constant.Misc.EMPTY, Collections.emptyList()), 0))
                 .register();
         FabricStructureBuilder.create(new Identifier(Constant.MOD_ID, "moon_ruins"), MOON_RUINS)
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
                 .defaultConfig(24, 8, 1903453)
-                .superflatFeature(DefaultFeatureConfig.INSTANCE)
                 .register();
     }
 }

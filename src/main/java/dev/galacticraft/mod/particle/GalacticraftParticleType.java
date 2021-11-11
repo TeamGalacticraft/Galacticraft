@@ -20,23 +20,23 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.surfacebuilder;
+package dev.galacticraft.mod.particle;
 
 import dev.galacticraft.mod.Constant;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
-import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftSurfaceBuilder {
-    public static final SurfaceBuilder<MultiBlockSurfaceConfig> MULTI_BLOCK_SURFACE_BUILDER = new MultiBlockSurfaceBuilder(MultiBlockSurfaceConfig.CODEC);
-    public static final SurfaceBuilder<TernarySurfaceConfig> MOON = new MoonSurfaceBuilder<>(TernarySurfaceConfig.CODEC);
+public class GalacticraftParticleType {
+    public static final DefaultParticleType DRIPPING_FUEL_PARTICLE = FabricParticleTypes.simple();
+    public static final DefaultParticleType DRIPPING_CRUDE_OIL_PARTICLE = FabricParticleTypes.simple();
 
     public static void register() {
-        Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constant.MOD_ID, "multi_block"), MULTI_BLOCK_SURFACE_BUILDER);
-        Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constant.MOD_ID, "moon"), MOON);
+        Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constant.MOD_ID, Constant.Particle.DRIPPING_CRUDE_OIL_PARTICLE), DRIPPING_FUEL_PARTICLE);
+        Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constant.MOD_ID, Constant.Particle.DRIPPING_FUEL_PARTICLE), DRIPPING_CRUDE_OIL_PARTICLE);
     }
 }

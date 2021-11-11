@@ -43,10 +43,6 @@ public class MoonRuinsFeature extends StructureFeature<DefaultFeatureConfig> {
       super(codec);
    }
 
-   public StructureStartFactory<DefaultFeatureConfig> getStructureStartFactory() {
-      return Start::new;
-   }
-
    public static class Start extends StructureStart<DefaultFeatureConfig> {
       public Start(StructureFeature<DefaultFeatureConfig> structureFeature, ChunkPos chunkPos, int i, long l) {
          super(structureFeature, chunkPos, i, l);

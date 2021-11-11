@@ -39,12 +39,11 @@ public class SolarPanelPartBlockEntity extends BlockEntity implements MultiBlock
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
         if (this.basePos != BlockPos.ORIGIN) {
             tag.putLong("Base", this.basePos.asLong());
         }
-        return tag;
     }
 
     @Override

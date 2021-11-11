@@ -24,23 +24,19 @@ package dev.galacticraft.mod.world.gen.carver;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
-import net.minecraft.structure.StructureStart;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.carver.Carver;
 import net.minecraft.world.gen.carver.CarverContext;
+import net.minecraft.world.gen.carver.CarvingMask;
 import net.minecraft.world.gen.chunk.AquiferSampler;
 import net.minecraft.world.gen.feature.StructureFeature;
 
-import java.util.BitSet;
 import java.util.Random;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -51,7 +47,7 @@ public class CraterCarver extends Carver<CraterCarverConfig> {
     }
 
     @Override
-    public boolean carve(CarverContext context, CraterCarverConfig config, Chunk chunk, Function<BlockPos, Biome> posToBiome, Random random, AquiferSampler aquiferSampler, ChunkPos pos, BitSet carvingMask) {
+    public boolean carve(CarverContext context, CraterCarverConfig config, Chunk chunk, Function<BlockPos, Biome> posToBiome, Random random, AquiferSampler aquiferSampler, ChunkPos pos, CarvingMask carvingMask) {
         int y = 127;//config.y.get(random, context);
         //pos = center chunk pos
         BlockPos craterCenter = pos.getBlockPos(random.nextInt(16), y, random.nextInt(16));
@@ -94,13 +90,13 @@ public class CraterCarver extends Carver<CraterCarverConfig> {
                     mutable.set(innerChunkX, y, innerChunkZ);
                     for (int dug = 0; dug < toDig; dug++) {
                         mutable.move(Direction.DOWN);
-                        if (!chunk.getBlockState(mutable).isAir() || carvingMask.get(innerChunkX + (innerChunkZ << 4) + ((mutable.getY() + 128) << 8)) || dug > 0) {
+                        if (!chunk.getBlockState(mutable).isAir() || carvingMask.get(innerChunkX, mutable.getY(), innerChunkZ) || dug > 0) {
                             chunk.setBlockState(mutable, CAVE_AIR, false);
                             if (dug == 0) {
-                                carvingMask.set(innerChunkX + (innerChunkZ << 4) + ((mutable.getY() + 128) << 8), true);
-                            }
+                                carvingMask.set(innerChunkX, mutable.getY(), innerChunkZ);
+                            };
                             if (!fresh && dug + 1 >= toDig && !chunk.getBlockState(copy.set(mutable).move(Direction.DOWN, 2)).isAir()) {
-                                chunk.setBlockState(mutable.move(Direction.DOWN), posToBiome.apply(chunk.getPos().getBlockPos(mutable.getX(), mutable.getY(), mutable.getZ())).getGenerationSettings().getSurfaceConfig().getTopMaterial(), false);
+                                context.method_39114(posToBiome, chunk, mutable, false).ifPresent(blockStatex -> chunk.setBlockState(mutable.move(Direction.DOWN), blockStatex, false));
                             }
                         } else {
                             dug--;
@@ -110,10 +106,6 @@ public class CraterCarver extends Carver<CraterCarverConfig> {
             }
         }
         return true;
-    }
-
-    public Stream<? extends StructureStart<?>> getStructuresWithChildren(Chunk chunk, ChunkRegion region, StructureFeature<?> feature) {
-        return chunk.getStructureReferences(feature).stream().map(l -> ChunkSectionPos.from(new ChunkPos(l), chunk.getBottomSectionCoord())).map(posx -> chunk.getStructureStart(feature)).filter(structureStart -> structureStart != null && structureStart.hasChildren());
     }
 
     @Override

@@ -24,7 +24,7 @@ package dev.galacticraft.mod.fluid;
 
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.item.GalacticraftItem;
-import dev.galacticraft.mod.particle.GalacticraftParticle;
+import dev.galacticraft.mod.particle.GalacticraftParticleType;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
@@ -54,7 +54,7 @@ public abstract class CrudeOilFluid extends BasicFluid {
     }
 
     public ParticleEffect getParticle() {
-        return GalacticraftParticle.DRIPPING_CRUDE_OIL_PARTICLE;
+        return GalacticraftParticleType.DRIPPING_CRUDE_OIL_PARTICLE;
     }
 
     @Override
@@ -65,7 +65,7 @@ public abstract class CrudeOilFluid extends BasicFluid {
     @Override
     public void randomDisplayTick(World world, BlockPos blockPos, FluidState fluidState, Random random) {
         if (random.nextInt(10) == 0) {
-            world.addParticle(GalacticraftParticle.DRIPPING_CRUDE_OIL_PARTICLE,
+            world.addParticle(GalacticraftParticleType.DRIPPING_CRUDE_OIL_PARTICLE,
                     (double) blockPos.getX() + 0.5D - random.nextGaussian() + random.nextGaussian(),
                     (double) blockPos.getY() + 1.1F,
                     (double) blockPos.getZ() + 0.5D - random.nextGaussian() + random.nextGaussian(),

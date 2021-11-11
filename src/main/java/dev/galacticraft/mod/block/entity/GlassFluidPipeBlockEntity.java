@@ -23,23 +23,17 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.block.entity.Pullable;
 import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 
-import java.util.Objects;
-
-public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colored, Connected, Pullable, BlockEntityClientSerializable {
+public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colored, Connected, Pullable {
     private boolean pull = false;
 
     public GlassFluidPipeBlockEntity(BlockPos pos, BlockState state) {
@@ -50,25 +44,16 @@ public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colore
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         this.readPullNbt(nbt);
+
+        if (world.isClient) {
+            ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
+        }
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
         this.writePullNbt(nbt);
-        return super.writeNbt(nbt);
-    }
-
-    @Override
-    public void fromClientTag(NbtCompound tag) {
-        super.fromClientTag(tag);
-        this.readPullNbt(tag);
-        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        this.writePullNbt(tag);
-        return super.toClientTag(tag);
     }
 
     @Override

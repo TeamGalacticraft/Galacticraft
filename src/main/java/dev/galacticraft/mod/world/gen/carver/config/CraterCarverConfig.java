@@ -48,8 +48,8 @@ public class CraterCarverConfig extends CarverConfig {
     public final int minRadius;
     public final int idealRangeOffset;
 
-    public CraterCarverConfig(float probability, HeightProvider y, FloatProvider yScale, CarverDebugConfig debugConfig, int maxRadius, int minRadius, int idealRangeOffset) {
-        super(probability, y, yScale, YOffset.fixed(0), false, debugConfig);
+    public CraterCarverConfig(float probability, HeightProvider y, FloatProvider yScale, CarverDebugConfig carverDebugConfig, int maxRadius, int minRadius, int idealRangeOffset) {
+        super(probability, y, yScale, YOffset.fixed(-64), carverDebugConfig);
         this.maxRadius = maxRadius;
         this.minRadius = minRadius;
         this.idealRangeOffset = idealRangeOffset;

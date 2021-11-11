@@ -42,21 +42,24 @@ public class WalkwayBlockEntity extends BlockEntity implements Walkway {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
         for (int i = 0; i < 6; i++) {
             nbt.putBoolean(Constant.Misc.DIRECTIONS[i].asString(), this.connections[i]);
         }
         nbt.putByte(Constant.Nbt.DIRECTION, (byte) this.direction.ordinal());
-        return super.writeNbt(nbt);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
         for (int i = 0; i < 6; i++) {
             this.connections[i] = nbt.getBoolean(Constant.Misc.DIRECTIONS[i].asString());
         }
         this.direction = Constant.Misc.DIRECTIONS[nbt.getByte(Constant.Nbt.DIRECTION)];
-        super.readNbt(nbt);
+        if (world.isClient) {
+            ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
+        }
     }
 
     @Override
@@ -72,16 +75,5 @@ public class WalkwayBlockEntity extends BlockEntity implements Walkway {
     @Override
     public void setDirection(@NotNull Direction direction) {
         this.direction = direction;
-    }
-
-    @Override
-    public void fromClientTag(NbtCompound tag) {
-        this.readNbt(tag);
-        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        return this.writeNbt(tag);
     }
 }

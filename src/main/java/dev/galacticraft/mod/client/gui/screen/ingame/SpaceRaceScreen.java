@@ -286,7 +286,7 @@ public class SpaceRaceScreen extends Screen {
             x2 = i;
         }
 
-        fillSolid(matrices.peek().getModel(), x1, y, x2 + 1, y + 1, color);
+        fillSolid(matrices.peek().getPositionMatrix(), x1, y, x2 + 1, y + 1, color);
     }
 
     protected void drawVerticalLineSolid(MatrixStack matrices, int x, int y1, int y2, int color) {
@@ -296,7 +296,7 @@ public class SpaceRaceScreen extends Screen {
             y2 = i;
         }
 
-        fillSolid(matrices.peek().getModel(), x, y1 + 1, x + 1, y2, color);
+        fillSolid(matrices.peek().getPositionMatrix(), x, y1 + 1, x + 1, y2, color);
     }
 
     private int getBottom() {
@@ -336,7 +336,7 @@ public class SpaceRaceScreen extends Screen {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.enableBlend();
         stack.push();
-        fillSolid(stack.peek().getModel(), x, y, x + width, y + height, 0xAA1e1e1e);
+        fillSolid(stack.peek().getPositionMatrix(), x, y, x + width, y + height, 0xAA1e1e1e);
         RenderSystem.setShader(GameRenderer::getRenderTypeLinesShader);
         RenderSystem.setShaderColor(1, 1, 1, 1);
         drawHorizontalLineSolid(stack, x, x + width, y, 0xFF3c3c3c);
@@ -360,7 +360,7 @@ public class SpaceRaceScreen extends Screen {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.enableBlend();
         matrices.push();
-        fillSolid(matrices.peek().getModel(), x, y, x + width, y + height, 0xAA000000);
+        fillSolid(matrices.peek().getPositionMatrix(), x, y, x + width, y + height, 0xAA000000);
         RenderSystem.setShader(GameRenderer::getRenderTypeLinesShader);
         RenderSystem.setShaderColor(1, 1, 1, 1);
         drawHorizontalLineSolid(matrices, x, x + width, y, 0xFF2d2d2d);

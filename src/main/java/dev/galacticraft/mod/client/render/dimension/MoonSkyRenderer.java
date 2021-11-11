@@ -112,7 +112,7 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-19.0F));
         RenderSystem.setShaderColor(1.0F, 0.95F, 0.9F, starBrightness);
         RenderSystem.disableTexture();
-        this.starBuffer.setShader(matrices.peek().getModel(), context.projectionMatrix(), GameRenderer.getPositionShader());
+        this.starBuffer.setShader(matrices.peek().getPositionMatrix(), context.projectionMatrix(), GameRenderer.getPositionShader());
         this.starBuffer.bind();
         this.starBuffer.drawVertices();
         VertexBuffer.unbind();
@@ -126,7 +126,7 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
         matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(context.world().getSkyAngle(context.tickDelta()) * 360.0f));
 
-        Matrix4f matrix = matrices.peek().getModel();
+        Matrix4f matrix = matrices.peek().getPositionMatrix();
         RenderSystem.enableTexture();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         float size = 15.0F;
@@ -145,7 +145,7 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
 
         context.profiler().push("earth");
         matrices.push();
-        matrix = matrices.peek().getModel();
+        matrix = matrices.peek().getPositionMatrix();
 
         size = 10.0F;
         assert MinecraftClient.getInstance().player != null;

@@ -145,10 +145,10 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.putInt(Constant.Nbt.FUEL_TIME, this.fuelTime);
         tag.putInt(Constant.Nbt.FUEL_LENGTH, this.fuelLength);
-        return super.writeNbt(tag);
     }
 
     @Override

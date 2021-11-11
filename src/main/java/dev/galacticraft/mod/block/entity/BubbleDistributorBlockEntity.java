@@ -186,11 +186,10 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
         tag.putByte(Constant.Nbt.MAX_SIZE, targetSize);
         tag.putDouble(Constant.Nbt.SIZE, size);
-        return tag;
     }
 
     @Override

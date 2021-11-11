@@ -39,6 +39,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
@@ -127,7 +128,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
         assert blockEntity != null;
         blockEntity.getConnections()[dir.ordinal()] = !neighbor.isAir() && ((otherBlockEntity instanceof Pipe pipe && pipe.canConnect(dir.getOpposite()))
                 || FluidUtil.canAccessFluid(world, fromPos, dir));
-        if (!world.isClient) blockEntity.sync();
+        if (!world.isClient) ((ServerWorld) world).getChunkManager().markForUpdate(pos);
     }
 
     @Override

@@ -245,6 +245,6 @@ public class Tank {
     }
 
     public static void drawSprite(MatrixStack matrices, float x, float y, float z, float width, float height, Sprite sprite) {
-        DrawableUtil.drawTexturedQuad_F(matrices.peek().getModel(), x, x + width, y, y + height, z, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
+        DrawableUtil.drawTexturedQuad_F(matrices.peek().getPositionMatrix(), x, x + width, y, y + height, z, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
     }
 }

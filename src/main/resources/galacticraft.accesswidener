@@ -5,13 +5,14 @@ accessible method net/minecraft/block/CakeBlock                                <
 accessible method net/minecraft/block/FluidBlock                               <init> (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V
 accessible method net/minecraft/block/LadderBlock                              <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
 accessible method net/minecraft/block/StairsBlock                              <init> (Lnet/minecraft/block/BlockState;Lnet/minecraft/block/AbstractBlock$Settings;)V
+accessible method net/minecraft/client/particle/BlockLeakParticle$Dripping     <init> (Lnet/minecraft/client/world/ClientWorld;DDDLnet/minecraft/fluid/Fluid;Lnet/minecraft/particle/ParticleEffect;)V
 accessible method net/minecraft/item/AxeItem                                   <init> (Lnet/minecraft/item/ToolMaterial;FFLnet/minecraft/item/Item$Settings;)V
 accessible method net/minecraft/item/HoeItem                                   <init> (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
 accessible method net/minecraft/item/MusicDiscItem                             <init> (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V
 accessible method net/minecraft/item/PickaxeItem                               <init> (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
-accessible method net/minecraft/world/gen/chunk/ChunkGeneratorSettings         <init> (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;IIIIZZZZZZ)V
+accessible method net/minecraft/world/biome/source/MultiNoiseBiomeSource       <init> (Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$Entries;Ljava/util/Optional;)V
 
 # private classes
+accessible class  net/minecraft/client/particle/BlockLeakParticle$Dripping
 
 # final classes
-extendable class  net/minecraft/world/gen/chunk/NoiseChunkGenerator

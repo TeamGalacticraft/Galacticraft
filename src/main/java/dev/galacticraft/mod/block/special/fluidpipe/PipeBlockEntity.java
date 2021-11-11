@@ -132,23 +132,10 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Attri
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
         this.writeColorNbt(nbt);
         this.writeConnectionNbt(nbt);
-        return super.writeNbt(nbt);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        this.writeColorNbt(tag);
-        this.writeConnectionNbt(tag);
-        return tag;
-    }
-
-    @Override
-    public void fromClientTag(NbtCompound tag) {
-        this.readColorNbt(tag);
-        this.readConnectionNbt(tag);
     }
 
     @Override

@@ -29,7 +29,6 @@ import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.attribute.energy.WireEnergyInsertable;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -44,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class WireBlockEntity extends BlockEntity implements Wire, AttributeProviderBlockEntity, BlockEntityClientSerializable {
+public class WireBlockEntity extends BlockEntity implements Wire, AttributeProviderBlockEntity {
     private @Nullable WireNetwork network = null;
     private @NotNull WireEnergyInsertable @Nullable[] insertables = null;
     private final int maxTransferRate;
@@ -137,26 +136,17 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag) {
-        this.readConnectionNbt(tag);
-        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        this.writeConnectionNbt(tag);
-        return tag;
-    }
-
-    @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
         this.writeConnectionNbt(nbt);
-        return super.writeNbt(nbt);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        this.readConnectionNbt(nbt);
         super.readNbt(nbt);
+        this.readConnectionNbt(nbt);
+        if (world.isClient) {
+            ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(pos);
+        }
     }
 }

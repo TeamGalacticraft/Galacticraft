@@ -15,6 +15,7 @@
     "ItemStackMixin",
     "LanternBlockMixin",
     "LootTablesAccessor",
+    "NoiseChunkGeneratorMixin",
     "ServerWorldMixin",
     "SlotAccessor",
     "TorchBlockMixin"

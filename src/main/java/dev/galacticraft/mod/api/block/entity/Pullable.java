@@ -23,10 +23,9 @@
 package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.nbt.NbtCompound;
 
-public interface Pullable extends BlockEntityClientSerializable {
+public interface Pullable {
     boolean isPull();
 
     void setPull(boolean pull);

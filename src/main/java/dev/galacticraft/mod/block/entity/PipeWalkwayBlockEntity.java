@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Walkway;
@@ -31,12 +30,9 @@ import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, Colored {
     private Direction direction;
@@ -56,28 +52,16 @@ public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, 
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag) {
-        super.fromClientTag(tag);
-        this.readWalkwayNbt(tag);
-        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        this.writeWalkwayNbt(tag);
-        return super.toClientTag(tag);
-    }
-
-    @Override
     public void readNbt(NbtCompound nbt) {
-        this.readWalkwayNbt(nbt);
         super.readNbt(nbt);
+        this.readWalkwayNbt(nbt);
+        if (world.isClient) ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
         this.writeWalkwayNbt(nbt);
-        return super.writeNbt(nbt);
     }
 
     @Override

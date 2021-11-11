@@ -51,9 +51,9 @@ val runtimeOptional        = project.property("optional_dependencies.enabled") =
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("0.9-SNAPSHOT")
+    id("fabric-loom") version("0.10-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
-    id("io.github.juuxel.loom-quiltflower") version("1.3.0")
+    id("io.github.juuxel.loom-quiltflower-mini") version("1.0.0")
 }
 
 java {
@@ -153,7 +153,6 @@ dependencies {
         "fabric-item-groups-v0",
         "fabric-mining-level-api-v1",
         "fabric-models-v0",
-        "fabric-networking-blockentity-v0",
         "fabric-networking-api-v1",
         "fabric-object-builder-api-v1",
         "fabric-particles-v1",
@@ -208,7 +207,7 @@ dependencies {
     }
 
     // Other Dependencies
-    modRuntime("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
+    modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 
     // Test Dependencies
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
@@ -308,7 +307,7 @@ fun getFabricApiModule(moduleName: String): String {
 fun DependencyHandler.optionalDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
     modCompileOnly(dependencyNotation, dependencyConfiguration)
     if (!net.fabricmc.loom.util.OperatingSystem.isCIBuild() && runtimeOptional) {
-        modRuntime(dependencyNotation, dependencyConfiguration)
+        modRuntimeOnly(dependencyNotation, dependencyConfiguration)
     }
 }
 

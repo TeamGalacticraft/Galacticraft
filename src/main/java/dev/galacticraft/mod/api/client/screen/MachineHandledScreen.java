@@ -349,7 +349,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
 
     private void renderItemIcon(MatrixStack matrices, int x, int y, ItemStack stack) {
         assert this.client != null;
-        BakedModel model = this.itemRenderer.getHeldItemModel(stack, this.world, this.handler.player, 8910823);
+        BakedModel model = this.itemRenderer.getModel(stack, this.world, this.handler.player, 8910823);
         matrices.push();
         this.client.getTextureManager().getTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).setFilter(false, false);
         RenderSystem.setShaderTexture(0, PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
@@ -878,7 +878,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-        fillGradient(matrices.peek().getModel(), bufferBuilder,
+        fillGradient(matrices.peek().getPositionMatrix(), bufferBuilder,
                 slot.x - 1, slot.y - 1,
                 slot.x - 1, slot.y + 17,
                 this.getZOffset(),
@@ -886,7 +886,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
                 this.machine.itemInv().getTypes()[index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-        fillGradient(matrices.peek().getModel(), bufferBuilder,
+        fillGradient(matrices.peek().getPositionMatrix(), bufferBuilder,
                 slot.x - 1, slot.y + 17,
                 slot.x + 17, slot.y - 1,
                 this.getZOffset(),
@@ -894,7 +894,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
                 this.machine.itemInv().getTypes()[index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-        fillGradient(matrices.peek().getModel(), bufferBuilder,
+        fillGradient(matrices.peek().getPositionMatrix(), bufferBuilder,
                 slot.x + 17, slot.y + 17,
                 slot.x + 17, slot.y - 1,
                 this.getZOffset(),
@@ -902,7 +902,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
                 this.machine.itemInv().getTypes()[index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-        fillGradient(matrices.peek().getModel(), bufferBuilder,
+        fillGradient(matrices.peek().getPositionMatrix(), bufferBuilder,
                 slot.x + 17, slot.y - 1,
                 slot.x - 1, slot.y - 1,
                 this.getZOffset(),

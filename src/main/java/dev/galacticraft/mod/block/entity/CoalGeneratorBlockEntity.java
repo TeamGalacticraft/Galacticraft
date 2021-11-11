@@ -176,11 +176,11 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.putInt(Constant.Nbt.FUEL_LENGTH, this.fuelLength);
         tag.putInt(Constant.Nbt.FUEL_TIME, this.fuelTime);
         tag.putDouble(Constant.Nbt.HEAT, this.heat);
-        return super.writeNbt(tag);
     }
 
     /**

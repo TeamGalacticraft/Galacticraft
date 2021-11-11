@@ -173,10 +173,10 @@ public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Re
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        tag.putInt("Progress", this.progress());
-        tag.putInt("MaxProgress", this.maxProgress());
-        return super.writeNbt(tag);
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
+        tag.putInt(Constant.Nbt.PROGRESS, this.progress());
+        tag.putInt(Constant.Nbt.MAX_PROGRESS, this.maxProgress());
     }
 
     @Override

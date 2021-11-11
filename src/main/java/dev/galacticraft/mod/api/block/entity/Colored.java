@@ -23,14 +23,12 @@
 package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.Direction;
 
 import java.util.Objects;
 
-public interface Colored extends BlockEntityClientSerializable {
+public interface Colored {
     DyeColor getColor();
 
     void setColor(DyeColor color);

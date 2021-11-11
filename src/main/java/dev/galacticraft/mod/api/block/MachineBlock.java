@@ -200,7 +200,9 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
         BlockEntity entity = builder.get(LootContextParameters.BLOCK_ENTITY);
-        if (entity.writeNbt(new NbtCompound()).getBoolean(Constant.Nbt.NO_DROP)) return Collections.emptyList();
+        if (entity instanceof MachineBlockEntity machine) {
+            if (machine.noDrops()) return Collections.emptyList();
+        }
         return super.getDroppedStacks(state, builder);
     }
 
@@ -208,8 +210,9 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
     public ItemStack getPickStack(BlockView view, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(view, pos, state);
         NbtCompound tag = (stack.getNbt() != null ? stack.getNbt() : new NbtCompound());
-        if (view.getBlockEntity(pos) != null) {
-            tag.put(Constant.Nbt.BLOCK_ENTITY_TAG, view.getBlockEntity(pos).writeNbt(new NbtCompound()));
+        BlockEntity blockEntity = view.getBlockEntity(pos);
+        if (blockEntity != null) {
+            tag.put(Constant.Nbt.BLOCK_ENTITY_TAG, blockEntity.createNbt());
         }
 
         stack.setNbt(tag);

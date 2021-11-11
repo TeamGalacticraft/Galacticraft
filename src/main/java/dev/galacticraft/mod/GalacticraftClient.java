@@ -26,6 +26,8 @@ import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.*;
 import dev.galacticraft.mod.client.network.GalacticraftClientPacketReceiver;
+import dev.galacticraft.mod.client.particle.DrippingFuelFactory;
+import dev.galacticraft.mod.client.particle.DrippingOilFactory;
 import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.dimension.EmptyCloudRenderer;
 import dev.galacticraft.mod.client.render.dimension.EmptyWeatherRenderer;
@@ -36,9 +38,7 @@ import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLa
 import dev.galacticraft.mod.client.resource.GalacticraftResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
-import dev.galacticraft.mod.particle.GalacticraftParticle;
-import dev.galacticraft.mod.particle.fluid.DrippingCrudeOilParticle;
-import dev.galacticraft.mod.particle.fluid.DrippingFuelParticle;
+import dev.galacticraft.mod.particle.GalacticraftParticleType;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
 import net.fabricmc.api.ClientModInitializer;
@@ -143,8 +143,8 @@ public class GalacticraftClient implements ClientModInitializer {
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new GalacticraftResourceReloadListener());
 
-        ParticleFactoryRegistry.getInstance().register(GalacticraftParticle.DRIPPING_FUEL_PARTICLE, (type, world, x, y, z, velX, velY, velZ) -> new DrippingFuelParticle(world, x, y, z, velX, velY, velZ));
-        ParticleFactoryRegistry.getInstance().register(GalacticraftParticle.DRIPPING_CRUDE_OIL_PARTICLE, (type, world, x, y, z, velX, velY, velZ) -> new DrippingCrudeOilParticle(world, x, y, z, velX, velY, velZ));
+        ParticleFactoryRegistry.getInstance().register(GalacticraftParticleType.DRIPPING_FUEL_PARTICLE, DrippingFuelFactory::new);
+        ParticleFactoryRegistry.getInstance().register(GalacticraftParticleType.DRIPPING_CRUDE_OIL_PARTICLE, DrippingOilFactory::new);
 
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(resourceManager -> (resourceId, context) -> {
             if (MachineBakedModel.MACHINE_MARKER.equals(resourceId)) {

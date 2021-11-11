@@ -23,12 +23,10 @@
 package dev.galacticraft.mod.world.gen.chunk;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 
-public class GalacticraftChunkGenerator {
-
-    public static void register() {
-        Registry.register(Registry.CHUNK_GENERATOR, new Identifier(Constant.MOD_ID, "moon"), MoonChunkGenerator.CODEC);
-    }
+public class GalacticraftChunkGeneratorSettings {
+    public static final RegistryKey<ChunkGeneratorSettings> MOON = RegistryKey.of(Registry.CHUNK_GENERATOR_SETTINGS_KEY, Constant.id("moon"));
 }

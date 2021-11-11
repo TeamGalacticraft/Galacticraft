@@ -78,7 +78,7 @@ public class OxygenTank extends Tank {
             RenderSystem.disableTexture();
             BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
             bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-            Matrix4f model = matrices.peek().getModel();
+            Matrix4f model = matrices.peek().getPositionMatrix();
             bufferBuilder.vertex(model, x - 1, y + Constant.TextureCoordinate.OVERLAY_HEIGHT + 1, (float) 0).texture(0, 0).next();
             bufferBuilder.vertex(model, x + Constant.TextureCoordinate.OVERLAY_WIDTH + 1, y + Constant.TextureCoordinate.OVERLAY_HEIGHT + 1, (float) 0).texture(0, 0).next();
             bufferBuilder.vertex(model, x + Constant.TextureCoordinate.OVERLAY_WIDTH + 1, y - 1, (float) 0).texture(0, 0).next();

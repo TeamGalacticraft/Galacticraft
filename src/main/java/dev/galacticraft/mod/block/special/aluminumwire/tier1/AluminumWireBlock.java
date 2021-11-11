@@ -30,6 +30,7 @@ import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -99,7 +100,7 @@ public class AluminumWireBlock extends WireBlock {
         for (Direction dir : Constant.Misc.DIRECTIONS) {
             b |= (wire.getConnections()[dir.ordinal()] = EnergyUtil.canAccessEnergy(world, pos.offset(dir), dir) && wire.canConnect(dir));
         }
-        if (b) wire.sync();
+        if (!world.isClient && b) ((ServerWorld) world).getChunkManager().markForUpdate(pos);
     }
 
     @Override
@@ -109,8 +110,8 @@ public class AluminumWireBlock extends WireBlock {
         Direction dir = Direction.fromVector(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
         assert dir != null;
         assert wire != null;
-        if (wire.getConnections()[dir.ordinal()] != (wire.getConnections()[dir.ordinal()] = EnergyUtil.canAccessEnergy(world, fromPos, dir) && wire.canConnect(dir))) {
-            wire.sync();
+        if (!world.isClient && wire.getConnections()[dir.ordinal()] != (wire.getConnections()[dir.ordinal()] = EnergyUtil.canAccessEnergy(world, fromPos, dir) && wire.canConnect(dir))) {
+            ((ServerWorld) world).getChunkManager().markForUpdate(pos);
         }
     }
 

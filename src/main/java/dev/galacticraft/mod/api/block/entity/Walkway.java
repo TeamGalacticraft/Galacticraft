@@ -23,14 +23,13 @@
 package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public interface Walkway extends Connected, BlockEntityClientSerializable {
+public interface Walkway extends Connected {
     Direction getDirection();
 
     void setDirection(@NotNull Direction direction);
