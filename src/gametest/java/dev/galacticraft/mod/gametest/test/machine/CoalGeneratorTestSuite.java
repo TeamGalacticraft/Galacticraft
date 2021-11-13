@@ -71,8 +71,8 @@ public class CoalGeneratorTestSuite implements MachineGameTest {
         final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);
         coalGenerator.fuelLength = CoalGeneratorBlockEntity.FUEL_MAP.getInt(Items.COAL);
         runFinalTaskAt(context, 370 + 1, () -> {
-            if (coalGenerator.capacitorView().getEnergy() != 26371) {
-                context.throwPositionedException(String.format("Expected coal generator to have 26371 energy! Found: %s", coalGenerator.capacitorView().getEnergy()), pos);
+            if (coalGenerator.capacitorView().getAmount() != 26371) {
+                context.throwPositionedException(String.format("Expected coal generator to have 26371 energy! Found: %s", coalGenerator.capacitorView().getAmount()), pos);
             }
         });
     }

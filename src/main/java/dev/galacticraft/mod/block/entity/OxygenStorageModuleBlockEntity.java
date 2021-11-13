@@ -80,7 +80,17 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public int getEnergyCapacity() {
+    public long getEnergyCapacity() {
+        return 0;
+    }
+
+    @Override
+    public long energyExtractionRate() {
+        return 0;
+    }
+
+    @Override
+    public long energyInsertionRate() {
         return 0;
     }
 

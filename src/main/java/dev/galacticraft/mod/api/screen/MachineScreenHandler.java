@@ -54,7 +54,7 @@ public abstract class MachineScreenHandler<M extends MachineBlockEntity> extends
         this.machine.fluidInv().createTanks(this);
 
         if (machine.fluidInvCapacity().isGreaterThan(FluidAmount.ZERO)) this.addProperties(new FluidTankPropertyDelegate(machine.fluidInv()));
-        if (machine.getEnergyCapacity() > 0) this.addProperty(new CapacitorProperty(machine.capacitor()));
+        if (machine.getEnergyCapacity() > 0) this.addProperties(new CapacitorProperty(machine.capacitor()));
         this.addProperty(new StatusProperty(machine));
     }
 

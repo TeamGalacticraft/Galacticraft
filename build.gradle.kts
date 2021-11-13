@@ -53,7 +53,7 @@ plugins {
     `maven-publish`
     id("fabric-loom") version("0.10-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
-    id("io.github.juuxel.loom-quiltflower-mini") version("1.0.0")
+    id("io.github.juuxel.loom-quiltflower-mini") version("1.1.0")
 }
 
 java {
@@ -109,14 +109,19 @@ repositories {
             includeGroup("dev.architectury")
         }
     }
-    maven("https://server.bbkr.space/artifactory/libs-release/") {
-        content {
-            includeGroup("io.github.fablabsmc")
-        }
-    }
     maven("https://alexiil.uk/maven/") {
         content {
             includeGroup("alexiil.mc.lib")
+        }
+    }
+    maven("https://maven.modmuss50.me/") {
+        content {
+            includeGroup("teamreborn")
+        }
+    }
+    maven("https://hephaestus.dev/release/") {
+        content {
+            includeGroup("dev.monarkhes")
         }
     }
     maven("https://maven.terraformersmc.com/releases/") {
@@ -124,9 +129,9 @@ repositories {
             includeGroup("com.terraformersmc")
         }
     }
-    maven("https://hephaestus.dev/release/") {
+    maven("https://server.bbkr.space/artifactory/libs-release/") {
         content {
-            includeGroup("dev.monarkhes")
+            includeGroup("io.github.fablabsmc")
         }
     }
     maven("https://bai.jfrog.io/artifactory/maven/") {
@@ -145,6 +150,7 @@ dependencies {
     // Fabric Api Modules
     listOf(
         "fabric-api-base",
+        "fabric-api-lookup-api-v1",
 //        "fabric-biome-api-v1",
         "fabric-blockrenderlayer-v1",
         "fabric-command-api-v1",
@@ -167,7 +173,8 @@ dependencies {
         "fabric-structure-api-v1",
         "fabric-tag-extensions-v0",
         "fabric-textures-v0",
-        "fabric-tool-attribute-api-v1"
+        "fabric-tool-attribute-api-v1",
+        "fabric-transfer-api-v1"
     ).forEach { module ->
         modImplementation(getFabricApiModule(module)) { isTransitive = false }
     }
@@ -181,10 +188,9 @@ dependencies {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     }
-    includedDependency("dev.galacticraft:GalacticraftEnergy:$energyVersion") {
+    includedDependency("teamreborn:energy:$energyVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
-        exclude(group = "alexiil.mc.lib")
     }
     includedDependency("dev.galacticraft:GalacticraftAPI:$galacticraftApiVersion") {
         exclude(group = "net.fabricmc")
@@ -206,7 +212,7 @@ dependencies {
         exclude(group = "net.fabricmc.fabric-api")
     }
 
-    // Other Dependencies
+    // Runtime Dependencies
     modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 
     // Test Dependencies
@@ -232,12 +238,15 @@ tasks.processResources {
 
 tasks.test {
     useJUnitPlatform()
+    dependsOn(tasks.getByName("runGametest"))
 }
 
 tasks.create<Jar>("javadocJar") {
     from(tasks.javadoc)
     archiveClassifier.set("javadoc")
+    tasks.build.get().dependsOn(this)
 }
+
 
 tasks.named<ProcessResources>("processGametestResources") {
     duplicatesStrategy = DuplicatesStrategy.WARN
@@ -261,10 +270,9 @@ publishing {
         register("mavenJava", MavenPublication::class) {
             groupId = modGroup
             artifactId = modName
+            version = project.version.toString()
 
-            artifact(tasks.remapJar) { builtBy(tasks.remapJar) }
-            artifact(tasks.getByName("sourcesJar", Jar::class)) { builtBy(tasks.remapSourcesJar) }
-            artifact(tasks.getByName("javadocJar", Jar::class))
+            from(components["java"])
         }
     }
     repositories {

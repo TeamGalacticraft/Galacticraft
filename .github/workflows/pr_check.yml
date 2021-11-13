@@ -9,12 +9,10 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
 
-      - name: Validate Gradle wrapper
+      - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
 
       - name: Setup JDK 16
@@ -26,8 +24,7 @@ jobs:
       - name: Build
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: checkLicenses build test runGametest
-          gradle-version: wrapper
+          arguments: checkLicenses build test
 
       - name: Copy GameTest Results
         run: cp run/TEST-gametest.xml build/test-results/test/

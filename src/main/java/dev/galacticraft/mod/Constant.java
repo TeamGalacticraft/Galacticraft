@@ -24,18 +24,21 @@ package dev.galacticraft.mod;
 
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.RawFluidTagFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.tag.GalacticraftTag;
-import dev.galacticraft.mod.util.ColorUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.ApiStatus;
+import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -621,6 +624,16 @@ public interface Constant {
     }
 
     interface Filter {
+        ItemFilter ENERGY_EXTRACTABLE = stack -> {
+            EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
+            return energyStorage != null && energyStorage.supportsExtraction();
+        };
+
+        ItemFilter ENERGY_INSERTABLE = stack -> {
+            EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
+            return energyStorage != null && energyStorage.supportsInsertion();
+        };
+
         FluidFilter LOX_ONLY = new RawFluidTagFilter(GalacticraftTag.LIQUID_OXYGEN);
         FluidFilter OIL = new RawFluidTagFilter(GalacticraftTag.OIL);
         FluidFilter FUEL = new RawFluidTagFilter(GalacticraftTag.FUEL);
@@ -644,7 +657,7 @@ public interface Constant {
         }
 
         static Style getRainbow(int ticks) {
-            return Style.EMPTY.withColor(TextColor.fromRgb(ColorUtil.hsbToRGB(ticks / 500.0f, 1, 1)));
+            return Style.EMPTY.withColor(TextColor.fromRgb(MathHelper.hsvToRgb(ticks / 500.0f, 1, 1)));
         }
     }
 
@@ -680,6 +693,11 @@ public interface Constant {
 
     interface Property {
         BooleanProperty ACTIVE = BooleanProperty.of("active");
+    }
+
+    interface Energy {
+        long T1_MACHINE_ENERGY_USAGE = 0;
+        long T2_MACHINE_ENERGY_USAGE = 0;
     }
 
     @ApiStatus.Internal

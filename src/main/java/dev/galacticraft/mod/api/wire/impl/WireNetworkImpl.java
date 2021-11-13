@@ -22,25 +22,21 @@
 
 package dev.galacticraft.mod.api.wire.impl;
 
-import alexiil.mc.lib.attributes.SearchOptions;
-import alexiil.mc.lib.attributes.Simulation;
-import dev.galacticraft.energy.GalacticraftEnergy;
-import dev.galacticraft.energy.api.EnergyInsertable;
-import dev.galacticraft.energy.impl.DefaultEnergyType;
-import dev.galacticraft.energy.impl.RejectingEnergyInsertable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
-import dev.galacticraft.mod.util.EnergyUtil;
-import it.unimi.dsi.fastutil.ints.IntIterator;
+import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.objects.*;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -50,15 +46,15 @@ import java.util.function.BiFunction;
  */
 public class WireNetworkImpl implements WireNetwork {
     private final @NotNull ServerWorld world;
-    private final @NotNull Object2ObjectOpenHashMap<BlockPos, EnergyInsertable> insertable = new Object2ObjectOpenHashMap<>();
+    private final @NotNull Object2ObjectOpenHashMap<BlockPos, EnergyStorage> storages = new Object2ObjectOpenHashMap<>();
     private final @NotNull ObjectSet<BlockPos> wires = new ObjectLinkedOpenHashSet<>(1);
     private final @NotNull ObjectSet<WireNetwork> peerNetworks = new ObjectLinkedOpenHashSet<>(0);
     private boolean markedForRemoval = false;
-    private final int maxTransferRate;
-    private int tickId;
-    private int transferred = 0;
+    private final long maxTransferRate;
+    private long tickId;
+    private long transferred = 0;
 
-    public WireNetworkImpl(@NotNull ServerWorld world, int maxTransferRate) {
+    public WireNetworkImpl(@NotNull ServerWorld world, long maxTransferRate) {
         this.world = world;
         this.maxTransferRate = maxTransferRate;
         this.tickId = world.getServer().getTicks();
@@ -97,9 +93,9 @@ public class WireNetworkImpl implements WireNetwork {
                             continue;
                         }
                     }
-                    EnergyInsertable insertable = EnergyUtil.getEnergyInsertable(world, pos.offset(direction), direction);
-                    if (insertable != RejectingEnergyInsertable.NULL) {
-                        this.insertable.put(pos.offset(direction), insertable);
+                    EnergyStorage storage = EnergyStorage.SIDED.find(world, pos.offset(direction), direction.getOpposite());
+                    if (storage != null && storage.supportsInsertion()) {
+                        this.storages.put(pos.offset(direction), storage);
                     }
                 }
             }
@@ -117,7 +113,7 @@ public class WireNetworkImpl implements WireNetwork {
             }
         }
 
-        this.insertable.putAll(network.getInsertable());
+        this.storages.putAll(network.getStorages());
         network.markForRemoval();
     }
 
@@ -136,7 +132,7 @@ public class WireNetworkImpl implements WireNetwork {
         }
 
         List<BlockPos> adjacent = new LinkedList<>();
-        this.reattachAdjacent(removedPos, this.insertable, (blockPos, direction) -> GalacticraftEnergy.INSERTABLE.getFirst(this.world, blockPos, SearchOptions.inDirection(direction)), adjacent);
+        this.reattachAdjacent(removedPos, this.storages, (blockPos, direction) -> EnergyStorage.SIDED.find(this.world, blockPos.offset(direction), direction.getOpposite()), adjacent);
         adjacent.clear();
 
         for (Direction direction : Constant.Misc.DIRECTIONS) {
@@ -197,11 +193,11 @@ public class WireNetworkImpl implements WireNetwork {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockPos adjacentPos = pos.offset(direction);
             if (map.remove(adjacentPos) != null) {
-                for (Direction direction1 : Constant.Misc.DIRECTIONS) {
-                    if (direction1 == direction.getOpposite()) continue;
-                    if (this.wires.contains(adjacentPos.offset(direction1))) {
-                        if (((Wire) world.getBlockEntity(adjacentPos.offset(direction1))).canConnect(direction1.getOpposite())) {
-                            T value = function.apply(adjacentPos, direction1);
+                for (Direction dir : Constant.Misc.DIRECTIONS) {
+                    if (dir == direction.getOpposite()) continue;
+                    if (this.wires.contains(adjacentPos.offset(dir))) {
+                        if (((Wire) world.getBlockEntity(adjacentPos.offset(dir))).canConnect(dir.getOpposite())) {
+                            T value = function.apply(adjacentPos, dir);
                             if (value != null) {
                                 optionalList.add(adjacentPos);
                                 map.put(adjacentPos, value);
@@ -217,19 +213,19 @@ public class WireNetworkImpl implements WireNetwork {
     @Override
     public boolean updateConnection(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos) {
         assert !(world.getBlockEntity(updatedPos) instanceof Wire);
-        this.insertable.remove(updatedPos);
+        this.storages.remove(updatedPos);
         BlockPos vector = updatedPos.subtract(adjacentToUpdated);
         Direction direction = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
-        EnergyInsertable insertable = EnergyUtil.getEnergyInsertable(world, updatedPos, direction);
-        if (insertable != RejectingEnergyInsertable.NULL) {
-            this.insertable.put(updatedPos, insertable);
+        EnergyStorage storage = EnergyStorage.SIDED.find(world, updatedPos, direction.getOpposite());
+        if (storage != null) {
+            this.storages.put(updatedPos, storage);
             return true;
         }
         return false;
     }
 
     @Override
-    public int insert(@NotNull BlockPos fromWire, int amount, Direction direction, @NotNull Simulation simulate) {
+    public long insert(@NotNull BlockPos fromWire, long amount, Direction direction, @NotNull TransactionContext transaction) {
         BlockPos source = fromWire.offset(direction.getOpposite());
         if (this.tickId != (this.tickId = world.getServer().getTicks())) {
             this.transferred = 0;
@@ -237,64 +233,63 @@ public class WireNetworkImpl implements WireNetwork {
         amount = Math.min(amount, this.getMaxTransferRate() - this.transferred);
         if (amount <= 0) return amount;
 
-        Object2IntArrayMap<WireNetwork> nonFullInsertables = new Object2IntArrayMap<>(1 + this.peerNetworks.size());
+        Object2LongArrayMap<WireNetwork> nonFullInsertables = new Object2LongArrayMap<>(1 + this.peerNetworks.size());
         nonFullInsertables.defaultReturnValue(-1);
-        this.getNonFullInsertables(nonFullInsertables, source, amount);
-        int requested = 0;
-        for (IntIterator it = nonFullInsertables.values().iterator(); it.hasNext(); ) {
-            requested += it.nextInt();
+        this.getNonFullInsertables(nonFullInsertables, source, amount, transaction);
+        long requested = 0;
+        LongIterator it = nonFullInsertables.values().longIterator();
+        while (it.hasNext()) {
+            requested += it.nextLong();
         }
         if (requested == 0) return amount;
         var ref = new Object() {
-            int available = 0;
+            private long available = 0;
         };
         ref.available = amount;
         double ratio = (double)amount / (double)requested;
         if (ratio > 1) ratio = 1;
 
-        int finalAmount = amount;
+        long finalAmount = amount;
         double finalRatio = ratio;
-        nonFullInsertables.forEach((wireNetwork, integer) -> ref.available = wireNetwork.insertInternal(finalAmount, finalRatio, ref.available, simulate));
+        nonFullInsertables.forEach((wireNetwork, integer) -> ref.available = wireNetwork.insertInternal(finalAmount, finalRatio, ref.available, transaction));
 
         return ref.available;
     }
 
     @Override
-    public int insertInternal(int amount, double ratio, int available, Simulation simulate) {
+    public long insertInternal(long amount, double ratio, long available, TransactionContext transaction) {
         if (this.tickId != (this.tickId = world.getServer().getTicks())) {
             this.transferred = 0;
         }
-        int removed = amount - Math.min(amount, this.maxTransferRate - this.transferred);
+        long removed = amount - Math.min(amount, this.maxTransferRate - this.transferred);
         amount -= removed;
-        for (EnergyInsertable insertable : this.insertable.values()) {
-            int consumed = Math.min(Math.min(available, (int) (amount * ratio)), this.getMaxTransferRate() - this.transferred);
+        for (EnergyStorage storage : this.storages.values()) {
+            long consumed = Math.min(Math.min(available, (long) (amount * ratio)), this.getMaxTransferRate() - this.transferred);
             if (consumed == 0) continue;
-            consumed -= insertable.attemptInsertion(DefaultEnergyType.INSTANCE, consumed, simulate);
-            available -= consumed;
+            available -= storage.insert(consumed, transaction);
             this.transferred += consumed;
         }
         return available + removed;
     }
 
     @Override
-    public void getNonFullInsertables(Object2IntMap<WireNetwork> energyRequirement, BlockPos source, int amount) {
+    public void getNonFullInsertables(Object2LongMap<WireNetwork> energyRequirement, BlockPos source, long amount, @NotNull TransactionContext transaction) {
         if (this.tickId != (this.tickId = world.getServer().getTicks())) {
             this.transferred = 0;
         }
         amount = Math.min(amount, this.maxTransferRate - this.transferred);
         if (energyRequirement.putIfAbsent(this, 0) == -1) {
-            int requested = 0;
-            for (ObjectIterator<Object2ObjectMap.Entry<BlockPos, EnergyInsertable>> it = this.getInsertable().object2ObjectEntrySet().fastIterator(); it.hasNext(); ) {
-                Map.Entry<BlockPos, EnergyInsertable> entry = it.next();
+            long requested = 0;
+            for (ObjectIterator<Object2ObjectMap.Entry<BlockPos, EnergyStorage>> it = this.getStorages().object2ObjectEntrySet().fastIterator(); it.hasNext(); ) {
+                Map.Entry<BlockPos, EnergyStorage> entry = it.next();
                 if (entry.getKey().equals(source)) continue;
-                int failed = entry.getValue().attemptInsertion(DefaultEnergyType.INSTANCE, amount, Simulation.SIMULATE);
-                if (failed != amount) {
-                    requested += (amount - failed);
+                try (Transaction simulation = transaction.openNested()){
+                    requested += entry.getValue().insert(amount, simulation);
                 }
             }
             for (WireNetwork peerNetwork : this.peerNetworks) {
                 if (!energyRequirement.containsKey(peerNetwork)) {
-                    peerNetwork.getNonFullInsertables(energyRequirement, source, amount);
+                    peerNetwork.getNonFullInsertables(energyRequirement, source, amount, transaction);
                 }
             }
             energyRequirement.put(this, requested);
@@ -302,7 +297,7 @@ public class WireNetworkImpl implements WireNetwork {
     }
 
     @Override
-    public int getMaxTransferRate() {
+    public long getMaxTransferRate() {
         return this.maxTransferRate;
     }
 
@@ -312,8 +307,8 @@ public class WireNetworkImpl implements WireNetwork {
     }
 
     @Override
-    public @NotNull Object2ObjectOpenHashMap<BlockPos, EnergyInsertable> getInsertable() {
-        return this.insertable;
+    public @NotNull Object2ObjectOpenHashMap<BlockPos, EnergyStorage> getStorages() {
+        return this.storages;
     }
 
     @Override
@@ -335,7 +330,7 @@ public class WireNetworkImpl implements WireNetwork {
     public String toString() {
         return "WireNetworkImpl{" +
                 "world=" + world.getRegistryKey().getValue() +
-                ", insertable=" + insertable +
+                ", insertable=" + storages +
                 ", wires=" + wires +
                 ", markedForRemoval=" + markedForRemoval +
                 ", maxTransferRate=" + maxTransferRate +

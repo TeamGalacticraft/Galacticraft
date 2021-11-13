@@ -61,8 +61,8 @@ public class ConfiguredMachineFace {
         CACHED_AUTOMATION_TYPE_SET.add(AutomationType.NONE);
         list.add(AutomationType.NONE);
 
-        if (machine.canInsertEnergy()) if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.POWER_INPUT)) list.add(AutomationType.POWER_INPUT);
-        if (machine.canExtractEnergy()) if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.POWER_OUTPUT)) list.add(AutomationType.POWER_OUTPUT);
+        if (machine.energyInsertionRate() > 0) if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.POWER_INPUT)) list.add(AutomationType.POWER_INPUT);
+        if (machine.energyExtractionRate() > 0) if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.POWER_OUTPUT)) list.add(AutomationType.POWER_OUTPUT);
 
         for (SlotType type : machine.fluidInv().getTypes()) {
             if (type.getType().isBidirectional()) {

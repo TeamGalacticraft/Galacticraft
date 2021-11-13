@@ -29,7 +29,6 @@ import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.block.entity.WireWalkwayBlockEntity;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
-import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -49,6 +48,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 import java.util.Objects;
 
@@ -104,7 +104,7 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
                         blockEntity.getConnections()[direction.ordinal()] = true;
                         continue;
                     }
-                } else if (EnergyUtil.canAccessEnergy(world, pos.offset(direction), direction)) {
+                } else if (EnergyStorage.SIDED.find(world, pos.offset(direction), direction.getOpposite()) != null) {
                     blockEntity.getConnections()[direction.ordinal()] = true;
                     continue;
                 }
@@ -140,7 +140,7 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
                         }
                         return;
                     }
-                } else if (EnergyUtil.canAccessEnergy(world, pos.offset(direction), direction)) {
+                } else if (EnergyStorage.SIDED.find(world, pos.offset(direction), direction.getOpposite()) != null) {
                     if (blockEntity.getConnections()[direction.ordinal()] != (blockEntity.getConnections()[direction.ordinal()] = true)) {
                         world.updateNeighbor(pos.offset(direction), state.getBlock(), pos);
                         if (!world.isClient) ((ServerWorld) world).getChunkManager().markForUpdate(pos);

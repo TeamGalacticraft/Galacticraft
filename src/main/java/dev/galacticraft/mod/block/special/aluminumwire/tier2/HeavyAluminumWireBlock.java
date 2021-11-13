@@ -27,7 +27,6 @@ import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
-import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -42,6 +41,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 import java.util.ArrayList;
 
@@ -102,7 +102,7 @@ public class HeavyAluminumWireBlock extends WireBlock {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockState block = context.getWorld().getBlockState(context.getBlockPos().offset(direction));
             state = state.with(ConnectingBlockUtil.getBooleanProperty(direction), !block.isAir() && (block.getBlock() instanceof WireBlock
-                    || EnergyUtil.canAccessEnergy(context.getWorld(), context.getBlockPos().offset(direction), direction)));
+                    || EnergyStorage.SIDED.find(context.getWorld(), context.getBlockPos().offset(direction), direction.getOpposite()) != null));
 
         }
 
@@ -116,7 +116,7 @@ public class HeavyAluminumWireBlock extends WireBlock {
         Direction dir = Direction.fromVector(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
         assert dir != null;
         world.setBlockState(pos, state.with(ConnectingBlockUtil.getBooleanProperty(dir), !neighbor.isAir() && block instanceof WireBlock
-                || EnergyUtil.canAccessEnergy(world, fromPos, dir)
+                || EnergyStorage.SIDED.find(world, fromPos, dir.getOpposite()) != null
         ));
     }
 

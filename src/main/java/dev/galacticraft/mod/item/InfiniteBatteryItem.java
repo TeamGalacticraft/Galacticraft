@@ -22,30 +22,30 @@
 
 package dev.galacticraft.mod.item;
 
-import alexiil.mc.lib.attributes.AttributeProviderItem;
-import alexiil.mc.lib.attributes.ItemAttributeList;
-import alexiil.mc.lib.attributes.misc.LimitedConsumer;
-import alexiil.mc.lib.attributes.misc.Reference;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.attribute.energy.InfiniteCapacitor;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class InfiniteBatteryItem extends Item implements AttributeProviderItem {
-    private int ticks = (int) (Math.random() * 500.0);
+public class InfiniteBatteryItem extends Item implements EnergyStorage {
+    private int ticks = (int) (Math.random() * 1000.0);
 
     public InfiniteBatteryItem(Settings settings) {
         super(settings.maxCount(1));
+
+        EnergyStorage.ITEM.registerSelf(this);
     }
 
     @Override
@@ -55,14 +55,49 @@ public class InfiniteBatteryItem extends Item implements AttributeProviderItem {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(new TranslatableText("tooltip.galacticraft.energy_remaining", new TranslatableText("tooltip.galacticraft.infinite").setStyle(Constant.Text.getRainbow(++ticks))));
+        tooltip.add(new TranslatableText("tooltip.galacticraft.energy_remaining", new TranslatableText("tooltip.galacticraft.infinite").setStyle(Constant.Text.getRainbow(ticks))));
         tooltip.add(new TranslatableText("tooltip.galacticraft.creative_only").setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
-        if (ticks >= 500) ticks -= 500;
         super.appendTooltip(stack, world, tooltip, context);
     }
 
     @Override
-    public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> itemAttributeList) {
-        itemAttributeList.offer(new InfiniteCapacitor());
+    public int getItemBarStep(ItemStack stack) {
+        return 13;
+    }
+
+    @Override
+    public int getItemBarColor(ItemStack stack) {
+        if (++ticks > 1000) ticks -= 1000;
+        return MathHelper.hsvToRgb(this.ticks / 1000.0f, 1, 1);
+    }
+
+    @Override
+    public long insert(long maxAmount, TransactionContext transaction) {
+        return 0;
+    }
+
+    @Override
+    public long extract(long maxAmount, TransactionContext transaction) {
+        return maxAmount;
+    }
+
+    @Override
+    public long getAmount() {
+        return Long.MAX_VALUE;
+    }
+
+    @Override
+    public long getCapacity() {
+        return Long.MAX_VALUE;
+    }
+
+    @Override
+    public boolean supportsExtraction() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsInsertion() {
+        return false;
     }
 }

@@ -31,7 +31,6 @@ import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.block.BlockState;
@@ -83,14 +82,14 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_INSERTABLE, 8, 62);
         builder.addSlot(FUEL_SLOT, SlotType.COAL, stack -> FUEL_MAP.containsKey(stack.getItem()), 71, 53);
         return builder;
     }
 
     @Override
-    public boolean canExtractEnergy() {
-        return true;
+    public long energyInsertionRate() {
+        return 0;
     }
 
     @Override
@@ -106,7 +105,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (this.fuelLength == 0 && this.itemInv().getInvStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
-        if (this.capacitor().getEnergy() >= this.capacitor().getMaxCapacity()) return Status.FULL;
+        if (this.capacitor().getAmount() >= this.capacitor().getCapacity()) return Status.FULL;
         if (this.heat < 1.0 && this.fuelLength > 0) return Status.WARMING;
         if (this.heat > 0.0 && this.fuelLength == 0) return Status.COOLING;
         return Status.ACTIVE;
@@ -119,13 +118,13 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public int getBaseEnergyGenerated() {
+    public long energyGeneration() {
         return Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate();
     }
 
     @Override
-    public int getEnergyGenerated() {
-        if (this.getStatus().getType().isActive()) return (int) (getBaseEnergyGenerated() * this.heat);
+    public long getEnergyGeneration() {
+        if (this.getStatus().getType().isActive()) return (int) (energyGeneration() * this.heat);
         return 0;
     }
 
@@ -168,11 +167,11 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
-        this.fuelLength = tag.getInt(Constant.Nbt.FUEL_LENGTH);
-        this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
-        this.setHeat(tag.getDouble(Constant.Nbt.HEAT));
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        this.fuelLength = nbt.getInt(Constant.Nbt.FUEL_LENGTH);
+        this.fuelTime = nbt.getInt(Constant.Nbt.FUEL_TIME);
+        this.setHeat(nbt.getDouble(Constant.Nbt.HEAT));
     }
 
     @Override

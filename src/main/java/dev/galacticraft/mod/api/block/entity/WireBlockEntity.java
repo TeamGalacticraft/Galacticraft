@@ -28,7 +28,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
-import dev.galacticraft.mod.attribute.energy.WireEnergyInsertable;
+import dev.galacticraft.mod.attribute.energy.WireEnergyStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -45,7 +45,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class WireBlockEntity extends BlockEntity implements Wire, AttributeProviderBlockEntity {
     private @Nullable WireNetwork network = null;
-    private @NotNull WireEnergyInsertable @Nullable[] insertables = null;
+    private @NotNull WireEnergyStorage @Nullable[] insertables = null;
     private final int maxTransferRate;
     private final boolean[] connections = new boolean[6];
 
@@ -65,7 +65,7 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     @Override
     public void setNetwork(@Nullable WireNetwork network) {
         this.network = network;
-        for (WireEnergyInsertable insertable : this.getInsertables()) {
+        for (WireEnergyStorage insertable : this.getInsertables()) {
             insertable.setNetwork(network);
         }
     }
@@ -100,11 +100,11 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
         return this.network;
     }
 
-    public @NotNull WireEnergyInsertable @NotNull[] getInsertables() {
+    public @NotNull WireEnergyStorage @NotNull[] getInsertables() {
         if (this.insertables == null) {
-            this.insertables = new WireEnergyInsertable[6];
+            this.insertables = new WireEnergyStorage[6];
             for (Direction direction : Constant.Misc.DIRECTIONS) {
-                this.insertables[direction.ordinal()] = new WireEnergyInsertable(direction, this.getMaxTransferRate(), this.pos);
+                this.insertables[direction.ordinal()] = new WireEnergyStorage(direction, this.getMaxTransferRate(), this.pos);
             }
         }
         return this.insertables;

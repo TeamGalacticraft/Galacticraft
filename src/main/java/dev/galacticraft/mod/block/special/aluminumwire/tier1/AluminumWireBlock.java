@@ -26,7 +26,6 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
-import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -38,6 +37,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +98,7 @@ public class AluminumWireBlock extends WireBlock {
         assert wire != null;
         boolean b = false;
         for (Direction dir : Constant.Misc.DIRECTIONS) {
-            b |= (wire.getConnections()[dir.ordinal()] = EnergyUtil.canAccessEnergy(world, pos.offset(dir), dir) && wire.canConnect(dir));
+            b |= (wire.getConnections()[dir.ordinal()] = EnergyStorage.SIDED.find(world, pos.offset(dir), dir.getOpposite()) != null && wire.canConnect(dir));
         }
         if (!world.isClient && b) ((ServerWorld) world).getChunkManager().markForUpdate(pos);
     }
@@ -110,7 +110,7 @@ public class AluminumWireBlock extends WireBlock {
         Direction dir = Direction.fromVector(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
         assert dir != null;
         assert wire != null;
-        if (!world.isClient && wire.getConnections()[dir.ordinal()] != (wire.getConnections()[dir.ordinal()] = EnergyUtil.canAccessEnergy(world, fromPos, dir) && wire.canConnect(dir))) {
+        if (!world.isClient && wire.getConnections()[dir.ordinal()] != (wire.getConnections()[dir.ordinal()] = EnergyStorage.SIDED.find(world, fromPos, dir.getOpposite()) != null && wire.canConnect(dir))) {
             ((ServerWorld) world).getChunkManager().markForUpdate(pos);
         }
     }

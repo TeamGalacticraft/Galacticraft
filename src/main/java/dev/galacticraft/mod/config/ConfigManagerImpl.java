@@ -31,7 +31,7 @@ import dev.galacticraft.mod.api.config.ConfigManager;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
-import me.shedaniel.clothconfig2.impl.builders.IntFieldBuilder;
+import me.shedaniel.clothconfig2.impl.builders.LongFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -117,7 +117,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
         SubCategoryBuilder wires = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constant.Config.WIRES));
 
-        wires.add(new IntFieldBuilder(
+        wires.add(new LongFieldBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.WIRE_ENERGY_TRANSFER_LIMIT),
                 this.config.wireTransferLimit())
@@ -126,7 +126,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        wires.add(new IntFieldBuilder(
+        wires.add(new LongFieldBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT),
                 this.config.heavyWireTransferLimit())
@@ -137,7 +137,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
         SubCategoryBuilder machines = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constant.Config.MACHINES));
 
-        machines.add(new IntFieldBuilder(
+        machines.add(new LongFieldBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE),
                 this.config.coalGeneratorEnergyProductionRate())
@@ -146,7 +146,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
+        machines.add(new LongFieldBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE),
                 this.config.solarPanelEnergyProductionRate())
@@ -155,7 +155,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
+        machines.add(new LongFieldBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE),
                 this.config.circuitFabricatorEnergyConsumptionRate())
@@ -164,7 +164,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
+        machines.add(new LongFieldBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                 this.config.electricCompressorEnergyConsumptionRate())
@@ -173,7 +173,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
+        machines.add(new LongFieldBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE),
                 this.config.oxygenCollectorEnergyConsumptionRate())
@@ -182,7 +182,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
+        machines.add(new LongFieldBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.REFINERY_ENERGY_CONSUMPTION_RATE),
                 this.config.refineryEnergyConsumptionRate())
@@ -191,7 +191,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
+        machines.add(new LongFieldBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE),
                 this.config.electricFurnaceEnergyConsumptionRate())
@@ -200,7 +200,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
+        machines.add(new LongFieldBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE),
                 this.config.energyStorageModuleStorageSize())
@@ -209,7 +209,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
+        machines.add(new LongFieldBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.ENERGY_STORAGE_SIZE),
                 this.config.machineEnergyStorageSize())
@@ -219,7 +219,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
         
-        machines.add(new IntFieldBuilder(
+        machines.add(new LongFieldBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                 this.config.oxygenCompressorEnergyConsumptionRate())
@@ -229,7 +229,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
+        machines.add(new LongFieldBuilder(
                 new TranslatableText(Constant.Config.RESET),
                 new TranslatableText(Constant.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
                 this.config.oxygenDecompressorEnergyConsumptionRate())

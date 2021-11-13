@@ -37,7 +37,6 @@ import dev.galacticraft.mod.entity.BubbleEntity;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtil;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.OxygenTankUtil;
 import io.netty.buffer.Unpooled;
@@ -82,7 +81,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(BATTERY_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
+        builder.addSlot(BATTERY_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_EXTRACTABLE, 8, 62);
         builder.addSlot(OXYGEN_TANK_SLOT, SlotType.OXYGEN_TANK, OxygenTankUtil.OXYGEN_TANK_EXTRACTABLE, 31, 62);
         return builder;
     }
@@ -109,8 +108,8 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public boolean canInsertEnergy() {
-        return true;
+    public long energyExtractionRate() {
+        return 0;
     }
 
     @Override
@@ -193,16 +192,16 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
-        this.size = tag.getDouble(Constant.Nbt.SIZE);
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        this.size = nbt.getDouble(Constant.Nbt.SIZE);
         if (size < 0) size = 0;
-        this.targetSize = tag.getByte(Constant.Nbt.MAX_SIZE);
+        this.targetSize = nbt.getByte(Constant.Nbt.MAX_SIZE);
         if (targetSize < 1) targetSize = 1;
     }
 
     @Override
-    public int getBaseEnergyConsumption() {
+    public long energyConsumption() {
         return Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate();
     }
 

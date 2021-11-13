@@ -129,7 +129,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
             if (face == BlockFace.FRONT || face == BlockFace.BACK) {
                 double energy;
                 if (machine != null) {
-                    energy = machine.capacitor().getEnergy();
+                    energy = machine.capacitor().getAmount();
                 } else {
                     if (stack.getNbt() != null && stack.getNbt().contains(Constant.Nbt.ENERGY, NbtType.COMPOUND)) {
                         energy = stack.getNbt().getInt(Constant.Nbt.ENERGY);

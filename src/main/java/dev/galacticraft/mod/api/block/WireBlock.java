@@ -25,7 +25,6 @@ package dev.galacticraft.mod.api.block;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.api.wire.Wire;
-import dev.galacticraft.mod.util.EnergyUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -40,6 +39,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -75,7 +75,8 @@ public abstract class WireBlock extends Block implements BlockEntityProvider {
                         wire.getOrCreateNetwork().addWire(fromPos, wire1);
                     }
                 } else {
-                    if (EnergyUtil.canAccessEnergy(world, fromPos, Direction.fromVector(fromPos.subtract(pos)))) {
+
+                    if (EnergyStorage.SIDED.find(world, fromPos, Direction.fromVector(fromPos.subtract(pos)).getOpposite()) != null) {
                         wire.getOrCreateNetwork().updateConnection(pos, fromPos);
                     } else if (wire.getNetwork() != null) {
                         wire.getNetwork().updateConnection(pos, fromPos);

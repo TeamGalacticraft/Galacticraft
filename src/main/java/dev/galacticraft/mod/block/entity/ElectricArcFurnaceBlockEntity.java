@@ -23,13 +23,13 @@
 package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -62,7 +62,7 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 61);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_EXTRACTABLE, 8, 61);
         builder.addSlot(INPUT_SLOT, SlotType.INPUT, stack -> {
             predicateInv.setStack(0, stack);
             return this.world.getRecipeManager().getFirstMatch(this.recipeType(), this.predicateInv, this.world).isPresent();
@@ -81,12 +81,12 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    public boolean canInsertEnergy() {
-        return true;
+    public long energyExtractionRate() {
+        return 0;
     }
 
     @Override
-    protected int getBaseEnergyConsumption() {
+    protected long energyConsumption() {
         return Galacticraft.CONFIG_MANAGER.get().electricArcFurnaceEnergyConsumptionRate();
     }
 

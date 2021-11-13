@@ -23,16 +23,15 @@
 package dev.galacticraft.mod.client.gui.widget.machine;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.galacticraft.energy.api.CapacitorView;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.util.DrawableUtil;
-import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import team.reborn.energy.api.EnergyStorage;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -43,14 +42,14 @@ import java.util.function.Supplier;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CapacitorWidget extends AbstractWidget {
-    private final CapacitorView view;
+    private final EnergyStorage storage;
     private final int height;
     private final Consumer<List<Text>> tooltipTransformer;
     private final Supplier<MachineStatus> statusSupplier;
 
     public CapacitorWidget(MachineHandledScreen<?, ?> screen, int x, int y, int height) {
         super(x, y, 16, height);
-        this.view = screen.getScreenHandler().machine.capacitorView();
+        this.storage = screen.getScreenHandler().machine.capacitorView();
         this.height = height;
         this.tooltipTransformer = screen::appendEnergyTooltip;
         this.statusSupplier = screen.getScreenHandler().machine::getStatus;
@@ -62,7 +61,7 @@ public class CapacitorWidget extends AbstractWidget {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
-        double scale = ((double) this.getView().getEnergy()) / ((double) this.getView().getMaxCapacity());
+        double scale = ((double) this.getStorage().getAmount()) / ((double) this.getStorage().getCapacity());
 
         int height = this.height;
         int y = 0;
@@ -82,8 +81,8 @@ public class CapacitorWidget extends AbstractWidget {
         if (status != MachineStatus.NULL) {
             lines.add(new TranslatableText("ui.galacticraft.machine.status").setStyle(Constant.Text.GRAY_STYLE).append(status.getName()));
         }
-        lines.add(new TranslatableText("ui.galacticraft.machine.current_energy", EnergyUtil.getDisplay(this.getView().getEnergy()).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.GOLD_STYLE));
-        lines.add(new TranslatableText("ui.galacticraft.machine.max_energy", EnergyUtil.getDisplay(this.getView().getMaxCapacity()).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.RED_STYLE));
+        lines.add(new TranslatableText("ui.galacticraft.machine.current_energy", DrawableUtil.getEnergyDisplay(this.getStorage().getAmount()).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.GOLD_STYLE));
+        lines.add(new TranslatableText("ui.galacticraft.machine.max_energy", DrawableUtil.getEnergyDisplay(this.getStorage().getCapacity()).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.RED_STYLE));
         tooltipTransformer.accept(lines);
 
         assert this.client.currentScreen != null;
@@ -95,7 +94,7 @@ public class CapacitorWidget extends AbstractWidget {
         DrawableUtil.drawProgressTexture(matrices, this.x, (float)(this.y - (height * scale) + height) + y, this.getZOffset(), Constant.TextureCoordinate.ENERGY_LIGHT_X, Constant.TextureCoordinate.ENERGY_LIGHT_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, (float) (height * scale), 128, 128);
     }
 
-    public CapacitorView getView() {
-        return this.view;
+    public EnergyStorage getStorage() {
+        return this.storage;
     }
 }

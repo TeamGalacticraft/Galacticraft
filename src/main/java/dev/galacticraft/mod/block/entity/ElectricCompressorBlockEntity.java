@@ -24,6 +24,7 @@ package dev.galacticraft.mod.block.entity;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
@@ -32,7 +33,6 @@ import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -72,7 +72,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
             }
         }
 
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 61);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_EXTRACTABLE, 8, 61);
 
         builder.addOutputSlot(OUTPUT_SLOT, SlotType.OUTPUT, 148, 22);
         builder.addOutputSlot(SECOND_OUTPUT_SLOT, SlotType.OUTPUT, 148, 48);
@@ -123,8 +123,8 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    public boolean canInsertEnergy() {
-        return true;
+    public long energyExtractionRate() {
+        return 0;
     }
 
     @Override
@@ -138,7 +138,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    public int getBaseEnergyConsumption() {
+    public long energyConsumption() {
         return Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate();
     }
 

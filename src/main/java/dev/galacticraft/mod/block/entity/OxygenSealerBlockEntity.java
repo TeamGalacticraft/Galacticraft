@@ -35,7 +35,6 @@ import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtil;
 import dev.galacticraft.mod.util.OxygenTankUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -82,7 +81,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(BATTERY_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
+        builder.addSlot(BATTERY_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_EXTRACTABLE, 8, 62);
         builder.addSlot(LOX_INPUT, SlotType.OXYGEN_TANK, OxygenTankUtil.OXYGEN_TANK_EXTRACTABLE, 8, 62);
         return builder;
     }
@@ -112,8 +111,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public boolean canInsertEnergy() {
-        return true;
+    public long energyExtractionRate() {
+        return 0;
     }
 
     @Override
@@ -224,7 +223,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected int getBaseEnergyConsumption() {
+    protected long energyConsumption() {
         return Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate();
     }
 

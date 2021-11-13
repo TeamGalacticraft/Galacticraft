@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.block.entity;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
@@ -29,7 +30,6 @@ import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -55,7 +55,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_INSERTABLE, 8, 62);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_INSERTABLE, 8, 62);
         return builder;
     }
 
@@ -80,8 +80,8 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
     }
 
     @Override
-    public boolean canExtractEnergy() {
-        return true;
+    public long energyInsertionRate() {
+        return 0;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
     @NotNull
     @Override
     public MachineStatus updateStatus() {
-        if (capacitor().getEnergy() >= capacitor().getMaxCapacity()) {
+        if (capacitor().getAmount() >= capacitor().getCapacity()) {
             return Status.FULL;
         }
 
@@ -126,7 +126,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
     }
 
     @Override
-    public int getEnergyGenerated() {
+    public long getEnergyGeneration() {
         if (this.getStatus().getType().isActive()) {
             double time = world.getTimeOfDay() % 24000;
             double multiplier = 0;
@@ -141,14 +141,14 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
             multiplier /= 9;
             if (world.isRaining() || world.isThundering()) multiplier *= 0.5D;
 
-            return (int) Math.min(this.getBaseEnergyGenerated(), (this.getBaseEnergyGenerated() * ((time) / 6000D) * multiplier) * 4);
+            return Math.min(this.energyGeneration(), (long)(this.energyGeneration() * ((time) / 6000.0) * multiplier) * 4);
         } else {
             return 0;
         }
     }
 
     @Override
-    public int getBaseEnergyGenerated() {
+    public long energyGeneration() {
         return Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate();
     }
 

@@ -29,6 +29,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Matrix4f;
 
@@ -38,6 +40,10 @@ import net.minecraft.util.math.Matrix4f;
 @Environment(EnvType.CLIENT)
 public class DrawableUtil {
     private DrawableUtil() {}
+
+    public static MutableText getEnergyDisplay(long amount) {
+        return new LiteralText(String.valueOf(amount)); //todo
+    }
     
     public static void drawCenteredStringWithoutShadow(MatrixStack matrices, TextRenderer textRenderer, Text text, int x, int y, int color) {
         textRenderer.draw(matrices, text.asOrderedText(), (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);

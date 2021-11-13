@@ -22,26 +22,31 @@
 
 package dev.galacticraft.mod.screen.property;
 
-import dev.galacticraft.energy.api.Capacitor;
-import net.minecraft.screen.Property;
+import dev.galacticraft.mod.lookup.storage.MachineEnergyStorage;
+import net.minecraft.screen.PropertyDelegate;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CapacitorProperty extends Property {
-    private final Capacitor capacitor;
+public class CapacitorProperty implements PropertyDelegate {
+    private final MachineEnergyStorage capacitor;
 
-    public CapacitorProperty(Capacitor capacitor) {
+    public CapacitorProperty(MachineEnergyStorage capacitor) {
         this.capacitor = capacitor;
     }
 
     @Override
-    public int get() {
-        return this.capacitor.getEnergy();
+    public int get(int index) {
+        return (int) (index == 0 ? this.capacitor.getAmount() & 0b1111111111111111111111111111111L : (this.capacitor.getAmount() >> 32 & 0b1111111111111111111111111111111L));
     }
 
     @Override
-    public void set(int value) {
-        this.capacitor.setEnergy(value);
+    public void set(int index, int value) {
+        this.capacitor.setEnergy(((long) value) << (index == 0 ? 0 : 32) | (capacitor.getAmount() & (0b1111111111111111111111111111111L << (index == 1 ? 0 : 32))));
+    }
+
+    @Override
+    public int size() {
+        return 2;
     }
 }

@@ -142,7 +142,6 @@
     "libblockattributes_core": ">=0.9",
     "libblockattributes_items": ">=0.9",
     "libblockattributes_fluids": ">=0.9",
-    "galacticraftenergy": ">=0.2.1",
 
     "fabric-api-base": "*",
     "fabric-blockrenderlayer-v1": "*",

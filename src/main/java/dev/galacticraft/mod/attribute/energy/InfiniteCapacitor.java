@@ -22,38 +22,45 @@
 
 package dev.galacticraft.mod.attribute.energy;
 
-import alexiil.mc.lib.attributes.ListenerRemovalToken;
-import alexiil.mc.lib.attributes.ListenerToken;
-import dev.galacticraft.energy.api.Capacitor;
-import dev.galacticraft.energy.api.EnergyType;
-import dev.galacticraft.energy.impl.DefaultEnergyType;
-import org.jetbrains.annotations.Nullable;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class InfiniteCapacitor implements Capacitor {
-    @Override
-    public void setEnergy(int amount) {
+public class InfiniteCapacitor implements EnergyStorage {
+    public static final InfiniteCapacitor INSTANCE = new InfiniteCapacitor();
+
+    protected InfiniteCapacitor() {
     }
 
     @Override
-    public EnergyType getEnergyType() {
-        return DefaultEnergyType.INSTANCE;
+    public boolean supportsInsertion() {
+        return false;
     }
 
     @Override
-    public int getEnergy() {
-        return 1073741823;
+    public long insert(long maxAmount, TransactionContext transaction) {
+        return 0;
     }
 
     @Override
-    public int getMaxCapacity() {
-        return 1073741823;
+    public boolean supportsExtraction() {
+        return true;
     }
 
     @Override
-    public @Nullable ListenerToken addListener(CapacitorListener listener, ListenerRemovalToken removalToken) {
-        return null;
+    public long extract(long maxAmount, TransactionContext transaction) {
+        return maxAmount;
+    }
+
+    @Override
+    public long getAmount() {
+        return Long.MAX_VALUE;
+    }
+
+    @Override
+    public long getCapacity() {
+        return Long.MAX_VALUE;
     }
 }

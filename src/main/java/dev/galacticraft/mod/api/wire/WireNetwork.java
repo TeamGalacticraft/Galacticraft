@@ -22,15 +22,15 @@
 
 package dev.galacticraft.mod.api.wire;
 
-import alexiil.mc.lib.attributes.Simulation;
-import dev.galacticraft.energy.api.EnergyInsertable;
 import dev.galacticraft.mod.api.wire.impl.WireNetworkImpl;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 import java.util.Collection;
 import java.util.Map;
@@ -39,7 +39,7 @@ import java.util.Map;
  * The basic 'Wire Network' spec
  */
 public interface WireNetwork {
-    static WireNetwork create(ServerWorld world, int maxTransferRate) {
+    static WireNetwork create(ServerWorld world, long maxTransferRate) {
         return new WireNetworkImpl(world, maxTransferRate);
     }
 
@@ -70,24 +70,24 @@ public interface WireNetwork {
      * @param fromWire The wire that received the energy
      * @param amount The amount of energy to insert
      * @param direction
-     * @param simulate Whether to perform the action or not
+     * @param transaction Whether to perform the action or not
      * @return the amount of energy that failed to insert
      */
-    int insert(@NotNull BlockPos fromWire, int amount, Direction direction, @NotNull Simulation simulate);
+    long insert(@NotNull BlockPos fromWire, long amount, Direction direction, @NotNull TransactionContext transaction);
 
-    int insertInternal(int amount, double ratio, int available, Simulation simulate);
+    long insertInternal(long amount, double ratio, long available, TransactionContext transaction);
 
-    void getNonFullInsertables(Object2IntMap<WireNetwork> energyRequirement, BlockPos source, int amount);
+    void getNonFullInsertables(Object2LongMap<WireNetwork> energyRequirement, BlockPos source, long amount, @NotNull TransactionContext transaction);
 
     /**
      * Returns the maximum amount of energy allowed to pass through this network per tick
      * @return the maximum amount of energy allowed to pass through this network per tick
      */
-    int getMaxTransferRate();
+    long getMaxTransferRate();
 
     Collection<BlockPos> getAllWires();
 
-    Map<BlockPos, EnergyInsertable> getInsertable();
+    Map<BlockPos, EnergyStorage> getStorages();
 
     boolean markedForRemoval();
 

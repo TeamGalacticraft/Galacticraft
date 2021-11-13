@@ -22,55 +22,68 @@
 
 package dev.galacticraft.mod.attribute.energy;
 
-import alexiil.mc.lib.attributes.Simulation;
-import dev.galacticraft.energy.api.EnergyInsertable;
-import dev.galacticraft.energy.api.EnergyType;
-import dev.galacticraft.energy.impl.DefaultEnergyType;
 import dev.galacticraft.mod.api.wire.WireNetwork;
+import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class WireEnergyInsertable implements EnergyInsertable {
+public class WireEnergyStorage implements EnergyStorage {
     private final Direction direction;
-    private final int maxTransfer;
+    private final int transferRate;
     private final BlockPos pos;
+
     private @Nullable WireNetwork network;
 
-    public WireEnergyInsertable(Direction direction, int maxTransfer, BlockPos pos) {
+    public WireEnergyStorage(Direction direction, int transferRate, BlockPos pos) {
         this.direction = direction;
-        this.maxTransfer = maxTransfer;
+        this.transferRate = transferRate;
         this.pos = pos;
-    }
-
-    @Override
-    public int attemptInsertion(EnergyType type, int amount, Simulation simulation) {
-        if (amount <= 0) return amount;
-        if (this.network != null) {
-            return this.network.insert(this.pos, type.convertTo(DefaultEnergyType.INSTANCE, amount), direction, simulation);
-        }
-        return amount;
-    }
-
-    @Override
-    public EnergyInsertable getPureInsertable() {
-        return this;
     }
 
     public void setNetwork(@Nullable WireNetwork network) {
         this.network = network;
     }
 
+
     @Override
-    public String toString() {
-        return "WireEnergyInsertable{" +
-                "dir=" + direction +
-                ", maxTransfer=" + maxTransfer +
-                ", pos=" + pos +
-                ", network=" + network +
-                '}';
+    public boolean supportsInsertion() {
+        return this.transferRate > 0;
+    }
+
+    @Override
+    public long insert(long maxAmount, TransactionContext transaction) {
+        StoragePreconditions.notNegative(maxAmount);
+
+        if (this.network != null) {
+            return this.network.insert(this.pos, Math.min(transferRate, maxAmount), direction, transaction);
+        }
+
+        return 0;
+    }
+
+    @Override
+    public boolean supportsExtraction() {
+        return false;
+    }
+
+    @Override
+    public long extract(long maxAmount, TransactionContext transaction) {
+        return 0;
+    }
+
+    @Override
+    public long getAmount() {
+        return 0;
+    }
+
+    @Override
+    public long getCapacity() {
+        return this.transferRate;
     }
 }

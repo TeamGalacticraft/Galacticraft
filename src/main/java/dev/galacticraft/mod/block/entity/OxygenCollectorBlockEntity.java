@@ -28,6 +28,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
@@ -36,7 +37,6 @@ import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.screen.OxygenCollectorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
@@ -76,7 +76,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
 
     @Override
     protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_EXTRACTABLE, 8, 62);
         return builder;
     }
 
@@ -102,8 +102,8 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public boolean canInsertEnergy() {
-        return true;
+    public long energyExtractionRate() {
+        return 0;
     }
 
     private int collectOxygen() {
@@ -189,7 +189,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public int getBaseEnergyConsumption() {
+    public long energyConsumption() {
         return Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate();
     }
 

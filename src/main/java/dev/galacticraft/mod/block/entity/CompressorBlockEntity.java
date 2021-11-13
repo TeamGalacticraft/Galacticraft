@@ -85,7 +85,17 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    public int getEnergyCapacity() {
+    public long getEnergyCapacity() {
+        return 0;
+    }
+
+    @Override
+    public long energyInsertionRate() {
+        return 0;
+    }
+
+    @Override
+    public long energyExtractionRate() {
         return 0;
     }
 
@@ -152,10 +162,10 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
-        this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
-        this.fuelLength = tag.getInt(Constant.Nbt.FUEL_LENGTH);
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        this.fuelTime = nbt.getInt(Constant.Nbt.FUEL_TIME);
+        this.fuelLength = nbt.getInt(Constant.Nbt.FUEL_LENGTH);
     }
 
     @Nullable
