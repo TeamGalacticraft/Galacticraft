@@ -73,7 +73,7 @@ public class ConfiguredMachineFace {
             }
         }
 
-        for (SlotType type : machine.itemInv().getTypes()) {
+        for (SlotType type : machine.itemStorage().getTypes()) {
             if (type.getType().isBidirectional()) {
                 if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.ITEM_INPUT)) list.add(AutomationType.ITEM_INPUT);
                 if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.ITEM_OUTPUT)) list.add(AutomationType.ITEM_OUTPUT);

@@ -45,7 +45,7 @@ public class CoalGeneratorTestSuite implements MachineGameTest {
     public void coalGeneratorFuelingTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);
-        final var fuelSlot = coalGenerator.itemInv().getSlot(CoalGeneratorBlockEntity.FUEL_SLOT);
+        final var fuelSlot = coalGenerator.itemStorage().getSlot(CoalGeneratorBlockEntity.FUEL_SLOT);
         fuelSlot.set(new ItemStack(Items.COAL, 2));
         runNext(context, () -> {
             ItemStack stack = fuelSlot.get();

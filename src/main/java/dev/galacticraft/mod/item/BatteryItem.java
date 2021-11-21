@@ -104,7 +104,6 @@ public class BatteryItem extends Item implements SimpleBatteryItem {
         return ((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8);
     }
 
-
     @Override
     public void onCraft(@NotNull ItemStack battery, World world, PlayerEntity player) {
         NbtCompound batteryTag = battery.getOrCreateNbt();

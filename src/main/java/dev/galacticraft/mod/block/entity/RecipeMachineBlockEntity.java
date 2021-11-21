@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.FixedItemInv;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.inventory.Inventory;
@@ -33,10 +33,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,21 +43,91 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Recipe<C>> extends MachineBlockEntity {
     private final @NotNull RecipeType<R> recipeType;
-    private final @NotNull RecipeTimeFunction<C, R> recipeTimeFunction;
-    private final ItemOutputFunction itemOutputFunction;
     private @Nullable R activeRecipe;
     private int progress;
     private int maxProgress = 0;
 
-    public RecipeMachineBlockEntity(BlockEntityType<? extends RecipeMachineBlockEntity<C, R>> type, BlockPos pos, BlockState state, @NotNull RecipeType<R> recipeType, @NotNull RecipeTimeFunction<C, R> recipeTimeFunction) {
-        this(type, pos, state, recipeType, recipeTimeFunction, ItemStack::copy);
-    }
-
-    public RecipeMachineBlockEntity(BlockEntityType<? extends RecipeMachineBlockEntity<C, R>> type, BlockPos pos, BlockState state, @NotNull RecipeType<R> recipeType, @NotNull RecipeTimeFunction<C, R> recipeTimeFunction, @NotNull ItemOutputFunction itemOutputFunction) {
+    public RecipeMachineBlockEntity(BlockEntityType<? extends RecipeMachineBlockEntity<C, R>> type, BlockPos pos, BlockState state, @NotNull RecipeType<R> recipeType) {
         super(type, pos, state);
         this.recipeType = recipeType;
-        this.recipeTimeFunction = recipeTimeFunction;
-        this.itemOutputFunction = itemOutputFunction;
+    }
+
+    protected abstract @NotNull C craftingInv();
+
+    protected abstract boolean outputStacks(R recipe, Transaction transaction);
+
+    protected abstract void extractCraftingMaterials(R recipe, Transaction transaction);
+
+    @Override
+    public void tickWork() {
+        if (this.getStatus().getType().isActive()) {
+            R recipe = this.findValidRecipe();
+            if (this.canOutput(recipe, null)) {
+                if (this.activeRecipe() != recipe) {
+                    this.setRecipeAndProgress(recipe);
+                } else {
+                    if (this.progress(this.progress() + 1) >= this.maxProgress()) {
+                        try (Transaction transaction = Transaction.openOuter()) {
+                            this.craft(recipe, transaction);
+                            transaction.commit();
+                        }
+                    } else {
+                        this.resetRecipeProgress();
+                    }
+                }
+            } else {
+                this.resetRecipeProgress();
+            }
+        }
+    }
+
+    protected boolean canOutput(R recipe, @Nullable TransactionContext context) {
+        try (Transaction transaction = Transaction.openNested(context)) {
+            return outputStacks(recipe, transaction);
+        }
+    }
+
+    protected void craft(R recipe, Transaction transaction) {
+        boolean success;
+        success = this.extractCraftingMaterials(recipe, transaction);
+        assert success;
+        success = this.outputStacks(recipe, transaction);
+        assert success;
+
+        recipe = this.findValidRecipe();
+        if (recipe == null) this.resetRecipeProgress();
+        else this.setRecipeAndProgress(recipe);
+    }
+
+    protected void resetRecipeProgress() {
+        this.activeRecipe(null);
+        this.progress(0);
+        this.maxProgress(0);
+    }
+
+    protected void setRecipeAndProgress(@NotNull R recipe) {
+        this.activeRecipe(recipe);
+        this.maxProgress(this.getProcessTime(recipe));
+        this.progress(0);
+    }
+
+    public RecipeType<R> recipeType() {
+        return this.recipeType;
+    }
+
+    protected @Nullable R findValidRecipe() {
+        assert this.world != null;
+        return this.world.getRecipeManager().getFirstMatch(this.recipeType(), this.craftingInv(), this.world).orElse(null);
+    }
+
+    protected abstract int getProcessTime(@NotNull R recipe);
+
+    public int progress(int progress) {
+        return this.progress = progress;
+    }
+
+    public void maxProgress(int maxProgress) {
+        this.maxProgress = maxProgress;
     }
 
     public int progress() {
@@ -70,7 +138,7 @@ public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Re
         return this.activeRecipe;
     }
 
-    public void activeRecipe(@Nullable R activeRecipe) {
+    protected void activeRecipe(@Nullable R activeRecipe) {
         this.activeRecipe = activeRecipe;
     }
 
@@ -81,97 +149,6 @@ public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Re
     public boolean active() {
         return this.maxProgress > 0;
     }
-    
-    public abstract @NotNull C craftingInv();
-    
-    public abstract @NotNull FixedItemInv outputInv();
-
-    @Override
-    public void tickWork() {
-        if (this.getStatus().getType().isActive()) {
-            R recipe = this.recipe();
-            if (this.activeRecipe() == null) {
-                if (this.canCraft(recipe)) {
-                    this.recipe(recipe);
-                }
-            } else {
-                if (this.canCraft(recipe)) {
-                    if (this.activeRecipe() == recipe) {
-                        if (this.progress(this.progress() + 1) >= this.maxProgress()) {
-                            this.craft(recipe);
-                        }
-                    } else {
-                        this.recipe(recipe);
-                    }
-                } else {
-                    this.resetRecipe();
-                }
-            }
-        } else {
-            this.resetRecipe();
-        }
-    }
-
-    protected void craft(R recipe) {
-        DefaultedList<ItemStack> list = recipe.getRemainder(this.craftingInv());
-        ItemStack output = itemOutputFunction.getOutput(recipe.craft(this.craftingInv()));
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i) != ItemStack.EMPTY) {
-                this.craftingInv().setStack(i, list.get(i));
-            } else {
-                this.craftingInv().removeStack(i, 1);
-            }
-        }
-        ItemStack leftover = this.outputInv().getInsertable().insert(output);
-        assert leftover.isEmpty();
-
-        recipe = this.recipe();
-        if (recipe == null) this.resetRecipe();
-        else this.recipe(recipe);
-    }
-
-    protected void resetRecipe() {
-        this.activeRecipe(null);
-        this.progress(0);
-        this.maxProgress(0);
-    }
-
-    protected void recipe(@NotNull R recipe) {
-        this.activeRecipe(recipe);
-        this.maxProgress(this.getProcessTime(recipe));
-        this.progress(0);
-    }
-
-    public RecipeType<R> recipeType() {
-        return this.recipeType;
-    }
-
-    protected @Nullable R recipe() {
-        assert this.world != null;
-        return this.world.getRecipeManager().getFirstMatch(this.recipeType(), this.craftingInv(), this.world).orElse(null);
-    }
-
-    protected int getProcessTime(@NotNull R recipe) {
-        return this.recipeTimeFunction.getRecipeLength(recipe);
-    }
-
-    @Contract("null->false")
-    protected boolean canCraft(@Nullable R recipe) {
-        assert recipe == this.recipe();
-        if (recipe != null) {
-            return this.outputInv().getInsertable().attemptInsertion(itemOutputFunction.getOutput(recipe.craft(this.craftingInv())), Simulation.SIMULATE).isEmpty();
-        }
-        return false;
-    }
-
-    public int progress(int progress) {
-        return this.progress = progress;
-    }
-
-    public void maxProgress(int maxProgress) {
-        this.maxProgress = maxProgress;
-    }
-
     @Override
     public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
@@ -189,7 +166,7 @@ public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Re
     @Override
     public void setWorld(World world) {
         super.setWorld(world);
-        this.activeRecipe(this.recipe());
+        this.activeRecipe(this.findValidRecipe());
     }
 
     @FunctionalInterface

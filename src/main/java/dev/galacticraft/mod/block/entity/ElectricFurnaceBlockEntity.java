@@ -27,7 +27,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import net.minecraft.block.BlockState;
@@ -56,12 +56,12 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Invento
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOT = 2;
     
-    private final @NotNull Inventory craftingInv = new MachineInvWrapper(this, this.itemInv().getSubInv(INPUT_SLOT, INPUT_SLOT + 1));
-    private final @NotNull FixedItemInv outputInv = this.itemInv().getSubInv(OUTPUT_SLOT, OUTPUT_SLOT + 1);
+    private final @NotNull Inventory craftingInv = new MachineInvWrapper(this, this.itemStorage().getSubInv(INPUT_SLOT, INPUT_SLOT + 1));
+    private final @NotNull FixedItemInv outputInv = this.itemStorage().getSubInv(OUTPUT_SLOT, OUTPUT_SLOT + 1);
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_EXTRACTABLE, 8, 61);
+    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, 8, 61);
         builder.addSlot(INPUT_SLOT, SlotType.INPUT, stack -> this.getRecipe(RecipeType.SMELTING, new SimpleInventory(stack)).isPresent(), 52, 35);
         builder.addOutputSlot(OUTPUT_SLOT, SlotType.OUTPUT, 113, 35);
         return builder;
@@ -84,8 +84,8 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Invento
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.recipe() == null) return Status.NOT_ENOUGH_ITEMS;
-        if (!this.canCraft(this.recipe())) return Status.OUTPUT_FULL;
+        if (this.findValidRecipe() == null) return Status.NOT_ENOUGH_ITEMS;
+        if (!this.canCraft(this.findValidRecipe())) return Status.OUTPUT_FULL;
         return Status.ACTIVE;
     }
 

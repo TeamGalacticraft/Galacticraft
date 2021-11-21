@@ -42,6 +42,6 @@ public class ChargeSlot extends Slot {
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        return Constant.Filter.ENERGY_EXTRACTABLE.matches(stack);
+        return Constant.Filter.Item.CAN_EXTRACT_ENERGY.matches(stack);
     }
 }

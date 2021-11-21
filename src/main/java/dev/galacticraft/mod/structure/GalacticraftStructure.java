@@ -45,7 +45,7 @@ public class GalacticraftStructure {
             Codec.INT.fieldOf("size").forGetter(StructurePoolFeatureConfig::getSize)
     ).apply(instance, StructurePoolFeatureConfig::new));
 
-    public static final StructurePieceType MOON_RUINS_PIECE = (StructurePieceType.class_6616)MoonRuinsGenerator.Piece::new;
+    public static final StructurePieceType MOON_RUINS_PIECE = (StructurePieceType.ManagerAware)MoonRuinsGenerator.Piece::new;
 
     public static final MoonPillagerBaseFeature MOON_PILLAGER_BASE_FEATURE = new MoonPillagerBaseFeature(SPFC_CODEC_UNCAPPED);
     public static final MoonRuinsFeature MOON_RUINS = new MoonRuinsFeature(DefaultFeatureConfig.CODEC);

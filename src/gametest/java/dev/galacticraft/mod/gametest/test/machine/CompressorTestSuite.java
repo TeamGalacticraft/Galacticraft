@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.gametest.test.machine;
 
 import alexiil.mc.lib.attributes.Simulation;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.CompressorBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
@@ -48,7 +48,7 @@ public class CompressorTestSuite implements MachineGameTest {
     public void compressorFuelingTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var compressor = this.createBlockEntity(context, pos, GalacticraftBlock.COMPRESSOR, GalacticraftBlockEntityType.COMPRESSOR);
-        final var inv = compressor.itemInv();
+        final var inv = compressor.itemStorage();
         final var fuelSlot = inv.getSlot(CompressorBlockEntity.FUEL_INPUT_SLOT);
         fuelSlot.set(new ItemStack(Items.COAL));
         runNext(context, () -> {
@@ -69,7 +69,7 @@ public class CompressorTestSuite implements MachineGameTest {
     public void compressorCraftingTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var compressor = this.createBlockEntity(context, pos, GalacticraftBlock.COMPRESSOR, GalacticraftBlockEntityType.COMPRESSOR);
-        final var inv = compressor.itemInv();
+        final var inv = compressor.itemStorage();
         fillCompressorSlots(inv);
         compressor.fuelTime = compressor.fuelLength = 1000;
         runFinalTaskAt(context, 200 + 1, () -> {
@@ -84,7 +84,7 @@ public class CompressorTestSuite implements MachineGameTest {
     public void compressorCraftingFullTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var compressor = this.createBlockEntity(context, pos, GalacticraftBlock.COMPRESSOR, GalacticraftBlockEntityType.COMPRESSOR);
-        final var inv = compressor.itemInv();
+        final var inv = compressor.itemStorage();
         compressor.fuelTime = compressor.fuelLength = 1000;
         inv.setInvStack(CompressorBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), Simulation.ACTION);
         fillCompressorSlots(inv);
@@ -95,7 +95,7 @@ public class CompressorTestSuite implements MachineGameTest {
         });
     }
 
-    private static void fillCompressorSlots(MachineItemInv inv) {
+    private static void fillCompressorSlots(MachineItemStorage inv) {
         inv.setInvStack(0, new ItemStack(Items.IRON_INGOT), Simulation.ACTION);
         inv.setInvStack(1, new ItemStack(Items.IRON_INGOT), Simulation.ACTION);
     }

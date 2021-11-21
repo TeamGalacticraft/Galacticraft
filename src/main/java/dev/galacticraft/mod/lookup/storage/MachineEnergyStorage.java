@@ -203,11 +203,11 @@ public class MachineEnergyStorage extends SnapshotParticipant<Long> implements E
 			this.extract = new ExposedDirectionalEnergyStorage(false);
 		}
 
-		public EnergyStorage insert() {
+		public EnergyStorage insertion() {
 			return this.insert;
 		}
 
-		public EnergyStorage extract() {
+		public EnergyStorage extraction() {
 			return this.extract;
 		}
 

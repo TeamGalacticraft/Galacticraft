@@ -32,10 +32,10 @@ import dev.galacticraft.mod.accessor.ServerWorldAccessor;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.OxygenTankUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -80,9 +80,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(BATTERY_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_EXTRACTABLE, 8, 62);
-        builder.addSlot(LOX_INPUT, SlotType.OXYGEN_TANK, OxygenTankUtil.OXYGEN_TANK_EXTRACTABLE, 8, 62);
+    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
+        builder.addSlot(SlotSettings.Builder.create(8, 62, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
+        builder.addSlot(SlotSettings.Builder.create(8, 62, SlotType.OXYGEN_TANK).filter(Constant.Filter.Item.CAN_EXTRACT_OXYGEN).build()); //fixme
         return builder;
     }
 
@@ -121,7 +121,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         this.attemptChargeFromStack(BATTERY_SLOT);
         assert this.world != null;
         if (!this.world.isClient && this.getStatus().getType().isActive()) {
-            this.fluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.LOX_ONLY, null, FluidAmount.of1620(breathablePositions.size()), Simulation.ACTION);
+            this.fluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.Fluid.LOX_ONLY, null, FluidAmount.of1620(breathablePositions.size()), Simulation.ACTION);
         }
     }
 

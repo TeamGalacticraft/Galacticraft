@@ -727,7 +727,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
         color = getItemColor(matrices, mouseX, mouseY);
         color.defaultReturnValue(-1);
         for (Slot slot : this.handler.slots) {
-            if (slot.inventory instanceof InventoryFixedWrapper inv && inv.getWrapped() == this.machine.itemInv()) {
+            if (slot.inventory instanceof InventoryFixedWrapper inv && inv.getWrapped() == this.machine.itemStorage()) {
                 int index = ((SlotAccessor) slot).getIndex();
                 if (color.get(index) != -1) {
                     RenderSystem.disableDepthTest();
@@ -785,27 +785,27 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
             mouseY -= this.y + TAB_HEIGHT + SPACING;
             Int2IntArrayMap out = new Int2IntArrayMap();
             if (DrawableUtil.isWithin(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16) && this.machine.getIOConfig().get(BlockFace.TOP).getMatching() != null) {
-                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.machine.itemInv()));
+                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.machine.itemStorage()));
                 groupItem(out, list);
             }
             if (DrawableUtil.isWithin(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16) && this.machine.getIOConfig().get(BlockFace.LEFT).getMatching() != null) {
-                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.machine.itemInv()));
+                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.machine.itemStorage()));
                 groupItem(out, list);
             }
             if (DrawableUtil.isWithin(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16) && this.machine.getIOConfig().get(BlockFace.FRONT).getMatching() != null) {
-                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.machine.itemInv()));
+                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.machine.itemStorage()));
                 groupItem(out, list);
             }
             if (DrawableUtil.isWithin(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16) && this.machine.getIOConfig().get(BlockFace.RIGHT).getMatching() != null) {
-                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.machine.itemInv()));
+                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.machine.itemStorage()));
                 groupItem(out, list);
             }
             if (DrawableUtil.isWithin(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16) && this.machine.getIOConfig().get(BlockFace.BACK).getMatching() != null) {
-                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.machine.itemInv()));
+                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.machine.itemStorage()));
                 groupItem(out, list);
             }
             if (DrawableUtil.isWithin(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16) && this.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching() != null) {
-                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.machine.itemInv()));
+                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.machine.itemStorage()));
                 groupItem(out, list);
             }
             return out;
@@ -825,7 +825,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
         for (Slot slot : this.handler.slots) {
             int index = ((SlotAccessor) slot).getIndex();
             if (list.contains(index)) {
-                out.put(index, this.machine.itemInv().getTypes()[index].getColor().getRgb());
+                out.put(index, this.machine.itemStorage().getTypes()[index].getColor().getRgb());
             }
         }
     }
@@ -835,27 +835,27 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
             mouseX -= PANEL_WIDTH + this.x;
             mouseY -= this.y + TAB_HEIGHT + SPACING;
             if (DrawableUtil.isWithin(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.machine.itemInv()));
+                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.machine.itemStorage()));
                 groupStack(matrices, list);
             }
             if (DrawableUtil.isWithin(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.machine.itemInv()));
+                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.machine.itemStorage()));
                 groupStack(matrices, list);
             }
             if (DrawableUtil.isWithin(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.machine.itemInv()));
+                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.machine.itemStorage()));
                 groupStack(matrices, list);
             }
             if (DrawableUtil.isWithin(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.machine.itemInv()));
+                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.machine.itemStorage()));
                 groupStack(matrices, list);
             }
             if (DrawableUtil.isWithin(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.machine.itemInv()));
+                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.machine.itemStorage()));
                 groupStack(matrices, list);
             }
             if (DrawableUtil.isWithin(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.machine.itemInv()));
+                IntList list = new IntArrayList(this.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.machine.itemStorage()));
                 groupStack(matrices, list);
             }
         }
@@ -882,32 +882,32 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
                 slot.x - 1, slot.y - 1,
                 slot.x - 1, slot.y + 17,
                 this.getZOffset(),
-                this.machine.itemInv().getTypes()[index].getColor().getRgb(),
-                this.machine.itemInv().getTypes()[index].getColor().getRgb());
+                this.machine.itemStorage().getTypes()[index].getColor().getRgb(),
+                this.machine.itemStorage().getTypes()[index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getPositionMatrix(), bufferBuilder,
                 slot.x - 1, slot.y + 17,
                 slot.x + 17, slot.y - 1,
                 this.getZOffset(),
-                this.machine.itemInv().getTypes()[index].getColor().getRgb(),
-                this.machine.itemInv().getTypes()[index].getColor().getRgb());
+                this.machine.itemStorage().getTypes()[index].getColor().getRgb(),
+                this.machine.itemStorage().getTypes()[index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getPositionMatrix(), bufferBuilder,
                 slot.x + 17, slot.y + 17,
                 slot.x + 17, slot.y - 1,
                 this.getZOffset(),
-                this.machine.itemInv().getTypes()[index].getColor().getRgb(),
-                this.machine.itemInv().getTypes()[index].getColor().getRgb());
+                this.machine.itemStorage().getTypes()[index].getColor().getRgb(),
+                this.machine.itemStorage().getTypes()[index].getColor().getRgb());
         tessellator.draw();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         fillGradient(matrices.peek().getPositionMatrix(), bufferBuilder,
                 slot.x + 17, slot.y - 1,
                 slot.x - 1, slot.y - 1,
                 this.getZOffset(),
-                this.machine.itemInv().getTypes()[index].getColor().getRgb(),
-                this.machine.itemInv().getTypes()[index].getColor().getRgb());
+                this.machine.itemStorage().getTypes()[index].getColor().getRgb(),
+                this.machine.itemStorage().getTypes()[index].getColor().getRgb());
         tessellator.draw();
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.enableDepthTest();

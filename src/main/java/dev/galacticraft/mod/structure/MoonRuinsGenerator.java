@@ -31,7 +31,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
-import net.minecraft.class_6625;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.structure.*;
@@ -140,8 +139,8 @@ public class MoonRuinsGenerator {
       }
 
       @Override
-      protected void writeNbt(class_6625 arg, NbtCompound nbt) {
-         super.writeNbt(arg, nbt);
+      protected void writeNbt(StructureContext context, NbtCompound nbt) {
+         super.writeNbt(context, nbt);
          nbt.putString("Rot", this.placementData.getRotation().name());
          nbt.putFloat("Integrity", this.integrity);
       }

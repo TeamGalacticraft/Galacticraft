@@ -26,6 +26,7 @@ import alexiil.mc.lib.attributes.item.FixedItemInv;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.item.Accessory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -43,18 +44,23 @@ public class AccessoryItem extends Item implements Accessory {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        FixedItemInv inv = ((GearInventoryProvider)user).getAccessories();
+        Inventory inv = ((GearInventoryProvider)user).getAccessories();
         boolean alreadyEquipped = false;
-        for (int i = 0; i < inv.getSlotCount(); i++) {
-            if (inv.getInvStack(i).getItem() == this) {
+        int minAcceptableSlot = -1;
+        ItemStack copy = user.getStackInHand(hand).copy();
+        for (int i = 0; i < inv.size(); i++) {
+            if (inv.getStack(i).getItem() == this) {
                 alreadyEquipped = true;
                 break;
+            } else {
+                if (minAcceptableSlot == -1 && inv.getStack(i).isEmpty() && inv.isValid(i, copy)) {
+                    minAcceptableSlot = i;
+                }
             }
         }
-        if (!alreadyEquipped) {
-            if (inv.getInsertable().insert(user.getStackInHand(hand).copy()).isEmpty()) {
-                return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
-            }
+        if (!alreadyEquipped && minAcceptableSlot != -1) {
+            inv.setStack(minAcceptableSlot, copy);
+            return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world, user, hand);
     }

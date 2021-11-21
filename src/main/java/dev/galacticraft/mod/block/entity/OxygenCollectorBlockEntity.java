@@ -33,9 +33,10 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.screen.OxygenCollectorScreenHandler;
+import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
@@ -75,8 +76,8 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_EXTRACTABLE, 8, 62);
+    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
+        builder.addSlot(SlotSettings.Builder.create(8, 62, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
         return builder;
     }
 

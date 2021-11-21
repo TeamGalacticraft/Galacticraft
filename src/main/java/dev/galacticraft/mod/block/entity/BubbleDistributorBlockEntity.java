@@ -27,20 +27,24 @@ import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import dev.galacticraft.api.attribute.GasStorage;
+import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.entity.BubbleEntity;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
+import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.FluidUtil;
-import dev.galacticraft.mod.util.OxygenTankUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -80,9 +84,9 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(BATTERY_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_EXTRACTABLE, 8, 62);
-        builder.addSlot(OXYGEN_TANK_SLOT, SlotType.OXYGEN_TANK, OxygenTankUtil.OXYGEN_TANK_EXTRACTABLE, 31, 62);
+    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
+        builder.addSlot(SlotSettings.Builder.create(8, 62, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
+        builder.addSlot(SlotSettings.Builder.create(31, 62, SlotType.OXYGEN_TANK).filter(Constant.Filter.Item.CAN_EXTRACT_OXYGEN).build());
         return builder;
     }
 
@@ -217,9 +221,23 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
         if (this.fluidInv().getInvFluid(0).amount().compareTo(this.fluidInv().getMaxAmount_F(0)) >= 0) {
             return;
         }
-        if (FluidUtil.canExtractFluids(this.itemInv().getSlot(slot))) {
-            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(this.itemInv().getSlot(slot));
-            this.fluidInv().insertFluid(OXYGEN_TANK, extractable.attemptExtraction(Constant.Filter.LOX_ONLY, this.fluidInv().getMaxAmount_F(0).sub(this.fluidInv().getInvFluid(0).amount()), Simulation.ACTION), Simulation.ACTION);
+        ContainerItemContext containerItemContext = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(slot));
+        Storage<Gas> storage = containerItemContext.find(GasStorage.ITEM);
+        if (storage != null && storage.supportsExtraction()) {
+            try (Transaction transaction = Transaction.openOuter()){
+                long extracted;
+                try (Transaction inner = transaction.openNested()) {
+                     extracted = storage.extract(Gas.OXYGEN, Long.MAX_VALUE, inner);
+                }
+                if (extracted > 0) {
+                    try (Transaction inner = transaction.openNested()) {
+                        this.stor
+                        extracted = storage.extract(Gas.OXYGEN, Long.MAX_VALUE, inner);
+                    }
+                }
+            }
+            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(this.itemStorage().getSlot(slot));
+            this.fluidInv().insertFluid(OXYGEN_TANK, extractable.attemptExtraction(Constant.Filter.Fluid.LOX_ONLY, this.fluidInv().getMaxAmount_F(0).sub(this.fluidInv().getInvFluid(0).amount()), Simulation.ACTION), Simulation.ACTION);
         }
     }
 

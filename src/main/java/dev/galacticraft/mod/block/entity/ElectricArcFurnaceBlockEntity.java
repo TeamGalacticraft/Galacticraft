@@ -22,19 +22,20 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.item.FixedItemInv;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.BlastingRecipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.ScreenHandler;
@@ -51,9 +52,8 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inventory, BlastingRecipe> {
-    private final @NotNull Inventory craftingInv = new MachineInvWrapper(this, this.itemInv().getSubInv(INPUT_SLOT, INPUT_SLOT + 1));
+    private final @NotNull Inventory craftingInv = this.itemStorage().mapped(INPUT_SLOT);
     private final @NotNull SimpleInventory predicateInv = new SimpleInventory(1);
-    private final @NotNull FixedItemInv outputInv = this.itemInv().getSubInv(OUTPUT_SLOT_1, OUTPUT_SLOT_2 + 1);
 
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
@@ -61,23 +61,19 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     public static final int OUTPUT_SLOT_2 = 3;
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_EXTRACTABLE, 8, 61);
-        builder.addSlot(INPUT_SLOT, SlotType.INPUT, stack -> {
-            predicateInv.setStack(0, stack);
+    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
+        builder.addSlot(SlotSettings.Builder.create(8, 61, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
+        builder.addSlot(SlotSettings.Builder.create(44, 35, SlotType.INPUT).filter(stack -> {
+            this.predicateInv.setStack(0, stack);
             return this.world.getRecipeManager().getFirstMatch(this.recipeType(), this.predicateInv, this.world).isPresent();
-        }, 44, 35);
-        builder.addOutputSlot(OUTPUT_SLOT_1, SlotType.OUTPUT, 108, 35);
-        builder.addOutputSlot(OUTPUT_SLOT_2, SlotType.OUTPUT, 134, 35);
+        }).build());
+        builder.addSlot(SlotSettings.Builder.create(108, 35, SlotType.OUTPUT).disableInput().build());
+        builder.addSlot(SlotSettings.Builder.create(134, 35, SlotType.OUTPUT).disableInput().build());
         return builder;
     }
 
     public ElectricArcFurnaceBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE, pos, state, RecipeType.BLASTING, recipe -> (int) (recipe.getCookTime() * 0.8f), stack -> {
-            stack = stack.copy();
-            stack.setCount(stack.getCount() * 2);
-            return stack;
-        });
+        super(GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE, pos, state, RecipeType.BLASTING);
     }
 
     @Override
@@ -109,8 +105,9 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.recipe() == null) return Status.NOT_ENOUGH_ITEMS;
-        if (!this.canCraft(this.recipe())) return Status.OUTPUT_FULL;
+        BlastingRecipe validRecipe = this.findValidRecipe();
+        if (validRecipe == null) return Status.NOT_ENOUGH_ITEMS;
+        if (!this.canOutput(validRecipe, null)) return Status.OUTPUT_FULL;
         return Status.ACTIVE;
     }
 
@@ -120,8 +117,25 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    public @NotNull FixedItemInv outputInv() {
-        return this.outputInv;
+    protected boolean outputStacks(BlastingRecipe recipe, Transaction transaction) {
+        ItemStack copy = recipe.getOutput().copy();
+        copy.setCount(copy.getCount() * 2);
+        ItemStack stack1 = this.itemStorage().insertStack(OUTPUT_SLOT_1, copy, transaction);
+        if (stack1.isEmpty()) return true;
+        stack1 = this.itemStorage().insertStack(OUTPUT_SLOT_2, stack1, transaction);
+        if (stack1.isEmpty()) return true;
+        transaction.abort();
+        return false;
+    }
+
+    @Override
+    protected void extractCraftingMaterials(BlastingRecipe recipe, Transaction transaction) {
+        this.itemStorage().extractStack(INPUT_SLOT, 1, transaction);
+    }
+
+    @Override
+    protected int getProcessTime(@NotNull BlastingRecipe recipe) {
+        return (int) (recipe.getCookTime() * 0.8);
     }
 
     @Nullable

@@ -24,8 +24,9 @@ package dev.galacticraft.mod.world.gen.feature;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.structure.MoonRuinsGenerator;
-import net.minecraft.class_6622;
-import net.minecraft.class_6626;
+import net.minecraft.class_6834;
+import net.minecraft.structure.StructurePiecesCollector;
+import net.minecraft.structure.StructurePiecesGenerator;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
@@ -37,13 +38,12 @@ import net.minecraft.world.gen.feature.StructureFeature;
  */
 public class MoonRuinsFeature extends StructureFeature<DefaultFeatureConfig> {
    public MoonRuinsFeature(Codec<DefaultFeatureConfig> codec) {
-      super(codec, MoonRuinsFeature::method_38700);
+      super(codec, class_6834.simple(class_6834.checkForBiomeOnTop(Heightmap.Type.WORLD_SURFACE_WG), MoonRuinsFeature::addPieces));
    }
-   private static void method_38700(class_6626 arg, DefaultFeatureConfig featureConfig, class_6622.class_6623 arg2) {
-      if (arg2.method_38707(Heightmap.Type.WORLD_SURFACE_WG)) {
-         BlockPos blockPos = new BlockPos(arg2.chunkPos().getStartX(), 90, arg2.chunkPos().getStartZ());
-         BlockRotation blockRotation = BlockRotation.random(arg2.random());
-         MoonRuinsGenerator.addPieces(arg2.structureManager(), blockPos, blockRotation, arg, arg2.random(), featureConfig);
-      }
+
+   private static void addPieces(StructurePiecesCollector collector, StructurePiecesGenerator.Context<DefaultFeatureConfig> context) {
+      BlockPos blockPos = new BlockPos(context.chunkPos().getStartX(), 90, context.chunkPos().getStartZ());
+      BlockRotation blockRotation = BlockRotation.random(context.random());
+      MoonRuinsGenerator.addPieces(context.structureManager(), blockPos, blockRotation, collector, context.random(), context.config());
    }
 }

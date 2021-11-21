@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.gametest.test.machine;
 
 import alexiil.mc.lib.attributes.Simulation;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.CircuitFabricatorBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
@@ -53,7 +53,7 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
     public void circuitFabricatorCraftingTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var circuitFabricator = this.createBlockEntity(context, pos, GalacticraftBlock.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
-        final var inv = circuitFabricator.itemInv();
+        final var inv = circuitFabricator.itemStorage();
         circuitFabricator.capacitor().setEnergy(circuitFabricator.getEnergyCapacity());
         fillCircuitFabricatorSlots(inv);
         runFinalTaskAt(context, 300 + 1, () -> {
@@ -68,7 +68,7 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
     public void circuitFabricatorCraftingFullTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var circuitFabricator = this.createBlockEntity(context, pos, GalacticraftBlock.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
-        final var inv = circuitFabricator.itemInv();
+        final var inv = circuitFabricator.itemStorage();
         circuitFabricator.capacitor().setEnergy(circuitFabricator.getEnergyCapacity());
         inv.setInvStack(CircuitFabricatorBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), Simulation.ACTION);
         fillCircuitFabricatorSlots(inv);
@@ -79,7 +79,7 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
         });
     }
 
-    private static void fillCircuitFabricatorSlots(MachineItemInv inv) {
+    private static void fillCircuitFabricatorSlots(MachineItemStorage inv) {
         inv.setInvStack(CircuitFabricatorBlockEntity.INPUT_SLOT_DIAMOND, new ItemStack(Items.DIAMOND), Simulation.ACTION);
         inv.setInvStack(CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON, new ItemStack(GalacticraftItem.RAW_SILICON), Simulation.ACTION);
         inv.setInvStack(CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON_2, new ItemStack(GalacticraftItem.RAW_SILICON), Simulation.ACTION);

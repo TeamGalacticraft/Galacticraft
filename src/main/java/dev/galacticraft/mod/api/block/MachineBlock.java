@@ -22,13 +22,14 @@
 
 package dev.galacticraft.mod.api.block;
 
-import alexiil.mc.lib.attributes.item.FixedItemInv;
 import com.mojang.authlib.GameProfile;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
 import dev.galacticraft.mod.block.entity.MachineBlockEntityTicker;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -68,6 +69,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -186,13 +188,16 @@ public abstract class MachineBlock<T extends MachineBlockEntity> extends BlockWi
         super.onBreak(world, pos, state, player);
         BlockEntity entity = world.getBlockEntity(pos);
         if (entity instanceof MachineBlockEntity machine) {
-            FixedItemInv inv = machine.itemInv();
-            for (int i = 0; i < inv.getSlotCount(); i++) {
-                ItemStack stack = inv.getInvStack(i);
-                if (!stack.isEmpty()) {
-                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack));
-                    inv.forceSetInvStack(i, ItemStack.EMPTY);
-                }
+            MachineItemStorage inv = machine.itemStorage();
+            List<ItemEntity> entities = new ArrayList<>();
+            try (Transaction transaction = Transaction.openOuter()) {
+                inv.iterator(transaction).forEachRemaining(view -> {
+                    entities.add(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), view.getResource().toStack((int) view.extract(view.getResource(), view.getAmount(), transaction))));
+                });
+                transaction.commit();
+            }
+            for (ItemEntity itemEntity : entities) {
+                world.spawnEntity(itemEntity);
             }
         }
     }

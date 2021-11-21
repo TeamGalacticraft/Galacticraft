@@ -26,7 +26,7 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.block.entity.RefineryBlockEntity;
@@ -57,7 +57,7 @@ public class RefineryTestSuite implements MachineGameTest {
     public void refineryOilInputTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY);
-        final var inv = refinery.itemInv();
+        final var inv = refinery.itemStorage();
         inv.setInvStack(RefineryBlockEntity.FLUID_INPUT_SLOT, new ItemStack(GalacticraftItem.CRUDE_OIL_BUCKET), Simulation.ACTION);
         refinery.capacitor().setEnergy(refinery.getEnergyCapacity());
         runFinalTaskNext(context, () -> {
@@ -72,7 +72,7 @@ public class RefineryTestSuite implements MachineGameTest {
     public void refineryCraftingTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY);
-        final var inv = refinery.itemInv();
+        final var inv = refinery.itemStorage();
         fillRefinerySlots(inv);
         refinery.capacitor().setEnergy(refinery.getEnergyCapacity());
         refinery.fluidInv().setInvFluid(RefineryBlockEntity.OIL_TANK, FluidKeys.get(GalacticraftFluid.CRUDE_OIL).withAmount(FluidAmount.ONE), Simulation.ACTION);
@@ -92,7 +92,7 @@ public class RefineryTestSuite implements MachineGameTest {
     public void refineryRefiningFullTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY);
-        final var inv = refinery.itemInv();
+        final var inv = refinery.itemStorage();
         fillRefinerySlots(inv);
         refinery.capacitor().setEnergy(refinery.getEnergyCapacity());
         refinery.fluidInv().setInvFluid(RefineryBlockEntity.OIL_TANK, FluidKeys.get(GalacticraftFluid.CRUDE_OIL).withAmount(FluidAmount.ONE), Simulation.ACTION);
@@ -104,7 +104,7 @@ public class RefineryTestSuite implements MachineGameTest {
         });
     }
 
-    private static void fillRefinerySlots(MachineItemInv inv) {
+    private static void fillRefinerySlots(MachineItemStorage inv) {
         inv.setInvStack(0, new ItemStack(Items.IRON_INGOT), Simulation.ACTION);
         inv.setInvStack(1, new ItemStack(Items.IRON_INGOT), Simulation.ACTION);
     }

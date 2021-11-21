@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.gametest.test.machine;
 
 import alexiil.mc.lib.attributes.Simulation;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
@@ -52,7 +52,7 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
     public void electricArcFurnaceBlastingTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var electricArcFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_ARC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE);
-        final var inv = electricArcFurnace.itemInv();
+        final var inv = electricArcFurnace.itemStorage();
         electricArcFurnace.capacitor().setEnergy(electricArcFurnace.getEnergyCapacity());
         fillElectricArcFurnaceSlots(inv);
         runFinalTaskAt(context, 80 + 1, () -> {
@@ -67,7 +67,7 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
     public void electricArcFurnaceCraftingFullTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var electricArcFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_ARC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE);
-        final var inv = electricArcFurnace.itemInv();
+        final var inv = electricArcFurnace.itemStorage();
         electricArcFurnace.capacitor().setEnergy(electricArcFurnace.getEnergyCapacity());
         inv.setInvStack(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1, new ItemStack(Items.BARRIER), Simulation.ACTION);
         inv.setInvStack(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_2, new ItemStack(Items.BARRIER), Simulation.ACTION);
@@ -79,7 +79,7 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         });
     }
 
-    private static void fillElectricArcFurnaceSlots(MachineItemInv inv) {
+    private static void fillElectricArcFurnaceSlots(MachineItemStorage inv) {
         inv.setInvStack(ElectricArcFurnaceBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON), Simulation.ACTION);
     }
 }

@@ -32,12 +32,6 @@ import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
-import alexiil.mc.lib.attributes.item.FixedItemInvView;
-import alexiil.mc.lib.attributes.item.ItemExtractable;
-import alexiil.mc.lib.attributes.item.ItemInsertable;
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.WorldRendererAccessor;
@@ -46,18 +40,18 @@ import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.*;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
-import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.lookup.storage.MachineEnergyStorage;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Recipe;
@@ -89,16 +83,16 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
     private boolean loaded = false;
 
     public final @NotNull MachineEnergyStorage capacitor = new MachineEnergyStorage(this);
-    private final @NotNull MachineItemInv itemInv = this.createInventory(MachineItemInv.Builder.create()).build();
+    private final @NotNull MachineItemStorage itemStorage = this.createInventory(MachineItemStorage.Builder.create(this)).build();
 
     private final @NotNull MachineFluidInv fluidInv = this.createFluidInv(MachineFluidInv.Builder.create(this.fluidInvCapacity())).build();
 
     private final @NotNull EnergyStorage capacitorView = this.capacitor.view();
 
     private final @NotNull FixedFluidInvView fluidInvView = this.fluidInv().getFixedView();
-    private final @NotNull FixedItemInvView invView = this.itemInv().getFixedView();
+    private final @NotNull Storage<ItemVariant> itemStorageView = this.itemStorage().view();
 
-    private final InventoryFixedWrapper wrappedInventory = new MachineInvWrapper(this, this.itemInv());
+    private final Inventory vanillaInventory = this.itemStorage().vanilla();
 
     public MachineBlockEntity(BlockEntityType<? extends MachineBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -169,7 +163,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
         return 0;
     }
 
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
         return builder;
     }
 
@@ -202,13 +196,6 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
     protected abstract MachineStatus getStatusById(int index);
 
     /**
-     * @return The {@link ItemFilter} for the given slot of {@link #itemInv()}.
-     */
-    public final ItemFilter getFilterForSlot(int slot) {
-        return this.itemInv().getFilterForSlot(slot);
-    }
-
-    /**
      * @return The maximum amount of energy that can be transferred to or from a battery in this machine per call to
      * {@link #attemptChargeFromStack(int)} or {@link #attemptDrainPowerToStack(int)}
      */
@@ -220,8 +207,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
         return this.capacitor;
     }
 
-    public final @NotNull MachineItemInv itemInv() {
-        return this.itemInv;
+    public final @NotNull MachineItemStorage itemStorage() {
+        return this.itemStorage;
     }
 
     public final @NotNull MachineFluidInv fluidInv() {
@@ -236,8 +223,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
         return this.fluidInvView;
     }
 
-    public @NotNull FixedItemInvView itemInvView() {
-        return this.invView;
+    public @NotNull Storage<ItemVariant> itemInvView() {
+        return this.itemStorageView;
     }
 
     public final @NotNull EnergyStorage getExposedCapacitor(@NotNull Direction direction) {
@@ -248,9 +235,23 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
         assert this.world != null;
         return switch (this.getIOConfig().get(face).getAutomationType()) {
             case POWER_IO -> this.capacitor.exposed();
-            case POWER_INPUT -> this.capacitor.exposed().insert();
-            case POWER_OUTPUT -> this.capacitor.exposed().extract();
+            case POWER_INPUT -> this.capacitor.exposed().insertion();
+            case POWER_OUTPUT -> this.capacitor.exposed().extraction();
             default -> this.capacitorView;
+        };
+    }
+
+    public final @NotNull Storage<ItemVariant> getExposedItemStorage(@NotNull Direction direction) {
+        return this.getExposedItemStorage(BlockFace.toFace(this.world.getBlockState(this.pos).get(Properties.HORIZONTAL_FACING), direction.getOpposite()));
+    }
+
+    public final @NotNull Storage<ItemVariant> getExposedItemStorage(@NotNull BlockFace face) {
+        assert this.world != null;
+        return switch (this.getIOConfig().get(face).getAutomationType()) {
+            case ITEM_IO -> this.itemStorage.exposed();
+            case ITEM_INPUT -> this.itemStorage.exposed().insertion();
+            case ITEM_OUTPUT -> this.itemStorage.exposed().extraction();
+            default -> this.itemStorageView;
         };
     }
 
@@ -263,45 +264,6 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
     //            default -> this.fluidInvView;
     //        };
     //    }
-    //
-    //    public final @Nullable Storage<ItemVariant> getEnergyInsertable(@NotNull BlockState state, @Nullable Direction direction) {
-    //        if (direction != null) {
-    //            ConfiguredMachineFace cso = this.getIOConfig().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction.getOpposite()));
-    //            if (cso.getAutomationType().isEnergy()) {
-    //                if (cso.getAutomationType().isInput()) {
-    //                    return this.capacitor().getPureInsertable();
-    //                }
-    //            }
-    //            return null;
-    //        }
-    //        return this.capacitor().getPureInsertable();
-    //    }
-
-    public final @Nullable ItemExtractable getItemExtractable(@NotNull BlockState state, @Nullable Direction direction) {
-        if (direction != null) {
-            ConfiguredMachineFace cso = this.getIOConfig().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction.getOpposite()));
-            if (cso.getAutomationType().isItem()) {
-                if (cso.getAutomationType().isOutput()) {
-                    return this.itemInv().getMappedInv(cso.getMatching(this.itemInv())).getExtractable().getPureExtractable();
-                }
-            }
-            return null;
-        }
-        return this.itemInv().getExtractable().getPureExtractable();
-    }
-
-    public final @Nullable ItemInsertable getItemInsertable(@NotNull BlockState state, @Nullable Direction direction) {
-        if (direction != null) {
-            ConfiguredMachineFace cso = this.getIOConfig().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction.getOpposite()));
-            if (cso.getAutomationType().isItem()) {
-                if (cso.getAutomationType().isInput()) {
-                    return this.itemInv().getMappedInv(cso.getMatching(this.itemInv())).getInsertable().getPureInsertable();
-                }
-            }
-            return null;
-        }
-        return this.itemInv().getInsertable().getPureInsertable();
-    }
 
     public final @Nullable FluidInsertable getFluidInsertable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
@@ -345,9 +307,6 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
         return noDrop;
     }
 
-    protected ItemStack decrement(int slot, int amount) {
-        return this.itemInv().extractStack(slot, ConstantItemFilter.ANYTHING, ItemStack.EMPTY, amount, Simulation.ACTION);
-    }
 
     /**
      * Whether the current machine is enabled
@@ -373,7 +332,9 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
                 this.tickDisabled();
                 return;
             }
-            this.setStatus(this.updateStatus());
+            try (Transaction transaction = Transaction.openOuter()) {
+                this.setStatus(this.updateStatus());
+            }
             this.tickWork();
             if (this.getStatus().getType().isActive()) {
                 if (this.energyConsumption() > 0) {
@@ -430,36 +391,11 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
         return this.world.getRecipeManager().getFirstMatch(type, inventory, this.world);
     }
 
-    public boolean canInsert(int slot, Recipe<?> recipe) {
-        return this.canInsert(slot, recipe, 1);
-    }
-
-    public boolean canInsert(int slot, Recipe<?> recipe, int multiplier) {
-        ItemStack stack = recipe.getOutput().copy();
-        stack.setCount(stack.getCount() * multiplier);
-        return this.canInsert(slot, stack);
-    }
-
-    public boolean canInsert(int[] slots, Recipe<?> recipe, int multiplier) {
-        ItemStack stack = recipe.getOutput().copy();
-        stack.setCount(stack.getCount() * multiplier);
-        return this.canInsert(slots, stack);
-    }
-
-    public boolean canInsert(int[] slots, ItemStack stack) {
-        stack = stack.copy();
-        for (int slot : slots) {
-            stack = this.itemInv().insertStack(slot, stack, Simulation.SIMULATE);
-            if (stack.isEmpty()) return true;
-        }
-        return stack.isEmpty();
-    }
-
     @Override
     public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
         this.capacitor.writeNbt(tag);
-        if (this.itemInv().getSlotCount()> 0) this.itemInv().toTag(tag);
+        this.itemStorage.writeNbt(tag);
         if (this.fluidInv().getTankCount() > 0) this.fluidInv().toTag(tag);
         this.configuration.toTag(tag);
         tag.putBoolean(Constant.Nbt.NO_DROP, this.noDrop);
@@ -469,7 +405,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         this.capacitor.readNbt(nbt);
-        if (this.itemInv().getSlotCount() > 0) this.itemInv().fromTag(nbt);
+        this.itemStorage.readNbt(nbt);
         if (this.fluidInv().getTankCount() > 0) this.fluidInv().fromTag(nbt);
         this.configuration.fromTag(nbt);
         this.noDrop = nbt.getBoolean(Constant.Nbt.NO_DROP);
@@ -481,18 +417,6 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
             }
         } else {
             ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(pos);
-        }
-    }
-
-    public boolean canInsert(int slot, ItemStack stack) {
-        return this.itemInv().insertStack(slot, stack, Simulation.SIMULATE).isEmpty();
-    }
-
-    public void insert(int slot, ItemStack stack) {
-        if (this.canInsert(slot, stack)) {
-            this.itemInv().insertStack(slot, stack, Simulation.ACTION);
-        } else {
-            throw new RuntimeException();
         }
     }
 
@@ -536,13 +460,12 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
     }
 
     /**
-     * Tries to charge this machine from the item in the given slot in this {@link #itemInv}.
+     * Tries to charge this machine from the item in the given slot in this {@link #itemStorage}.
      */
     protected void attemptChargeFromStack(int slot) {
         if (this.capacitor().getAmount() >= this.capacitor().getCapacity()) return;
 
-        ItemStack stack = this.itemInv().getInvStack(slot);
-        EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
+        EnergyStorage energyStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(slot)).find(EnergyStorage.ITEM);
         if (energyStorage.supportsExtraction()) {
             try (Transaction transaction = Transaction.openOuter()) {
                 EnergyStorageUtil.move(energyStorage, this.capacitor.exposed(), Math.min(Long.MAX_VALUE, this.getBatteryTransferRate()), transaction);
@@ -552,13 +475,12 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
     }
 
     /**
-     * Tries to drain some of this machine's power into the item in the given slot in this {@link #itemInv}.
+     * Tries to drain some of this machine's power into the item in the given slot in this {@link #itemStorage}.
      *
      * @param slot The slot id of the item
      */
     protected void attemptDrainPowerToStack(int slot) {
-        ItemStack stack = this.itemInv().getInvStack(slot);
-        EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
+        EnergyStorage energyStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(slot)).find(EnergyStorage.ITEM);
         if (energyStorage.supportsInsertion()) {
             try (Transaction transaction = Transaction.openOuter()) {
                 EnergyStorageUtil.move(this.capacitor.exposed(), energyStorage, Math.min(Long.MAX_VALUE, this.getBatteryTransferRate()), transaction);
@@ -575,8 +497,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
         return Collections.emptyList();
     }
 
-    public Inventory getWrappedInventory() {
-        return this.wrappedInventory;
+    public Inventory getVanillaInventory() {
+        return this.vanillaInventory;
     }
 
     public void sync() {
@@ -605,19 +527,11 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
             if (this.fluidInv().getTankCount() != 0) {
                 to.offer(machine.fluidInv());
             }
-            if (this.itemInv().getSlotCount() != 0) {
-                to.offer(machine.itemInv()); //expose everything if not given a direction
-            }
         } else {
             if (this.fluidInv().getTankCount() != 0) {
                 to.offer(machine.fluidInvView());
                 to.offer(machine.getFluidInsertable(state, direction));
                 to.offer(machine.getFluidExtractable(state, direction));
-            }
-            if (this.itemInv().getSlotCount() != 0) {
-                to.offer(machine.itemInvView());
-                to.offer(machine.getItemInsertable(state, direction));
-                to.offer(machine.getItemExtractable(state, direction));
             }
         }
     }

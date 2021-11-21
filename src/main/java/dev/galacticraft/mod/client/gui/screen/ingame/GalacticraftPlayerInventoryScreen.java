@@ -23,12 +23,16 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.galacticraft.api.attribute.oxygen.OxygenTank;
+import dev.galacticraft.api.attribute.GasStorage;
+import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
-import dev.galacticraft.mod.util.OxygenTankUtil;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.DiffuseLighting;
@@ -57,11 +61,31 @@ public class GalacticraftPlayerInventoryScreen extends HandledScreen<Galacticraf
     @Override
     protected void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
         if (DrawableUtil.isWithin(mouseX, mouseY, this.x + 129, this.y + 8, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
-            OxygenTank tank = OxygenTankUtil.getOxygenTank(this.handler.inventory.getSlot(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_1_SLOT));
-            this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, tank.getAmount(), tank.getCapacity()), mouseX, mouseY);
+            Storage<Gas> storage = ContainerItemContext.withInitial(this.handler.inventory.getStack(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_1_SLOT)).find(GasStorage.ITEM);
+            if (storage != null) {
+                try (Transaction transaction = Transaction.openOuter()) {
+                    StorageView<Gas> exact = storage.exactView(transaction, Gas.OXYGEN);
+                    if (exact != null) {
+                        this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, exact.getAmount(), exact.getCapacity()), mouseX, mouseY);
+                    } else {
+                        long l = storage.extract(Gas.OXYGEN, Long.MAX_VALUE, transaction);
+                        this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, l, "???"), mouseX, mouseY);
+                    }
+                }
+            }
         } else if (DrawableUtil.isWithin(mouseX, mouseY, this.x + 152, this.y + 8, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
-            OxygenTank tank = OxygenTankUtil.getOxygenTank(this.handler.inventory.getSlot(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_2_SLOT));
-            this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, tank.getAmount(), tank.getCapacity()), mouseX, mouseY);
+            Storage<Gas> storage = ContainerItemContext.withInitial(this.handler.inventory.getStack(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_2_SLOT)).find(GasStorage.ITEM);
+            if (storage != null) {
+                try (Transaction transaction = Transaction.openOuter()) {
+                    StorageView<Gas> exact = storage.exactView(transaction, Gas.OXYGEN);
+                    if (exact != null) {
+                        this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, exact.getAmount(), exact.getCapacity()), mouseX, mouseY);
+                    } else {
+                        long l = storage.extract(Gas.OXYGEN, Long.MAX_VALUE, transaction);
+                        this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, l, "???"), mouseX, mouseY);
+                    }
+                }
+            }
         }
         super.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
@@ -94,11 +118,24 @@ public class GalacticraftPlayerInventoryScreen extends HandledScreen<Galacticraf
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.PLAYER_INVENTORY_SCREEN);
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        OxygenTank tank1 = OxygenTankUtil.getOxygenTank(this.handler.inventory.getSlot(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_1_SLOT));
-        OxygenTank tank2 = OxygenTankUtil.getOxygenTank(this.handler.inventory.getSlot(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_2_SLOT));
-
-        DrawableUtil.drawOxygenBuffer(matrices, this.x + 129, this.y + 8, tank1.getAmount(), tank1.getCapacity());
-        DrawableUtil.drawOxygenBuffer(matrices, this.x + 152, this.y + 8, tank2.getAmount(), tank2.getCapacity());
+        Storage<Gas> storage1 = ContainerItemContext.withInitial(this.handler.inventory.getStack(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_1_SLOT)).find(GasStorage.ITEM);
+        if (storage1 != null) {
+            try (Transaction transaction = Transaction.openOuter()) {
+                StorageView<Gas> exact = storage1.exactView(transaction, Gas.OXYGEN);
+                if (exact != null) {
+                    DrawableUtil.drawOxygenBuffer(matrices, this.x + 129, this.y + 8, exact.getAmount(), exact.getCapacity());
+                }
+            }
+        }
+        Storage<Gas> storage2 = ContainerItemContext.withInitial(this.handler.inventory.getStack(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_2_SLOT)).find(GasStorage.ITEM);
+        if (storage2 != null) {
+            try (Transaction transaction = Transaction.openOuter()) {
+                StorageView<Gas> exact = storage2.exactView(transaction, Gas.OXYGEN);
+                if (exact != null) {
+                    DrawableUtil.drawOxygenBuffer(matrices, this.x + 152, this.y + 8, exact.getAmount(), exact.getCapacity());
+                }
+            }
+        }
 
         InventoryScreen.drawEntity(this.x + 51, this.y + 75, 30, (float) (this.x + 51) - mouseX, (float) (this.y + 75 - 50) - mouseY, this.client.player);
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.PLAYER_INVENTORY_TABS);

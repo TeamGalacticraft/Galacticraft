@@ -23,13 +23,13 @@
 package dev.galacticraft.mod.compat.rei.common.transfer.info;
 
 import dev.galacticraft.mod.block.entity.RecipeMachineBlockEntity;
-import dev.galacticraft.mod.compat.rei.common.transfer.info.stack.LBASlotAccessor;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoContext;
 import me.shedaniel.rei.api.common.transfer.info.clean.InputCleanHandler;
 import me.shedaniel.rei.api.common.transfer.info.simple.DumpHandler;
 import me.shedaniel.rei.api.common.transfer.info.simple.SimpleGridMenuInfo;
+import me.shedaniel.rei.api.common.transfer.info.stack.ContainerSlotAccessor;
 import me.shedaniel.rei.api.common.transfer.info.stack.SlotAccessor;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -42,7 +42,7 @@ public record SimpleMachineMenuInfo<C extends Inventory, R extends Recipe<C>, B 
     @Override
     public Iterable<SlotAccessor> getInputSlots(MenuInfoContext<T, ?, D> context) {
         return getInputStackSlotIds(context)
-                .mapToObj(value -> new LBASlotAccessor(context.getMenu().machine.itemInv(), value + offset))
+                .mapToObj(value -> new ContainerSlotAccessor(context.getMenu().machine.itemStorage(), value + offset))
                 .collect(Collectors.toList());
     }
 

@@ -26,21 +26,26 @@ import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.misc.NullVariant;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
-import dev.galacticraft.api.attribute.GcApiAttributes;
-import dev.galacticraft.api.attribute.oxygen.OxygenTank;
+import dev.galacticraft.api.attribute.GasStorage;
+import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.attribute.oxygen.InfiniteOxygenTank;
+import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.inventory.Inventory;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -68,11 +73,18 @@ public abstract class InGameHudMixin extends DrawableHelper {
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f , 1.0f);
             RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
             assert this.client.player != null;
-            FixedItemInv inv = ((GearInventoryProvider) this.client.player).getOxygenTanks();
-            for (int i = 0; i < inv.getSlotCount(); i++) {
-                OxygenTank tank = GcApiAttributes.OXYGEN_TANK.getFirst(inv.getSlot(i));
-                if (client.player.isCreative() && tank instanceof NullVariant) tank = InfiniteOxygenTank.INSTANCE;
-                DrawableUtil.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, tank.getAmount(), tank.getCapacity());
+            Inventory inv = ((GearInventoryProvider) this.client.player).getOxygenTanks();
+            for (int i = 0; i < inv.size(); i++) {
+                Storage<Gas> storage = ContainerItemContext.withInitial(inv.getStack(i)).find(GasStorage.ITEM);
+                if (client.player.isCreative() && storage == null) {
+                    DrawableUtil.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, 1, 1);
+                }
+                try (Transaction transaction = Transaction.openOuter()) {
+                    StorageView<Gas> exact = storage.exactView(transaction, Gas.OXYGEN);
+                    if (exact != null) {
+                        DrawableUtil.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, exact.getAmount(), exact.getCapacity());
+                    }
+                }
             }
         }
     }

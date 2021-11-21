@@ -25,9 +25,11 @@ package dev.galacticraft.mod.lookup;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.entity.BlockEntityType;
 import team.reborn.energy.api.EnergyStorage;
 
+@SuppressWarnings("UnstableApiUsage")
 public class GalacticraftApiLookupProviders {
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] MACHINE_TYPES = new BlockEntityType[]{
@@ -44,6 +46,11 @@ public class GalacticraftApiLookupProviders {
         EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
             assert blockEntity instanceof MachineBlockEntity;
             return ((MachineBlockEntity) blockEntity).getExposedCapacitor(direction);
+        }, MACHINE_TYPES);
+
+        ItemStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
+            assert blockEntity instanceof MachineBlockEntity;
+            return ((MachineBlockEntity) blockEntity).getExposedItemStorage(direction);
         }, MACHINE_TYPES);
 
         EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {

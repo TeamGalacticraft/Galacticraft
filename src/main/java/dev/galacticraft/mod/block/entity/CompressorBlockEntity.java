@@ -22,18 +22,16 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
+import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -47,6 +45,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,24 +57,23 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
 
-    private final Inventory craftingInv = new MachineInvWrapper(this, this.itemInv().getSubInv(0, FUEL_INPUT_SLOT));
-    private final FixedItemInv outputInv = this.itemInv().getSubInv(OUTPUT_SLOT, OUTPUT_SLOT + 1);
+    private final Inventory craftingInv = this.itemStorage().mappedFrom(0, FUEL_INPUT_SLOT);
     public int fuelTime;
     public int fuelLength;
 
     public CompressorBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE, CompressingRecipe::getTime);
+        super(GalacticraftBlockEntityType.COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE);
     }
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                builder.addSlot(y * 3 + x, SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 17, y * 18 + 17);
+                builder.addSlot(SlotSettings.Builder.create(x * 18 + 17, y * 18 + 17, SlotType.INPUT).build());
             }
         }
-        builder.addSlot(FUEL_INPUT_SLOT, SlotType.SOLID_FUEL, stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null, 83, 47);
-        builder.addOutputSlot(OUTPUT_SLOT, SlotType.OUTPUT, 143, 36);
+        builder.addSlot(SlotSettings.Builder.create(83, 47, SlotType.SOLID_FUEL).filter(stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null).build());
+        builder.addSlot(SlotSettings.Builder.create(143, 36, SlotType.OUTPUT).disableInput().build());
         return builder;
     }
 
@@ -105,8 +103,9 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
 
     @Override
     public @NotNull MachineStatus updateStatus() {
-        if (this.recipe() == null) return Status.INVALID_RECIPE;
-        if (!this.canCraft(this.recipe())) return Status.OUTPUT_FULL;
+        CompressingRecipe validRecipe = this.findValidRecipe();
+        if (validRecipe == null) return Status.INVALID_RECIPE;
+        if (!this.canOutput(validRecipe, null)) return Status.OUTPUT_FULL;
         if (this.fuelTime <= 0) return Status.MISSING_FUEL;
         return Status.PROCESSING;
     }
@@ -117,17 +116,34 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    public @NotNull FixedItemInv outputInv() {
-        return this.outputInv;
+    protected boolean outputStacks(CompressingRecipe recipe, Transaction transaction) {
+        return this.itemStorage().insertStack(OUTPUT_SLOT, recipe.getOutput().copy(), transaction).isEmpty();
+    }
+
+    @Override
+    protected void extractCraftingMaterials(@NotNull CompressingRecipe recipe, Transaction transaction) {
+        DefaultedList<ItemStack> remainder = recipe.getRemainder(this.craftingInv);
+        for (int i = 0; i < remainder.size(); i++) {
+            ItemStack stack = remainder.get(i);
+            if (stack != ItemStack.EMPTY) {
+                this.craftingInv.setStack(i, stack);
+            } else {
+                this.craftingInv.removeStack(i, 1);
+            }
+        }
     }
 
     @Override
     public void tickWork() {
         if (this.getStatus() == Status.MISSING_FUEL) {
             if (this.fuelLength == 0) {
-                Integer integer = FuelRegistry.INSTANCE.get(this.itemInv().extractStack(FUEL_INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem());
-                if (integer != null) {
-                    this.fuelTime = this.fuelLength = integer;
+                try (Transaction transaction = Transaction.openOuter()) {
+                    ItemStack stack = this.itemStorage().extractStack(FUEL_INPUT_SLOT, 1, transaction);
+                    Integer integer = FuelRegistry.INSTANCE.get(stack.getItem());
+                    if (integer != null && integer > 0) {
+                        transaction.commit();
+                        this.fuelTime = this.fuelLength = integer;
+                    }
                 }
             }
             this.setStatus(this.updateStatus());
@@ -146,12 +162,8 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    protected void craft(CompressingRecipe recipe) {
-        super.craft(recipe);
-        recipe = this.recipe();
-        if (this.canCraft(recipe)) {
-            super.craft(recipe);
-        }
+    protected int getProcessTime(@NotNull CompressingRecipe recipe) {
+        return recipe.getTime();
     }
 
     @Override

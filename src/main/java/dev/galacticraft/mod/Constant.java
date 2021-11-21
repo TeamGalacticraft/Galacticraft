@@ -25,11 +25,14 @@ package dev.galacticraft.mod;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.RawFluidTagFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import dev.galacticraft.api.attribute.GasStorage;
+import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
@@ -624,19 +627,34 @@ public interface Constant {
     }
 
     interface Filter {
-        ItemFilter ENERGY_EXTRACTABLE = stack -> {
-            EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
-            return energyStorage != null && energyStorage.supportsExtraction();
-        };
+        interface Item {
+            ItemFilter ALWAYS = stack -> true;
+            ItemFilter NEVER = stack -> false;
 
-        ItemFilter ENERGY_INSERTABLE = stack -> {
-            EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
-            return energyStorage != null && energyStorage.supportsInsertion();
-        };
+            ItemFilter CAN_EXTRACT_ENERGY = stack -> {
+                EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
+                return energyStorage != null && energyStorage.supportsExtraction();
+            };
+            ItemFilter CAN_INSERT_ENERGY = stack -> {
+                EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
+                return energyStorage != null && energyStorage.supportsInsertion();
+            };
+            ItemFilter CAN_EXTRACT_OXYGEN = stack -> {
+                Storage<Gas> gasStorage = ContainerItemContext.withInitial(stack).find(GasStorage.ITEM);
+                return gasStorage != null && gasStorage.supportsExtraction();
+            };
+            ItemFilter CAN_INSERT_OXYGEN = stack -> {
+                Storage<Gas> gasStorage = ContainerItemContext.withInitial(stack).find(GasStorage.ITEM);
+                return gasStorage != null && gasStorage.supportsInsertion();
+            };
+        }
 
-        FluidFilter LOX_ONLY = new RawFluidTagFilter(GalacticraftTag.LIQUID_OXYGEN);
-        FluidFilter OIL = new RawFluidTagFilter(GalacticraftTag.OIL);
-        FluidFilter FUEL = new RawFluidTagFilter(GalacticraftTag.FUEL);
+        interface Fluid {
+            FluidFilter LOX_ONLY = new RawFluidTagFilter(GalacticraftTag.LIQUID_OXYGEN);
+            FluidFilter OIL = new RawFluidTagFilter(GalacticraftTag.OIL);
+            FluidFilter FUEL = new RawFluidTagFilter(GalacticraftTag.FUEL);
+        }
+
     }
 
     interface Text {
@@ -657,7 +675,7 @@ public interface Constant {
         }
 
         static Style getRainbow(int ticks) {
-            return Style.EMPTY.withColor(TextColor.fromRgb(MathHelper.hsvToRgb(ticks / 500.0f, 1, 1)));
+            return Style.EMPTY.withColor(TextColor.fromRgb(MathHelper.hsvToRgb(ticks / 1000.0f, 1, 1)));
         }
     }
 
@@ -689,6 +707,7 @@ public interface Constant {
         String INPUTS = "Inputs";
         String OUTPUTS = "Outputs";
         String SHAPED = "Shaped";
+        String ITEMS = "Items";
     }
 
     interface Property {

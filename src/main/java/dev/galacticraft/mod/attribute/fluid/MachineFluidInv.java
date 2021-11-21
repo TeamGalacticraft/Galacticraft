@@ -131,7 +131,7 @@ public class MachineFluidInv extends SimpleFixedFluidInv implements Automatable 
         }
 
         public void addLOXTank(int index, SlotType type, int x, int y) {
-            this.addTank(index, type, Constant.Filter.LOX_ONLY, new OxygenTankProvider(x, y));
+            this.addTank(index, type, Constant.Filter.Fluid.LOX_ONLY, new OxygenTankProvider(x, y));
         }
     }
 

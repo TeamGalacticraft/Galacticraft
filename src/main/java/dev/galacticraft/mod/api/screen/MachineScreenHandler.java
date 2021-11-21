@@ -50,7 +50,7 @@ public abstract class MachineScreenHandler<M extends MachineBlockEntity> extends
         super(handlerType, syncId);
         this.player = player;
         this.machine = machine;
-        this.machine.itemInv().createSlots(this);
+        this.machine.itemStorage().createSlots(player, this::addSlot);
         this.machine.fluidInv().createTanks(this);
 
         if (machine.fluidInvCapacity().isGreaterThan(FluidAmount.ZERO)) this.addProperties(new FluidTankPropertyDelegate(machine.fluidInv()));
@@ -71,11 +71,12 @@ public abstract class MachineScreenHandler<M extends MachineBlockEntity> extends
                 return stack;
             }
 
-            if (slotId < this.machine.itemInv().getSlotCount()) {
-                if (!this.insertItem(stack1, this.machine.itemInv().getSlotCount(), this.slots.size(), true)) {
+            int size = this.machine.itemStorage().size();
+            if (slotId < size) {
+                if (!this.insertItem(stack1, size, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(stack1, 0, this.machine.itemInv().getSlotCount(), false)) {
+            } else if (!this.insertItem(stack1, 0, size, false)) {
                 return ItemStack.EMPTY;
             }
             if (stack1.getCount() == 0) {

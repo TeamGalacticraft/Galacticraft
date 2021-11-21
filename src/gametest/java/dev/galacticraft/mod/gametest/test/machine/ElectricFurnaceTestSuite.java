@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.gametest.test.machine;
 
 import alexiil.mc.lib.attributes.Simulation;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.ElectricFurnaceBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
@@ -52,7 +52,7 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
     public void electricFurnaceCraftingTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var electricFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE);
-        final var inv = electricFurnace.itemInv();
+        final var inv = electricFurnace.itemStorage();
         electricFurnace.capacitor().setEnergy(electricFurnace.getEnergyCapacity());
         fillElectricFurnaceSlots(inv);
         runFinalTaskAt(context, 200 + 1, () -> {
@@ -67,7 +67,7 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
     public void electricFurnaceCraftingFullTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var electricFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE);
-        final var inv = electricFurnace.itemInv();
+        final var inv = electricFurnace.itemStorage();
         electricFurnace.capacitor().setEnergy(electricFurnace.getEnergyCapacity());
         inv.setInvStack(ElectricFurnaceBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), Simulation.ACTION);
         fillElectricFurnaceSlots(inv);
@@ -78,7 +78,7 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
         });
     }
 
-    private static void fillElectricFurnaceSlots(MachineItemInv inv) {
+    private static void fillElectricFurnaceSlots(MachineItemStorage inv) {
         inv.setInvStack(ElectricFurnaceBlockEntity.INPUT_SLOT, new ItemStack(Items.PORKCHOP), Simulation.ACTION);
     }
 }

@@ -26,8 +26,9 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -49,9 +50,9 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_TO_BATTERY_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_EXTRACTABLE, 102, 24);
-        builder.addSlot(DRAIN_FROM_BATTERY_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_INSERTABLE, 102, 48);
+    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
+        builder.addSlot(SlotSettings.Builder.create(102, 24, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
+        builder.addSlot(SlotSettings.Builder.create(102, 48, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_INSERT_ENERGY).build());
         return builder;
     }
 

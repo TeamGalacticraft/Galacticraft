@@ -88,7 +88,7 @@ public class LunarCaveCarver extends CaveCarver {
             } else {
                 chunk.setBlockState(mutable, blockState2, false);
                 if (aquiferSampler.needsFluidTick() && !blockState2.getFluidState().isEmpty()) {
-                    chunk.getFluidTickScheduler().scheduleTick(OrderedTick.create(blockState2.getFluidState().getFluid(), mutable, 0L));
+                    chunk.getFluidTickScheduler().scheduleTick(OrderedTick.create(blockState2.getFluidState().getFluid(), mutable));
                 }
 
                 if (mutableBoolean.isTrue()) {

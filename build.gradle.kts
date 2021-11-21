@@ -57,8 +57,8 @@ plugins {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_16
-    targetCompatibility = JavaVersion.VERSION_16
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
     withSourcesJar()
 }
 
@@ -151,7 +151,7 @@ dependencies {
     listOf(
         "fabric-api-base",
         "fabric-api-lookup-api-v1",
-//        "fabric-biome-api-v1",
+        "fabric-biome-api-v1",
         "fabric-blockrenderlayer-v1",
         "fabric-command-api-v1",
         "fabric-content-registries-v0",

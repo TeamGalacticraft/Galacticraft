@@ -27,6 +27,7 @@ import alexiil.mc.lib.attributes.item.FixedItemInv;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -51,10 +52,10 @@ public class ThermalArmorItem extends Item {
 
     @Override //should sync with server
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        FixedItemInv inv = ((GearInventoryProvider)player).getThermalArmor();
-        ItemStack thermalPiece = inv.getInvStack(this.getSlotIdForType(this.getSlotType()));
+        Inventory inv = ((GearInventoryProvider)player).getThermalArmor();
+        ItemStack thermalPiece = inv.getStack(this.getSlotIdForType(this.getSlotType()));
         if (thermalPiece.isEmpty()) {
-            inv.setInvStack(this.getSlotIdForType(getSlotType()), player.getStackInHand(hand), Simulation.ACTION);
+            inv.setStack(this.getSlotIdForType(getSlotType()), player.getStackInHand(hand));
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world, player, hand);

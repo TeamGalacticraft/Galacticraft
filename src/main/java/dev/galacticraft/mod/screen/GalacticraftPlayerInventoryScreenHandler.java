@@ -22,14 +22,11 @@
 
 package dev.galacticraft.mod.screen;
 
-import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.item.ThermalArmorItem;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;
-import dev.galacticraft.mod.util.OxygenTankUtil;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -56,7 +53,7 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
     public static final int OXYGEN_TANK_1_SLOT = 4;
     public static final int OXYGEN_TANK_2_SLOT = 5;
 
-    public final FixedItemInv inventory;
+    public final Inventory inventory;
 
     public final PlayerEntity player;
 
@@ -65,12 +62,6 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
 
         this.player = player;
         this.inventory = ((GearInventoryProvider)player).getGearInv();
-        Inventory inventory = new InventoryFixedWrapper(this.inventory) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return GalacticraftPlayerInventoryScreenHandler.this.player == player;
-            }
-        };
 
         for (int slotY = 0; slotY < 4; ++slotY) {
             EquipmentSlot slot = EQUIPMENT_SLOT_ORDER[slotY];
@@ -144,7 +135,7 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
 
         @Override
         public boolean canInsert(ItemStack stack) {
-            return OxygenTankUtil.isOxygenTank(stack);
+            return Constant.Filter.Item.CAN_EXTRACT_OXYGEN.matches(stack);
         }
 
         @Override

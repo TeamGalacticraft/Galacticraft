@@ -22,25 +22,24 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Style;
@@ -63,29 +62,30 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     public static final int INPUT_SLOT = 5;
     public static final int OUTPUT_SLOT = 6;
 
-    private final Inventory craftingInv = new MachineInvWrapper(this, this.itemInv().getSubInv(INPUT_SLOT, INPUT_SLOT + 1));
-    private final FixedItemInv outputInv = this.itemInv().getSubInv(OUTPUT_SLOT, OUTPUT_SLOT + 1);
+    private final Inventory craftingInv = this.itemStorage().mapped(INPUT_SLOT);
     private final SimpleInventory predicateInv = new SimpleInventory(1);
 
     public Status status = Status.NOT_ENOUGH_RESOURCES;
 
     public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.CIRCUIT_FABRICATOR, pos, state, GalacticraftRecipe.FABRICATION_TYPE, FabricationRecipe::getProcessingTime);
+        super(GalacticraftBlockEntityType.CIRCUIT_FABRICATOR, pos, state, GalacticraftRecipe.FABRICATION_TYPE);
     }
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_EXTRACTABLE, 8, 70);
-        builder.addSlot(INPUT_SLOT_DIAMOND, SlotType.INPUT, ExactItemFilter.createFilter(Items.DIAMOND), 31, 15);
-        builder.addSlot(INPUT_SLOT_SILICON, SlotType.INPUT, ExactItemFilter.createFilter(GalacticraftItem.RAW_SILICON), 62, 45);
-        builder.addSlot(INPUT_SLOT_SILICON_2, SlotType.INPUT, ExactItemFilter.createFilter(GalacticraftItem.RAW_SILICON), 62, 63);
-        builder.addSlot(INPUT_SLOT_REDSTONE, SlotType.INPUT, ExactItemFilter.createFilter(Items.REDSTONE), 107, 70);
-        builder.addSlot(INPUT_SLOT, SlotType.INPUT, stack -> {
-            this.predicateInv.setStack(0, stack);
-            assert this.world != null;
-            return this.world.getRecipeManager().getFirstMatch(this.recipeType(), this.predicateInv, this.world).isPresent();
-        }, 134, 15);
-        builder.addOutputSlot(OUTPUT_SLOT, SlotType.OUTPUT, 152, 70);
+    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
+        builder.addSlot(SlotSettings.Builder.create(8, 70, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
+        builder.addSlot(SlotSettings.Builder.create(31, 15, SlotType.INPUT).filter(ExactItemFilter.createFilter(Items.DIAMOND)).build());
+        builder.addSlot(SlotSettings.Builder.create(62, 45, SlotType.INPUT).filter(ExactItemFilter.createFilter(GalacticraftItem.RAW_SILICON)).build());
+        builder.addSlot(SlotSettings.Builder.create(62, 63, SlotType.INPUT).filter(ExactItemFilter.createFilter(GalacticraftItem.RAW_SILICON)).build());
+        builder.addSlot(SlotSettings.Builder.create(107, 70, SlotType.INPUT).filter(ExactItemFilter.createFilter(Items.REDSTONE)).build());
+        builder.addSlot(SlotSettings.Builder.create(134, 15, SlotType.INPUT).build());
+        builder.addSlot(SlotSettings.Builder.create(152, 70, SlotType.OUTPUT).filter(stack -> {
+            synchronized (this.predicateInv) {
+                this.predicateInv.setStack(0, stack);
+                assert this.world != null;
+                return this.world.getRecipeManager().getFirstMatch(this.recipeType(), this.predicateInv, this.world).isPresent();
+            }
+        }).disableInput().build());
         return builder;
     }
 
@@ -112,8 +112,9 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.recipe() == null || !this.canCraft()) return Status.NOT_ENOUGH_RESOURCES;
-        if (!super.canCraft(this.recipe())) return Status.FULL;
+        FabricationRecipe validRecipe = this.findValidRecipe();
+        if (validRecipe == null) return Status.NOT_ENOUGH_RESOURCES;
+        if (!this.canOutput(validRecipe, null)) return Status.FULL;
         return Status.PROCESSING;
     }
 
@@ -123,29 +124,41 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     }
 
     @Override
-    public @NotNull FixedItemInv outputInv() {
-        return this.outputInv;
+    protected boolean outputStacks(FabricationRecipe recipe, Transaction transaction) {
+        return this.itemStorage().insertStack(OUTPUT_SLOT, recipe.getOutput().copy(), transaction).isEmpty();
     }
 
     @Override
-    protected boolean canCraft(@Nullable FabricationRecipe recipe) {
-        return this.canCraft() && super.canCraft(recipe);
-    }
-
-    private boolean canCraft() {
-        return !this.itemInv().extractStack(INPUT_SLOT_DIAMOND, this.getFilterForSlot(INPUT_SLOT_DIAMOND), ItemStack.EMPTY, 1, Simulation.SIMULATE).isEmpty()
-                && !this.itemInv().extractStack(INPUT_SLOT_SILICON, this.getFilterForSlot(INPUT_SLOT_SILICON), ItemStack.EMPTY, 1, Simulation.SIMULATE).isEmpty()
-                && !this.itemInv().extractStack(INPUT_SLOT_SILICON_2, this.getFilterForSlot(INPUT_SLOT_SILICON_2), ItemStack.EMPTY, 1, Simulation.SIMULATE).isEmpty()
-                && !this.itemInv().extractStack(INPUT_SLOT_REDSTONE, this.getFilterForSlot(INPUT_SLOT_REDSTONE), ItemStack.EMPTY, 1, Simulation.SIMULATE).isEmpty();
+    protected void extractCraftingMaterials(FabricationRecipe recipe, Transaction transaction) {
+        if (this.itemStorage().getSlot(INPUT_SLOT_DIAMOND).extract(ItemVariant.of(Items.DIAMOND), 1, transaction) == 1) {
+            if (this.itemStorage().getSlot(INPUT_SLOT_SILICON).extract(ItemVariant.of(GalacticraftItem.RAW_SILICON), 1, transaction) == 1) {
+                if (this.itemStorage().getSlot(INPUT_SLOT_SILICON_2).extract(ItemVariant.of(GalacticraftItem.RAW_SILICON), 1, transaction) == 1) {
+                    if (this.itemStorage().getSlot(INPUT_SLOT_REDSTONE).extract(ItemVariant.of(Items.REDSTONE), 1, transaction) == 1) {
+                        transaction.commit();
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override
-    protected void craft(FabricationRecipe recipe) {
-        this.itemInv().extractStack(INPUT_SLOT_DIAMOND, this.getFilterForSlot(INPUT_SLOT_DIAMOND), ItemStack.EMPTY, 1, Simulation.ACTION);
-        this.itemInv().extractStack(INPUT_SLOT_SILICON, this.getFilterForSlot(INPUT_SLOT_SILICON), ItemStack.EMPTY, 1, Simulation.ACTION);
-        this.itemInv().extractStack(INPUT_SLOT_SILICON_2, this.getFilterForSlot(INPUT_SLOT_SILICON_2), ItemStack.EMPTY, 1, Simulation.ACTION);
-        this.itemInv().extractStack(INPUT_SLOT_REDSTONE, this.getFilterForSlot(INPUT_SLOT_REDSTONE), ItemStack.EMPTY, 1, Simulation.ACTION);
-        super.craft(recipe);
+    protected @Nullable FabricationRecipe findValidRecipe() {
+        try (Transaction transaction = Transaction.openOuter()) {
+            if (this.itemStorage().getSlot(INPUT_SLOT_DIAMOND).extract(ItemVariant.of(Items.DIAMOND), 1, transaction) == 1
+                    && this.itemStorage().getSlot(INPUT_SLOT_SILICON).extract(ItemVariant.of(GalacticraftItem.RAW_SILICON), 1, transaction) == 1
+                    && this.itemStorage().getSlot(INPUT_SLOT_SILICON_2).extract(ItemVariant.of(GalacticraftItem.RAW_SILICON), 1, transaction) == 1
+                    && this.itemStorage().getSlot(INPUT_SLOT_REDSTONE).extract(ItemVariant.of(Items.REDSTONE), 1, transaction) == 1) {
+                return super.findValidRecipe();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    protected int getProcessTime(@NotNull FabricationRecipe recipe) {
+        return recipe.getProcessingTime();
     }
 
     @Override

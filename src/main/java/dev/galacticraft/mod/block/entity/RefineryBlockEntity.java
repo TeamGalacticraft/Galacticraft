@@ -32,9 +32,10 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -66,17 +67,17 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_EXTRACTABLE, 8, 7);
-        builder.addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtil.canExtractFluids(stack, GalacticraftTag.OIL) || FluidUtil.isEmpty(stack), 123, 7);
-        builder.addSlot(FLUID_OUTPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtil.canInsertFluids(stack, GalacticraftFluid.FUEL), 153, 7);
+    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
+        builder.addSlot(SlotSettings.Builder.create(8, 7, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
+        builder.addSlot(SlotSettings.Builder.create(123, 7, SlotType.FLUID_TANK_IO).filter(stack -> FluidUtil.canExtractFluids(stack, GalacticraftTag.OIL) || FluidUtil.isEmpty(stack)).build());
+        builder.addSlot(SlotSettings.Builder.create(153, 7, SlotType.FLUID_TANK_IO).filter(stack -> FluidUtil.canInsertFluids(stack, GalacticraftFluid.FUEL)).build());
         return builder;
     }
 
     @Override
     protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
-        builder.addTank(OIL_TANK, SlotType.OIL_IN, Constant.Filter.OIL, 122, 28, 1);
-        builder.addTank(FUEL_TANK, SlotType.FUEL_OUT, Constant.Filter.FUEL, 152, 28, 1);
+        builder.addTank(OIL_TANK, SlotType.OIL_IN, Constant.Filter.Fluid.OIL, 122, 28, 1);
+        builder.addTank(FUEL_TANK, SlotType.FUEL_OUT, Constant.Filter.Fluid.FUEL, 152, 28, 1);
         return builder;
     }
 
@@ -105,8 +106,8 @@ public class RefineryBlockEntity extends MachineBlockEntity {
         super.updateComponents();
         this.attemptChargeFromStack(CHARGE_SLOT);
 
-        FluidVolumeUtil.move(FluidAttributes.EXTRACTABLE.getFirst(this.itemInv().getSlot(FLUID_INPUT_SLOT)), this.fluidInv().getTank(OIL_TANK));
-        FluidVolumeUtil.move(this.fluidInv().getTank(FUEL_TANK), FluidAttributes.INSERTABLE.getFirst(this.itemInv().getSlot(FLUID_OUTPUT_SLOT)));
+        FluidVolumeUtil.move(FluidAttributes.EXTRACTABLE.getFirst(this.itemStorage().getSlot(FLUID_INPUT_SLOT)), this.fluidInv().getTank(OIL_TANK));
+        FluidVolumeUtil.move(this.fluidInv().getTank(FUEL_TANK), FluidAttributes.INSERTABLE.getFirst(this.itemStorage().getSlot(FLUID_OUTPUT_SLOT)));
     }
 
     @Override

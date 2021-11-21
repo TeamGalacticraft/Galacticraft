@@ -22,22 +22,24 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
 import com.google.common.annotations.VisibleForTesting;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
+import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
@@ -81,9 +83,9 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, Constant.Filter.ENERGY_INSERTABLE, 8, 62);
-        builder.addSlot(FUEL_SLOT, SlotType.COAL, stack -> FUEL_MAP.containsKey(stack.getItem()), 71, 53);
+    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
+        builder.addSlot(SlotSettings.Builder.create(8, 62, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_INSERT_ENERGY).build());
+        builder.addSlot(SlotSettings.Builder.create(71, 53, SlotType.COAL).filter(stack -> FUEL_MAP.containsKey(stack.getItem())).build());
         return builder;
     }
 
@@ -104,7 +106,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
 
     @Override
     public @NotNull MachineStatus updateStatus() {
-        if (this.fuelLength == 0 && this.itemInv().getInvStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
+        if (this.fuelLength == 0 && this.itemStorage().getStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
         if (this.capacitor().getAmount() >= this.capacitor().getCapacity()) return Status.FULL;
         if (this.heat < 1.0 && this.fuelLength > 0) return Status.WARMING;
         if (this.heat > 0.0 && this.fuelLength == 0) return Status.COOLING;
@@ -140,7 +142,11 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
             }
             if (this.fuelLength == 0) {
                 this.fuelTime = 0;
-                this.fuelLength = FUEL_MAP.getInt(itemInv().extractStack(FUEL_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem());
+                SingleSlotStorage<ItemVariant> slot = itemStorage().getSlot(FUEL_SLOT);
+                try (Transaction transaction = Transaction.openOuter()) {
+                    this.fuelLength = FUEL_MAP.getInt(slot.getResource().toStack((int) slot.extract(slot.getResource(), 1, transaction)));
+                    transaction.commit();
+                }
                 if (this.fuelLength == 0) return;
             }
 

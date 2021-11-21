@@ -25,11 +25,10 @@ package dev.galacticraft.mod.world.gen.feature;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
+import net.minecraft.class_6834;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.biome.SpawnSettings;
-import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.StructureConfig;
 import net.minecraft.world.gen.feature.JigsawFeature;
@@ -45,24 +44,24 @@ public class MoonPillagerBaseFeature extends JigsawFeature {
     public static final Pool<SpawnSettings.SpawnEntry> MONSTER_SPAWNS = Pool.of(ImmutableList.<SpawnSettings.SpawnEntry>builder().add(new SpawnSettings.SpawnEntry(GalacticraftEntityType.EVOLVED_PILLAGER, 1, 1, 2)).build());
 
     public MoonPillagerBaseFeature(Codec<StructurePoolFeatureConfig> codec) {
-        super(codec, 0, true, true);
+        super(codec, 0, true, true, MoonPillagerBaseFeature::canStart);
     }
 
-    @Override
-    protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long seed, ChunkPos chunkPos, StructurePoolFeatureConfig featureConfig, HeightLimitView heightLimitView) {
-        int i = chunkPos.x >> 4;
-        int j = chunkPos.z >> 4;
+    private static boolean canStart(class_6834.class_6835<StructurePoolFeatureConfig> arg) {
+        int i = arg.chunkPos().x >> 4;
+        int j = arg.chunkPos().z >> 4;
         ChunkRandom chunkRandom = new ChunkRandom(new AtomicSimpleRandom(0L));
-        chunkRandom.setSeed((long)(i ^ j << 4) ^ seed);
+        chunkRandom.setSeed((long)(i ^ j << 4) ^ arg.seed());
         chunkRandom.nextInt();
         if (chunkRandom.nextInt(5) != 0) {
             return false;
         } else {
-            return !this.isVillageNearby(chunkGenerator, seed, chunkPos);
+            return !isVillageNearby(arg.chunkGenerator(), arg.seed(), arg.chunkPos());
         }
     }
 
-    private boolean isVillageNearby(ChunkGenerator generator, long worldSeed, ChunkPos chunkPos) {
+
+    private static boolean isVillageNearby(ChunkGenerator generator, long worldSeed, ChunkPos chunkPos) {
         StructureConfig structureConfig = generator.getStructuresConfig().getForType(StructureFeature.VILLAGE);
         if (structureConfig != null) {
             int i = chunkPos.x;
