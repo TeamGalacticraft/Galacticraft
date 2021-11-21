@@ -231,7 +231,6 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
                 }
                 if (extracted > 0) {
                     try (Transaction inner = transaction.openNested()) {
-                        this.stor
                         extracted = storage.extract(Gas.OXYGEN, Long.MAX_VALUE, inner);
                     }
                 }
