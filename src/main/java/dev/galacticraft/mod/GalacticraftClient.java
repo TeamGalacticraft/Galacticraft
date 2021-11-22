@@ -23,6 +23,7 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.*;
 import dev.galacticraft.mod.client.network.GalacticraftClientPacketReceiver;
@@ -48,6 +49,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
@@ -176,6 +178,8 @@ public class GalacticraftClient implements ClientModInitializer {
         DimensionRenderingRegistry.registerSkyRenderer(GalacticraftDimension.MOON, MoonSkyRenderer.INSTANCE);
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
+
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> FallenMeteorBlock.colorMultiplier(world, pos), GalacticraftBlock.FALLEN_METEOR);
 
         Galacticraft.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
