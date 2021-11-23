@@ -59,18 +59,20 @@ public class GratingBlock extends Block implements FluidLoggable {
         this.setDefaultState(this.getStateManager().getDefaultState()
                 .with(FLUID, new Identifier("invalid"))
                 .with(FlowableFluid.LEVEL, 8)
-                .with(GRATING_STATE, GratingState.UPPER));
+                .with(GRATING_STATE, GratingState.UPPER)
+                .with(FlowableFluid.FALLING, false));
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
-        BlockState blockState = this.getDefaultState()
+        var fluidState = context.getWorld().getFluidState(context.getBlockPos());
+        var blockState = this.getDefaultState()
                 .with(GRATING_STATE, GratingState.LOWER)
                 .with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
-                .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
-        BlockPos blockPos = context.getBlockPos();
-        Direction direction = context.getPlayerFacing();
+                .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1))
+                .with(FlowableFluid.FALLING, fluidState.contains(FlowableFluid.FALLING) ? fluidState.get(FlowableFluid.FALLING) : false);
+        var blockPos = context.getBlockPos();
+        var direction = context.getPlayerFacing();
 
         return direction != Direction.DOWN && (direction == Direction.UP || context.getBlockPos().getY() - (double) blockPos.getY() <= 0.5D) ? blockState : blockState.with(GRATING_STATE, GratingState.UPPER);
     }
@@ -92,13 +94,13 @@ public class GratingBlock extends Block implements FluidLoggable {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(FLUID).add(GRATING_STATE).add(FlowableFluid.LEVEL);
+        builder.add(FLUID, GRATING_STATE, FlowableFluid.LEVEL, FlowableFluid.FALLING);
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
         if (this.isEmpty(state)) return EMPTY_STATE;
-        FluidState state1 = Registry.FLUID.get(state.get(FLUID)).getDefaultState();
+        var state1 = Registry.FLUID.get(state.get(FLUID)).getDefaultState().with(FlowableFluid.FALLING, state.get(FlowableFluid.FALLING));
         if (state1.getEntries().containsKey(FlowableFluid.LEVEL)) {
             state1 = state1.with(FlowableFluid.LEVEL, state.get(FlowableFluid.LEVEL));
         }
