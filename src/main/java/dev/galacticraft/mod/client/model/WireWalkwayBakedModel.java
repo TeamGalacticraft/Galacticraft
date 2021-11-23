@@ -132,6 +132,7 @@ public class WireWalkwayBakedModel implements FabricBakedModel, BakedModel {
         Consumer<Mesh> meshConsumer = context.meshConsumer();
         QuadEmitter emitter = context.getEmitter();
         assert wire != null;
+        assert wire.getDirection() != null;
 
         int x = 0;
         int y = 0;

@@ -137,6 +137,7 @@ public class PipeWalkwayBakedModel implements FabricBakedModel, BakedModel {
         Consumer<Mesh> meshConsumer = context.meshConsumer();
         QuadEmitter emitter = context.getEmitter();
         assert walkway != null;
+        assert walkway.getDirection() != null;
 
         int x = 0;
         int y = 0;
