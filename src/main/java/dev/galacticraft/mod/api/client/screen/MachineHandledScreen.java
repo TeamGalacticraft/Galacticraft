@@ -22,9 +22,6 @@
 
 package dev.galacticraft.mod.api.client.screen;
 
-import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
-import alexiil.mc.lib.attributes.misc.CallableRef;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Either;
@@ -727,7 +724,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
         color = getItemColor(matrices, mouseX, mouseY);
         color.defaultReturnValue(-1);
         for (Slot slot : this.handler.slots) {
-            if (slot.inventory instanceof InventoryFixedWrapper inv && inv.getWrapped() == this.machine.itemStorage()) {
+            if (slot.inventory == this.machine.itemStorage()) {
                 int index = ((SlotAccessor) slot).getIndex();
                 if (color.get(index) != -1) {
                     RenderSystem.disableDepthTest();

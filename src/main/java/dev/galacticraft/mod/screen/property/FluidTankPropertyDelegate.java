@@ -22,10 +22,9 @@
 
 package dev.galacticraft.mod.screen.property;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
+import dev.galacticraft.api.fluid.FluidStack;
+import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.util.registry.Registry;
@@ -36,34 +35,38 @@ import java.math.RoundingMode;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class FluidTankPropertyDelegate implements PropertyDelegate {
-    private final FixedFluidInv inv;
+    private final MachineFluidStorage inv;
     private final Fluid[] fluids;
 
-    public FluidTankPropertyDelegate(FixedFluidInv inv) {
+    public FluidTankPropertyDelegate(MachineFluidStorage inv) {
         this.inv = inv;
-        this.fluids = new Fluid[inv.getTankCount()];
+        this.fluids = new Fluid[inv.size()];
     }
 
     @Override
     public int get(int index) {
-        if (index % 2 == 0) {
-            return Registry.FLUID.getRawId(inv.getInvFluid(index / 2).getRawFluid());
+        if (index % 3 == 0) {
+            return Registry.FLUID.getRawId(inv.getStack(index / 3).fluid().getFluid());
+        } else if (index % 3 == 1) {
+            return (int) (inv.getTank(((index - 1) / 3)).getAmount() & 0b11111111111111111111111111111111L);
         } else {
-            return inv.getInvFluid(((index + 1) / 2) - 1).amount().asInt(1000, RoundingMode.HALF_DOWN);
+            return (int) ((inv.getTank(((index - 2) / 3)).getAmount() >> 32) & 0b11111111111111111111111111111111L);
         }
     }
 
     @Override
     public void set(int index, int value) {
-        if (index % 2 == 0) {
-            fluids[index / 2] = Registry.FLUID.get(value);
+        if (index % 2 == 0){
+            fluids[index / 3] = Registry.FLUID.get(value);
+        } else if (index % 3 == 1) {
+            inv.setStack(((index - 1) / 3), new FluidStack(FluidVariant.of(this.fluids[(index - 1) / 3]), (inv.getStack(((index - 1) / 3)).amount() >> 32 << 32) | (value & 0b11111111111111111111111111111111L)));
         } else {
-            inv.setInvFluid(((index + 1) / 2) - 1, FluidKeys.get(fluids[((index + 1) / 2) - 1]).withAmount(FluidAmount.of(value, 1000)), Simulation.ACTION);
+            inv.setStack(((index - 2) / 3), new FluidStack(FluidVariant.of(this.fluids[(index - 2) / 3]), (inv.getStack(((index - 1) / 3)).amount() << 32 >> 32) | ((value & 0b11111111111111111111111111111111L) << 32)));
         }
     }
 
     @Override
     public int size() {
-        return fluids.length * 2;
+        return fluids.length * 3;
     }
 }

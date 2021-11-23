@@ -22,16 +22,6 @@
 
 package dev.galacticraft.mod.network;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.FluidExtractable;
-import alexiil.mc.lib.attributes.fluid.FluidInsertable;
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.item.ItemInsertable;
-import alexiil.mc.lib.attributes.item.compat.FixedInventoryVanillaWrapper;
-import alexiil.mc.lib.attributes.misc.CallableRef;
-import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.datafixers.util.Either;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.AutomationType;
@@ -41,7 +31,6 @@ import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
 import dev.galacticraft.mod.api.machine.SecurityInfo;
 import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.attribute.Automatable;
-import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
@@ -152,20 +141,20 @@ public class GalacticraftServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "tank_modify"), (server, player, handler, buf, responseSender) -> {
             int index = buf.readInt();
             server.execute(() -> {
-                MachineFluidInv inv = ((MachineScreenHandler<?>) player.currentScreenHandler).machine.fluidInv();
+                MachineFluidStorage inv = ((MachineScreenHandler<?>) player.currentScreenHandler).machine.fluidInv();
                 ItemInsertable excess = new FixedInventoryVanillaWrapper(player.getInventory()).getInsertable();
                 Reference<ItemStack> reference = new CallableRef<>(player.currentScreenHandler::getCursorStack, player.currentScreenHandler::setCursorStack, Objects::nonNull);
                 FluidExtractable extractable = FluidAttributes.EXTRACTABLE.getFirstOrNull(reference, excess);
                 if (extractable != null && !extractable.attemptExtraction(inv.getFilterForTank(index), FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty()) {
                     if (((Automatable) inv).getTypes()[index].getType().isInput()) {
-                        FluidVolumeUtil.move(extractable, inv.getTank(index));
+                        FluidStackUtil.move(extractable, inv.getTank(index));
                         ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(index)));
                     }
                 } else {
                     FluidInsertable insertable = FluidAttributes.INSERTABLE.getFirstOrNull(reference, excess);
                     if (insertable != null) {
                         if (((Automatable) inv).getTypes()[index].getType().isOutput()) {
-                            FluidVolumeUtil.move(inv.getTank(index), insertable);
+                            FluidStackUtil.move(inv.getTank(index), insertable);
                             ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(index)));
                         }
                     }

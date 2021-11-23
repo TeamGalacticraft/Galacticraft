@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.lookup.storage;
 
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
@@ -31,6 +29,7 @@ import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.attribute.Automatable;
+import dev.galacticraft.mod.lookup.filter.ItemFilter;
 import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -55,7 +54,10 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -154,7 +156,7 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
         StoragePreconditions.notNegative(amount);
 
         ItemStack stack = this.getStack(index);
-        if (amount != 0 && filter.matches(stack) && !stack.isEmpty()) {
+        if (amount != 0 && filter.test(stack) && !stack.isEmpty()) {
             this.parts.get(index).updateSnapshots(context);
             int count = Math.min(stack.getCount(), amount);
             ItemStack copy = stack.copy();
@@ -280,12 +282,8 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
 
     public void createSlots(PlayerEntity player, Consumer<Slot> consumer) {
         for (int i = 0; i < this.slotSettings.length; i++) {
-            consumer.accept(new ConfiguredItemSlot(this.vanilla(), i, player, this.slotSettings[i]));
+            consumer.accept(new ConfiguredItemSlot(this, i, player, this.slotSettings[i]));
         }
-    }
-
-    public Inventory vanilla() {
-        return this;
     }
 
     public Storage<ItemVariant> view() {
@@ -323,7 +321,7 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
-        return this.parts.get(slot).filter().matches(stack);
+        return this.parts.get(slot).filter().test(stack);
     }
 
     protected class MachineItemSlot extends SingleStackStorage {
@@ -351,12 +349,12 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
 
         @Override
         protected boolean canInsert(@NotNull ItemVariant itemVariant) {
-            return this.filter.matches(itemVariant.toStack());
+            return this.filter.test(itemVariant.toStack());
         }
 
         @Override
         protected boolean canExtract(@NotNull ItemVariant itemVariant) {
-            return this.filter.matches(itemVariant.toStack());
+            return this.filter.test(itemVariant.toStack());
         }
 
         @Override
@@ -474,7 +472,7 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
 
         @Override
         public boolean isValid(int slot, ItemStack stack) {
-            return stack.isEmpty() || this.parts.get(slot).filter.matches(stack);
+            return stack.isEmpty() || this.parts.get(slot).filter.test(stack);
         }
 
         @Override
@@ -507,7 +505,7 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
             public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
                 StoragePreconditions.notBlankNotNegative(resource, maxAmount);
 
-                if (this.filter.matches(resource.toStack())) {
+                if (this.filter.test(resource.toStack())) {
                     return MachineItemStorage.this.getSlot(this.index).insert(resource, maxAmount, transaction);
                 }
 
@@ -518,7 +516,7 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
             public long simulateInsert(ItemVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
                 StoragePreconditions.notBlankNotNegative(resource, maxAmount);
 
-                if (this.filter.matches(resource.toStack())) {
+                if (this.filter.test(resource.toStack())) {
                     return MachineItemStorage.this.getSlot(this.index).simulateInsert(resource, maxAmount, transaction);
                 }
 
@@ -793,7 +791,7 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
         public Builder addSlot(@NotNull SlotSettings settings, @Nullable ItemFilter internalFilter) {
             Preconditions.checkNotNull(settings);
             this.slots.add(settings);
-            this.filters.add(internalFilter == null ? ConstantItemFilter.ANYTHING : internalFilter);
+            this.filters.add(internalFilter == null ? Constant.Filter.Item.ALWAYS : internalFilter);
             return this;
         }
 
@@ -828,7 +826,7 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
 
         @Override
         public boolean canInsert(ItemStack stack) {
-            return this.settings.canInsertItems() && this.settings.filter().matches(stack);
+            return this.settings.canInsertItems() && this.settings.filter().test(stack);
         }
 
         @Nullable

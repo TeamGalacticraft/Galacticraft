@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.misc.NullVariant;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.attribute.GasStorage;
@@ -32,7 +30,6 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

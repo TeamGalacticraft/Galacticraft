@@ -22,13 +22,13 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
+import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.screen.tank.NullTank;
+import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -42,21 +42,16 @@ import org.jetbrains.annotations.Nullable;
  */
 public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     private static final int OXYGEN_TANK = 0;
-    public static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(50);
+    public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
 
     public OxygenStorageModuleBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.OXYGEN_STORAGE_MODULE, pos, state);
     }
 
     @Override
-    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+    protected MachineFluidStorage.Builder createFluidInv(MachineFluidStorage.Builder builder) {
         builder.addTank(OXYGEN_TANK, SlotType.OXYGEN, (index, inv) -> NullTank.INSTANCE);
         return builder;
-    }
-
-    @Override
-    public FluidAmount fluidInvCapacity() {
-        return MAX_CAPACITY;
     }
 
     @Override

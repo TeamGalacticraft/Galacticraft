@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.api.accessor.WorldOxygenAccessor;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
@@ -31,11 +29,13 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerWorldAccessor;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
+import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
 import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.util.FluidUtil;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -62,7 +62,7 @@ import java.util.Set;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenSealerBlockEntity extends MachineBlockEntity {
-    public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
+    public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
     public static final int BATTERY_SLOT = 0;
     public static final int LOX_INPUT = 1;
     public static final int OXYGEN_TANK = 0;
@@ -87,14 +87,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+    protected MachineFluidStorage.Builder createFluidInv(MachineFluidStorage.Builder builder) {
         builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_IN, 30, 8);
         return builder;
-    }
-
-    @Override
-    public FluidAmount fluidInvCapacity() {
-        return MAX_OXYGEN;
     }
 
     @Override
@@ -121,7 +116,10 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         this.attemptChargeFromStack(BATTERY_SLOT);
         assert this.world != null;
         if (!this.world.isClient && this.getStatus().getType().isActive()) {
-            this.fluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.Fluid.LOX_ONLY, null, FluidAmount.of1620(breathablePositions.size()), Simulation.ACTION);
+            try (Transaction transaction = Transaction.openOuter()) {
+                this.fluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.Fluid.LOX_ONLY, breathablePositions.size() * 2L, transaction);
+                transaction.commit();
+            }
         }
     }
 

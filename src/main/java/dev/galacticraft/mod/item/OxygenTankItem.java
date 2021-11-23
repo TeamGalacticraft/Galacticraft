@@ -22,9 +22,6 @@
 
 package dev.galacticraft.mod.item;
 
-import alexiil.mc.lib.attributes.ItemAttributeList;
-import alexiil.mc.lib.attributes.misc.LimitedConsumer;
-import alexiil.mc.lib.attributes.misc.Reference;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.attribute.GasStorage;
 import dev.galacticraft.api.gas.Gas;

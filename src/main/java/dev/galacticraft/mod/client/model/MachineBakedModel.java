@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.client.model;
 
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.AutomationType;
@@ -150,7 +148,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
 
         register(GalacticraftBlock.OXYGEN_STORAGE_MODULE, (machine, stack, face, atlas, view, pos) -> {
             if (face == BlockFace.FRONT || face == BlockFace.BACK) {
-                FluidVolume volume;
+                FluidStack volume;
                 if (machine != null) {
                     volume = machine.fluidInv().getInvFluid(0);
                 } else {
@@ -158,15 +156,15 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
                         if (stack.getNbt().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).contains("tanks", NbtType.LIST)) {
                             NbtList tag1 = stack.getNbt().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).getList("tanks", NbtType.COMPOUND);
                             if (tag1.size() > 0) {
-                                volume = FluidVolume.fromTag(tag1.getCompound(0));
+                                volume = FluidStack.fromTag(tag1.getCompound(0));
                             } else {
-                                volume = FluidVolumeUtil.EMPTY;
+                                volume = FluidStackUtil.EMPTY;
                             }
                         } else {
-                            volume = FluidVolumeUtil.EMPTY;
+                            volume = FluidStackUtil.EMPTY;
                         }
                     } else {
-                        volume = FluidVolumeUtil.EMPTY;
+                        volume = FluidStackUtil.EMPTY;
                     }
                 }
                 return atlas.apply(new Identifier(Constant.MOD_ID, "block/oxygen_storage_module_" + volume.amount().div(OxygenStorageModuleBlockEntity.MAX_CAPACITY).asInt(8, RoundingMode.DOWN)));
@@ -295,7 +293,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     public static boolean transformItem(ItemStack stack, MutableQuadView quad) {
         NbtCompound tag = stack.getNbt();
         if (tag != null && tag.contains(Constant.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
-            CONFIGURATION.fromTag(tag.getCompound(Constant.Nbt.BLOCK_ENTITY_TAG));
+            CONFIGURATION.fromNbt(tag.getCompound(Constant.Nbt.BLOCK_ENTITY_TAG));
             quad.spriteBake(0,
                     getSprite(BlockFace.toFace(Direction.NORTH, quad.nominalFace()),
                             null,

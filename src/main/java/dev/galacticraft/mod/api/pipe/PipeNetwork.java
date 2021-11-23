@@ -22,12 +22,9 @@
 
 package dev.galacticraft.mod.api.pipe;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FluidInsertable;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import dev.galacticraft.api.fluid.FluidStack;
 import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -35,13 +32,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
-import java.util.Map;
 
 /**
  * The basic 'Pipe Network' spec
  */
 public interface PipeNetwork {
-    static PipeNetwork create(ServerWorld world, FluidAmount maxTransferRate) {
+    static PipeNetwork create(ServerWorld world, long maxTransferRate) {
         return new PipeNetworkImpl(world, maxTransferRate);
     }
 
@@ -75,17 +71,17 @@ public interface PipeNetwork {
      * @param simulate Whether to perform the action or not
      * @return the amount of fluid that failed to insert
      */
-    FluidVolume insert(@NotNull BlockPos fromPipe, FluidVolume amount, Direction direction, @NotNull Simulation simulate);
+    FluidStack insert(@NotNull BlockPos fromPipe, FluidStack amount, Direction direction, @NotNull Simulation simulate);
 
-    FluidVolume insertInternal(FluidVolume amount, FluidAmount ratio, FluidVolume available, Simulation simulate);
+    FluidStack insertInternal(FluidStack amount, long ratio, FluidStack available, Simulation simulate);
 
-    void getNonFullInsertables(Object2ObjectMap<PipeNetwork, FluidAmount> fluidRequirement, BlockPos source, FluidVolume amount);
+    void getNonFullInsertables(Object2LongMap<PipeNetwork> fluidRequirement, BlockPos source, FluidStack amount);
 
     /**
      * Returns the maximum amount of fluid allowed to pass through this network per tick
      * @return the maximum amount of fluid allowed to pass through this network per tick
      */
-    FluidAmount getMaxTransferRate();
+    long getMaxTransferRate();
 
     Collection<BlockPos> getAllPipes();
 

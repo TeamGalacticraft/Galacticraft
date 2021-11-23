@@ -31,6 +31,7 @@ import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.lookup.filter.FluidFilter;
 import dev.galacticraft.mod.screen.slot.FluidTankSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.screen.tank.Tank;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
@@ -40,6 +41,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -51,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 @SuppressWarnings("UnstableApiUsage")
 public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFluidStorage.MachineFluidSlot> implements Automatable {
@@ -116,7 +119,7 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
     }
 
     //returns failed
-    public FluidStack insertStack(int index, @NotNull FluidStack stack, TransactionContext context) {
+    public FluidStack insertFluid(int index, @NotNull FluidStack stack, TransactionContext context) {
         Preconditions.checkNotNull(stack);
         this.parts.get(index).updateSnapshots(context);
         FluidStack stack1 = this.stacks[index];
@@ -132,17 +135,17 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
 
     public FluidStack simulateInsertion(int index, @NotNull FluidStack stack, TransactionContext context) {
         try (Transaction transaction = context.openNested()) {
-            return insertStack(index, stack, transaction);
+            return insertFluid(index, stack, transaction);
         }
     }
 
     public FluidStack simulateInsertion(int index, @NotNull FluidStack stack) {
         try (Transaction transaction = Transaction.openOuter()) {
-            return insertStack(index, stack, transaction);
+            return insertFluid(index, stack, transaction);
         }
     }
 
-    public FluidStack extractStack(int index, @NotNull FluidFilter filter, long amount, @NotNull TransactionContext context) {
+    public FluidStack extractFluid(int index, @NotNull FluidFilter filter, long amount, @NotNull TransactionContext context) {
         Preconditions.checkNotNull(filter);
         StoragePreconditions.notNegative(amount);
 
@@ -160,13 +163,13 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
         return FluidStack.EMPTY;
     }
 
-    public FluidStack extractStack(int index, long amount, @NotNull TransactionContext context) {
-        return extractStack(index, Constant.Filter.Fluid.ALWAYS, amount, context);
+    public FluidStack extractFluid(int index, long amount, @NotNull TransactionContext context) {
+        return extractFluid(index, Constant.Filter.Fluid.ALWAYS, amount, context);
     }
 
     public FluidStack simulateExtraction(int index, long amount, @Nullable TransactionContext context) {
         try (Transaction transaction = Transaction.openNested(context)) {
-            return extractStack(index, amount, transaction);
+            return extractFluid(index, amount, transaction);
         }
     }
 
@@ -176,7 +179,7 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
 
     public FluidStack simulateExtraction(int index, @NotNull FluidFilter filter, long amount, @Nullable TransactionContext context) {
         try (Transaction transaction = Transaction.openNested(context)) {
-            return extractStack(index, filter, amount, transaction);
+            return extractFluid(index, filter, amount, transaction);
         }
     }
 
@@ -237,15 +240,15 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
         return this.exposed;
     }
 
-    public SingleSlotStorage<FluidVariant> getSlot(int slot) {
+    public SingleSlotStorage<FluidVariant> getTank(int slot) {
         return this.parts.get(slot);
     }
 
-//    public void createSlots(PlayerEntity player, Consumer<Slot> consumer) { //todo
-//        for (int i = 0; i < this.slotSettings.length; i++) {
-//            consumer.accept(new ConfiguredFluidSlot(this.vanilla(), i, player, this.slotSettings[i]));
-//        }
-//    }
+    public void createTanks(PlayerEntity player, Consumer<Tank> consumer) { //todo
+        for (int i = 0; i < this.slotSettings.length; i++) {
+//            consumer.accept(new ConfiguredFluidSlot(this, i, player, this.slotSettings[i]));
+        }
+    }
 
     public Storage<FluidVariant> view() {
         return this.view;
@@ -438,7 +441,7 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
                 StoragePreconditions.notBlankNotNegative(resource, maxAmount);
 
                 if (this.filter.test(resource)) {
-                    return MachineFluidStorage.this.getSlot(this.index).insert(resource, maxAmount, transaction);
+                    return MachineFluidStorage.this.getTank(this.index).insert(resource, maxAmount, transaction);
                 }
 
                 return 0;
@@ -449,7 +452,7 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
                 StoragePreconditions.notBlankNotNegative(resource, maxAmount);
 
                 if (this.filter.test(resource)) {
-                    return MachineFluidStorage.this.getSlot(this.index).simulateInsert(resource, maxAmount, transaction);
+                    return MachineFluidStorage.this.getTank(this.index).simulateInsert(resource, maxAmount, transaction);
                 }
 
                 return 0;
@@ -464,44 +467,44 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
             public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
                 StoragePreconditions.notBlankNotNegative(resource, maxAmount);
 
-                return MachineFluidStorage.this.getSlot(this.index).extract(resource, maxAmount, transaction);
+                return MachineFluidStorage.this.getTank(this.index).extract(resource, maxAmount, transaction);
             }
 
             @Override
             public long simulateExtract(FluidVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
                 StoragePreconditions.notBlankNotNegative(resource, maxAmount);
 
-                return MachineFluidStorage.this.getSlot(this.index).simulateExtract(resource, maxAmount, transaction);
+                return MachineFluidStorage.this.getTank(this.index).simulateExtract(resource, maxAmount, transaction);
             }
 
             @Override
             public boolean isResourceBlank() {
-                return MachineFluidStorage.this.getSlot(this.index).isResourceBlank();
+                return MachineFluidStorage.this.getTank(this.index).isResourceBlank();
             }
 
             @Override
             public FluidVariant getResource() {
-                return MachineFluidStorage.this.getSlot(this.index).getResource();
+                return MachineFluidStorage.this.getTank(this.index).getResource();
             }
 
             @Override
             public long getAmount() {
-                return MachineFluidStorage.this.getSlot(this.index).getAmount();
+                return MachineFluidStorage.this.getTank(this.index).getAmount();
             }
 
             @Override
             public long getCapacity() {
-                return MachineFluidStorage.this.getSlot(this.index).getCapacity();
+                return MachineFluidStorage.this.getTank(this.index).getCapacity();
             }
 
             @Override
             public @Nullable StorageView<FluidVariant> exactView(TransactionContext transaction, FluidVariant resource) {
-                return MachineFluidStorage.this.getSlot(this.index).exactView(transaction, resource);
+                return MachineFluidStorage.this.getTank(this.index).exactView(transaction, resource);
             }
 
             @Override
             public long getVersion() {
-                return MachineFluidStorage.this.getSlot(this.index).getVersion();
+                return MachineFluidStorage.this.getTank(this.index).getVersion();
             }
         }
 
@@ -682,22 +685,22 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
 
             @Override
             public boolean isResourceBlank() {
-                return MachineFluidStorage.this.getSlot(this.index).isResourceBlank();
+                return MachineFluidStorage.this.getTank(this.index).isResourceBlank();
             }
 
             @Override
             public FluidVariant getResource() {
-                return MachineFluidStorage.this.getSlot(this.index).getResource();
+                return MachineFluidStorage.this.getTank(this.index).getResource();
             }
 
             @Override
             public long getAmount() {
-                return MachineFluidStorage.this.getSlot(this.index).getAmount();
+                return MachineFluidStorage.this.getTank(this.index).getAmount();
             }
 
             @Override
             public long getCapacity() {
-                return MachineFluidStorage.this.getSlot(this.index).getCapacity();
+                return MachineFluidStorage.this.getTank(this.index).getCapacity();
             }
         }
     }
@@ -716,14 +719,14 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
             return new Builder(machine);
         }
 
-        public Builder addSlot(@NotNull FluidTankSettings settings) {
-            return addSlot(settings, null);
+        public Builder addTank(@NotNull FluidTankSettings settings) {
+            return addTank(settings, Constant.Filter.Fluid.ALWAYS);
         }
 
-        public Builder addSlot(@NotNull FluidTankSettings settings, @Nullable FluidFilter internalFilter) {
+        public Builder addTank(@NotNull FluidTankSettings settings, @NotNull FluidFilter internalFilter) {
             Preconditions.checkNotNull(settings);
             this.slots.add(settings);
-            this.filters.add(internalFilter == null ? Constant.Filter.Fluid.ALWAYS : internalFilter);
+            this.filters.add(internalFilter);
             return this;
         }
 

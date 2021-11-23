@@ -22,15 +22,10 @@
 
 package dev.galacticraft.mod.screen.tank;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.*;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.lib.attributes.misc.LimitedConsumer;
-import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.attribute.Automatable;
+import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
 import dev.galacticraft.mod.util.DrawableUtil;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
@@ -106,12 +101,12 @@ public class Tank {
 
     public int id;
     public final int index;
-    public final FixedFluidInv inv;
+    public final MachineFluidStorage inv;
     public final int x;
     public final int y;
     public final int scale;
 
-    public Tank(int index, FixedFluidInv inv, int x, int y, int scale) {
+    public Tank(int index, MachineFluidStorage inv, int x, int y, int scale) {
         this.index = index;
         this.inv = inv;
         this.x = x;
@@ -163,7 +158,7 @@ public class Tank {
             DrawableHelper.drawTexture(matrices, this.x, this.y, 0, data[0], data[1] + Constant.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constant.TextureCoordinate.FLUID_TANK_WIDTH, data[2], 128, 128);
         }
 
-        FluidVolume content = this.inv.getInvFluid(this.index);
+        FluidStack content = this.inv.getInvFluid(this.index);
         if (content.isEmpty()) return;
         matrices.push();
         double scale = content.amount().div(this.inv.getMaxAmount_F(this.index)).asInexactDouble();
@@ -179,7 +174,7 @@ public class Tank {
         matrices.translate(0, 0, 1);
         if (DrawableUtil.isWithin(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.FLUID_TANK_WIDTH, this.getPositionData()[2])) {
             List<Text> lines = new ArrayList<>(2);
-            FluidVolume volume = this.inv.getInvFluid(this.index);
+            FluidStack volume = this.inv.getInvFluid(this.index);
             if (volume.isEmpty()) {
                 client.currentScreen.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.fluid_inv.empty").setStyle(Constant.Text.GRAY_STYLE), mouseX, mouseY);
                 return;
@@ -225,7 +220,7 @@ public class Tank {
             FluidExtractable extractable = FluidAttributes.EXTRACTABLE.getFirstOrNull(stack, excess);
             if (extractable != null && !extractable.attemptExtraction(this.inv.getFilterForTank(this.index), FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty()) {
                 if (automatable.getTypes()[this.index].getType().isInput()) {
-                    FluidVolumeUtil.move(extractable, this.inv.getTank(this.index));
+                    FluidStackUtil.move(extractable, this.inv.getTank(this.index));
                     ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(this.index)));
                     return true;
                 }
@@ -233,7 +228,7 @@ public class Tank {
                 FluidInsertable insertable = FluidAttributes.INSERTABLE.getFirstOrNull(stack, excess);
                 if (insertable != null) {
                     if (automatable.getTypes()[this.index].getType().isOutput()) {
-                        FluidVolumeUtil.move(this.inv.getTank(this.index), insertable);
+                        FluidStackUtil.move(this.inv.getTank(this.index), insertable);
                         ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(this.index)));
                         return true;
                     }

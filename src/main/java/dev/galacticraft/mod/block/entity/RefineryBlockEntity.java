@@ -22,23 +22,24 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
+import dev.galacticraft.api.fluid.FluidStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
-import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
+import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.slot.FluidTankSettings;
 import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.tag.GalacticraftTag;
 import dev.galacticraft.mod.util.FluidUtil;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -55,7 +56,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RefineryBlockEntity extends MachineBlockEntity {
-    private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(8);
+    private static final long MAX_CAPACITY = FluidUtil.bucketsToDroplets(8);
     public static final int OIL_TANK = 0;
     public static final int FUEL_TANK = 1;
     public static final int CHARGE_SLOT = 0;
@@ -69,21 +70,16 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     @Override
     protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
         builder.addSlot(SlotSettings.Builder.create(8, 7, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
-        builder.addSlot(SlotSettings.Builder.create(123, 7, SlotType.FLUID_TANK_IO).filter(stack -> FluidUtil.canExtractFluids(stack, GalacticraftTag.OIL) || FluidUtil.isEmpty(stack)).build());
-        builder.addSlot(SlotSettings.Builder.create(153, 7, SlotType.FLUID_TANK_IO).filter(stack -> FluidUtil.canInsertFluids(stack, GalacticraftFluid.FUEL)).build());
+        builder.addSlot(SlotSettings.Builder.create(123, 7, SlotType.FLUID_TANK_IO).filter(Constant.Filter.Item.CAN_EXTRACT_OIL).build());
+        builder.addSlot(SlotSettings.Builder.create(153, 7, SlotType.FLUID_TANK_IO).filter(Constant.Filter.Item.CAN_INSERT_FUEL).build());
         return builder;
     }
 
     @Override
-    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
-        builder.addTank(OIL_TANK, SlotType.OIL_IN, Constant.Filter.Fluid.OIL, 122, 28, 1);
-        builder.addTank(FUEL_TANK, SlotType.FUEL_OUT, Constant.Filter.Fluid.FUEL, 152, 28, 1);
+    protected MachineFluidStorage.Builder createFluidInv(MachineFluidStorage.Builder builder) {
+        builder.addTank(FluidTankSettings.Builder.create(122, 28, SlotType.OIL_IN).filter(Constant.Filter.Fluid.OIL).build());
+        builder.addTank(FluidTankSettings.Builder.create(152, 28, SlotType.FUEL_OUT).filter(Constant.Filter.Fluid.FUEL).build());
         return builder;
-    }
-
-    @Override
-    public FluidAmount fluidInvCapacity() {
-        return MAX_CAPACITY;
     }
 
     @Override
@@ -106,14 +102,20 @@ public class RefineryBlockEntity extends MachineBlockEntity {
         super.updateComponents();
         this.attemptChargeFromStack(CHARGE_SLOT);
 
-        FluidVolumeUtil.move(FluidAttributes.EXTRACTABLE.getFirst(this.itemStorage().getSlot(FLUID_INPUT_SLOT)), this.fluidInv().getTank(OIL_TANK));
-        FluidVolumeUtil.move(this.fluidInv().getTank(FUEL_TANK), FluidAttributes.INSERTABLE.getFirst(this.itemStorage().getSlot(FLUID_OUTPUT_SLOT)));
+        Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(FLUID_INPUT_SLOT)).find(FluidStorage.ITEM);
+        if (storage != null) {
+            FluidUtil.move(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), storage, this.fluidInv().getTank(OIL_TANK), Long.MAX_VALUE, null);
+        }
+        storage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(FLUID_INPUT_SLOT)).find(FluidStorage.ITEM);
+        if (storage != null) {
+            FluidUtil.move(FluidVariant.of(GalacticraftFluid.FUEL), this.fluidInv().getTank(FUEL_TANK), storage, Long.MAX_VALUE, null);
+        }
     }
 
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.fluidInv().getInvFluid(OIL_TANK).amount().compareTo(FluidAmount.ZERO) <= 0) return Status.NOT_ENOUGH_FLUID;
+        if (this.fluidInv().getStack(OIL_TANK).amount() == 0) return Status.NOT_ENOUGH_FLUID;
         if (this.isTankFull(FUEL_TANK)) return Status.FULL;
         return Status.ACTIVE;
     }
@@ -121,9 +123,13 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     @Override
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
-            FluidAmount amount = this.fluidInv().extractFluid(OIL_TANK, key -> GalacticraftTag.OIL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 200), Simulation.ACTION).amount();
-            amount = this.fluidInv().insertFluid(FUEL_TANK, FluidKeys.get(GalacticraftFluid.FUEL).withAmount(amount), Simulation.ACTION).amount();
-            this.fluidInv().insertFluid(OIL_TANK, this.fluidInv().getInvFluid(OIL_TANK).getFluidKey().withAmount(amount), Simulation.ACTION);
+            try (Transaction transaction = Transaction.openOuter()) {
+                FluidVariant resource = this.fluidInv().getTank(OIL_TANK).getResource();
+                long amount = this.fluidInv().extractFluid(OIL_TANK, 405L, transaction).amount();
+                amount = this.fluidInv().insertFluid(FUEL_TANK, new FluidStack(FluidVariant.of(GalacticraftFluid.FUEL), amount), transaction).amount();
+                this.fluidInv().insertFluid(OIL_TANK, new FluidStack(resource, amount), transaction).amount();
+                transaction.commit();
+            }
         }
     }
 

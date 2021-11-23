@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.item;
 
-import alexiil.mc.lib.attributes.item.FixedItemInv;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.item.Accessory;
 import net.minecraft.entity.player.PlayerEntity;

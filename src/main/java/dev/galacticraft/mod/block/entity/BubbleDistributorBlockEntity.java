@@ -22,24 +22,20 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.FluidExtractable;
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.api.attribute.GasStorage;
 import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
-import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.entity.BubbleEntity;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
+import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
+import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.util.FluidUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -68,7 +64,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class BubbleDistributorBlockEntity extends MachineBlockEntity {
-    public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
+    public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
     public static final int BATTERY_SLOT = 0;
     public static final int OXYGEN_TANK_SLOT = 1;
     public static final int OXYGEN_TANK = 0;
@@ -91,7 +87,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+    protected MachineFluidStorage.Builder createFluidInv(MachineFluidStorage.Builder builder) {
         builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_IN, 31, 8);
         return builder;
     }
@@ -104,11 +100,6 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     @Override
     protected void tickDisabled() {
 
-    }
-
-    @Override
-    public FluidAmount fluidInvCapacity() {
-        return MAX_OXYGEN;
     }
 
     @Override
@@ -126,8 +117,10 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        FluidAmount oxygenRequired = FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D) + 1);
-        if (!this.fluidInv().extractFluid(OXYGEN_TANK, null, FluidVolumeUtil.EMPTY, oxygenRequired, Simulation.SIMULATE).amount().equals(oxygenRequired)) return Status.NOT_ENOUGH_OXYGEN;
+        long oxygenRequired = ((long) ((4.0 / 3.0) * Math.PI * size * size * size));
+        try (Transaction transaction = Transaction.openOuter()) {
+            if (this.fluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.Fluid.ALWAYS, oxygenRequired, transaction).amount() < oxygenRequired) return Status.NOT_ENOUGH_OXYGEN;
+        }
         return Status.DISTRIBUTING;
     }
 
@@ -152,7 +145,10 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
             }
         }
         if (this.getStatus().getType().isActive()) {
-            this.fluidInv().extractFluid(OXYGEN_TANK, null, FluidVolumeUtil.EMPTY, FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), Simulation.ACTION);
+            try (Transaction transaction = Transaction.openOuter()) {
+                this.fluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.Fluid.ALWAYS, ((long) ((4.0 / 3.0) * Math.PI * size * size * size)), transaction);
+                transaction.commit();
+            }
             if (!world.isClient()) {
                 if (size < targetSize) {
                     setSize(size + 0.05D);

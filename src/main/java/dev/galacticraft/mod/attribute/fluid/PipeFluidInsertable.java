@@ -22,10 +22,6 @@
 
 package dev.galacticraft.mod.attribute.fluid;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FluidInsertable;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -36,18 +32,18 @@ import org.jetbrains.annotations.Nullable;
  */
 public class PipeFluidInsertable implements FluidInsertable {
     private final Direction direction;
-    private final FluidAmount maxTransfer;
+    private final long maxTransfer;
     private final BlockPos pipe;
     private @Nullable PipeNetwork network;
 
-    public PipeFluidInsertable(Direction direction, FluidAmount maxTransfer, BlockPos pipe) {
+    public PipeFluidInsertable(Direction direction, long maxTransfer, BlockPos pipe) {
         this.direction = direction;
         this.maxTransfer = maxTransfer;
         this.pipe = pipe;
     }
 
     @Override
-    public FluidVolume attemptInsertion(FluidVolume volume, Simulation simulation) {
+    public FluidStack attemptInsertion(FluidStack volume, Simulation simulation) {
         if (this.network != null) {
             return this.network.insert(this.pipe, volume, direction, simulation);
         }

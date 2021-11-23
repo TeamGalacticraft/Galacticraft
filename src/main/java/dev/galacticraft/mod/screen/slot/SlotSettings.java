@@ -22,11 +22,10 @@
 
 package dev.galacticraft.mod.screen.slot;
 
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.base.Preconditions;
 import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.lookup.filter.ItemFilter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -48,7 +47,7 @@ public record SlotSettings(int x, int y, @NotNull SlotType type, @NotNull ItemFi
         private int maxCount = 64;
         private @NotNull SlotChangeListener extractionListener = SlotChangeListener.DO_NOTHING;
         private @NotNull SlotChangeListener insertionListener = SlotChangeListener.DO_NOTHING;
-        private @NotNull ItemFilter filter = ConstantItemFilter.ANYTHING;
+        private @NotNull ItemFilter filter = Constant.Filter.Item.ALWAYS;
         private @Nullable Pair<Identifier, Identifier> icon = null;
 
         private Builder(int x, int y, @NotNull SlotType type) {

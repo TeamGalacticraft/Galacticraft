@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.screen.tank;
 
-import alexiil.mc.lib.attributes.misc.LimitedConsumer;
-import alexiil.mc.lib.attributes.misc.Reference;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;

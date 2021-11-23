@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.lookup.filter;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.minecraft.item.ItemStack;
 
 import java.util.function.Predicate;
 

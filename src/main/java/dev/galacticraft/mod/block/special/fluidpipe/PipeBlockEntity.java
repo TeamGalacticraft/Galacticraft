@@ -22,9 +22,6 @@
 
 package dev.galacticraft.mod.block.special.fluidpipe;
 
-import alexiil.mc.lib.attributes.AttributeList;
-import alexiil.mc.lib.attributes.AttributeProviderBlockEntity;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
@@ -47,11 +44,11 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Attri
     private @NotNull PipeFluidInsertable @Nullable[] insertables = null;
     private @Nullable PipeNetwork network = null;
     private DyeColor color = DyeColor.WHITE;
-    private final FluidAmount maxTransferRate; // 1 bucket per second
+    private final long maxTransferRate; // 1 bucket per second
     private final boolean[] connections = new boolean[6];
 
 
-    public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type, BlockPos pos, BlockState state, FluidAmount maxTransferRate) {
+    public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type, BlockPos pos, BlockState state, long maxTransferRate) {
         super(type, pos, state);
         this.maxTransferRate = maxTransferRate;
     }
@@ -105,7 +102,7 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Attri
     }
 
     @Override
-    public FluidAmount getMaxTransferRate() {
+    public long getMaxTransferRate() {
         return maxTransferRate;
     }
 

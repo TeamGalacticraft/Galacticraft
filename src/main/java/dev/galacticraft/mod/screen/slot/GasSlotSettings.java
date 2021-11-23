@@ -47,7 +47,7 @@ public record GasSlotSettings(@NotNull SlotType type, @NotNull GasFilter filter,
 
         public static @NotNull Builder create(@NotNull SlotType type) {
             Preconditions.checkNotNull(type);
-            assert type.getType().isGas();
+//            assert type.getType().isGas(); //fixme
             return new Builder(type);
         }
 

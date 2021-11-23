@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.item;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.FixedItemInv;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;

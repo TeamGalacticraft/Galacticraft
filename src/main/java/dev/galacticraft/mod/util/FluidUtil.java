@@ -22,27 +22,12 @@
 
 package dev.galacticraft.mod.util;
 
-import alexiil.mc.lib.attributes.SearchOptions;
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.FluidExtractable;
-import alexiil.mc.lib.attributes.fluid.FluidInsertable;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.fluid.impl.EmptyFixedFluidInv;
-import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
-import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.lib.attributes.misc.Ref;
-import alexiil.mc.lib.attributes.misc.Reference;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tag.Tag;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -50,120 +35,28 @@ import net.minecraft.world.World;
 public class FluidUtil {
     private FluidUtil() {}
 
-    public static FluidVolume extractFluid(Reference<ItemStack> stackRef, FluidAmount maxAmount, FluidFilter filter) {
-        return extractFluid(stackRef, maxAmount, filter, Simulation.ACTION);
+    public static long bucketsToDroplets(int buckets) {
+        return buckets * 81000L;
     }
 
-    public static FluidVolume insertFluid(Reference<ItemStack> stackRef, FluidVolume volume) {
-        return insertFluid(stackRef, volume, Simulation.ACTION);
-    }
+    public static long move(FluidVariant variant, @Nullable Storage<FluidVariant> from, @Nullable Storage<FluidVariant> to, long maxAmount, @Nullable TransactionContext transaction) {
+        if (from == null || to == null) return 0;
+        StoragePreconditions.notNegative(maxAmount);
 
-    public static FluidVolume extractFluid(Reference<ItemStack> stackRef, FluidAmount maxAmount, FluidFilter filter, Simulation simulation) {
-        return FluidAttributes.EXTRACTABLE.get(stackRef).attemptExtraction(filter, maxAmount, simulation);
-    }
+        long maxExtracted;
+        try (Transaction extractionTestTransaction = Transaction.openNested(transaction)) {
+            maxExtracted = from.extract(variant, maxAmount, extractionTestTransaction);
+        }
 
-    public static FluidVolume insertFluid(Reference<ItemStack> stackRef, FluidVolume volume, Simulation simulation) {
-        return FluidAttributes.INSERTABLE.get(stackRef).attemptInsertion(volume, simulation);
-    }
+        try (Transaction moveTransaction = Transaction.openNested(transaction)) {
+            long accepted = to.insert(variant, maxExtracted, moveTransaction);
 
-    public static boolean canInsertFluids(Reference<ItemStack> stack) {
-        return FluidAttributes.INSERTABLE.get(stack) != RejectingFluidInsertable.NULL;
-    }
+            if (from.extract(variant, accepted, moveTransaction) == accepted) {
+                moveTransaction.commit();
+                return accepted;
+            }
+        }
 
-    public static boolean canInsertFluids(ItemStack stack) {
-        return canInsertFluids(new Ref<>(stack));
-    }
-
-    public static boolean canInsertFluids(Reference<ItemStack> stack, FluidKey key) {
-        return FluidAttributes.INSERTABLE.get(stack).getInsertionFilter().matches(key);
-    }
-
-    public static boolean canInsertFluids(ItemStack stack, FluidKey key) {
-        return canInsertFluids(new Ref<>(stack), key);
-    }
-    
-    public static boolean canInsertFluids(Reference<ItemStack> stack, Fluid fluid) {
-        return canInsertFluids(stack, FluidKeys.get(fluid));
-    }
-
-    public static boolean canInsertFluids(ItemStack stack, Fluid fluid) {
-        return canInsertFluids(new Ref<>(stack), fluid);
-    }
-
-    public static boolean canExtractFluids(Reference<ItemStack> stack) {
-        return FluidAttributes.EXTRACTABLE.get(stack) != EmptyFluidExtractable.NULL;
-    }
-
-    public static boolean canExtractFluids(ItemStack stack) {
-        return canExtractFluids(new Ref<>(stack));
-    }
-
-    public static boolean canExtractFluids(Reference<ItemStack> stack, FluidFilter filter) {
-        return FluidAttributes.EXTRACTABLE.get(stack).filtered(filter).couldExtractAnything();
-    }
-
-    public static boolean canExtractFluids(ItemStack stack, FluidFilter filter) {
-        return canExtractFluids(new Ref<>(stack), filter);
-    }
-
-    public static boolean canExtractFluids(Reference<ItemStack> stack, Fluid fluid) {
-        return canExtractFluids(stack, key -> key.getRawFluid() == fluid);
-    }
-
-    public static boolean canExtractFluids(ItemStack stack, Fluid fluid) {
-        return canExtractFluids(new Ref<>(stack), fluid);
-    }
-
-    public static boolean canExtractFluids(Reference<ItemStack> stack, Tag<Fluid> tag) {
-        return canExtractFluids(stack, key -> tag.contains(key.getRawFluid()));
-    }
-
-    public static boolean canExtractFluids(ItemStack stack, Tag<Fluid> tag) {
-        return canExtractFluids(new Ref<>(stack), tag);
-    }
-
-    public static boolean isFixedFluidInv(Reference<ItemStack> stack) {
-        return FluidAttributes.FIXED_INV.get(stack) != EmptyFixedFluidInv.INSTANCE;
-    }
-
-    public static boolean isFixedFluidInvView(Reference<ItemStack> stack) {
-        return FluidAttributes.FIXED_INV_VIEW.get(stack) != EmptyFixedFluidInv.INSTANCE;
-    }
-
-    public static FluidInsertable getInsertable(World world, BlockPos pos, Direction direction) {
-        return FluidAttributes.INSERTABLE.get(world, pos, SearchOptions.inDirection(direction));
-    }
-
-    public static FluidExtractable getExtractable(World world, BlockPos pos, Direction direction) {
-        return FluidAttributes.EXTRACTABLE.get(world, pos, SearchOptions.inDirection(direction));
-    }
-
-    public static FluidInsertable getInsertable(ItemStack stack) {
-        return getInsertable(new Ref<>(stack));
-    }
-
-    public static FluidInsertable getInsertable(Ref<ItemStack> stack) {
-        return FluidAttributes.INSERTABLE.get(stack);
-    }
-
-    public static FluidExtractable getExtractable(ItemStack stack) {
-        return getExtractable(new Ref<>(stack));
-    }
-
-    public static FluidExtractable getExtractable(Ref<ItemStack> stack) {
-        return FluidAttributes.EXTRACTABLE.get(stack);
-    }
-
-    public static boolean canAccessFluid(World world, BlockPos pos, Direction direction) {
-        return FluidAttributes.EXTRACTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null
-                || FluidAttributes.INSERTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null;
-    }
-
-    public static boolean isEmpty(ItemStack stack) {
-        return isEmpty(new Ref<>(stack));
-    }
-
-    public static boolean isEmpty(Ref<ItemStack> stack) {
-        return FluidAttributes.EXTRACTABLE.get(stack).attemptAnyExtraction(FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty();
+        return 0;
     }
 }

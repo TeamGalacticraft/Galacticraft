@@ -23,8 +23,8 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.api.attribute.GasStorage;
-import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.mod.api.block.util.BlockFace;
+import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.lookup.filter.FluidFilter;
 import dev.galacticraft.mod.lookup.filter.GasFilter;
 import dev.galacticraft.mod.lookup.filter.ItemFilter;
@@ -33,7 +33,10 @@ import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
@@ -647,6 +650,24 @@ public interface Constant {
             ItemFilter CAN_INSERT_OXYGEN = stack -> {
                 Storage<dev.galacticraft.api.gas.Gas> gasStorage = ContainerItemContext.withInitial(stack).find(GasStorage.ITEM);
                 return gasStorage != null && gasStorage.supportsInsertion();
+            };
+            ItemFilter CAN_EXTRACT_OIL = stack -> {
+                Storage<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM);
+                if (storage != null && storage.supportsExtraction()) {
+                    try (Transaction transaction = Transaction.openOuter()) {
+                        return storage.extract(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), Long.MAX_VALUE, transaction) >= 0;
+                    }
+                }
+                return false;
+            };
+            ItemFilter CAN_INSERT_FUEL = stack -> {
+                Storage<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM);
+                if (storage != null && storage.supportsInsertion()) {
+                    try (Transaction transaction = Transaction.openOuter()) {
+                        return storage.insert(FluidVariant.of(GalacticraftFluid.FUEL), Long.MAX_VALUE, transaction) >= 0;
+                    }
+                }
+                return false;
             };
         }
 

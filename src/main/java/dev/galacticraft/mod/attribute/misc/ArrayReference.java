@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.attribute.misc;
 
-import alexiil.mc.lib.attributes.misc.Reference;
 
 import java.util.function.Predicate;
 

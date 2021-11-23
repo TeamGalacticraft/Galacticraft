@@ -22,10 +22,6 @@
 
 package dev.galacticraft.mod.fluid;
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import alexiil.mc.lib.attributes.fluid.volume.SimpleFluidKey;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import net.minecraft.fluid.FlowableFluid;
@@ -57,7 +53,7 @@ public class GalacticraftFluid {
                                 .setStyle(Constant.Text.DARK_GRAY_STYLE)
                         )
                         .setViscosity(FluidAmount.of(30, 5))
-                        .setCohesion(FluidAmount.ofWhole(2))
+                        .setCohesion(FluidUtil.bucketsToDroplets(2))
                         .setSprites(Constant.Fluid.getId(Constant.Fluid.CRUDE_OIL_STILL), Constant.Fluid.getId(Constant.Fluid.CRUDE_OIL_FLOWING))
                         .setDensity(FluidAmount.of(825, 1000)) // https://www.engineeringtoolbox.com/liquids-densities-d_743.html relative to water
         ));
@@ -68,7 +64,7 @@ public class GalacticraftFluid {
                                 .setStyle(Constant.Text.YELLOW_STYLE)
                         )
                         .setViscosity(FluidAmount.of(10, 5))
-                        .setCohesion(FluidAmount.ofWhole(3))
+                        .setCohesion(FluidUtil.bucketsToDroplets(3))
                         .setSprites(Constant.Fluid.getId(Constant.Fluid.FUEL_STILL), Constant.Fluid.getId(Constant.Fluid.FUEL_FLOWING))
                         .setDensity(FluidAmount.of(900, 1000))
         ));

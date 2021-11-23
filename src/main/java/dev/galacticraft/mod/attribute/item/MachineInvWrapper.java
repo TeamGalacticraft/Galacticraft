@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.attribute.item;
 
-import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 

@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.api.block.entity;
 
-import alexiil.mc.lib.attributes.AttributeList;
-import alexiil.mc.lib.attributes.AttributeProviderBlockEntity;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.wire.Wire;
@@ -43,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class WireBlockEntity extends BlockEntity implements Wire, AttributeProviderBlockEntity {
+public class WireBlockEntity extends BlockEntity implements Wire {
     private @Nullable WireNetwork network = null;
     private @NotNull WireEnergyStorage @Nullable[] insertables = null;
     private final int maxTransferRate;
@@ -120,13 +118,6 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
         super.markRemoved();
         if (this.getNetwork() != null) {
             this.getOrCreateNetwork().removeWire(this, this.pos);
-        }
-    }
-
-    @Override
-    public void addAllAttributes(AttributeList<?> to) {
-        if (to.getSearchDirection() != null && this.canConnect(to.getSearchDirection().getOpposite())) {
-            to.offer(this.getInsertables()[to.getSearchDirection().ordinal()]);
         }
     }
 

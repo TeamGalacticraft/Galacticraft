@@ -22,10 +22,6 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
@@ -77,8 +73,8 @@ public class RefineryTestSuite implements MachineGameTest {
         refinery.capacitor().setEnergy(refinery.getEnergyCapacity());
         refinery.fluidInv().setInvFluid(RefineryBlockEntity.OIL_TANK, FluidKeys.get(GalacticraftFluid.CRUDE_OIL).withAmount(FluidAmount.ONE), Simulation.ACTION);
         runFinalTaskAt(context, 200 + 1, () -> {
-            FluidVolume oil = refinery.fluidInv().getInvFluid(RefineryBlockEntity.OIL_TANK);
-            FluidVolume fuel = refinery.fluidInv().getInvFluid(RefineryBlockEntity.FUEL_TANK);
+            FluidStack oil = refinery.fluidInv().getInvFluid(RefineryBlockEntity.OIL_TANK);
+            FluidStack fuel = refinery.fluidInv().getInvFluid(RefineryBlockEntity.FUEL_TANK);
             if (!oil.isEmpty()) {
                 context.throwPositionedException(String.format("Expected refinery to refine all of the oil but found %s remaining!", oil), pos);
             }

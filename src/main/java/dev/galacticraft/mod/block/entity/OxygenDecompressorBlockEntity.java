@@ -22,18 +22,16 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.lookup.storage.MachineGasStorage;
 import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -50,7 +48,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
-    public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
+    public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
     public static final int CHARGE_SLOT = 0;
     public static final int TANK_SLOT = 1;
     public static final int OXYGEN_TANK = 0;
@@ -72,14 +70,9 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
+    protected MachineFluidStorage.Builder createFluidInv(MachineFluidStorage.Builder builder) {
         builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_OUT, 30, 8);
         return builder;
-    }
-
-    @Override
-    public FluidAmount fluidInvCapacity() {
-        return MAX_OXYGEN;
     }
 
     @Override
