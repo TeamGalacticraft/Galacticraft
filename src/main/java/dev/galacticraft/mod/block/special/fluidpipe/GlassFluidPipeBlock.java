@@ -33,14 +33,11 @@ import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -69,19 +66,10 @@ public class GlassFluidPipeBlock extends FluidPipe {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
-        final GlassFluidPipeBlockEntity blockEntity = (GlassFluidPipeBlockEntity) world.getBlockEntity(pos);
+        var blockEntity = (GlassFluidPipeBlockEntity) world.getBlockEntity(pos);
         assert blockEntity != null;
-        for (Hand hand : Hand.values()) {
-            final ItemStack stack = placer.getStackInHand(hand);
-            if (stack.getItem() instanceof DyeItem dye && dye.getColor() != blockEntity.getColor()) {
-                blockEntity.setColor(dye.getColor());
-                final ItemStack copy = stack.copy();
-                copy.decrement(1);
-                placer.setStackInHand(hand, copy);
-            }
-        }
-        for (Direction direction : Constant.Misc.DIRECTIONS) {
-            final BlockEntity otherBlockEntity = world.getBlockEntity(pos.offset(direction));
+        for (var direction : Constant.Misc.DIRECTIONS) {
+            var otherBlockEntity = world.getBlockEntity(pos.offset(direction));
             blockEntity.getConnections()[direction.ordinal()] = (otherBlockEntity instanceof Pipe pipe && pipe.canConnect(direction.getOpposite()))
                     || FluidUtil.canAccessFluid(world, pos.offset(direction), direction);
         }
@@ -90,26 +78,31 @@ public class GlassFluidPipeBlock extends FluidPipe {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!player.getStackInHand(hand).isEmpty()) {
-            final GlassFluidPipeBlockEntity blockEntity = (GlassFluidPipeBlockEntity) world.getBlockEntity(pos);
+        var stack = player.getStackInHand(hand);
+        if (!stack.isEmpty()) {
+            var blockEntity = (GlassFluidPipeBlockEntity) world.getBlockEntity(pos);
             assert blockEntity != null;
-            if (player.getStackInHand(hand).getItem() instanceof DyeItem dye) {
-                ItemStack stack = player.getStackInHand(hand).copy();
-                DyeColor color = dye.getColor();
+            if (stack.getItem() instanceof DyeItem dye) {
+                var color = dye.getColor();
                 if (color != blockEntity.getColor()) {
-                    stack.decrement(1);
-                    player.setStackInHand(hand, stack);
+                    if (!player.getAbilities().creativeMode) {
+                        stack.decrement(1);
+                    }
                     blockEntity.setColor(color);
+                    if (!world.isClient) {
+                        blockEntity.sync();
+                    }
                     return ActionResult.SUCCESS;
                 } else {
                     return ActionResult.FAIL;
                 }
             }
-            if (player.getStackInHand(hand).getItem() instanceof StandardWrenchItem) {
-                ItemStack stack = player.getStackInHand(hand).copy();
-                stack.damage(1, world.random, player instanceof ServerPlayerEntity ? ((ServerPlayerEntity) player) : null);
-                player.setStackInHand(hand, stack);
+            if (stack.getItem() instanceof StandardWrenchItem) {
+                stack.damage(1, player, playerx -> playerx.sendToolBreakStatus(hand));
                 blockEntity.setPull(!blockEntity.isPull());
+                if (!world.isClient) {
+                    blockEntity.sync();
+                }
                 return ActionResult.SUCCESS;
             }
         }
@@ -119,11 +112,11 @@ public class GlassFluidPipeBlock extends FluidPipe {
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborUpdate(state, world, pos, block, fromPos, notify);
-        BlockState neighbor = world.getBlockState(fromPos);
-        Direction dir = Direction.fromVector(fromPos.subtract(pos));
+        var neighbor = world.getBlockState(fromPos);
+        var dir = Direction.fromVector(fromPos.subtract(pos));
         assert dir != null;
-        final GlassFluidPipeBlockEntity blockEntity = (GlassFluidPipeBlockEntity) world.getBlockEntity(pos);
-        final BlockEntity otherBlockEntity = world.getBlockEntity(fromPos);
+        var blockEntity = (GlassFluidPipeBlockEntity) world.getBlockEntity(pos);
+        var otherBlockEntity = world.getBlockEntity(fromPos);
         assert blockEntity != null;
         blockEntity.getConnections()[dir.ordinal()] = !neighbor.isAir() && ((otherBlockEntity instanceof Pipe pipe && pipe.canConnect(dir.getOpposite()))
                 || FluidUtil.canAccessFluid(world, fromPos, dir));
@@ -132,7 +125,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
 
     @Override
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
-        final BlockEntity blockEntity = blockView.getBlockEntity(blockPos);
+        var blockEntity = blockView.getBlockEntity(blockPos);
         if (blockEntity instanceof Connected connected) {
             return ConnectingBlockUtil.getVoxelShape(connected, NORTH, SOUTH, EAST, WEST, UP, DOWN, NONE);
         }
