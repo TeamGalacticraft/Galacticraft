@@ -1,7 +1,7 @@
 {
   "parent": "block/stairs",
   "textures": {
-    "bottom": "galacticraft:block/detailed_aluminum_decoration_side",
+    "bottom": "galacticraft:block/aluminum_decoration",
     "top": "galacticraft:block/detailed_aluminum_decoration_top",
     "side": "galacticraft:block/detailed_aluminum_decoration_side"
   }

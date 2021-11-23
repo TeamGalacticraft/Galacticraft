@@ -1,8 +1,8 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "down": "galacticraft:block/detailed_meteoric_iron_decoration_top",
-    "up": "galacticraft:block/meteoric_iron_decoration",
+    "down": "galacticraft:block/meteoric_iron_decoration",
+    "up": "galacticraft:block/detailed_meteoric_iron_decoration_top",
     "north": "galacticraft:block/detailed_meteoric_iron_decoration_side",
     "south": "galacticraft:block/detailed_meteoric_iron_decoration_side",
     "west": "galacticraft:block/detailed_meteoric_iron_decoration_side",

@@ -1,7 +1,7 @@
 {
   "parent": "block/inner_stairs",
   "textures": {
-    "bottom": "galacticraft:block/detailed_iron_decoration_side",
+    "bottom": "galacticraft:block/iron_decoration",
     "top": "galacticraft:block/detailed_iron_decoration_top",
     "side": "galacticraft:block/detailed_iron_decoration_side"
   }
