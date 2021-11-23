@@ -30,7 +30,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -71,10 +71,12 @@ public class TinLadderBlock extends Block {
     @Nullable
     private ActionResult checkCanTinLadderBePlaced(World world, BlockPos checkPos, BlockState state) {
         if (world.getBlockState(checkPos).isAir()) {
-            BlockState newState = this.getDefaultState().with(FACING, state.get(FACING));
+            var newState = this.getDefaultState().with(FACING, state.get(FACING));
             world.setBlockState(checkPos, newState);
+            var blockSoundGroup = newState.getSoundGroup();
+            world.playSound(null, checkPos, blockSoundGroup.getPlaceSound(), SoundCategory.BLOCKS, (blockSoundGroup.getVolume() + 1.0F) / 2.0F, blockSoundGroup.getPitch() * 0.8F);
             return ActionResult.SUCCESS;
-        } else if (!(world.getBlockState(checkPos).getBlock() instanceof TinLadderBlock)) {
+        } else if (world.getBlockState(checkPos).getBlock() != this) {
             return ActionResult.PASS;
         }
         return null;
@@ -82,21 +84,27 @@ public class TinLadderBlock extends Block {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack item = player.getInventory().getStack(player.getInventory().selectedSlot);
-        if (Block.getBlockFromItem(item.getItem()) instanceof TinLadderBlock) {
-            if (!player.isCreative())
-                item.decrement(1);
+        var itemStack = player.getStackInHand(hand);
+        if (itemStack.getItem() == this.asItem()) {
             if (player.getPitch() < 0f) {
-                for (BlockPos checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() < world.getHeight(); checkPos = checkPos.add(0, 1, 0)) {
-                    ActionResult result = this.checkCanTinLadderBePlaced(world, checkPos, state);
-                    if (result != null)
+                for (BlockPos checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()); world.isInBuildLimit(checkPos); checkPos = checkPos.add(0, 1, 0)) {
+                    var result = this.checkCanTinLadderBePlaced(world, checkPos, state);
+                    if (result != null) {
+                        if (!player.isCreative() && result == ActionResult.SUCCESS) {
+                            itemStack.decrement(1);
+                        }
                         return result;
+                    }
                 }
             } else {
-                for (BlockPos checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() > 0; checkPos = checkPos.add(0, -1, 0)) {
-                    ActionResult result = this.checkCanTinLadderBePlaced(world, checkPos, state);
-                    if (result != null)
+                for (BlockPos checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()); world.isInBuildLimit(checkPos); checkPos = checkPos.add(0, -1, 0)) {
+                    var result = this.checkCanTinLadderBePlaced(world, checkPos, state);
+                    if (result != null) {
+                        if (!player.isCreative() && result == ActionResult.SUCCESS) {
+                            itemStack.decrement(1);
+                        }
                         return result;
+                    }
                 }
             }
         }
@@ -142,10 +150,12 @@ public class TinLadderBlock extends Block {
         return true;
     }
 
+    @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         return true;
     }
 
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
         if (state.get(WATERLOGGED)) {
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
@@ -153,6 +163,7 @@ public class TinLadderBlock extends Block {
         return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
     }
 
+    @Override
     @Nullable
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockState blockState2;
@@ -163,11 +174,11 @@ public class TinLadderBlock extends Block {
             }
         }
         blockState2 = this.getDefaultState();
-        WorldView worldView = ctx.getWorld();
-        BlockPos blockPos = ctx.getBlockPos();
-        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        Direction[] var6 = ctx.getPlacementDirections();
-        for (Direction direction : var6) {
+        var worldView = ctx.getWorld();
+        var blockPos = ctx.getBlockPos();
+        var fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+        var placementDirs = ctx.getPlacementDirections();
+        for (var direction : placementDirs) {
             if (direction.getAxis().isHorizontal()) {
                 blockState2 = blockState2.with(FACING, direction.getOpposite());
                 if (blockState2.canPlaceAt(worldView, blockPos)) {
@@ -178,18 +189,22 @@ public class TinLadderBlock extends Block {
         return null;
     }
 
+    @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING, WATERLOGGED);
     }
 
+    @Override
     public FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
