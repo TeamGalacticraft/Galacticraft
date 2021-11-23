@@ -51,7 +51,6 @@ import java.util.List;
 public class StandardWrenchItem extends Item {
     public StandardWrenchItem(Settings settings) {
         super(settings);
-        settings.maxDamage(256);
     }
 
     private static <T extends Comparable<T>> BlockState cycle(BlockState state, Property<T> property, boolean reverse) {

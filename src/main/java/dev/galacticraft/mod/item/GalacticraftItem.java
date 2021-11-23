@@ -146,7 +146,7 @@ public class GalacticraftItem {
     public static final Item TITANIUM_PICKAXE = registerItem(Constant.Item.TITANIUM_PICKAXE, new PickaxeItem(GalacticraftToolMaterial.TITANIUM, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TITANIUM_AXE = registerItem(Constant.Item.TITANIUM_AXE, new AxeItem(GalacticraftToolMaterial.TITANIUM, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TITANIUM_HOE = registerItem(Constant.Item.TITANIUM_HOE, new HoeItem(GalacticraftToolMaterial.TITANIUM, -3, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item STANDARD_WRENCH = registerItem(Constant.Item.STANDARD_WRENCH, new StandardWrenchItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item STANDARD_WRENCH = registerItem(Constant.Item.STANDARD_WRENCH, new StandardWrenchItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(256)));
     public static final Item BATTERY = registerItem(Constant.Item.BATTERY, new BatteryItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item INFINITE_BATTERY = registerItem(Constant.Item.INFINITE_BATTERY, new InfiniteBatteryItem(new Item.Settings().group(ITEMS_GROUP).rarity(Rarity.EPIC)));
     //Fluid buckets
