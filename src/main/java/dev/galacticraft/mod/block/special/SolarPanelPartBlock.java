@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.block.special;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.SolarPanelPartBlockEntity;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.ShapeContext;
@@ -33,6 +33,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -46,9 +47,9 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SolarPanelPartBlock extends BlockWithEntity {
-    private static final VoxelShape POLE_SHAPE = createCuboidShape(8 - 2, 0, 8 - 2, 8 + 2, 16, 8 + 2);
-    private static final VoxelShape TOP_POLE_SHAPE = createCuboidShape(8 - 2, 0, 8 - 2, 8 + 2, 8, 8 + 2);
-    private static final VoxelShape TOP_SHAPE = createCuboidShape(0, 6, 0, 16, 10, 16);
+    private static final VoxelShape POLE_SHAPE = createCuboidShape(6, 0, 6, 10, 16, 10);
+    private static final VoxelShape TOP_POLE_SHAPE = createCuboidShape(6, 0, 6, 10, 7, 10);
+    private static final VoxelShape TOP_SHAPE = createCuboidShape(0, 7, 0, 16, 10, 16);
     private static final VoxelShape TOP_MID_SHAPE = VoxelShapes.union(TOP_POLE_SHAPE, TOP_SHAPE);
 
     public SolarPanelPartBlock(Settings settings) {
@@ -57,10 +58,10 @@ public class SolarPanelPartBlock extends BlockWithEntity {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView blockView, BlockPos pos, ShapeContext context) {
-        Block down = blockView.getBlockState(pos.down()).getBlock();
+        var down = blockView.getBlockState(pos.down()).getBlock();
         if (down instanceof MultiBlockBase) {
             return POLE_SHAPE;
-        } else if (blockView.getBlockState(pos.down().down()).getBlock() == GalacticraftBlock.BASIC_SOLAR_PANEL) {
+        } else if (blockView.getBlockState(pos.down().down()).getBlock() == GalacticraftBlock.BASIC_SOLAR_PANEL || blockView.getBlockState(pos.down().down()).getBlock() == GalacticraftBlock.ADVANCED_SOLAR_PANEL) {
             return TOP_MID_SHAPE;
         }
         return TOP_SHAPE;
@@ -68,21 +69,21 @@ public class SolarPanelPartBlock extends BlockWithEntity {
 
     @Override
     public void onBreak(World world, BlockPos partPos, BlockState partState, PlayerEntity player) {
-        BlockEntity partBE = world.getBlockEntity(partPos);
-        SolarPanelPartBlockEntity be = (SolarPanelPartBlockEntity) partBE;
+        var partBE = world.getBlockEntity(partPos);
+        var be = (SolarPanelPartBlockEntity) partBE;
 
         if (be == null || be.basePos == BlockPos.ORIGIN) {
             return;
         }
-        BlockPos basePos = new BlockPos(be.basePos);
-        BlockState baseState = world.getBlockState(basePos);
+        var basePos = new BlockPos(be.basePos);
+        var baseState = world.getBlockState(basePos);
 
         if (baseState.isAir()) {
             // The base has been destroyed already.
             return;
         }
 
-        MultiBlockBase block = (MultiBlockBase) baseState.getBlock();
+        var block = (MultiBlockBase) baseState.getBlock();
         block.onPartDestroyed(world, player, baseState, basePos, partState, partPos);
 
         super.onBroken(world, partPos, partState);
@@ -95,7 +96,22 @@ public class SolarPanelPartBlock extends BlockWithEntity {
 
     @Override
     public ItemStack getPickStack(BlockView blockView, BlockPos pos, BlockState state) {
-        return new ItemStack(GalacticraftBlock.BASIC_SOLAR_PANEL);
+        var partBE = blockView.getBlockEntity(pos);
+        var be = (SolarPanelPartBlockEntity) partBE;
+
+        if (be == null || be.basePos == BlockPos.ORIGIN) {
+            return ItemStack.EMPTY;
+        }
+        var basePos = new BlockPos(be.basePos);
+        var baseBe = blockView.getBlockEntity(basePos);
+        var baseStack = blockView.getBlockState(basePos).getBlock().getPickStack(blockView, pos, state);
+        var tag = new NbtCompound();
+
+        if (baseBe != null) {
+            tag.put(Constant.Nbt.BLOCK_ENTITY_TAG, baseBe.writeNbt(new NbtCompound()));
+        }
+        baseStack.setNbt(tag);
+        return baseStack;
     }
 
     @Override
@@ -120,16 +136,13 @@ public class SolarPanelPartBlock extends BlockWithEntity {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
-        BlockEntity partEntity = world.getBlockEntity(pos);
-        if (world.isAir(pos) || !(partEntity instanceof SolarPanelPartBlockEntity)) {
+        var partEntity = world.getBlockEntity(pos);
+        if (world.isAir(pos) || !(partEntity instanceof SolarPanelPartBlockEntity) || world.isClient) {
             return ActionResult.SUCCESS;
         }
 
-        if (world.isClient) return ActionResult.SUCCESS;
-
-        BlockPos basePos = ((SolarPanelPartBlockEntity) partEntity).basePos;
-
-        BlockState base = world.getBlockState(basePos);
+        var basePos = ((SolarPanelPartBlockEntity) partEntity).basePos;
+        var base = world.getBlockState(basePos);
         return base.getBlock().onUse(base, world, basePos, player, hand, blockHitResult);
     }
 }

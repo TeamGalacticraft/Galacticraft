@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.mod.api.block.MultiBlockPart;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -31,7 +32,7 @@ import net.minecraft.util.math.BlockPos;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class SolarPanelPartBlockEntity extends BlockEntity implements MultiBlockPart {
+public class SolarPanelPartBlockEntity extends BlockEntity implements MultiBlockPart, BlockEntityClientSerializable {
     public BlockPos basePos = BlockPos.ORIGIN;
 
     public SolarPanelPartBlockEntity(BlockPos pos, BlockState state) {
@@ -59,5 +60,15 @@ public class SolarPanelPartBlockEntity extends BlockEntity implements MultiBlock
     public void setBasePos(BlockPos basePos) {
         this.basePos = basePos;
         this.markDirty();
+    }
+
+    @Override
+    public void fromClientTag(NbtCompound tag) {
+        this.readNbt(tag);
+    }
+
+    @Override
+    public NbtCompound toClientTag(NbtCompound tag) {
+        return this.writeNbt(tag);
     }
 }
