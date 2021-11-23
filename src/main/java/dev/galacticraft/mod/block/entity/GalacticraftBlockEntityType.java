@@ -70,7 +70,6 @@ public class GalacticraftBlockEntityType {
 
     // MISC
     public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = FabricBlockEntityTypeBuilder.create(SolarPanelPartBlockEntity::new, GalacticraftBlock.SOLAR_PANEL_PART).build();
-    public static final BlockEntityType<FallenMeteorBlockEntity> FALLEN_METEOR = FabricBlockEntityTypeBuilder.create(FallenMeteorBlockEntity::new, GalacticraftBlock.FALLEN_METEOR).build();
 
     public static void register() {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.COAL_GENERATOR), COAL_GENERATOR);
@@ -100,7 +99,6 @@ public class GalacticraftBlockEntityType {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
 
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.SOLAR_PANEL_PART), SOLAR_PANEL_PART);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.FALLEN_METEOR), FALLEN_METEOR);
     }
 
     private static void register(String id, BlockEntityType<?> type) {

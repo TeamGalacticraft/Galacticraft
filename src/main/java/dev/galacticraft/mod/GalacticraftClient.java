@@ -179,7 +179,7 @@ public class GalacticraftClient implements ClientModInitializer {
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
 
-        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> FallenMeteorBlock.colorMultiplier(world, pos), GalacticraftBlock.FALLEN_METEOR);
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> FallenMeteorBlock.colorMultiplier(state, world, pos), GalacticraftBlock.FALLEN_METEOR);
 
         Galacticraft.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

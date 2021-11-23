@@ -22,31 +22,27 @@
 
 package dev.galacticraft.mod.block.environment;
 
+import java.util.Random;
+
 import org.jetbrains.annotations.Nullable;
 
-import dev.galacticraft.mod.block.entity.FallenMeteorBlockEntity;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.util.ColorUtil;
 import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
@@ -61,23 +57,37 @@ import net.minecraft.world.WorldAccess;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class FallenMeteorBlock extends FallingBlock implements Waterloggable, BlockEntityProvider {
+public class FallenMeteorBlock extends FallingBlock implements Waterloggable {
     private static final VoxelShape SHAPE = createCuboidShape(3, 1, 3, 13, 11, 13);
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    public static final IntProperty HEAT = IntProperty.of("heat", 0, 5);
 
     public FallenMeteorBlock(AbstractBlock.Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(WATERLOGGED, true));
+        this.setDefaultState(this.stateManager.getDefaultState().with(WATERLOGGED, false).with(HEAT, 0));
+    }
+
+    @Override
+    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        this.scheduledTick(state, world, pos, random);
+    }
+
+    @Override
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        var i = state.get(HEAT);
+
+        if (i > 0) {
+            if (random.nextInt(500) == 0) {
+                world.setBlockState(pos, state.with(HEAT, i - 1), Block.NOTIFY_LISTENERS);
+            } else {
+                super.scheduledTick(state, world, pos, random);
+            }
+        }
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED);
-    }
-
-    @Override
-    public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new FallenMeteorBlockEntity(blockPos, blockState);
+        builder.add(WATERLOGGED, HEAT);
     }
 
     @Override
@@ -94,17 +104,9 @@ public class FallenMeteorBlock extends FallingBlock implements Waterloggable, Bl
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof FallenMeteorBlockEntity) {
-            ((FallenMeteorBlockEntity)blockEntity).setHeatLevel(0);
-        }
-    }
-
-    @Override
     @Nullable
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+        var fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
         return this.getDefaultState().with(WATERLOGGED, fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8);
     }
 
@@ -114,82 +116,51 @@ public class FallenMeteorBlock extends FallingBlock implements Waterloggable, Bl
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entityIn) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        if (state.get(HEAT) <= 0) {
+            return;
+        }
 
-        if (blockEntity instanceof FallenMeteorBlockEntity) {
-            FallenMeteorBlockEntity meteor = (FallenMeteorBlockEntity) blockEntity;
+        if (entity instanceof LivingEntity livingEntity) {
+            world.playSound(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.NEUTRAL, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
 
-            if (meteor.getHeatLevel() <= 0) {
-                return;
+            for (var i = 0; i < 8; ++i) {
+                world.addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + Math.random(), pos.getY() + 0.2D + Math.random(), pos.getZ() + Math.random(), 0.0D, 0.0D, 0.0D);
             }
 
-            if (entityIn instanceof LivingEntity) {
-                LivingEntity livingEntity = (LivingEntity) entityIn;
-
-                world.playSound(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.NEUTRAL, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
-
-                for (int i = 0; i < 8; ++i) {
-                    world.addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + Math.random(), pos.getY() + 0.2D + Math.random(), pos.getZ() + Math.random(), 0.0D, 0.0D, 0.0D);
-                }
-
-                if (!livingEntity.isOnFire()) {
-                    livingEntity.setFireTicks(2);
-                }
-
-                double knockX = pos.getX() + 0.5F - livingEntity.getX();
-                double knockZ;
-
-                for (knockZ = livingEntity.getZ() - pos.getZ(); knockX * knockX + knockZ * knockZ < 1.0E-4D; knockZ = (Math.random() - Math.random()) * 0.01D) {
-                    knockX = (Math.random() - Math.random()) * 0.01D;
-                }
-
-                livingEntity.takeKnockback(1, knockX, knockZ);
+            if (!livingEntity.isOnFire()) {
+                livingEntity.setFireTicks(2);
             }
+
+            var knockX = pos.getX() + 0.5F - livingEntity.getX();
+            double knockZ;
+
+            for (knockZ = livingEntity.getZ() - pos.getZ(); knockX * knockX + knockZ * knockZ < 1.0E-4D; knockZ = (Math.random() - Math.random()) * 0.01D) {
+                knockX = (Math.random() - Math.random()) * 0.01D;
+            }
+
+            livingEntity.takeKnockback(1, knockX, knockZ);
         }
     }
 
     @Override
-    protected void configureFallingBlockEntity(FallingBlockEntity entity) {
-        entity.blockEntityData = entity.world.getBlockEntity(entity.getBlockPos()).writeNbt(new NbtCompound());
-    }
-
-    @Override
-    public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingBlockEntity fallingBlockEntity) {
-        ((FallenMeteorBlockEntity)world.getBlockEntity(pos)).setHeatLevel(fallingBlockEntity.blockEntityData.getInt("HeatLevel"));
-    }
-
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, GalacticraftBlockEntityType.FALLEN_METEOR, FallenMeteorBlockEntity::clientTick);
-    }
-
-    @Override
     public void onStacksDropped(BlockState state, ServerWorld world, BlockPos pos, ItemStack stack) {
-        super.onStacksDropped(state, world, pos, stack);
         if (EnchantmentHelper.getLevel(Enchantments.SILK_TOUCH, stack) == 0) {
-            int i = MathHelper.nextInt(world.random, 3, 7);
+            var i = MathHelper.nextInt(world.random, 3, 7);
             if (i > 0) {
                 this.dropExperience(world, pos, i);
             }
         }
     }
 
-    //TODO Fix falling block entity don't render block color
-    public static int colorMultiplier(BlockRenderView blockView, BlockPos pos) {
-        if (blockView != null && pos != null) {
-            BlockEntity blockEntity = blockView.getBlockEntity(pos);
-
-            if (blockEntity instanceof FallenMeteorBlockEntity) {
-                FallenMeteorBlockEntity meteor = (FallenMeteorBlockEntity) blockEntity;
-                float scale = 200 - meteor.getScaledHeatLevel() * 200;
-                return ColorUtil.rgb(Math.min(255, 198 + (int)scale), Math.min(255, 108 + (int)scale), Math.min(255, 58 + (int)scale));
-            }
-        }
-        return 16777215;
-    }
-
-    private static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> checkType(BlockEntityType<A> givenType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
-        return expectedType == givenType ? (BlockEntityTicker) ticker : null;
+    public static int colorMultiplier(BlockState state, BlockRenderView blockView, BlockPos pos) {
+        return blockView != null && pos != null ? switch (state.get(HEAT)) {
+            case 1 -> ColorUtil.rgb(255, 255, 218);
+            case 2 -> ColorUtil.rgb(255, 228, 178);
+            case 3 -> ColorUtil.rgb(255, 187, 137);
+            case 4 -> ColorUtil.rgb(238, 148, 98);
+            case 5 -> ColorUtil.rgb(198, 108, 58);
+            default -> 16777215;
+        } : 16777215;
     }
 }
