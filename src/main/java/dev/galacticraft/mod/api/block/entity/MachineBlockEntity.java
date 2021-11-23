@@ -41,6 +41,7 @@ import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.*;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
 import dev.galacticraft.mod.lookup.storage.MachineEnergyStorage;
+import dev.galacticraft.mod.lookup.storage.MachineGasStorage;
 import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -84,6 +85,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
 
     public final @NotNull MachineEnergyStorage capacitor = new MachineEnergyStorage(this);
     private final @NotNull MachineItemStorage itemStorage = this.createInventory(MachineItemStorage.Builder.create(this)).build();
+//    private final @NotNull MachineGasStorage gasStorage = this.createGasStorage(MachineGasStorage.Builder.create(this)).build();
 
     private final @NotNull MachineFluidInv fluidInv = this.createFluidInv(MachineFluidInv.Builder.create(this.fluidInvCapacity())).build();
 
@@ -167,6 +169,10 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
         return builder;
     }
 
+    protected MachineGasStorage.Builder createGasStorage(MachineGasStorage.Builder builder) {
+        return builder;
+    }
+
     protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
         return builder;
     }
@@ -210,6 +216,10 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
     public final @NotNull MachineItemStorage itemStorage() {
         return this.itemStorage;
     }
+
+//    public final @NotNull MachineGasStorage gasStorage() {
+//        return this.gasStorage;
+//    }
 
     public final @NotNull MachineFluidInv fluidInv() {
         return this.fluidInv;

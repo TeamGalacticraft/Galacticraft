@@ -67,7 +67,6 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
     public static final int FUEL_SLOT = 1;
 
-    public Status status = Status.FULL;
     public int fuelLength = 0;
     public int fuelTime = 0;
     private double heat = 0.0d;

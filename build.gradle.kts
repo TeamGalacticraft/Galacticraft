@@ -109,11 +109,6 @@ repositories {
             includeGroup("dev.architectury")
         }
     }
-    maven("https://alexiil.uk/maven/") {
-        content {
-            includeGroup("alexiil.mc.lib")
-        }
-    }
     maven("https://maven.modmuss50.me/") {
         content {
             includeGroup("teamreborn")
@@ -197,11 +192,6 @@ dependencies {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "alexiil.mc.lib")
     }
-    includedDependency("alexiil.mc.lib:libblockattributes-all:$lbaVersion") {
-        exclude(group = "net.fabricmc")
-        exclude(group = "net.fabricmc.fabric-api")
-    }
-
     // Optional Dependencies
     optionalDependency("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
     optionalDependency("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }

@@ -29,7 +29,9 @@ import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
 import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -52,23 +54,27 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Inventory, SmeltingRecipe> {
+    private static final Inventory PREDICATE_INV = new SimpleInventory(1);
+
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOT = 2;
     
-    private final @NotNull Inventory craftingInv = new MachineInvWrapper(this, this.itemStorage().getSubInv(INPUT_SLOT, INPUT_SLOT + 1));
-    private final @NotNull FixedItemInv outputInv = this.itemStorage().getSubInv(OUTPUT_SLOT, OUTPUT_SLOT + 1);
+    private final @NotNull Inventory craftingInv = this.itemStorage().mapped(INPUT_SLOT);
 
     @Override
     protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, 8, 61);
-        builder.addSlot(INPUT_SLOT, SlotType.INPUT, stack -> this.getRecipe(RecipeType.SMELTING, new SimpleInventory(stack)).isPresent(), 52, 35);
-        builder.addOutputSlot(OUTPUT_SLOT, SlotType.OUTPUT, 113, 35);
+        builder.addSlot(SlotSettings.Builder.create(8, 61, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
+        builder.addSlot(SlotSettings.Builder.create(52, 35, SlotType.INPUT).filter(stack -> {
+            PREDICATE_INV.setStack(0, stack);
+            return this.getRecipe(RecipeType.SMELTING, PREDICATE_INV).isPresent();
+        }).build());
+        builder.addSlot(SlotSettings.Builder.create(113, 35, SlotType.OUTPUT).disableInput().build());
         return builder;
     }
 
     public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING, AbstractCookingRecipe::getCookTime);
+        super(GalacticraftBlockEntityType.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING);
     }
 
     @Override
@@ -84,8 +90,9 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Invento
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.findValidRecipe() == null) return Status.NOT_ENOUGH_ITEMS;
-        if (!this.canCraft(this.findValidRecipe())) return Status.OUTPUT_FULL;
+        SmeltingRecipe validRecipe = this.findValidRecipe();
+        if (validRecipe == null) return Status.NOT_ENOUGH_ITEMS;
+        if (!this.outputStacks(validRecipe, null)) return Status.OUTPUT_FULL;
         return Status.ACTIVE;
     }
 
@@ -101,8 +108,18 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Invento
     }
 
     @Override
-    public @NotNull FixedItemInv outputInv() {
-        return this.outputInv;
+    protected boolean outputStacks(SmeltingRecipe recipe, TransactionContext transaction) {
+        return this.itemStorage().insertStack(OUTPUT_SLOT, recipe.getOutput().copy(), transaction).isEmpty();
+    }
+
+    @Override
+    protected boolean extractCraftingMaterials(SmeltingRecipe recipe, TransactionContext transaction) {
+        return recipe.getIngredients().get(0).test(this.itemStorage().extractStack(INPUT_SLOT, 1, transaction));
+    }
+
+    @Override
+    protected int getProcessTime(@NotNull SmeltingRecipe recipe) {
+        return recipe.getCookTime();
     }
 
     @Override

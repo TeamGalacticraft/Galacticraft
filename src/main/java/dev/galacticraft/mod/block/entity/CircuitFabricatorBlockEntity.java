@@ -35,6 +35,7 @@ import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -54,6 +55,8 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inventory, FabricationRecipe> {
+    private static final SimpleInventory PREDICATE_INV = new SimpleInventory(1);
+
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT_DIAMOND = 1;
     public static final int INPUT_SLOT_SILICON = 2;
@@ -63,9 +66,6 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     public static final int OUTPUT_SLOT = 6;
 
     private final Inventory craftingInv = this.itemStorage().mapped(INPUT_SLOT);
-    private final SimpleInventory predicateInv = new SimpleInventory(1);
-
-    public Status status = Status.NOT_ENOUGH_RESOURCES;
 
     public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.CIRCUIT_FABRICATOR, pos, state, GalacticraftRecipe.FABRICATION_TYPE);
@@ -80,10 +80,10 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
         builder.addSlot(SlotSettings.Builder.create(107, 70, SlotType.INPUT).filter(ExactItemFilter.createFilter(Items.REDSTONE)).build());
         builder.addSlot(SlotSettings.Builder.create(134, 15, SlotType.INPUT).build());
         builder.addSlot(SlotSettings.Builder.create(152, 70, SlotType.OUTPUT).filter(stack -> {
-            synchronized (this.predicateInv) {
-                this.predicateInv.setStack(0, stack);
+            synchronized (this.PREDICATE_INV) {
+                this.PREDICATE_INV.setStack(0, stack);
                 assert this.world != null;
-                return this.world.getRecipeManager().getFirstMatch(this.recipeType(), this.predicateInv, this.world).isPresent();
+                return this.world.getRecipeManager().getFirstMatch(this.recipeType(), this.PREDICATE_INV, this.world).isPresent();
             }
         }).disableInput().build());
         return builder;
@@ -124,18 +124,17 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     }
 
     @Override
-    protected boolean outputStacks(FabricationRecipe recipe, Transaction transaction) {
+    protected boolean outputStacks(FabricationRecipe recipe, TransactionContext transaction) {
         return this.itemStorage().insertStack(OUTPUT_SLOT, recipe.getOutput().copy(), transaction).isEmpty();
     }
 
     @Override
-    protected void extractCraftingMaterials(FabricationRecipe recipe, Transaction transaction) {
-        if (this.itemStorage().getSlot(INPUT_SLOT_DIAMOND).extract(ItemVariant.of(Items.DIAMOND), 1, transaction) == 1) {
-            if (this.itemStorage().getSlot(INPUT_SLOT_SILICON).extract(ItemVariant.of(GalacticraftItem.RAW_SILICON), 1, transaction) == 1) {
-                if (this.itemStorage().getSlot(INPUT_SLOT_SILICON_2).extract(ItemVariant.of(GalacticraftItem.RAW_SILICON), 1, transaction) == 1) {
-                    if (this.itemStorage().getSlot(INPUT_SLOT_REDSTONE).extract(ItemVariant.of(Items.REDSTONE), 1, transaction) == 1) {
-                        transaction.commit();
-                        return true;
+    protected boolean extractCraftingMaterials(FabricationRecipe recipe, TransactionContext transaction) {
+        if (!this.itemStorage().extractStack(INPUT_SLOT_DIAMOND, stack -> stack.getItem() == Items.DIAMOND, 1, transaction).isEmpty()) {
+            if (!this.itemStorage().extractStack(INPUT_SLOT_SILICON, stack -> stack.getItem() == GalacticraftItem.RAW_SILICON, 1, transaction).isEmpty()) {
+                if (!this.itemStorage().extractStack(INPUT_SLOT_SILICON_2, stack -> stack.getItem() == GalacticraftItem.RAW_SILICON, 1, transaction).isEmpty()) {
+                    if (!this.itemStorage().extractStack(INPUT_SLOT_REDSTONE, stack -> stack.getItem() == Items.REDSTONE, 1, transaction).isEmpty()) {
+                        return recipe.getIngredients().get(0).test(this.itemStorage().extractStack(INPUT_SLOT, 1, transaction));
                     }
                 }
             }

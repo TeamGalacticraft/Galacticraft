@@ -22,34 +22,30 @@
 
 package dev.galacticraft.mod.screen.slot;
 
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.base.Preconditions;
-import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.lookup.filter.FluidFilter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record SlotSettings(int x, int y, @NotNull SlotType type, @NotNull ItemFilter filter, boolean canInsertItems,
-                           boolean canTakeItems,
-                           int maxCount, @Nullable Pair<Identifier, Identifier> icon,
-                           @NotNull SlotChangeListener extractionListener,
-                           @NotNull SlotChangeListener insertionListener) {
+public record FluidTankSettings(int x, int y, @NotNull SlotType type, @NotNull FluidFilter filter, boolean canInsertFluids,
+                                boolean canExtractFluids, long capacity, int size,
+                                @NotNull FluidTankSettings.TankChangeListener extractionListener,
+                                @NotNull FluidTankSettings.TankChangeListener insertionListener) {
     public static class Builder {
         private final int x;
         private final int y;
         private final SlotType type;
-        private boolean canInsertItems = true;
-        private boolean canTakeItems = true;
-        private int maxCount = 64;
-        private @NotNull SlotChangeListener extractionListener = SlotChangeListener.DO_NOTHING;
-        private @NotNull SlotChangeListener insertionListener = SlotChangeListener.DO_NOTHING;
-        private @NotNull ItemFilter filter = ConstantItemFilter.ANYTHING;
-        private @Nullable Pair<Identifier, Identifier> icon = null;
+        private boolean canInsertFluids = true;
+        private boolean canExtractFluids = true;
+        private long capacity = 64;
+        private @NotNull FluidTankSettings.TankChangeListener extractionListener = TankChangeListener.DO_NOTHING;
+        private @NotNull FluidTankSettings.TankChangeListener insertionListener = TankChangeListener.DO_NOTHING;
+        private @NotNull FluidFilter filter = Constant.Filter.Fluid.ALWAYS;
+        private int size = 48;
 
         private Builder(int x, int y, @NotNull SlotType type) {
             this.x = x;
@@ -64,49 +60,49 @@ public record SlotSettings(int x, int y, @NotNull SlotType type, @NotNull ItemFi
             return new Builder(x, y, type);
         }
 
-        public Builder filter(@NotNull ItemFilter filter) {
+        public Builder filter(@NotNull FluidFilter filter) {
             this.filter = filter;
             return this;
         }
 
         public Builder disableInput() {
-            this.canInsertItems = false;
+            this.canInsertFluids = false;
             return this;
         }
 
         public Builder disableOutput() {
-            this.canTakeItems = false;
+            this.canExtractFluids = false;
             return this;
         }
 
-        public Builder maxCount(int maxCount) {
-            this.maxCount = maxCount;
+        public Builder capacity(long capacity) {
+            this.capacity = capacity;
             return this;
         }
 
-        public Builder icon(@NotNull Pair<Identifier, Identifier> icon) {
-            this.icon = icon;
+        public Builder size(int size) {
+            assert size > 0 && size <= 48;
             return this;
         }
 
-        public Builder onExtract(@NotNull SlotChangeListener listener) {
+        public Builder onExtract(@NotNull FluidTankSettings.TankChangeListener listener) {
             this.extractionListener = listener;
             return this;
         }
 
-        public Builder onInsert(@NotNull SlotChangeListener listener) {
+        public Builder onInsert(@NotNull FluidTankSettings.TankChangeListener listener) {
             this.insertionListener = listener;
             return this;
         }
 
-        public SlotSettings build() {
-            return new SlotSettings(this.x, this.y, this.type, this.filter, this.canInsertItems, this.canTakeItems, this.maxCount, this.icon, this.extractionListener, this.insertionListener);
+        public FluidTankSettings build() {
+            return new FluidTankSettings(this.x, this.y, this.type, this.filter, this.canInsertFluids, this.canExtractFluids, this.capacity, this.size, this.extractionListener, this.insertionListener);
         }
     }
 
     @FunctionalInterface
-    public interface SlotChangeListener {
-        @NotNull SlotChangeListener DO_NOTHING = (player, stack) -> {
+    public interface TankChangeListener {
+        @NotNull TankChangeListener DO_NOTHING = (player, stack) -> {
         };
 
         void onChange(@Nullable PlayerEntity player, ItemStack stack);

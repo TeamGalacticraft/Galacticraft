@@ -54,9 +54,9 @@ public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Re
 
     protected abstract @NotNull C craftingInv();
 
-    protected abstract boolean outputStacks(R recipe, Transaction transaction);
+    protected abstract boolean outputStacks(R recipe, TransactionContext transaction);
 
-    protected abstract void extractCraftingMaterials(R recipe, Transaction transaction);
+    protected abstract boolean extractCraftingMaterials(R recipe, TransactionContext transaction);
 
     @Override
     public void tickWork() {
@@ -87,12 +87,14 @@ public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Re
         }
     }
 
-    protected void craft(R recipe, Transaction transaction) {
-        boolean success;
-        success = this.extractCraftingMaterials(recipe, transaction);
-        assert success;
-        success = this.outputStacks(recipe, transaction);
-        assert success;
+    protected void craft(R recipe, TransactionContext transaction) {
+        try (Transaction inner = transaction.openNested()) {
+            if (this.extractCraftingMaterials(recipe, inner)) {
+                if (this.outputStacks(recipe, inner)) {
+                    inner.commit();
+                }
+            }
+        }
 
         recipe = this.findValidRecipe();
         if (recipe == null) this.resetRecipeProgress();

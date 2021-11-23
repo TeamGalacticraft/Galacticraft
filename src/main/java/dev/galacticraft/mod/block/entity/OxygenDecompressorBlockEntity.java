@@ -29,6 +29,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
+import dev.galacticraft.mod.lookup.storage.MachineGasStorage;
 import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotSettings;
@@ -63,6 +64,11 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
         builder.addSlot(SlotSettings.Builder.create(8, 62, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
         builder.addSlot(SlotSettings.Builder.create(80, 27, SlotType.OXYGEN_TANK).filter(Constant.Filter.Item.CAN_INSERT_OXYGEN).build());
         return builder;
+    }
+
+    @Override
+    protected MachineGasStorage.Builder createGasStorage(MachineGasStorage.Builder builder) {
+        return super.createGasStorage(builder);
     }
 
     @Override

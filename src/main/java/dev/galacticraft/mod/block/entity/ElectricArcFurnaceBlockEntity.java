@@ -29,7 +29,7 @@ import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -117,20 +117,19 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    protected boolean outputStacks(BlastingRecipe recipe, Transaction transaction) {
+    protected boolean outputStacks(BlastingRecipe recipe, TransactionContext transaction) {
         ItemStack copy = recipe.getOutput().copy();
         copy.setCount(copy.getCount() * 2);
         ItemStack stack1 = this.itemStorage().insertStack(OUTPUT_SLOT_1, copy, transaction);
         if (stack1.isEmpty()) return true;
         stack1 = this.itemStorage().insertStack(OUTPUT_SLOT_2, stack1, transaction);
         if (stack1.isEmpty()) return true;
-        transaction.abort();
         return false;
     }
 
     @Override
-    protected void extractCraftingMaterials(BlastingRecipe recipe, Transaction transaction) {
-        this.itemStorage().extractStack(INPUT_SLOT, 1, transaction);
+    protected boolean extractCraftingMaterials(BlastingRecipe recipe, TransactionContext transaction) {
+        return !this.itemStorage().extractStack(INPUT_SLOT, 1, transaction).isEmpty();
     }
 
     @Override

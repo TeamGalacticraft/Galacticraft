@@ -26,6 +26,7 @@ import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.common.primitives.Ints;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
@@ -56,7 +57,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.IntStream;
 
 @SuppressWarnings("UnstableApiUsage")
 public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItemStorage.MachineItemSlot> implements Automatable, Inventory {
@@ -107,7 +107,8 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
         if (context != null) {
             this.setStack(index, stack, context);
         } else {
-            if (this.stacks[index] != (this.stacks[index] = stack)) {
+            if (this.stacks[index] != stack) {
+                this.stacks[index] = stack;
                 this.markDirty();
             }
         }
@@ -241,6 +242,12 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
 
     @Override
     public ItemStack removeStack(int slot, int amount) {
+        TransactionContext context = Transaction.getCurrentUnsafe();
+        if (context != null) {
+            SingleSlotStorage<ItemVariant> slot1 = this.getSlot(slot);
+            ItemVariant resource = slot1.getResource();
+            return resource.toStack(Ints.saturatedCast(slot1.extract(resource, amount, context)));
+        }
         ItemStack copy = this.getStack(slot).copy();
         ItemStack copy2 = this.getStack(slot).copy();
         copy.setCount(Math.min(copy.getCount(), amount));
@@ -251,6 +258,13 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
 
     @Override
     public ItemStack removeStack(int slot) {
+        TransactionContext context = Transaction.getCurrentUnsafe();
+        if (context != null) {
+            SingleSlotStorage<ItemVariant> slot1 = this.getSlot(slot);
+            ItemVariant resource = slot1.getResource();
+            return resource.toStack(Ints.saturatedCast(slot1.extract(resource, Integer.MAX_VALUE, context)));
+        }
+
         ItemStack stack = this.getStack(slot);
         this.setStack(slot, ItemStack.EMPTY);
         return stack;

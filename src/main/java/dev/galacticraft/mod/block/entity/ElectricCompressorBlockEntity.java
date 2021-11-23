@@ -31,7 +31,7 @@ import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -98,19 +98,18 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    protected boolean outputStacks(CompressingRecipe recipe, Transaction transaction) {
+    protected boolean outputStacks(CompressingRecipe recipe, TransactionContext transaction) {
         ItemStack copy = recipe.getOutput().copy();
         copy.setCount(copy.getCount() * 2);
         ItemStack stack1 = this.itemStorage().insertStack(OUTPUT_SLOT, copy, transaction);
         if (stack1.isEmpty()) return true;
         stack1 = this.itemStorage().insertStack(SECOND_OUTPUT_SLOT, stack1, transaction);
         if (stack1.isEmpty()) return true;
-        transaction.abort();
         return false;
     }
 
     @Override
-    protected void extractCraftingMaterials(CompressingRecipe recipe, Transaction transaction) {
+    protected boolean extractCraftingMaterials(CompressingRecipe recipe, TransactionContext transaction) {
         DefaultedList<ItemStack> remainder = recipe.getRemainder(this.craftingInv);
         for (int i = 0; i < remainder.size(); i++) {
             ItemStack stack = remainder.get(i);
@@ -120,6 +119,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
                 this.craftingInv.removeStack(i, 1);
             }
         }
+        return true;
     }
 
     @Override

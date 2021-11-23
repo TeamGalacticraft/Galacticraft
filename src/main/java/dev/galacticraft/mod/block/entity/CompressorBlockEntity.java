@@ -32,6 +32,7 @@ import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -116,21 +117,21 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    protected boolean outputStacks(CompressingRecipe recipe, Transaction transaction) {
+    protected boolean outputStacks(CompressingRecipe recipe, TransactionContext transaction) {
         return this.itemStorage().insertStack(OUTPUT_SLOT, recipe.getOutput().copy(), transaction).isEmpty();
     }
 
     @Override
-    protected void extractCraftingMaterials(@NotNull CompressingRecipe recipe, Transaction transaction) {
+    protected boolean extractCraftingMaterials(@NotNull CompressingRecipe recipe, TransactionContext transaction) {
         DefaultedList<ItemStack> remainder = recipe.getRemainder(this.craftingInv);
         for (int i = 0; i < remainder.size(); i++) {
             ItemStack stack = remainder.get(i);
+            this.craftingInv.removeStack(i, 1);
             if (stack != ItemStack.EMPTY) {
                 this.craftingInv.setStack(i, stack);
-            } else {
-                this.craftingInv.removeStack(i, 1);
             }
         }
+        return true;
     }
 
     @Override

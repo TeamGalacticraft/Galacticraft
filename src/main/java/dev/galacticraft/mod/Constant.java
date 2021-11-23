@@ -22,12 +22,13 @@
 
 package dev.galacticraft.mod;
 
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.fluid.filter.RawFluidTagFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import dev.galacticraft.api.attribute.GasStorage;
 import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.mod.api.block.util.BlockFace;
+import dev.galacticraft.mod.lookup.filter.FluidFilter;
+import dev.galacticraft.mod.lookup.filter.GasFilter;
+import dev.galacticraft.mod.lookup.filter.ItemFilter;
+import dev.galacticraft.mod.lookup.filter.TagFluidFilter;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -640,19 +641,26 @@ public interface Constant {
                 return energyStorage != null && energyStorage.supportsInsertion();
             };
             ItemFilter CAN_EXTRACT_OXYGEN = stack -> {
-                Storage<Gas> gasStorage = ContainerItemContext.withInitial(stack).find(GasStorage.ITEM);
+                Storage<dev.galacticraft.api.gas.Gas> gasStorage = ContainerItemContext.withInitial(stack).find(GasStorage.ITEM);
                 return gasStorage != null && gasStorage.supportsExtraction();
             };
             ItemFilter CAN_INSERT_OXYGEN = stack -> {
-                Storage<Gas> gasStorage = ContainerItemContext.withInitial(stack).find(GasStorage.ITEM);
+                Storage<dev.galacticraft.api.gas.Gas> gasStorage = ContainerItemContext.withInitial(stack).find(GasStorage.ITEM);
                 return gasStorage != null && gasStorage.supportsInsertion();
             };
         }
 
+        interface Gas {
+            GasFilter ALWAYS = stack -> true;
+            GasFilter NEVER = stack -> false;
+        }
+
         interface Fluid {
-            FluidFilter LOX_ONLY = new RawFluidTagFilter(GalacticraftTag.LIQUID_OXYGEN);
-            FluidFilter OIL = new RawFluidTagFilter(GalacticraftTag.OIL);
-            FluidFilter FUEL = new RawFluidTagFilter(GalacticraftTag.FUEL);
+            FluidFilter ALWAYS = fluid -> true;
+            FluidFilter NEVER = fluid -> false;
+            FluidFilter LOX_ONLY = new TagFluidFilter(GalacticraftTag.LIQUID_OXYGEN);
+            FluidFilter OIL = new TagFluidFilter(GalacticraftTag.OIL);
+            FluidFilter FUEL = new TagFluidFilter(GalacticraftTag.FUEL);
         }
 
     }
@@ -708,6 +716,7 @@ public interface Constant {
         String OUTPUTS = "Outputs";
         String SHAPED = "Shaped";
         String ITEMS = "Items";
+        String GASES = "Gases";
     }
 
     interface Property {

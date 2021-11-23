@@ -22,70 +22,52 @@
 
 package dev.galacticraft.mod.screen.slot;
 
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.base.Preconditions;
-import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.lookup.filter.GasFilter;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record SlotSettings(int x, int y, @NotNull SlotType type, @NotNull ItemFilter filter, boolean canInsertItems,
-                           boolean canTakeItems,
-                           int maxCount, @Nullable Pair<Identifier, Identifier> icon,
-                           @NotNull SlotChangeListener extractionListener,
-                           @NotNull SlotChangeListener insertionListener) {
+public record GasSlotSettings(@NotNull SlotType type, @NotNull GasFilter filter, boolean canInsertGases,
+                              boolean canTakeGases, long capacity, @NotNull SlotChangeListener extractionListener,
+                              @NotNull SlotChangeListener insertionListener) {
     public static class Builder {
-        private final int x;
-        private final int y;
         private final SlotType type;
-        private boolean canInsertItems = true;
-        private boolean canTakeItems = true;
-        private int maxCount = 64;
+        private boolean canInsertGases = true;
+        private boolean canExtractGases = true;
+        private long capacity = 0;
         private @NotNull SlotChangeListener extractionListener = SlotChangeListener.DO_NOTHING;
         private @NotNull SlotChangeListener insertionListener = SlotChangeListener.DO_NOTHING;
-        private @NotNull ItemFilter filter = ConstantItemFilter.ANYTHING;
-        private @Nullable Pair<Identifier, Identifier> icon = null;
+        private @NotNull GasFilter filter = Constant.Filter.Gas.ALWAYS;
 
-        private Builder(int x, int y, @NotNull SlotType type) {
-            this.x = x;
-            this.y = y;
+        private Builder(@NotNull SlotType type) {
             this.type = type;
         }
 
-        @Contract("_, _, _ -> new")
-        public static @NotNull Builder create(int x, int y, @NotNull SlotType type) {
+        public static @NotNull Builder create(@NotNull SlotType type) {
             Preconditions.checkNotNull(type);
-            assert type.getType().isItem();
-            return new Builder(x, y, type);
+            assert type.getType().isGas();
+            return new Builder(type);
         }
 
-        public Builder filter(@NotNull ItemFilter filter) {
+        public Builder filter(@NotNull GasFilter filter) {
             this.filter = filter;
             return this;
         }
 
         public Builder disableInput() {
-            this.canInsertItems = false;
+            this.canInsertGases = false;
             return this;
         }
 
         public Builder disableOutput() {
-            this.canTakeItems = false;
+            this.canExtractGases = false;
             return this;
         }
 
-        public Builder maxCount(int maxCount) {
-            this.maxCount = maxCount;
-            return this;
-        }
-
-        public Builder icon(@NotNull Pair<Identifier, Identifier> icon) {
-            this.icon = icon;
+        public Builder capacity(long capacity) {
+            this.capacity = capacity;
             return this;
         }
 
@@ -99,8 +81,8 @@ public record SlotSettings(int x, int y, @NotNull SlotType type, @NotNull ItemFi
             return this;
         }
 
-        public SlotSettings build() {
-            return new SlotSettings(this.x, this.y, this.type, this.filter, this.canInsertItems, this.canTakeItems, this.maxCount, this.icon, this.extractionListener, this.insertionListener);
+        public GasSlotSettings build() {
+            return new GasSlotSettings(this.type, this.filter, this.canInsertGases, this.canExtractGases, this.capacity, this.extractionListener, this.insertionListener);
         }
     }
 
@@ -109,6 +91,6 @@ public record SlotSettings(int x, int y, @NotNull SlotType type, @NotNull ItemFi
         @NotNull SlotChangeListener DO_NOTHING = (player, stack) -> {
         };
 
-        void onChange(@Nullable PlayerEntity player, ItemStack stack);
+        void onChange(@Nullable PlayerEntity player, dev.galacticraft.api.gas.GasStack stack);
     }
 }
