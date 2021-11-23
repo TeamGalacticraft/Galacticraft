@@ -131,6 +131,7 @@ public class WalkwayBakedModel implements FabricBakedModel, BakedModel {
         Walkway walkway = ((Walkway) blockView.getBlockEntity(pos));
         Consumer<Mesh> meshConsumer = context.meshConsumer();
         assert walkway != null;
+        assert walkway.getDirection() != null;
 
         int x = 0;
         int y = 0;
