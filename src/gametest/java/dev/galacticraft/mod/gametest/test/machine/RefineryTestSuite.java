@@ -73,8 +73,8 @@ public class RefineryTestSuite implements MachineGameTest {
         refinery.capacitor().setEnergy(refinery.getEnergyCapacity());
         refinery.fluidInv().setInvFluid(RefineryBlockEntity.OIL_TANK, FluidKeys.get(GalacticraftFluid.CRUDE_OIL).withAmount(FluidAmount.ONE), Simulation.ACTION);
         runFinalTaskAt(context, 200 + 1, () -> {
-            FluidStack oil = refinery.fluidInv().getInvFluid(RefineryBlockEntity.OIL_TANK);
-            FluidStack fuel = refinery.fluidInv().getInvFluid(RefineryBlockEntity.FUEL_TANK);
+            FluidStack oil = refinery.fluidInv().getFluid(RefineryBlockEntity.OIL_TANK);
+            FluidStack fuel = refinery.fluidInv().getFluid(RefineryBlockEntity.FUEL_TANK);
             if (!oil.isEmpty()) {
                 context.throwPositionedException(String.format("Expected refinery to refine all of the oil but found %s remaining!", oil), pos);
             }
@@ -94,7 +94,7 @@ public class RefineryTestSuite implements MachineGameTest {
         refinery.fluidInv().setInvFluid(RefineryBlockEntity.OIL_TANK, FluidKeys.get(GalacticraftFluid.CRUDE_OIL).withAmount(FluidAmount.ONE), Simulation.ACTION);
         refinery.fluidInv().setInvFluid(RefineryBlockEntity.FUEL_TANK, FluidKeys.get(GalacticraftFluid.FUEL).withAmount(FluidAmount.ONE), Simulation.ACTION);
         runFinalTaskNext(context, () -> {
-            if (!refinery.fluidInv().getInvFluid(RefineryBlockEntity.OIL_TANK).amount().isLessThan(FluidAmount.ONE)) {
+            if (!refinery.fluidInv().getFluid(RefineryBlockEntity.OIL_TANK).amount().isLessThan(FluidAmount.ONE)) {
                 context.throwPositionedException(String.format("Expected refinery to be unable to refine oil as the fuel tank was full!"), pos);
             }
         });

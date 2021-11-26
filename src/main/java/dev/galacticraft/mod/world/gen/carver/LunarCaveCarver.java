@@ -75,7 +75,7 @@ public class LunarCaveCarver extends CaveCarver {
     @Override
     protected boolean carveAtPoint(CarverContext context, CaveCarverConfig config, @NotNull Chunk chunk, Function<BlockPos, Biome> posToBiome, CarvingMask carvingMask, BlockPos.Mutable mutable, BlockPos.Mutable mutable2, AquiferSampler aquiferSampler, MutableBoolean mutableBoolean) {
         BlockState blockState = chunk.getBlockState(mutable);
-        if (blockState.isOf(Blocks.GRASS_BLOCK) || blockState.isOf(Blocks.MYCELIUM)) {
+        if (blockState.isOf(GalacticraftBlock.MOON_TURF) || blockState.isOf(Blocks.MYCELIUM)) {
             mutableBoolean.setTrue();
         }
 
@@ -93,8 +93,8 @@ public class LunarCaveCarver extends CaveCarver {
 
                 if (mutableBoolean.isTrue()) {
                     mutable2.set(mutable, Direction.DOWN);
-                    if (chunk.getBlockState(mutable2).isOf(Blocks.DIRT)) {
-                        context.method_39114(posToBiome, chunk, mutable2, !blockState2.getFluidState().isEmpty()).ifPresent(blockStatex -> chunk.setBlockState(mutable2, blockStatex, false));
+                    if (chunk.getBlockState(mutable2).isOf(GalacticraftBlock.MOON_DIRT)) {
+                        context.applyMaterialRule(posToBiome, chunk, mutable2, !blockState2.getFluidState().isEmpty()).ifPresent(blockStatex -> chunk.setBlockState(mutable2, blockStatex, false));
                     }
                 }
 

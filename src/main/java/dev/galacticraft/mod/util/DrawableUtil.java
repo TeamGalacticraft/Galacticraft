@@ -28,6 +28,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.*;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
@@ -111,5 +112,19 @@ public class DrawableUtil {
         bufferBuilder.vertex(matrices, (float)x0, (float)y0, (float)z).color(red, green, blue, 255).texture(u0, v0).next();
         bufferBuilder.end();
         BufferRenderer.draw(bufferBuilder);
+    }
+
+    public static String roundForDisplay(double d, int places) {
+        if (places == 0) return String.valueOf(Math.round(d));
+        String s = String.valueOf(d);
+        int dot = s.indexOf('.');
+        if (dot == -1) {
+            return s;
+        }
+        return s.substring(0, Math.min(s.length(), dot + 1 + places));
+    }
+
+    public static void drawSprite_F(MatrixStack matrices, float x, float y, float z, float width, float height, Sprite sprite) {
+        drawTexturedQuad_F(matrices.peek().getPositionMatrix(), x, x + width, y, y + height, z, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
     }
 }

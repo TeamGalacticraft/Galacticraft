@@ -135,7 +135,7 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
 
         @Override
         public boolean canInsert(ItemStack stack) {
-            return Constant.Filter.Item.CAN_EXTRACT_OXYGEN.matches(stack);
+            return Constant.Filter.Item.CAN_EXTRACT_OXYGEN.test(stack);
         }
 
         @Override

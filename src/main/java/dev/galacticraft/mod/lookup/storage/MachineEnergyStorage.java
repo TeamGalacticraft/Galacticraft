@@ -24,6 +24,8 @@ package dev.galacticraft.mod.lookup.storage;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.attribute.Automatable;
+import dev.galacticraft.mod.screen.slot.SlotType;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
@@ -32,7 +34,11 @@ import net.minecraft.nbt.NbtElement;
 import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
-public class MachineEnergyStorage extends SnapshotParticipant<Long> implements EnergyStorage {
+public class MachineEnergyStorage extends SnapshotParticipant<Long> implements EnergyStorage, Automatable<Long> {
+	private static final SlotType[] NONE = new SlotType[]{};
+//	private static final SlotType[] INPUT = new SlotType[]{};
+//	private static final SlotType[] OUTPUT = new SlotType[]{};
+//	private static final SlotType[] IO = new SlotType[]{};
 	private final EnergyStorage view;
 	private final ExposedEnergyStorage exposed;
 	private final MachineBlockEntity machine;
@@ -144,6 +150,11 @@ public class MachineEnergyStorage extends SnapshotParticipant<Long> implements E
 				", capacity=" + capacity +
 				", energy=" + energy +
 				'}';
+	}
+
+	@Override
+	public SlotType<Long>[] getTypes() {
+		return NONE;//this.exposed().supportsExtraction() ? this.exposed().supportsInsertion() ? IO : OUTPUT : this.exposed().supportsInsertion() ? INPUT : NONE;
 	}
 
 	public class EnergyStorageView extends SnapshotParticipant<Long> implements EnergyStorage {

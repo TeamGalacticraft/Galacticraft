@@ -24,12 +24,14 @@ package dev.galacticraft.mod.lookup.storage;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import dev.galacticraft.api.gas.Gas;
+import dev.galacticraft.api.gas.GasStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.lookup.filter.GasFilter;
 import dev.galacticraft.mod.screen.slot.GasSlotSettings;
-import dev.galacticraft.mod.screen.slot.SlotSettings;
+import dev.galacticraft.mod.screen.slot.ResourceFlow;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
@@ -42,6 +44,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.util.registry.DynamicRegistryManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,9 +55,9 @@ import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.Gas, MachineGasStorage.MachineGasSlot> implements Automatable {
+public class MachineGasStorage extends CombinedStorage<Gas, MachineGasStorage.MachineGasSlot> implements Automatable<Gas> {
     private final MachineBlockEntity machine;
-    private final dev.galacticraft.api.gas.GasStack[] stacks;
+    private final GasStack[] stacks;
     private final SlotType[] types;
     private final ExposedGasStorage exposed;
     private final ReadOnlyGasStorage view;
@@ -66,10 +69,10 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
         assert internalFilters.length == size;
 
         this.machine = machine;
-        this.stacks = new dev.galacticraft.api.gas.GasStack[size];
+        this.stacks = new GasStack[size];
         this.types = new SlotType[size];
 
-        Arrays.fill(this.stacks, dev.galacticraft.api.gas.GasStack.EMPTY);
+        Arrays.fill(this.stacks, GasStack.EMPTY);
         ImmutableList.Builder<MachineGasStorage.MachineGasSlot> builder = ImmutableList.builderWithExpectedSize(size);
         for (int i = 0; i < size; i++) {
             builder.add(new MachineGasSlot(i, slotSettings[i], internalFilters[i]));
@@ -91,7 +94,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
         return true;
     }
 
-    public void setStack(int index, @NotNull dev.galacticraft.api.gas.GasStack stack) {
+    public void setStack(int index, @NotNull GasStack stack) {
         Preconditions.checkNotNull(stack);
         TransactionContext context = Transaction.getCurrentUnsafe();
         if (context != null) {
@@ -104,7 +107,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
         }
     }
 
-    public void setStack(int index, @NotNull dev.galacticraft.api.gas.GasStack stack, TransactionContext context) {
+    public void setStack(int index, @NotNull GasStack stack, TransactionContext context) {
         Preconditions.checkNotNull(stack);
         if (!stack.equals(this.getStack(index))) {
             this.parts.get(index).updateSnapshots(context);
@@ -113,10 +116,10 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
     }
 
     //returns failed
-    public dev.galacticraft.api.gas.GasStack insertStack(int index, @NotNull dev.galacticraft.api.gas.GasStack stack, TransactionContext context) {
+    public GasStack insertStack(int index, @NotNull GasStack stack, TransactionContext context) {
         Preconditions.checkNotNull(stack);
         this.parts.get(index).updateSnapshots(context);
-        dev.galacticraft.api.gas.GasStack stack1 = this.stacks[index];
+        GasStack stack1 = this.stacks[index];
         if (stack.gas() == stack1.gas()) {
             long count = stack.amount() + stack1.amount();
             long min = Math.min(count, this.parts.get(index).capacity);
@@ -127,57 +130,57 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
         return stack1;
     }
 
-    public dev.galacticraft.api.gas.GasStack simulateInsertion(int index, @NotNull dev.galacticraft.api.gas.GasStack stack, TransactionContext context) {
+    public GasStack simulateInsertion(int index, @NotNull GasStack stack, TransactionContext context) {
         try (Transaction transaction = context.openNested()) {
             return insertStack(index, stack, transaction);
         }
     }
 
-    public dev.galacticraft.api.gas.GasStack simulateInsertion(int index, @NotNull dev.galacticraft.api.gas.GasStack stack) {
+    public GasStack simulateInsertion(int index, @NotNull GasStack stack) {
         try (Transaction transaction = Transaction.openOuter()) {
             return insertStack(index, stack, transaction);
         }
     }
 
-    public dev.galacticraft.api.gas.GasStack extractStack(int index, @NotNull GasFilter filter, int amount, @NotNull TransactionContext context) {
+    public GasStack extractStack(int index, @NotNull GasFilter filter, long amount, @NotNull TransactionContext context) {
         Preconditions.checkNotNull(filter);
         StoragePreconditions.notNegative(amount);
 
-        dev.galacticraft.api.gas.GasStack stack = this.getStack(index);
+        GasStack stack = this.getStack(index);
         if (amount != 0 && filter.test(stack) && !stack.isEmpty()) {
             this.parts.get(index).updateSnapshots(context);
             long count = Math.min(stack.amount(), amount);
-            dev.galacticraft.api.gas.GasStack copy = stack.copy();
-            dev.galacticraft.api.gas.GasStack copy1 = stack.copy();
+            GasStack copy = stack.copy();
+            GasStack copy1 = stack.copy();
             copy.setAmount(count);
             copy1.setAmount(stack.amount() - count);
             this.stacks[index] = copy1;
             return copy;
         }
-        return dev.galacticraft.api.gas.GasStack.EMPTY;
+        return GasStack.EMPTY;
     }
 
-    public dev.galacticraft.api.gas.GasStack extractStack(int index, int amount, @NotNull TransactionContext context) {
+    public GasStack extractStack(int index, long amount, @NotNull TransactionContext context) {
         return extractStack(index, Constant.Filter.Gas.ALWAYS, amount, context);
     }
 
-    public dev.galacticraft.api.gas.GasStack simulateExtraction(int index, int amount, @Nullable TransactionContext context) {
+    public GasStack simulateExtraction(int index, long amount, @Nullable TransactionContext context) {
         try (Transaction transaction = Transaction.openNested(context)) {
             return extractStack(index, amount, transaction);
         }
     }
 
-    public dev.galacticraft.api.gas.GasStack simulateExtraction(int index, int amount) {
+    public GasStack simulateExtraction(int index, long amount) {
         return simulateExtraction(index, amount, null);
     }
 
-    public dev.galacticraft.api.gas.GasStack simulateExtraction(int index, @NotNull GasFilter filter, int amount, @Nullable TransactionContext context) {
+    public GasStack simulateExtraction(int index, @NotNull GasFilter filter, long amount, @Nullable TransactionContext context) {
         try (Transaction transaction = Transaction.openNested(context)) {
             return extractStack(index, filter, amount, transaction);
         }
     }
 
-    public dev.galacticraft.api.gas.GasStack simulateExtraction(int index, @NotNull GasFilter filter, int amount) {
+    public GasStack simulateExtraction(int index, @NotNull GasFilter filter, long amount) {
         return simulateExtraction(index, filter, amount, null);
     }
 
@@ -185,9 +188,9 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
         this.machine.markDirty();
     }
 
-    public void writeNbt(NbtCompound nbt) {
+    public void writeNbt(DynamicRegistryManager manager, NbtCompound nbt) {
         boolean empty = true;
-        for (dev.galacticraft.api.gas.GasStack stack : this.stacks) {
+        for (GasStack stack : this.stacks) {
             if (!stack.isEmpty()) {
                 empty = false;
                 break;
@@ -195,38 +198,38 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
         }
         if (!empty) {
             NbtList list = new NbtList();
-            for (dev.galacticraft.api.gas.GasStack stack : this.stacks) {
-                list.add(stack.writeNbt(new NbtCompound()));
+            for (GasStack stack : this.stacks) {
+                list.add(stack.writeNbt(manager, new NbtCompound()));
             }
             nbt.put(Constant.Nbt.GASES, list);
         }
     }
 
-    public void readNbt(NbtCompound nbt) {
+    public void readNbt(DynamicRegistryManager manager, NbtCompound nbt) {
         if (nbt.contains(Constant.Nbt.GASES, NbtElement.LIST_TYPE)) {
             NbtList list = nbt.getList(Constant.Nbt.GASES, NbtElement.COMPOUND_TYPE);
             for (int i = 0; i < list.size(); i++) {
-                this.stacks[i] = dev.galacticraft.api.gas.GasStack.fromNbt(list.getCompound(i));
+                this.stacks[i] = GasStack.readNbt(manager, list.getCompound(i));
             }
         }
     }
 
-    public @NotNull dev.galacticraft.api.gas.GasStack getStack(int index) {
+    public @NotNull GasStack getStack(int index) {
         return this.stacks[index];
     }
 
-    public dev.galacticraft.api.gas.GasStack removeStack(int slot, long amount) {
-        dev.galacticraft.api.gas.GasStack copy = this.getStack(slot).copy();
-        dev.galacticraft.api.gas.GasStack copy2 = this.getStack(slot).copy();
+    public GasStack removeStack(int slot, long amount) {
+        GasStack copy = this.getStack(slot).copy();
+        GasStack copy2 = this.getStack(slot).copy();
         copy.setAmount(Math.min(copy.amount(), amount));
         copy2.setAmount(copy2.amount() - copy.amount());
         this.setStack(slot, copy2);
         return copy;
     }
 
-    public dev.galacticraft.api.gas.GasStack removeStack(int slot) {
-        dev.galacticraft.api.gas.GasStack stack = this.getStack(slot);
-        this.setStack(slot, dev.galacticraft.api.gas.GasStack.EMPTY);
+    public GasStack removeStack(int slot) {
+        GasStack stack = this.getStack(slot);
+        this.setStack(slot, GasStack.EMPTY);
         return stack;
     }
 
@@ -234,11 +237,11 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
         return this.exposed;
     }
 
-    public SingleSlotStorage<dev.galacticraft.api.gas.Gas> getSlot(int slot) {
+    public SingleSlotStorage<Gas> getSlot(int slot) {
         return this.parts.get(slot);
     }
     
-    public Storage<dev.galacticraft.api.gas.Gas> view() {
+    public Storage<Gas> view() {
         return this.view;
     }
 
@@ -247,7 +250,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
     }
 
     public boolean isEmpty() {
-        for (dev.galacticraft.api.gas.GasStack stack : this.stacks) {
+        for (GasStack stack : this.stacks) {
             if (!stack.isEmpty()) return false;
         }
         return true;
@@ -258,15 +261,19 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
     }
 
     @Override
-    public SlotType[] getTypes() {
+    public SlotType<Gas>[] getTypes() {
         return this.types;
     }
 
-    public boolean canInsert(int slot, dev.galacticraft.api.gas.GasStack stack) {
+    public boolean canInsert(int slot, GasStack stack) {
         return this.parts.get(slot).filter().test(stack);
     }
 
-    protected class MachineGasSlot extends SnapshotParticipant<dev.galacticraft.api.gas.GasStack> implements SingleSlotStorage<dev.galacticraft.api.gas.Gas> {
+    public long getCapacity(int i) {
+        return this.parts.get(i).capacity;
+    }
+
+    protected class MachineGasSlot extends SnapshotParticipant<GasStack> implements SingleSlotStorage<Gas> {
         private final int index;
         private final boolean insertion;
         private final boolean extraction;
@@ -291,12 +298,12 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
             return this.extraction;
         }
 
-        protected boolean canInsert(@NotNull dev.galacticraft.api.gas.Gas gas) {
-            return this.filter.test(new dev.galacticraft.api.gas.GasStack(gas, 1));
+        protected boolean canInsert(@NotNull Gas gas) {
+            return this.filter.test(new GasStack(gas, 1));
         }
 
-        protected boolean canExtract(@NotNull dev.galacticraft.api.gas.Gas gas) {
-            return this.filter.test(new dev.galacticraft.api.gas.GasStack(gas, 1));
+        protected boolean canExtract(@NotNull Gas gas) {
+            return this.filter.test(new GasStack(gas, 1));
         }
 
         @Override
@@ -315,7 +322,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
         }
 
         @Override
-        public dev.galacticraft.api.gas.Gas getResource() {
+        public Gas getResource() {
             return MachineGasStorage.this.getStack(this.index).gas();
         }
 
@@ -330,15 +337,15 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
         }
 
         @Override
-        public long insert(dev.galacticraft.api.gas.Gas gas, long amount, TransactionContext transaction) {
+        public long insert(Gas gas, long amount, TransactionContext transaction) {
             StoragePreconditions.notNegative(amount);
-            dev.galacticraft.api.gas.GasStack stack = MachineGasStorage.this.getStack(this.index);
+            GasStack stack = MachineGasStorage.this.getStack(this.index);
             if ((gas == stack.gas() || stack.isEmpty()) && this.canInsert(gas)) {
                 int insertedAmount = (int)Math.min(amount, this.capacity - stack.amount());
                 if (insertedAmount > 0) {
                     this.updateSnapshots(transaction);
                     if (stack.isEmpty()) {
-                        stack = new dev.galacticraft.api.gas.GasStack(gas, insertedAmount);
+                        stack = new GasStack(gas, insertedAmount);
                     } else {
                         stack = stack.copy();
                         stack.setAmount(stack.amount() + insertedAmount);
@@ -353,9 +360,9 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
         }
 
         @Override
-        public long extract(dev.galacticraft.api.gas.Gas gas, long maxAmount, TransactionContext transaction) {
+        public long extract(Gas gas, long maxAmount, TransactionContext transaction) {
             StoragePreconditions.notNegative(maxAmount);
-            dev.galacticraft.api.gas.GasStack currentStack = MachineGasStorage.this.getStack(this.index);
+            GasStack currentStack = MachineGasStorage.this.getStack(this.index);
             if (gas == currentStack.gas() && this.canExtract(gas)) {
                 long extracted = Math.min(currentStack.amount(), maxAmount);
                 if (extracted > 0) {
@@ -372,21 +379,21 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
         }
 
         @Override
-        protected dev.galacticraft.api.gas.GasStack createSnapshot() {
-            dev.galacticraft.api.gas.GasStack original = MachineGasStorage.this.getStack(this.index);
+        protected GasStack createSnapshot() {
+            GasStack original = MachineGasStorage.this.getStack(this.index);
             MachineGasStorage.this.stacks[this.index] = original.copy();
             return original;
         }
 
         @Override
-        protected void readSnapshot(dev.galacticraft.api.gas.GasStack snapshot) {
+        protected void readSnapshot(GasStack snapshot) {
             MachineGasStorage.this.stacks[this.index] = snapshot;
         }
     }
 
-    public class ExposedGasStorage extends CombinedStorage<dev.galacticraft.api.gas.Gas, ExposedGasStorage.ExposedGasSlot> {
-        private final Storage<dev.galacticraft.api.gas.Gas> insertion;
-        private final Storage<dev.galacticraft.api.gas.Gas> extraction;
+    public class ExposedGasStorage extends CombinedStorage<Gas, ExposedGasStorage.ExposedGasSlot> {
+        private final Storage<Gas> insertion;
+        private final Storage<Gas> extraction;
 
         private ExposedGasStorage(GasSlotSettings[] settings) {
             super(Collections.emptyList());
@@ -399,20 +406,20 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
             this.extraction = new DirectionalExposedGasStorage(false);
         }
 
-        public Storage<dev.galacticraft.api.gas.Gas> insertion() {
+        public Storage<Gas> insertion() {
             return this.insertion;
         }
 
-        public Storage<dev.galacticraft.api.gas.Gas> extraction() {
+        public Storage<Gas> extraction() {
             return this.extraction;
         }
         
-        private class ExposedGasSlot implements SingleSlotStorage<dev.galacticraft.api.gas.Gas> {
+        private class ExposedGasSlot implements SingleSlotStorage<Gas> {
             private final int index;
-            private final SlotType type;
+            private final SlotType<Gas> type;
             private final GasFilter filter;
 
-            public ExposedGasSlot(int index, SlotType type, GasFilter filter) {
+            public ExposedGasSlot(int index, SlotType<Gas> type, GasFilter filter) {
                 this.index = index;
                 this.type = type;
                 this.filter = filter;
@@ -420,14 +427,14 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
 
             @Override
             public boolean supportsInsertion() {
-                return this.type.getType().isInput();
+                return this.type.getType().canFlow(ResourceFlow.INPUT);
             }
 
             @Override
-            public long insert(dev.galacticraft.api.gas.Gas resource, long maxAmount, TransactionContext transaction) {
+            public long insert(Gas resource, long maxAmount, TransactionContext transaction) {
                 StoragePreconditions.notNegative(maxAmount);
 
-                if (this.filter.test(new dev.galacticraft.api.gas.GasStack(resource, 1))) {
+                if (this.filter.test(new GasStack(resource, 1))) {
                     return MachineGasStorage.this.getSlot(this.index).insert(resource, maxAmount, transaction);
                 }
 
@@ -435,10 +442,10 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
             }
 
             @Override
-            public long simulateInsert(dev.galacticraft.api.gas.Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
+            public long simulateInsert(Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
                 StoragePreconditions.notNegative(maxAmount);
 
-                if (this.filter.test(new dev.galacticraft.api.gas.GasStack(resource, 1))) {
+                if (this.filter.test(new GasStack(resource, 1))) {
                     return MachineGasStorage.this.getSlot(this.index).simulateInsert(resource, maxAmount, transaction);
                 }
 
@@ -447,18 +454,18 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
 
             @Override
             public boolean supportsExtraction() {
-                return this.type.getType().isOutput();
+                return this.type.getType().canFlow(ResourceFlow.OUTPUT);
             }
 
             @Override
-            public long extract(dev.galacticraft.api.gas.Gas resource, long maxAmount, TransactionContext transaction) {
+            public long extract(Gas resource, long maxAmount, TransactionContext transaction) {
                 StoragePreconditions.notNegative(maxAmount);
 
                 return MachineGasStorage.this.getSlot(this.index).extract(resource, maxAmount, transaction);
             }
 
             @Override
-            public long simulateExtract(dev.galacticraft.api.gas.Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
+            public long simulateExtract(Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
                 StoragePreconditions.notNegative(maxAmount);
 
                 return MachineGasStorage.this.getSlot(this.index).simulateExtract(resource, maxAmount, transaction);
@@ -470,7 +477,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
             }
 
             @Override
-            public dev.galacticraft.api.gas.Gas getResource() {
+            public Gas getResource() {
                 return MachineGasStorage.this.getSlot(this.index).getResource();
             }
 
@@ -485,7 +492,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
             }
 
             @Override
-            public @Nullable StorageView<dev.galacticraft.api.gas.Gas> exactView(TransactionContext transaction, dev.galacticraft.api.gas.Gas resource) {
+            public @Nullable StorageView<Gas> exactView(TransactionContext transaction, Gas resource) {
                 return null; //todo
             }
 
@@ -495,7 +502,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
             }
         }
 
-        public class DirectionalExposedGasStorage extends CombinedStorage<dev.galacticraft.api.gas.Gas, DirectionalExposedGasStorage.DirectionalExposedGasSlot> {
+        public class DirectionalExposedGasStorage extends CombinedStorage<Gas, DirectionalExposedGasStorage.DirectionalExposedGasSlot> {
             private DirectionalExposedGasStorage(boolean insertion) {
                 super(Collections.emptyList());
                 ImmutableList.Builder<DirectionalExposedGasSlot> builder = ImmutableList.builder();
@@ -507,7 +514,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
                 this.parts = builder.build();
             }
 
-            private class DirectionalExposedGasSlot implements SingleSlotStorage<dev.galacticraft.api.gas.Gas> {
+            private class DirectionalExposedGasSlot implements SingleSlotStorage<Gas> {
                 private final int index;
                 private final boolean insertion;
 
@@ -522,7 +529,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
                 }
 
                 @Override
-                public long insert(dev.galacticraft.api.gas.Gas resource, long maxAmount, TransactionContext transaction) {
+                public long insert(Gas resource, long maxAmount, TransactionContext transaction) {
                     if (this.insertion && ExposedGasStorage.this.supportsInsertion()) {
                         return ExposedGasStorage.this.parts.get(this.index).insert(resource, maxAmount, transaction);
                     }
@@ -531,7 +538,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
                 }
 
                 @Override
-                public long simulateInsert(dev.galacticraft.api.gas.Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
+                public long simulateInsert(Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
                     if (this.insertion && ExposedGasStorage.this.supportsInsertion()) {
                         return ExposedGasStorage.this.parts.get(this.index).simulateInsert(resource, maxAmount, transaction);
                     }
@@ -545,7 +552,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
                 }
 
                 @Override
-                public long extract(dev.galacticraft.api.gas.Gas resource, long maxAmount, TransactionContext transaction) {
+                public long extract(Gas resource, long maxAmount, TransactionContext transaction) {
                     if (!this.insertion && ExposedGasStorage.this.supportsExtraction()) {
                         return ExposedGasStorage.this.parts.get(this.index).extract(resource, maxAmount, transaction);
                     }
@@ -553,7 +560,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
                 }
 
                 @Override
-                public long simulateExtract(dev.galacticraft.api.gas.Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
+                public long simulateExtract(Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
                     if (!this.insertion && ExposedGasStorage.this.supportsExtraction()) {
                         return ExposedGasStorage.this.parts.get(this.index).simulateExtract(resource, maxAmount, transaction);
                     }
@@ -566,7 +573,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
                 }
 
                 @Override
-                public dev.galacticraft.api.gas.Gas getResource() {
+                public Gas getResource() {
                     return ExposedGasStorage.this.parts.get(this.index).getResource();
                 }
 
@@ -581,7 +588,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
                 }
 
                 @Override
-                public @Nullable StorageView<dev.galacticraft.api.gas.Gas> exactView(TransactionContext transaction, dev.galacticraft.api.gas.Gas resource) {
+                public @Nullable StorageView<Gas> exactView(TransactionContext transaction, Gas resource) {
                     return null; //todo
                 }
 
@@ -593,7 +600,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
         }
     }
 
-    public class ReadOnlyGasStorage extends CombinedStorage<dev.galacticraft.api.gas.Gas, ReadOnlyGasStorage.ReadOnlyGasSlot> {
+    public class ReadOnlyGasStorage extends CombinedStorage<Gas, ReadOnlyGasStorage.ReadOnlyGasSlot> {
         public ReadOnlyGasStorage() {
             super(Collections.emptyList());
             ImmutableList.Builder<ReadOnlyGasSlot> builder = ImmutableList.builderWithExpectedSize(MachineGasStorage.this.parts.size());
@@ -609,12 +616,12 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
         }
 
         @Override
-        public long insert(dev.galacticraft.api.gas.Gas resource, long maxAmount, TransactionContext transaction) {
+        public long insert(Gas resource, long maxAmount, TransactionContext transaction) {
             return 0;
         }
 
         @Override
-        public long simulateInsert(dev.galacticraft.api.gas.Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
+        public long simulateInsert(Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
             return 0;
         }
 
@@ -624,16 +631,16 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
         }
 
         @Override
-        public long extract(dev.galacticraft.api.gas.Gas resource, long maxAmount, TransactionContext transaction) {
+        public long extract(Gas resource, long maxAmount, TransactionContext transaction) {
             return 0;
         }
 
         @Override
-        public long simulateExtract(dev.galacticraft.api.gas.Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
+        public long simulateExtract(Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
             return 0;
         }
 
-        public class ReadOnlyGasSlot implements SingleSlotStorage<dev.galacticraft.api.gas.Gas> {
+        public class ReadOnlyGasSlot implements SingleSlotStorage<Gas> {
             private final int index;
 
             public ReadOnlyGasSlot(int index) {
@@ -646,12 +653,12 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
             }
 
             @Override
-            public long insert(dev.galacticraft.api.gas.Gas resource, long maxAmount, TransactionContext transaction) {
+            public long insert(Gas resource, long maxAmount, TransactionContext transaction) {
                 return 0;
             }
 
             @Override
-            public long simulateInsert(dev.galacticraft.api.gas.Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
+            public long simulateInsert(Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
                 return 0;
             }
 
@@ -661,12 +668,12 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
             }
 
             @Override
-            public long extract(dev.galacticraft.api.gas.Gas resource, long maxAmount, TransactionContext transaction) {
+            public long extract(Gas resource, long maxAmount, TransactionContext transaction) {
                 return 0;
             }
 
             @Override
-            public long simulateExtract(dev.galacticraft.api.gas.Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
+            public long simulateExtract(Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
                 return 0;
             }
 
@@ -676,7 +683,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
             }
 
             @Override
-            public dev.galacticraft.api.gas.Gas getResource() {
+            public Gas getResource() {
                 return MachineGasStorage.this.getSlot(this.index).getResource();
             }
 
@@ -694,7 +701,7 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
 
     public static class Builder {
         private final MachineBlockEntity machine;
-        private final List<SlotSettings> slots = new ArrayList<>();
+        private final List<GasSlotSettings> slots = new ArrayList<>();
         private final List<GasFilter> filters = new ArrayList<>();
 
         private Builder(MachineBlockEntity machine) {
@@ -706,11 +713,11 @@ public class MachineGasStorage extends CombinedStorage<dev.galacticraft.api.gas.
             return new Builder(machine);
         }
 
-        public Builder addSlot(@NotNull SlotSettings settings) {
+        public Builder addSlot(@NotNull GasSlotSettings settings) {
             return addSlot(settings, null);
         }
 
-        public Builder addSlot(@NotNull SlotSettings settings, @Nullable GasFilter internalFilter) {
+        public Builder addSlot(@NotNull GasSlotSettings settings, @Nullable GasFilter internalFilter) {
             Preconditions.checkNotNull(settings);
             this.slots.add(settings);
             this.filters.add(internalFilter == null ? Constant.Filter.Gas.ALWAYS : internalFilter);

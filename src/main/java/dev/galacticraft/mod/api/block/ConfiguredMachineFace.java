@@ -29,6 +29,8 @@ import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -42,15 +44,15 @@ import java.util.stream.IntStream;
  */
 public class ConfiguredMachineFace {
     private static final Set<AutomationType> CACHED_AUTOMATION_TYPE_SET = new HashSet<>();
-    private AutomationType automationType;
-    private @Nullable Either<Integer, SlotType> matching;
+    private AutomationType<?> automationType;
+    private @Nullable Either<Integer, SlotType<?>> matching;
 
-    public ConfiguredMachineFace(@NotNull AutomationType automationType) {
+    public ConfiguredMachineFace(@NotNull AutomationType<?> automationType) {
         this.automationType = automationType;
         this.matching = null;
     }
 
-    public void setOption(@NotNull AutomationType option) {
+    public void setOption(@NotNull AutomationType<?> option) {
         this.automationType = option;
         this.matching = null;
     }
@@ -61,10 +63,10 @@ public class ConfiguredMachineFace {
         CACHED_AUTOMATION_TYPE_SET.add(AutomationType.NONE);
         list.add(AutomationType.NONE);
 
-        if (machine.energyInsertionRate() > 0) if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.POWER_INPUT)) list.add(AutomationType.POWER_INPUT);
-        if (machine.energyExtractionRate() > 0) if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.POWER_OUTPUT)) list.add(AutomationType.POWER_OUTPUT);
+        if (machine.energyInsertionRate() > 0) if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.ENERGY_INPUT)) list.add(AutomationType.ENERGY_INPUT);
+        if (machine.energyExtractionRate() > 0) if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.ENERGY_OUTPUT)) list.add(AutomationType.ENERGY_OUTPUT);
 
-        for (SlotType type : machine.fluidInv().getTypes()) {
+        for (SlotType<FluidVariant> type : machine.fluidInv().getTypes()) {
             if (type.getType().isBidirectional()) {
                 if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.FLUID_INPUT)) list.add(AutomationType.FLUID_INPUT);
                 if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.FLUID_OUTPUT)) list.add(AutomationType.FLUID_OUTPUT);
@@ -73,7 +75,7 @@ public class ConfiguredMachineFace {
             }
         }
 
-        for (SlotType type : machine.itemStorage().getTypes()) {
+        for (SlotType<ItemVariant> type : machine.itemStorage().getTypes()) {
             if (type.getType().isBidirectional()) {
                 if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.ITEM_INPUT)) list.add(AutomationType.ITEM_INPUT);
                 if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.ITEM_OUTPUT)) list.add(AutomationType.ITEM_OUTPUT);
@@ -84,27 +86,27 @@ public class ConfiguredMachineFace {
         return list;
     }
 
-    public void setMatching(@Nullable Either<Integer, SlotType> matching) {
+    public void setMatching(@Nullable Either<Integer, SlotType<?>> matching) {
         this.matching = matching;
     }
 
-    public @NotNull AutomationType getAutomationType() {
+    public @NotNull AutomationType<?> getAutomationType() {
         return automationType;
     }
 
-    public @Nullable Either<Integer, SlotType> getMatching() {
+    public @Nullable Either<Integer, SlotType<?>> getMatching() {
         return matching;
     }
 
-    public int[] getMatching(Automatable automatable) {
-        if (Arrays.stream(automatable.getTypes()).anyMatch(type -> !type.getType().canPassAsIgnoreFlow(this.automationType))) {
+    public <T> int[] getMatching(Automatable<T> automatable) {
+        if (Arrays.stream(automatable.getTypes()).anyMatch(type -> !type.getType().typeAllows(this.automationType))) {
             return new int[0];
         }
         if (matching != null) {
             if (matching.left().isPresent()) {
                 return new int[]{matching.left().get()};
             }
-            SlotType type = matching.right().orElseThrow(RuntimeException::new);
+            SlotType<?> type = matching.right().orElseThrow(RuntimeException::new);
             if (type == null) {
                 return IntStream.range(0, automatable.getTypes().length - 1).toArray();
             }
@@ -118,13 +120,13 @@ public class ConfiguredMachineFace {
         }
         IntList intList = new IntArrayList(1);
         for (int i = 0; i < automatable.getTypes().length; i++) {
-            if (automatable.getTypes()[i].getType().canPassAs(this.automationType)) intList.add(i);
+            if (automatable.getTypes()[i].getType().equalToOrBroaderThan(this.automationType)) intList.add(i);
         }
         return intList.toIntArray();
     }
 
     public NbtCompound toTag(NbtCompound tag) {
-        tag.putString(Constant.Nbt.AUTOMATION_TYPE, automationType.name());
+        tag.putByte(Constant.Nbt.AUTOMATION_TYPE, automationType.getIndex());
         tag.putBoolean(Constant.Nbt.MATCH, this.matching != null);
         if (this.matching != null) {
             tag.putBoolean(Constant.Nbt.IS_SLOT_ID, this.matching.left().isPresent());
@@ -138,7 +140,7 @@ public class ConfiguredMachineFace {
     }
 
     public void fromTag(NbtCompound tag) {
-        this.automationType = AutomationType.valueOf(tag.getString(Constant.Nbt.AUTOMATION_TYPE));
+        this.automationType = AutomationType.getType(tag.getByte(Constant.Nbt.AUTOMATION_TYPE));
         if (tag.getBoolean(Constant.Nbt.MATCH)) {
             if (tag.getBoolean(Constant.Nbt.IS_SLOT_ID)) {
                 this.matching = Either.left(tag.getInt(Constant.Nbt.VALUE));

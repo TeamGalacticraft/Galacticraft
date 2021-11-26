@@ -73,16 +73,16 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     @Override
     protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
         builder.addSlot(SlotSettings.Builder.create(8, 70, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
-        builder.addSlot(SlotSettings.Builder.create(31, 15, SlotType.INPUT).filter(ExactItemFilter.createFilter(Items.DIAMOND)).build());
-        builder.addSlot(SlotSettings.Builder.create(62, 45, SlotType.INPUT).filter(ExactItemFilter.createFilter(GalacticraftItem.RAW_SILICON)).build());
-        builder.addSlot(SlotSettings.Builder.create(62, 63, SlotType.INPUT).filter(ExactItemFilter.createFilter(GalacticraftItem.RAW_SILICON)).build());
-        builder.addSlot(SlotSettings.Builder.create(107, 70, SlotType.INPUT).filter(ExactItemFilter.createFilter(Items.REDSTONE)).build());
+        builder.addSlot(SlotSettings.Builder.create(31, 15, SlotType.INPUT).filter(Constant.Filter.Item.DIAMOND).build());
+        builder.addSlot(SlotSettings.Builder.create(62, 45, SlotType.INPUT).filter(Constant.Filter.Item.SILICON).build());
+        builder.addSlot(SlotSettings.Builder.create(62, 63, SlotType.INPUT).filter(Constant.Filter.Item.SILICON).build());
+        builder.addSlot(SlotSettings.Builder.create(107, 70, SlotType.INPUT).filter(Constant.Filter.Item.REDSTONE).build());
         builder.addSlot(SlotSettings.Builder.create(134, 15, SlotType.INPUT).build());
         builder.addSlot(SlotSettings.Builder.create(152, 70, SlotType.OUTPUT).filter(stack -> {
-            synchronized (this.PREDICATE_INV) {
-                this.PREDICATE_INV.setStack(0, stack);
+            synchronized (PREDICATE_INV) {
+                PREDICATE_INV.setStack(0, stack);
                 assert this.world != null;
-                return this.world.getRecipeManager().getFirstMatch(this.recipeType(), this.PREDICATE_INV, this.world).isPresent();
+                return this.world.getRecipeManager().getFirstMatch(this.recipeType(), PREDICATE_INV, this.world).isPresent();
             }
         }).disableInput().build());
         return builder;

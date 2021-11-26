@@ -22,9 +22,11 @@
 
 package dev.galacticraft.mod.api.block.entity;
 
+import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.WorldRendererAccessor;
+import dev.galacticraft.mod.api.block.AutomationType;
 import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.api.machine.*;
@@ -32,6 +34,7 @@ import dev.galacticraft.mod.lookup.storage.MachineEnergyStorage;
 import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
 import dev.galacticraft.mod.lookup.storage.MachineGasStorage;
 import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
+import dev.galacticraft.mod.screen.slot.ResourceType;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -78,12 +81,13 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
 
     public final @NotNull MachineEnergyStorage capacitor = new MachineEnergyStorage(this);
     private final @NotNull MachineItemStorage itemStorage = this.createInventory(MachineItemStorage.Builder.create(this)).build();
-//    private final @NotNull MachineGasStorage gasStorage = this.createGasStorage(MachineGasStorage.Builder.create(this)).build();
+    private final @NotNull MachineGasStorage gasStorage = this.createGasStorage(MachineGasStorage.Builder.create(this)).build();
 
     private final @NotNull MachineFluidStorage fluidInv = this.createFluidInv(MachineFluidStorage.Builder.create(this)).build();
 
     private final @NotNull EnergyStorage capacitorView = this.capacitor.view();
 
+    private final @NotNull Storage<Gas> gasStorageView = this.gasStorage().view();
     private final @NotNull Storage<FluidVariant> fluidInvView = this.fluidInv().view();
     private final @NotNull Storage<ItemVariant> itemStorageView = this.itemStorage().view();
 
@@ -204,9 +208,9 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
         return this.itemStorage;
     }
 
-//    public final @NotNull MachineGasStorage gasStorage() {
-//        return this.gasStorage;
-//    }
+    public final @NotNull MachineGasStorage gasStorage() {
+        return this.gasStorage;
+    }
 
     public final @NotNull MachineFluidStorage fluidInv() {
         return this.fluidInv;
@@ -230,12 +234,15 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
 
     public final @NotNull EnergyStorage getExposedCapacitor(@NotNull BlockFace face) {
         assert this.world != null;
-        return switch (this.getIOConfig().get(face).getAutomationType()) {
-            case POWER_IO -> this.capacitor.exposed();
-            case POWER_INPUT -> this.capacitor.exposed().insertion();
-            case POWER_OUTPUT -> this.capacitor.exposed().extraction();
-            default -> this.capacitorView;
-        };
+        AutomationType<?> automationType = this.getIOConfig().get(face).getAutomationType();
+        if (automationType.willAccept(ResourceType.ITEM)) {
+            return switch (automationType.getFlow()) {
+                case BOTH -> this.capacitor.exposed();
+                case INPUT -> this.capacitor.exposed().insertion();
+                case OUTPUT -> this.capacitor.exposed().extraction();
+            };
+        }
+        return this.capacitorView;
     }
 
     public final @NotNull Storage<ItemVariant> getExposedItemStorage(@NotNull Direction direction) {
@@ -244,27 +251,51 @@ public abstract class MachineBlockEntity extends BlockEntity implements Extended
 
     public final @NotNull Storage<ItemVariant> getExposedItemStorage(@NotNull BlockFace face) {
         assert this.world != null;
-        return switch (this.getIOConfig().get(face).getAutomationType()) {
-            case ITEM_IO -> this.itemStorage.exposed();
-            case ITEM_INPUT -> this.itemStorage.exposed().insertion();
-            case ITEM_OUTPUT -> this.itemStorage.exposed().extraction();
-            default -> this.itemStorageView;
-        };
-    }
-
-    public final @NotNull Storage<FluidVariant> getExposedFluidInv(@NotNull BlockFace face) {
-        assert this.world != null;
-        return switch (this.getIOConfig().get(face).getAutomationType()) {
-            case FLUID_IO -> this.fluidInv.exposed();
-            case FLUID_INPUT -> this.fluidInv.exposed().insertion();
-            case FLUID_OUTPUT -> this.fluidInv.exposed().extraction();
-            default -> this.fluidInvView;
-        };
+        AutomationType<?> automationType = this.getIOConfig().get(face).getAutomationType();
+        if (automationType.willAccept(ResourceType.ITEM)) {
+            return switch (automationType.getFlow()) {
+                case BOTH -> this.itemStorage.exposed();
+                case INPUT -> this.itemStorage.exposed().insertion();
+                case OUTPUT -> this.itemStorage.exposed().extraction();
+            };
+        }
+        return this.itemStorageView;
     }
 
     public final @NotNull Storage<FluidVariant> getExposedFluidInv(@NotNull Direction direction) {
         return this.getExposedFluidInv(BlockFace.toFace(this.world.getBlockState(this.pos).get(Properties.HORIZONTAL_FACING), direction.getOpposite()));
     }
+
+    public final @NotNull Storage<FluidVariant> getExposedFluidInv(@NotNull BlockFace face) {
+        assert this.world != null;
+        AutomationType<?> automationType = this.getIOConfig().get(face).getAutomationType();
+        if (automationType.willAccept(ResourceType.FLUID)) {
+            return switch (automationType.getFlow()) {
+                case BOTH -> this.fluidInv.exposed();
+                case INPUT -> this.fluidInv.exposed().insertion();
+                case OUTPUT -> this.fluidInv.exposed().extraction();
+            };
+        }
+        return this.fluidInvView;
+    }
+
+    public final @NotNull Storage<Gas> getExposedGasInv(@NotNull Direction direction) {
+        return this.getExposedGasInv(BlockFace.toFace(this.world.getBlockState(this.pos).get(Properties.HORIZONTAL_FACING), direction.getOpposite()));
+    }
+
+    public final @NotNull Storage<Gas> getExposedGasInv(@NotNull BlockFace face) {
+        assert this.world != null;
+        AutomationType automationType = this.getIOConfig().get(face).getAutomationType();
+        if (automationType.willAccept(ResourceType.FLUID)) {
+            return switch (automationType.getFlow()) {
+                case BOTH -> this.gasStorage.exposed();
+                case INPUT -> this.gasStorage.exposed().insertion();
+                case OUTPUT -> this.gasStorage.exposed().extraction();
+            };
+        }
+        return this.gasStorageView;
+    }
+
 
     public final @NotNull SecurityInfo security() {
         return this.configuration.getSecurity();

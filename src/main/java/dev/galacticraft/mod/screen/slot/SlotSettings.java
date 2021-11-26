@@ -26,6 +26,7 @@ import com.google.common.base.Preconditions;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.lookup.filter.ItemFilter;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -33,7 +34,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record SlotSettings(int x, int y, @NotNull SlotType type, @NotNull ItemFilter filter, boolean canInsertItems,
+public record SlotSettings(int x, int y, @NotNull SlotType<ItemVariant> type, @NotNull ItemFilter filter, boolean canInsertItems,
                            boolean canTakeItems,
                            int maxCount, @Nullable Pair<Identifier, Identifier> icon,
                            @NotNull SlotChangeListener extractionListener,
@@ -41,7 +42,7 @@ public record SlotSettings(int x, int y, @NotNull SlotType type, @NotNull ItemFi
     public static class Builder {
         private final int x;
         private final int y;
-        private final SlotType type;
+        private final SlotType<ItemVariant> type;
         private boolean canInsertItems = true;
         private boolean canTakeItems = true;
         private int maxCount = 64;
@@ -50,16 +51,15 @@ public record SlotSettings(int x, int y, @NotNull SlotType type, @NotNull ItemFi
         private @NotNull ItemFilter filter = Constant.Filter.Item.ALWAYS;
         private @Nullable Pair<Identifier, Identifier> icon = null;
 
-        private Builder(int x, int y, @NotNull SlotType type) {
+        private Builder(int x, int y, @NotNull SlotType<ItemVariant> type) {
             this.x = x;
             this.y = y;
             this.type = type;
         }
 
         @Contract("_, _, _ -> new")
-        public static @NotNull Builder create(int x, int y, @NotNull SlotType type) {
+        public static @NotNull Builder create(int x, int y, @NotNull SlotType<ItemVariant> type) {
             Preconditions.checkNotNull(type);
-            assert type.getType().isItem();
             return new Builder(x, y, type);
         }
 

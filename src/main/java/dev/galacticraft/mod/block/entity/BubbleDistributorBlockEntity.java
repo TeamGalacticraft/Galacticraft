@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.api.attribute.GasStorage;
+import dev.galacticraft.api.fluid.FluidStack;
 import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
@@ -30,15 +31,19 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.entity.BubbleEntity;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
-import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
+import dev.galacticraft.mod.fluid.GalacticraftFluid;
+import dev.galacticraft.mod.lookup.storage.MachineGasStorage;
 import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
+import dev.galacticraft.mod.screen.slot.GasSlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.FluidUtil;
+import dev.galacticraft.mod.util.GenericStorageUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
@@ -82,13 +87,13 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     @Override
     protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
         builder.addSlot(SlotSettings.Builder.create(8, 62, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
-        builder.addSlot(SlotSettings.Builder.create(31, 62, SlotType.OXYGEN_TANK).filter(Constant.Filter.Item.CAN_EXTRACT_OXYGEN).build());
+        builder.addSlot(SlotSettings.Builder.create(31, 62, SlotType.OXYGEN_TANK).filter(Constant.Filter.Item.CAN_EXTRACT_LOX).build());
         return builder;
     }
 
     @Override
-    protected MachineFluidStorage.Builder createFluidInv(MachineFluidStorage.Builder builder) {
-        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_IN, 31, 8);
+    protected MachineGasStorage.Builder createGasStorage(MachineGasStorage.Builder builder) {
+        builder.addSlot(GasSlotSettings.Builder.create(31, 8, SlotType.OXYGEN_IN).capacity(MAX_OXYGEN).filter(Constant.Filter.Gas.OXYGEN).build());
         return builder;
     }
 
@@ -119,7 +124,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         long oxygenRequired = ((long) ((4.0 / 3.0) * Math.PI * size * size * size));
         try (Transaction transaction = Transaction.openOuter()) {
-            if (this.fluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.Fluid.ALWAYS, oxygenRequired, transaction).amount() < oxygenRequired) return Status.NOT_ENOUGH_OXYGEN;
+            if (this.fluidInv().simulateExtraction(OXYGEN_TANK, Constant.Filter.Fluid.ALWAYS, oxygenRequired, transaction).amount() < oxygenRequired) return Status.NOT_ENOUGH_OXYGEN;
         }
         return Status.DISTRIBUTING;
     }
@@ -214,25 +219,16 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     protected void drainOxygenFromStack(int slot) {
-        if (this.fluidInv().getInvFluid(0).amount().compareTo(this.fluidInv().getMaxAmount_F(0)) >= 0) {
+        if (this.fluidInv().isFull(0)) {
             return;
         }
         ContainerItemContext containerItemContext = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(slot));
         Storage<Gas> storage = containerItemContext.find(GasStorage.ITEM);
         if (storage != null && storage.supportsExtraction()) {
             try (Transaction transaction = Transaction.openOuter()){
-                long extracted;
-                try (Transaction inner = transaction.openNested()) {
-                     extracted = storage.extract(Gas.OXYGEN, Long.MAX_VALUE, inner);
-                }
-                if (extracted > 0) {
-                    try (Transaction inner = transaction.openNested()) {
-                        extracted = storage.extract(Gas.OXYGEN, Long.MAX_VALUE, inner);
-                    }
-                }
+                GenericStorageUtil.move(Gas.OXYGEN, storage, this.gasStorage(), Long.MAX_VALUE, transaction);
+                transaction.commit();
             }
-            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(this.itemStorage().getSlot(slot));
-            this.fluidInv().insertFluid(OXYGEN_TANK, extractable.attemptExtraction(Constant.Filter.Fluid.LOX_ONLY, this.fluidInv().getMaxAmount_F(0).sub(this.fluidInv().getInvFluid(0).amount()), Simulation.ACTION), Simulation.ACTION);
         }
     }
 

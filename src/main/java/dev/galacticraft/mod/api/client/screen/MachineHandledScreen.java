@@ -37,6 +37,7 @@ import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.client.model.MachineBakedModel;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.mixin.SlotAccessor;
+import dev.galacticraft.mod.screen.slot.ResourceType;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.screen.tank.Tank;
 import dev.galacticraft.mod.util.ColorUtil;
@@ -50,6 +51,7 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -653,7 +655,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
         tooltipCache.add(face.getName());
         ConfiguredMachineFace configuredFace = this.machine.getConfiguration().getSideConfiguration().get(face);
         if (configuredFace.getAutomationType() != AutomationType.NONE) {
-            tooltipCache.add(configuredFace.getAutomationType().getFormattedName());
+            tooltipCache.add(configuredFace.getAutomationType().getName());
         }
         if (configuredFace.getMatching() != null) {
             if (configuredFace.getMatching().left().isPresent()) {
@@ -916,10 +918,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
         if (isAllowed()) {
             boolean tankMod = false;
             if (this.focusedTank != null && button == 0) {
-                tankMod = this.focusedTank.acceptStack(
-                        new CallableRef<>(this.handler::getCursorStack, this.handler::setCursorStack, stack -> true),
-                        new FixedInventoryVanillaWrapper(this.handler.player.getInventory()).getInsertable()
-                );
+                tankMod = this.focusedTank.acceptStack(ContainerItemContext.ofPlayerCursor(this.handler.player, this.handler));
             }
             return this.checkTabsClick(mouseX, mouseY, button) | super.mouseClicked(mouseX, mouseY, button) | tankMod;
         } else {
@@ -1023,13 +1022,13 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
             sideOption.setOption(types.get(i));
             sideOption.setMatching(null);
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-            buf.writeByte(face.ordinal()).writeBoolean(false).writeByte(sideOption.getAutomationType().ordinal());
+            buf.writeByte(face.ordinal()).writeBoolean(false).writeByte(sideOption.getAutomationType().getIndex());
             ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "side_config"), buf);
 
         }), //LEFT
         CHANGE_MATCH((player, machine, face, back, reset) -> {
             ConfiguredMachineFace sideOption = machine.getIOConfig().get(face);
-            if (sideOption.getAutomationType().isEnergy() || sideOption.getAutomationType() == AutomationType.NONE) return;
+            if (sideOption.getAutomationType().willAccept(ResourceType.ENERGY) || sideOption.getAutomationType() == AutomationType.NONE) return;
             if (reset) {
                 sideOption.setMatching(null);
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
@@ -1037,11 +1036,11 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
                 ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "side_config"), buf);
                 return;
             }
-            SlotType[] slotTypes = sideOption.getAutomationType().getAutomatable(machine).getTypes();
+            SlotType<?>[] slotTypes = sideOption.getAutomationType().getLinkedResources(machine).getTypes();
             slotTypes = Arrays.copyOf(slotTypes, slotTypes.length);
             int s = 0;
             for (int i = 0; i < slotTypes.length; i++) {
-                if (!slotTypes[i].getType().canPassAs(sideOption.getAutomationType())) {
+                if (!slotTypes[i].getType().equalToOrBroaderThan(sideOption.getAutomationType())) {
                     slotTypes[i] = null;
                     s++;
                 }
@@ -1077,7 +1076,7 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
         }), //RIGHT
         CHANGE_MATCH_SLOT((player, machine, face, back, reset) -> {
             ConfiguredMachineFace sideOption = machine.getIOConfig().get(face);
-            if (sideOption.getAutomationType().isEnergy() || sideOption.getAutomationType() == AutomationType.NONE) return;
+            if (sideOption.getAutomationType().willAccept(ResourceType.ENERGY) || sideOption.getAutomationType() == AutomationType.NONE) return;
             if (reset) {
                 sideOption.setMatching(null);
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
@@ -1090,11 +1089,11 @@ public abstract class MachineHandledScreen<M extends MachineBlockEntity, H exten
             if (sideOption.getMatching() != null && sideOption.getMatching().left().isPresent()) {
                 i = sideOption.getMatching().left().get();
                 sideOption.setMatching(null);
-                list = new IntArrayList(sideOption.getMatching(sideOption.getAutomationType().getAutomatable(machine)));
+                list = new IntArrayList(sideOption.getMatching(sideOption.getAutomationType().getLinkedResources(machine)));
                 i = list.indexOf(i);
             }
             if (list == null)
-                list = new IntArrayList(sideOption.getMatching(sideOption.getAutomationType().getAutomatable(machine)));
+                list = new IntArrayList(sideOption.getMatching(sideOption.getAutomationType().getLinkedResources(machine)));
 
             if (!back) {
                 if (++i == list.size()) i = 0;

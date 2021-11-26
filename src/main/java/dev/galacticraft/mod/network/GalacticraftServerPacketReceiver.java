@@ -32,19 +32,25 @@ import dev.galacticraft.mod.api.machine.SecurityInfo;
 import dev.galacticraft.mod.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
+import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
+import dev.galacticraft.mod.screen.slot.ResourceFlow;
 import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.util.FluidUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.item.ItemStack;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
-
-import java.util.Objects;
 
 /**
  * Handles server-bound (C2S) packets.
@@ -60,37 +66,43 @@ public class GalacticraftServerPacketReceiver {
                 if (buf.readBoolean()) { // int or slottype
                     int i = buf.readInt();
                     server.execute(() -> {
-                        MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                        if (machine.security().hasAccess(player)) {
-                            if (i == -1) {
-                                machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
-                                return;
+                        if (player.currentScreenHandler instanceof MachineScreenHandler sHandler) {
+                            MachineBlockEntity machine = sHandler.machine;
+                            if (machine.security().hasAccess(player)) {
+                                if (i == -1) {
+                                    machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
+                                    return;
+                                }
+                                machine.getConfiguration().getSideConfiguration().get(face).setMatching(Either.left(i));
                             }
-                            machine.getConfiguration().getSideConfiguration().get(face).setMatching(Either.left(i));
                         }
                     });
                 } else {
                     int i = buf.readInt();
                     server.execute(() -> {
-                        MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                        if (machine.security().hasAccess(player)) {
-                            if (i == -1) {
-                                machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
-                                return;
+                        if (player.currentScreenHandler instanceof MachineScreenHandler sHandler) {
+                            MachineBlockEntity machine = sHandler.machine;
+                            if (machine.security().hasAccess(player)) {
+                                if (i == -1) {
+                                    machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
+                                    return;
+                                }
+                                SlotType<?> type = SlotType.SLOT_TYPES.get(i);
+                                machine.getConfiguration().getSideConfiguration().get(face).setMatching(Either.right(type));
                             }
-                            SlotType type = SlotType.SLOT_TYPES.get(i);
-                            machine.getConfiguration().getSideConfiguration().get(face).setMatching(Either.right(type));
                         }
                     });
                 }
             } else {
-                int i = buf.readByte();
+                byte i = buf.readByte();
                 server.execute(() -> {
-                    MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                    if (machine.security().hasAccess(player)) {
-                        machine.getConfiguration().getSideConfiguration().get(face).setOption(AutomationType.values()[i]);
-                        machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
-                        machine.sync();
+                    if (player.currentScreenHandler instanceof MachineScreenHandler sHandler) {
+                        MachineBlockEntity machine = sHandler.machine;
+                        if (machine.security().hasAccess(player)) {
+                            machine.getConfiguration().getSideConfiguration().get(face).setOption(AutomationType.getType(i));
+                            machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
+                            machine.sync();
+                        }
                     }
                 });
             }
@@ -99,9 +111,11 @@ public class GalacticraftServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "redstone_config"), (server, player, handler, buf, responseSender) -> {
             RedstoneInteractionType redstoneInteractionType = RedstoneInteractionType.values()[buf.readByte()];
             server.execute(() -> {
-                MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                if (machine.security().hasAccess(player)) {
-                    machine.getConfiguration().setRedstone(redstoneInteractionType);
+                if (player.currentScreenHandler instanceof MachineScreenHandler sHandler) {
+                    MachineBlockEntity machine = sHandler.machine;
+                    if (machine.security().hasAccess(player)) {
+                        machine.getConfiguration().setRedstone(redstoneInteractionType);
+                    }
                 }
             });
         });
@@ -109,9 +123,11 @@ public class GalacticraftServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "security_config"), (server, player, handler, buf, responseSender) -> {
             SecurityInfo.Accessibility accessibility = SecurityInfo.Accessibility.values()[buf.readByte()];
             server.execute(() -> {
-                MachineBlockEntity machine = ((MachineScreenHandler<?>) player.currentScreenHandler).machine;
-                if (machine.security().isOwner(player)) {
-                    machine.getConfiguration().getSecurity().setAccessibility(accessibility);
+                if (player.currentScreenHandler instanceof MachineScreenHandler sHandler) {
+                    MachineBlockEntity machine = sHandler.machine;
+                    if (machine.security().isOwner(player)) {
+                        machine.getConfiguration().getSecurity().setAccessibility(accessibility);
+                    }
                 }
             });
         });
@@ -119,10 +135,12 @@ public class GalacticraftServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "bubble_max"), (server, player, handler, buf, responseSender) -> {
             byte max = buf.readByte();
             server.execute(() -> {
-                BubbleDistributorBlockEntity machine = ((BubbleDistributorScreenHandler) player.currentScreenHandler).machine;
-                if (machine.security().hasAccess(player)) {
-                    if (max > 0) {
-                        machine.setTargetSize(max);
+                if (player.currentScreenHandler instanceof BubbleDistributorScreenHandler sHandler) {
+                    BubbleDistributorBlockEntity machine = sHandler.machine;
+                    if (machine.security().hasAccess(player)) {
+                        if (max > 0) {
+                            machine.setTargetSize(max);
+                        }
                     }
                 }
             });
@@ -131,9 +149,11 @@ public class GalacticraftServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "bubble_visible"), (server, player, handler, buf, responseSender) -> {
             boolean visible = buf.readBoolean();
             server.execute(() -> {
-                BubbleDistributorBlockEntity machine = ((BubbleDistributorScreenHandler) player.currentScreenHandler).machine;
-                if (machine.security().hasAccess(player)) {
-                    machine.bubbleVisible = visible;
+                if (player.currentScreenHandler instanceof BubbleDistributorScreenHandler sHandler) {
+                    BubbleDistributorBlockEntity machine = sHandler.machine;
+                    if (machine.security().hasAccess(player)) {
+                        machine.bubbleVisible = visible;
+                    }
                 }
             });
         });
@@ -141,21 +161,36 @@ public class GalacticraftServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "tank_modify"), (server, player, handler, buf, responseSender) -> {
             int index = buf.readInt();
             server.execute(() -> {
-                MachineFluidStorage inv = ((MachineScreenHandler<?>) player.currentScreenHandler).machine.fluidInv();
-                ItemInsertable excess = new FixedInventoryVanillaWrapper(player.getInventory()).getInsertable();
-                Reference<ItemStack> reference = new CallableRef<>(player.currentScreenHandler::getCursorStack, player.currentScreenHandler::setCursorStack, Objects::nonNull);
-                FluidExtractable extractable = FluidAttributes.EXTRACTABLE.getFirstOrNull(reference, excess);
-                if (extractable != null && !extractable.attemptExtraction(inv.getFilterForTank(index), FluidAmount.MAX_BUCKETS, Simulation.SIMULATE).isEmpty()) {
-                    if (((Automatable) inv).getTypes()[index].getType().isInput()) {
-                        FluidStackUtil.move(extractable, inv.getTank(index));
-                        ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(index)));
-                    }
-                } else {
-                    FluidInsertable insertable = FluidAttributes.INSERTABLE.getFirstOrNull(reference, excess);
-                    if (insertable != null) {
-                        if (((Automatable) inv).getTypes()[index].getType().isOutput()) {
-                            FluidStackUtil.move(inv.getTank(index), insertable);
-                            ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(index)));
+                if (player.currentScreenHandler instanceof MachineScreenHandler sHandler) {
+                    MachineFluidStorage fluidTank = sHandler.machine.fluidInv();
+                    ContainerItemContext context = ContainerItemContext.ofPlayerCursor(player, player.currentScreenHandler);
+                    Storage<FluidVariant> itemTank = context.find(FluidStorage.ITEM);
+                    if (itemTank != null) {
+                        if (itemTank.supportsExtraction()) {
+                            if (((Automatable<?>) fluidTank).getTypes()[index].getType().canFlow(ResourceFlow.INPUT)) {
+                                try (Transaction transaction = Transaction.openOuter()) {
+                                    FluidVariant extractableResource = StorageUtil.findExtractableResource(itemTank, fluidTank.getFilter(index), transaction);
+                                    if (extractableResource != null) {
+                                        FluidUtil.move(extractableResource, itemTank, fluidTank.getTank(index), Long.MAX_VALUE, transaction);
+                                        ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(index)));
+                                        transaction.commit();
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                        if (itemTank.supportsInsertion()) {
+                            if (((Automatable) fluidTank).getTypes()[index].getType().canFlow(ResourceFlow.OUTPUT)) {
+                                try (Transaction transaction = Transaction.openOuter()) {
+                                    FluidVariant extractableResource = fluidTank.getFluid(index).fluid();
+                                    if (!extractableResource.isBlank()) {
+                                        FluidUtil.move(extractableResource, fluidTank.getTank(index), itemTank, Long.MAX_VALUE, transaction);
+                                        ClientPlayNetworking.send(new Identifier(Constant.MOD_ID, "tank_modify"), new PacketByteBuf(Unpooled.buffer().writeInt(index)));
+                                        transaction.commit();
+                                        return;
+                                    }
+                                }
+                            }
                         }
                     }
                 }

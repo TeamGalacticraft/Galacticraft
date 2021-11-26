@@ -22,97 +22,116 @@
 
 package dev.galacticraft.mod.api.block;
 
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.attribute.NullAutomatable;
-import net.minecraft.text.MutableText;
+import dev.galacticraft.mod.screen.slot.ResourceFlow;
+import dev.galacticraft.mod.screen.slot.ResourceType;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public enum AutomationType implements Comparable<AutomationType> {
-    NONE(new TranslatableText("ui.galacticraft.side_option.none").setStyle(Constant.Text.DARK_GRAY_STYLE), false, false, false, false, false),
-    POWER_INPUT(new TranslatableText("ui.galacticraft.side_option.energy").setStyle(Constant.Text.LIGHT_PURPLE_STYLE).append(new TranslatableText("ui.galacticraft.side_option.in").setStyle(Constant.Text.GREEN_STYLE)), true, false, false, true, false),
-    POWER_OUTPUT(new TranslatableText("ui.galacticraft.side_option.energy").setStyle(Constant.Text.LIGHT_PURPLE_STYLE).append(new TranslatableText("ui.galacticraft.side_option.out").setStyle(Constant.Text.DARK_RED_STYLE)), true, false, false, false, true),
-    POWER_IO(new TranslatableText("ui.galacticraft.side_option.energy").setStyle(Constant.Text.LIGHT_PURPLE_STYLE).append(new TranslatableText("ui.galacticraft.side_option.io").setStyle(Constant.Text.BLUE_STYLE)), true, false, false, true, true),
-    FLUID_INPUT(new TranslatableText("ui.galacticraft.side_option.fluids").setStyle(Constant.Text.GREEN_STYLE).append(new TranslatableText("ui.galacticraft.side_option.in").setStyle(Constant.Text.GREEN_STYLE)), false, true, false, true, false),
-    FLUID_OUTPUT(new TranslatableText("ui.galacticraft.side_option.fluids").setStyle(Constant.Text.GREEN_STYLE).append(new TranslatableText("ui.galacticraft.side_option.out").setStyle(Constant.Text.DARK_RED_STYLE)), false, true, false, false, true),
-    FLUID_IO(new TranslatableText("ui.galacticraft.side_option.fluids").setStyle(Constant.Text.GREEN_STYLE).append(new TranslatableText("ui.galacticraft.side_option.io").setStyle(Constant.Text.BLUE_STYLE)), false, true, false, true, true),
-    ITEM_INPUT(new TranslatableText("ui.galacticraft.side_option.items").setStyle(Constant.Text.GOLD_STYLE).append(new TranslatableText("ui.galacticraft.side_option.in").setStyle(Constant.Text.GREEN_STYLE)), false, false, true, true, false),
-    ITEM_OUTPUT(new TranslatableText("ui.galacticraft.side_option.items").setStyle(Constant.Text.GOLD_STYLE).append(new TranslatableText("ui.galacticraft.side_option.out").setStyle(Constant.Text.DARK_RED_STYLE)), false, false, true, false, true),
-    ITEM_IO(new TranslatableText("ui.galacticraft.side_option.items").setStyle(Constant.Text.GOLD_STYLE).append(new TranslatableText("ui.galacticraft.side_option.io").setStyle(Constant.Text.BLUE_STYLE)), false, false, true, true, true);
-//    ANY(new TranslatableText("ui.galacticraft.side_option.any").setStyle(Constants.Text.RED_STYLE).append(new TranslatableText("ui.galacticraft.side_option.io").setStyle(Constants.Text.BLUE_STYLE)), true, true, true, true, true);
+public final class AutomationType<T> {
+    public static final AutomationType<?> NONE = new AutomationType<>(ResourceType.NONE, ResourceFlow.BOTH);
+    public static final AutomationType<?> ANY_INPUT = new AutomationType<>(ResourceType.ANY, ResourceFlow.INPUT);
+    public static final AutomationType<?> ANY_OUTPUT = new AutomationType<>(ResourceType.ANY, ResourceFlow.OUTPUT);
+    public static final AutomationType<?> ANY_IO = new AutomationType<>(ResourceType.ANY, ResourceFlow.BOTH);
+    public static final AutomationType<Long> ENERGY_INPUT = new AutomationType<>(ResourceType.ENERGY, ResourceFlow.INPUT);
+    public static final AutomationType<Long> ENERGY_OUTPUT = new AutomationType<>(ResourceType.ENERGY, ResourceFlow.OUTPUT);
+    public static final AutomationType<Long> ENERGY_IO = new AutomationType<>(ResourceType.ENERGY, ResourceFlow.BOTH);
+    public static final AutomationType<FluidVariant> FLUID_INPUT = new AutomationType<>(ResourceType.FLUID, ResourceFlow.INPUT);
+    public static final AutomationType<FluidVariant> FLUID_OUTPUT = new AutomationType<>(ResourceType.FLUID, ResourceFlow.OUTPUT);
+    public static final AutomationType<FluidVariant> FLUID_IO = new AutomationType<>(ResourceType.FLUID, ResourceFlow.BOTH);
+    public static final AutomationType<Gas> GAS_INPUT = new AutomationType<>(ResourceType.GAS, ResourceFlow.INPUT);
+    public static final AutomationType<Gas> GAS_OUTPUT = new AutomationType<>(ResourceType.GAS, ResourceFlow.OUTPUT);
+    public static final AutomationType<Gas> GAS_IO = new AutomationType<>(ResourceType.GAS, ResourceFlow.BOTH);
+    public static final AutomationType<ItemVariant> ITEM_INPUT = new AutomationType<>(ResourceType.ITEM, ResourceFlow.INPUT);
+    public static final AutomationType<ItemVariant> ITEM_OUTPUT = new AutomationType<>(ResourceType.ITEM, ResourceFlow.OUTPUT);
+    public static final AutomationType<ItemVariant> ITEM_IO = new AutomationType<>(ResourceType.ITEM, ResourceFlow.BOTH);
 
-    private final MutableText name;
-    private final boolean energy;
-    private final boolean fluid;
-    private final boolean item;
-    private final boolean input;
-    private final boolean output;
+    private static final List<AutomationType<?>> TYPES = new ArrayList<>(16);
 
-    AutomationType(MutableText name, boolean energy, boolean fluid, boolean item, boolean input, boolean output) {
-        this.name = name;
-        this.energy = energy;
-        this.fluid = fluid;
-        this.item = item;
-        this.input = input;
-        this.output = output;
+    private final Text name;
+    private final ResourceType<T> resource;
+    private final ResourceFlow flow;
+    private final byte index;
+
+    private AutomationType(ResourceType<T> resource, ResourceFlow flow) {
+        TYPES.add(this);
+        this.name = resource.getName().copy().append(flow.getName());
+        this.resource = resource;
+        this.flow = flow;
+        this.index = (byte) TYPES.size();
     }
 
-    public boolean isEnergy() {
-        return energy;
+    public ResourceType<T> getResource() {
+        return resource;
     }
 
-    public boolean isItem() {
-        return item;
+    public ResourceFlow getFlow() {
+        return flow;
     }
 
-    public boolean isFluid() {
-        return fluid;
+    public <OT> boolean willAccept(ResourceType<OT> type) {
+        return this.resource.willAcceptResource(type);
     }
 
-    public boolean isInput() {
-        return input;
+    public byte getIndex() {
+        return this.index;
     }
 
-    public boolean isOutput() {
-        return output;
+    public boolean canFlow(ResourceFlow flow) {
+        return this.flow.canFlowIn(flow);
     }
 
     public boolean isBidirectional() {
-        return this.isInput() && this.isOutput();
+        return this.flow == ResourceFlow.BOTH;
     }
 
-    public boolean canPassAs(AutomationType other) {
+    public <OT> boolean equalToOrBroaderThan(AutomationType<OT> other) {
         if (other == this) return true;
-        if (other.isEnergy() != this.isEnergy()) return false;
-        if (other.isFluid() != this.isFluid()) return false;
-        if (other.isItem() != this.isItem()) return false;
-        if (this.isBidirectional()) return true;
-        if (other.isInput() != this.isInput()) return false;
-        if (other.isOutput() != this.isOutput()) return false;
-        return true;
+        return this.willAccept(other.getResource()) && this.canFlow(other.getFlow());
     }
 
-    public boolean canPassAsIgnoreFlow(AutomationType other) {
+    public <OT> boolean typeAllows(AutomationType<OT> other) {
         if (other == this) return true;
-        if (other.isEnergy() != this.isEnergy()) return false;
-        if (other.isFluid() != this.isFluid()) return false;
-        if (other.isItem() != this.isItem()) return false;
-        return true;
+        return this.willAccept(other.getResource());
     }
 
-    public Automatable getAutomatable(MachineBlockEntity machine) {
-        if (this.isItem()) return machine.itemStorage();
-        if (this.isFluid()) return machine.fluidInv();
-        if (this.isEnergy()) return NullAutomatable.INSTANCE;
-        return NullAutomatable.INSTANCE;
+    @Contract("_ -> new")
+    public @NotNull Automatable<T> getLinkedResources(MachineBlockEntity machine) {
+        if (this.resource == ResourceType.ANY || this.resource == ResourceType.NONE) {
+            return (Automatable<T>) NullAutomatable.INSTANCE;
+        } else if (this.resource == ResourceType.ITEM) {
+            return (Automatable<T>) machine.itemStorage();
+        } else if (this.resource == ResourceType.ENERGY) {
+            return (Automatable<T>) machine.capacitor();
+        } else if (this.resource == ResourceType.GAS) {
+            return (Automatable<T>) machine.gasStorage();
+        } else if (this.resource == ResourceType.FLUID) {
+            return (Automatable<T>) machine.fluidInv();
+        }
+        throw new AssertionError();
     }
 
-    public Text getFormattedName() {
+    public Text getName() {
         return this.name;
+    }
+
+    public static <T> AutomationType<T> getType(byte index) {
+        return (AutomationType<T>) TYPES.get(index);
     }
 }

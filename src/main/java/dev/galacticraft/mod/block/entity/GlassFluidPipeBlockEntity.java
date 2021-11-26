@@ -36,7 +36,7 @@ public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colore
     private boolean pull = false;
 
     public GlassFluidPipeBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.GLASS_FLUID_PIPE, pos, state, FluidAmount.of(1, 50)); //0.4B/s
+        super(GalacticraftBlockEntityType.GLASS_FLUID_PIPE, pos, state, 81000 / 50); //0.4B/s
     }
 
     @Override

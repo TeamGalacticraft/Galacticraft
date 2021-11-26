@@ -30,6 +30,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.lookup.filter.ItemFilter;
+import dev.galacticraft.mod.screen.slot.ResourceFlow;
 import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -61,7 +62,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("UnstableApiUsage")
-public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItemStorage.MachineItemSlot> implements Automatable, Inventory {
+public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItemStorage.MachineItemSlot> implements Automatable<ItemVariant>, Inventory {
     private final MachineBlockEntity machine;
     private final ItemStack[] stacks;
     private final SlotSettings[] slotSettings;
@@ -308,7 +309,7 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
     }
 
     @Override
-    public SlotType[] getTypes() {
+    public SlotType<ItemVariant>[] getTypes() {
         return this.types;
     }
 
@@ -498,7 +499,7 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
 
             @Override
             public boolean supportsInsertion() {
-                return this.type.getType().isInput();
+                return this.type.getType().canFlow(ResourceFlow.INPUT);
             }
 
             @Override
@@ -525,7 +526,7 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
 
             @Override
             public boolean supportsExtraction() {
-                return this.type.getType().isOutput();
+                return this.type.getType().canFlow(ResourceFlow.OUTPUT);
             }
 
             @Override

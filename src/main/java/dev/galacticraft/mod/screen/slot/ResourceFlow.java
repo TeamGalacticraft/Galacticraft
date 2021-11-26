@@ -22,20 +22,26 @@
 
 package dev.galacticraft.mod.screen.slot;
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+import dev.galacticraft.mod.Constant;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class OutputSlot extends Slot {
-    public OutputSlot(Inventory inventory, int slotId, int x, int y) {
-        super(inventory, slotId, x, y);
+public enum ResourceFlow {
+    INPUT(new TranslatableText("ui.galacticraft.side_option.in").setStyle(Constant.Text.GREEN_STYLE)),
+    OUTPUT(new TranslatableText("ui.galacticraft.side_option.out").setStyle(Constant.Text.DARK_RED_STYLE)),
+    BOTH(new TranslatableText("ui.galacticraft.side_option.io").setStyle(Constant.Text.BLUE_STYLE));
+
+    private final Text name;
+
+    ResourceFlow(Text name) {
+        this.name = name;
     }
 
-    @Override
-    public boolean canInsert(ItemStack stack) {
-        return false;
+    public Text getName() {
+        return this.name;
+    }
+
+    public boolean canFlowIn(ResourceFlow direction) {
+        return this == direction || this == BOTH;
     }
 }

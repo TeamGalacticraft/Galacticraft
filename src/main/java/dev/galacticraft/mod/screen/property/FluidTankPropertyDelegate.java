@@ -29,8 +29,6 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.util.registry.Registry;
 
-import java.math.RoundingMode;
-
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
@@ -46,7 +44,7 @@ public class FluidTankPropertyDelegate implements PropertyDelegate {
     @Override
     public int get(int index) {
         if (index % 3 == 0) {
-            return Registry.FLUID.getRawId(inv.getStack(index / 3).fluid().getFluid());
+            return Registry.FLUID.getRawId(inv.getFluid(index / 3).fluid().getFluid());
         } else if (index % 3 == 1) {
             return (int) (inv.getTank(((index - 1) / 3)).getAmount() & 0b11111111111111111111111111111111L);
         } else {
@@ -59,9 +57,9 @@ public class FluidTankPropertyDelegate implements PropertyDelegate {
         if (index % 2 == 0){
             fluids[index / 3] = Registry.FLUID.get(value);
         } else if (index % 3 == 1) {
-            inv.setStack(((index - 1) / 3), new FluidStack(FluidVariant.of(this.fluids[(index - 1) / 3]), (inv.getStack(((index - 1) / 3)).amount() >> 32 << 32) | (value & 0b11111111111111111111111111111111L)));
+            inv.setStack(((index - 1) / 3), new FluidStack(FluidVariant.of(this.fluids[(index - 1) / 3]), (inv.getFluid(((index - 1) / 3)).amount() >> 32 << 32) | (value & 0b11111111111111111111111111111111L)));
         } else {
-            inv.setStack(((index - 2) / 3), new FluidStack(FluidVariant.of(this.fluids[(index - 2) / 3]), (inv.getStack(((index - 1) / 3)).amount() << 32 >> 32) | ((value & 0b11111111111111111111111111111111L) << 32)));
+            inv.setStack(((index - 2) / 3), new FluidStack(FluidVariant.of(this.fluids[(index - 2) / 3]), (inv.getFluid(((index - 1) / 3)).amount() << 32 >> 32) | ((value & 0b11111111111111111111111111111111L) << 32)));
         }
     }
 

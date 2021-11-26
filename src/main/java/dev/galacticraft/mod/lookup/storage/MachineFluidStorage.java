@@ -30,6 +30,7 @@ import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.attribute.Automatable;
 import dev.galacticraft.mod.lookup.filter.FluidFilter;
 import dev.galacticraft.mod.screen.slot.FluidTankSettings;
+import dev.galacticraft.mod.screen.slot.ResourceFlow;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.screen.tank.Tank;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -56,7 +57,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("UnstableApiUsage")
-public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFluidStorage.MachineFluidSlot> implements Automatable {
+public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFluidStorage.MachineFluidSlot> implements Automatable<FluidVariant> {
     private final MachineBlockEntity machine;
     private final FluidStack[] stacks;
     private final FluidTankSettings[] slotSettings;
@@ -112,7 +113,7 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
 
     public void setStack(int index, @NotNull FluidStack stack, TransactionContext context) {
         Preconditions.checkNotNull(stack);
-        if (!stack.equals(this.getStack(index))) {
+        if (!stack.equals(this.getFluid(index))) {
             this.parts.get(index).updateSnapshots(context);
             this.stacks[index] = stack;
         }
@@ -133,6 +134,11 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
         return stack1;
     }
 
+    public boolean isFull(int tank) {
+        assert this.getFluid(tank).amount() <= this.getCapacity(tank) : "Overfilled tank?!";
+        return this.getFluid(tank).amount() >= this.getCapacity(tank);
+    }
+
     public FluidStack simulateInsertion(int index, @NotNull FluidStack stack, TransactionContext context) {
         try (Transaction transaction = context.openNested()) {
             return insertFluid(index, stack, transaction);
@@ -149,7 +155,7 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
         Preconditions.checkNotNull(filter);
         StoragePreconditions.notNegative(amount);
 
-        FluidStack stack = this.getStack(index);
+        FluidStack stack = this.getFluid(index);
         if (amount != 0 && filter.test(stack.fluid()) && !stack.isEmpty()) {
             this.parts.get(index).updateSnapshots(context);
             long count = Math.min(stack.amount(), amount);
@@ -187,6 +193,10 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
         return simulateExtraction(index, filter, amount, null);
     }
 
+    public long getCapacity(int tank) {
+        return this.parts.get(tank).capacity;
+    }
+
     public void markDirty() {
         this.machine.markDirty();
     }
@@ -217,13 +227,13 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
         }
     }
 
-    public @NotNull FluidStack getStack(int index) {
+    public @NotNull FluidStack getFluid(int index) {
         return this.stacks[index];
     }
 
     public FluidStack extractFluid(int slot, long amount) {
-        FluidStack copy = this.getStack(slot).copy();
-        FluidStack copy2 = this.getStack(slot).copy();
+        FluidStack copy = this.getFluid(slot).copy();
+        FluidStack copy2 = this.getFluid(slot).copy();
         copy.setAmount(Math.min(copy.amount(), amount));
         copy2.setAmount(copy2.amount() - copy.amount());
         this.setStack(slot, copy2);
@@ -231,7 +241,7 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
     }
 
     public FluidStack clearTank(int slot) {
-        FluidStack stack = this.getStack(slot);
+        FluidStack stack = this.getFluid(slot);
         this.setStack(slot, FluidStack.EMPTY);
         return stack;
     }
@@ -270,8 +280,12 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
     }
 
     @Override
-    public SlotType[] getTypes() {
+    public SlotType<FluidVariant>[] getTypes() {
         return this.types;
+    }
+
+    public FluidFilter getFilter(int slot) {
+        return this.parts.get(slot).filter();
     }
 
     public boolean canAccept(int slot, FluidStack stack) {
@@ -315,17 +329,17 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
 
         @Override
         public boolean isResourceBlank() {
-            return MachineFluidStorage.this.getStack(this.index).isEmpty();
+            return MachineFluidStorage.this.getFluid(this.index).isEmpty();
         }
 
         @Override
         public final FluidVariant getResource() {
-            return MachineFluidStorage.this.getStack(this.index).fluid();
+            return MachineFluidStorage.this.getFluid(this.index).fluid();
         }
 
         @Override
         public long getAmount() {
-            return MachineFluidStorage.this.getStack(this.index).amount();
+            return MachineFluidStorage.this.getFluid(this.index).amount();
         }
 
         @Override
@@ -336,12 +350,12 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
         @Override
         public long insert(FluidVariant insertedVariant, long maxAmount, TransactionContext transaction) {
             StoragePreconditions.notBlankNotNegative(insertedVariant, maxAmount);
-            FluidStack currentStack = MachineFluidStorage.this.getStack(this.index);
+            FluidStack currentStack = MachineFluidStorage.this.getFluid(this.index);
             if ((currentStack.fluid() == insertedVariant || currentStack.isEmpty()) && this.canAccept(insertedVariant)) {
                 int insertedAmount = (int)Math.min(maxAmount, this.capacity - currentStack.amount());
                 if (insertedAmount > 0) {
                     this.updateSnapshots(transaction);
-                    currentStack = MachineFluidStorage.this.getStack(this.index);
+                    currentStack = MachineFluidStorage.this.getFluid(this.index);
                     if (currentStack.isEmpty()) {
                         currentStack = new FluidStack(insertedVariant, insertedAmount);
                     } else {
@@ -360,12 +374,12 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
         @Override
         public long extract(FluidVariant variant, long maxAmount, TransactionContext transaction) {
             StoragePreconditions.notBlankNotNegative(variant, maxAmount);
-            FluidStack currentStack = MachineFluidStorage.this.getStack(this.index);
+            FluidStack currentStack = MachineFluidStorage.this.getFluid(this.index);
             if (currentStack.fluid() == variant && this.canAccept(variant)) {
                 int extracted = (int)Math.min(currentStack.amount(), maxAmount);
                 if (extracted > 0) {
                     this.updateSnapshots(transaction);
-                    currentStack = MachineFluidStorage.this.getStack(this.index);
+                    currentStack = MachineFluidStorage.this.getFluid(this.index);
                     currentStack.setAmount(currentStack.amount() - extracted);
                     MachineFluidStorage.this.stacks[this.index] = currentStack;
                 }
@@ -378,7 +392,7 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
 
         @Override
         protected final FluidStack createSnapshot() {
-            FluidStack original = MachineFluidStorage.this.getStack(this.index);
+            FluidStack original = MachineFluidStorage.this.getFluid(this.index);
             MachineFluidStorage.this.stacks[this.index] = original.copy();
             return original;
         }
@@ -422,10 +436,10 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
 
         private class ExposedFluidSlot implements SingleSlotStorage<FluidVariant> {
             private final int index;
-            private final SlotType type;
+            private final SlotType<FluidVariant> type;
             private final FluidFilter filter;
 
-            public ExposedFluidSlot(int index, SlotType type, FluidFilter filter) {
+            public ExposedFluidSlot(int index, SlotType<FluidVariant> type, FluidFilter filter) {
                 this.index = index;
                 this.type = type;
                 this.filter = filter;
@@ -433,7 +447,7 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
 
             @Override
             public boolean supportsInsertion() {
-                return this.type.getType().isInput();
+                return this.type.getType().canFlow(ResourceFlow.INPUT);
             }
 
             @Override
@@ -460,7 +474,7 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
 
             @Override
             public boolean supportsExtraction() {
-                return this.type.getType().isOutput();
+                return this.type.getType().canFlow(ResourceFlow.OUTPUT);
             }
 
             @Override

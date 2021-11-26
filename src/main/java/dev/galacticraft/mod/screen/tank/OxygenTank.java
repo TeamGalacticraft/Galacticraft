@@ -25,15 +25,17 @@ package dev.galacticraft.mod.screen.tank;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
+import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
 import dev.galacticraft.mod.util.DrawableUtil;
+import dev.galacticraft.mod.util.FluidUtil;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -49,22 +51,23 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenTank extends Tank {
-    public OxygenTank(int index, FixedFluidInv inv, int x, int y) {
+    public OxygenTank(int index, MachineFluidStorage inv, int x, int y) {
         super(index, inv, x, y, 0);
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public void render(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY, boolean colorize, Int2IntMap color) {
-        drawOxygenBuffer(matrices, this.x, this.y, (float) inv.getInvFluid(this.index).amount().div(inv.getMaxAmount_F(this.index)).asInexactDouble(), colorize);
+        drawOxygenBuffer(matrices, this.x, this.y, (float) ((double)inv.getFluid(this.index).amount() / (double)inv.getCapacity(this.index)), colorize);
     }
 
     @Override
     public void drawTooltip(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY) {
         if (DrawableUtil.isWithin(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
             List<Text> lines = new ArrayList<>(2);
-            lines.add(new TranslatableText("ui.galacticraft.machine.current_oxygen", new LiteralText(Screen.hasShiftDown() ? this.inv.getInvFluid(this.index).amount().toString() + "B" : (this.inv.getInvFluid(this.index).amount().asInt(1000, RoundingMode.HALF_DOWN) + "mB")).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.GOLD_STYLE));
-            lines.add(new TranslatableText("ui.galacticraft.machine.max_oxygen", new LiteralText(String.valueOf(OxygenCollectorBlockEntity.MAX_OXYGEN.asInt(1000, RoundingMode.HALF_DOWN))).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.RED_STYLE));
+            long amount = this.inv.getFluid(this.index).amount();
+            lines.add(new TranslatableText("ui.galacticraft.machine.current_oxygen", new LiteralText(!Screen.hasShiftDown() || amount / 81.0 >= 10000 ? (DrawableUtil.roundForDisplay(amount / 81000.0, 2) + FluidUtil.SUFFIX_BUCKETS) : (DrawableUtil.roundForDisplay(amount / 81.0, 0) + FluidUtil.SUFFIX_MILLIBUCKETS)).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.GOLD_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft.machine.max_oxygen", new LiteralText(DrawableUtil.roundForDisplay(this.inv.getCapacity(this.index) / 81000.0, 2) + FluidUtil.SUFFIX_BUCKETS).setStyle(Constant.Text.BLUE_STYLE)).setStyle(Constant.Text.RED_STYLE));
 
             client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
         }
@@ -95,8 +98,8 @@ public class OxygenTank extends Tank {
     }
 
     @Override
-    public boolean acceptStack(Reference<ItemStack> stack, LimitedConsumer<ItemStack> excess) {
-        return super.acceptStack(stack, excess);
+    public boolean acceptStack(ContainerItemContext context) {
+        return super.acceptStack(context);
     }
 
     @Override

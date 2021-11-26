@@ -22,6 +22,9 @@
 
 package dev.galacticraft.mod.block.entity;
 
+import dev.galacticraft.api.attribute.GasStorage;
+import dev.galacticraft.api.gas.Gas;
+import dev.galacticraft.api.gas.GasStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
@@ -29,9 +32,14 @@ import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.lookup.storage.MachineGasStorage;
 import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.slot.GasSlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.FluidUtil;
+import dev.galacticraft.mod.util.GenericStorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -50,7 +58,7 @@ import org.jetbrains.annotations.Nullable;
 public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
     public static final int CHARGE_SLOT = 0;
-    public static final int TANK_SLOT = 1;
+    public static final int OXYGEN_TANK_SLOT = 1;
     public static final int OXYGEN_TANK = 0;
 
     public OxygenDecompressorBlockEntity(BlockPos pos, BlockState state) {
@@ -66,12 +74,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
 
     @Override
     protected MachineGasStorage.Builder createGasStorage(MachineGasStorage.Builder builder) {
-        return super.createGasStorage(builder);
-    }
-
-    @Override
-    protected MachineFluidStorage.Builder createFluidInv(MachineFluidStorage.Builder builder) {
-        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_OUT, 30, 8);
+        builder.addSlot(GasSlotSettings.Builder.create(30, 8, SlotType.OXYGEN_OUT).capacity(MAX_OXYGEN).filter(Constant.Filter.Gas.OXYGEN).build());
         return builder;
     }
 
@@ -99,9 +102,9 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        OxygenTank tank = OxygenTankUtil.getOxygenTank(this.itemStorage().getSlot(TANK_SLOT));
-        if (tank == EmptyOxygenTank.NULL) return Status.NOT_ENOUGH_ITEMS;
-        if (tank.getAmount() <= 0) return Status.EMPTY_CANISTER;
+        Storage<Gas> gasStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(GasStorage.ITEM);
+        if (gasStorage == null) return Status.NOT_ENOUGH_ITEMS;
+        if (gasStorage.simulateExtract(Gas.OXYGEN, Long.MAX_VALUE, null) == 0) return Status.EMPTY_CANISTER;
         if (this.isTankFull(0)) return Status.FULL;
         return Status.DECOMPRESSING;
     }
@@ -109,8 +112,11 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     @Override
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
-            OxygenTank tank = OxygenTankUtil.getOxygenTank(this.itemStorage().getSlot(TANK_SLOT));
-            OxygenTankUtil.insertLiquidOxygen(tank, this.fluidInv().insertFluid(0, OxygenTankUtil.extractLiquidOxygen(tank, FluidAmount.of(1, 300)), Simulation.ACTION));
+            Storage<Gas> gasStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(GasStorage.ITEM);
+            try (Transaction transaction = Transaction.openOuter()) {
+                GenericStorageUtil.move(Gas.OXYGEN, gasStorage, this.gasStorage(), Long.MAX_VALUE, transaction);
+                transaction.commit();
+            }
         }
     }
 

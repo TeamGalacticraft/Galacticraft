@@ -35,28 +35,22 @@ import org.jetbrains.annotations.Nullable;
 public class FluidUtil {
     private FluidUtil() {}
 
+    public static final String SUFFIX_MILLIBUCKETS = "mB";
+    public static final String SUFFIX_BUCKETS = "B";
+
     public static long bucketsToDroplets(int buckets) {
         return buckets * 81000L;
     }
 
     public static long move(FluidVariant variant, @Nullable Storage<FluidVariant> from, @Nullable Storage<FluidVariant> to, long maxAmount, @Nullable TransactionContext transaction) {
-        if (from == null || to == null) return 0;
-        StoragePreconditions.notNegative(maxAmount);
+        GenericStorageUtil.move(variant, from, to, maxAmount, transaction);
+    }
 
-        long maxExtracted;
-        try (Transaction extractionTestTransaction = Transaction.openNested(transaction)) {
-            maxExtracted = from.extract(variant, maxAmount, extractionTestTransaction);
-        }
+    public static long oxygenGasToLOX(long oxygen) {
+        return oxygen;
+    }
 
-        try (Transaction moveTransaction = Transaction.openNested(transaction)) {
-            long accepted = to.insert(variant, maxExtracted, moveTransaction);
-
-            if (from.extract(variant, accepted, moveTransaction) == accepted) {
-                moveTransaction.commit();
-                return accepted;
-            }
-        }
-
-        return 0;
+    public static long loxToOxygenGas(long lox) {
+        return lox; //todo
     }
 }

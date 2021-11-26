@@ -22,10 +22,11 @@
 
 package dev.galacticraft.mod.screen.tank;
 
+import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -37,11 +38,6 @@ public final class NullTank extends Tank {
 
     private NullTank() {
         super(0, null, 0, 0, 0);
-    }
-
-    @Override
-    public int[] getPositionData() {
-        return new int[]{0, 0, 0};
     }
 
     @Override
@@ -62,7 +58,7 @@ public final class NullTank extends Tank {
     }
 
     @Override
-    public boolean acceptStack(Reference<ItemStack> stack, LimitedConsumer<ItemStack> excess) {
+    public boolean acceptStack(ContainerItemContext context) {
         return false;
     }
 }

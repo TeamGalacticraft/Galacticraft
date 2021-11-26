@@ -23,17 +23,21 @@
 package dev.galacticraft.mod.screen.slot;
 
 import com.google.common.base.Preconditions;
+import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.lookup.filter.GasFilter;
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record GasSlotSettings(@NotNull SlotType type, @NotNull GasFilter filter, boolean canInsertGases,
-                              boolean canTakeGases, long capacity, @NotNull SlotChangeListener extractionListener,
+public record GasSlotSettings(int x, int y, @NotNull SlotType<Gas> type, @NotNull GasFilter filter,
+                              boolean canInsertGases, boolean canTakeGases, long capacity,
+                              @NotNull SlotChangeListener extractionListener,
                               @NotNull SlotChangeListener insertionListener) {
     public static class Builder {
-        private final SlotType type;
+        private final int x;
+        private final int y;
+        private final SlotType<Gas> type;
         private boolean canInsertGases = true;
         private boolean canExtractGases = true;
         private long capacity = 0;
@@ -41,14 +45,15 @@ public record GasSlotSettings(@NotNull SlotType type, @NotNull GasFilter filter,
         private @NotNull SlotChangeListener insertionListener = SlotChangeListener.DO_NOTHING;
         private @NotNull GasFilter filter = Constant.Filter.Gas.ALWAYS;
 
-        private Builder(@NotNull SlotType type) {
+        private Builder(int x, int y, @NotNull SlotType<Gas> type) {
+            this.x = x;
+            this.y = y;
             this.type = type;
         }
 
-        public static @NotNull Builder create(@NotNull SlotType type) {
+        public static @NotNull Builder create(int x, int y, @NotNull SlotType<Gas> type) {
             Preconditions.checkNotNull(type);
-//            assert type.getType().isGas(); //fixme
-            return new Builder(type);
+            return new Builder(x, y, type);
         }
 
         public Builder filter(@NotNull GasFilter filter) {
@@ -82,7 +87,7 @@ public record GasSlotSettings(@NotNull SlotType type, @NotNull GasFilter filter,
         }
 
         public GasSlotSettings build() {
-            return new GasSlotSettings(this.type, this.filter, this.canInsertGases, this.canExtractGases, this.capacity, this.extractionListener, this.insertionListener);
+            return new GasSlotSettings(this.x, this.y, this.type, this.filter, this.canInsertGases, this.canExtractGases, this.capacity, this.extractionListener, this.insertionListener);
         }
     }
 

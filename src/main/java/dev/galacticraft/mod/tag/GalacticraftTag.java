@@ -22,18 +22,23 @@
 
 package dev.galacticraft.mod.tag;
 
+import dev.galacticraft.api.gas.Gas;
+import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftTag {
+    public static final TagFactory<Gas> GAS_TAG_FACTORY = TagFactory.of(AddonRegistry.GAS_KEY, "tags/gas");
 
     public static final Tag.Identified<Fluid> OIL = TagFactory.FLUID.create(new Identifier(Constant.COMMON_NAMESPACE, "oil"));
     public static final Tag.Identified<Fluid> FUEL = TagFactory.FLUID.create(new Identifier(Constant.COMMON_NAMESPACE, "fuel"));
@@ -44,6 +49,12 @@ public class GalacticraftTag {
 
     public static final Tag.Identified<Biome> MOON = TagFactory.BIOME.create(new Identifier(Constant.MOD_ID, "moon"));
     public static final Tag.Identified<Biome> MOON_MARE = TagFactory.BIOME.create(new Identifier(Constant.MOD_ID, "moon_mare"));
+
+    public static final Tag.Identified<Gas> OXYGEN = GAS_TAG_FACTORY.create(new Identifier(Constant.MOD_ID, "oxygen"));
+
+    public static final Tag.Identified<Item> DIAMONDS = TagFactory.ITEM.create(new Identifier(Constant.COMMON_NAMESPACE, "diamonds"));
+    public static final Tag.Identified<Item> SILICONS = TagFactory.ITEM.create(new Identifier(Constant.COMMON_NAMESPACE, "silicons"));
+    public static final Tag.Identified<Item> REDSTONES = TagFactory.ITEM.create(new Identifier(Constant.COMMON_NAMESPACE, "redstones"));
 
     public static void register() {
     }

@@ -25,20 +25,21 @@ package dev.galacticraft.mod.screen.slot;
 import com.google.common.base.Preconditions;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.lookup.filter.FluidFilter;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record FluidTankSettings(int x, int y, @NotNull SlotType type, @NotNull FluidFilter filter, boolean canInsertFluids,
+public record FluidTankSettings(int x, int y, @NotNull SlotType<FluidVariant> type, @NotNull FluidFilter filter, boolean canInsertFluids,
                                 boolean canExtractFluids, long capacity, int size,
                                 @NotNull FluidTankSettings.TankChangeListener extractionListener,
                                 @NotNull FluidTankSettings.TankChangeListener insertionListener) {
     public static class Builder {
         private final int x;
         private final int y;
-        private final SlotType type;
+        private final SlotType<FluidVariant> type;
         private boolean canInsertFluids = true;
         private boolean canExtractFluids = true;
         private long capacity = 64;
@@ -47,7 +48,7 @@ public record FluidTankSettings(int x, int y, @NotNull SlotType type, @NotNull F
         private @NotNull FluidFilter filter = Constant.Filter.Fluid.ALWAYS;
         private int size = 48;
 
-        private Builder(int x, int y, @NotNull SlotType type) {
+        private Builder(int x, int y, @NotNull SlotType<FluidVariant> type) {
             this.x = x;
             this.y = y;
             this.type = type;
@@ -56,7 +57,6 @@ public record FluidTankSettings(int x, int y, @NotNull SlotType type, @NotNull F
         @Contract("_, _, _ -> new")
         public static @NotNull Builder create(int x, int y, @NotNull SlotType type) {
             Preconditions.checkNotNull(type);
-            assert type.getType().isItem();
             return new Builder(x, y, type);
         }
 

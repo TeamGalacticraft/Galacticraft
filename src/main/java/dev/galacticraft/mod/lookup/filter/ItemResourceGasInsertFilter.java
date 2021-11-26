@@ -20,28 +20,26 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.attribute.misc;
+package dev.galacticraft.mod.lookup.filter;
 
+import dev.galacticraft.api.attribute.GasStorage;
+import dev.galacticraft.api.gas.Gas;
+import dev.galacticraft.api.gas.GasStack;
+import net.fabricmc.fabric.api.lookup.v1.item.ItemApiLookup;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
+import net.minecraft.item.ItemStack;
 
-import java.util.function.Predicate;
+public record ItemResourceGasInsertFilter(Gas type) implements ItemFilter {
 
-public record ArrayReference<T>(T[] array, int index, Predicate<T> predicate) implements Reference<T> {
     @Override
-    public T get() {
-        return this.array[index];
-    }
-
-    @Override
-    public boolean set(T value) {
-        if (this.isValid(value)) {
-            this.array[index] = value;
-            return true;
+    public boolean test(ItemStack itemStack) {
+        Storage<Gas> storage = ContainerItemContext.withInitial(itemStack).find(GasStorage.ITEM);
+        if (storage != null && storage.supportsInsertion()) {
+            return storage.simulateInsert(type, Long.MAX_VALUE, null) >= 0;
         }
         return false;
-    }
-
-    @Override
-    public boolean isValid(T value) {
-        return predicate.test(value);
     }
 }

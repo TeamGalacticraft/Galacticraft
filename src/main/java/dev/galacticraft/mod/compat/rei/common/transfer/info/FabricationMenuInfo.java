@@ -36,7 +36,7 @@ import net.minecraft.inventory.Inventory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FabricationMenuInfo<B extends RecipeMachineBlockEntity<Inventory, FabricationRecipe>, T extends RecipeMachineScreenHandler<Inventory, FabricationRecipe, B>, D extends DefaultFabricationDisplay> implements SimplePlayerInventoryMenuInfo<T, D> {
+public record FabricationMenuInfo<B extends RecipeMachineBlockEntity<Inventory, FabricationRecipe>, T extends RecipeMachineScreenHandler<Inventory, FabricationRecipe, B>, D extends DefaultFabricationDisplay>(D display) implements SimplePlayerInventoryMenuInfo<T, D> {
     @Override
     public Iterable<SlotAccessor> getInputSlots(MenuInfoContext<T, ?, D> context) {
         T menu = context.getMenu();
@@ -46,6 +46,11 @@ public class FabricationMenuInfo<B extends RecipeMachineBlockEntity<Inventory, F
             list.add(new ContainerSlotAccessor(menu.machine.itemStorage(), i));
         }
         return list;
+    }
+
+    @Override
+    public D getDisplay() {
+        return this.display;
     }
 
 

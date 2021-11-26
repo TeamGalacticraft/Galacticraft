@@ -249,7 +249,7 @@ public class PipeNetworkImpl implements PipeNetwork {
         }
         if (requested.isLessThanOrEqual(0)) return volume.withAmount(volume.amount().add(skipped));
         var ref = new Object() {
-            FluidStack available = FluidStackUtil.EMPTY;
+            FluidStack available = FluidStack.EMPTY;
         };
         ref.available = volume;
         long ratio = volume.amount().div(requested).min(1);

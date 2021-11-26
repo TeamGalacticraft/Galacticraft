@@ -20,21 +20,28 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.attribute.item;
+package dev.galacticraft.mod.lookup.filter;
 
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.fabricmc.fabric.api.lookup.v1.item.ItemApiLookup;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
+import net.minecraft.item.ItemStack;
 
-public class MachineInvWrapper extends InventoryFixedWrapper {
-    private final MachineBlockEntity machine;
-
-    public MachineInvWrapper(MachineBlockEntity machine, FixedItemInv inv) {
-        super(inv);
-        this.machine = machine;
-    }
+public record ItemResourceTagInsertFilter<R, V extends TransferVariant<R>>(
+        ItemApiLookup<Storage<V>, ContainerItemContext> lookup,
+        R type) implements ItemFilter {
 
     @Override
-    public boolean canPlayerUse(PlayerEntity player) {
-        return this.machine.getConfiguration().getSecurity().hasAccess(player);
+    public boolean test(ItemStack itemStack) {
+        Storage<V> storage = ContainerItemContext.withInitial(itemStack).find(this.lookup);
+        if (storage != null && storage.supportsInsertion()) {
+            V extractableContent = StorageUtil.findExtractableResource(storage, variant -> this.type == variant.getObject(), null);
+            if (extractableContent != null && !extractableContent.isBlank()) {
+                return storage.simulateExtract(extractableContent, Long.MAX_VALUE, null) >= 0;
+            }
+        }
+        return false;
     }
 }

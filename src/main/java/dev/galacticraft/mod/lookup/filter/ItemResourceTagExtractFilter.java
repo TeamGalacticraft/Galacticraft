@@ -20,29 +20,29 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen.slot;
+package dev.galacticraft.mod.lookup.filter;
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
+import net.fabricmc.fabric.api.lookup.v1.item.ItemApiLookup;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.tag.Tag;
 
-import java.util.Arrays;
-import java.util.List;
-
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class ItemSpecificSlot extends Slot {
-    private final List<Item> items;
-
-    public ItemSpecificSlot(Inventory inventory, int slotId, int x, int y, Item... items) {
-        super(inventory, slotId, x, y);
-        this.items = Arrays.asList(items);
-    }
+public record ItemResourceTagExtractFilter<R, V extends TransferVariant<R>>(
+        ItemApiLookup<Storage<V>, ContainerItemContext> lookup,
+        Tag<R> tag) implements ItemFilter {
 
     @Override
-    public boolean canInsert(ItemStack stack) {
-        return items.contains(stack.getItem());
+    public boolean test(ItemStack itemStack) {
+        Storage<V> storage = ContainerItemContext.withInitial(itemStack).find(this.lookup);
+        if (storage != null && storage.supportsExtraction()) {
+            V extractableContent = StorageUtil.findExtractableResource(storage, variant -> tag.contains(variant.getObject()), null);
+            if (extractableContent != null && !extractableContent.isBlank()) {
+                return storage.simulateExtract(extractableContent, Long.MAX_VALUE, null) >= 0;
+            }
+        }
+        return false;
     }
 }

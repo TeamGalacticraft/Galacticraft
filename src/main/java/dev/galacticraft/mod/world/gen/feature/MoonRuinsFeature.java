@@ -24,7 +24,7 @@ package dev.galacticraft.mod.world.gen.feature;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.structure.MoonRuinsGenerator;
-import net.minecraft.class_6834;
+import net.minecraft.structure.StructureGeneratorFactory;
 import net.minecraft.structure.StructurePiecesCollector;
 import net.minecraft.structure.StructurePiecesGenerator;
 import net.minecraft.util.BlockRotation;
@@ -38,7 +38,7 @@ import net.minecraft.world.gen.feature.StructureFeature;
  */
 public class MoonRuinsFeature extends StructureFeature<DefaultFeatureConfig> {
    public MoonRuinsFeature(Codec<DefaultFeatureConfig> codec) {
-      super(codec, class_6834.simple(class_6834.checkForBiomeOnTop(Heightmap.Type.WORLD_SURFACE_WG), MoonRuinsFeature::addPieces));
+      super(codec, StructureGeneratorFactory.simple(StructureGeneratorFactory.checkForBiomeOnTop(Heightmap.Type.WORLD_SURFACE_WG), MoonRuinsFeature::addPieces));
    }
 
    private static void addPieces(StructurePiecesCollector collector, StructurePiecesGenerator.Context<DefaultFeatureConfig> context) {

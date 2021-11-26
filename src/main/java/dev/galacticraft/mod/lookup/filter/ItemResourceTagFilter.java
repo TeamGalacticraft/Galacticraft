@@ -20,37 +20,15 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen.slot;
+package dev.galacticraft.mod.lookup.filter;
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.world.World;
+import net.minecraft.tag.Tag;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class RecipeInputSlot<I extends Inventory, T extends Recipe<I>> extends Slot {
-    private final Inventory inventory = new SimpleInventory(1);
-    private final RecipeType<T> type;
-    private final World world;
-
-    public RecipeInputSlot(I inventory, int slotId, int x, int y, World world, RecipeType<T> type) {
-        super(inventory, slotId, x, y);
-        this.type = type;
-        this.world = world;
-        if (!inventory.getClass().isInstance(this.inventory)) {
-            throw new AssertionError();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
+public record ItemResourceTagFilter(Tag<Item> tag) implements ItemFilter {
     @Override
-    public boolean canInsert(ItemStack stack) {
-        this.inventory.setStack(0, stack);
-        return this.world.getRecipeManager().getFirstMatch(this.type, (I)inventory, world).isPresent();
+    public boolean test(ItemStack itemStack) {
+        return tag.contains(itemStack.getItem());
     }
 }

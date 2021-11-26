@@ -20,28 +20,29 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen.slot;
+package dev.galacticraft.mod.lookup.filter;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.inventory.Inventory;
+import dev.galacticraft.api.attribute.GasStorage;
+import dev.galacticraft.api.gas.Gas;
+import dev.galacticraft.api.gas.GasStack;
+import net.fabricmc.fabric.api.lookup.v1.item.ItemApiLookup;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.tag.Tag;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class ChargeSlot extends Slot {
-    public ChargeSlot(Inventory inventory, int slotId, int x, int y) {
-        super(inventory, slotId, x, y);
-    }
+public record ItemResourceGasExtractFilter(Tag<Gas> type) implements ItemFilter {
 
     @Override
-    public int getMaxItemCount() {
-        return 1;
-    }
-
-    @Override
-    public boolean canInsert(ItemStack stack) {
-        return Constant.Filter.Item.CAN_EXTRACT_ENERGY.matches(stack);
+    public boolean test(ItemStack itemStack) {
+        Storage<Gas> storage = ContainerItemContext.withInitial(itemStack).find(GasStorage.ITEM);
+        if (storage != null && storage.supportsExtraction()) {
+            Gas extractableContent = StorageUtil.findExtractableResource(storage, variant -> this.type.contains(variant), null);
+            if (extractableContent != null) {
+                return storage.simulateExtract(extractableContent, Long.MAX_VALUE, null) >= 0;
+            }
+        }
+        return false;
     }
 }

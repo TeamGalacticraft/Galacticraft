@@ -22,15 +22,26 @@
 
 package dev.galacticraft.mod.block.entity;
 
+import dev.galacticraft.api.attribute.GasStorage;
+import dev.galacticraft.api.fluid.FluidStack;
+import dev.galacticraft.api.gas.Gas;
+import dev.galacticraft.api.gas.GasStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
+import dev.galacticraft.mod.lookup.storage.MachineGasStorage;
 import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.slot.GasSlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.FluidUtil;
+import dev.galacticraft.mod.util.GenericStorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -64,8 +75,8 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineFluidStorage.Builder createFluidInv(MachineFluidStorage.Builder builder) {
-        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_IN, 30, 8);
+    protected MachineGasStorage.Builder createGasStorage(MachineGasStorage.Builder builder) {
+        builder.addSlot(GasSlotSettings.Builder.create(30, 8, SlotType.OXYGEN_IN).capacity(MAX_OXYGEN).filter(Constant.Filter.Gas.OXYGEN).build());
         return builder;
     }
 
@@ -93,18 +104,22 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.fluidInv().getInvFluid(OXYGEN_TANK).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
-        OxygenTank tank = OxygenTankUtil.getOxygenTank(this.itemStorage().getSlot(1));
-        if (tank == EmptyOxygenTank.NULL) return Status.NOT_ENOUGH_ITEMS;
-        if (tank.getCapacity() >= tank.getCapacity()) return Status.CONTAINER_FULL;
+        if (this.fluidInv().getFluid(OXYGEN_TANK).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
+        Storage<Gas> gasStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(GasStorage.ITEM);
+        if (gasStorage == null) return Status.NOT_ENOUGH_ITEMS;
+        if (!gasStorage.supportsInsertion() || gasStorage.simulateInsert(Gas.OXYGEN, Long.MAX_VALUE, null) == 0) return Status.CONTAINER_FULL;
         return Status.COMPRESSING;
     }
 
     @Override
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
-            OxygenTank tank = OxygenTankUtil.getOxygenTank(this.itemStorage().getSlot(1));
-            this.fluidInv().insertFluid(OXYGEN_TANK, OxygenTankUtil.insertLiquidOxygen(tank, this.fluidInv().attemptExtraction(Constant.Filter.Fluid.LOX_ONLY, FluidAmount.of(1, 400), Simulation.ACTION)), Simulation.ACTION);
+            Storage<Gas> gasStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(GasStorage.ITEM);
+            GasStack fluidStack = this.gasStorage().simulateExtraction(OXYGEN_TANK, Long.MAX_VALUE);
+            try (Transaction transaction = Transaction.openOuter()) {
+                GenericStorageUtil.move(fluidStack.gas(), this.gasStorage(), gasStorage, fluidStack.amount(), transaction);
+                transaction.commit();
+            }
         }
     }
 

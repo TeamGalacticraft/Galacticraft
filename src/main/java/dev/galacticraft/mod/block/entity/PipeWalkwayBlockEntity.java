@@ -37,7 +37,7 @@ public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, 
     private Direction direction;
 
     public PipeWalkwayBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.PIPE_WALKWAY, pos, state, FluidAmount.of(1, 50));
+        super(GalacticraftBlockEntityType.PIPE_WALKWAY, pos, state, 81000 / 50);
     }
 
     @Override

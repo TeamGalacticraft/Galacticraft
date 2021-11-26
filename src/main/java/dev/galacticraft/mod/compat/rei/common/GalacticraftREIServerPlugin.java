@@ -33,6 +33,7 @@ import me.shedaniel.rei.api.common.display.DisplaySerializerRegistry;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoRegistry;
+import me.shedaniel.rei.api.common.transfer.info.simple.SimpleMenuInfoProvider;
 
 public class GalacticraftREIServerPlugin implements REIServerPlugin {
     public static final CategoryIdentifier<DefaultFabricationDisplay> CIRCUIT_FABRICATION = CategoryIdentifier.of(Constant.MOD_ID, "plugins/circuit_fabricator");
@@ -41,8 +42,8 @@ public class GalacticraftREIServerPlugin implements REIServerPlugin {
 
     @Override
     public void registerMenuInfo(MenuInfoRegistry registry) {
-        registry.register(COMPRESSING, RecipeMachineScreenHandler.class, new SimpleMachineMenuInfo<>(3, 3, 10, 0));
-        registry.register(CIRCUIT_FABRICATION, RecipeMachineScreenHandler.class, new FabricationMenuInfo<>());
+        registry.register(COMPRESSING, RecipeMachineScreenHandler.class, SimpleMenuInfoProvider.of(d -> new SimpleMachineMenuInfo<>(3, 3, 10, 0, d)));
+        registry.register(CIRCUIT_FABRICATION, RecipeMachineScreenHandler.class, SimpleMenuInfoProvider.of(FabricationMenuInfo::new));
     }
 
     @Override

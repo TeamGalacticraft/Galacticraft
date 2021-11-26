@@ -23,12 +23,10 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.api.attribute.GasStorage;
+import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
-import dev.galacticraft.mod.lookup.filter.FluidFilter;
-import dev.galacticraft.mod.lookup.filter.GasFilter;
-import dev.galacticraft.mod.lookup.filter.ItemFilter;
-import dev.galacticraft.mod.lookup.filter.TagFluidFilter;
+import dev.galacticraft.mod.lookup.filter.*;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -38,6 +36,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.tag.ItemTags;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
@@ -635,45 +634,35 @@ public interface Constant {
             ItemFilter ALWAYS = stack -> true;
             ItemFilter NEVER = stack -> false;
 
+            ItemFilter DIAMOND = new ItemResourceTagFilter(GalacticraftTag.DIAMONDS);
+            ItemFilter SILICON = new ItemResourceTagFilter(GalacticraftTag.SILICONS);
+            ItemFilter REDSTONE = new ItemResourceTagFilter(GalacticraftTag.REDSTONES);
+
             ItemFilter CAN_EXTRACT_ENERGY = stack -> {
                 EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
-                return energyStorage != null && energyStorage.supportsExtraction();
+                try (Transaction transaction = Transaction.openOuter()) {
+                    return energyStorage != null && energyStorage.supportsExtraction() && energyStorage.extract(Long.MAX_VALUE, transaction) > 0;
+                }
             };
             ItemFilter CAN_INSERT_ENERGY = stack -> {
                 EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
-                return energyStorage != null && energyStorage.supportsInsertion();
-            };
-            ItemFilter CAN_EXTRACT_OXYGEN = stack -> {
-                Storage<dev.galacticraft.api.gas.Gas> gasStorage = ContainerItemContext.withInitial(stack).find(GasStorage.ITEM);
-                return gasStorage != null && gasStorage.supportsExtraction();
-            };
-            ItemFilter CAN_INSERT_OXYGEN = stack -> {
-                Storage<dev.galacticraft.api.gas.Gas> gasStorage = ContainerItemContext.withInitial(stack).find(GasStorage.ITEM);
-                return gasStorage != null && gasStorage.supportsInsertion();
-            };
-            ItemFilter CAN_EXTRACT_OIL = stack -> {
-                Storage<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM);
-                if (storage != null && storage.supportsExtraction()) {
-                    try (Transaction transaction = Transaction.openOuter()) {
-                        return storage.extract(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), Long.MAX_VALUE, transaction) >= 0;
-                    }
+                try (Transaction transaction = Transaction.openOuter()) {
+                    return energyStorage != null && energyStorage.supportsInsertion() && energyStorage.insert(Long.MAX_VALUE, transaction) > 0;
                 }
-                return false;
             };
-            ItemFilter CAN_INSERT_FUEL = stack -> {
-                Storage<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM);
-                if (storage != null && storage.supportsInsertion()) {
-                    try (Transaction transaction = Transaction.openOuter()) {
-                        return storage.insert(FluidVariant.of(GalacticraftFluid.FUEL), Long.MAX_VALUE, transaction) >= 0;
-                    }
-                }
-                return false;
-            };
+
+            ItemFilter CAN_EXTRACT_OXYGEN = new ItemResourceGasExtractFilter(GalacticraftTag.OXYGEN);
+            ItemFilter CAN_INSERT_OXYGEN = new ItemResourceGasInsertFilter(dev.galacticraft.api.gas.Gas.OXYGEN);
+
+            ItemFilter CAN_EXTRACT_OIL = new ItemResourceTagExtractFilter<>(FluidStorage.ITEM, GalacticraftTag.OIL);
+            ItemFilter CAN_INSERT_FUEL = new ItemResourceTagInsertFilter<>(FluidStorage.ITEM, GalacticraftFluid.FUEL);
+            ItemFilter CAN_EXTRACT_LOX = new ItemResourceTagExtractFilter<>(FluidStorage.ITEM, GalacticraftTag.LIQUID_OXYGEN);
         }
 
         interface Gas {
             GasFilter ALWAYS = stack -> true;
             GasFilter NEVER = stack -> false;
+            GasFilter OXYGEN = stack -> stack.gas() == dev.galacticraft.api.gas.Gas.OXYGEN;
         }
 
         interface Fluid {

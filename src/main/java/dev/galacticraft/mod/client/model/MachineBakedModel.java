@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.model;
 
+import dev.galacticraft.api.fluid.FluidStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.AutomationType;
@@ -32,6 +33,7 @@ import dev.galacticraft.mod.api.machine.MachineConfiguration;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.OxygenStorageModuleBlockEntity;
 import dev.galacticraft.mod.client.util.CachingSpriteAtlas;
+import dev.galacticraft.mod.screen.slot.ResourceType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
@@ -62,7 +64,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.math.RoundingMode;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -150,24 +151,24 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
             if (face == BlockFace.FRONT || face == BlockFace.BACK) {
                 FluidStack volume;
                 if (machine != null) {
-                    volume = machine.fluidInv().getInvFluid(0);
+                    volume = machine.fluidInv().getFluid(0);
                 } else {
                     if (stack.getNbt() != null && stack.getNbt().contains(Constant.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
                         if (stack.getNbt().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).contains("tanks", NbtType.LIST)) {
                             NbtList tag1 = stack.getNbt().getCompound(Constant.Nbt.BLOCK_ENTITY_TAG).getList("tanks", NbtType.COMPOUND);
                             if (tag1.size() > 0) {
-                                volume = FluidStack.fromTag(tag1.getCompound(0));
+                                volume = FluidStack.readNbt(tag1.getCompound(0));
                             } else {
-                                volume = FluidStackUtil.EMPTY;
+                                volume = FluidStack.EMPTY;
                             }
                         } else {
-                            volume = FluidStackUtil.EMPTY;
+                            volume = FluidStack.EMPTY;
                         }
                     } else {
-                        volume = FluidStackUtil.EMPTY;
+                        volume = FluidStack.EMPTY;
                     }
                 }
-                return atlas.apply(new Identifier(Constant.MOD_ID, "block/oxygen_storage_module_" + volume.amount().div(OxygenStorageModuleBlockEntity.MAX_CAPACITY).asInt(8, RoundingMode.DOWN)));
+                return atlas.apply(new Identifier(Constant.MOD_ID, "block/oxygen_storage_module_" + volume.amount() / OxygenStorageModuleBlockEntity.MAX_OXYGEN));
             }
             return atlas.apply(MACHINE);
         });
@@ -273,7 +274,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
          * @param pos The position of the machine about to be rendered or t. Will be null in item contexts.
          * @return The appropriate sprite to render for the given face.
          */
-        @Contract(pure = true, value = "null,null,_,_,_,_->fail;!null,_,_,_,null,_->fail;")
+        @Contract(value = "null,null,_,_,_,_->fail;!null,_,_,_,null,_->fail;")
         @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos);
     }
 
@@ -309,16 +310,42 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
         return true;
     }
 
-    public static Sprite getSprite(BlockFace face, MachineBlockEntity machine, ItemStack stack, SpriteProvider provider, AutomationType type) {
-        return switch (type) {
-            case FLUID_INPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_IN);
-            case POWER_INPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_IN);
-            case POWER_OUTPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_OUT);
-            case FLUID_OUTPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_OUT);
-            case ITEM_INPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_IN);
-            case ITEM_OUTPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_OUT);
-            default -> provider.getSpritesForState(machine, stack, face, CACHING_SPRITE_ATLAS, null, null);
-        };
+    public static Sprite getSprite(BlockFace face, MachineBlockEntity machine, ItemStack stack, SpriteProvider provider, AutomationType<?> type) {
+        if (type.getResource() == ResourceType.ENERGY) {
+            return switch (type.getFlow()) {
+                case INPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_IN);
+                case OUTPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_OUT);
+                case BOTH -> CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_IN);
+            };
+        } else if (type.getResource() == ResourceType.FLUID) {
+            return switch (type.getFlow()) {
+                case INPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_IN);
+                case OUTPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_OUT);
+                case BOTH -> CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_IN);
+            };
+        } else if (type.getResource() == ResourceType.GAS) {
+            return switch (type.getFlow()) {
+                case INPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_IN);
+                case OUTPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_OUT);
+                case BOTH -> CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_IN);
+            };
+
+        } else if (type.getResource() == ResourceType.ITEM) {
+            return switch (type.getFlow()) {
+                case INPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_IN);
+                case OUTPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_OUT);
+                case BOTH -> CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_IN);
+            };
+
+        } else if (type.getResource() == ResourceType.ANY) {
+            return switch (type.getFlow()) {
+                case INPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_IN);
+                case OUTPUT -> CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_OUT);
+                case BOTH -> CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_IN);
+            };
+
+        }
+        return provider.getSpritesForState(machine, stack, face, CACHING_SPRITE_ATLAS, null, null);
     }
 
     public record FrontFaceSpriteProvider(Identifier sprite) implements SpriteProvider {

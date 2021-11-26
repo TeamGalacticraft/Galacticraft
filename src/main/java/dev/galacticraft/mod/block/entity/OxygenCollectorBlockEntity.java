@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.block.entity;
 
+import dev.galacticraft.api.gas.Gas;
+import dev.galacticraft.api.gas.GasStack;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
@@ -30,11 +32,14 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
+import dev.galacticraft.mod.lookup.storage.MachineGasStorage;
 import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.OxygenCollectorScreenHandler;
+import dev.galacticraft.mod.screen.slot.GasSlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.FluidUtil;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
@@ -79,8 +84,8 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineFluidStorage.Builder createFluidInv(MachineFluidStorage.Builder builder) {
-        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_OUT, 31, 8);
+    protected MachineGasStorage.Builder createGasStorage(MachineGasStorage.Builder builder) {
+        builder.addSlot(GasSlotSettings.Builder.create(31, 8, SlotType.OXYGEN_OUT).capacity(MAX_OXYGEN).filter(Constant.Filter.Gas.OXYGEN).build());
         return builder;
     }
 
@@ -177,7 +182,10 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         this.collectionAmount = 0;
         if (this.getStatus().getType().isActive()) {
             this.collectionAmount = collectOxygen();
-            this.fluidInv().insertFluid(OXYGEN_TANK, FluidKeys.get(GalacticraftFluid.LIQUID_OXYGEN).withAmount(FluidAmount.of(collectionAmount, 100)), Simulation.ACTION);
+            try (Transaction transaction = Transaction.openOuter()) {
+                this.gasStorage().insertStack(OXYGEN_TANK, new GasStack(Gas.OXYGEN, collectionAmount * 8100L), transaction);
+                transaction.commit();
+            }
         }
     }
 

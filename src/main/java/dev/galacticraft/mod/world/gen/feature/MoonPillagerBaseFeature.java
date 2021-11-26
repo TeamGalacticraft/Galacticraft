@@ -25,7 +25,7 @@ package dev.galacticraft.mod.world.gen.feature;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
-import net.minecraft.class_6834;
+import net.minecraft.structure.StructureGeneratorFactory;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.biome.SpawnSettings;
@@ -47,16 +47,16 @@ public class MoonPillagerBaseFeature extends JigsawFeature {
         super(codec, 0, true, true, MoonPillagerBaseFeature::canStart);
     }
 
-    private static boolean canStart(class_6834.class_6835<StructurePoolFeatureConfig> arg) {
-        int i = arg.chunkPos().x >> 4;
-        int j = arg.chunkPos().z >> 4;
+    private static boolean canStart(StructureGeneratorFactory.Context<StructurePoolFeatureConfig> context) {
+        int i = context.chunkPos().x >> 4;
+        int j = context.chunkPos().z >> 4;
         ChunkRandom chunkRandom = new ChunkRandom(new AtomicSimpleRandom(0L));
-        chunkRandom.setSeed((long)(i ^ j << 4) ^ arg.seed());
+        chunkRandom.setSeed((long)(i ^ j << 4) ^ context.seed());
         chunkRandom.nextInt();
         if (chunkRandom.nextInt(5) != 0) {
             return false;
         } else {
-            return !isVillageNearby(arg.chunkGenerator(), arg.seed(), arg.chunkPos());
+            return !isVillageNearby(context.chunkGenerator(), context.seed(), context.chunkPos());
         }
     }
 

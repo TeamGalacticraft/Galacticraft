@@ -30,8 +30,10 @@ import dev.galacticraft.mod.accessor.ServerWorldAccessor;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.machine.MachineStatus;
 import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
+import dev.galacticraft.mod.lookup.storage.MachineGasStorage;
 import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.slot.GasSlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotSettings;
 import dev.galacticraft.mod.screen.slot.SlotType;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -87,8 +89,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineFluidStorage.Builder createFluidInv(MachineFluidStorage.Builder builder) {
-        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_IN, 30, 8);
+    protected MachineGasStorage.Builder createGasStorage(MachineGasStorage.Builder builder) {
+        builder.addSlot(GasSlotSettings.Builder.create(30, 8, SlotType.OXYGEN_IN).capacity(MAX_OXYGEN).filter(Constant.Filter.Gas.OXYGEN).build());
         return builder;
     }
 
@@ -126,7 +128,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.fluidInv().getInvFluid(OXYGEN_TANK).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
+        if (this.fluidInv().getFluid(OXYGEN_TANK).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
         return Status.SEALED;
     }
 

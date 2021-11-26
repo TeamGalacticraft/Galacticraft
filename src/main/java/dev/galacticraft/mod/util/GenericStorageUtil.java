@@ -20,47 +20,34 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.attribute.energy;
+package dev.galacticraft.mod.util;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import team.reborn.energy.api.EnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class InfiniteCapacitor implements EnergyStorage {
-    public static final InfiniteCapacitor INSTANCE = new InfiniteCapacitor();
+public class GenericStorageUtil {
+    public static <T, S extends Storage<T>> long move(T variant, @Nullable S from, @Nullable S to, long maxAmount, @Nullable TransactionContext transaction) {
+        if (from == null || to == null) return 0;
+        StoragePreconditions.notNegative(maxAmount);
 
-    protected InfiniteCapacitor() {
-    }
+        long maxExtracted;
+        try (Transaction extractionTestTransaction = Transaction.openNested(transaction)) {
+            maxExtracted = from.extract(variant, maxAmount, extractionTestTransaction);
+        }
 
-    @Override
-    public boolean supportsInsertion() {
-        return false;
-    }
+        try (Transaction moveTransaction = Transaction.openNested(transaction)) {
+            long accepted = to.insert(variant, maxExtracted, moveTransaction);
 
-    @Override
-    public long insert(long maxAmount, TransactionContext transaction) {
+            if (from.extract(variant, accepted, moveTransaction) == accepted) {
+                moveTransaction.commit();
+                return accepted;
+            }
+        }
+
         return 0;
-    }
-
-    @Override
-    public boolean supportsExtraction() {
-        return true;
-    }
-
-    @Override
-    public long extract(long maxAmount, TransactionContext transaction) {
-        return maxAmount;
-    }
-
-    @Override
-    public long getAmount() {
-        return Long.MAX_VALUE;
-    }
-
-    @Override
-    public long getCapacity() {
-        return Long.MAX_VALUE;
     }
 }

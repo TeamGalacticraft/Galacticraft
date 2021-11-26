@@ -115,7 +115,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.fluidInv().getStack(OIL_TANK).amount() == 0) return Status.NOT_ENOUGH_FLUID;
+        if (this.fluidInv().getFluid(OIL_TANK).amount() == 0) return Status.NOT_ENOUGH_FLUID;
         if (this.isTankFull(FUEL_TANK)) return Status.FULL;
         return Status.ACTIVE;
     }

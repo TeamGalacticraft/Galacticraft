@@ -27,11 +27,12 @@ import dev.galacticraft.mod.screen.slot.SlotType;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class NullAutomatable implements Automatable {
+public final class NullAutomatable implements Automatable {
     public static final Automatable INSTANCE = new NullAutomatable();
-    private static final SlotType[] SLOT_TYPE_LIST = new SlotType[0];
+    private static final SlotType[] EMPTY = new SlotType[0];
+
     @Override
     public SlotType[] getTypes() {
-        return SLOT_TYPE_LIST;
+        return EMPTY;
     }
 }
