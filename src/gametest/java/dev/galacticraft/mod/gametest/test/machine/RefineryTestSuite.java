@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
+import dev.galacticraft.api.fluid.FluidStack;
 import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
@@ -29,6 +30,10 @@ import dev.galacticraft.mod.block.entity.RefineryBlockEntity;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GalacticraftItem;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.test.GameTest;
@@ -54,10 +59,13 @@ public class RefineryTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY);
         final var inv = refinery.itemStorage();
-        inv.setInvStack(RefineryBlockEntity.FLUID_INPUT_SLOT, new ItemStack(GalacticraftItem.CRUDE_OIL_BUCKET), Simulation.ACTION);
+        try (Transaction transaction = Transaction.openOuter()) {
+            inv.setStack(RefineryBlockEntity.FLUID_INPUT_SLOT, new ItemStack(GalacticraftItem.CRUDE_OIL_BUCKET), transaction);
+            transaction.commit();
+        }
         refinery.capacitor().setEnergy(refinery.getEnergyCapacity());
         runFinalTaskNext(context, () -> {
-            ItemStack inputStack = inv.getInvStack(RefineryBlockEntity.FLUID_INPUT_SLOT);
+            ItemStack inputStack = inv.getStack(RefineryBlockEntity.FLUID_INPUT_SLOT);
             if (inputStack.getItem() != Items.BUCKET) {
                 context.throwPositionedException(String.format("Expected refinery to return a bucket from fluid transaction but found %s instead!", formatItemStack(inputStack)), pos);
             }
@@ -69,16 +77,22 @@ public class RefineryTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY);
         final var inv = refinery.itemStorage();
-        fillRefinerySlots(inv);
+        try (Transaction transaction = Transaction.openOuter()) {
+            fillRefinerySlots(inv, transaction);
+            transaction.commit();
+        }
         refinery.capacitor().setEnergy(refinery.getEnergyCapacity());
-        refinery.fluidInv().setInvFluid(RefineryBlockEntity.OIL_TANK, FluidKeys.get(GalacticraftFluid.CRUDE_OIL).withAmount(FluidAmount.ONE), Simulation.ACTION);
+        try (Transaction transaction = Transaction.openOuter()) {
+            refinery.fluidInv().setStack(RefineryBlockEntity.OIL_TANK, new FluidStack(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), FluidConstants.BUCKET), transaction);
+            transaction.commit();
+        }
         runFinalTaskAt(context, 200 + 1, () -> {
             FluidStack oil = refinery.fluidInv().getFluid(RefineryBlockEntity.OIL_TANK);
             FluidStack fuel = refinery.fluidInv().getFluid(RefineryBlockEntity.FUEL_TANK);
             if (!oil.isEmpty()) {
                 context.throwPositionedException(String.format("Expected refinery to refine all of the oil but found %s remaining!", oil), pos);
             }
-            if (fuel.amount().isLessThan(FluidAmount.ONE) || fuel.getRawFluid() != GalacticraftFluid.FUEL) {
+            if (fuel.amount() < FluidConstants.BUCKET || fuel.fluid().getFluid() != GalacticraftFluid.FUEL) {
                 context.throwPositionedException(String.format("Expected refinery to refine all of the oil into fuel but it only refined %s!", fuel), pos);
             }
         });
@@ -89,19 +103,25 @@ public class RefineryTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY);
         final var inv = refinery.itemStorage();
-        fillRefinerySlots(inv);
+        try (Transaction transaction = Transaction.openOuter()) {
+            fillRefinerySlots(inv, transaction);
+            transaction.commit();
+        }
         refinery.capacitor().setEnergy(refinery.getEnergyCapacity());
-        refinery.fluidInv().setInvFluid(RefineryBlockEntity.OIL_TANK, FluidKeys.get(GalacticraftFluid.CRUDE_OIL).withAmount(FluidAmount.ONE), Simulation.ACTION);
-        refinery.fluidInv().setInvFluid(RefineryBlockEntity.FUEL_TANK, FluidKeys.get(GalacticraftFluid.FUEL).withAmount(FluidAmount.ONE), Simulation.ACTION);
+        try (Transaction transaction = Transaction.openOuter()) {
+            refinery.fluidInv().setStack(RefineryBlockEntity.OIL_TANK, new FluidStack(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), FluidConstants.BUCKET), transaction);
+            refinery.fluidInv().setStack(RefineryBlockEntity.FUEL_TANK, new FluidStack(FluidVariant.of(GalacticraftFluid.FUEL), FluidConstants.BUCKET), transaction);
+            transaction.commit();
+        }
         runFinalTaskNext(context, () -> {
-            if (!refinery.fluidInv().getFluid(RefineryBlockEntity.OIL_TANK).amount().isLessThan(FluidAmount.ONE)) {
+            if (refinery.fluidInv().getFluid(RefineryBlockEntity.OIL_TANK).amount() != FluidConstants.BUCKET) {
                 context.throwPositionedException(String.format("Expected refinery to be unable to refine oil as the fuel tank was full!"), pos);
             }
         });
     }
 
-    private static void fillRefinerySlots(MachineItemStorage inv) {
-        inv.setInvStack(0, new ItemStack(Items.IRON_INGOT), Simulation.ACTION);
-        inv.setInvStack(1, new ItemStack(Items.IRON_INGOT), Simulation.ACTION);
+    private static void fillRefinerySlots(MachineItemStorage inv, TransactionContext transaction) {
+        inv.setStack(0, new ItemStack(Items.IRON_INGOT), transaction);
+        inv.setStack(1, new ItemStack(Items.IRON_INGOT), transaction);
     }
 }

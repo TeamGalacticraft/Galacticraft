@@ -46,8 +46,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
  */
 @Mixin(DimensionType.class)
 public abstract class DimensionTypeMixin {
-    @Inject(method = "createDefaultDimensionOptions", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void addGCDimOptions(DynamicRegistryManager dynamicRegistryManager, long l, CallbackInfoReturnable<SimpleRegistry<DimensionOptions>> cir, SimpleRegistry<DimensionOptions> simpleRegistry, Registry<DimensionType> registry, Registry<Biome> registry2, Registry<ChunkGeneratorSettings> registry3, Registry<DoublePerlinNoiseSampler.NoiseParameters> registry4) {
+    @Inject(method = "createDefaultDimensionOptions(Lnet/minecraft/util/registry/DynamicRegistryManager;JZ)Lnet/minecraft/util/registry/SimpleRegistry;", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private static void addGCDimOptions(DynamicRegistryManager dynamicRegistryManager, long l, boolean bl, CallbackInfoReturnable<SimpleRegistry<DimensionOptions>> cir, SimpleRegistry<DimensionOptions> simpleRegistry, Registry<DimensionType> registry, Registry<Biome> registry2, Registry<ChunkGeneratorSettings> registry3, Registry<DoublePerlinNoiseSampler.NoiseParameters> registry4) {
         Registry.register(simpleRegistry, new Identifier(Constant.MOD_ID, "moon"), new DimensionOptions(() -> registry.get(new Identifier(Constant.MOD_ID, "moon")), new NoiseChunkGenerator(registry4, GalacticraftBiomeNoisePreset.MOON.getBiomeSource(registry2), l, () -> registry3.getOrThrow(GalacticraftChunkGeneratorSettings.MOON))));
     }
 }

@@ -27,6 +27,8 @@ import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.ElectricFurnaceBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.test.GameTest;
@@ -53,9 +55,12 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
         final var electricFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE);
         final var inv = electricFurnace.itemStorage();
         electricFurnace.capacitor().setEnergy(electricFurnace.getEnergyCapacity());
-        fillElectricFurnaceSlots(inv);
+        try (Transaction transaction = Transaction.openOuter()) {
+            fillElectricFurnaceSlots(inv, transaction);
+            transaction.commit();
+        }
         runFinalTaskAt(context, 200 + 1, () -> {
-            ItemStack output = inv.getInvStack(ElectricFurnaceBlockEntity.OUTPUT_SLOT);
+            ItemStack output = inv.getStack(ElectricFurnaceBlockEntity.OUTPUT_SLOT);
             if (output.getItem() != Items.COOKED_PORKCHOP) {
                 context.throwPositionedException(String.format("Expected electric furnace to have made a cooked porkchop but found %s instead!", formatItemStack(output)), pos);
             }
@@ -68,8 +73,12 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
         final var electricFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE);
         final var inv = electricFurnace.itemStorage();
         electricFurnace.capacitor().setEnergy(electricFurnace.getEnergyCapacity());
-        inv.setInvStack(ElectricFurnaceBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), Simulation.ACTION);
-        fillElectricFurnaceSlots(inv);
+
+        try (Transaction transaction = Transaction.openOuter()) {
+            inv.setStack(ElectricFurnaceBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), transaction);
+            fillElectricFurnaceSlots(inv, transaction);
+            transaction.commit();
+        }
         runFinalTaskNext(context, () -> {
             if (electricFurnace.maxProgress() != 0) {
                 context.throwPositionedException("Expected electric furnace to be unable to craft as the output was full!", pos);
@@ -77,7 +86,7 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
         });
     }
 
-    private static void fillElectricFurnaceSlots(MachineItemStorage inv) {
-        inv.setInvStack(ElectricFurnaceBlockEntity.INPUT_SLOT, new ItemStack(Items.PORKCHOP), Simulation.ACTION);
+    private static void fillElectricFurnaceSlots(MachineItemStorage inv, TransactionContext transaction) {
+        inv.setStack(ElectricFurnaceBlockEntity.INPUT_SLOT, new ItemStack(Items.PORKCHOP), transaction);
     }
 }

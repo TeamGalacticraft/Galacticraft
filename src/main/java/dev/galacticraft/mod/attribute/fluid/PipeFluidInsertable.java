@@ -22,15 +22,23 @@
 
 package dev.galacticraft.mod.attribute.fluid;
 
+import dev.galacticraft.api.fluid.FluidStack;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.Iterator;
+
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class PipeFluidInsertable implements FluidInsertable {
+public class PipeFluidInsertable implements Storage<FluidVariant>, StorageView<FluidVariant> {
     private final Direction direction;
     private final long maxTransfer;
     private final BlockPos pipe;
@@ -40,19 +48,6 @@ public class PipeFluidInsertable implements FluidInsertable {
         this.direction = direction;
         this.maxTransfer = maxTransfer;
         this.pipe = pipe;
-    }
-
-    @Override
-    public FluidStack attemptInsertion(FluidStack volume, Simulation simulation) {
-        if (this.network != null) {
-            return this.network.insert(this.pipe, volume, direction, simulation);
-        }
-        return volume;
-    }
-
-    @Override
-    public FluidInsertable getPureInsertable() {
-        return this;
     }
 
     public void setNetwork(@Nullable PipeNetwork network) {
@@ -67,5 +62,48 @@ public class PipeFluidInsertable implements FluidInsertable {
                 ", pipe=" + pipe +
                 ", network=" + network +
                 '}';
+    }
+
+    @Override
+    public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+        if (this.network != null) {
+            return this.network.insert(this.pipe, new FluidStack(resource, maxAmount), direction, transaction);
+        }
+        return 0;
+    }
+
+    @Override
+    public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+        return 0;
+    }
+
+    @Override
+    public long simulateExtract(FluidVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
+        return 0;
+    }
+
+    @Override
+    public boolean isResourceBlank() {
+        return true;
+    }
+
+    @Override
+    public FluidVariant getResource() {
+        return FluidVariant.blank();
+    }
+
+    @Override
+    public long getAmount() {
+        return 0;
+    }
+
+    @Override
+    public long getCapacity() {
+        return this.maxTransfer;
+    }
+
+    @Override
+    public Iterator<StorageView<FluidVariant>> iterator(TransactionContext transaction) {
+        return Collections.emptyIterator();
     }
 }

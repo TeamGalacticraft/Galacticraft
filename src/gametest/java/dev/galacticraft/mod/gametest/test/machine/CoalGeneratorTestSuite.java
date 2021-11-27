@@ -45,10 +45,9 @@ public class CoalGeneratorTestSuite implements MachineGameTest {
     public void coalGeneratorFuelingTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);
-        final var fuelSlot = coalGenerator.itemStorage().getSlot(CoalGeneratorBlockEntity.FUEL_SLOT);
-        fuelSlot.set(new ItemStack(Items.COAL, 2));
+        coalGenerator.itemStorage().setStack(CoalGeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 2));
         runNext(context, () -> {
-            ItemStack stack = fuelSlot.get();
+            ItemStack stack = coalGenerator.itemStorage().getStack(CoalGeneratorBlockEntity.FUEL_SLOT);
             if (stack.isEmpty() || stack.getItem() != Items.COAL || stack.getCount() != 1) {
                 context.throwPositionedException(String.format("Expected coal generator inventory to be have 1 coal but found %s!", formatItemStack(stack)), pos);
             }
@@ -56,7 +55,7 @@ public class CoalGeneratorTestSuite implements MachineGameTest {
                 context.throwPositionedException("Expected coal generator inventory to be burning fuel!", pos);
             }
             runFinalTaskAt(context, 320 + 1, () -> {
-                ItemStack stack1 = fuelSlot.get();
+                ItemStack stack1 = coalGenerator.itemStorage().getStack(CoalGeneratorBlockEntity.FUEL_SLOT);
 
                 if (!stack1.isEmpty()) {
                     context.throwPositionedException(String.format("Expected coal generator inventory to be empty but found %s!", formatItemStack(stack1)), pos);

@@ -22,9 +22,18 @@
 
 package dev.galacticraft.mod.lookup;
 
+import dev.galacticraft.api.attribute.GasStorage;
+import dev.galacticraft.api.gas.Gas;
+import dev.galacticraft.impl.attribute.SingleTypeSlotGasStorage;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
+import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
+import dev.galacticraft.mod.item.GalacticraftItem;
+import dev.galacticraft.mod.item.OxygenTankItem;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.entity.BlockEntityType;
 import team.reborn.energy.api.EnergyStorage;
@@ -38,8 +47,14 @@ public class GalacticraftApiLookupProviders {
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] WIRE_TYPES = new BlockEntityType[]{
             GalacticraftBlockEntityType.WIRE_T1,
-            GalacticraftBlockEntityType.WIRE_T2,
+//            GalacticraftBlockEntityType.WIRE_T2,
             GalacticraftBlockEntityType.WIRE_WALKWAY
+    };
+
+    @SuppressWarnings("rawtypes")
+    private static final BlockEntityType[] PIPE_TYPES = new BlockEntityType[]{
+            GalacticraftBlockEntityType.GLASS_FLUID_PIPE,
+            GalacticraftBlockEntityType.PIPE_WALKWAY
     };
 
     public static void register() {
@@ -53,19 +68,35 @@ public class GalacticraftApiLookupProviders {
             return ((MachineBlockEntity) blockEntity).getExposedItemStorage(direction);
         }, MACHINE_TYPES);
 
+        FluidStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
+            assert blockEntity instanceof MachineBlockEntity;
+            return ((MachineBlockEntity) blockEntity).getExposedFluidInv(direction);
+        }, MACHINE_TYPES);
+
+        FluidStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
+            assert blockEntity instanceof PipeBlockEntity;
+            return ((PipeBlockEntity) blockEntity).getInsertables()[direction.ordinal()];
+        }, PIPE_TYPES);
+
+        GasStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
+            assert blockEntity instanceof MachineBlockEntity;
+            return ((MachineBlockEntity) blockEntity).getExposedGasInv(direction);
+        }, MACHINE_TYPES);
+
         EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
             assert blockEntity instanceof WireBlockEntity;
             return ((WireBlockEntity) blockEntity).getInsertables()[direction.ordinal()];
         }, WIRE_TYPES);
 
-//        FluidStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
-//            assert blockEntity instanceof MachineBlockEntity;
-//            return ((MachineBlockEntity) blockEntity).getExposedFluidInv(direction);
-//        }, MACHINE_TYPES);
-//
-//        ItemStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
-//            assert blockEntity instanceof MachineBlockEntity;
-//            return ((MachineBlockEntity) blockEntity).getExposedItemInv(direction);
-//        }, MACHINE_TYPES);
+        GasStorage.ITEM.registerForItems((itemStack, context) -> {
+            long amount = itemStack.getNbt() != null ? itemStack.getNbt().getLong(Constant.Nbt.VALUE) : 0;
+            return new SingleTypeSlotGasStorage(((OxygenTankItem) itemStack.getItem()).capacity, Gas.OXYGEN, amount) {
+                @Override
+                protected void onFinalCommit() {
+                    super.onFinalCommit();
+                    itemStack.getOrCreateNbt().putLong(Constant.Nbt.VALUE, this.getAmount());
+                }
+            };
+        }, GalacticraftItem.SMALL_OXYGEN_TANK, GalacticraftItem.MEDIUM_OXYGEN_TANK, GalacticraftItem.LARGE_OXYGEN_TANK);
     }
 }

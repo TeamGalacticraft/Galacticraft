@@ -28,6 +28,8 @@ import dev.galacticraft.mod.block.entity.CompressorBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GalacticraftItem;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.test.GameTest;
@@ -48,14 +50,16 @@ public class CompressorTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var compressor = this.createBlockEntity(context, pos, GalacticraftBlock.COMPRESSOR, GalacticraftBlockEntityType.COMPRESSOR);
         final var inv = compressor.itemStorage();
-        final var fuelSlot = inv.getSlot(CompressorBlockEntity.FUEL_INPUT_SLOT);
-        fuelSlot.set(new ItemStack(Items.COAL));
+        inv.setStack(CompressorBlockEntity.FUEL_INPUT_SLOT, new ItemStack(Items.COAL));
         runNext(context, () -> {
-            ItemStack stack = fuelSlot.get();
+            ItemStack stack = inv.getStack(CompressorBlockEntity.FUEL_INPUT_SLOT);
             if (stack.isEmpty() || stack.getItem() != Items.COAL || stack.getCount() != 1) {
                 context.throwPositionedException(String.format("Expected compressor inventory to be have 1 coal but found %s!", formatItemStack(stack)), pos);
             }
-            fillCompressorSlots(inv);
+            try (Transaction transaction = Transaction.openOuter()) {
+                fillCompressorSlots(inv, transaction);
+                transaction.commit();
+            }
             runFinalTaskNext(context, () -> {
                 if (compressor.fuelLength == 0) {
                     context.throwPositionedException("Expected compressor inventory to be burning fuel!", pos);
@@ -69,10 +73,13 @@ public class CompressorTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var compressor = this.createBlockEntity(context, pos, GalacticraftBlock.COMPRESSOR, GalacticraftBlockEntityType.COMPRESSOR);
         final var inv = compressor.itemStorage();
-        fillCompressorSlots(inv);
+        try (Transaction transaction = Transaction.openOuter()) {
+            fillCompressorSlots(inv, transaction);
+            transaction.commit();
+        }
         compressor.fuelTime = compressor.fuelLength = 1000;
         runFinalTaskAt(context, 200 + 1, () -> {
-            ItemStack output = inv.getInvStack(CompressorBlockEntity.OUTPUT_SLOT);
+            ItemStack output = inv.getStack(CompressorBlockEntity.OUTPUT_SLOT);
             if (output.getItem() != GalacticraftItem.COMPRESSED_IRON) {
                 context.throwPositionedException(String.format("Expected compressor to have made compressed iron but found %s instead!", formatItemStack(output)), pos);
             }
@@ -85,8 +92,11 @@ public class CompressorTestSuite implements MachineGameTest {
         final var compressor = this.createBlockEntity(context, pos, GalacticraftBlock.COMPRESSOR, GalacticraftBlockEntityType.COMPRESSOR);
         final var inv = compressor.itemStorage();
         compressor.fuelTime = compressor.fuelLength = 1000;
-        inv.setInvStack(CompressorBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), Simulation.ACTION);
-        fillCompressorSlots(inv);
+        try (Transaction transaction = Transaction.openOuter()) {
+            inv.setStack(CompressorBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), transaction);
+            fillCompressorSlots(inv, transaction);
+            transaction.commit();
+        }
         runFinalTaskNext(context, () -> {
             if (compressor.maxProgress() != 0) {
                 context.throwPositionedException("Expected compressor to be unable to craft as the output was full!", pos);
@@ -94,8 +104,8 @@ public class CompressorTestSuite implements MachineGameTest {
         });
     }
 
-    private static void fillCompressorSlots(MachineItemStorage inv) {
-        inv.setInvStack(0, new ItemStack(Items.IRON_INGOT), Simulation.ACTION);
-        inv.setInvStack(1, new ItemStack(Items.IRON_INGOT), Simulation.ACTION);
+    private static void fillCompressorSlots(MachineItemStorage inv, TransactionContext transaction) {
+        inv.setStack(0, new ItemStack(Items.IRON_INGOT), transaction);
+        inv.setStack(1, new ItemStack(Items.IRON_INGOT), transaction);
     }
 }

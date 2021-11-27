@@ -27,6 +27,8 @@ import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.test.GameTest;
@@ -53,9 +55,12 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         final var electricArcFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_ARC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE);
         final var inv = electricArcFurnace.itemStorage();
         electricArcFurnace.capacitor().setEnergy(electricArcFurnace.getEnergyCapacity());
-        fillElectricArcFurnaceSlots(inv);
+        try (Transaction transaction = Transaction.openOuter()) {
+            fillElectricArcFurnaceSlots(inv, transaction);
+            transaction.commit();
+        }
         runFinalTaskAt(context, 80 + 1, () -> {
-            ItemStack output = inv.getInvStack(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1);
+            ItemStack output = inv.getStack(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1);
             if (output.getItem() != Items.IRON_INGOT && output.getCount() != 2) {
                 context.throwPositionedException(String.format("Expected electric arc furnace to have made two iron ingots but found %s instead!", formatItemStack(output)), pos);
             }
@@ -68,9 +73,12 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         final var electricArcFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_ARC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE);
         final var inv = electricArcFurnace.itemStorage();
         electricArcFurnace.capacitor().setEnergy(electricArcFurnace.getEnergyCapacity());
-        inv.setInvStack(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1, new ItemStack(Items.BARRIER), Simulation.ACTION);
-        inv.setInvStack(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_2, new ItemStack(Items.BARRIER), Simulation.ACTION);
-        fillElectricArcFurnaceSlots(inv);
+        try (Transaction transaction = Transaction.openOuter()) {
+            inv.setStack(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1, new ItemStack(Items.BARRIER), transaction);
+            inv.setStack(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_2, new ItemStack(Items.BARRIER), transaction);
+            fillElectricArcFurnaceSlots(inv, transaction);
+            transaction.commit();
+        }
         runFinalTaskNext(context, () -> {
             if (electricArcFurnace.maxProgress() != 0) {
                 context.throwPositionedException("Expected electric arc furnace to be unable to craft as the output was full!", pos);
@@ -78,7 +86,7 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         });
     }
 
-    private static void fillElectricArcFurnaceSlots(MachineItemStorage inv) {
-        inv.setInvStack(ElectricArcFurnaceBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON), Simulation.ACTION);
+    private static void fillElectricArcFurnaceSlots(MachineItemStorage inv, TransactionContext transaction) {
+        inv.setStack(ElectricArcFurnaceBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON), transaction);
     }
 }

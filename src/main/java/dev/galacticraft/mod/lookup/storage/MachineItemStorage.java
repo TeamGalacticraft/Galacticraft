@@ -365,12 +365,12 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
         }
 
         @Override
-        protected ItemStack getStack() {
+        public ItemStack getStack() {
             return MachineItemStorage.this.getStack(this.index);
         }
 
         @Override
-        protected void setStack(ItemStack stack) {
+        public void setStack(ItemStack stack) {
             MachineItemStorage.this.stacks[this.index] = stack;
         }
 

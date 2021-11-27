@@ -28,6 +28,8 @@ import dev.galacticraft.mod.block.entity.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GalacticraftItem;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.test.GameTest;
@@ -53,10 +55,13 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var electricCompressor = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR);
         final var inv = electricCompressor.itemStorage();
-        fillElectricCompressorSlots(inv);
+        try (Transaction transaction = Transaction.openOuter()) {
+            fillElectricCompressorSlots(inv, transaction);
+            transaction.commit();
+        }
         electricCompressor.capacitor().setEnergy(electricCompressor.getEnergyCapacity());
         runFinalTaskAt(context, 200 + 1, () -> {
-            ItemStack output = inv.getInvStack(ElectricCompressorBlockEntity.OUTPUT_SLOT);
+            ItemStack output = inv.getStack(ElectricCompressorBlockEntity.OUTPUT_SLOT);
             if (output.getItem() != GalacticraftItem.COMPRESSED_IRON) {
                 context.throwPositionedException(String.format("Expected electric compressor to have made compressed iron but found %s instead!", formatItemStack(output)), pos);
             }
@@ -69,9 +74,12 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
         final var electricCompressor = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR);
         final var inv = electricCompressor.itemStorage();
         electricCompressor.capacitor().setEnergy(electricCompressor.getEnergyCapacity());
-        inv.setInvStack(ElectricCompressorBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), Simulation.ACTION);
-        inv.setInvStack(ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, new ItemStack(Items.BARRIER), Simulation.ACTION);
-        fillElectricCompressorSlots(inv);
+        try (Transaction transaction = Transaction.openOuter()) {
+            inv.setStack(ElectricCompressorBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), transaction);
+            inv.setStack(ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, new ItemStack(Items.BARRIER), transaction);
+            fillElectricCompressorSlots(inv, transaction);
+            transaction.commit();
+        }
         runFinalTaskNext(context, () -> {
             if (electricCompressor.maxProgress() != 0) {
                 context.throwPositionedException("Expected electric compressor to be unable to craft as the output was full!", pos);
@@ -79,8 +87,8 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
         });
     }
 
-    private static void fillElectricCompressorSlots(MachineItemStorage inv) {
-        inv.setInvStack(0, new ItemStack(Items.IRON_INGOT), Simulation.ACTION);
-        inv.setInvStack(1, new ItemStack(Items.IRON_INGOT), Simulation.ACTION);
+    private static void fillElectricCompressorSlots(MachineItemStorage inv, TransactionContext transaction) {
+        inv.setStack(0, new ItemStack(Items.IRON_INGOT), transaction);
+        inv.setStack(1, new ItemStack(Items.IRON_INGOT), transaction);
     }
 }

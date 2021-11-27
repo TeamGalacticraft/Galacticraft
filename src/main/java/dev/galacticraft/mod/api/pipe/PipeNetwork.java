@@ -25,6 +25,9 @@ package dev.galacticraft.mod.api.pipe;
 import dev.galacticraft.api.fluid.FluidStack;
 import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -32,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * The basic 'Pipe Network' spec
@@ -65,17 +69,13 @@ public interface PipeNetwork {
 
     /**
      * Inserts fluid into the network
-     * @param fromPipe The pipe that received the fluid
-     * @param amount The amount of fluid to insert
-     * @param direction
-     * @param simulate Whether to perform the action or not
      * @return the amount of fluid that failed to insert
      */
-    FluidStack insert(@NotNull BlockPos fromPipe, FluidStack amount, Direction direction, @NotNull Simulation simulate);
+    long insert(BlockPos pipe, FluidStack amount, Direction direction, TransactionContext transaction);
 
-    FluidStack insertInternal(FluidStack amount, long ratio, FluidStack available, Simulation simulate);
+    FluidStack insertInternal(FluidStack amount, double ratio, FluidStack available, TransactionContext transaction);
 
-    void getNonFullInsertables(Object2LongMap<PipeNetwork> fluidRequirement, BlockPos source, FluidStack amount);
+    void getNonFullInsertables(Object2LongMap<PipeNetwork> fluidRequirement, BlockPos source, FluidStack amount, TransactionContext context);
 
     /**
      * Returns the maximum amount of fluid allowed to pass through this network per tick
@@ -85,11 +85,12 @@ public interface PipeNetwork {
 
     Collection<BlockPos> getAllPipes();
 
-    Map<BlockPos, FluidInsertable> getInsertable();
+    Map<BlockPos, Storage<FluidVariant>> getInsertable();
 
     boolean markedForRemoval();
 
     void markForRemoval();
 
     boolean isCompatibleWith(Pipe pipe);
+
 }

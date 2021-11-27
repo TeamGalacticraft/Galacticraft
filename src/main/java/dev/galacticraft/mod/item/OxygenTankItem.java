@@ -50,11 +50,11 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenTankItem extends Item {
-    private final int size;
+    public final int capacity;
 
-    public OxygenTankItem(Settings settings, int size) {
-        super(settings.maxDamage(size));
-        this.size = size;
+    public OxygenTankItem(Settings settings, int capacity) {
+        super(settings.maxDamage(capacity));
+        this.capacity = capacity;
     }
 
     @Override
@@ -113,7 +113,7 @@ public class OxygenTankItem extends Item {
 
     @Override
     public boolean hasGlint(ItemStack stack) {
-        return this.size <= 0;
+        return this.capacity <= 0;
     }
 
     @Override

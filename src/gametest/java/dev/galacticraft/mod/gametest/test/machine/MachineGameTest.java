@@ -26,6 +26,7 @@ import dev.galacticraft.mod.api.block.MachineBlock;
 import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GalacticraftItem;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.test.TestContext;
@@ -50,7 +51,10 @@ public interface MachineGameTest extends GalacticraftGameTest {
 
     default <T extends MachineBlockEntity, B extends MachineBlock<T>> void testItemCharging(TestContext context, BlockPos pos, B block, BlockEntityType<T> type, int slot) {
         T machine = this.createBlockEntity(context, pos, block, type);
-        machine.itemStorage().setInvStack(slot, new ItemStack(GalacticraftItem.INFINITE_BATTERY), Simulation.ACTION);
+        try (Transaction transaction = Transaction.openOuter()) {
+            machine.itemStorage().setStack(slot, new ItemStack(GalacticraftItem.INFINITE_BATTERY), transaction);
+            transaction.commit();
+        }
         runFinalTaskNext(context, () -> {
             if (machine.capacitor().getAmount() <= 0) {
                 context.throwPositionedException(String.format("Expected %s to charge from an item, but found %s energy!", Registry.BLOCK_ENTITY_TYPE.getId(type), machine.capacitor().getAmount()), pos);
@@ -61,7 +65,10 @@ public interface MachineGameTest extends GalacticraftGameTest {
     default <T extends MachineBlockEntity, B extends MachineBlock<T>> void testItemDraining(TestContext context, BlockPos pos, B block, BlockEntityType<T> type, int slot) {
         T machine = this.createBlockEntity(context, pos, block, type);
         machine.capacitor().setEnergy(machine.capacitor().getCapacity());
-        machine.itemStorage().setInvStack(slot, new ItemStack(GalacticraftItem.BATTERY), Simulation.ACTION);
+        try (Transaction transaction = Transaction.openOuter()) {
+            machine.itemStorage().setStack(slot, new ItemStack(GalacticraftItem.BATTERY), transaction);
+            transaction.commit();
+        }
         runFinalTaskNext(context, () -> {
             if (machine.capacitor().getAmount() >= machine.capacitor().getCapacity()) {
                 context.throwPositionedException(String.format("Expected %s to drain power to an item, but it was still at max energy!", Registry.BLOCK_ENTITY_TYPE.getId(type)), pos);

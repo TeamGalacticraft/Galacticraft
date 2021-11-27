@@ -28,6 +28,8 @@ import dev.galacticraft.mod.block.entity.CircuitFabricatorBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GalacticraftItem;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.test.GameTest;
@@ -54,9 +56,12 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
         final var circuitFabricator = this.createBlockEntity(context, pos, GalacticraftBlock.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
         final var inv = circuitFabricator.itemStorage();
         circuitFabricator.capacitor().setEnergy(circuitFabricator.getEnergyCapacity());
-        fillCircuitFabricatorSlots(inv);
+        try (Transaction transaction = Transaction.openOuter()) {
+            fillCircuitFabricatorSlots(inv, transaction);
+            transaction.commit();
+        }
         runFinalTaskAt(context, 300 + 1, () -> {
-            ItemStack output = inv.getInvStack(CircuitFabricatorBlockEntity.OUTPUT_SLOT);
+            ItemStack output = inv.getStack(CircuitFabricatorBlockEntity.OUTPUT_SLOT);
             if (output.getItem() != GalacticraftItem.BASIC_WAFER) {
                 context.throwPositionedException(String.format("Expected circuit fabricator to have made a wafer but found %s instead!", formatItemStack(output)), pos);
             }
@@ -69,8 +74,11 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
         final var circuitFabricator = this.createBlockEntity(context, pos, GalacticraftBlock.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
         final var inv = circuitFabricator.itemStorage();
         circuitFabricator.capacitor().setEnergy(circuitFabricator.getEnergyCapacity());
-        inv.setInvStack(CircuitFabricatorBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), Simulation.ACTION);
-        fillCircuitFabricatorSlots(inv);
+        try (Transaction transaction = Transaction.openOuter()) {
+            inv.setStack(CircuitFabricatorBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), transaction);
+            fillCircuitFabricatorSlots(inv, transaction);
+            transaction.commit();
+        }
         runFinalTaskNext(context, () -> {
             if (circuitFabricator.maxProgress() != 0) {
                 context.throwPositionedException("Expected circuit fabricator to be unable to craft as the output was full!", pos);
@@ -78,11 +86,11 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
         });
     }
 
-    private static void fillCircuitFabricatorSlots(MachineItemStorage inv) {
-        inv.setInvStack(CircuitFabricatorBlockEntity.INPUT_SLOT_DIAMOND, new ItemStack(Items.DIAMOND), Simulation.ACTION);
-        inv.setInvStack(CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON, new ItemStack(GalacticraftItem.RAW_SILICON), Simulation.ACTION);
-        inv.setInvStack(CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON_2, new ItemStack(GalacticraftItem.RAW_SILICON), Simulation.ACTION);
-        inv.setInvStack(CircuitFabricatorBlockEntity.INPUT_SLOT_REDSTONE, new ItemStack(Items.REDSTONE), Simulation.ACTION);
-        inv.setInvStack(CircuitFabricatorBlockEntity.INPUT_SLOT, new ItemStack(Items.REDSTONE_TORCH), Simulation.ACTION);
+    private static void fillCircuitFabricatorSlots(MachineItemStorage inv, TransactionContext transaction) {
+        inv.setStack(CircuitFabricatorBlockEntity.INPUT_SLOT_DIAMOND, new ItemStack(Items.DIAMOND), transaction);
+        inv.setStack(CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON, new ItemStack(GalacticraftItem.RAW_SILICON), transaction);
+        inv.setStack(CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON_2, new ItemStack(GalacticraftItem.RAW_SILICON), transaction);
+        inv.setStack(CircuitFabricatorBlockEntity.INPUT_SLOT_REDSTONE, new ItemStack(Items.REDSTONE), transaction);
+        inv.setStack(CircuitFabricatorBlockEntity.INPUT_SLOT, new ItemStack(Items.REDSTONE_TORCH), transaction);
     }
 }

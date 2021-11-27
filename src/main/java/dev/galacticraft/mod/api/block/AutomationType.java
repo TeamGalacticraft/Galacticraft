@@ -45,6 +45,8 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public final class AutomationType<T> {
+    private static final List<AutomationType<?>> TYPES = new ArrayList<>(16);
+
     public static final AutomationType<?> NONE = new AutomationType<>(ResourceType.NONE, ResourceFlow.BOTH);
     public static final AutomationType<?> ANY_INPUT = new AutomationType<>(ResourceType.ANY, ResourceFlow.INPUT);
     public static final AutomationType<?> ANY_OUTPUT = new AutomationType<>(ResourceType.ANY, ResourceFlow.OUTPUT);
@@ -61,9 +63,7 @@ public final class AutomationType<T> {
     public static final AutomationType<ItemVariant> ITEM_INPUT = new AutomationType<>(ResourceType.ITEM, ResourceFlow.INPUT);
     public static final AutomationType<ItemVariant> ITEM_OUTPUT = new AutomationType<>(ResourceType.ITEM, ResourceFlow.OUTPUT);
     public static final AutomationType<ItemVariant> ITEM_IO = new AutomationType<>(ResourceType.ITEM, ResourceFlow.BOTH);
-
-    private static final List<AutomationType<?>> TYPES = new ArrayList<>(16);
-
+    
     private final Text name;
     private final ResourceType<T> resource;
     private final ResourceFlow flow;

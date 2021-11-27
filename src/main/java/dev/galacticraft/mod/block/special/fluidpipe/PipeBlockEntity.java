@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public abstract class PipeBlockEntity extends BlockEntity implements Pipe, AttributeProviderBlockEntity {
+public abstract class PipeBlockEntity extends BlockEntity implements Pipe {
     private @NotNull PipeFluidInsertable @Nullable[] insertables = null;
     private @Nullable PipeNetwork network = null;
     private DyeColor color = DyeColor.WHITE;
@@ -140,15 +140,6 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Attri
         super.markRemoved();
         if (this.getNetwork() != null) {
             this.getNetwork().removePipe(this, this.pos);
-        }
-    }
-
-    @Override
-    public void addAllAttributes(AttributeList<?> to) {
-        if (to.getSearchDirection() != null) {
-            if (this.canConnect(to.getSearchDirection().getOpposite())) {
-                to.offer(this.getInsertables()[to.getSearchDirection().ordinal()]);
-            }
         }
     }
 }
