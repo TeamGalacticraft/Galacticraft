@@ -1,0 +1,230 @@
+/*
+ * Copyright (c) 2019-2021 Team Galacticraft
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package dev.galacticraft.mod.block.entity;
+
+import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.api.block.entity.SolarPanel;
+import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.mod.api.screen.MachineScreenHandler;
+import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.mod.util.EnergyUtil;
+import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * Base class to deduplicate solar panel code
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
+public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity implements SolarPanel {
+    public static final int CHARGE_SLOT = 0;
+    private final boolean[] blockage = new boolean[9];
+    public AbstractSolarPanelBlockEntity(BlockEntityType<? extends MachineBlockEntity> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
+    }
+
+    @Override
+    public int getBaseEnergyGenerated() {
+        return Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate();
+    }
+
+    @Override
+    protected void clientTick() {
+        super.clientTick();
+        assert this.world != null;
+        for (int x = -1; x < 2; x++) {
+            for (int y = -1; y < 2; y++) {
+                blockage[(y + 1) * 3 + (x + 1)] = !this.world.isSkyVisible(pos.add(x, 2, y));
+            }
+        }
+    }
+    @Override
+    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_INSERTABLE, 8, 62);
+        return builder;
+    }
+
+    @Override
+    protected MachineStatus getStatusById(int index) {
+        return Status.values()[index];
+    }
+
+    @Override
+    protected void tickDisabled() {
+
+    }
+
+    @Override
+    public boolean canExtractEnergy() {
+        return true;
+    }
+
+    @Override
+    public void updateComponents() {
+        super.updateComponents();
+        this.attemptDrainPowerToStack(CHARGE_SLOT);
+    }
+
+    @NotNull
+    @Override
+    public MachineStatus updateStatus() {
+        assert this.world != null;
+        if (capacitor().getEnergy() >= capacitor().getMaxCapacity()) {
+            return Status.FULL;
+        }
+
+        if (!this.world.isDay()) {
+            return Status.NIGHT;
+        }
+
+        byte panels = 0;
+        for (int x = -1; x < 2; x++) {
+            for (int y = -1; y < 2; y++) {
+                blockage[(y + 1) * 3 + (x + 1)] = true;
+                if (this.world.isSkyVisible(pos.add(x, 2, y))) {
+                    panels++;
+                    blockage[(y + 1) * 3 + (x + 1)] = false;
+                }
+            }
+        }
+
+        if (panels == 0) {
+            return Status.BLOCKED;
+        } else if (panels == 9) {
+            return Status.COLLECTING;
+        } else {
+            return Status.PARTIALLY_BLOCKED;
+        }
+    }
+
+    @Override
+    public void tickWork() {
+    }
+
+    @Override
+    public int getEnergyGenerated() {
+        assert this.world != null;
+        if (!this.nightCollection() && this.getStatus() == Status.NIGHT)
+            return 0; // see: #nightCollection
+        if (this.getStatus().getType().isActive()) {
+            // progression of each half-day
+            double time = (int) (this.world.getTimeOfDay() % 12000L); // int cast to avoid potential weirdness
+            // shifts time, so it looks like: 0123454321
+            // instead of looking like:       0123456789
+            if (time > 6000)
+                time = 6000 - (time - 6000);
+
+            double multiplier = (double)getActive()/9;
+            if (world.isRaining() || world.isThundering()) multiplier *= 0.5D; // rain = half productivity
+
+            int base = this.getBaseEnergyGenerated(); // no need to call twice, it's not changing that frequently
+            return (int) Math.min(base, Math.floor(base*multiplier*(this.followsSun() ? 1 : time/6000D)));
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public boolean @NotNull [] getBlockage() {
+        return this.blockage;
+    }
+
+    @Override
+    public SolarPanelSource getSource() {
+        assert this.world != null;
+        if (this.world.getDimension().hasCeiling()) return SolarPanelSource.NO_LIGHT_SOURCE;
+        if (this.world.isDay()) {
+            if (this.world.isRaining()) return SolarPanelSource.OVERCAST;
+            return SolarPanelSource.DAY;
+        } else {
+            return SolarPanelSource.NIGHT;
+        }
+    }
+    /**
+     * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+     */
+    private enum Status implements MachineStatus {
+        /**
+         * Solar panel is active and is generating energy.
+         */
+        COLLECTING(new TranslatableText("ui.galacticraft.machine.status.collecting"), Formatting.GREEN, StatusType.WORKING),
+
+        /**
+         * Solar Panel can generate energy, but the buffer is full.
+         */
+        FULL(new TranslatableText("ui.galacticraft.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+
+        /**
+         * Solar Panel is generating energy, but less efficiently as it is blocked or raining.
+         */
+        PARTIALLY_BLOCKED(new TranslatableText("ui.galacticraft.machine.status.partially_blocked"), Formatting.DARK_AQUA, StatusType.PARTIALLY_WORKING),
+
+        /**
+         * Solar Panel is generating very little energy as it is night.
+         */
+        NIGHT(new TranslatableText("ui.galacticraft.machine.status.night"), Formatting.BLUE, StatusType.PARTIALLY_WORKING),
+
+        /**
+         * The sun is not visible.
+         */
+        BLOCKED(new TranslatableText("ui.galacticraft.machine.status.blocked"), Formatting.DARK_GRAY, StatusType.MISSING_RESOURCE);
+
+        private final Text text;
+        private final MachineStatus.StatusType type;
+
+        Status(TranslatableText text, Formatting color, StatusType type) {
+            this.text = text.setStyle(Style.EMPTY.withColor(color));
+            this.type = type;
+        }
+
+        @Override
+        public @NotNull Text getName() {
+            return text;
+        }
+
+        @Override
+        public @NotNull StatusType getType() {
+            return type;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
+        }
+    }
+
+}
