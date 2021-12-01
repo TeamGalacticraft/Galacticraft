@@ -65,7 +65,7 @@ public class SpaceRaceScreen extends Screen {
         return false;
     }
 
-    public static boolean check(double mouseX, double mouseY, int x, int y, int width, int height) {
+    protected static boolean check(double mouseX, double mouseY, int x, int y, int width, int height) {
         return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
     }
 

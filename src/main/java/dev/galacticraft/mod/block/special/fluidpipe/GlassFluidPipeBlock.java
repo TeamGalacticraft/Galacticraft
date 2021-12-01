@@ -30,8 +30,6 @@ import dev.galacticraft.mod.block.entity.GlassFluidPipeBlockEntity;
 import dev.galacticraft.mod.item.StandardWrenchItem;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.FluidUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -146,7 +144,6 @@ public class GlassFluidPipeBlock extends FluidPipe {
         return true;
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView view, BlockPos pos) {
         return 1.0F;

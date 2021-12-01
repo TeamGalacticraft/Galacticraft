@@ -31,7 +31,6 @@ import alexiil.mc.lib.attributes.misc.Reference;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.attribute.Automatable;
-import dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen;
 import dev.galacticraft.mod.util.DrawableUtil;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
@@ -178,7 +177,7 @@ public class Tank {
 
     public void drawTooltip(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY) {
         matrices.translate(0, 0, 1);
-        if (SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.FLUID_TANK_WIDTH, this.getPositionData()[2])) {
+        if (DrawableUtil.isWithin(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.FLUID_TANK_WIDTH, this.getPositionData()[2])) {
             List<Text> lines = new ArrayList<>(2);
             FluidVolume volume = this.inv.getInvFluid(this.index);
             if (volume.isEmpty()) {
@@ -209,7 +208,7 @@ public class Tank {
 
     public boolean isHoveredOverTank(int mouseX, int mouseY) {
         int[] data = getPositionData();
-        return SpaceRaceScreen.check(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.FLUID_TANK_WIDTH, data[2]);
+        return DrawableUtil.isWithin(mouseX, mouseY, this.x, this.y, Constant.TextureCoordinate.FLUID_TANK_WIDTH, data[2]);
     }
 
     public void renderHighlight(MatrixStack matrices, MinecraftClient client, World world, BlockPos pos, int mouseX, int mouseY) {

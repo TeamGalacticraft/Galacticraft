@@ -60,10 +60,10 @@ public class MoonPillagerBaseFeature extends JigsawFeature {
     private boolean ensureNoVillage(ChunkGenerator chunkGenerator, long l, ChunkRandom chunkRandom, int i, int j) {
         StructureConfig structureConfig = chunkGenerator.getStructuresConfig().getForType(StructureFeature.VILLAGE);
         if (structureConfig != null) {
-            for (int k = i - 10; k <= i + 10; ++k) {
-                for (int m = j - 10; m <= j + 10; ++m) {
-                    ChunkPos chunkPos = StructureFeature.VILLAGE.getStartChunk(structureConfig, l, chunkRandom, k, m);
-                    if (k == chunkPos.x && m == chunkPos.z) {
+            for (int x = i - 10; x <= i + 10; ++x) {
+                for (int z = j - 10; z <= j + 10; ++z) {
+                    ChunkPos chunkPos = StructureFeature.VILLAGE.getStartChunk(structureConfig, l, chunkRandom, x, z);
+                    if (x == chunkPos.x && z == chunkPos.z) {
                         return true;
                     }
                 }

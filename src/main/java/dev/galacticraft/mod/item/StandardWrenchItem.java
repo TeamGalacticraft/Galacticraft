@@ -23,8 +23,6 @@
 package dev.galacticraft.mod.item;
 
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
@@ -87,7 +85,6 @@ public class StandardWrenchItem extends Item {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         if (Screen.hasShiftDown()) {
             lines.add(new TranslatableText("tooltip.galacticraft.standard_wrench").setStyle(Constant.Text.GRAY_STYLE));

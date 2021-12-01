@@ -25,8 +25,6 @@ package dev.galacticraft.mod.entity;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -228,7 +226,6 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public boolean shouldRender(double distance) {
         BlockEntity entity = world.getBlockEntity(getBlockPos());
         if (entity instanceof BubbleDistributorBlockEntity machine) {

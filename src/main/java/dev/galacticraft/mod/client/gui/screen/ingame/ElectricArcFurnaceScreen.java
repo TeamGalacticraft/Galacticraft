@@ -25,7 +25,9 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.ElectricArcFurnaceBlockEntity;
+import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -36,18 +38,21 @@ import net.minecraft.text.Text;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFurnaceBlockEntity, RecipeMachineScreenHandler<Inventory, BlastingRecipe, ElectricArcFurnaceBlockEntity>> {
-    private static final int ARROW_X = 78;
-    private static final int ARROW_Y = 24;
-
-    private static final int LIT_ARROW_X = 176;
-    private static final int LIT_ARROW_Y = 0;
-
-    private static final int ARROW_WIDTH = 22;
-    private static final int ARROW_HEIGHT = 15;
+    private static final int ARROW_X = 68;
+    private static final int ARROW_Y = 35;
+    private static final int ARROW_U = 176;
+    private static final int ARROW_V = 0;
+    private static final int ARROW_WIDTH = 26;
+    private static final int ARROW_HEIGHT = 16;
 
     public ElectricArcFurnaceScreen(RecipeMachineScreenHandler<Inventory, BlastingRecipe, ElectricArcFurnaceBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
-        addWidget(this.createCapacitorWidget(8, 29, 48));
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
     }
 
     @Override
@@ -56,7 +61,7 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
         if (this.machine.maxProgress() != 0 && this.machine.progress() != 0) {
             double scale = ((double)handler.machine.progress()) / ((double)handler.machine.maxProgress());
 
-            this.drawTexture(matrices, this.x + ARROW_X, this.y + ARROW_Y, LIT_ARROW_X, LIT_ARROW_Y, (int) (((double)ARROW_WIDTH) * scale), ARROW_HEIGHT);
+            DrawableUtil.drawProgressTexture(matrices, this.x + ARROW_X, this.y + ARROW_Y, ARROW_U, ARROW_V, (float) (ARROW_WIDTH * scale), ARROW_HEIGHT);
         }
     }
 }

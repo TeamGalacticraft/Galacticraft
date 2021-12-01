@@ -35,17 +35,35 @@ public enum MoonEdgeBiomeLayer implements CrossSamplingLayer {
     @Override
     public int sample(LayerRandomnessSource context, int n, int e, int s, int w, int center) {
         int mare = 0;
-        int highland = 0;
+        if (isInnerMare(center) || isInnerHighlands(center)) return center;
+        if (areAnyInnerMare(n, e, s, w)) {
+            if (isMare(n)) {
+                return n;
+            } else if (isMare(e)) {
+                return e;
+            } else if (isMare(s)) {
+                return s;
+            } else if (isMare(w)) {
+                return w;
+            }
+        }
+        if (areAnyInnerHighlands(n, e, s, w)) {
+            if (isHighlands(n)) {
+                return n;
+            } else if (isHighlands(e)) {
+                return e;
+            } else if (isHighlands(s)) {
+                return s;
+            } else if (isHighlands(w)) {
+                return w;
+            }
+        }
         if (isMare(n)) mare++;
-        else if (isHighland(n)) highland++;
         if (isMare(s)) mare++;
-        else if (isHighland(n)) highland++;
         if (isMare(e)) mare++;
-        else if (isHighland(n)) highland++;
         if (isMare(w)) mare++;
-        else if (isHighland(n)) highland++;
-        if (mare > 0 && mare < 4 && highland > 0) {
-            if (isMare(center)) {
+        if (mare > 0 && mare < 4) {
+            if (mare > 2) {
                 return MoonBiomeLayer.MOON_MARE_EDGE_ID;
             }
             return MoonBiomeLayer.MOON_HIGHLANDS_EDGE_ID;
@@ -53,11 +71,27 @@ public enum MoonEdgeBiomeLayer implements CrossSamplingLayer {
         return center;
     }
 
-    private static boolean isMare(int id) {
-        return id == MoonBiomeLayer.MOON_MARE_ID;
+    private static boolean areAnyInnerMare(int n, int e, int s, int w) {
+        return isInnerMare(n) || isInnerMare(e) || isInnerMare(s) || isInnerMare(w);
     }
 
-    private static boolean isHighland(int id) {
-        return id == MoonBiomeLayer.MOON_HIGHLANDS_ID;
+    private static boolean areAnyInnerHighlands(int n, int e, int s, int w) {
+        return isInnerHighlands(n) || isInnerHighlands(e) || isInnerHighlands(s) || isInnerHighlands(w);
+    }
+
+    private static boolean isMare(int id) {
+        return id == MoonBiomeLayer.MOON_MARE_ID || id == MoonBiomeLayer.MOON_MARE_FLAT_ID || id == MoonBiomeLayer.MOON_MARE_HILLS_ID;
+    }
+
+    private static boolean isHighlands(int id) {
+        return id == MoonBiomeLayer.MOON_HIGHLANDS_ID || id == MoonBiomeLayer.MOON_HIGHLANDS_FLAT_ID || id == MoonBiomeLayer.MOON_HIGHLANDS_HILLS_ID;
+    }
+
+    private static boolean isInnerMare(int id) {
+        return id == MoonBiomeLayer.MOON_MARE_VALLEY_ID;
+    }
+
+    private static boolean isInnerHighlands(int id) {
+        return id == MoonBiomeLayer.MOON_HIGHLANDS_VALLEY_ID;
     }
 }

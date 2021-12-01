@@ -33,10 +33,16 @@ import net.minecraft.world.biome.Biome;
  */
 public interface GalacticraftBiome {
     interface Moon {
-        RegistryKey<Biome> HIGHLANDS_PLAINS = key(Constant.Biome.Moon.HIGHLANDS);
+        RegistryKey<Biome> HIGHLANDS = key(Constant.Biome.Moon.HIGHLANDS);
+        RegistryKey<Biome> HIGHLANDS_FLAT = key(Constant.Biome.Moon.HIGHLANDS_FLAT);
+        RegistryKey<Biome> HIGHLANDS_HILLS = key(Constant.Biome.Moon.HIGHLANDS_HILLS);
         RegistryKey<Biome> HIGHLANDS_EDGE = key(Constant.Biome.Moon.HIGHLANDS_EDGE);
-        RegistryKey<Biome> MARE_PLAINS = key(Constant.Biome.Moon.MARE);
+        RegistryKey<Biome> HIGHLANDS_VALLEY = key(Constant.Biome.Moon.HIGHLANDS_VALLEY);
+        RegistryKey<Biome> MARE = key(Constant.Biome.Moon.MARE);
+        RegistryKey<Biome> MARE_FLAT = key(Constant.Biome.Moon.MARE_FLAT);
+        RegistryKey<Biome> MARE_HILLS = key(Constant.Biome.Moon.MARE_HILLS);
         RegistryKey<Biome> MARE_EDGE = key(Constant.Biome.Moon.MARE_EDGE);
+        RegistryKey<Biome> MARE_VALLEY = key(Constant.Biome.Moon.MARE_VALLEY);
     }
 
     private static RegistryKey<Biome> key(String id) {

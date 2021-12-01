@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 HRZN LTD
+ * Copyright (c) 2019-2021 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -68,19 +68,13 @@ println("Galacticraft: $version")
 base.archivesName.set(modName)
 
 val gametestSourceSet = sourceSets.create("gametest") {
-    compileClasspath += sourceSets.main.get().compileClasspath
-    compileClasspath += sourceSets.main.get().output
-    runtimeClasspath += sourceSets.main.get().runtimeClasspath
-    runtimeClasspath += sourceSets.main.get().output
     java.srcDir("src/gametest/java")
     resources.srcDir("src/gametest/resources")
 }
 
 loom {
     accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
-    mixin {
-        add(sourceSets.main.get(), "galacticraft.refmap.json")
-    }
+    mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
 
     runs {
         register("gametest") {
@@ -88,16 +82,14 @@ loom {
             name("Game Test")
             source(gametestSourceSet)
             property("fabric.log.level", "debug")
-            vmArg("-Dfabric-api.gametest=true")
-            vmArg("-ea")
+            vmArg("-Dfabric-api.gametest")
         }
         register("gametestClient") {
             client()
             name("Game Test Client")
             source(gametestSourceSet)
             property("fabric.log.level", "debug")
-            vmArg("-Dfabric-api.gametest=true")
-            vmArg("-ea")
+            vmArg("-Dfabric-api.gametest")
         }
     }
 }
@@ -144,25 +136,6 @@ repositories {
     }
 }
 
-/**
- * From:
- * @see net.fabricmc.loom.configuration.FabricApiExtension.getDependencyNotation
- */
-fun getFabricApiModule(moduleName: String): String {
-    return "net.fabricmc.fabric-api:${moduleName}:${fabricApi.moduleVersion(moduleName, fabricVersion)}"
-}
-
-fun DependencyHandler.optionalDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
-    modCompileOnly(dependencyNotation, dependencyConfiguration)
-    if (!net.fabricmc.loom.util.OperatingSystem.isCIBuild() && runtimeOptional) {
-        modRuntime(dependencyNotation, dependencyConfiguration)
-    }
-}
-
-fun DependencyHandler.includedDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
-    include(modApi(dependencyNotation, dependencyConfiguration), dependencyConfiguration)
-}
-
 dependencies {
     // Minecraft, Mappings, Loader
     minecraft("com.mojang:minecraft:$minecraftVersion")
@@ -178,6 +151,7 @@ dependencies {
         "fabric-content-registries-v0",
         "fabric-gametest-api-v1",
         "fabric-item-groups-v0",
+        "fabric-mining-level-api-v1",
         "fabric-models-v0",
         "fabric-networking-blockentity-v0",
         "fabric-networking-api-v1",
@@ -235,6 +209,10 @@ dependencies {
 
     // Other Dependencies
     modRuntime("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
+
+    // Test Dependencies
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 }
 
 tasks.processResources {
@@ -251,6 +229,10 @@ tasks.processResources {
                 file: File -> file.writeText(groovy.json.JsonOutput.toJson(groovy.json.JsonSlurper().parse(file)))
         }
     }
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.create<Jar>("javadocJar") {
@@ -315,7 +297,24 @@ tasks.withType(JavaCompile::class) {
     options.release.set(16)
 }
 
-tasks.getByName("gametestClasses").dependsOn("classes")
+/**
+ * From:
+ * @see net.fabricmc.loom.configuration.FabricApiExtension.getDependencyNotation
+ */
+fun getFabricApiModule(moduleName: String): String {
+    return "net.fabricmc.fabric-api:${moduleName}:${fabricApi.moduleVersion(moduleName, fabricVersion)}"
+}
+
+fun DependencyHandler.optionalDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
+    modCompileOnly(dependencyNotation, dependencyConfiguration)
+    if (!net.fabricmc.loom.util.OperatingSystem.isCIBuild() && runtimeOptional) {
+        modRuntime(dependencyNotation, dependencyConfiguration)
+    }
+}
+
+fun DependencyHandler.includedDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
+    include(modApi(dependencyNotation, dependencyConfiguration), dependencyConfiguration)
+}
 
 // inspired by https://github.com/TerraformersMC/GradleScripts/blob/2.0/ferry.gradle
 fun getVersionDecoration(): String {
@@ -323,7 +322,7 @@ fun getVersionDecoration(): String {
     if (project.hasProperty("release")) return ""
 
     var version = "+build"
-    if ("git".exitValue() != 1) {
+    if (!"git".testForProcess()) {
         version += ".unknown"
     } else {
         val branch = "git branch --show-current".execute()
@@ -356,6 +355,21 @@ fun String.execute(): String {
     return String(output.toByteArray()).trim()
 }
 
+fun String.testForProcess(): Boolean {
+    return try {
+        rootProject.exec {
+            commandLine(split("\\s".toRegex()))
+            workingDir = rootProject.projectDir
+            isIgnoreExitValue = true
+            standardOutput = OutputStream.nullOutputStream()
+            errorOutput = OutputStream.nullOutputStream()
+        }
+        true;
+    } catch (ex: Exception) {
+        false;
+    }
+}
+
 fun String.exitValue(): Int {
     return rootProject.exec {
         commandLine(split("\\s".toRegex()))
@@ -365,3 +379,7 @@ fun String.exitValue(): Int {
         errorOutput = OutputStream.nullOutputStream()
     }.exitValue
 }
+
+tasks.getByName("gametestClasses").dependsOn("classes")
+gametestSourceSet.compileClasspath += sourceSets.main.get().compileClasspath + sourceSets.main.get().output
+gametestSourceSet.runtimeClasspath += sourceSets.main.get().runtimeClasspath + sourceSets.main.get().output

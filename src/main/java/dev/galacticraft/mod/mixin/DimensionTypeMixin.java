@@ -51,28 +51,45 @@ import java.util.Optional;
  */
 @Mixin(DimensionType.class)
 public abstract class DimensionTypeMixin {
-    @Inject(method = "createDefaultDimensionOptions", at = @At(value = "RETURN", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "createDefaultDimensionOptions", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void addGCDimOptions(Registry<DimensionType> registry, Registry<Biome> registry2, Registry<ChunkGeneratorSettings> registry3, long l, CallbackInfoReturnable<SimpleRegistry<DimensionOptions>> cir, SimpleRegistry<DimensionOptions> simpleRegistry) {
-        Registry.register(simpleRegistry, new Identifier(Constant.MOD_ID, "moon"), new DimensionOptions(() -> registry.get(new Identifier(Constant.MOD_ID, "moon")), new MoonChunkGenerator(new MoonBiomeSource(l, 4, registry2), l, () -> new ChunkGeneratorSettings(
+        //noinspection Convert2MethodRef
+        Registry.register(simpleRegistry, new Identifier(Constant.MOD_ID, "moon"), new DimensionOptions(() -> registry.get(new Identifier(Constant.MOD_ID, "moon")), new MoonChunkGenerator(new MoonBiomeSource(l, 4, registry2), l, () -> createMoonSettings_gc())));
+    }
+
+    private static ChunkGeneratorSettings createMoonSettings_gc() {
+        return new ChunkGeneratorSettings(
                 new StructuresConfig(Optional.empty(), Util.make(() -> {
                     ImmutableMap.Builder<StructureFeature<?>, StructureConfig> builder = ImmutableMap.builder();
-                    builder.put(StructureFeature.VILLAGE, new StructureConfig(16, 8, 930573769));
+                    builder.put(StructureFeature.VILLAGE, new StructureConfig(24, 16, 930573769));
                     builder.put(GalacticraftStructure.MOON_PILLAGER_BASE_FEATURE, new StructureConfig(32, 16, 56836814));
                     builder.put(GalacticraftStructure.MOON_RUINS, new StructureConfig(24, 8, 78473257));
                     return builder.build();
-                })), GenerationShapeConfig.create(
-                        0, 256,
-                new NoiseSamplingConfig(0.9999999814507745D, 0.9999999814507745D, 80.0D, 160.0D),
-                new SlideConfig(-10, 3, 0),
-                new SlideConfig(15, 3, 0),
-                1, 2, 1.0D,
-                -0.46875D, true,
-                true, false, false),
-                GalacticraftBlock.MOON_ROCKS[0].getDefaultState(), Blocks.WATER.getDefaultState(),
-                -2147483648, 0, 63,
-                0, false, false,
-                false, false, false,
-                false
-        ))));
+                })),
+                GenerationShapeConfig.create(0,
+                        256,
+                        new NoiseSamplingConfig(1.2, 1.0, 400.0, 300.0),
+                        new SlideConfig(-10, 3, 0),
+                        new SlideConfig(15, 30, 3),
+                        1,
+                        2,
+                        1.0,
+                        -0.46875,
+                        true,
+                        true,
+                        false,
+                        false),
+                GalacticraftBlock.MOON_ROCKS[0].getDefaultState(),
+                Blocks.WATER.getDefaultState(),
+                Integer.MIN_VALUE,
+                0,
+                Integer.MIN_VALUE,
+                0,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false);
     }
 }

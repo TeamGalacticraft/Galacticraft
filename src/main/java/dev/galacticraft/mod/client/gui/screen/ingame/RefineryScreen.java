@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.RefineryBlockEntity;
+import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,6 +40,11 @@ public class RefineryScreen extends MachineHandledScreen<RefineryBlockEntity, Si
     public RefineryScreen(SimpleMachineScreenHandler<RefineryBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.REFINERY_SCREEN);
         this.backgroundHeight = 192;
-        this.addWidget(this.createCapacitorWidget(8, 29, 48));
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 29, 48));
     }
 }

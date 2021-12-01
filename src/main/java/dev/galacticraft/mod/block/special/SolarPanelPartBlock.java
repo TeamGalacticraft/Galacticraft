@@ -25,8 +25,6 @@ package dev.galacticraft.mod.block.special;
 import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.SolarPanelPartBlockEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -105,7 +103,7 @@ public class SolarPanelPartBlock extends BlockWithEntity {
         return new SolarPanelPartBlockEntity(pos, state);
     }
 
-    @Environment(EnvType.CLIENT)
+    @Override
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView blockView, BlockPos pos) {
         return 1.0F;
     }
