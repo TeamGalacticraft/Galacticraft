@@ -236,7 +236,6 @@ tasks.create<Jar>("javadocJar") {
     tasks.build.get().dependsOn(this)
 }
 
-
 tasks.named<ProcessResources>("processGametestResources") {
     duplicatesStrategy = DuplicatesStrategy.WARN
 }
@@ -285,6 +284,10 @@ license {
         set("year", Year.now().value)
         set("company", "Team Galacticraft")
     }
+}
+
+quiltflower {
+    addToRuntimeClasspath.set(true)
 }
 
 tasks.withType(JavaCompile::class) {
