@@ -122,7 +122,6 @@ public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Re
                 this.craftingInv().removeStack(i, 1);
             }
         }
-        assert this.outputInv().getInsertable().insert(output).isEmpty();
         this.outputInv().getInsertable().insert(output);
 
         recipe = this.recipe();
