@@ -22,11 +22,59 @@
 
 package dev.galacticraft.mod.world.gen.chunk;
 
+import com.google.common.collect.ImmutableMap;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.world.gen.feature.GalacticraftConfiguredStructureFeature;
+import dev.galacticraft.mod.world.gen.feature.GalacticraftStructureFeature;
+import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
+import net.minecraft.block.Blocks;
+import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
+import net.minecraft.world.biome.source.util.VanillaTerrainParametersCreator;
+import net.minecraft.world.gen.chunk.*;
+import net.minecraft.world.gen.feature.StructureFeature;
+import net.minecraft.world.gen.surfacebuilder.VanillaSurfaceRules;
+
+import java.util.Optional;
 
 public class GalacticraftChunkGeneratorSettings {
     public static final RegistryKey<ChunkGeneratorSettings> MOON = RegistryKey.of(Registry.CHUNK_GENERATOR_SETTINGS_KEY, Constant.id("moon"));
+
+    public static void register() {
+        BuiltinRegistries.add(BuiltinRegistries.CHUNK_GENERATOR_SETTINGS, MOON, new ChunkGeneratorSettings(
+                new StructuresConfig(
+                        Optional.empty(),
+                        ImmutableMap.of(
+                                GalacticraftStructureFeature.MOON_PILLAGER_OUTPOST, new StructureConfig(32, 16, 100737579),
+                                GalacticraftStructureFeature.MOON_RUINS, new StructureConfig(24, 8, 181808579),
+                                StructureFeature.VILLAGE, new StructureConfig(24, 8, 197408419)
+                        )
+                ),
+                GenerationShapeConfig.create(
+                        -64,
+                        384,
+                        new NoiseSamplingConfig(2.0, 1.0, 80.0, 160.0),
+                        new SlideConfig(-0.078125, 2, 8),
+                        new SlideConfig(0.1171875, 3, 0),
+                        4,
+                        8,
+                        false,
+                        false,
+                        false,
+                        VanillaTerrainParametersCreator.createSurfaceParameters(false)),
+                GalacticraftBlock.MOON_ROCKS[0].getDefaultState(),
+                Blocks.AIR.getDefaultState(),
+                MoonSurfaceRules.createDefaultRule(),
+                -65, // seaLevel - mapped incorrectly on yarn
+                false,
+                false,
+                true,
+                false,
+                true,
+                false
+        ));
+    }
 }

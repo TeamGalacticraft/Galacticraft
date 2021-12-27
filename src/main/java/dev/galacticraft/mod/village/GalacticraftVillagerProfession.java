@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.village;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.structure.GalacticraftStructure;
+import dev.galacticraft.mod.world.gen.feature.GalacticraftStructureFeature;
 import dev.galacticraft.mod.world.poi.GalacticraftPointOfInterestType;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerProfessionBuilder;
@@ -49,7 +49,7 @@ public class GalacticraftVillagerProfession {
         });
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 2, factories -> {
             factories.add(new GalacticraftTradeOffer.BuyForOneEmeraldFactory(Items.GLASS_PANE, 11, 16, 10));
-            factories.add(new GalacticraftTradeOffer.SellMapFactory(13, GalacticraftStructure.MOON_RUINS, MapIcon.Type.RED_X, 12, 5));
+            factories.add(new GalacticraftTradeOffer.SellMapFactory(13, GalacticraftStructureFeature.MOON_RUINS, MapIcon.Type.RED_X, 12, 5));
         });
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 3, factories -> {
             factories.add(new GalacticraftTradeOffer.BuyForOneEmeraldFactory(Items.COMPASS, 1, 12, 20));

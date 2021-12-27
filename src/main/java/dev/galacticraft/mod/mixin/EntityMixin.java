@@ -24,7 +24,7 @@ package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.mod.entity.damage.GalacticraftDamageSource;
 import dev.galacticraft.mod.tag.GalacticraftTag;
-import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
+import dev.galacticraft.mod.world.dimension.GalacticraftDimensionType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.fluid.Fluid;
@@ -65,7 +65,7 @@ public abstract class EntityMixin {
 
     @Inject(method = "getTeleportTarget", at = @At("HEAD"), cancellable = true)
     private void getTeleportTargetGC(ServerWorld destination, CallbackInfoReturnable<TeleportTarget> cir) {
-        if (destination.getRegistryKey().equals(GalacticraftDimension.MOON) || this.world.getRegistryKey().equals(GalacticraftDimension.MOON)) { //TODO lander/parachute stuff
+        if (destination.getRegistryKey().equals(GalacticraftDimensionType.MOON_KEY) || this.world.getRegistryKey().equals(GalacticraftDimensionType.MOON_KEY)) { //TODO lander/parachute stuff
             BlockPos pos = destination.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, destination.getSpawnPos());
             cir.setReturnValue(new TeleportTarget(new Vec3d((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getVelocity(), this.yaw, this.pitch));
         }

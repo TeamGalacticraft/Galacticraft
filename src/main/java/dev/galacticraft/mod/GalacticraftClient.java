@@ -40,7 +40,7 @@ import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.particle.GalacticraftParticleType;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
-import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
+import dev.galacticraft.mod.world.dimension.GalacticraftDimensionType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -170,10 +170,10 @@ public class GalacticraftClient implements ClientModInitializer {
             return null;
         });
 
-        DimensionRenderingRegistry.registerDimensionEffects(GalacticraftDimension.MOON.getValue(), MoonDimensionEffects.INSTANCE);
-        DimensionRenderingRegistry.registerCloudRenderer(GalacticraftDimension.MOON, EmptyCloudRenderer.INSTANCE);
-        DimensionRenderingRegistry.registerWeatherRenderer(GalacticraftDimension.MOON, EmptyWeatherRenderer.INSTANCE);
-        DimensionRenderingRegistry.registerSkyRenderer(GalacticraftDimension.MOON, MoonSkyRenderer.INSTANCE);
+        DimensionRenderingRegistry.registerDimensionEffects(GalacticraftDimensionType.MOON_KEY.getValue(), MoonDimensionEffects.INSTANCE);
+        DimensionRenderingRegistry.registerCloudRenderer(GalacticraftDimensionType.MOON_KEY, EmptyCloudRenderer.INSTANCE);
+        DimensionRenderingRegistry.registerWeatherRenderer(GalacticraftDimensionType.MOON_KEY, EmptyWeatherRenderer.INSTANCE);
+        DimensionRenderingRegistry.registerSkyRenderer(GalacticraftDimensionType.MOON_KEY, MoonSkyRenderer.INSTANCE);
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
 

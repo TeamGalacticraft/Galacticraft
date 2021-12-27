@@ -125,12 +125,12 @@ public class MoonRuinsGenerator {
       private final float integrity;
 
       public Piece(StructureManager structureManager, Identifier template, BlockPos pos, BlockRotation rotation, float integrity) {
-         super(GalacticraftStructure.MOON_RUINS_PIECE, 0, structureManager, template, template.toString(), method_35446(rotation), pos);
+         super(GalacticraftStructurePieceType.MOON_RUINS_PIECE, 0, structureManager, template, template.toString(), method_35446(rotation), pos);
          this.integrity = integrity;
       }
 
       public Piece(StructureManager structureManager, NbtCompound nbt) {
-         super(GalacticraftStructure.MOON_RUINS_PIECE, nbt, structureManager, (identifier) -> method_35446(BlockRotation.valueOf(nbt.getString("Rot"))));
+         super(GalacticraftStructurePieceType.MOON_RUINS_PIECE, nbt, structureManager, (identifier) -> method_35446(BlockRotation.valueOf(nbt.getString("Rot"))));
          this.integrity = nbt.getFloat("Integrity");
       }
 

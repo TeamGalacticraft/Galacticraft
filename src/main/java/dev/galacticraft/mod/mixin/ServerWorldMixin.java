@@ -25,7 +25,7 @@ package dev.galacticraft.mod.mixin;
 import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.accessor.ServerWorldAccessor;
 import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
-import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
+import dev.galacticraft.mod.world.dimension.GalacticraftDimensionType;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.MinecraftServer;
@@ -60,7 +60,7 @@ public abstract class ServerWorldMixin implements ServerWorldAccessor {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void setSpawnersGC(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> registryKey, DimensionType dimensionType, WorldGenerationProgressListener worldGenerationProgressListener, ChunkGenerator chunkGenerator, boolean debugWorld, long l, List<Spawner> list, boolean bl, CallbackInfo ci) {
-        if (registryKey.equals(GalacticraftDimension.MOON)) {
+        if (registryKey.equals(GalacticraftDimensionType.MOON_KEY)) {
             this.spawners = ImmutableList.<Spawner>builder().add(new EvolvedPillagerSpawner()).build();
         }
     }

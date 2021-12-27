@@ -110,6 +110,8 @@ public class GalacticraftBlock {
     public static final Block MOON_SURFACE_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.GRAY).strength(1.5F, 6.0F)), Constant.Block.MOON_SURFACE_ROCK);
     public static final Block[] MOON_ROCKS = createDecorationBlocks(Constant.Block.MOON_ROCK, FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).requiresTool().strength(2.0F, 5.0F), false);
     public static final Block[] COBBLED_MOON_ROCKS = createDecorationBlocks(Constant.Block.COBBLED_MOON_ROCK, FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).requiresTool().strength(2.0F, 5.0F), false);
+    public static final Block[] LUNASLATES = createDecorationBlocks(Constant.Block.LUNASLATE, FabricBlockSettings.of(Material.STONE, MapColor.DEEPSLATE_GRAY).sounds(BlockSoundGroup.DEEPSLATE).requiresTool().strength(3.5F, 5.0F), false);
+    public static final Block[] COBBLED_LUNASLATES = createDecorationBlocks(Constant.Block.COBBLED_LUNASLATE, FabricBlockSettings.of(Material.STONE, MapColor.DEEPSLATE_GRAY).sounds(BlockSoundGroup.DEEPSLATE).requiresTool().strength(3.5F, 5.0F), false);
     public static final Block[] MOON_BASALTS = createDecorationBlocks(Constant.Block.MOON_BASALT, FabricBlockSettings.of(Material.STONE, MapColor.TERRACOTTA_BLACK).strength(2.0F, 6.0F), false);
     public static final Block[] MOON_BASALT_BRICKS = createDecorationBlocks(Constant.Block.MOON_BASALT_BRICK, FabricBlockSettings.of(Material.STONE, MapColor.TERRACOTTA_BLACK).strength(2.0F, 6.0F), false);
     public static final Block[] CRACKED_MOON_BASALT_BRICKS = createDecorationBlocks(Constant.Block.CRACKED_MOON_BASALT_BRICK, FabricBlockSettings.of(Material.STONE, MapColor.TERRACOTTA_BLACK).strength(2.0F, 6.0F), false);
@@ -135,8 +137,8 @@ public class GalacticraftBlock {
 
     // MISC DECOR
     public static final Block WALKWAY = registerBlock(new WalkwayBlock(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constant.Block.WALKWAY);
-    public static final Block PIPE_WALKWAY = registerBlock(new PipeWalkway(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constant.Block.PIPE_WALKWAY);
-    public static final Block WIRE_WALKWAY = registerBlock(new WireWalkway(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constant.Block.WIRE_WALKWAY);
+    public static final Block PIPE_WALKWAY = registerBlock(new PipeWalkway(FabricBlockSettings.copyOf(WALKWAY)), Constant.Block.PIPE_WALKWAY);
+    public static final Block WIRE_WALKWAY = registerBlock(new WireWalkway(FabricBlockSettings.copyOf(WALKWAY)), Constant.Block.WIRE_WALKWAY);
     public static final Block TIN_LADDER = registerBlock(new TinLadderBlock(FabricBlockSettings.of(Material.DECORATION).strength(1.0f, 1.0f).sounds(BlockSoundGroup.METAL)), Constant.Block.TIN_LADDER);
     public static final Block GRATING = registerBlock(new GratingBlock(FabricBlockSettings.of(Material.METAL, MapColor.STONE_GRAY).strength(2.5f, 6.0f).sounds(BlockSoundGroup.METAL)), Constant.Block.GRATING);
 
@@ -159,28 +161,25 @@ public class GalacticraftBlock {
     public static final Block STRONG_VACUUM_GLASS = registerBlock(new VacuumGlassBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constant.Block.STRONG_VACUUM_GLASS);
 
     // ORES
-    public static final Block SILICON_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.SILICON_ORE);
-    public static final Block DEEPSLATE_SILICON_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.DEEPSLATE_SILICON_ORE);
+    public static final Block SILICON_ORE = registerBlock(new OreBlock(oreSettings(3.0F, 3.0F, false)), Constant.Block.SILICON_ORE);
+    public static final Block DEEPSLATE_SILICON_ORE = registerBlock(new OreBlock(oreSettings(4.5F, 3.0F, true)), Constant.Block.DEEPSLATE_SILICON_ORE);
 
-    public static final Block MOON_CHEESE_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.MOON_CHEESE_ORE);
-    public static final Block MOON_BASALT_CHEESE_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.MOON_BASALT_CHEESE_ORE);
+    public static final Block MOON_COPPER_ORE = registerBlock(new OreBlock(oreSettings(3.0F, 5.0F, false)), Constant.Block.MOON_COPPER_ORE);
+    public static final Block LUNASLATE_COPPER_ORE = registerBlock(new OreBlock(oreSettings(5.0F, 5.0F, true)), Constant.Block.LUNASLATE_COPPER_ORE);
 
-    public static final Block DESH_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.DESH_ORE);
+    public static final Block TIN_ORE = registerBlock(new OreBlock(oreSettings(3.0F, 3.0F, false)), Constant.Block.TIN_ORE);
+    public static final Block DEEPSLATE_TIN_ORE = registerBlock(new OreBlock(oreSettings(4.5F, 3.0F, true)), Constant.Block.DEEPSLATE_TIN_ORE);
+    public static final Block MOON_TIN_ORE = registerBlock(new OreBlock(oreSettings(3.0F, 5.0F, false)), Constant.Block.MOON_TIN_ORE);
+    public static final Block LUNASLATE_TIN_ORE = registerBlock(new OreBlock(oreSettings(5.0F, 5.0F, true)), Constant.Block.LUNASLATE_TIN_ORE);
 
-    public static final Block ILMENITE_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.ILMENITE_ORE);
+    public static final Block ALUMINUM_ORE = registerBlock(new OreBlock(oreSettings(3.0F, 3.0F, false)), Constant.Block.ALUMINUM_ORE);
+    public static final Block DEEPSLATE_ALUMINUM_ORE = registerBlock(new OreBlock(oreSettings(3.5F, 3.0F, true)), Constant.Block.DEEPSLATE_ALUMINUM_ORE);
 
-    public static final Block MOON_COPPER_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.MOON_COPPER_ORE);
-    public static final Block MOON_BASALT_COPPER_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.MOON_BASALT_COPPER_ORE);
+    public static final Block DESH_ORE = registerBlock(new OreBlock(oreSettings(3.0F, 5.0F, false)), Constant.Block.DESH_ORE);
 
-    public static final Block TIN_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.TIN_ORE);
-    public static final Block DEEPSLATE_TIN_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.DEEPSLATE_TIN_ORE);
-    public static final Block MOON_TIN_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.MOON_TIN_ORE);
-    public static final Block MOON_BASALT_TIN_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.MOON_BASALT_TIN_ORE);
+    public static final Block ILMENITE_ORE = registerBlock(new OreBlock(oreSettings(3.0F, 5.0F, false)), Constant.Block.ILMENITE_ORE);
 
-    public static final Block ALUMINUM_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.ALUMINUM_ORE);
-    public static final Block DEEPSLATE_ALUMINUM_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.DEEPSLATE_ALUMINUM_ORE);
-
-    public static final Block GALENA_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constant.Block.GALENA_ORE);
+    public static final Block GALENA_ORE = registerBlock(new OreBlock(oreSettings(3.0F, 5.0F, false)), Constant.Block.GALENA_ORE);
 
     // COMPACT MINERAL BLOCKS
     public static final Block MOON_CHEESE_BLOCK = registerBlock(new CakeBlock(FabricBlockSettings.of(Material.CAKE).strength(0.5F).sounds(BlockSoundGroup.WOOL)), Constant.Block.MOON_CHEESE_BLOCK);
@@ -198,8 +197,6 @@ public class GalacticraftBlock {
     public static final Block CAVERNOUS_VINE = registerBlock(new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MapColor.GREEN).dropsNothing().noCollision().luminance(0).sounds(BlockSoundGroup.GRASS).ticksRandomly()), Constant.Block.CAVERNOUS_VINE);
     public static final Block POISONOUS_CAVERNOUS_VINE = registerBlock(new PoisonousCavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MapColor.GREEN).dropsNothing().noCollision().luminance(3).sounds(BlockSoundGroup.GRASS).ticksRandomly()), Constant.Block.POISONOUS_CAVERNOUS_VINE);
     public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MapColor.GREEN).dropsNothing().noCollision().luminance(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly()), Constant.Block.MOON_BERRY_BUSH);
-    public static final Block MOON_CHEESE_LEAVES = registerBlock(new LeavesBlock(FabricBlockSettings.of(Material.LEAVES).strength(0.2F, 0.2F).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque()), Constant.Block.MOON_CHEESE_LEAVES);
-    public static final Block MOON_CHEESE_LOG = registerBlock(new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MapColor.YELLOW).strength(2.0F).sounds(BlockSoundGroup.WOOD)), Constant.Block.MOON_CHEESE_LOG);
 
     // DUMMY
     public static final BlockWithEntity SOLAR_PANEL_PART = registerBlockWithoutItem(new SolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL)), Constant.Block.SOLAR_PANEL_PART);
@@ -226,6 +223,11 @@ public class GalacticraftBlock {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);
         FlammableBlockRegistry.getDefaultInstance().add(CRUDE_OIL, 60, 100);
         BLOCKS.forEach((identifier, block) -> Registry.register(Registry.BLOCK, identifier, block));
+    }
+
+    private static FabricBlockSettings oreSettings(float hardness, float resistance, boolean deepslate) {
+        if (deepslate) return FabricBlockSettings.of(Material.STONE, MapColor.DEEPSLATE_GRAY).strength(hardness, resistance).requiresTool().sounds(BlockSoundGroup.DEEPSLATE);
+        return FabricBlockSettings.of(Material.STONE).strength(hardness, resistance).requiresTool();
     }
 
     private static Block[] createDecorationBlocks(String baseId, AbstractBlock.Settings settings, boolean detailedVariant) {

@@ -22,14 +22,14 @@
 
 package dev.galacticraft.mod.mixin;
 
+import com.mojang.serialization.Lifecycle;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.world.biome.source.GalacticraftBiomeNoisePreset;
+import dev.galacticraft.mod.world.biome.source.GalacticraftBiomeParameters;
+import dev.galacticraft.mod.world.dimension.GalacticraftDimensionType;
 import dev.galacticraft.mod.world.gen.chunk.GalacticraftChunkGeneratorSettings;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
-import net.minecraft.util.registry.DynamicRegistryManager;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.SimpleRegistry;
+import net.minecraft.util.registry.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
@@ -47,7 +47,12 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(DimensionType.class)
 public abstract class DimensionTypeMixin {
     @Inject(method = "createDefaultDimensionOptions(Lnet/minecraft/util/registry/DynamicRegistryManager;JZ)Lnet/minecraft/util/registry/SimpleRegistry;", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void addGCDimOptions(DynamicRegistryManager dynamicRegistryManager, long l, boolean bl, CallbackInfoReturnable<SimpleRegistry<DimensionOptions>> cir, SimpleRegistry<DimensionOptions> simpleRegistry, Registry<DimensionType> registry, Registry<Biome> registry2, Registry<ChunkGeneratorSettings> registry3, Registry<DoublePerlinNoiseSampler.NoiseParameters> registry4) {
-        Registry.register(simpleRegistry, new Identifier(Constant.MOD_ID, "moon"), new DimensionOptions(() -> registry.get(new Identifier(Constant.MOD_ID, "moon")), new NoiseChunkGenerator(registry4, GalacticraftBiomeNoisePreset.MOON.getBiomeSource(registry2), l, () -> registry3.getOrThrow(GalacticraftChunkGeneratorSettings.MOON))));
+    private static void addGCDimOptions(DynamicRegistryManager dynamicRegistryManager, long seed, boolean bl, CallbackInfoReturnable<SimpleRegistry<DimensionOptions>> cir, SimpleRegistry<DimensionOptions> dimOptionsRegistry, Registry<DimensionType> dimTypeRegistry, Registry<Biome> biomeRegistry, Registry<ChunkGeneratorSettings> chunkGenSettingsRegistry, Registry<DoublePerlinNoiseSampler.NoiseParameters> noiseRegistry) {
+        dimOptionsRegistry.add(RegistryKey.of(Registry.DIMENSION_KEY, new Identifier(Constant.MOD_ID, "moon")), new DimensionOptions(() -> dimTypeRegistry.getOrThrow(GalacticraftDimensionType.MOON_DIMENSION_TYPE_KEY), new NoiseChunkGenerator(noiseRegistry, GalacticraftBiomeParameters.MOON.getBiomeSource(biomeRegistry), seed, () -> chunkGenSettingsRegistry.getOrThrow(GalacticraftChunkGeneratorSettings.MOON))), Lifecycle.stable());
+    }
+
+    @Inject(method = "addRegistryDefaults", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private static void addGCDimOptions(DynamicRegistryManager registryManager, CallbackInfoReturnable<DynamicRegistryManager> cir, MutableRegistry<DimensionType> registry) {
+        GalacticraftDimensionType.register(registry);
     }
 }

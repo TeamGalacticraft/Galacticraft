@@ -73,14 +73,15 @@ public abstract class InGameHudMixin extends DrawableHelper {
             Inventory inv = ((GearInventoryProvider) this.client.player).getOxygenTanks();
             for (int i = 0; i < inv.size(); i++) {
                 Storage<Gas> storage = ContainerItemContext.withInitial(inv.getStack(i)).find(GasStorage.ITEM);
-                if (client.player.isCreative() && storage == null) {
-                    DrawableUtil.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, 1, 1);
-                }
-                try (Transaction transaction = Transaction.openOuter()) {
-                    StorageView<Gas> exact = storage.exactView(transaction, Gas.OXYGEN);
-                    if (exact != null) {
-                        DrawableUtil.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, exact.getAmount(), exact.getCapacity());
+                if (storage != null) {
+                    try (Transaction transaction = Transaction.openOuter()) {
+                        StorageView<Gas> exact = storage.exactView(transaction, Gas.OXYGEN);
+                        if (exact != null) {
+                            DrawableUtil.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, exact.getAmount(), exact.getCapacity());
+                        }
                     }
+                } else if (client.player.isCreative()) {
+                    DrawableUtil.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, 1, 1);
                 }
             }
         }

@@ -90,11 +90,11 @@ public class CraterCarver extends Carver<CraterCarverConfig> {
                     mutable.set(innerChunkX, y, innerChunkZ);
                     for (int dug = 0; dug < toDig; dug++) {
                         mutable.move(Direction.DOWN);
-                        if (!chunk.getBlockState(mutable).isAir() || carvingMask.get(innerChunkX, mutable.getY(), innerChunkZ) || dug > 0) {
-                            chunk.setBlockState(mutable, CAVE_AIR, false);
+                        if (!chunk.getBlockState(mutable).isAir() || carvingMask.get(innerChunkX, mutable.getY() + 64, innerChunkZ) || dug > 0) {
+                            chunk.setBlockState(mutable, AIR, false);
                             if (dug == 0) {
-                                carvingMask.set(innerChunkX, mutable.getY(), innerChunkZ);
-                            };
+                                carvingMask.set(innerChunkX, mutable.getY() + 64, innerChunkZ);
+                            }
                             if (!fresh && dug + 1 >= toDig && !chunk.getBlockState(copy.set(mutable).move(Direction.DOWN, 2)).isAir()) {
                                 context.applyMaterialRule(posToBiome, chunk, mutable, false).ifPresent(blockStatex -> chunk.setBlockState(mutable.move(Direction.DOWN), blockStatex, false));
                             }

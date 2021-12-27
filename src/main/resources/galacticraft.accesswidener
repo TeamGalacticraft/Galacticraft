@@ -10,9 +10,17 @@ accessible method net/minecraft/item/AxeItem                                   <
 accessible method net/minecraft/item/HoeItem                                   <init> (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
 accessible method net/minecraft/item/MusicDiscItem                             <init> (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V
 accessible method net/minecraft/item/PickaxeItem                               <init> (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
+accessible method net/minecraft/structure/pool/LegacySinglePoolElement         <init> (Lcom/mojang/datafixers/util/Either;Ljava/util/function/Supplier;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
 accessible method net/minecraft/world/biome/source/MultiNoiseBiomeSource       <init> (Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$Entries;Ljava/util/Optional;)V
+accessible method net/minecraft/world/gen/chunk/ChunkGeneratorSettings         <init> (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;Lnet/minecraft/world/gen/surfacebuilder/MaterialRules$MaterialRule;IZZZZZZ)V
 
 # private classes
 accessible class  net/minecraft/client/particle/BlockLeakParticle$Dripping
+accessible class  net/minecraft/world/gen/surfacebuilder/MaterialRules$BooleanSupplier
+accessible class  net/minecraft/world/gen/surfacebuilder/MaterialRules$FullLazyAbstractPredicate
+accessible class  net/minecraft/world/gen/surfacebuilder/MaterialRules$MaterialRuleContext
+
+# fields in final classes
+accessible field  net/minecraft/world/gen/surfacebuilder/MaterialRules$MaterialRuleContext    biomeSupplier  Ljava/util/function/Supplier;
 
 # final classes

@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.structure.GalacticraftStructure;
-import dev.galacticraft.mod.world.gen.feature.MoonPillagerBaseFeature;
+import dev.galacticraft.mod.world.gen.feature.GalacticraftStructureFeature;
+import dev.galacticraft.mod.world.gen.feature.MoonPillagerOutpostFeature;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.math.BlockPos;
@@ -41,8 +41,8 @@ public abstract class NoiseChunkGeneratorMixin {
     @Inject(method = "getEntitySpawnList", at = @At("HEAD"), cancellable = true)
     private void getEntityStructureSpawns_gc(Biome biome, StructureAccessor accessor, SpawnGroup group, BlockPos pos, CallbackInfoReturnable<Pool<SpawnSettings.SpawnEntry>> cir) {
         if (group == SpawnGroup.MONSTER) {
-            if (accessor.getStructureAt(pos, GalacticraftStructure.MOON_PILLAGER_BASE_FEATURE).hasChildren()) {
-                cir.setReturnValue(MoonPillagerBaseFeature.MONSTER_SPAWNS);
+            if (accessor.getStructureAt(pos, GalacticraftStructureFeature.MOON_PILLAGER_OUTPOST).hasChildren()) {
+                cir.setReturnValue(MoonPillagerOutpostFeature.MONSTER_SPAWNS);
             }
         }
     }

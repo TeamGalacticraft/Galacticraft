@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod;
 
-import dev.galacticraft.api.attribute.GasStorage;
-import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.mod.api.block.util.BlockFace;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.lookup.filter.*;
@@ -32,11 +30,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.tag.ItemTags;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
@@ -67,6 +62,8 @@ public interface Constant {
         String MOON_SURFACE_ROCK = "moon_surface_rock";
         String MOON_ROCK = "moon_rock";
         String COBBLED_MOON_ROCK = "cobbled_moon_rock";
+        String LUNASLATE = "lunaslate";
+        String COBBLED_LUNASLATE = "cobbled_lunaslate";
         String MOON_BASALT = "moon_basalt";
         String MOON_DIRT = "moon_dirt";
         String MARS_SURFACE_ROCK = "mars_surface_rock";
@@ -85,10 +82,8 @@ public interface Constant {
         String VAPOR_SPOUT = "vapor_spout";
 
         // Ore
-        String MOON_CHEESE_ORE = "moon_cheese_ore";
-        String MOON_BASALT_CHEESE_ORE = "moon_basalt_cheese_ore";
         String MOON_COPPER_ORE = "moon_copper_ore";
-        String MOON_BASALT_COPPER_ORE = "moon_basalt_copper_ore";
+        String LUNASLATE_COPPER_ORE = "lunaslate_copper_ore";
         String DESH_ORE = "desh_ore";
         String ILMENITE_ORE = "ilmenite_ore";
         String SILICON_ORE = "silicon_ore";
@@ -96,7 +91,7 @@ public interface Constant {
         String TIN_ORE = "tin_ore";
         String DEEPSLATE_TIN_ORE = "deepslate_tin_ore";
         String MOON_TIN_ORE = "moon_tin_ore";
-        String MOON_BASALT_TIN_ORE = "moon_basalt_tin_ore";
+        String LUNASLATE_TIN_ORE = "lunaslate_tin_ore";
         String ALUMINUM_ORE = "aluminum_ore";
         String DEEPSLATE_ALUMINUM_ORE = "deepslate_aluminum_ore";
         String GALENA_ORE = "galena_ore";
@@ -132,8 +127,6 @@ public interface Constant {
         String WALKWAY = "walkway";
         String WIRE_WALKWAY = "wire_walkway";
         String PIPE_WALKWAY = "pipe_walkway";
-        String MOON_CHEESE_LEAVES = "moon_cheese_leaves";
-        String MOON_CHEESE_LOG = "moon_cheese_log";
 
         //  Environment
         String GLOWSTONE_TORCH = "glowstone_torch";

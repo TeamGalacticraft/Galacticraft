@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "AbstractSkeletonEntityAccessor",
+    "BlockTagsAccessor",
     "BucketItemAccessor",
+    "ConfiguredStructureFeaturesMixin",
     "DamageSourceAccessor",
     "DimensionTypeMixin",
     "EntityMixin",
