@@ -27,6 +27,18 @@ import org.jetbrains.annotations.NotNull;
 public interface SolarPanel {
     boolean @NotNull [/*9*/] getBlockage();
 
+    /**
+     * Mainly used for output calculation.
+     * @return The count of non-blocked cells
+     */
+    default int getActive() {
+        int val = 0;
+        for (boolean blocked : this.getBlockage()) {
+            if (!blocked) val++;
+        }
+        return val;
+    }
+
     boolean followsSun();
 
     boolean nightCollection();
