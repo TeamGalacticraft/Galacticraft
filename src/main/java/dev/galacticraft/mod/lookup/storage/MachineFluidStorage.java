@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -140,7 +140,7 @@ public class MachineFluidStorage extends CombinedStorage<FluidVariant, MachineFl
     }
 
     public FluidStack simulateInsertion(int index, @NotNull FluidStack stack, TransactionContext context) {
-        try (Transaction transaction = context.openNested()) {
+        try (Transaction transaction = Transaction.openNested(context)) {
             return insertFluid(index, stack, transaction);
         }
     }

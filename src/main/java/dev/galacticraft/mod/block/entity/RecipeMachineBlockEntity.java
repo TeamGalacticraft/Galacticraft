@@ -88,7 +88,7 @@ public abstract class RecipeMachineBlockEntity<C extends Inventory, R extends Re
     }
 
     protected void craft(R recipe, TransactionContext transaction) {
-        try (Transaction inner = transaction.openNested()) {
+        try (Transaction inner = Transaction.openNested(transaction)) {
             if (this.extractCraftingMaterials(recipe, inner)) {
                 if (this.outputStacks(recipe, inner)) {
                     inner.commit();

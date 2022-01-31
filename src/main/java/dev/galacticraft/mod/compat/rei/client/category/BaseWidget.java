@@ -30,6 +30,7 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -56,5 +57,26 @@ public class BaseWidget extends Widget {
     @Override
     public List<? extends Element> children() {
         return Collections.emptyList();
+    }
+
+    @Override
+    public boolean isDragging() {
+        return false;
+    }
+
+    @Override
+    public void setDragging(boolean dragging) {
+
+    }
+
+    @Nullable
+    @Override
+    public Element getFocused() {
+        return null;
+    }
+
+    @Override
+    public void setFocused(@Nullable Element focused) {
+
     }
 }

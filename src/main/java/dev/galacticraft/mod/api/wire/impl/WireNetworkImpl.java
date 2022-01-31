@@ -283,7 +283,7 @@ public class WireNetworkImpl implements WireNetwork {
             for (ObjectIterator<Object2ObjectMap.Entry<BlockPos, EnergyStorage>> it = this.getStorages().object2ObjectEntrySet().fastIterator(); it.hasNext(); ) {
                 Map.Entry<BlockPos, EnergyStorage> entry = it.next();
                 if (entry.getKey().equals(source)) continue;
-                try (Transaction simulation = transaction.openNested()){
+                try (Transaction simulation = Transaction.openNested(transaction)){
                     requested += entry.getValue().insert(amount, simulation);
                 }
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -141,7 +141,7 @@ public class MachineItemStorage extends CombinedStorage<ItemVariant, MachineItem
     }
 
     public ItemStack simulateInsertion(int index, @NotNull ItemStack stack, TransactionContext context) {
-        try (Transaction transaction = context.openNested()) {
+        try (Transaction transaction = Transaction.openNested(context)) {
             return insertStack(index, stack, transaction);
         }
     }

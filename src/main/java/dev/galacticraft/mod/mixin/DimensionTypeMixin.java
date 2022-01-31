@@ -46,8 +46,9 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
  */
 @Mixin(DimensionType.class)
 public abstract class DimensionTypeMixin {
+    @SuppressWarnings("InvalidInjectorMethodSignature") // MCDev doesn't seem to capture the locals correctly
     @Inject(method = "createDefaultDimensionOptions(Lnet/minecraft/util/registry/DynamicRegistryManager;JZ)Lnet/minecraft/util/registry/SimpleRegistry;", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void addGCDimOptions(DynamicRegistryManager dynamicRegistryManager, long seed, boolean bl, CallbackInfoReturnable<SimpleRegistry<DimensionOptions>> cir, SimpleRegistry<DimensionOptions> dimOptionsRegistry, Registry<DimensionType> dimTypeRegistry, Registry<Biome> biomeRegistry, Registry<ChunkGeneratorSettings> chunkGenSettingsRegistry, Registry<DoublePerlinNoiseSampler.NoiseParameters> noiseRegistry) {
+    private static void addGCDimOptions(DynamicRegistryManager registryManager, long seed, boolean bl, CallbackInfoReturnable<SimpleRegistry<DimensionOptions>> cir, SimpleRegistry<DimensionOptions> dimOptionsRegistry, Registry<DimensionType> dimTypeRegistry, Registry<Biome> biomeRegistry, Registry<ChunkGeneratorSettings> chunkGenSettingsRegistry, Registry<DoublePerlinNoiseSampler.NoiseParameters> noiseRegistry) {
         dimOptionsRegistry.add(RegistryKey.of(Registry.DIMENSION_KEY, new Identifier(Constant.MOD_ID, "moon")), new DimensionOptions(() -> dimTypeRegistry.getOrThrow(GalacticraftDimensionType.MOON_DIMENSION_TYPE_KEY), new NoiseChunkGenerator(noiseRegistry, GalacticraftBiomeParameters.MOON.getBiomeSource(biomeRegistry), seed, () -> chunkGenSettingsRegistry.getOrThrow(GalacticraftChunkGeneratorSettings.MOON))), Lifecycle.stable());
     }
 

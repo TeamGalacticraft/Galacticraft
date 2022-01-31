@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,6 @@
 
 import java.io.ByteArrayOutputStream
 import java.io.OutputStream
-import java.time.Year
 import java.time.format.DateTimeFormatter
 
 // Minecraft, Mappings, Loader Versions
@@ -45,14 +44,17 @@ val reiVersion             = project.property("rei.version").toString()
 val myronVersion           = project.property("myron.version").toString()
 val bannerppVersion        = project.property("bannerpp.version").toString()
 val wthitVersion           = project.property("wthit.version").toString()
-val runtimeOptional        = project.property("optional_dependencies.enabled") == "true"
+val runtimeOptional        = project.property("optional_dependencies.enabled").toString().toBoolean()
+
+// Test Dependency Versions
+val jupiterVersion         = project.property("jupiter.version").toString()
 
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("0.10-SNAPSHOT")
+    id("fabric-loom") version("0.11-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
-    id("io.github.juuxel.loom-quiltflower-mini") version("1.2.0")
+    id("io.github.juuxel.loom-quiltflower") version("1.6.0")
 }
 
 java {
@@ -174,7 +176,7 @@ dependencies {
     }
 
     // Mandatory Dependencies (Included with Jar-In-Jar)
-    includedDependency("dev.monarkhes:myron-1.17.1:$myronVersion") {
+    includedDependency("dev.monarkhes:myron:$myronVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     }
@@ -205,8 +207,8 @@ dependencies {
     modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 
     // Test Dependencies
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
 }
 
 tasks.processResources {
@@ -293,7 +295,7 @@ quiltflower {
 tasks.withType(JavaCompile::class) {
     dependsOn(tasks.checkLicenses)
     options.encoding = "UTF-8"
-    options.release.set(16)
+    options.release.set(17)
 }
 
 /**

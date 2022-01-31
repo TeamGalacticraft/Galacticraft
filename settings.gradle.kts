@@ -11,7 +11,7 @@ pluginManagement {
         maven("https://server.bbkr.space/artifactory/libs-release/") {
             name = "Cotton"
             content {
-                includeGroup("io.github.juuxel.loom-quiltflower-mini")
+                includeGroup("io.github.juuxel.loom-quiltflower")
                 includeGroup("io.github.juuxel")
             }
         }

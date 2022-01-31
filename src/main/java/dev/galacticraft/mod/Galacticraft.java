@@ -31,7 +31,6 @@ import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.entity.data.GalacticraftTrackedDataHandler;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.item.GalacticraftItem;
-import dev.galacticraft.mod.log.GalacticraftPrependingMessageFactory;
 import dev.galacticraft.mod.lookup.GalacticraftApiLookupProviders;
 import dev.galacticraft.mod.loot.GalacticraftLootTable;
 import dev.galacticraft.mod.misc.banner.GalacticraftBannerPattern;
@@ -53,14 +52,14 @@ import dev.galacticraft.mod.world.gen.feature.*;
 import dev.galacticraft.mod.world.poi.GalacticraftPointOfInterestType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class Galacticraft implements ModInitializer {
-    public static final Logger LOGGER = LogManager.getLogger("Galacticraft", new GalacticraftPrependingMessageFactory());
+    public static final Logger LOGGER = LoggerFactory.getLogger("Galacticraft");
 
     public static final ConfigManager CONFIG_MANAGER = new ConfigManagerImpl();
 

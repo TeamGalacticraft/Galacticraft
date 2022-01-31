@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,11 +34,7 @@ import net.minecraft.nbt.NbtElement;
 import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
-public class MachineEnergyStorage extends SnapshotParticipant<Long> implements EnergyStorage, Automatable<Long> {
-	private static final SlotType[] NONE = new SlotType[]{};
-//	private static final SlotType[] INPUT = new SlotType[]{};
-//	private static final SlotType[] OUTPUT = new SlotType[]{};
-//	private static final SlotType[] IO = new SlotType[]{};
+public class MachineEnergyStorage extends SnapshotParticipant<Long> implements EnergyStorage {
 	private final EnergyStorage view;
 	private final ExposedEnergyStorage exposed;
 	private final MachineBlockEntity machine;
@@ -150,11 +146,6 @@ public class MachineEnergyStorage extends SnapshotParticipant<Long> implements E
 				", capacity=" + capacity +
 				", energy=" + energy +
 				'}';
-	}
-
-	@Override
-	public SlotType<Long>[] getTypes() {
-		return NONE;//this.exposed().supportsExtraction() ? this.exposed().supportsInsertion() ? IO : OUTPUT : this.exposed().supportsInsertion() ? INPUT : NONE;
 	}
 
 	public class EnergyStorageView extends SnapshotParticipant<Long> implements EnergyStorage {

@@ -136,8 +136,8 @@
     }
   },
   "depends": {
-    "minecraft": ">=1.18-beta.4",
-    "fabricloader": ">=0.12.0",
+    "minecraft": ">=1.18.1",
+    "fabricloader": ">=0.12.12",
     "galacticraft-api": ">=0.4.0-prealpha.20+1.18-pre4",
 
     "fabric-api-base": "*",
@@ -167,7 +167,7 @@
     "fabric-transfer-api-v1": "*"
   },
   "suggests": {
-    "modmenu": ">=1.16",
-    "waila": ">=2"
+    "modmenu": ">=3.0.0",
+    "waila": ">=2.0.0"
   }
 }
