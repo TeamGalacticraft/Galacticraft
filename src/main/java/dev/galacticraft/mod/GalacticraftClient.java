@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,29 +26,35 @@ import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.*;
 import dev.galacticraft.mod.client.network.GalacticraftClientPacketReceiver;
-import dev.galacticraft.mod.client.render.MoonSkyProperties;
 import dev.galacticraft.mod.client.render.block.entity.GalacticraftBlockEntityRenderer;
+import dev.galacticraft.mod.client.render.dimension.EmptyCloudRenderer;
+import dev.galacticraft.mod.client.render.dimension.EmptyWeatherRenderer;
+import dev.galacticraft.mod.client.render.dimension.MoonDimensionEffects;
+import dev.galacticraft.mod.client.render.dimension.MoonSkyRenderer;
 import dev.galacticraft.mod.client.render.entity.*;
 import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLayer;
 import dev.galacticraft.mod.client.resource.GalacticraftResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
-import dev.galacticraft.mod.mixin.SkyPropertiesAccessor;
 import dev.galacticraft.mod.particle.GalacticraftParticle;
 import dev.galacticraft.mod.particle.fluid.DrippingCrudeOilParticle;
 import dev.galacticraft.mod.particle.fluid.DrippingFuelParticle;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
@@ -164,7 +170,12 @@ public class GalacticraftClient implements ClientModInitializer {
             return null;
         });
 
-        SkyPropertiesAccessor.getBY_IDENTIFIER().put(new Identifier(Constant.MOD_ID, "moon"), new MoonSkyProperties());
+        DimensionRenderingRegistry.registerDimensionEffects(GalacticraftDimension.MOON.getValue(), MoonDimensionEffects.INSTANCE);
+        DimensionRenderingRegistry.registerCloudRenderer(GalacticraftDimension.MOON, EmptyCloudRenderer.INSTANCE);
+        DimensionRenderingRegistry.registerWeatherRenderer(GalacticraftDimension.MOON, EmptyWeatherRenderer.INSTANCE);
+        DimensionRenderingRegistry.registerSkyRenderer(GalacticraftDimension.MOON, MoonSkyRenderer.INSTANCE);
+
+        FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
 
         Galacticraft.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

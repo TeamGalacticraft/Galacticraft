@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,34 +20,15 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.render;
+package dev.galacticraft.mod.client.render.dimension;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.render.SkyProperties;
-import net.minecraft.util.math.Vec3d;
+import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-@Environment(EnvType.CLIENT)
-public class MoonSkyProperties extends SkyProperties {
-    public MoonSkyProperties() {
-        super(Float.NaN, false, SkyType.NORMAL, true, true);
-    }
+public enum EmptyWeatherRenderer implements DimensionRenderingRegistry.WeatherRenderer {
+    INSTANCE;
 
     @Override
-    public Vec3d adjustFogColor(Vec3d color, float sunHeight) {
-        return Vec3d.ZERO;
-    }
-
-    @Override
-    public boolean useThickFog(int camX, int camY) {
-        return false;
-    }
-
-    @Override
-    public float[] getFogColorOverride(float skyAngle, float tickDelta) {
-        return new float[]{0.0F, 0.0F, 0.0F, 0.0F};
+    public void render(WorldRenderContext context) {
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,21 +20,26 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.mod.mixin.client;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import net.minecraft.client.render.SkyProperties;
-import net.minecraft.util.Identifier;
+import dev.galacticraft.mod.accessor.WorldRendererAccessor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.render.BuiltChunkStorage;
+import net.minecraft.client.render.WorldRenderer;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.Shadow;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(SkyProperties.class)
-public interface SkyPropertiesAccessor {
-    @Accessor
-    static Object2ObjectMap<Identifier, SkyProperties> getBY_IDENTIFIER() {
-        throw new UnsupportedOperationException("Untransformed accessor");
+@Mixin(WorldRenderer.class)
+@Environment(EnvType.CLIENT)
+public abstract class WorldRendererMixin implements WorldRendererAccessor {
+    @Shadow private BuiltChunkStorage chunks;
+
+    @Override
+    public void addChunkToRebuild(int x, int y, int z) {
+        this.chunks.scheduleRebuild(x, y, z, false);
     }
 }

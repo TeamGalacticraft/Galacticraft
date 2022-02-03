@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,20 +24,30 @@ package dev.galacticraft.mod.misc.cape;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import dev.galacticraft.mod.Galacticraft;
 import net.minecraft.util.Util;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CapesLoader {
-    public static Map PLAYERS;
+    public static class PlayerCapeData {
+        public String uuid;
+        public String cape;
+        public String name;
+    }
+
+    public static HashMap<String,String> UUID_CAPE_MAP = new HashMap<>();
+    private static final Type PLAYER_CAPE_DATA_TYPE = new TypeToken<List<PlayerCapeData>>(){}.getType();
 
     public static void load() {
         Util.getMainWorkerExecutor().execute(() -> {
@@ -45,17 +55,21 @@ public class CapesLoader {
             Gson gson = new GsonBuilder().create();
             Galacticraft.LOGGER.info("Loading capes data...");
             try {
-                PLAYERS = gson.fromJson(
+                List<PlayerCapeData> players = gson.fromJson(
                         IOUtils.toString(
                                 new URL("https://raw.githubusercontent.com/TeamGalacticraft/Galacticraft/main/capes.json"),
                                 StandardCharsets.UTF_8
                         ),
-                        Map.class
+                        PLAYER_CAPE_DATA_TYPE
                 );
+                // It's more efficient while ingame to load the data we actually use into a map
+                for (var player : players) {
+                    UUID_CAPE_MAP.put(player.uuid, player.cape);
+                }
             } catch (IOException e) {
                 Galacticraft.LOGGER.warn("Failed to load capes.", e);
             }
-            Galacticraft.LOGGER.info("Loaded capes for {} players. (Took {}ms)", PLAYERS.size(), System.currentTimeMillis()-startLoad);
+            Galacticraft.LOGGER.info("Loaded capes for {} players. (Took {}ms)", UUID_CAPE_MAP.size(), System.currentTimeMillis()-startLoad);
         });
     }
 }
