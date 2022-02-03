@@ -129,7 +129,7 @@ public class GalacticraftItem {
     public static final Item TITANIUM_CHESTPLATE = registerItem(Constant.Item.TITANIUM_CHESTPLATE, new ArmorItem(GalacticraftArmorMaterial.TITANIUM, EquipmentSlot.CHEST, (new Item.Settings().group(ITEMS_GROUP))));
     public static final Item TITANIUM_LEGGINGS = registerItem(Constant.Item.TITANIUM_LEGGINGS, new ArmorItem(GalacticraftArmorMaterial.TITANIUM, EquipmentSlot.LEGS, (new Item.Settings().group(ITEMS_GROUP))));
     public static final Item TITANIUM_BOOTS = registerItem(Constant.Item.TITANIUM_BOOTS, new ArmorItem(GalacticraftArmorMaterial.TITANIUM, EquipmentSlot.FEET, (new Item.Settings().group(ITEMS_GROUP))));
-    public static final Item SENSOR_GLASSES = registerItem(Constant.Item.SENSOR_GLASSES, new ArmorItem(GalacticraftArmorMaterial.SENSOR_GLASSES, EquipmentSlot.HEAD, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item SENSOR_GLASSES = registerItem(Constant.Item.SENSOR_GLASSES, new SensorGlassesItem(new Item.Settings().group(ITEMS_GROUP)));
     //TOOLS + WEAPONS
     public static final Item HEAVY_DUTY_SWORD = registerItem(Constant.Item.HEAVY_DUTY_SWORD, new BrittleSwordItem(GalacticraftToolMaterial.STEEL, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HEAVY_DUTY_SHOVEL = registerItem(Constant.Item.HEAVY_DUTY_SHOVEL, new ShovelItem(GalacticraftToolMaterial.STEEL, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP)));
