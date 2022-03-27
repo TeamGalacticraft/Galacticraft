@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.ElectricFurnaceBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;

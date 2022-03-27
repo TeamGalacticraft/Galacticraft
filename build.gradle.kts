@@ -40,14 +40,12 @@ val clothConfigVersion     = project.property("cloth.config.version").toString()
 val modMenuVersion         = project.property("modmenu.version").toString()
 val energyVersion          = project.property("energy.version").toString()
 val galacticraftApiVersion = project.property("galacticraft.api.version").toString()
+val machineLibVersion      = project.property("machinelib.version").toString()
 val reiVersion             = project.property("rei.version").toString()
 val myronVersion           = project.property("myron.version").toString()
 val bannerppVersion        = project.property("bannerpp.version").toString()
 val wthitVersion           = project.property("wthit.version").toString()
 val runtimeOptional        = project.property("optional_dependencies.enabled").toString().toBoolean()
-
-// Test Dependency Versions
-val jupiterVersion         = project.property("jupiter.version").toString()
 
 plugins {
     java
@@ -193,6 +191,11 @@ dependencies {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "alexiil.mc.lib")
     }
+    includedDependency("dev.galacticraft:MachineLib:$machineLibVersion") {
+        exclude(group = "net.fabricmc")
+        exclude(group = "net.fabricmc.fabric-api")
+        exclude(group = "alexiil.mc.lib")
+    }
     // Optional Dependencies
     optionalDependency("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
     optionalDependency("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
@@ -205,10 +208,6 @@ dependencies {
 
     // Runtime Dependencies
     modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
-
-    // Test Dependencies
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
 }
 
 tasks.processResources {
@@ -225,11 +224,6 @@ tasks.processResources {
                 file: File -> file.writeText(groovy.json.JsonOutput.toJson(groovy.json.JsonSlurper().parse(file)))
         }
     }
-}
-
-tasks.test {
-    useJUnitPlatform()
-    dependsOn(tasks.getByName("runGametest"))
 }
 
 tasks.create<Jar>("javadocJar") {

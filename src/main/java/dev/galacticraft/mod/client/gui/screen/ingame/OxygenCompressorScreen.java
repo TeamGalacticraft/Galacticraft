@@ -23,9 +23,8 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.OxygenCompressorBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
@@ -47,7 +46,6 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
     protected void init() {
         super.init();
         this.titleX += 18;
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
     }
 
     @Override

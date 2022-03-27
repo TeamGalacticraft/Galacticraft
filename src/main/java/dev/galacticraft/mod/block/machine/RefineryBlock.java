@@ -51,7 +51,7 @@ public class RefineryBlock extends SimpleMachineBlock<RefineryBlockEntity> {
     }
 
     @Override
-    public Text machineInfo(ItemStack stack, BlockView view, boolean advanced) {
+    public Text machineDescription(ItemStack stack, BlockView view, boolean advanced) {
         return TOOLTIP_TEXT;
     }
 

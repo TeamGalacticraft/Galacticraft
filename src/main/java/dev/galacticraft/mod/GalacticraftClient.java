@@ -123,7 +123,6 @@ public class GalacticraftClient implements ClientModInitializer {
 
         GalacticraftBlockEntityRenderer.register();
         GalacticraftClientPacketReceiver.register();
-        MachineBakedModel.registerDefaults();
         GalacticraftEntityModelLayer.register();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.TIN_LADDER, RenderLayer.getCutout());
@@ -147,9 +146,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(GalacticraftParticleType.DRIPPING_CRUDE_OIL_PARTICLE, DrippingOilFactory::new);
 
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(resourceManager -> (resourceId, context) -> {
-            if (MachineBakedModel.MACHINE_MARKER.equals(resourceId)) {
-                return MachineUnbakedModel.INSTANCE;
-            } else if (WireBakedModel.WIRE_MARKER.equals(resourceId)) {
+            if (WireBakedModel.WIRE_MARKER.equals(resourceId)) {
                 return WireUnbakedModel.INSTANCE;
             } else if (WalkwayBakedModel.WALKWAY_MARKER.equals(resourceId)) {
                 return WalkwayUnbakedModel.INSTANCE;
@@ -159,13 +156,6 @@ public class GalacticraftClient implements ClientModInitializer {
                 return PipeWalkwayUnbakedModel.INSTANCE;
             } else if (PipeBakedModel.GLASS_FLUID_PIPE_MARKER.equals(resourceId)) {
                 return PipeUnbakedModel.INSTANCE;
-            }
-            return null;
-        });
-
-        ModelLoadingRegistry.INSTANCE.registerVariantProvider(resourceManager -> (modelId, context) -> {
-            if (modelId.getVariant().equals("inventory") && MachineBakedModel.IDENTIFIERS.getOrDefault(modelId.getNamespace(), Collections.emptySet()).contains(modelId.getPath())) {
-                return MachineUnbakedModel.INSTANCE;
             }
             return null;
         });

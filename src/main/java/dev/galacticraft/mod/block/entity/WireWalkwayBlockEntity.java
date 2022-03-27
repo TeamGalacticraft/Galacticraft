@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import net.minecraft.block.BlockState;
@@ -53,7 +52,7 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     public void readNbt(NbtCompound nbt) {
         this.direction = Constant.Misc.DIRECTIONS[nbt.getByte(Constant.Nbt.DIRECTION)];
         super.readNbt(nbt);
-        if (!world.isClient) ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
+        if (!world.isClient) MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(this.pos.getX(), this.pos.getY(), this.pos.getZ());
     }
 
     @Override

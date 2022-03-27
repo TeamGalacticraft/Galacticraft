@@ -22,19 +22,20 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
-import dev.galacticraft.mod.screen.slot.SlotSettings;
-import dev.galacticraft.mod.screen.slot.SlotType;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.SmeltingRecipe;
 import net.minecraft.screen.ScreenHandler;
@@ -51,22 +52,17 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Inventory, SmeltingRecipe> {
-    private static final Inventory PREDICATE_INV = new SimpleInventory(1);
-
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOT = 2;
     
-    private final @NotNull Inventory craftingInv = this.itemStorage().mapped(INPUT_SLOT);
+    private final @NotNull Inventory craftingInv = this.itemStorage().subInv(INPUT_SLOT, 1);
 
     @Override
     protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
-        builder.addSlot(SlotSettings.Builder.create(8, 61, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
-        builder.addSlot(SlotSettings.Builder.create(52, 35, SlotType.INPUT).filter(stack -> {
-            PREDICATE_INV.setStack(0, stack);
-            return this.getRecipe(RecipeType.SMELTING, PREDICATE_INV).isPresent();
-        }).build());
-        builder.addSlot(SlotSettings.Builder.create(113, 35, SlotType.OUTPUT).disableInput().build());
+        builder.addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61));
+        builder.addSlot(GalacticraftSlotTypes.ITEM_INPUT, new ItemSlotDisplay(52, 35));
+        builder.addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(113, 35));
         return builder;
     }
 
@@ -106,12 +102,13 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Invento
 
     @Override
     protected boolean outputStacks(SmeltingRecipe recipe, TransactionContext transaction) {
-        return this.itemStorage().insertStack(OUTPUT_SLOT, recipe.getOutput().copy(), transaction).isEmpty();
+        ItemStack output = recipe.getOutput();
+        return this.itemStorage().insert(OUTPUT_SLOT, ItemVariant.of(output), output.getCount(), transaction) == output.getCount();
     }
 
     @Override
     protected boolean extractCraftingMaterials(SmeltingRecipe recipe, TransactionContext transaction) {
-        return recipe.getIngredients().get(0).test(this.itemStorage().extractStack(INPUT_SLOT, 1, transaction));
+        return recipe.getIngredients().get(0).test(this.itemStorage().extract(INPUT_SLOT, 1, transaction));
     }
 
     @Override

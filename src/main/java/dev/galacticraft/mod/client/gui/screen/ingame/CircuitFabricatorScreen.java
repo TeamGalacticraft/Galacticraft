@@ -24,9 +24,8 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.CircuitFabricatorBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
@@ -80,12 +79,6 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     public CircuitFabricatorScreen(RecipeMachineScreenHandler<Inventory, FabricationRecipe, CircuitFabricatorBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         this.backgroundHeight = 176;
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 15, 48));
     }
 
     @Override

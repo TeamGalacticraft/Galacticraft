@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -57,8 +56,9 @@ public class WalkwayBlockEntity extends BlockEntity implements Walkway {
             this.connections[i] = nbt.getBoolean(Constant.Misc.DIRECTIONS[i].asString());
         }
         this.direction = Constant.Misc.DIRECTIONS[nbt.getByte(Constant.Nbt.DIRECTION)];
-        if (world.isClient) {
-            ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
+        assert this.world != null;
+        if (this.world.isClient) {
+            MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(this.pos.getX(), this.pos.getY(), this.pos.getZ());
         }
     }
 

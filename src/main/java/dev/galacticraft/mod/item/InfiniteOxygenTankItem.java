@@ -22,7 +22,8 @@
 
 package dev.galacticraft.mod.item;
 
-import dev.galacticraft.api.gas.Gas;
+import dev.galacticraft.api.gas.GasVariant;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
@@ -40,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
-public class InfiniteOxygenTankItem extends Item implements Storage<Gas>, StorageView<Gas> {
+public class InfiniteOxygenTankItem extends Item implements Storage<GasVariant>, StorageView<GasVariant> {
     private int ticks = (int) (Math.random() * 1000.0);
 
     public InfiniteOxygenTankItem(Settings settings) {
@@ -86,12 +87,12 @@ public class InfiniteOxygenTankItem extends Item implements Storage<Gas>, Storag
     }
 
     @Override
-    public long insert(Gas gas, long l, TransactionContext transactionContext) {
+    public long insert(GasVariant gas, long l, TransactionContext transactionContext) {
         return 0;
     }
 
     @Override
-    public long simulateInsert(Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
+    public long simulateInsert(GasVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
         return 0;
     }
 
@@ -101,8 +102,8 @@ public class InfiniteOxygenTankItem extends Item implements Storage<Gas>, Storag
     }
 
     @Override
-    public long extract(Gas gas, long l, TransactionContext transactionContext) {
-        if (gas == Gas.OXYGEN) {
+    public long extract(GasVariant gas, long l, TransactionContext transactionContext) {
+        if (gas == Gases.OXYGEN) {
             return l;
         }
         return 0;
@@ -114,8 +115,8 @@ public class InfiniteOxygenTankItem extends Item implements Storage<Gas>, Storag
     }
 
     @Override
-    public Gas getResource() {
-        return Gas.OXYGEN;
+    public GasVariant getResource() {
+        return GasVariant.of(Gases.OXYGEN);
     }
 
     @Override
@@ -129,21 +130,21 @@ public class InfiniteOxygenTankItem extends Item implements Storage<Gas>, Storag
     }
 
     @Override
-    public long simulateExtract(Gas resource, long maxAmount, @Nullable TransactionContext transaction) {
-        if (resource == Gas.OXYGEN) {
+    public long simulateExtract(GasVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
+        if (resource == Gases.OXYGEN) {
             return maxAmount;
         }
         return 0;
     }
 
     @Override
-    public Iterator<StorageView<Gas>> iterator(TransactionContext transactionContext) {
+    public Iterator<StorageView<GasVariant>> iterator(TransactionContext transactionContext) {
         return SingleViewIterator.create(this, transactionContext);
     }
 
     @Override
-    public @Nullable StorageView<Gas> exactView(TransactionContext transaction, Gas resource) {
-        if (resource == Gas.OXYGEN) {
+    public @Nullable StorageView<GasVariant> exactView(TransactionContext transaction, GasVariant resource) {
+        if (resource.isOf(Gases.OXYGEN)) {
             return this;
         }
         return null;

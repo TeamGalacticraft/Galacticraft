@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.compat.rei.client;
 
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;

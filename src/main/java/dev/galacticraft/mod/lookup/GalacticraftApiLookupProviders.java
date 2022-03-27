@@ -22,17 +22,20 @@
 
 package dev.galacticraft.mod.lookup;
 
-import dev.galacticraft.api.attribute.GasStorage;
+import dev.galacticraft.api.gas.GasVariant;
+import dev.galacticraft.api.transfer.v1.gas.GasStorage;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.api.gas.Gas;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.impl.attribute.SingleTypeSlotGasStorage;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.item.OxygenTankItem;
+import dev.galacticraft.mod.storage.SingleTypeStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.entity.BlockEntityType;
@@ -58,30 +61,14 @@ public class GalacticraftApiLookupProviders {
     };
 
     public static void register() {
-        EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
-            assert blockEntity instanceof MachineBlockEntity;
-            return ((MachineBlockEntity) blockEntity).getExposedCapacitor(direction);
-        }, MACHINE_TYPES);
-
-        ItemStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
-            assert blockEntity instanceof MachineBlockEntity;
-            return ((MachineBlockEntity) blockEntity).getExposedItemStorage(direction);
-        }, MACHINE_TYPES);
-
-        FluidStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
-            assert blockEntity instanceof MachineBlockEntity;
-            return ((MachineBlockEntity) blockEntity).getExposedFluidInv(direction);
-        }, MACHINE_TYPES);
+        for (BlockEntityType machineType : MACHINE_TYPES) {
+            MachineBlockEntity.registerComponents(machineType);
+        }
 
         FluidStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
             assert blockEntity instanceof PipeBlockEntity;
             return ((PipeBlockEntity) blockEntity).getInsertables()[direction.ordinal()];
         }, PIPE_TYPES);
-
-        GasStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
-            assert blockEntity instanceof MachineBlockEntity;
-            return ((MachineBlockEntity) blockEntity).getExposedGasInv(direction);
-        }, MACHINE_TYPES);
 
         EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
             assert blockEntity instanceof WireBlockEntity;
@@ -90,7 +77,7 @@ public class GalacticraftApiLookupProviders {
 
         GasStorage.ITEM.registerForItems((itemStack, context) -> {
             long amount = itemStack.getNbt() != null ? itemStack.getNbt().getLong(Constant.Nbt.VALUE) : 0;
-            return new SingleTypeSlotGasStorage(((OxygenTankItem) itemStack.getItem()).capacity, Gas.OXYGEN, amount) {
+            return new SingleTypeStorage<>(GasVariant.of(Gases.OXYGEN), ((OxygenTankItem) itemStack.getItem()).capacity, GasVariant.blank(), amount) {
                 @Override
                 protected void onFinalCommit() {
                     super.onFinalCommit();

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.compat.rei.common.transfer.info;
 
-import dev.galacticraft.mod.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
@@ -43,7 +43,7 @@ public record FabricationMenuInfo<B extends RecipeMachineBlockEntity<Inventory, 
 
         List<SlotAccessor> list = new ArrayList<>(5);
         for (int i = 1; i < 6; i++) {
-            list.add(new ContainerSlotAccessor(menu.machine.itemStorage(), i));
+            list.add(new ContainerSlotAccessor(menu.machine.itemStorage().playerInventory(), i));
         }
         return list;
     }

@@ -23,14 +23,17 @@
 package dev.galacticraft.mod.block.entity;
 
 import com.google.common.annotations.VisibleForTesting;
+import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
+import dev.galacticraft.api.machine.storage.io.ResourceFlow;
+import dev.galacticraft.api.machine.storage.io.ResourceType;
+import dev.galacticraft.api.machine.storage.io.SlotType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
-import dev.galacticraft.mod.screen.slot.SlotSettings;
-import dev.galacticraft.mod.screen.slot.SlotType;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -45,8 +48,10 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
@@ -66,6 +71,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
 
     public static final int CHARGE_SLOT = 0;
     public static final int FUEL_SLOT = 1;
+    private static final SlotType<Item, ItemVariant> COAL_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "coal_input"), TextColor.fromRgb(0x000000), new TranslatableText("slot_type.galacticraft.coal_input"), v -> FUEL_MAP.containsKey(v.getItem()), ResourceFlow.INPUT, ResourceType.ITEM);
 
     public int fuelLength = 0;
     public int fuelTime = 0;
@@ -82,9 +88,9 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
-        builder.addSlot(SlotSettings.Builder.create(8, 62, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_INSERT_ENERGY).build());
-        builder.addSlot(SlotSettings.Builder.create(71, 53, SlotType.COAL).filter(stack -> FUEL_MAP.containsKey(stack.getItem())).build());
+    protected MachineItemStorage.Builder createInventory(MachineItemStorage.@NotNull Builder builder) {
+        builder.addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62));
+        builder.addSlot(COAL_INPUT, new ItemSlotDisplay(71, 53));
         return builder;
     }
 

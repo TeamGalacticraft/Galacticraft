@@ -22,15 +22,12 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
-import dev.galacticraft.mod.lookup.storage.MachineGasStorage;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.api.machine.storage.MachineGasStorage;
+import dev.galacticraft.api.machine.storage.display.TankDisplay;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
-import dev.galacticraft.mod.screen.slot.GasSlotSettings;
-import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.screen.tank.NullTank;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -53,7 +50,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
 
     @Override
     protected MachineGasStorage.Builder createGasStorage(MachineGasStorage.Builder builder) {
-        builder.addSlot(GasSlotSettings.Builder.create(0, 0, SlotType.OXYGEN_OUT).capacity(MAX_OXYGEN).filter(Constant.Filter.Gas.OXYGEN).build());
+        builder.addSlot(GalacticraftSlotTypes.OXYGEN_IO, MAX_OXYGEN, new TankDisplay(31, 8, 48));
         return builder;
     }
 
@@ -65,7 +62,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     @Override
     public void updateComponents() {
         super.updateComponents();
-        this.trySpreadFluids(OXYGEN_TANK);
+        this.trySpreadGases();
     }
 
     @Override
@@ -94,7 +91,6 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
 
     @Override
     protected void tickDisabled() {
-
     }
 
     @Nullable

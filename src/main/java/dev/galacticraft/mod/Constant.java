@@ -22,14 +22,21 @@
 
 package dev.galacticraft.mod;
 
-import dev.galacticraft.mod.api.block.util.BlockFace;
+import com.google.common.base.Predicates;
+import dev.galacticraft.api.block.util.BlockFace;
+import dev.galacticraft.api.gas.GasVariant;
+import dev.galacticraft.api.transfer.v1.gas.GasStorage;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
-import dev.galacticraft.mod.lookup.filter.*;
+import dev.galacticraft.mod.lookup.predicate.ItemResourceTagExtractPredicate;
+import dev.galacticraft.mod.lookup.predicate.ItemResourceTagInsertPredicate;
+import dev.galacticraft.mod.lookup.predicate.TagPredicate;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Style;
@@ -39,7 +46,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import team.reborn.energy.api.EnergyStorage;
+
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -623,49 +633,49 @@ public interface Constant {
     }
 
     interface Filter {
+        static <T> @NotNull Predicate<T> any() {
+            return Predicates.alwaysTrue();
+        }
+
+        static <T> @NotNull Predicate<T> none() {
+            return Predicates.alwaysFalse();
+        }
+
         interface Item {
-            ItemFilter ALWAYS = stack -> true;
-            ItemFilter NEVER = stack -> false;
+            Predicate<ItemVariant> DIAMOND = new TagPredicate<>(GalacticraftTag.DIAMONDS);
+            Predicate<ItemVariant> SILICON = new TagPredicate<>(GalacticraftTag.SILICONS);
+            Predicate<ItemVariant> REDSTONE = new TagPredicate<>(GalacticraftTag.REDSTONES);
 
-            ItemFilter DIAMOND = new ItemResourceTagFilter(GalacticraftTag.DIAMONDS);
-            ItemFilter SILICON = new ItemResourceTagFilter(GalacticraftTag.SILICONS);
-            ItemFilter REDSTONE = new ItemResourceTagFilter(GalacticraftTag.REDSTONES);
-
-            ItemFilter CAN_EXTRACT_ENERGY = stack -> {
-                EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
+            Predicate<ItemVariant> CAN_EXTRACT_ENERGY = stack -> {
+                EnergyStorage energyStorage = ContainerItemContext.withInitial(stack.toStack()).find(EnergyStorage.ITEM);
                 try (Transaction transaction = Transaction.openOuter()) {
                     return energyStorage != null && energyStorage.supportsExtraction() && energyStorage.extract(Long.MAX_VALUE, transaction) > 0;
                 }
             };
-            ItemFilter CAN_INSERT_ENERGY = stack -> {
-                EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
+            Predicate<ItemVariant> CAN_INSERT_ENERGY = stack -> {
+                EnergyStorage energyStorage = ContainerItemContext.withInitial(stack.toStack()).find(EnergyStorage.ITEM);
                 try (Transaction transaction = Transaction.openOuter()) {
                     return energyStorage != null && energyStorage.supportsInsertion() && energyStorage.insert(Long.MAX_VALUE, transaction) > 0;
                 }
             };
 
-            ItemFilter CAN_EXTRACT_OXYGEN = new ItemResourceGasExtractFilter(GalacticraftTag.OXYGEN);
-            ItemFilter CAN_INSERT_OXYGEN = new ItemResourceGasInsertFilter(dev.galacticraft.api.gas.Gas.OXYGEN);
+            Predicate<ItemVariant> CAN_EXTRACT_OXYGEN = new ItemResourceTagExtractPredicate(GasStorage.ITEM, GalacticraftTag.OXYGEN);
+            Predicate<ItemVariant> CAN_INSERT_OXYGEN = new ItemResourceTagInsertPredicate(GasStorage.ITEM, GalacticraftTag.OXYGEN);
 
-            ItemFilter CAN_EXTRACT_OIL = new ItemResourceTagExtractFilter<>(FluidStorage.ITEM, GalacticraftTag.OIL);
-            ItemFilter CAN_INSERT_FUEL = new ItemResourceTagInsertFilter<>(FluidStorage.ITEM, GalacticraftFluid.FUEL);
-            ItemFilter CAN_EXTRACT_LOX = new ItemResourceTagExtractFilter<>(FluidStorage.ITEM, GalacticraftTag.LIQUID_OXYGEN);
+            Predicate<ItemVariant> CAN_EXTRACT_OIL = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, GalacticraftTag.OIL);
+            Predicate<ItemVariant> CAN_INSERT_FUEL = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, GalacticraftFluid.FUEL);
+            Predicate<ItemVariant> CAN_EXTRACT_LOX = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, GalacticraftTag.LIQUID_OXYGEN);
         }
 
         interface Gas {
-            GasFilter ALWAYS = stack -> true;
-            GasFilter NEVER = stack -> false;
-            GasFilter OXYGEN = stack -> stack.gas() == dev.galacticraft.api.gas.Gas.OXYGEN;
+            Predicate<GasVariant> OXYGEN = v -> GalacticraftTag.OXYGEN.contains(v.getGas());
         }
 
         interface Fluid {
-            FluidFilter ALWAYS = fluid -> true;
-            FluidFilter NEVER = fluid -> false;
-            FluidFilter LOX_ONLY = new TagFluidFilter(GalacticraftTag.LIQUID_OXYGEN);
-            FluidFilter OIL = new TagFluidFilter(GalacticraftTag.OIL);
-            FluidFilter FUEL = new TagFluidFilter(GalacticraftTag.FUEL);
+            Predicate<FluidVariant> LOX_ONLY = new TagPredicate<>(GalacticraftTag.LIQUID_OXYGEN);
+            Predicate<FluidVariant> OIL = new TagPredicate<>(GalacticraftTag.OIL);
+            Predicate<FluidVariant> FUEL = new TagPredicate<>(GalacticraftTag.FUEL);
         }
-
     }
 
     interface Text {

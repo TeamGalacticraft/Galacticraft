@@ -22,19 +22,19 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
-import dev.galacticraft.mod.screen.slot.SlotSettings;
-import dev.galacticraft.mod.screen.slot.SlotType;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.BlastingRecipe;
 import net.minecraft.recipe.RecipeType;
@@ -52,8 +52,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inventory, BlastingRecipe> {
-    private final @NotNull Inventory craftingInv = this.itemStorage().mapped(INPUT_SLOT);
-    private final @NotNull SimpleInventory predicateInv = new SimpleInventory(1);
+    private final @NotNull Inventory craftingInv = this.itemStorage().subInv(INPUT_SLOT, 1);
 
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
@@ -61,14 +60,11 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     public static final int OUTPUT_SLOT_2 = 3;
 
     @Override
-    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
-        builder.addSlot(SlotSettings.Builder.create(8, 61, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
-        builder.addSlot(SlotSettings.Builder.create(44, 35, SlotType.INPUT).filter(stack -> {
-            this.predicateInv.setStack(0, stack);
-            return this.world.getRecipeManager().getFirstMatch(this.recipeType(), this.predicateInv, this.world).isPresent();
-        }).build());
-        builder.addSlot(SlotSettings.Builder.create(108, 35, SlotType.OUTPUT).disableInput().build());
-        builder.addSlot(SlotSettings.Builder.create(134, 35, SlotType.OUTPUT).disableInput().build());
+    protected MachineItemStorage.Builder createInventory(MachineItemStorage.@NotNull Builder builder) {
+        builder.addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61));
+        builder.addSlot(GalacticraftSlotTypes.ITEM_INPUT, new ItemSlotDisplay(44, 35));
+        builder.addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(108, 35));
+        builder.addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(134, 35));
         return builder;
     }
 
@@ -118,18 +114,21 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
 
     @Override
     protected boolean outputStacks(BlastingRecipe recipe, TransactionContext transaction) {
-        ItemStack copy = recipe.getOutput().copy();
-        copy.setCount(copy.getCount() * 2);
-        ItemStack stack1 = this.itemStorage().insertStack(OUTPUT_SLOT_1, copy, transaction);
-        if (stack1.isEmpty()) return true;
-        stack1 = this.itemStorage().insertStack(OUTPUT_SLOT_2, stack1, transaction);
-        if (stack1.isEmpty()) return true;
-        return false;
+        ItemStack output = recipe.getOutput();
+        ItemVariant variant = ItemVariant.of(output);
+        long count = output.getCount() * 2L;
+        count -= this.itemStorage().insert(OUTPUT_SLOT_1, variant, count, transaction);
+        if (count == 0) {
+            return true;
+        } else {
+            count -= this.itemStorage().insert(OUTPUT_SLOT_2, variant, count, transaction);
+            return count == 0;
+        }
     }
 
     @Override
     protected boolean extractCraftingMaterials(BlastingRecipe recipe, TransactionContext transaction) {
-        return !this.itemStorage().extractStack(INPUT_SLOT, 1, transaction).isEmpty();
+        return !this.itemStorage().extract(INPUT_SLOT, 1, transaction).isEmpty();
     }
 
     @Override

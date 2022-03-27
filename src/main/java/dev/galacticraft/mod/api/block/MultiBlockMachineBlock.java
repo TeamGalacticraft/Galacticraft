@@ -22,7 +22,8 @@
 
 package dev.galacticraft.mod.api.block;
 
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.block.MachineBlock;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

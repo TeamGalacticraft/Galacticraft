@@ -22,28 +22,28 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.api.attribute.GasStorage;
-import dev.galacticraft.api.fluid.FluidStack;
 import dev.galacticraft.api.gas.Gas;
+import dev.galacticraft.api.gas.GasVariant;
+import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
+import dev.galacticraft.api.machine.storage.display.TankDisplay;
+import dev.galacticraft.api.transfer.v1.gas.GasStorage;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.mod.entity.BubbleEntity;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
-import dev.galacticraft.mod.fluid.GalacticraftFluid;
-import dev.galacticraft.mod.lookup.storage.MachineGasStorage;
-import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.storage.MachineGasStorage;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
-import dev.galacticraft.mod.screen.slot.GasSlotSettings;
-import dev.galacticraft.mod.screen.slot.SlotSettings;
-import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.api.machine.storage.io.SlotType;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.GenericStorageUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
@@ -86,14 +86,14 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
 
     @Override
     protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
-        builder.addSlot(SlotSettings.Builder.create(8, 62, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
-        builder.addSlot(SlotSettings.Builder.create(31, 62, SlotType.OXYGEN_TANK).filter(Constant.Filter.Item.CAN_EXTRACT_LOX).build());
+        builder.addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62));
+        builder.addSlot(GalacticraftSlotTypes.OXYGEN_TANK_FILL, new ItemSlotDisplay(31, 62));
         return builder;
     }
 
     @Override
     protected MachineGasStorage.Builder createGasStorage(MachineGasStorage.Builder builder) {
-        builder.addSlot(GasSlotSettings.Builder.create(31, 8, SlotType.OXYGEN_IN).capacity(MAX_OXYGEN).filter(Constant.Filter.Gas.OXYGEN).build());
+        builder.addSlot(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48));
         return builder;
     }
 
@@ -124,7 +124,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         long oxygenRequired = ((long) ((4.0 / 3.0) * Math.PI * size * size * size));
         try (Transaction transaction = Transaction.openOuter()) {
-            if (this.fluidInv().simulateExtraction(OXYGEN_TANK, Constant.Filter.Fluid.ALWAYS, oxygenRequired, transaction).amount() < oxygenRequired) return Status.NOT_ENOUGH_OXYGEN;
+            if (this.fluidStorage().extract(OXYGEN_TANK, oxygenRequired, transaction).getAmount() < oxygenRequired) return Status.NOT_ENOUGH_OXYGEN;
         }
         return Status.DISTRIBUTING;
     }
@@ -151,7 +151,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
         }
         if (this.getStatus().getType().isActive()) {
             try (Transaction transaction = Transaction.openOuter()) {
-                this.fluidInv().extractFluid(OXYGEN_TANK, Constant.Filter.Fluid.ALWAYS, ((long) ((4.0 / 3.0) * Math.PI * size * size * size)), transaction);
+                this.fluidStorage().extract(OXYGEN_TANK, ((long) ((4.0 / 3.0) * Math.PI * size * size * size)), transaction);
                 transaction.commit();
             }
             if (!world.isClient()) {
@@ -219,14 +219,14 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     protected void drainOxygenFromStack(int slot) {
-        if (this.fluidInv().isFull(0)) {
+        if (this.fluidStorage().isFull(0)) {
             return;
         }
         ContainerItemContext containerItemContext = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(slot));
-        Storage<Gas> storage = containerItemContext.find(GasStorage.ITEM);
+        Storage<GasVariant> storage = containerItemContext.find(GasStorage.ITEM);
         if (storage != null && storage.supportsExtraction()) {
             try (Transaction transaction = Transaction.openOuter()){
-                GenericStorageUtil.move(Gas.OXYGEN, storage, this.gasStorage(), Long.MAX_VALUE, transaction);
+                GenericStorageUtil.move(GasVariant.of(Gases.OXYGEN), storage, this.gasStorage(), Long.MAX_VALUE, transaction);
                 transaction.commit();
             }
         }

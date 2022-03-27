@@ -24,14 +24,13 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
-import dev.galacticraft.mod.api.screen.MachineScreenHandler;
+import dev.galacticraft.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.api.solarpanel.LightSource;
 import dev.galacticraft.mod.api.solarpanel.SolarPanelRegistry;
 import dev.galacticraft.mod.api.solarpanel.WorldLightSources;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -82,12 +81,6 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
         super(handler, inv, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
         this.solarPanelTexture = SolarPanelRegistry.getSolarPanelTexture(handler.machine.getType());
         this.lightSource = SolarPanelRegistry.getLightSource(handler.machine.getWorld().getRegistryKey());
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
     }
 
     @Override

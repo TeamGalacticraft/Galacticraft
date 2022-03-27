@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.galacticraft.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.OxygenStorageModuleBlockEntity;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
@@ -34,8 +34,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-
-import java.math.RoundingMode;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -51,12 +49,17 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
         super.renderBackground(matrices, delta, mouseX, mouseY);
         this.drawOxygenBufferBar(matrices);
 
-        drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.current_oxygen", this.machine.gasStorage().getStack(0).amount()), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
-        drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.max_oxygen", this.machine.gasStorage().getCapacity(0)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.current_oxygen", this.machine.gasStorage().getAmount(0)), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.max_oxygen", this.machine.gasStorage().getMaxCount(0)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
+    }
+
+    @Override
+    protected void drawTanks(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+//        super.drawTanks(matrices, mouseX, mouseY, delta);
     }
 
     private void drawOxygenBufferBar(MatrixStack matrices) {
-        double oxygenScale = (double)this.machine.fluidInv().getFluid(0).amount() / (double)this.machine.fluidInv().getCapacity(0);
+        double oxygenScale = (double)this.machine.fluidStorage().getAmount(0) / (double)this.machine.fluidStorage().getMaxCount(0);
 
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
         this.drawTexture(matrices, this.x + 52, this.y + 57, 176, 0, (int) (72.0D * oxygenScale), 3);

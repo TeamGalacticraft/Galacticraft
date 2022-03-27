@@ -22,15 +22,16 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
-import dev.galacticraft.mod.screen.slot.SlotSettings;
-import dev.galacticraft.mod.screen.slot.SlotType;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -57,7 +58,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     public static final int OUTPUT_SLOT = 10;
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
 
-    private final Inventory craftingInv = this.itemStorage().mappedFrom(0, CHARGE_SLOT);
+    private final Inventory craftingInv = this.itemStorage().subInv(CHARGE_SLOT);
 
     public ElectricCompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE);
@@ -67,13 +68,12 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                builder.addSlot(SlotSettings.Builder.create(x * 18 + 30, y * 18 + 17, SlotType.INPUT).build());
+                builder.addSlot(GalacticraftSlotTypes.ITEM_INPUT, new ItemSlotDisplay(x * 18 + 30, y * 18 + 17));
             }
         }
-        builder.addSlot(SlotSettings.Builder.create(8, 61, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).disableInput().build());
-
-        builder.addSlot(SlotSettings.Builder.create(148, 22, SlotType.OUTPUT).disableInput().build());
-        builder.addSlot(SlotSettings.Builder.create(148, 48, SlotType.OUTPUT).disableInput().build());
+        builder.addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61));
+        builder.addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(148, 22));
+        builder.addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(148, 48));
         return builder;
     }
 
@@ -99,24 +99,30 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
 
     @Override
     protected boolean outputStacks(CompressingRecipe recipe, TransactionContext transaction) {
-        ItemStack copy = recipe.getOutput().copy();
-        copy.setCount(copy.getCount() * 2);
-        ItemStack stack1 = this.itemStorage().insertStack(OUTPUT_SLOT, copy, transaction);
-        if (stack1.isEmpty()) return true;
-        stack1 = this.itemStorage().insertStack(SECOND_OUTPUT_SLOT, stack1, transaction);
-        if (stack1.isEmpty()) return true;
-        return false;
+        ItemStack output = recipe.getOutput();
+        ItemVariant variant = ItemVariant.of(output);
+        long count = output.getCount() * 2;
+        long outputted = this.itemStorage().insert(OUTPUT_SLOT, variant, count, transaction);
+        if (outputted == count) return true;
+        outputted += this.itemStorage().insert(SECOND_OUTPUT_SLOT, variant, count - outputted, transaction);
+        return outputted == count;
     }
 
     @Override
     protected boolean extractCraftingMaterials(CompressingRecipe recipe, TransactionContext transaction) {
         DefaultedList<ItemStack> remainder = recipe.getRemainder(this.craftingInv);
-        for (int i = 0; i < remainder.size(); i++) {
+        for (int i = 0; i < 9; i++) {
             ItemStack stack = remainder.get(i);
-            if (stack != ItemStack.EMPTY) {
-                this.craftingInv.setStack(i, stack);
-            } else {
-                this.craftingInv.removeStack(i, 1);
+            this.itemStorage().extract(i, 1);
+
+            if (!stack.isEmpty()) {
+                if (this.itemStorage().getAmount(i) == 0) {
+                    if (stack.getCount() == this.itemStorage().insert(i, ItemVariant.of(stack), stack.getCount())) {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
             }
         }
         return true;

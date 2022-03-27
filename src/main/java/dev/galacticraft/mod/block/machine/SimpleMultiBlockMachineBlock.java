@@ -25,7 +25,7 @@ package dev.galacticraft.mod.block.machine;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.MultiBlockMachineBlock;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -70,7 +70,7 @@ public class SimpleMultiBlockMachineBlock<T extends MachineBlockEntity, P extend
     }
 
     @Override
-    public Text machineInfo(ItemStack stack, BlockView view, boolean advanced) {
+    public Text machineDescription(ItemStack stack, BlockView view, boolean advanced) {
         return this.information;
     }
 

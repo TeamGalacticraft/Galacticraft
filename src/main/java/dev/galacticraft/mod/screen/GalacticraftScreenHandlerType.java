@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.screen;
 
+import dev.galacticraft.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.screen.MachineScreenHandler;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.block.entity.*;
 import dev.galacticraft.mod.mixin.ExtendedScreenHandlerTypeAccessor;
 import dev.galacticraft.mod.recipe.CompressingRecipe;

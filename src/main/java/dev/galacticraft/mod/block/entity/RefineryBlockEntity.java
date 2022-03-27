@@ -23,19 +23,21 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.api.fluid.FluidStack;
+import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
+import dev.galacticraft.api.machine.storage.display.TankDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.machine.MachineStatus;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
-import dev.galacticraft.mod.lookup.storage.MachineFluidStorage;
-import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.storage.MachineFluidStorage;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
-import dev.galacticraft.mod.screen.slot.FluidTankSettings;
-import dev.galacticraft.mod.screen.slot.SlotSettings;
-import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.api.machine.storage.io.SlotType;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -69,16 +71,16 @@ public class RefineryBlockEntity extends MachineBlockEntity {
 
     @Override
     protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
-        builder.addSlot(SlotSettings.Builder.create(8, 7, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
-        builder.addSlot(SlotSettings.Builder.create(123, 7, SlotType.FLUID_TANK_IO).filter(Constant.Filter.Item.CAN_EXTRACT_OIL).build());
-        builder.addSlot(SlotSettings.Builder.create(153, 7, SlotType.FLUID_TANK_IO).filter(Constant.Filter.Item.CAN_INSERT_FUEL).build());
+        builder.addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 7));
+        builder.addSlot(GalacticraftSlotTypes.OIL_FILL, new ItemSlotDisplay(123, 7));
+        builder.addSlot(GalacticraftSlotTypes.FUEL_DRAIN, new ItemSlotDisplay(153, 7));
         return builder;
     }
 
     @Override
-    protected MachineFluidStorage.Builder createFluidInv(MachineFluidStorage.Builder builder) {
-        builder.addTank(FluidTankSettings.Builder.create(122, 28, SlotType.OIL_IN).filter(Constant.Filter.Fluid.OIL).build());
-        builder.addTank(FluidTankSettings.Builder.create(152, 28, SlotType.FUEL_OUT).filter(Constant.Filter.Fluid.FUEL).build());
+    protected MachineFluidStorage.Builder createFluidStorage(MachineFluidStorage.Builder builder) {
+        builder.addSlot(GalacticraftSlotTypes.OIL_INPUT, MAX_CAPACITY, new TankDisplay(122, 28, 48));
+        builder.addSlot(GalacticraftSlotTypes.FUEL_OUTPUT, MAX_CAPACITY, new TankDisplay(152, 28, 48));
         return builder;
     }
 
@@ -104,18 +106,18 @@ public class RefineryBlockEntity extends MachineBlockEntity {
 
         Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(FLUID_INPUT_SLOT)).find(FluidStorage.ITEM);
         if (storage != null) {
-            FluidUtil.move(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), storage, this.fluidInv().getTank(OIL_TANK), Long.MAX_VALUE, null);
+            FluidUtil.move(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), storage, this.fluidStorage().getSlot(OIL_TANK), Long.MAX_VALUE, null);
         }
         storage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(FLUID_INPUT_SLOT)).find(FluidStorage.ITEM);
         if (storage != null) {
-            FluidUtil.move(FluidVariant.of(GalacticraftFluid.FUEL), this.fluidInv().getTank(FUEL_TANK), storage, Long.MAX_VALUE, null);
+            FluidUtil.move(FluidVariant.of(GalacticraftFluid.FUEL), this.fluidStorage().getSlot(FUEL_TANK), storage, Long.MAX_VALUE, null);
         }
     }
 
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.fluidInv().getFluid(OIL_TANK).amount() == 0) return Status.NOT_ENOUGH_FLUID;
+        if (this.fluidStorage().getAmount(OIL_TANK) == 0) return Status.NOT_ENOUGH_FLUID;
         if (this.isTankFull(FUEL_TANK)) return Status.FULL;
         return Status.ACTIVE;
     }
@@ -123,12 +125,17 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     @Override
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
+            long extracted;
             try (Transaction transaction = Transaction.openOuter()) {
-                FluidVariant resource = this.fluidInv().getTank(OIL_TANK).getResource();
-                long amount = this.fluidInv().extractFluid(OIL_TANK, 405L, transaction).amount();
-                amount = this.fluidInv().insertFluid(FUEL_TANK, new FluidStack(FluidVariant.of(GalacticraftFluid.FUEL), amount), transaction).amount();
-                this.fluidInv().insertFluid(OIL_TANK, new FluidStack(resource, amount), transaction).amount();
-                transaction.commit();
+                extracted = this.fluidStorage().extract(OIL_TANK, FluidConstants.BUCKET / 20 / 5, transaction).getAmount();
+            }
+
+            try (Transaction transaction = Transaction.openOuter()) {
+                long accepted = this.fluidStorage().insert(FUEL_TANK, FluidVariant.of(GalacticraftFluid.FUEL), extracted, transaction);
+
+                if (this.fluidStorage().extract(OIL_TANK, accepted, transaction).getAmount() == accepted) {
+                    transaction.commit();
+                }
             }
         }
     }

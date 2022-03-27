@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import dev.galacticraft.mod.api.block.MachineBlock;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.block.MachineBlock;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;

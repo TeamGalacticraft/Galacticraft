@@ -22,11 +22,16 @@
 
 package dev.galacticraft.mod.compat.waila;
 
+import dev.galacticraft.api.machine.MachineConfiguration;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.MachineBlock;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.machine.MachineConfiguration;
-import mcp.mobius.waila.api.*;
+import dev.galacticraft.api.block.MachineBlock;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import mcp.mobius.waila.api.IComponentProvider;
+import mcp.mobius.waila.api.IDataAccessor;
+import mcp.mobius.waila.api.IPluginConfig;
+import mcp.mobius.waila.api.IRegistrar;
+import mcp.mobius.waila.api.IWailaPlugin;
+import mcp.mobius.waila.api.TooltipPosition;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -42,8 +47,9 @@ public class GalacticraftWailaPlugin implements IWailaPlugin {
         @Override
         public void appendTail(List<Text> tooltip, IDataAccessor accessor, IPluginConfig config) {
             if (Screen.hasShiftDown()) {
-                MachineConfiguration configuration = MachineConfiguration.fromClientTag(accessor.getServerData());
-                tooltip.add(new TranslatableText("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneInteraction().getName()).setStyle(Constant.Text.RED_STYLE));
+                MachineConfiguration configuration = MachineConfiguration.create();
+                configuration.readNbt(accessor.getServerData());
+                tooltip.add(new TranslatableText("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneActivation().getName()).setStyle(Constant.Text.RED_STYLE));
                 if (configuration.getSecurity().getOwner() != null) tooltip.add(new TranslatableText("ui.galacticraft.machine.security.owned_by", new LiteralText(configuration.getSecurity().getOwner().getName()).setStyle(Constant.Text.WHITE_STYLE)).setStyle(Constant.Text.AQUA_STYLE));
             }
         }
@@ -51,7 +57,7 @@ public class GalacticraftWailaPlugin implements IWailaPlugin {
 
     @Override
     public void register(IRegistrar registrar) {
-        registrar.registerBlockDataProvider((data, player, world, blockEntity) -> ((MachineBlockEntity) blockEntity).getConfiguration().toClientNbt(data, player), MachineBlock.class);
+        registrar.registerBlockDataProvider((data, player, world, blockEntity) -> ((MachineBlockEntity) blockEntity).getConfiguration().writeNbt(data), MachineBlock.class);
         registrar.registerComponentProvider(COMPONENT_PROVIDER, TooltipPosition.TAIL, MachineBlock.class);
     }
 }

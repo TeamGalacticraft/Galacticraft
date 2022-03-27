@@ -22,15 +22,17 @@
 
 package dev.galacticraft.mod.block.entity;
 
+import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
-import dev.galacticraft.mod.screen.slot.SlotSettings;
-import dev.galacticraft.mod.screen.slot.SlotType;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
@@ -58,7 +60,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
 
-    private final Inventory craftingInv = this.itemStorage().mappedFrom(0, FUEL_INPUT_SLOT);
+    private final Inventory craftingInv = this.itemStorage().subInv(0, FUEL_INPUT_SLOT);
     public int fuelTime;
     public int fuelLength;
 
@@ -70,11 +72,11 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                builder.addSlot(SlotSettings.Builder.create(x * 18 + 17, y * 18 + 17, SlotType.INPUT).build());
+                builder.addSlot(GalacticraftSlotTypes.ITEM_INPUT, new ItemSlotDisplay(x * 18 + 17, y * 18 + 17));
             }
         }
-        builder.addSlot(SlotSettings.Builder.create(83, 47, SlotType.SOLID_FUEL).filter(stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null).build());
-        builder.addSlot(SlotSettings.Builder.create(143, 36, SlotType.OUTPUT).disableInput().build());
+        builder.addSlot(GalacticraftSlotTypes.SOLID_FUEL, new ItemSlotDisplay(83, 47));
+        builder.addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(143, 36));
         return builder;
     }
 
@@ -117,18 +119,25 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    protected boolean outputStacks(CompressingRecipe recipe, TransactionContext transaction) {
-        return this.itemStorage().insertStack(OUTPUT_SLOT, recipe.getOutput().copy(), transaction).isEmpty();
+    protected boolean outputStacks(@NotNull CompressingRecipe recipe, TransactionContext transaction) {
+        ItemStack output = recipe.getOutput();
+        return this.itemStorage().insert(OUTPUT_SLOT, ItemVariant.of(output), output.getCount(), transaction) == output.getCount();
     }
 
     @Override
     protected boolean extractCraftingMaterials(@NotNull CompressingRecipe recipe, TransactionContext transaction) {
         DefaultedList<ItemStack> remainder = recipe.getRemainder(this.craftingInv);
-        for (int i = 0; i < remainder.size(); i++) {
+        for (int i = 0; i < 9; i++) {
             ItemStack stack = remainder.get(i);
-            this.craftingInv.removeStack(i, 1);
+            this.itemStorage().extract(i, 1, transaction);
             if (stack != ItemStack.EMPTY) {
-                this.craftingInv.setStack(i, stack);
+                if (this.itemStorage().getAmount(i) == 0) {
+                    if (stack.getCount() != this.itemStorage().insert(i, ItemVariant.of(stack), stack.getCount(), transaction)) {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
             }
         }
         return true;
@@ -139,7 +148,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
         if (this.getStatus() == Status.MISSING_FUEL) {
             if (this.fuelLength == 0) {
                 try (Transaction transaction = Transaction.openOuter()) {
-                    ItemStack stack = this.itemStorage().extractStack(FUEL_INPUT_SLOT, 1, transaction);
+                    ItemStack stack = this.itemStorage().extract(FUEL_INPUT_SLOT, 1, transaction);
                     Integer integer = FuelRegistry.INSTANCE.get(stack.getItem());
                     if (integer != null && integer > 0) {
                         transaction.commit();
@@ -149,6 +158,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
             }
             this.setStatus(this.updateStatus());
         }
+
         if (--this.fuelTime <= 0) {
             this.fuelLength = 0;
             this.fuelTime = 0;

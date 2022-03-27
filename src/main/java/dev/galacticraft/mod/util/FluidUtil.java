@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.util;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -31,6 +32,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -43,22 +45,14 @@ public class FluidUtil {
     public static final String SUFFIX_BUCKETS = "B";
 
     public static long bucketsToDroplets(int buckets) {
-        return buckets * 81000L;
+        return buckets * FluidConstants.BUCKET;
     }
 
     public static long move(FluidVariant variant, @Nullable Storage<FluidVariant> from, @Nullable Storage<FluidVariant> to, long maxAmount, @Nullable TransactionContext transaction) {
         return GenericStorageUtil.move(variant, from, to, maxAmount, transaction);
     }
 
-    public static long oxygenGasToLOX(long oxygen) {
-        return oxygen;
-    }
-
-    public static long loxToOxygenGas(long lox) {
-        return lox; //todo
-    }
-
-    public static boolean canAccessFluid(World world, BlockPos offset, Direction direction) {
+    public static boolean canAccessFluid(World world, BlockPos offset, @NotNull Direction direction) {
         Storage<FluidVariant> fluidVariantStorage = FluidStorage.SIDED.find(world, offset, direction.getOpposite());
         return fluidVariantStorage != null && (fluidVariantStorage.supportsExtraction() || fluidVariantStorage.supportsInsertion());
     }

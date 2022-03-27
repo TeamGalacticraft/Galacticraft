@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.block.entity.Pullable;
 import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
@@ -36,7 +36,7 @@ public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colore
     private boolean pull = false;
 
     public GlassFluidPipeBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.GLASS_FLUID_PIPE, pos, state, 81000 / 50); //0.4B/s
+        super(GalacticraftBlockEntityType.GLASS_FLUID_PIPE, pos, state, FluidConstants.BUCKET / 50); //0.4B/s
     }
 
     @Override
@@ -44,8 +44,9 @@ public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colore
         super.readNbt(nbt);
         this.readPullNbt(nbt);
 
-        if (world.isClient) {
-            ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
+        assert this.world != null;
+        if (this.world.isClient) {
+            MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(this.pos.getX(), this.pos.getY(), this.pos.getZ());
         }
     }
 

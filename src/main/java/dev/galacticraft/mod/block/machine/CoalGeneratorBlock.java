@@ -77,7 +77,7 @@ public class CoalGeneratorBlock extends SimpleMachineBlock<CoalGeneratorBlockEnt
     }
 
     @Override
-    public Text machineInfo(ItemStack stack, BlockView view, boolean advanced) {
+    public Text machineDescription(ItemStack stack, BlockView view, boolean advanced) {
         return TOOLTIP_INFO;
     }
 }

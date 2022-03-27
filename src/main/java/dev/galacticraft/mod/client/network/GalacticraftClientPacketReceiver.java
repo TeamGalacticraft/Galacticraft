@@ -22,11 +22,7 @@
 
 package dev.galacticraft.mod.client.network;
 
-import com.mojang.authlib.GameProfile;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.machine.RedstoneInteractionType;
-import dev.galacticraft.mod.api.machine.SecurityInfo;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,13 +30,11 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -50,38 +44,6 @@ import java.util.UUID;
 @Environment(EnvType.CLIENT)
 public class GalacticraftClientPacketReceiver {
     public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "security_update"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
-            BlockPos pos = buf.readBlockPos();
-            SecurityInfo.Accessibility accessibility = SecurityInfo.Accessibility.values()[buf.readByte()];
-            GameProfile profile = NbtHelper.toGameProfile(Objects.requireNonNull(buf.readNbt()));
-
-            client.execute(() -> {
-                assert client.world != null;
-                BlockEntity entity = client.world.getBlockEntity(pos);
-                if (entity instanceof MachineBlockEntity machine) {
-                    assert profile != null;
-                    assert accessibility != null;
-                    machine.getConfiguration().getSecurity().setOwner(/*((ClientWorldTeamsGetter) client.world).getSpaceRaceTeams(), */profile); //todo teams
-                    machine.getConfiguration().getSecurity().setAccessibility(accessibility);
-
-                }
-            });
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "redstone_update"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
-            BlockPos pos = buf.readBlockPos();
-            RedstoneInteractionType redstone = RedstoneInteractionType.values()[buf.readByte()];
-
-            client.execute(() -> {
-                assert client.world != null;
-                BlockEntity entity = client.world.getBlockEntity(pos);
-                if (entity instanceof MachineBlockEntity) {
-                    assert redstone != null;
-                    ((MachineBlockEntity) entity).getConfiguration().setRedstone(redstone);
-                }
-            });
-        });
-
         ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "entity_spawn"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             client.execute(() -> {

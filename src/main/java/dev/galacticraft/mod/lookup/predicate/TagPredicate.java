@@ -20,22 +20,17 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.test;
+package dev.galacticraft.mod.lookup.predicate;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
+import net.minecraft.tag.Tag;
+import org.jetbrains.annotations.NotNull;
 
-public class TestTemplate {
+import java.util.function.Predicate;
 
-    @Test
-    @Disabled
-    public void should_result_when_condition() {
-        // Given
-
-        // When
-
-        // Then
-        Assertions.fail("Template test should be skipped. Add @Disabled annotation.");
+public record TagPredicate<T, V extends TransferVariant<T>>(Tag<T> tag) implements Predicate<V> {
+    @Override
+    public boolean test(@NotNull V v) {
+        return tag.values().contains(v.getObject());
     }
 }

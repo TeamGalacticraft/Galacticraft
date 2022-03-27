@@ -24,7 +24,9 @@ package dev.galacticraft.mod.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
-import dev.galacticraft.api.attribute.GasStorage;
+import dev.galacticraft.api.gas.GasVariant;
+import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.api.transfer.v1.gas.GasStorage;
 import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
@@ -72,10 +74,10 @@ public abstract class InGameHudMixin extends DrawableHelper {
             assert this.client.player != null;
             Inventory inv = ((GearInventoryProvider) this.client.player).getOxygenTanks();
             for (int i = 0; i < inv.size(); i++) {
-                Storage<Gas> storage = ContainerItemContext.withInitial(inv.getStack(i)).find(GasStorage.ITEM);
+                Storage<GasVariant> storage = ContainerItemContext.withInitial(inv.getStack(i)).find(GasStorage.ITEM);
                 if (storage != null) {
                     try (Transaction transaction = Transaction.openOuter()) {
-                        StorageView<Gas> exact = storage.exactView(transaction, Gas.OXYGEN);
+                        StorageView<GasVariant> exact = storage.exactView(transaction, GasVariant.of(Gases.OXYGEN));
                         if (exact != null) {
                             DrawableUtil.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, exact.getAmount(), exact.getCapacity());
                         }

@@ -23,9 +23,8 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.CoalGeneratorBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
@@ -49,12 +48,6 @@ public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorBlock
     public CoalGeneratorScreen(CoalGeneratorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.COAL_GENERATOR_SCREEN);
         this.backgroundHeight = 176;
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
     }
 
     @Override

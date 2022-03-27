@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.MachineBlock;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.block.MachineBlock;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
@@ -61,7 +61,7 @@ public class SimpleMachineBlock<T extends MachineBlockEntity> extends MachineBlo
     }
 
     @Override
-    public Text machineInfo(ItemStack stack, BlockView view, boolean advanced) {
+    public Text machineDescription(ItemStack stack, BlockView view, boolean advanced) {
         return this.information;
     }
 

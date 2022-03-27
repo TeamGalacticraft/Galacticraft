@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.mod.api.screen.MachineScreenHandler;
-import dev.galacticraft.mod.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.screen.MachineScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.recipe.Recipe;

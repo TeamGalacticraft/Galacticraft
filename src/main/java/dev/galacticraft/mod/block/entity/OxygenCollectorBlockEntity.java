@@ -24,20 +24,22 @@ package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.api.gas.GasStack;
+import dev.galacticraft.api.gas.GasVariant;
+import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
+import dev.galacticraft.api.machine.storage.display.TankDisplay;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.fluid.GalacticraftFluid;
-import dev.galacticraft.mod.lookup.storage.MachineGasStorage;
-import dev.galacticraft.mod.lookup.storage.MachineItemStorage;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.api.machine.storage.MachineGasStorage;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.OxygenCollectorScreenHandler;
-import dev.galacticraft.mod.screen.slot.GasSlotSettings;
-import dev.galacticraft.mod.screen.slot.SlotSettings;
-import dev.galacticraft.mod.screen.slot.SlotType;
+import dev.galacticraft.api.machine.storage.io.SlotType;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
@@ -78,14 +80,14 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
-        builder.addSlot(SlotSettings.Builder.create(8, 62, SlotType.CHARGE).filter(Constant.Filter.Item.CAN_EXTRACT_ENERGY).build());
+    protected MachineItemStorage.Builder createInventory(MachineItemStorage.@NotNull Builder builder) {
+        builder.addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62));
         return builder;
     }
 
     @Override
-    protected MachineGasStorage.Builder createGasStorage(MachineGasStorage.Builder builder) {
-        builder.addSlot(GasSlotSettings.Builder.create(31, 8, SlotType.OXYGEN_OUT).capacity(MAX_OXYGEN).filter(Constant.Filter.Gas.OXYGEN).build());
+    protected MachineGasStorage.Builder createGasStorage(MachineGasStorage.@NotNull Builder builder) {
+        builder.addSlot(GalacticraftSlotTypes.OXYGEN_OUTPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48));
         return builder;
     }
 
@@ -166,7 +168,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     public void updateComponents() {
         super.updateComponents();
         this.attemptChargeFromStack(CHARGE_SLOT);
-        this.trySpreadFluids(0);
+        this.trySpreadGases();
     }
 
     @Override
@@ -183,7 +185,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         if (this.getStatus().getType().isActive()) {
             this.collectionAmount = collectOxygen();
             try (Transaction transaction = Transaction.openOuter()) {
-                this.gasStorage().insertStack(OXYGEN_TANK, new GasStack(Gas.OXYGEN, collectionAmount * 8100L), transaction);
+                this.gasStorage().insert(OXYGEN_TANK, GasVariant.of(Gases.OXYGEN), FluidUtil.bucketsToDroplets(collectionAmount), transaction);
                 transaction.commit();
             }
         }

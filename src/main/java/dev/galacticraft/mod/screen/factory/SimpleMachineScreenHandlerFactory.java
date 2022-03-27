@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.screen.factory;
 
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.screen.MachineScreenHandler;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 

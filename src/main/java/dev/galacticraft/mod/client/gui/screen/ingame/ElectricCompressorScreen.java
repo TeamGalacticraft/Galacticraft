@@ -24,9 +24,8 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.ElectricCompressorBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
@@ -51,12 +50,6 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
 
     public ElectricCompressorScreen(RecipeMachineScreenHandler<Inventory, CompressingRecipe, ElectricCompressorBlockEntity> handler, PlayerInventory inv, Text title) {
         super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
     }
 
     @Override

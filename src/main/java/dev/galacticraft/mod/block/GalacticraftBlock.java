@@ -24,7 +24,7 @@ package dev.galacticraft.mod.block;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidBlock;
-import dev.galacticraft.mod.api.block.MachineBlock;
+import dev.galacticraft.api.block.MachineBlock;
 import dev.galacticraft.mod.block.decoration.GratingBlock;
 import dev.galacticraft.mod.block.decoration.LightPanelBlock;
 import dev.galacticraft.mod.block.decoration.LunarCartographyTableBlock;

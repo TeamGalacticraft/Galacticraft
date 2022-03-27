@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.screen.factory;
 
-import dev.galacticraft.mod.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.recipe.Recipe;

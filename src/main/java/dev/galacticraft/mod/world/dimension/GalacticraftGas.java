@@ -35,15 +35,17 @@ import net.minecraft.util.registry.Registry;
 public class GalacticraftGas {
     public static final Identifier NITROGEN_OXIDE_ID = new Identifier(Constant.MOD_ID, "nitrogen_oxide");
     public static final Gas NITROGEN_OXIDE =
-            new Gas(
+            Gas.create(
                     new TranslatableText("ui.galacticraft.nitrogen_oxide"),
+                    null,
                     "NO"
             );
 
     public static final Identifier HYDROGEN_DEUTERIUM_OXYGEN_ID = new Identifier(Constant.MOD_ID, "hydrogen_deuterium_oxygen");
     public static final Gas HYDROGEN_DEUTERIUM_OXYGEN =
-            new Gas(
+            Gas.create(
                     new TranslatableText("ui.galacticraft.hydrogen_deuterium_oxygen"),
+                    null,
                     "HDO"
             );
 

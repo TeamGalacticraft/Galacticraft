@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
@@ -37,7 +37,7 @@ public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, 
     private Direction direction;
 
     public PipeWalkwayBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.PIPE_WALKWAY, pos, state, 81000 / 50);
+        super(GalacticraftBlockEntityType.PIPE_WALKWAY, pos, state, FluidConstants.BUCKET / 50);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, 
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         this.readWalkwayNbt(nbt);
-        if (world.isClient) ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
+        if (world.isClient) MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(this.pos.getX(), this.pos.getY(), this.pos.getZ());
     }
 
     @Override

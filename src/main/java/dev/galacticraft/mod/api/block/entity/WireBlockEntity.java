@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.attribute.energy.WireEnergyStorage;
@@ -137,7 +136,7 @@ public class WireBlockEntity extends BlockEntity implements Wire {
         super.readNbt(nbt);
         this.readConnectionNbt(nbt);
         if (world.isClient) {
-            ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(pos);
+            MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(pos.getX(), pos.getY(), pos.getZ());
         }
     }
 }

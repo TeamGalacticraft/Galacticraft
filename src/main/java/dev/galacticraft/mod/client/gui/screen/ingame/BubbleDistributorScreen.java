@@ -24,9 +24,8 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
 import io.netty.buffer.Unpooled;
@@ -74,7 +73,6 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     protected void init() {
         super.init();
         this.titleX += 20;
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
     }
 
     @Override

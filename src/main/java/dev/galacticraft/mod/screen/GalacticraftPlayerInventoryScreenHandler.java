@@ -27,6 +27,7 @@ import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.item.ThermalArmorItem;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -135,7 +136,7 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
 
         @Override
         public boolean canInsert(ItemStack stack) {
-            return Constant.Filter.Item.CAN_EXTRACT_OXYGEN.test(stack);
+            return Constant.Filter.Item.CAN_EXTRACT_OXYGEN.test(ItemVariant.of(stack));
         }
 
         @Override

@@ -24,7 +24,7 @@ jobs:
       - name: Build
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: checkLicenses build test
+          arguments: checkLicenses build runGametest
 
       - name: Copy GameTest Results
         run: cp run/TEST-gametest.xml build/test-results/test/
