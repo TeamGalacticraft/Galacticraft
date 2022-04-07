@@ -27,6 +27,7 @@ import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
@@ -44,10 +45,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
@@ -69,48 +66,22 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    protected MachineItemStorage.Builder createInventory(MachineItemStorage.Builder builder) {
+    protected MachineItemStorage createInventory() {
+        MachineItemStorage.Builder builder = MachineItemStorage.Builder.create();
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 builder.addSlot(GalacticraftSlotTypes.ITEM_INPUT, new ItemSlotDisplay(x * 18 + 17, y * 18 + 17));
             }
         }
-        builder.addSlot(GalacticraftSlotTypes.SOLID_FUEL, new ItemSlotDisplay(83, 47));
-        builder.addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(143, 36));
-        return builder;
+        return builder
+                .addSlot(GalacticraftSlotTypes.SOLID_FUEL, new ItemSlotDisplay(83, 47))
+                .addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(143, 36))
+                .build();
     }
 
     @Override
-    protected MachineStatus getStatusById(int index) {
-        return Status.values()[index];
-    }
-
-    @Override
-    public long getEnergyCapacity() {
-        return 0;
-    }
-
-    @Override
-    public long energyInsertionRate() {
-        return 0;
-    }
-
-    @Override
-    public long energyExtractionRate() {
-        return 0;
-    }
-
-    @Override
-    protected void tickDisabled() {
-    }
-
-    @Override
-    public @NotNull MachineStatus updateStatus() {
-        CompressingRecipe validRecipe = this.findValidRecipe();
-        if (validRecipe == null) return Status.INVALID_RECIPE;
-        if (!this.canOutput(validRecipe, null)) return Status.OUTPUT_FULL;
-        if (this.fuelTime <= 0) return Status.MISSING_FUEL;
-        return Status.PROCESSING;
+    protected @NotNull MachineStatus workingStatus() {
+        return GalacticraftMachineStatus.COMPRESSING;
     }
 
     @Override
@@ -119,20 +90,20 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    protected boolean outputStacks(@NotNull CompressingRecipe recipe, TransactionContext transaction) {
+    protected boolean outputStacks(@NotNull CompressingRecipe recipe, TransactionContext context) {
         ItemStack output = recipe.getOutput();
-        return this.itemStorage().insert(OUTPUT_SLOT, ItemVariant.of(output), output.getCount(), transaction) == output.getCount();
+        return this.itemStorage().insert(OUTPUT_SLOT, ItemVariant.of(output), output.getCount(), context) == output.getCount();
     }
 
     @Override
-    protected boolean extractCraftingMaterials(@NotNull CompressingRecipe recipe, TransactionContext transaction) {
+    protected boolean extractCraftingMaterials(@NotNull CompressingRecipe recipe, TransactionContext context) {
         DefaultedList<ItemStack> remainder = recipe.getRemainder(this.craftingInv);
         for (int i = 0; i < 9; i++) {
             ItemStack stack = remainder.get(i);
-            this.itemStorage().extract(i, 1, transaction);
+            this.itemStorage().extract(i, 1, context);
             if (stack != ItemStack.EMPTY) {
                 if (this.itemStorage().getAmount(i) == 0) {
-                    if (stack.getCount() != this.itemStorage().insert(i, ItemVariant.of(stack), stack.getCount(), transaction)) {
+                    if (stack.getCount() != this.itemStorage().insert(i, ItemVariant.of(stack), stack.getCount(), context)) {
                         return false;
                     }
                 } else {
@@ -144,32 +115,36 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    public void tickWork() {
-        if (this.getStatus() == Status.MISSING_FUEL) {
-            if (this.fuelLength == 0) {
-                try (Transaction transaction = Transaction.openOuter()) {
-                    ItemStack stack = this.itemStorage().extract(FUEL_INPUT_SLOT, 1, transaction);
-                    Integer integer = FuelRegistry.INSTANCE.get(stack.getItem());
-                    if (integer != null && integer > 0) {
-                        transaction.commit();
-                        this.fuelTime = this.fuelLength = integer;
-                    }
-                }
-            }
-            this.setStatus(this.updateStatus());
-        }
-
+    protected void tickConstant() {
+        super.tickConstant();
         if (--this.fuelTime <= 0) {
             this.fuelLength = 0;
             this.fuelTime = 0;
         }
+    }
 
-        super.tickWork();
-        if (this.getStatus().getType().isActive() && this.maxProgress() > 0) {
-            if (this.progress() % (this.maxProgress() / 8) == 0 && this.progress() > this.maxProgress() / 2) {
+    @Override
+    public @NotNull MachineStatus tick() {
+        if (this.getMaxProgress() > 0) {
+            if (this.getProgress() % (this.getMaxProgress() / 8) == 0 && this.getProgress() > this.getMaxProgress() / 2) {
+                assert this.world != null;
                 this.world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
             }
         }
+
+        return super.tick();
+    }
+
+    @Override
+    protected @Nullable MachineStatus extractResourcesToWork(@NotNull TransactionContext context) {
+        if (this.fuelLength == 0) {
+            ItemStack stack = this.itemStorage().extract(FUEL_INPUT_SLOT, 1, context);
+            Integer integer = FuelRegistry.INSTANCE.get(stack.getItem());
+            if (integer != null && integer > 0) {
+                this.fuelTime = this.fuelLength = integer;
+            }
+        }
+        return this.fuelLength == 0 ? GalacticraftMachineStatus.NO_FUEL : super.extractResourcesToWork(context);
     }
 
     @Override
@@ -196,53 +171,5 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
         if (this.security().hasAccess(player)) return new CompressorScreenHandler(syncId, player, this);
         return null;
-    }
-
-    /**
-     * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
-     */
-    private enum Status implements MachineStatus {
-        /**
-         * Compressor is compressing items.
-         */
-        PROCESSING(new TranslatableText("ui.galacticraft.machine.status.active"), Formatting.GREEN, StatusType.WORKING),
-
-        /**
-         * Compressor has no valid recipe.
-         */
-        INVALID_RECIPE(new TranslatableText("ui.galacticraft.machine.status.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
-
-        /**
-         * Compressor has no valid recipe.
-         */
-        OUTPUT_FULL(new TranslatableText("ui.galacticraft.machine.status.output_full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-
-        /**
-         * Compressor has no fuel.
-         */
-        MISSING_FUEL(new TranslatableText("ui.galacticraft.machine.status.missing_fuel"), Formatting.RED, StatusType.MISSING_ENERGY);
-
-        private final Text text;
-        private final StatusType type;
-
-        Status(TranslatableText text, Formatting color, StatusType type) {
-            this.text = text.setStyle(Style.EMPTY.withColor(color));
-            this.type = type;
-        }
-
-        @Override
-        public @NotNull Text getName() {
-            return text;
-        }
-
-        @Override
-        public @NotNull StatusType getType() {
-            return type;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
     }
 }

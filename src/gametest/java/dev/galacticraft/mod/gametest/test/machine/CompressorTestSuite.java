@@ -98,7 +98,7 @@ public class CompressorTestSuite implements MachineGameTest {
             transaction.commit();
         }
         runFinalTaskNext(context, () -> {
-            if (compressor.maxProgress() != 0) {
+            if (compressor.getMaxProgress() != 0) {
                 context.throwPositionedException("Expected compressor to be unable to craft as the output was full!", pos);
             }
         });

@@ -56,21 +56,21 @@ public interface MachineGameTest extends GalacticraftGameTest {
             transaction.commit();
         }
         runFinalTaskNext(context, () -> {
-            if (machine.capacitor().getAmount() <= 0) {
-                context.throwPositionedException(String.format("Expected %s to charge from an item, but found %s energy!", Registry.BLOCK_ENTITY_TYPE.getId(type), machine.capacitor().getAmount()), pos);
+            if (machine.energyStorage().getAmount() <= 0) {
+                context.throwPositionedException(String.format("Expected %s to charge from an item, but found %s energy!", Registry.BLOCK_ENTITY_TYPE.getId(type), machine.energyStorage().getAmount()), pos);
             }
         });
     }
 
     default <T extends MachineBlockEntity, B extends MachineBlock<T>> void testItemDraining(TestContext context, BlockPos pos, B block, BlockEntityType<T> type, int slot) {
         T machine = this.createBlockEntity(context, pos, block, type);
-        machine.capacitor().setEnergy(machine.capacitor().getCapacity());
+        machine.energyStorage().setEnergyUnsafe(machine.energyStorage().getCapacity());
         try (Transaction transaction = Transaction.openOuter()) {
             machine.itemStorage().setStack(slot, new ItemStack(GalacticraftItem.BATTERY), transaction);
             transaction.commit();
         }
         runFinalTaskNext(context, () -> {
-            if (machine.capacitor().getAmount() >= machine.capacitor().getCapacity()) {
+            if (machine.energyStorage().getAmount() >= machine.energyStorage().getCapacity()) {
                 context.throwPositionedException(String.format("Expected %s to drain power to an item, but it was still at max energy!", Registry.BLOCK_ENTITY_TYPE.getId(type)), pos);
             }
         });

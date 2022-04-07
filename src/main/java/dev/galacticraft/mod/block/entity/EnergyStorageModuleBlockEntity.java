@@ -49,10 +49,11 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemStorage.Builder createInventory(MachineItemStorage.@NotNull Builder builder) {
-        builder.addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(102, 24));
-        builder.addSlot(GalacticraftSlotTypes.ENERGY_DRAIN, new ItemSlotDisplay(102, 48));
-        return builder;
+    protected MachineItemStorage createInventory() {
+        return MachineItemStorage.Builder.create()
+                .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(102, 24))
+                .addSlot(GalacticraftSlotTypes.ENERGY_DRAIN, new ItemSlotDisplay(102, 48))
+                .build();
     }
 
     @Override
@@ -61,34 +62,21 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineStatus getStatusById(int index) {
-        return MachineStatus.NULL;
+    public long getEnergyItemExtractionRate() {
+        return super.getEnergyItemExtractionRate() * 2;
     }
 
     @Override
-    protected int getBatteryTransferRate() {
-        return 100;
+    public long getEnergyInsertionRate() {
+        return super.getEnergyInsertionRate() * 2;
     }
 
     @Override
-    protected void tickDisabled() {
-
-    }
-
-    @Override
-    public @NotNull MachineStatus updateStatus() {
-        return MachineStatus.NULL;
-    }
-
-    @Override
-    public void tickWork() {
-    }
-
-    @Override
-    public void updateComponents() {
-        super.updateComponents();
+    protected @NotNull MachineStatus tick() {
+        this.trySpreadEnergy();
         this.attemptChargeFromStack(DRAIN_FROM_BATTERY_SLOT);
         this.attemptDrainPowerToStack(CHARGE_TO_BATTERY_SLOT);
+        return MachineStatus.INVALID;
     }
 
     @Nullable

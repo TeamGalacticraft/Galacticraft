@@ -54,7 +54,7 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var electricFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE);
         final var inv = electricFurnace.itemStorage();
-        electricFurnace.capacitor().setEnergy(electricFurnace.getEnergyCapacity());
+        electricFurnace.energyStorage().setEnergyUnsafe(electricFurnace.getEnergyCapacity());
         try (Transaction transaction = Transaction.openOuter()) {
             fillElectricFurnaceSlots(inv, transaction);
             transaction.commit();
@@ -72,7 +72,7 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var electricFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE);
         final var inv = electricFurnace.itemStorage();
-        electricFurnace.capacitor().setEnergy(electricFurnace.getEnergyCapacity());
+        electricFurnace.energyStorage().setEnergyUnsafe(electricFurnace.getEnergyCapacity());
 
         try (Transaction transaction = Transaction.openOuter()) {
             inv.setStack(ElectricFurnaceBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), transaction);
@@ -80,7 +80,7 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
             transaction.commit();
         }
         runFinalTaskNext(context, () -> {
-            if (electricFurnace.maxProgress() != 0) {
+            if (electricFurnace.getMaxProgress() != 0) {
                 context.throwPositionedException("Expected electric furnace to be unable to craft as the output was full!", pos);
             }
         });

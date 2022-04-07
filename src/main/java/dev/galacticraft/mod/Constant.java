@@ -690,6 +690,7 @@ public interface Constant {
         Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(Formatting.LIGHT_PURPLE);
         Style YELLOW_STYLE = Style.EMPTY.withColor(Formatting.YELLOW);
         Style WHITE_STYLE = Style.EMPTY.withColor(Formatting.WHITE);
+        Style DARK_BLUE_STYLE = Style.EMPTY.withColor(Formatting.DARK_BLUE);
 
         static Style getStorageLevelColor(double scale) {
             return Style.EMPTY.withColor(TextColor.fromRgb(((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8)));

@@ -37,24 +37,24 @@ public class CoalGeneratorScreenHandler extends MachineScreenHandler<CoalGenerat
     public final Property fuelTime = new Property() {
         @Override
         public int get() {
-            return CoalGeneratorScreenHandler.this.machine.fuelTime;
+            return CoalGeneratorScreenHandler.this.machine.getFuelTime();
         }
 
         @Override
         public void set(int value) {
-            CoalGeneratorScreenHandler.this.machine.fuelTime = value;
+            CoalGeneratorScreenHandler.this.machine.setFuelTime(value);
         }
     };
 
     public final Property fuelLength = new Property() {
         @Override
         public int get() {
-            return CoalGeneratorScreenHandler.this.machine.fuelLength;
+            return CoalGeneratorScreenHandler.this.machine.getFuelLength();
         }
 
         @Override
         public void set(int value) {
-            CoalGeneratorScreenHandler.this.machine.fuelLength = value;
+            CoalGeneratorScreenHandler.this.machine.setFuelLength(value);
         }
     };
 

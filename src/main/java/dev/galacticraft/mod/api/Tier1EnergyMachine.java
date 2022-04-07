@@ -20,26 +20,12 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.block.entity;
+package dev.galacticraft.mod.api;
 
-import org.jetbrains.annotations.NotNull;
+import dev.galacticraft.mod.Galacticraft;
 
-public interface SolarPanel {
-    boolean @NotNull [/*9*/] getBlockage();
-
-    boolean followsSun();
-
-    boolean nightCollection();
-
-    SolarPanelSource getSource();
-
-    // client only
-    long getCurrentEnergyGeneration();
-
-    enum SolarPanelSource {
-        DAY,
-        NIGHT,
-        OVERCAST,
-        NO_LIGHT_SOURCE
+public interface Tier1EnergyMachine {
+    default long getEnergyCapacity() {
+        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
     }
 }

@@ -55,7 +55,7 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var circuitFabricator = this.createBlockEntity(context, pos, GalacticraftBlock.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
         final var inv = circuitFabricator.itemStorage();
-        circuitFabricator.capacitor().setEnergy(circuitFabricator.getEnergyCapacity());
+        circuitFabricator.energyStorage().setEnergyUnsafe(circuitFabricator.getEnergyCapacity());
         try (Transaction transaction = Transaction.openOuter()) {
             fillCircuitFabricatorSlots(inv, transaction);
             transaction.commit();
@@ -73,14 +73,14 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var circuitFabricator = this.createBlockEntity(context, pos, GalacticraftBlock.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
         final var inv = circuitFabricator.itemStorage();
-        circuitFabricator.capacitor().setEnergy(circuitFabricator.getEnergyCapacity());
+        circuitFabricator.energyStorage().setEnergyUnsafe(circuitFabricator.getEnergyCapacity());
         try (Transaction transaction = Transaction.openOuter()) {
             inv.setStack(CircuitFabricatorBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), transaction);
             fillCircuitFabricatorSlots(inv, transaction);
             transaction.commit();
         }
         runFinalTaskNext(context, () -> {
-            if (circuitFabricator.maxProgress() != 0) {
+            if (circuitFabricator.getMaxProgress() != 0) {
                 context.throwPositionedException("Expected circuit fabricator to be unable to craft as the output was full!", pos);
             }
         });

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.api.pipe;
 
-import dev.galacticraft.api.fluid.FluidStack;
+import dev.galacticraft.impl.fluid.FluidStack;
 import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;

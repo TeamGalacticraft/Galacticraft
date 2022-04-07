@@ -22,22 +22,18 @@
 
 package dev.galacticraft.mod.lookup;
 
-import dev.galacticraft.api.gas.GasVariant;
-import dev.galacticraft.api.transfer.v1.gas.GasStorage;
 import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.gas.Gas;
+import dev.galacticraft.api.gas.GasVariant;
 import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.impl.attribute.SingleTypeSlotGasStorage;
+import dev.galacticraft.api.transfer.v1.gas.GasStorage;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
-import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.item.OxygenTankItem;
 import dev.galacticraft.mod.storage.SingleTypeStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.entity.BlockEntityType;
 import team.reborn.energy.api.EnergyStorage;
 

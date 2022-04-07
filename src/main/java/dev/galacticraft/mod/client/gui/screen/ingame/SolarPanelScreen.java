@@ -159,7 +159,7 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
     @Override
     public void appendEnergyTooltip(List<Text> list) {
         if (this.machine.getStatus().getType().isActive()) {
-            list.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", this.machine.getEnergyGeneration()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
+            list.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", this.machine.getCurrentEnergyGeneration()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
         }
     }
 }

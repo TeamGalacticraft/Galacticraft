@@ -72,7 +72,7 @@ public class CompressorScreen extends MachineHandledScreen<CompressorBlockEntity
     }
 
     protected void drawCraftProgressBar(MatrixStack matrices) {
-        float progressScale = (((float)this.handler.machine.progress()) / ((float)this.handler.machine.maxProgress()));
+        float progressScale = (((float)this.handler.machine.getProgress()) / ((float)this.handler.machine.getMaxProgress()));
 
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.COMPRESSOR_SCREEN);
         DrawableUtil.drawProgressTexture(matrices, this.x + PROGRESS_X, this.y + PROGRESS_Y, PROGRESS_U, PROGRESS_V, PROGRESS_WIDTH * progressScale, PROGRESS_HEIGHT);

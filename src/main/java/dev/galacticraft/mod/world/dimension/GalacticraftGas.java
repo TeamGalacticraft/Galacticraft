@@ -50,7 +50,7 @@ public class GalacticraftGas {
             );
 
     public static void register() {
-        Registry.register(AddonRegistry.GAS, HYDROGEN_DEUTERIUM_OXYGEN_ID, HYDROGEN_DEUTERIUM_OXYGEN);
-        Registry.register(AddonRegistry.GAS, NITROGEN_OXIDE_ID, NITROGEN_OXIDE);
+        Registry.register(Gas.REGISTRY, HYDROGEN_DEUTERIUM_OXYGEN_ID, HYDROGEN_DEUTERIUM_OXYGEN);
+        Registry.register(Gas.REGISTRY, NITROGEN_OXIDE_ID, NITROGEN_OXIDE);
     }
 }

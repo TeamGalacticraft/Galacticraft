@@ -51,8 +51,8 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
     @Override
     protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         super.renderBackground(matrices, delta, mouseX, mouseY);
-        if (this.machine.maxProgress() != 0 && this.machine.progress() != 0) {
-            double scale = ((double)handler.machine.progress()) / ((double)handler.machine.maxProgress());
+        if (this.machine.getMaxProgress() != 0 && this.machine.getProgress() != 0) {
+            double scale = ((double)handler.machine.getProgress()) / ((double)handler.machine.getMaxProgress());
 
             DrawableUtil.drawProgressTexture(matrices, this.x + ARROW_X, this.y + ARROW_Y, ARROW_U, ARROW_V, (float) (ARROW_WIDTH * scale), ARROW_HEIGHT);
         }

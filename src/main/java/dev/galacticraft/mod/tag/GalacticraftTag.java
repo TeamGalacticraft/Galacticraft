@@ -46,7 +46,7 @@ import net.minecraft.world.biome.Biome;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftTag {
-    public static final TagFactory<Gas> GAS_TAG_FACTORY = TagFactory.of(AddonRegistry.GAS_KEY, "tags/gas");
+    public static final TagFactory<Gas> GAS_TAG_FACTORY = TagFactory.of(Gas.REGISTRY_KEY, "tags/gas");
 
     public static final Tag.Identified<Fluid> OIL = TagFactory.FLUID.create(new Identifier(Constant.COMMON_NAMESPACE, "oil"));
     public static final Tag.Identified<Fluid> FUEL = TagFactory.FLUID.create(new Identifier(Constant.COMMON_NAMESPACE, "fuel"));

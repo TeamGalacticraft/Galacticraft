@@ -59,7 +59,7 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
             fillElectricCompressorSlots(inv, transaction);
             transaction.commit();
         }
-        electricCompressor.capacitor().setEnergy(electricCompressor.getEnergyCapacity());
+        electricCompressor.energyStorage().setEnergyUnsafe(electricCompressor.getEnergyCapacity());
         runFinalTaskAt(context, 200 + 1, () -> {
             ItemStack output = inv.getStack(ElectricCompressorBlockEntity.OUTPUT_SLOT);
             if (output.getItem() != GalacticraftItem.COMPRESSED_IRON) {
@@ -73,7 +73,7 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var electricCompressor = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR);
         final var inv = electricCompressor.itemStorage();
-        electricCompressor.capacitor().setEnergy(electricCompressor.getEnergyCapacity());
+        electricCompressor.energyStorage().setEnergyUnsafe(electricCompressor.getEnergyCapacity());
         try (Transaction transaction = Transaction.openOuter()) {
             inv.setStack(ElectricCompressorBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), transaction);
             inv.setStack(ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, new ItemStack(Items.BARRIER), transaction);
@@ -81,7 +81,7 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
             transaction.commit();
         }
         runFinalTaskNext(context, () -> {
-            if (electricCompressor.maxProgress() != 0) {
+            if (electricCompressor.getMaxProgress() != 0) {
                 context.throwPositionedException("Expected electric compressor to be unable to craft as the output was full!", pos);
             }
         });

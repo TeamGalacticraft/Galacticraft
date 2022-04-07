@@ -41,24 +41,24 @@ public class RecipeMachineScreenHandler<C extends Inventory, R extends Recipe<C>
     public final Property progress = new Property() {
         @Override
         public int get() {
-            return RecipeMachineScreenHandler.this.machine.progress();
+            return RecipeMachineScreenHandler.this.machine.getProgress();
         }
 
         @Override
         public void set(int value) {
-            RecipeMachineScreenHandler.this.machine.progress(value);
+            RecipeMachineScreenHandler.this.machine.setProgress(value);
         }
     };
 
     public final Property maxProgress = new Property() {
         @Override
         public int get() {
-            return RecipeMachineScreenHandler.this.machine.maxProgress();
+            return RecipeMachineScreenHandler.this.machine.getMaxProgress();
         }
 
         @Override
         public void set(int value) {
-            RecipeMachineScreenHandler.this.machine.maxProgress(value);
+            RecipeMachineScreenHandler.this.machine.setMaxProgress(value);
         }
     };
 

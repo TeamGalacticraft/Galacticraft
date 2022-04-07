@@ -23,10 +23,12 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatuses;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -60,12 +62,13 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     public static final int OUTPUT_SLOT_2 = 3;
 
     @Override
-    protected MachineItemStorage.Builder createInventory(MachineItemStorage.@NotNull Builder builder) {
-        builder.addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61));
-        builder.addSlot(GalacticraftSlotTypes.ITEM_INPUT, new ItemSlotDisplay(44, 35));
-        builder.addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(108, 35));
-        builder.addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(134, 35));
-        return builder;
+    protected MachineItemStorage createInventory() {
+        return MachineItemStorage.Builder.create()
+                .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61))
+                .addSlot(GalacticraftSlotTypes.ITEM_INPUT, new ItemSlotDisplay(44, 35))
+                .addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(108, 35))
+                .addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(134, 35))
+                .build();
     }
 
     public ElectricArcFurnaceBlockEntity(BlockPos pos, BlockState state) {
@@ -73,38 +76,17 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    public long energyExtractionRate() {
-        return 0;
+    protected @Nullable MachineStatus extractResourcesToWork(@NotNull TransactionContext context) {
+        if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().electricArcFurnaceEnergyConsumptionRate(), context) != Galacticraft.CONFIG_MANAGER.get().electricArcFurnaceEnergyConsumptionRate()) {
+            return MachineStatuses.NOT_ENOUGH_ENERGY;
+        }
+        return super.extractResourcesToWork(context);
     }
 
     @Override
-    protected long energyConsumption() {
-        return Galacticraft.CONFIG_MANAGER.get().electricArcFurnaceEnergyConsumptionRate();
-    }
-
-    @Override
-    protected MachineStatus getStatusById(int index) {
-        return Status.values()[index];
-    }
-
-    @Override
-    protected void tickDisabled() {
-
-    }
-
-    @Override
-    public void updateComponents() {
-        super.updateComponents();
+    public @NotNull MachineStatus tick() {
         this.attemptChargeFromStack(CHARGE_SLOT);
-    }
-
-    @Override
-    public @NotNull MachineStatus updateStatus() {
-        if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        BlastingRecipe validRecipe = this.findValidRecipe();
-        if (validRecipe == null) return Status.NOT_ENOUGH_ITEMS;
-        if (!this.canOutput(validRecipe, null)) return Status.OUTPUT_FULL;
-        return Status.ACTIVE;
+        return super.tick();
     }
 
     @Override
@@ -113,7 +95,7 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    protected boolean outputStacks(BlastingRecipe recipe, TransactionContext transaction) {
+    protected boolean outputStacks(@NotNull BlastingRecipe recipe, TransactionContext transaction) {
         ItemStack output = recipe.getOutput();
         ItemVariant variant = ItemVariant.of(output);
         long count = output.getCount() * 2L;
@@ -127,13 +109,18 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
+    protected @NotNull MachineStatus workingStatus() {
+        return GalacticraftMachineStatus.ACTIVE;
+    }
+
+    @Override
     protected boolean extractCraftingMaterials(BlastingRecipe recipe, TransactionContext transaction) {
         return !this.itemStorage().extract(INPUT_SLOT, 1, transaction).isEmpty();
     }
 
     @Override
     protected int getProcessTime(@NotNull BlastingRecipe recipe) {
-        return (int) (recipe.getCookTime() * 0.8);
+        return (int) (recipe.getCookTime() * 0.9);
     }
 
     @Nullable
@@ -141,50 +128,5 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
         if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER, syncId, player.getInventory(), this);
         return null;
-    }
-
-    private enum Status implements MachineStatus {
-        /**
-         * The electric arc furnace is cooking/smelting items
-         */
-        ACTIVE(new TranslatableText("ui.galacticraft.machine.status.active"), Formatting.GREEN, StatusType.WORKING),
-
-        /**
-         * The output slot is full.
-         */
-        OUTPUT_FULL(new TranslatableText("ui.galacticraft.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-
-        /**
-         * There are no valid items to smelt/cook.
-         */
-        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft.machine.status.not_enough_items"), Formatting.GRAY, StatusType.MISSING_ITEMS),
-
-        /**
-         * The electric arc furnace has no more energy
-         */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
-
-        private final Text name;
-        private final StatusType type;
-
-        Status(MutableText name, Formatting color, StatusType type) {
-            this.type = type;
-            this.name = name.setStyle(Style.EMPTY.withColor(color));
-        }
-
-        @Override
-        public @NotNull Text getName() {
-            return name;
-        }
-
-        @Override
-        public @NotNull StatusType getType() {
-            return type;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
     }
 }

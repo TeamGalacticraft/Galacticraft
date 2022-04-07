@@ -24,6 +24,7 @@ package dev.galacticraft.mod.block.entity;
 
 import com.google.common.annotations.VisibleForTesting;
 import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.api.machine.MachineStatuses;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.machine.storage.io.ResourceFlow;
@@ -32,6 +33,7 @@ import dev.galacticraft.api.machine.storage.io.SlotType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
@@ -46,11 +48,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
@@ -73,8 +72,9 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     public static final int FUEL_SLOT = 1;
     private static final SlotType<Item, ItemVariant> COAL_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "coal_input"), TextColor.fromRgb(0x000000), new TranslatableText("slot_type.galacticraft.coal_input"), v -> FUEL_MAP.containsKey(v.getItem()), ResourceFlow.INPUT, ResourceType.ITEM);
 
-    public int fuelLength = 0;
-    public int fuelTime = 0;
+    private int fuelLength = 0;
+    private int inventoryModCount = -1;
+    private int fuelTime = 0;
     private double heat = 0.0d;
 
     /*
@@ -88,77 +88,76 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemStorage.Builder createInventory(MachineItemStorage.@NotNull Builder builder) {
-        builder.addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62));
-        builder.addSlot(COAL_INPUT, new ItemSlotDisplay(71, 53));
-        return builder;
+    protected MachineItemStorage createInventory() {
+        return MachineItemStorage.Builder.create()
+                .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
+                .addSlot(COAL_INPUT, new ItemSlotDisplay(71, 53))
+                .build();
     }
 
     @Override
-    public long energyInsertionRate() {
-        return 0;
+    protected void tickConstant() {
+        super.tickConstant();
+        if (this.fuelLength == 0) {
+            if (this.heat > 0) {
+                this.setHeat(Math.max(0, this.heat - 0.02d));
+            }
+        }
     }
 
     @Override
-    protected MachineStatus getStatusById(int index) {
-        return Status.values()[index];
-    }
-
-    @Override
-    protected void tickDisabled() {
-
-    }
-
-    @Override
-    public @NotNull MachineStatus updateStatus() {
-        if (this.fuelLength == 0 && this.itemStorage().getStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
-        if (this.capacitor().getAmount() >= this.capacitor().getCapacity()) return Status.FULL;
-        if (this.heat < 1.0 && this.fuelLength > 0) return Status.WARMING;
-        if (this.heat > 0.0 && this.fuelLength == 0) return Status.COOLING;
-        return Status.ACTIVE;
-    }
-
-    @Override
-    public void updateComponents() {
-        super.updateComponents();
+    public @NotNull MachineStatus tick() {
+        try (Transaction transaction = Transaction.openOuter()) {
+            this.energyStorage().insert((long) (Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate() * this.heat), transaction);
+        }
         this.attemptDrainPowerToStack(CHARGE_SLOT);
-    }
-
-    @Override
-    public long energyGeneration() {
-        return Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate();
-    }
-
-    @Override
-    public long getEnergyGeneration() {
-        if (this.getStatus().getType().isActive()) return (int) (energyGeneration() * this.heat);
-        return 0;
-    }
-
-    @Override
-    public void tickWork() {
-        if (this.heat > 0 && this.fuelLength == 0) {
-            this.setHeat(Math.max(0, this.heat - 0.02d));
-        }
-        if (this.getStatus().getType().isActive()) {
-            if (this.fuelTime++ >= this.fuelLength) {
-                this.fuelTime = 0;
-                this.fuelLength = 0;
-            }
+        this.trySpreadEnergy();
+        if (this.fuelLength == 0) {
+            this.consumeFuel();
             if (this.fuelLength == 0) {
-                this.fuelTime = 0;
-                SingleSlotStorage<ItemVariant> slot = itemStorage().getSlot(FUEL_SLOT);
-                try (Transaction transaction = Transaction.openOuter()) {
-                    this.fuelLength = FUEL_MAP.getInt(slot.getResource().toStack((int) slot.extract(slot.getResource(), 1, transaction)));
-                    transaction.commit();
+                if (this.heat > 0) {
+                    return GalacticraftMachineStatus.COOLING_DOWN;
+                } else {
+                    return GalacticraftMachineStatus.NO_FUEL;
                 }
-                if (this.fuelLength == 0) return;
-            }
-
-            if (this.heat < 1) {
-                this.setHeat(Math.min(1, this.heat + 0.004));
             }
         }
+
+        if (this.fuelTime++ >= this.fuelLength) {
+            this.fuelLength = 0;
+            this.consumeFuel();
+        }
+
+        this.setHeat(Math.min(1, this.heat + 0.004));
+
+        if (this.energyStorage().isFull()) {
+            return MachineStatuses.CAPACITOR_FULL;
+        } else if (this.heat < 1.0) {
+            return GalacticraftMachineStatus.WARMING_UP;
+        } else {
+            return GalacticraftMachineStatus.GENERATING;
+        }
+    }
+
+    private void consumeFuel() {
+        this.fuelTime = 0;
+        this.fuelLength = 0;
+        if (this.itemStorage().getModCount() != this.inventoryModCount) {
+            this.inventoryModCount = this.itemStorage().getModCount();
+            SingleSlotStorage<ItemVariant> slot = this.itemStorage().getSlot(FUEL_SLOT);
+            try (Transaction transaction = Transaction.openOuter()) {
+                this.fuelLength = FUEL_MAP.getInt(slot.getResource().toStack((int) slot.extract(slot.getResource(), 1, transaction)));
+                transaction.commit();
+            }
+        }
+    }
+
+    public int getFuelLength() {
+        return this.fuelLength;
+    }
+
+    public void setFuelLength(int fuelLength) {
+        this.fuelLength = fuelLength;
     }
 
     @Nullable
@@ -177,12 +176,20 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         this.heat = heat;
     }
 
+    public int getFuelTime() {
+        return fuelTime;
+    }
+
+    public void setFuelTime(int value) {
+        this.fuelTime = value;
+    }
+
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         this.fuelLength = nbt.getInt(Constant.Nbt.FUEL_LENGTH);
         this.fuelTime = nbt.getInt(Constant.Nbt.FUEL_TIME);
-        this.setHeat(nbt.getDouble(Constant.Nbt.HEAT));
+        this.heat = nbt.getDouble(Constant.Nbt.HEAT);
     }
 
     @Override
@@ -191,64 +198,5 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         tag.putInt(Constant.Nbt.FUEL_LENGTH, this.fuelLength);
         tag.putInt(Constant.Nbt.FUEL_TIME, this.fuelTime);
         tag.putDouble(Constant.Nbt.HEAT, this.heat);
-    }
-
-    /**
-     * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
-     */
-    @VisibleForTesting
-    public enum Status implements MachineStatus {
-        /**
-         * The generator is active and is generating energy.
-         */
-        ACTIVE(new TranslatableText("ui.galacticraft.machine.status.active"), Formatting.GREEN, StatusType.WORKING),
-
-        /**
-         * The generator is warming up.
-         */
-        WARMING(new TranslatableText("ui.galacticraft.machine.status.warming"), Formatting.GOLD, StatusType.PARTIALLY_WORKING),
-
-        /**
-         * The generator is cooling down.
-         */
-        COOLING(new TranslatableText("ui.galacticraft.machine.status.cooling"), Formatting.AQUA, StatusType.PARTIALLY_WORKING),
-
-        /**
-         * The generator is full.
-         */
-        FULL(new TranslatableText("ui.galacticraft.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-
-        /**
-         * The generator is out of fuel.
-         */
-        NOT_ENOUGH_FUEL(new TranslatableText("ui.galacticraft.machine.status.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS);
-
-        private final Text text;
-        private final StatusType type;
-
-        Status(TranslatableText text, Formatting color, StatusType type) {
-            this.type = type;
-            this.text = text.setStyle(Style.EMPTY.withColor(color));
-        }
-
-        public static Status get(int index) {
-            if (index < 0) return ACTIVE;
-            return Status.values()[index % Status.values().length];
-        }
-
-        @Override
-        public @NotNull Text getName() {
-            return text;
-        }
-
-        @Override
-        public @NotNull StatusType getType() {
-            return type;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
     }
 }

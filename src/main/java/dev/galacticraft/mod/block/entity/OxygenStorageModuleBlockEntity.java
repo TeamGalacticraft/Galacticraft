@@ -49,48 +49,14 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineGasStorage.Builder createGasStorage(MachineGasStorage.Builder builder) {
-        builder.addSlot(GalacticraftSlotTypes.OXYGEN_IO, MAX_OXYGEN, new TankDisplay(31, 8, 48));
-        return builder;
+    protected @NotNull MachineGasStorage createGasStorage() {
+        return MachineGasStorage.Builder.create().addSlot(GalacticraftSlotTypes.OXYGEN_IO, MAX_OXYGEN, new TankDisplay(31, 8, 48)).build();
     }
 
     @Override
-    protected MachineStatus getStatusById(int index) {
-        return MachineStatus.NULL;
-    }
-
-    @Override
-    public void updateComponents() {
-        super.updateComponents();
+    protected @NotNull MachineStatus tick() {
         this.trySpreadGases();
-    }
-
-    @Override
-    public @NotNull MachineStatus updateStatus() {
-        return MachineStatus.NULL;
-    }
-
-    @Override
-    public void tickWork() {
-    }
-
-    @Override
-    public long getEnergyCapacity() {
-        return 0;
-    }
-
-    @Override
-    public long energyExtractionRate() {
-        return 0;
-    }
-
-    @Override
-    public long energyInsertionRate() {
-        return 0;
-    }
-
-    @Override
-    protected void tickDisabled() {
+        return MachineStatus.INVALID;
     }
 
     @Nullable

@@ -91,8 +91,8 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     private void drawProgressBar(MatrixStack matrices) {
         assert this.client != null;
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
-        if (this.machine.progress() > 0) {
-            float progress = (float) ((((double) this.machine.progress()) / ((double) this.machine.maxProgress())) * 140.0);
+        if (this.machine.getProgress() > 0) {
+            float progress = (float) ((((double) this.machine.getProgress()) / ((double) this.machine.getMaxProgress())) * 140.0);
             if (progress <= 24) {
                 DrawableUtil.drawProgressTexture(matrices, this.x + INITIAL_PROGRESS_X, this.y + INITIAL_PROGRESS_Y, INITIAL_PROGRESS_U, INITIAL_PROGRESS_V, progress, PROGRESS_SIZE);
             } else {

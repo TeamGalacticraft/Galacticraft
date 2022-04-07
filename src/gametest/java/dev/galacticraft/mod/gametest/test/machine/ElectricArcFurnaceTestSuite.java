@@ -54,7 +54,7 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var electricArcFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_ARC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE);
         final var inv = electricArcFurnace.itemStorage();
-        electricArcFurnace.capacitor().setEnergy(electricArcFurnace.getEnergyCapacity());
+        electricArcFurnace.energyStorage().setEnergyUnsafe(electricArcFurnace.getEnergyCapacity());
         try (Transaction transaction = Transaction.openOuter()) {
             fillElectricArcFurnaceSlots(inv, transaction);
             transaction.commit();
@@ -72,7 +72,7 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var electricArcFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_ARC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE);
         final var inv = electricArcFurnace.itemStorage();
-        electricArcFurnace.capacitor().setEnergy(electricArcFurnace.getEnergyCapacity());
+        electricArcFurnace.energyStorage().setEnergyUnsafe(electricArcFurnace.getEnergyCapacity());
         try (Transaction transaction = Transaction.openOuter()) {
             inv.setStack(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1, new ItemStack(Items.BARRIER), transaction);
             inv.setStack(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_2, new ItemStack(Items.BARRIER), transaction);
@@ -80,7 +80,7 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
             transaction.commit();
         }
         runFinalTaskNext(context, () -> {
-            if (electricArcFurnace.maxProgress() != 0) {
+            if (electricArcFurnace.getMaxProgress() != 0) {
                 context.throwPositionedException("Expected electric arc furnace to be unable to craft as the output was full!", pos);
             }
         });
