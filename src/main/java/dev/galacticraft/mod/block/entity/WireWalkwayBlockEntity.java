@@ -52,7 +52,8 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     public void readNbt(NbtCompound nbt) {
         this.direction = Constant.Misc.DIRECTIONS[nbt.getByte(Constant.Nbt.DIRECTION)];
         super.readNbt(nbt);
-        if (!world.isClient) MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(this.pos.getX(), this.pos.getY(), this.pos.getZ());
+        assert this.world != null;
+        if (this.world.isClient) MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(this.pos.getX(), this.pos.getY(), this.pos.getZ());
     }
 
     @Override

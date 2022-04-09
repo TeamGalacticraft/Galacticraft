@@ -66,7 +66,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    protected MachineItemStorage createInventory() {
+    protected @NotNull MachineItemStorage createItemStorage() {
         MachineItemStorage.Builder builder = MachineItemStorage.Builder.create();
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {

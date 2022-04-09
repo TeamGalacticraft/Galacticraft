@@ -79,7 +79,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemStorage createInventory() {
+    protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
                 .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
                 .addSlot(GalacticraftSlotTypes.OXYGEN_TANK_FILL, new ItemSlotDisplay(8, 62))
@@ -87,8 +87,10 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineGasStorage createGasStorage() {
-        return MachineGasStorage.Builder.create().addSlot(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48)).build();
+    protected @NotNull MachineGasStorage createGasStorage() {
+        return MachineGasStorage.Builder.create()
+                .addTank(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48))
+                .build();
     }
 
     @Override
@@ -100,20 +102,18 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
     @Override
     protected @NotNull MachineStatus tick() {
-        if (this.disabled != (this.disabled = false) && !this.world.isClient) {
+        assert world != null;
+        if (this.disabled != (this.disabled = false)) {
             ((ServerWorldAccessor) world).addSealer(this);
         }
         this.attemptChargeFromStack(BATTERY_SLOT);
-        assert this.world != null;
 
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate()) {
                 if (!this.gasStorage().isEmpty(OXYGEN_TANK)) {
-                    if (this.sealCheckTime > 0) {
-                        this.sealCheckTime--;
-                    }
+                    if (this.sealCheckTime > 0) this.sealCheckTime--;
                     if (this.updateQueued && this.sealCheckTime == 0) {
-                        this.world.getProfiler().push("oxygen_sealer");
+                        this.world.getProfiler().push("check_seal");
                         this.updateQueued = false;
                         this.sealCheckTime = SEAL_CHECK_TIME;
                         BlockPos pos = this.pos.toImmutable();
@@ -169,8 +169,10 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                         }
                         this.world.getProfiler().pop();
                     }
+                    this.world.getProfiler().push("extract_oxygen");
                     this.gasStorage().extract(OXYGEN_TANK, breathablePositions.size() * 2L, transaction);
                     transaction.commit();
+                    this.world.getProfiler().pop();
                     return GalacticraftMachineStatus.SEALED;
                 } else {
                     this.sealCheckTime = 0;

@@ -49,7 +49,7 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemStorage createInventory() {
+    protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
                 .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(102, 24))
                 .addSlot(GalacticraftSlotTypes.ENERGY_DRAIN, new ItemSlotDisplay(102, 48))

@@ -64,7 +64,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemStorage createInventory() {
+    protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
                 .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
                 .addSlot(GalacticraftSlotTypes.OXYGEN_TANK_DRAIN, new ItemSlotDisplay(80, 27))
@@ -72,21 +72,22 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineGasStorage createGasStorage() {
+    protected @NotNull MachineGasStorage createGasStorage() {
         return MachineGasStorage.Builder.create()
-                .addSlot(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48))
+                .addTank(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48))
                 .build();
     }
 
     @Override
     protected @NotNull MachineStatus tick() {
+        this.world.getProfiler().push("transfer");
         this.attemptChargeFromStack(CHARGE_SLOT);
 
         if (this.gasStorage().isEmpty(OXYGEN_TANK)) return GalacticraftMachineStatus.NOT_ENOUGH_OXYGEN;
         Storage<GasVariant> gasStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(GasStorage.ITEM);
         if (gasStorage == null) return GalacticraftMachineStatus.MISSING_OXYGEN_TANK;
         if (!gasStorage.supportsInsertion() || gasStorage.simulateInsert(GasVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GalacticraftMachineStatus.OXYGEN_TANK_FULL;
-
+        this.world.getProfiler().swap("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate()) {
                 GasStack gasStack;
@@ -100,6 +101,8 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
             } else {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
             }
+        } finally {
+            this.world.getProfiler().pop();
         }
 
         return GalacticraftMachineStatus.COMPRESSING;

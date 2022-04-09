@@ -45,8 +45,8 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
     }
 
     @Override
-    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        super.renderBackground(matrices, delta, mouseX, mouseY);
+    protected void renderBackground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.renderBackground(matrices, mouseX, mouseY, delta);
         this.drawOxygenBufferBar(matrices);
 
         drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.current_oxygen", this.machine.gasStorage().getAmount(0)), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());

@@ -57,9 +57,7 @@ public class WalkwayBlockEntity extends BlockEntity implements Walkway {
         }
         this.direction = Constant.Misc.DIRECTIONS[nbt.getByte(Constant.Nbt.DIRECTION)];
         assert this.world != null;
-        if (this.world.isClient) {
-            MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(this.pos.getX(), this.pos.getY(), this.pos.getZ());
-        }
+        if (this.world.isClient) MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(this.pos.getX(), this.pos.getY(), this.pos.getZ());
     }
 
     @Override

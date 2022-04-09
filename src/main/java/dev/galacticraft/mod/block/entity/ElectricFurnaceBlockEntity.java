@@ -61,7 +61,7 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Invento
     private final @NotNull Inventory craftingInv = this.itemStorage().subInv(INPUT_SLOT, 1);
 
     @Override
-    protected MachineItemStorage createInventory() {
+    protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
                 .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61))
                 .addSlot(GalacticraftSlotTypes.ITEM_INPUT, new ItemSlotDisplay(52, 35))

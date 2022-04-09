@@ -84,8 +84,8 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
     }
 
     @Override
-    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        super.renderBackground(matrices, delta, mouseX, mouseY);
+    protected void renderBackground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.renderBackground(matrices, mouseX, mouseY, delta);
         RenderSystem.setShaderTexture(0, this.solarPanelTexture);
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {

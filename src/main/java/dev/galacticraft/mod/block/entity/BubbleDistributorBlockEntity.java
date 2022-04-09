@@ -80,7 +80,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemStorage createInventory() {
+    protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
                 .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
                 .addSlot(GalacticraftSlotTypes.OXYGEN_TANK_FILL, new ItemSlotDisplay(31, 62))
@@ -88,19 +88,24 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineGasStorage createGasStorage() {
-        return MachineGasStorage.Builder.create().addSlot(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48)).build();
+    protected @NotNull MachineGasStorage createGasStorage() {
+        return MachineGasStorage.Builder.create()
+                .addTank(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48))
+                .build();
     }
 
     @Override
     protected @NotNull MachineStatus tick() {
+        this.world.getProfiler().push("transfer");
         this.attemptChargeFromStack(BATTERY_SLOT);
-        this.drainOxygenFromStack(1);
+        this.drainOxygenFromStack(OXYGEN_TANK_SLOT);
+        this.world.getProfiler().swap("transaction");
         MachineStatus status;
         this.players = world.getPlayers().size();
         this.prevSize = this.size;
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate()) {
+                this.world.getProfiler().push("bubble");
                 if (this.size > this.targetSize) {
                     this.setSize(Math.max(this.size - 0.1F, this.targetSize));
                 }
@@ -116,25 +121,34 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
                         player.networkHandler.sendPacket(entity.createSpawnPacket());
                     }
                 }
+                this.world.getProfiler().pop();
                 if (this.prevSize != this.size || this.players != this.world.getPlayers().size()) {
+                    this.world.getProfiler().push("network");
                     for (ServerPlayerEntity player : ((ServerWorld) this.world).getPlayers()) {
                         ServerPlayNetworking.send(player, new Identifier(Constant.MOD_ID, "bubble_size"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(this.pos).writeDouble(this.size)));
                     }
+                    this.world.getProfiler().pop();
                 }
+                this.world.getProfiler().push("bubbler_distributor_transfer");
                 long oxygenRequired = ((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size));
                 if (this.fluidStorage().extract(OXYGEN_TANK, oxygenRequired, transaction).getAmount() == oxygenRequired) {
                     if (this.size < this.targetSize) {
                         setSize(this.size + 0.05D);
                     }
                     transaction.commit();
+                    this.world.getProfiler().pop();
                     return GalacticraftMachineStatus.DISTRIBUTING;
                 } else {
                     status = GalacticraftMachineStatus.NOT_ENOUGH_OXYGEN;
+                    this.world.getProfiler().pop();
                 }
             } else {
                 status = MachineStatuses.NOT_ENOUGH_ENERGY;
             }
+        } finally {
+            this.world.getProfiler().pop();
         }
+        this.world.getProfiler().push("size");
         if (this.bubbleId != -1 && this.size <= 0) {
             this.world.getEntityById(bubbleId).remove(Entity.RemovalReason.DISCARDED);
             this.world.getEntityById(bubbleId).onRemoved();
@@ -148,6 +162,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
         if (this.size < 0) {
             this.setSize(0);
         }
+        this.world.getProfiler().pop();
         return status;
     }
 

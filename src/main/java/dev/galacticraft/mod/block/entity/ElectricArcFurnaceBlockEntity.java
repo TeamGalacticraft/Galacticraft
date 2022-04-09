@@ -62,7 +62,7 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     public static final int OUTPUT_SLOT_2 = 3;
 
     @Override
-    protected MachineItemStorage createInventory() {
+    protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
                 .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61))
                 .addSlot(GalacticraftSlotTypes.ITEM_INPUT, new ItemSlotDisplay(44, 35))

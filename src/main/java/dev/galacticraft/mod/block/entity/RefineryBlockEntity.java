@@ -65,7 +65,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemStorage createInventory() {
+    protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
                 .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 7))
                 .addSlot(GalacticraftSlotTypes.OIL_FILL, new ItemSlotDisplay(123, 7))
@@ -74,7 +74,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineFluidStorage createFluidStorage() {
+    protected @NotNull MachineFluidStorage createFluidStorage() {
         return MachineFluidStorage.Builder.create()
                 .addSlot(GalacticraftSlotTypes.OIL_INPUT, MAX_CAPACITY, new TankDisplay(122, 28, 48))
                 .addSlot(GalacticraftSlotTypes.FUEL_OUTPUT, MAX_CAPACITY, new TankDisplay(152, 28, 48))
@@ -83,6 +83,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
 
     @Override
     protected @NotNull MachineStatus tick() {
+        this.world.getProfiler().push("transfer");
         this.attemptChargeFromStack(CHARGE_SLOT);
 
         Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(FLUID_INPUT_SLOT)).find(FluidStorage.ITEM);
@@ -95,7 +96,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
         }
         if (this.fluidStorage().isEmpty(OIL_TANK)) return GalacticraftMachineStatus.MISSING_OIL;
         if (this.fluidStorage().isFull(FUEL_TANK)) return GalacticraftMachineStatus.FUEL_TANK_FULL;
-
+        this.world.getProfiler().swap("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate()) {
                 long extracted;
@@ -115,6 +116,8 @@ public class RefineryBlockEntity extends MachineBlockEntity {
             } else {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
             }
+        } finally {
+            this.world.getProfiler().pop();
         }
     }
 

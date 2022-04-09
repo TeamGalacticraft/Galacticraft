@@ -135,8 +135,7 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         this.readConnectionNbt(nbt);
-        if (world.isClient) {
-            MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(pos.getX(), pos.getY(), pos.getZ());
-        }
+        assert this.world != null;
+        if (this.world.isClient) MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(pos.getX(), pos.getY(), pos.getZ());
     }
 }

@@ -54,7 +54,8 @@ public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, 
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         this.readWalkwayNbt(nbt);
-        if (world.isClient) MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(this.pos.getX(), this.pos.getY(), this.pos.getZ());
+        assert this.world != null;
+        if (this.world.isClient) MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(this.pos.getX(), this.pos.getY(), this.pos.getZ());
     }
 
     @Override

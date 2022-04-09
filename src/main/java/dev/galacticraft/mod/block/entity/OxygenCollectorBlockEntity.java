@@ -74,14 +74,14 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemStorage createInventory() {
+    protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create().addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62)).build();
     }
 
     @Override
-    protected MachineGasStorage createGasStorage() {
+    protected @NotNull MachineGasStorage createGasStorage() {
         return MachineGasStorage.Builder.create()
-                .addSlot(GalacticraftSlotTypes.OXYGEN_OUTPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48))
+                .addTank(GalacticraftSlotTypes.OXYGEN_OUTPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48))
                 .build();
     }
 
@@ -116,43 +116,19 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         return 183 / 20;
     }
 
-    private boolean canCollectOxygen() {
-        if (!oxygenWorld) {
-            int minX = this.pos.getX() - 5;
-            int minY = this.pos.getY() - 5;
-            int minZ = this.pos.getZ() - 5;
-            int maxX = this.pos.getX() + 5;
-            int maxY = this.pos.getY() + 5;
-            int maxZ = this.pos.getZ() + 5;
-
-            float leafBlocks = 0;
-
-            for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
-                BlockState state = world.getBlockState(pos);
-                if (state.isAir()) {
-                    continue;
-                }
-                if (state.getBlock() instanceof LeavesBlock && !state.get(LeavesBlock.PERSISTENT)) {
-                    if (++leafBlocks >= 2) break;
-                } else if (state.getBlock() instanceof CropBlock) {
-                    if ((leafBlocks += 0.75f) >= 2) break;
-                }
-            }
-            return leafBlocks >= 2;
-        }
-        return true;
-    }
-
     @Override
     protected @NotNull MachineStatus tick() {
+        this.world.getProfiler().push("transfer");
         this.attemptChargeFromStack(CHARGE_SLOT);
         this.trySpreadGases();
 
         if (this.gasStorage().isFull(OXYGEN_TANK)) return GalacticraftMachineStatus.OXYGEN_TANK_FULL;
-
+        this.world.getProfiler().swap("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate()) {
+                this.world.getProfiler().push("collect");
                 this.collectionAmount = collectOxygen();
+                this.world.getProfiler().pop();
                 if (this.collectionAmount > 0) {
                     this.gasStorage().insert(OXYGEN_TANK, GasVariant.of(Gases.OXYGEN), FluidUtil.bucketsToDroplets(this.collectionAmount), transaction);
                     transaction.commit();
@@ -164,6 +140,8 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 this.collectionAmount = 0;
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
             }
+        } finally {
+            this.world.getProfiler().pop();
         }
     }
 

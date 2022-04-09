@@ -76,7 +76,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     }
 
     @Override
-    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    protected void renderBackground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
 
         if (! this.machine.bubbleVisible) {

@@ -63,7 +63,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemStorage createInventory() {
+    protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
                 .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
                 .addSlot(GalacticraftSlotTypes.OXYGEN_TANK_FILL, new ItemSlotDisplay(80, 27))
@@ -71,17 +71,22 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineGasStorage createGasStorage() {
-        return MachineGasStorage.Builder.create().addSlot(GalacticraftSlotTypes.OXYGEN_OUTPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48)).build();
+    protected @NotNull MachineGasStorage createGasStorage() {
+        return MachineGasStorage.Builder.create()
+                .addTank(GalacticraftSlotTypes.OXYGEN_OUTPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48))
+                .build();
     }
 
     @Override
     protected @NotNull MachineStatus tick() {
+        this.world.getProfiler().push("transfer");
         this.attemptChargeFromStack(CHARGE_SLOT);
         this.trySpreadGases();
         Storage<GasVariant> gasStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(GasStorage.ITEM);
         if (gasStorage == null) return GalacticraftMachineStatus.MISSING_OXYGEN_TANK;
         if (gasStorage.simulateExtract(GasVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GalacticraftMachineStatus.EMPTY_OXYGEN_TANK;
+        this.world.getProfiler().swap("transaction");
+
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenDecompressorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenDecompressorEnergyConsumptionRate()) {
                 GenericStorageUtil.move(GasVariant.of(Gases.OXYGEN), gasStorage, this.gasStorage(), Long.MAX_VALUE, transaction);
@@ -90,6 +95,8 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
             } else {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
             }
+        } finally {
+            this.world.getProfiler().pop();
         }
     }
 

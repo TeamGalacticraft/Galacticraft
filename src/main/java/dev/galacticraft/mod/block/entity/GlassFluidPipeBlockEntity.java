@@ -45,9 +45,7 @@ public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colore
         this.readPullNbt(nbt);
 
         assert this.world != null;
-        if (this.world.isClient) {
-            MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(this.pos.getX(), this.pos.getY(), this.pos.getZ());
-        }
+        if (this.world.isClient) MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(this.pos.getX(), this.pos.getY(), this.pos.getZ());
     }
 
     @Override

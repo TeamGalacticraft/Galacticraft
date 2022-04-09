@@ -82,7 +82,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     }
 
     @Override
-    protected MachineItemStorage createInventory() {
+    protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
                 .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 70))
                 .addSlot(DIAMOND_INPUT, new ItemSlotDisplay(31, 15))
@@ -133,10 +133,10 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     @Override
     protected boolean extractCraftingMaterials(FabricationRecipe recipe, TransactionContext context) {
         try (Transaction transaction = Transaction.openNested(context)) {
-            if (this.itemStorage().extract(INPUT_SLOT_DIAMOND, Items.DIAMOND, 1, transaction).getCount() == 1) {
-                if (this.itemStorage().extract(INPUT_SLOT_SILICON, GalacticraftItem.RAW_SILICON, 1, transaction).getCount() == 1) {
-                    if (this.itemStorage().extract(INPUT_SLOT_SILICON_2, GalacticraftItem.RAW_SILICON, 1, transaction).getCount() == 1) {
-                        if (this.itemStorage().extract(INPUT_SLOT_REDSTONE, Items.REDSTONE, 1, transaction).getCount() == 1) {
+            if (this.itemStorage().extract(INPUT_SLOT_DIAMOND, Items.DIAMOND, 1, transaction) == 1) {
+                if (this.itemStorage().extract(INPUT_SLOT_SILICON, GalacticraftItem.RAW_SILICON, 1, transaction) == 1) {
+                    if (this.itemStorage().extract(INPUT_SLOT_SILICON_2, GalacticraftItem.RAW_SILICON, 1, transaction) == 1) {
+                        if (this.itemStorage().extract(INPUT_SLOT_REDSTONE, Items.REDSTONE, 1, transaction) == 1) {
                             if (recipe.getIngredients().get(0).test(this.itemStorage().extract(INPUT_SLOT, 1, transaction))) {
                                 transaction.commit();
                                 return true;

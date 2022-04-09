@@ -64,7 +64,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
     }
 
     @Override
-    protected MachineItemStorage createInventory() {
+    protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
                 .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
                 .build();
@@ -100,8 +100,10 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
 
     @Override
     public @NotNull MachineStatus tick() {
+        this.world.getProfiler().push("transfer");
         this.attemptDrainPowerToStack(CHARGE_SLOT);
         this.trySpreadEnergy();
+        this.world.getProfiler().pop();
         if (this.blocked == 9) return GalacticraftMachineStatus.BLOCKED;
         if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
         MachineStatus status = null;
@@ -114,11 +116,13 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
         if (!this.world.isDay()) status = GalacticraftMachineStatus.NIGHT;
         double time = this.world.getTimeOfDay() % 24000;
         if (time > 6000) time = 12000L - time;
+
+        this.world.getProfiler().push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             this.energyStorage().insert((long)(Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * (time / 6000.0) * multiplier) * 4L, transaction);
             transaction.commit();
         }
-
+        this.world.getProfiler().pop();
         return status == null ? GalacticraftMachineStatus.COLLECTING : status;
     }
 

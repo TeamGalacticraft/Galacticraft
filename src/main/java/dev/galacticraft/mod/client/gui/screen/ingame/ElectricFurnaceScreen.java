@@ -49,8 +49,8 @@ public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceB
     }
 
     @Override
-    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        super.renderBackground(matrices, delta, mouseX, mouseY);
+    protected void renderBackground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.renderBackground(matrices, mouseX, mouseY, delta);
         if (this.machine.getMaxProgress() > 0 && this.machine.getProgress() != 0) {
             double scale = ((double)handler.machine.getProgress()) / ((double)handler.machine.getMaxProgress());
 

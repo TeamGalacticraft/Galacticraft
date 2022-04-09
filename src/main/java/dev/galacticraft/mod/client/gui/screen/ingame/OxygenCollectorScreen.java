@@ -51,8 +51,8 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorB
     }
 
     @Override
-    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        super.renderBackground(matrices, delta, mouseX, mouseY);
+    protected void renderBackground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.renderBackground(matrices, mouseX, mouseY, delta);
         this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.machine.collecting", this.machine.collectionAmount).getString(), this.x + 55, this.y + 56, Formatting.DARK_GRAY.getColorValue());
         this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft.machine.status").append(this.machine.getStatus().getName()), this.x + 32, this.y + 66, Formatting.DARK_GRAY.getColorValue());
     }

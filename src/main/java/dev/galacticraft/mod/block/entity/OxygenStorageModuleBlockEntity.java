@@ -50,7 +50,9 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
 
     @Override
     protected @NotNull MachineGasStorage createGasStorage() {
-        return MachineGasStorage.Builder.create().addSlot(GalacticraftSlotTypes.OXYGEN_IO, MAX_OXYGEN, new TankDisplay(31, 8, 48)).build();
+        return MachineGasStorage.Builder.create()
+                .addTank(GalacticraftSlotTypes.OXYGEN_IO, MAX_OXYGEN, new TankDisplay(31, 8, 48))
+                .build();
     }
 
     @Override

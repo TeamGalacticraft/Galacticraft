@@ -82,8 +82,8 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     }
 
     @Override
-    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        super.renderBackground(matrices, delta, mouseX, mouseY);
+    protected void renderBackground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.renderBackground(matrices, mouseX, mouseY, delta);
         this.drawProgressBar(matrices);
     }
 
