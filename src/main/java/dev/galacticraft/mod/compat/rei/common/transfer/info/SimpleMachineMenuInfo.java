@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.compat.rei.common.transfer.info;
 
 import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
-import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
 import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoContext;
 import me.shedaniel.rei.api.common.transfer.info.clean.InputCleanHandler;

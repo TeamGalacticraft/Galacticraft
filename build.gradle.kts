@@ -164,11 +164,12 @@ dependencies {
         "fabric-rendering-v1",
         "fabric-resource-loader-v0",
         "fabric-screen-handler-api-v1",
-        "fabric-structure-api-v1",
-        "fabric-tag-extensions-v0",
+//        "fabric-structure-api-v1",
+//        "fabric-tag-extensions-v0",
         "fabric-textures-v0",
-        "fabric-tool-attribute-api-v1",
-        "fabric-transfer-api-v1"
+//        "fabric-tool-attribute-api-v1",
+        "fabric-transfer-api-v1",
+        "fabric-transitive-access-wideners-v1"
     ).forEach { module ->
         modImplementation(getFabricApiModule(module)) { isTransitive = false }
     }

@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.api.machine.MachineStatuses;
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.api.transfer.v1.gas.GasStorage;
 import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.api.gas.GasVariant;
@@ -111,7 +113,14 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER, syncId, inv, this);
+        if (this.security().hasAccess(player)) {
+            return SimpleMachineScreenHandler.create(
+                    syncId,
+                    player,
+                    this,
+                    GalacticraftScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER
+            );
+        }
         return null;
     }
 }

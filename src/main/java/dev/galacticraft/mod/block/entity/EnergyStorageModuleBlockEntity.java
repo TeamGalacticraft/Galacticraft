@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.api.machine.MachineStatus;
@@ -82,7 +84,14 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER, syncId, inv, this);
+        if (this.security().hasAccess(player)) {
+            return SimpleMachineScreenHandler.create(
+                    syncId,
+                    player,
+                    this,
+                    GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER
+            );
+        }
         return null;
     }
 }

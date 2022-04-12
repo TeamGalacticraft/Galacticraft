@@ -27,6 +27,8 @@ import dev.galacticraft.api.machine.MachineStatuses;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.machine.storage.io.ResourceFlow;
 import dev.galacticraft.api.machine.storage.io.ResourceType;
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.api.machine.MachineStatus;
@@ -175,7 +177,15 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.CIRCUIT_FABRICATOR_HANDLER, syncId, player.getInventory(), this);
+        if (this.security().hasAccess(player)) {
+            return RecipeMachineScreenHandler.create(
+                    syncId,
+                    player,
+                    this,
+                    GalacticraftScreenHandlerType.CIRCUIT_FABRICATOR_HANDLER,
+                    94
+            );
+        }
         return null;
     }
 }

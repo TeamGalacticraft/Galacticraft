@@ -31,6 +31,8 @@ import dev.galacticraft.api.machine.storage.MachineGasStorage;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.machine.storage.display.TankDisplay;
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.api.transfer.v1.gas.GasStorage;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
@@ -103,7 +105,14 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER, syncId, inv, this);
+        if (this.security().hasAccess(player)) {
+            return SimpleMachineScreenHandler.create(
+                    syncId,
+                    player,
+                    this,
+                    GalacticraftScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER
+            );
+        }
         return null;
     }
 }

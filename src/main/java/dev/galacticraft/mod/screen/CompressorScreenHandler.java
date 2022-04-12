@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.screen;
 
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.block.entity.CompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import net.minecraft.entity.player.PlayerEntity;
@@ -59,7 +60,7 @@ public class CompressorScreenHandler extends RecipeMachineScreenHandler<Inventor
     };
 
     public CompressorScreenHandler(int syncId, PlayerEntity player, CompressorBlockEntity machine) {
-        super(syncId, player, machine, () -> GalacticraftScreenHandlerType.COMPRESSOR_HANDLER, 8, 85);
+        super(syncId, player, machine, GalacticraftScreenHandlerType.COMPRESSOR_HANDLER, 8, 85);
         this.addProperty(this.fuelTime);
         this.addProperty(this.fuelLength);
     }

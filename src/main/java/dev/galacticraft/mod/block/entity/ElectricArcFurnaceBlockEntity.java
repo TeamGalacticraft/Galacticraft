@@ -25,6 +25,8 @@ package dev.galacticraft.mod.block.entity;
 import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.api.machine.MachineStatuses;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
@@ -126,7 +128,14 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER, syncId, player.getInventory(), this);
+        if (this.security().hasAccess(player)) {
+            return RecipeMachineScreenHandler.create(
+                    syncId,
+                    player,
+                    this,
+                    GalacticraftScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER
+            );
+        }
         return null;
     }
 }

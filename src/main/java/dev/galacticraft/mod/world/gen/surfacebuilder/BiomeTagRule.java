@@ -24,8 +24,6 @@ package dev.galacticraft.mod.world.gen.surfacebuilder;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.fabric.api.tag.TagFactory;
-import net.fabricmc.fabric.impl.tag.extension.TagFactoryImpl;
 import net.minecraft.tag.RequiredTagList;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.registry.Registry;

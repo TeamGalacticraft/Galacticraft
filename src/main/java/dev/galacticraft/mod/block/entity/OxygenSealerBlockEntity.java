@@ -26,6 +26,7 @@ import dev.galacticraft.api.accessor.WorldOxygenAccessor;
 import dev.galacticraft.api.machine.MachineStatuses;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.machine.storage.display.TankDisplay;
+import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
@@ -212,7 +213,14 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.OXYGEN_SEALER_HANDLER, syncId, inv, this);
+        if (this.security().hasAccess(player)) {
+            return SimpleMachineScreenHandler.create(
+                    syncId,
+                    player,
+                    this,
+                    GalacticraftScreenHandlerType.OXYGEN_SEALER_HANDLER
+            );
+        }
         return null;
     }
 

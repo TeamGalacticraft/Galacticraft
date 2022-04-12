@@ -27,6 +27,7 @@ import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.api.machine.MachineStatuses;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
@@ -148,7 +149,14 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.ELECTRIC_COMPRESSOR_HANDLER, syncId, player.getInventory(), this);
+        if (this.security().hasAccess(player)) {
+            return RecipeMachineScreenHandler.create(
+                    syncId,
+                    player,
+                    this,
+                    GalacticraftScreenHandlerType.ELECTRIC_COMPRESSOR_HANDLER
+            );
+        }
         return null;
     }
 }
