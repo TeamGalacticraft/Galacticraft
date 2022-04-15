@@ -24,10 +24,7 @@ package dev.galacticraft.mod.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
-import dev.galacticraft.api.gas.GasVariant;
 import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.api.transfer.v1.gas.GasStorage;
-import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
@@ -36,6 +33,8 @@ import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -74,10 +73,10 @@ public abstract class InGameHudMixin extends DrawableHelper {
             assert this.client.player != null;
             Inventory inv = ((GearInventoryProvider) this.client.player).getOxygenTanks();
             for (int i = 0; i < inv.size(); i++) {
-                Storage<GasVariant> storage = ContainerItemContext.withInitial(inv.getStack(i)).find(GasStorage.ITEM);
+                Storage<FluidVariant> storage = ContainerItemContext.withInitial(inv.getStack(i)).find(FluidStorage.ITEM);
                 if (storage != null) {
                     try (Transaction transaction = Transaction.openOuter()) {
-                        StorageView<GasVariant> exact = storage.exactView(transaction, GasVariant.of(Gases.OXYGEN));
+                        StorageView<FluidVariant> exact = storage.exactView(transaction, FluidVariant.of(Gases.OXYGEN));
                         if (exact != null) {
                             DrawableUtil.drawOxygenBuffer(matrices, this.client.getWindow().getScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, exact.getAmount(), exact.getCapacity());
                         }

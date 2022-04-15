@@ -23,15 +23,13 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.gas.GasVariant;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.api.machine.MachineStatuses;
-import dev.galacticraft.api.machine.storage.MachineGasStorage;
+import dev.galacticraft.api.machine.storage.MachineFluidStorage;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.machine.storage.display.TankDisplay;
-import dev.galacticraft.api.transfer.v1.gas.GasStorage;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.entity.BubbleEntity;
@@ -88,9 +86,9 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @NotNull MachineGasStorage createGasStorage() {
-        return MachineGasStorage.Builder.create()
-                .addTank(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48))
+    protected @NotNull MachineFluidStorage createFluidStorage() {
+        return MachineFluidStorage.Builder.create()
+                .addTank(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48), true)
                 .build();
     }
 
@@ -203,10 +201,10 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
             return;
         }
         ContainerItemContext containerItemContext = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(slot));
-        Storage<GasVariant> storage = containerItemContext.find(GasStorage.ITEM);
+        Storage<FluidVariant> storage = containerItemContext.find(FluidStorage.ITEM);
         if (storage != null && storage.supportsExtraction()) {
             try (Transaction transaction = Transaction.openOuter()){
-                GenericStorageUtil.move(GasVariant.of(Gases.OXYGEN), storage, this.gasStorage(), Long.MAX_VALUE, transaction);
+                GenericStorageUtil.move(FluidVariant.of(Gases.OXYGEN), storage, this.fluidStorage(), Long.MAX_VALUE, transaction);
                 transaction.commit();
             }
         }

@@ -23,9 +23,7 @@
 package dev.galacticraft.mod.lookup;
 
 import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.gas.GasVariant;
 import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.api.transfer.v1.gas.GasStorage;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
@@ -71,9 +69,9 @@ public class GalacticraftApiLookupProviders {
             return ((WireBlockEntity) blockEntity).getInsertables()[direction.ordinal()];
         }, WIRE_TYPES);
 
-        GasStorage.ITEM.registerForItems((itemStack, context) -> {
+        FluidStorage.ITEM.registerForItems((itemStack, context) -> {
             long amount = itemStack.getNbt() != null ? itemStack.getNbt().getLong(Constant.Nbt.VALUE) : 0;
-            return new SingleTypeStorage<>(GasVariant.of(Gases.OXYGEN), ((OxygenTankItem) itemStack.getItem()).capacity, GasVariant.blank(), amount) {
+            return new SingleTypeStorage<>(FluidVariant.of(Gases.OXYGEN), ((OxygenTankItem) itemStack.getItem()).capacity, FluidVariant.blank(), amount) {
                 @Override
                 protected void onFinalCommit() {
                     super.onFinalCommit();

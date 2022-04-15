@@ -26,6 +26,7 @@ import dev.galacticraft.api.block.MachineBlock;
 import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GalacticraftItem;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
@@ -52,7 +53,7 @@ public interface MachineGameTest extends GalacticraftGameTest {
     default <T extends MachineBlockEntity, B extends MachineBlock<T>> void testItemCharging(TestContext context, BlockPos pos, B block, BlockEntityType<T> type, int slot) {
         T machine = this.createBlockEntity(context, pos, block, type);
         try (Transaction transaction = Transaction.openOuter()) {
-            machine.itemStorage().setStack(slot, new ItemStack(GalacticraftItem.INFINITE_BATTERY), transaction);
+            machine.itemStorage().setSlot(slot, ItemVariant.of(GalacticraftItem.INFINITE_BATTERY), 1);
             transaction.commit();
         }
         runFinalTaskNext(context, () -> {
@@ -66,7 +67,7 @@ public interface MachineGameTest extends GalacticraftGameTest {
         T machine = this.createBlockEntity(context, pos, block, type);
         machine.energyStorage().setEnergyUnsafe(machine.energyStorage().getCapacity());
         try (Transaction transaction = Transaction.openOuter()) {
-            machine.itemStorage().setStack(slot, new ItemStack(GalacticraftItem.BATTERY), transaction);
+            machine.itemStorage().setSlot(slot, ItemVariant.of(GalacticraftItem.BATTERY), 1);
             transaction.commit();
         }
         runFinalTaskNext(context, () -> {

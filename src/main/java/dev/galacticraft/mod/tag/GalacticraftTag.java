@@ -35,6 +35,7 @@ import net.fabricmc.fabric.mixin.tag.extension.MixinRequiredTagListRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.tag.ServerTagManagerHolder;
 import net.minecraft.tag.SetTag;
 import net.minecraft.tag.Tag;
@@ -46,8 +47,6 @@ import net.minecraft.world.biome.Biome;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftTag {
-    public static final TagFactory<Gas> GAS_TAG_FACTORY = TagFactory.of(Gas.REGISTRY_KEY, "tags/gas");
-
     public static final Tag.Identified<Fluid> OIL = TagFactory.FLUID.create(new Identifier(Constant.COMMON_NAMESPACE, "oil"));
     public static final Tag.Identified<Fluid> FUEL = TagFactory.FLUID.create(new Identifier(Constant.COMMON_NAMESPACE, "fuel"));
     public static final Tag.Identified<Fluid> LIQUID_OXYGEN = TagFactory.FLUID.create(new Identifier(Constant.COMMON_NAMESPACE, "oxygen"));
@@ -73,7 +72,7 @@ public class GalacticraftTag {
             BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.MARE_EDGE)
     ));
 
-    public static final Tag.Identified<Gas> OXYGEN = GAS_TAG_FACTORY.create(new Identifier(Constant.MOD_ID, "oxygen"));
+    public static final Tag<Fluid> OXYGEN = FluidTags.getTagGroup().getTag(new Identifier(Constant.MOD_ID, "oxygen"));
 
     public static final Tag.Identified<Item> DIAMONDS = TagFactory.ITEM.create(new Identifier(Constant.COMMON_NAMESPACE, "diamonds"));
     public static final Tag.Identified<Item> SILICONS = TagFactory.ITEM.create(new Identifier(Constant.COMMON_NAMESPACE, "silicons"));

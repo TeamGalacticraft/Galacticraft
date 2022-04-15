@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.item;
 
-import dev.galacticraft.api.gas.GasVariant;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleViewIterator;
@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
-public class InfiniteOxygenTankItem extends Item implements Storage<GasVariant>, StorageView<GasVariant> {
+public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant>, StorageView<FluidVariant> {
     private int ticks = (int) (Math.random() * 1000.0);
 
     public InfiniteOxygenTankItem(Settings settings) {
@@ -87,12 +87,12 @@ public class InfiniteOxygenTankItem extends Item implements Storage<GasVariant>,
     }
 
     @Override
-    public long insert(GasVariant gas, long l, TransactionContext transactionContext) {
+    public long insert(FluidVariant gas, long l, TransactionContext transactionContext) {
         return 0;
     }
 
     @Override
-    public long simulateInsert(GasVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
+    public long simulateInsert(FluidVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
         return 0;
     }
 
@@ -102,8 +102,8 @@ public class InfiniteOxygenTankItem extends Item implements Storage<GasVariant>,
     }
 
     @Override
-    public long extract(GasVariant gas, long l, TransactionContext transactionContext) {
-        if (gas == Gases.OXYGEN) {
+    public long extract(FluidVariant gas, long l, TransactionContext transactionContext) {
+        if (gas.isOf(Gases.OXYGEN)) {
             return l;
         }
         return 0;
@@ -115,8 +115,8 @@ public class InfiniteOxygenTankItem extends Item implements Storage<GasVariant>,
     }
 
     @Override
-    public GasVariant getResource() {
-        return GasVariant.of(Gases.OXYGEN);
+    public FluidVariant getResource() {
+        return FluidVariant.of(Gases.OXYGEN);
     }
 
     @Override
@@ -130,20 +130,20 @@ public class InfiniteOxygenTankItem extends Item implements Storage<GasVariant>,
     }
 
     @Override
-    public long simulateExtract(GasVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
-        if (resource == Gases.OXYGEN) {
+    public long simulateExtract(FluidVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
+        if (resource.isOf(Gases.OXYGEN)) {
             return maxAmount;
         }
         return 0;
     }
 
     @Override
-    public Iterator<StorageView<GasVariant>> iterator(TransactionContext transactionContext) {
+    public Iterator<StorageView<FluidVariant>> iterator(TransactionContext transactionContext) {
         return SingleViewIterator.create(this, transactionContext);
     }
 
     @Override
-    public @Nullable StorageView<GasVariant> exactView(TransactionContext transaction, GasVariant resource) {
+    public @Nullable StorageView<FluidVariant> exactView(TransactionContext transaction, FluidVariant resource) {
         if (resource.isOf(Gases.OXYGEN)) {
             return this;
         }

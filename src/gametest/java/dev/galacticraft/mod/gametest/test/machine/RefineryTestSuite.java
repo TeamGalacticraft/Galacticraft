@@ -60,7 +60,7 @@ public class RefineryTestSuite implements MachineGameTest {
         final var refinery = this.createBlockEntity(context, pos, GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY);
         final var inv = refinery.itemStorage();
         try (Transaction transaction = Transaction.openOuter()) {
-            inv.setStack(RefineryBlockEntity.FLUID_INPUT_SLOT, new ItemStack(GalacticraftItem.CRUDE_OIL_BUCKET), transaction);
+            inv.setSlot(RefineryBlockEntity.FLUID_INPUT_SLOT, ItemVariant.of(GalacticraftItem.CRUDE_OIL_BUCKET), 1);
             transaction.commit();
         }
         refinery.energyStorage().setEnergyUnsafe(refinery.getEnergyCapacity());
@@ -83,7 +83,7 @@ public class RefineryTestSuite implements MachineGameTest {
         }
         refinery.energyStorage().setEnergyUnsafe(refinery.getEnergyCapacity());
         try (Transaction transaction = Transaction.openOuter()) {
-            refinery.fluidStorage().setStack(RefineryBlockEntity.OIL_TANK, new FluidStack(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), FluidConstants.BUCKET), transaction);
+            refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, new FluidStack(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), FluidConstants.BUCKET), 1);
             transaction.commit();
         }
         runFinalTaskAt(context, 200 + 1, () -> {
@@ -109,8 +109,8 @@ public class RefineryTestSuite implements MachineGameTest {
         }
         refinery.energyStorage().setEnergyUnsafe(refinery.getEnergyCapacity());
         try (Transaction transaction = Transaction.openOuter()) {
-            refinery.fluidStorage().setStack(RefineryBlockEntity.OIL_TANK, new FluidStack(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), FluidConstants.BUCKET), transaction);
-            refinery.fluidStorage().setStack(RefineryBlockEntity.FUEL_TANK, new FluidStack(FluidVariant.of(GalacticraftFluid.FUEL), FluidConstants.BUCKET), transaction);
+            refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, new FluidStack(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), FluidConstants.BUCKET), 1);
+            refinery.fluidStorage().setSlot(RefineryBlockEntity.FUEL_TANK, new FluidStack(FluidVariant.of(GalacticraftFluid.FUEL), FluidConstants.BUCKET), 1);
             transaction.commit();
         }
         runFinalTaskNext(context, () -> {
@@ -121,7 +121,7 @@ public class RefineryTestSuite implements MachineGameTest {
     }
 
     private static void fillRefinerySlots(MachineItemStorage inv, TransactionContext transaction) {
-        inv.setStack(0, new ItemStack(Items.IRON_INGOT), transaction);
-        inv.setStack(1, new ItemStack(Items.IRON_INGOT), transaction);
+        inv.setSlot(0, ItemVariant.of(Items.IRON_INGOT), 1);
+        inv.setSlot(1, ItemVariant.of(Items.IRON_INGOT), 1);
     }
 }

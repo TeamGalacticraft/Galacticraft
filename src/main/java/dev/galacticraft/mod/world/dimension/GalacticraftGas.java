@@ -22,9 +22,10 @@
 
 package dev.galacticraft.mod.world.dimension;
 
-import dev.galacticraft.api.gas.Gas;
+import dev.galacticraft.api.gas.GasFluid;
 import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.mod.Constant;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -34,18 +35,18 @@ import net.minecraft.util.registry.Registry;
  */
 public class GalacticraftGas {
     public static final Identifier NITROGEN_OXIDE_ID = new Identifier(Constant.MOD_ID, "nitrogen_oxide");
-    public static final Gas NITROGEN_OXIDE =
-            Gas.create(
+    public static final Fluid NITROGEN_OXIDE =
+            GasFluid.create(
                     new TranslatableText("ui.galacticraft.nitrogen_oxide"),
-                    null,
+                    new Identifier(Constant.MOD_ID, "gas/nitrogen_oxide"),
                     "NO"
             );
 
     public static final Identifier HYDROGEN_DEUTERIUM_OXYGEN_ID = new Identifier(Constant.MOD_ID, "hydrogen_deuterium_oxygen");
-    public static final Gas HYDROGEN_DEUTERIUM_OXYGEN =
-            Gas.create(
+    public static final Fluid HYDROGEN_DEUTERIUM_OXYGEN =
+            GasFluid.create(
                     new TranslatableText("ui.galacticraft.hydrogen_deuterium_oxygen"),
-                    null,
+                    new Identifier(Constant.MOD_ID, "gas/hydrogen_deuterium_oxygen"),
                     "HDO"
             );
 

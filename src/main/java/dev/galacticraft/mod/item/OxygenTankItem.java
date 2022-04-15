@@ -23,9 +23,6 @@
 package dev.galacticraft.mod.item;
 
 import dev.galacticraft.api.accessor.GearInventoryProvider;
-import dev.galacticraft.api.gas.GasVariant;
-import dev.galacticraft.api.transfer.v1.gas.GasStorage;
-import dev.galacticraft.api.gas.Gas;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -64,14 +61,14 @@ public class OxygenTankItem extends Item {
         if (this.isIn(group)) {
             ItemStack charged = new ItemStack(this);
             try (Transaction transaction = Transaction.openOuter()) {
-                ContainerItemContext.withInitial(charged).find(GasStorage.ITEM).insert(GasVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
+                ContainerItemContext.withInitial(charged).find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
                 transaction.commit();
             }
             list.add(charged);
 
             ItemStack depleted = new ItemStack(this);
             try (Transaction transaction = Transaction.openOuter()) {
-                ContainerItemContext.withInitial(charged).find(GasStorage.ITEM).extract(GasVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
+                ContainerItemContext.withInitial(charged).find(FluidStorage.ITEM).extract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
                 transaction.commit();
             }
             list.add(depleted);
@@ -86,7 +83,7 @@ public class OxygenTankItem extends Item {
     @Override
     public int getItemBarStep(ItemStack stack) {
         try (Transaction transaction = Transaction.openOuter()) {
-            StorageView<GasVariant> storage = ContainerItemContext.withInitial(stack).find(GasStorage.ITEM).exactView(transaction, GasVariant.of(Gases.OXYGEN));
+            StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(transaction, FluidVariant.of(Gases.OXYGEN));
             assert storage != null;
 
             return (int) Math.round(13.0 - (((double) storage.getAmount() / (double) storage.getCapacity()) * 13.0));
@@ -96,7 +93,7 @@ public class OxygenTankItem extends Item {
     @Override
     public int getItemBarColor(ItemStack stack) {
         try (Transaction transaction = Transaction.openOuter()) {
-            StorageView<GasVariant> storage = ContainerItemContext.withInitial(stack).find(GasStorage.ITEM).exactView(transaction, GasVariant.of(Gases.OXYGEN));
+            StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(transaction, FluidVariant.of(Gases.OXYGEN));
             assert storage != null;
             double scale = 1.0 - Math.max(0.0, (double) storage.getAmount() / (double)storage.getCapacity());
             return ((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8);
@@ -121,7 +118,7 @@ public class OxygenTankItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         try (Transaction transaction = Transaction.openOuter()) {
-            StorageView<GasVariant> storage = ContainerItemContext.withInitial(stack).find(GasStorage.ITEM).exactView(transaction, GasVariant.of(Gases.OXYGEN));
+            StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(transaction, FluidVariant.of(Gases.OXYGEN));
             assert storage != null;
             lines.add(new TranslatableText("tooltip.galacticraft.oxygen_remaining", storage.getAmount() + "/" + storage.getCapacity()).setStyle(Constant.Text.getStorageLevelColor(1.0 - ((double)storage.getAmount() / (double)storage.getCapacity()))));
         }

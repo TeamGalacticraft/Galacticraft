@@ -22,19 +22,16 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.api.machine.MachineStatuses;
-import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
-import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
-import dev.galacticraft.api.transfer.v1.gas.GasStorage;
 import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.gas.GasVariant;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.storage.MachineGasStorage;
+import dev.galacticraft.api.machine.MachineStatuses;
+import dev.galacticraft.api.machine.storage.MachineFluidStorage;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.machine.storage.display.TankDisplay;
-import dev.galacticraft.impl.gas.GasStack;
+import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.impl.fluid.FluidStack;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
@@ -42,6 +39,8 @@ import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.GenericStorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
@@ -74,9 +73,9 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @NotNull MachineGasStorage createGasStorage() {
-        return MachineGasStorage.Builder.create()
-                .addTank(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48))
+    protected @NotNull MachineFluidStorage createFluidStorage() {
+        return MachineFluidStorage.Builder.create()
+                .addTank(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48), true)
                 .build();
     }
 
@@ -85,19 +84,19 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
         this.world.getProfiler().push("transfer");
         this.attemptChargeFromStack(CHARGE_SLOT);
 
-        if (this.gasStorage().isEmpty(OXYGEN_TANK)) return GalacticraftMachineStatus.NOT_ENOUGH_OXYGEN;
-        Storage<GasVariant> gasStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(GasStorage.ITEM);
-        if (gasStorage == null) return GalacticraftMachineStatus.MISSING_OXYGEN_TANK;
-        if (!gasStorage.supportsInsertion() || gasStorage.simulateInsert(GasVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GalacticraftMachineStatus.OXYGEN_TANK_FULL;
+        if (this.fluidStorage().isEmpty(OXYGEN_TANK)) return GalacticraftMachineStatus.NOT_ENOUGH_OXYGEN;
+        Storage<FluidVariant> fluidStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(FluidStorage.ITEM);
+        if (fluidStorage == null) return GalacticraftMachineStatus.MISSING_OXYGEN_TANK;
+        if (!fluidStorage.supportsInsertion() || fluidStorage.simulateInsert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GalacticraftMachineStatus.OXYGEN_TANK_FULL;
         this.world.getProfiler().swap("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate()) {
-                GasStack gasStack;
+                FluidStack gasStack;
                 try (Transaction inner = Transaction.openNested(transaction)) {
-                    gasStack = this.gasStorage().extract(OXYGEN_TANK, Long.MAX_VALUE, inner);
+                    gasStack = this.fluidStorage().extract(OXYGEN_TANK, Long.MAX_VALUE, inner);
                 }
                 try (Transaction inner = Transaction.openNested(transaction)) {
-                    GenericStorageUtil.move(GasVariant.of(gasStack), this.gasStorage(), gasStorage, gasStack.getAmount(), inner);
+                    GenericStorageUtil.move(FluidVariant.of(gasStack.getFluid(), gasStack.getNbt()), this.fluidStorage(), fluidStorage, gasStack.getAmount(), inner);
                     inner.commit();
                 }
             } else {

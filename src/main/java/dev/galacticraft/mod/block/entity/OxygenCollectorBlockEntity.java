@@ -23,11 +23,10 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.gas.GasVariant;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.api.machine.MachineStatuses;
-import dev.galacticraft.api.machine.storage.MachineGasStorage;
+import dev.galacticraft.api.machine.storage.MachineFluidStorage;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.machine.storage.display.TankDisplay;
@@ -79,9 +78,9 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @NotNull MachineGasStorage createGasStorage() {
-        return MachineGasStorage.Builder.create()
-                .addTank(GalacticraftSlotTypes.OXYGEN_OUTPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48))
+    protected @NotNull MachineFluidStorage createFluidStorage() {
+        return MachineFluidStorage.Builder.create()
+                .addTank(GalacticraftSlotTypes.OXYGEN_OUTPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48), true)
                 .build();
     }
 
@@ -122,7 +121,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         this.attemptChargeFromStack(CHARGE_SLOT);
         this.trySpreadGases();
 
-        if (this.gasStorage().isFull(OXYGEN_TANK)) return GalacticraftMachineStatus.OXYGEN_TANK_FULL;
+        if (this.fluidStorage().isFull(OXYGEN_TANK)) return GalacticraftMachineStatus.OXYGEN_TANK_FULL;
         this.world.getProfiler().swap("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate()) {
@@ -130,7 +129,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 this.collectionAmount = collectOxygen();
                 this.world.getProfiler().pop();
                 if (this.collectionAmount > 0) {
-                    this.gasStorage().insert(OXYGEN_TANK, GasVariant.of(Gases.OXYGEN), FluidUtil.bucketsToDroplets(this.collectionAmount), transaction);
+                    this.fluidStorage().insert(OXYGEN_TANK, FluidVariant.of(Gases.OXYGEN), FluidUtil.bucketsToDroplets(this.collectionAmount), transaction);
                     transaction.commit();
                     return GalacticraftMachineStatus.COLLECTING;
                 } else {

@@ -23,17 +23,15 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.gas.GasVariant;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.api.machine.MachineStatuses;
-import dev.galacticraft.api.machine.storage.MachineGasStorage;
+import dev.galacticraft.api.machine.storage.MachineFluidStorage;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.machine.storage.display.TankDisplay;
 import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
-import dev.galacticraft.api.transfer.v1.gas.GasStorage;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
@@ -73,9 +71,9 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @NotNull MachineGasStorage createGasStorage() {
-        return MachineGasStorage.Builder.create()
-                .addTank(GalacticraftSlotTypes.OXYGEN_OUTPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48))
+    protected @NotNull MachineFluidStorage createFluidStorage() {
+        return MachineFluidStorage.Builder.create()
+                .addTank(GalacticraftSlotTypes.OXYGEN_OUTPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48), true)
                 .build();
     }
 
@@ -84,14 +82,14 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
         this.world.getProfiler().push("transfer");
         this.attemptChargeFromStack(CHARGE_SLOT);
         this.trySpreadGases();
-        Storage<GasVariant> gasStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(GasStorage.ITEM);
-        if (gasStorage == null) return GalacticraftMachineStatus.MISSING_OXYGEN_TANK;
-        if (gasStorage.simulateExtract(GasVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GalacticraftMachineStatus.EMPTY_OXYGEN_TANK;
+        Storage<FluidVariant> fluidStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(FluidStorage.ITEM);
+        if (fluidStorage == null) return GalacticraftMachineStatus.MISSING_OXYGEN_TANK;
+        if (fluidStorage.simulateExtract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GalacticraftMachineStatus.EMPTY_OXYGEN_TANK;
         this.world.getProfiler().swap("transaction");
 
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenDecompressorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenDecompressorEnergyConsumptionRate()) {
-                GenericStorageUtil.move(GasVariant.of(Gases.OXYGEN), gasStorage, this.gasStorage(), Long.MAX_VALUE, transaction);
+                GenericStorageUtil.move(FluidVariant.of(Gases.OXYGEN), fluidStorage, this.fluidStorage(), Long.MAX_VALUE, transaction);
                 transaction.commit();
                 return GalacticraftMachineStatus.DECOMPRESSING;
             } else {

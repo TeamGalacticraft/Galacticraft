@@ -24,8 +24,6 @@ package dev.galacticraft.mod;
 
 import com.google.common.base.Predicates;
 import dev.galacticraft.api.block.util.BlockFace;
-import dev.galacticraft.api.gas.GasVariant;
-import dev.galacticraft.api.transfer.v1.gas.GasStorage;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagExtractPredicate;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagInsertPredicate;
@@ -659,8 +657,8 @@ public interface Constant {
                 }
             };
 
-            Predicate<ItemVariant> CAN_EXTRACT_OXYGEN = new ItemResourceTagExtractPredicate(GasStorage.ITEM, GalacticraftTag.OXYGEN);
-            Predicate<ItemVariant> CAN_INSERT_OXYGEN = new ItemResourceTagInsertPredicate(GasStorage.ITEM, GalacticraftTag.OXYGEN);
+            Predicate<ItemVariant> CAN_EXTRACT_OXYGEN = new ItemResourceTagExtractPredicate(FluidStorage.ITEM, GalacticraftTag.OXYGEN);
+            Predicate<ItemVariant> CAN_INSERT_OXYGEN = new ItemResourceTagInsertPredicate(FluidStorage.ITEM, GalacticraftTag.OXYGEN);
 
             Predicate<ItemVariant> CAN_EXTRACT_OIL = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, GalacticraftTag.OIL);
             Predicate<ItemVariant> CAN_INSERT_FUEL = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, GalacticraftFluid.FUEL);
@@ -668,7 +666,7 @@ public interface Constant {
         }
 
         interface Gas {
-            Predicate<GasVariant> OXYGEN = v -> GalacticraftTag.OXYGEN.contains(v.getGas());
+            Predicate<FluidVariant> OXYGEN = v -> GalacticraftTag.OXYGEN.contains(v.getGas());
         }
 
         interface Fluid {

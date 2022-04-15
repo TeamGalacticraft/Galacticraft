@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.machine.storage.io;
 
-import dev.galacticraft.api.gas.Gas;
-import dev.galacticraft.api.gas.GasVariant;
 import dev.galacticraft.api.machine.storage.io.ResourceFlow;
 import dev.galacticraft.api.machine.storage.io.ResourceType;
 import dev.galacticraft.api.machine.storage.io.SlotType;
@@ -57,11 +55,11 @@ public class GalacticraftSlotTypes {
     public static final SlotType<Fluid, FluidVariant> FLUID_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "fluid_input"), TextColor.fromRgb(0xdb2e4c), new TranslatableText("slot_type.galacticraft.fluid_input"), Constant.Filter.any(), ResourceFlow.INPUT, ResourceType.FLUID);
     public static final SlotType<Fluid, FluidVariant> FLUID_OUTPUT = SlotType.create(new Identifier(Constant.MOD_ID, "fluid_output"), TextColor.fromRgb(0x2edb5b), new TranslatableText("slot_type.galacticraft.fluid_output"), Constant.Filter.any(), ResourceFlow.OUTPUT, ResourceType.FLUID);
 
-    public static final SlotType<Gas, GasVariant> OXYGEN_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "oxygen_input"), TextColor.fromRgb(0xdb2e4c), new TranslatableText("slot_type.galacticraft.oxygen_input"), Constant.Filter.Gas.OXYGEN, ResourceFlow.INPUT, ResourceType.GAS);
-    public static final SlotType<Gas, GasVariant> OXYGEN_OUTPUT = SlotType.create(new Identifier(Constant.MOD_ID, "oxygen_output"), TextColor.fromRgb(0x2edb5b), new TranslatableText("slot_type.galacticraft.oxygen_output"), Constant.Filter.Gas.OXYGEN, ResourceFlow.OUTPUT, ResourceType.GAS);
-    public static final SlotType<Gas, GasVariant> OXYGEN_IO = SlotType.create(new Identifier(Constant.MOD_ID, "oxygen_io"), TextColor.fromRgb(0x2edb5b), new TranslatableText("slot_type.galacticraft.oxygen_io"), Constant.Filter.Gas.OXYGEN, ResourceFlow.BOTH, ResourceType.GAS);
+    public static final SlotType<Fluid, FluidVariant> OXYGEN_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "oxygen_input"), TextColor.fromRgb(0xdb2e4c), new TranslatableText("slot_type.galacticraft.oxygen_input"), Constant.Filter.Gas.OXYGEN, ResourceFlow.INPUT, ResourceType.GAS);
+    public static final SlotType<Fluid, FluidVariant> OXYGEN_OUTPUT = SlotType.create(new Identifier(Constant.MOD_ID, "oxygen_output"), TextColor.fromRgb(0x2edb5b), new TranslatableText("slot_type.galacticraft.oxygen_output"), Constant.Filter.Gas.OXYGEN, ResourceFlow.OUTPUT, ResourceType.GAS);
+    public static final SlotType<Fluid, FluidVariant> OXYGEN_IO = SlotType.create(new Identifier(Constant.MOD_ID, "oxygen_io"), TextColor.fromRgb(0x2edb5b), new TranslatableText("slot_type.galacticraft.oxygen_io"), Constant.Filter.Gas.OXYGEN, ResourceFlow.BOTH, ResourceType.GAS);
 
-    public static final SlotType<Gas, GasVariant> GAS_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "gas_input"), TextColor.fromRgb(0xdb2e4c), new TranslatableText("slot_type.galacticraft.gas_input"), Constant.Filter.any(), ResourceFlow.INPUT, ResourceType.GAS);
-    public static final SlotType<Gas, GasVariant> GAS_OUTPUT = SlotType.create(new Identifier(Constant.MOD_ID, "gas_output"), TextColor.fromRgb(0x2edb5b), new TranslatableText("slot_type.galacticraft.gas_output"), Constant.Filter.any(), ResourceFlow.OUTPUT, ResourceType.GAS);
+    public static final SlotType<Fluid, FluidVariant> GAS_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "gas_input"), TextColor.fromRgb(0xdb2e4c), new TranslatableText("slot_type.galacticraft.gas_input"), Constant.Filter.any(), ResourceFlow.INPUT, ResourceType.GAS);
+    public static final SlotType<Fluid, FluidVariant> GAS_OUTPUT = SlotType.create(new Identifier(Constant.MOD_ID, "gas_output"), TextColor.fromRgb(0x2edb5b), new TranslatableText("slot_type.galacticraft.gas_output"), Constant.Filter.any(), ResourceFlow.OUTPUT, ResourceType.GAS);
 
 }

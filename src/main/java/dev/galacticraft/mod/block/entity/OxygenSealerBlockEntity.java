@@ -33,7 +33,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerWorldAccessor;
 import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.storage.MachineGasStorage;
+import dev.galacticraft.api.machine.storage.MachineFluidStorage;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
@@ -88,9 +88,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @NotNull MachineGasStorage createGasStorage() {
-        return MachineGasStorage.Builder.create()
-                .addTank(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48))
+    protected @NotNull MachineFluidStorage createFluidStorage() {
+        return MachineFluidStorage.Builder.create()
+                .addTank(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48), true)
                 .build();
     }
 
@@ -111,7 +111,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate()) {
-                if (!this.gasStorage().isEmpty(OXYGEN_TANK)) {
+                if (!this.fluidStorage().isEmpty(OXYGEN_TANK)) {
                     if (this.sealCheckTime > 0) this.sealCheckTime--;
                     if (this.updateQueued && this.sealCheckTime == 0) {
                         this.world.getProfiler().push("check_seal");
@@ -171,7 +171,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                         this.world.getProfiler().pop();
                     }
                     this.world.getProfiler().push("extract_oxygen");
-                    this.gasStorage().extract(OXYGEN_TANK, breathablePositions.size() * 2L, transaction);
+                    this.fluidStorage().extract(OXYGEN_TANK, breathablePositions.size() * 2L, transaction);
                     transaction.commit();
                     this.world.getProfiler().pop();
                     return GalacticraftMachineStatus.SEALED;
