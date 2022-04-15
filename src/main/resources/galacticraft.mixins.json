@@ -11,14 +11,12 @@
     "DamageSourceAccessor",
     "DimensionTypeMixin",
     "EntityMixin",
-    "ExtendedScreenHandlerTypeAccessor",
     "FlowableFluidMixin",
     "ItemStackMixin",
     "LanternBlockMixin",
     "LootTablesAccessor",
     "NoiseChunkGeneratorMixin",
     "ServerWorldMixin",
-    "SlotAccessor",
     "TorchBlockMixin"
   ],
   "client": [
@@ -30,8 +28,7 @@
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",
     "client.VillagerEntityRendererMixin",
-    "client.VillagerResemblingModelMixin",
-    "client.WorldRendererMixin"
+    "client.VillagerResemblingModelMixin"
   ],
   "minVersion": "0.8.0",
   "injectors": {

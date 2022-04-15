@@ -61,32 +61,60 @@ java {
     withSourcesJar()
 }
 
+sourceSets {
+    main {
+        java {
+            srcDir("src/main/java")
+        }
+        resources {
+            srcDir("src/main/resources")
+            srcDir("src/main/generated")
+        }
+    }
+    register("gametest") {
+        java {
+            srcDir("src/gametest/java")
+        }
+        resources {
+            srcDir("src/gametest/resources")
+        }
+        runtimeClasspath += main.get().runtimeClasspath;
+    }
+}
+
 group = modGroup
 version = modVersion + getVersionDecoration()
 println("Galacticraft: $version")
 base.archivesName.set(modName)
-
-val gametestSourceSet = sourceSets.create("gametest") {
-    java.srcDir("src/gametest/java")
-    resources.srcDir("src/gametest/resources")
-}
 
 loom {
     accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
     mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
 
     runs {
+        register("datagen") {
+            server()
+            name("Data Generation")
+            runDir("build/datagen")
+            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/testmod/generated")}", "-Dfabric-api.datagen.strict-validation")
+        }
+        register("datagenClient") {
+            client()
+            name("Data Generation Client")
+            runDir("build/datagen")
+            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/testmod/generated")}", "-Dfabric-api.datagen.strict-validation")
+        }
         register("gametest") {
             server()
             name("Game Test")
-            source(gametestSourceSet)
+            source(sourceSets.getByName("gametest"))
             property("fabric.log.level", "debug")
             vmArg("-Dfabric-api.gametest")
         }
         register("gametestClient") {
             client()
             name("Game Test Client")
-            source(gametestSourceSet)
+            source(sourceSets.getByName("gametest"))
             property("fabric.log.level", "debug")
             vmArg("-Dfabric-api.gametest")
         }
@@ -149,6 +177,7 @@ dependencies {
         "fabric-blockrenderlayer-v1",
         "fabric-command-api-v1",
         "fabric-content-registries-v0",
+        "fabric-data-generation-api-v1",
         "fabric-gametest-api-v1",
         "fabric-item-groups-v0",
         "fabric-mining-level-api-v1",
@@ -162,6 +191,7 @@ dependencies {
         "fabric-renderer-registries-v1",
         "fabric-rendering-fluids-v1",
         "fabric-rendering-v1",
+        "fabric-resource-conditions-api-v1",
         "fabric-resource-loader-v0",
         "fabric-screen-handler-api-v1",
 //        "fabric-structure-api-v1",
@@ -209,6 +239,7 @@ dependencies {
 
     // Runtime Dependencies
     modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
+    "gametestImplementation"(sourceSets.main.get().output)
 }
 
 tasks.processResources {
@@ -375,7 +406,3 @@ fun String.exitValue(): Int {
         errorOutput = OutputStream.nullOutputStream()
     }.exitValue
 }
-
-tasks.getByName("gametestClasses").dependsOn("classes")
-gametestSourceSet.compileClasspath += sourceSets.main.get().compileClasspath + sourceSets.main.get().output
-gametestSourceSet.runtimeClasspath += sourceSets.main.get().runtimeClasspath + sourceSets.main.get().output

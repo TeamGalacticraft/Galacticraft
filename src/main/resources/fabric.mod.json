@@ -119,6 +119,9 @@
   "entrypoints": {
     "main": [ "dev.galacticraft.mod.Galacticraft" ],
     "client": [ "dev.galacticraft.mod.GalacticraftClient" ],
+    "fabric-datagen": [
+      "dev.galacticraft.mod.data.GalacticraftDataGenerator"
+    ],
     "modmenu": [ "dev.galacticraft.mod.compat.modmenu.ModMenuApiImpl" ],
     "rei": [
       "dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin",
