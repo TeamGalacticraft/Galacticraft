@@ -286,7 +286,7 @@ license {
     include("**/dev/galacticraft/**/*.java")
     include("build.gradle.kts")
     ext {
-        set("year", Year.now().value)
+        set("year", "2022")
         set("company", "Team Galacticraft")
     }
 }
