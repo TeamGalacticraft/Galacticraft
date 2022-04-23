@@ -59,7 +59,6 @@ public class GalacticraftTag {
 
     public static final Tag<Fluid> OXYGEN = null;//FluidTags.getTagGroup().getTag(new Identifier(Constant.MOD_ID, "oxygen"));
 
-    public static final Tag.Identified<Item> DIAMONDS = null;//TagFactory.ITEM.create(new Identifier(Constant.COMMON_NAMESPACE, "diamonds"));
     public static final Tag.Identified<Item> SILICONS = null;//TagFactory.ITEM.create(new Identifier(Constant.COMMON_NAMESPACE, "silicons"));
     public static final Tag.Identified<Item> REDSTONES = null;//TagFactory.ITEM.create(new Identifier(Constant.COMMON_NAMESPACE, "redstones"));
 

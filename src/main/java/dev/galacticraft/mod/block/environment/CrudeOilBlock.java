@@ -24,6 +24,7 @@ package dev.galacticraft.mod.block.environment;
 
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -36,7 +37,7 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CrudeOilBlock extends net.minecraft.block.FluidBlock {
+public class CrudeOilBlock extends FluidBlock {
     public CrudeOilBlock(FlowableFluid fluid, Settings settings) {
         super(fluid, settings);
     }

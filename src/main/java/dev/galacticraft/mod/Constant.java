@@ -23,7 +23,6 @@
 package dev.galacticraft.mod;
 
 import com.google.common.base.Predicates;
-import dev.galacticraft.api.block.util.BlockFace;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagExtractPredicate;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagInsertPredicate;
@@ -31,6 +30,7 @@ import dev.galacticraft.mod.lookup.predicate.TagPredicate;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -524,40 +524,6 @@ public interface Constant {
 
         int BASE_FLUID_TANK_Y = 49;
 
-        int FLUID_TANK_8_16_X = 32;
-        int FLUID_TANK_8_16_Y = BASE_FLUID_TANK_Y;
-        int FLUID_TANK_8_16_HEIGHT = 49;
-
-        int FLUID_TANK_7_14_X = FLUID_TANK_8_16_X + FLUID_TANK_WIDTH;
-        int FLUID_TANK_7_14_Y = BASE_FLUID_TANK_Y;
-        int FLUID_TANK_7_14_HEIGHT = FLUID_TANK_8_16_HEIGHT - 6; // segment size
-
-        int FLUID_TANK_6_12_X = FLUID_TANK_7_14_X + FLUID_TANK_WIDTH;
-        int FLUID_TANK_6_12_Y = BASE_FLUID_TANK_Y;
-        int FLUID_TANK_6_12_HEIGHT = FLUID_TANK_7_14_HEIGHT - 6;
-
-        int FLUID_TANK_5_10_X = FLUID_TANK_6_12_X + FLUID_TANK_WIDTH;
-        int FLUID_TANK_5_10_Y = BASE_FLUID_TANK_Y;
-        int FLUID_TANK_5_10_HEIGHT = FLUID_TANK_6_12_HEIGHT - 6;
-
-        int FLUID_TANK_4_8_X = FLUID_TANK_5_10_X + FLUID_TANK_WIDTH;
-        int FLUID_TANK_4_8_Y = BASE_FLUID_TANK_Y;
-        int FLUID_TANK_4_8_HEIGHT = FLUID_TANK_5_10_HEIGHT - 6;
-
-        int FLUID_TANK_3_6_X = FLUID_TANK_5_10_X;
-        int FLUID_TANK_3_6_Y = FLUID_TANK_5_10_Y - FLUID_TANK_5_10_HEIGHT;
-        int FLUID_TANK_3_6_HEIGHT = FLUID_TANK_4_8_HEIGHT - 6;
-
-        int FLUID_TANK_2_4_X = FLUID_TANK_6_12_X;
-        int FLUID_TANK_2_4_Y = FLUID_TANK_6_12_Y - FLUID_TANK_6_12_HEIGHT;
-        int FLUID_TANK_2_4_HEIGHT = FLUID_TANK_3_6_HEIGHT - 6;
-
-        int FLUID_TANK_1_2_X = FLUID_TANK_7_14_X;
-        int FLUID_TANK_1_2_Y = FLUID_TANK_7_14_Y - FLUID_TANK_7_14_HEIGHT;
-        int FLUID_TANK_1_2_HEIGHT = FLUID_TANK_2_4_HEIGHT - 6;
-
-        int FLUID_TANK_UNDERLAY_OFFSET = -49;
-
         int BUTTON_WIDTH = 13;
         int BUTTON_HEIGHT = 13;
 
@@ -608,7 +574,7 @@ public interface Constant {
         String OXYGEN_COMPRESSOR_SCREEN_HANDLER = "oxygen_compressor_screen_handler";
         String OXYGEN_DECOMPRESSOR_SCREEN_HANDLER = "oxygen_decompressor_screen_handler";
         String OXYGEN_STORAGE_MODULE_SCREEN_HANDLER = "oxygen_storage_module_screen_handler";
-        String OXYGEN_SEALER_SCREEN_HANDLER = "oxygen_sealer";
+        String OXYGEN_SEALER_SCREEN_HANDLER = "oxygen_sealer_screen_handler";
     }
 
     interface Biome {
@@ -640,7 +606,7 @@ public interface Constant {
         }
 
         interface Item {
-            Predicate<ItemVariant> DIAMOND = new TagPredicate<>(GalacticraftTag.DIAMONDS);
+            Predicate<ItemVariant> DIAMOND = new TagPredicate<>(ConventionalItemTags.DIAMONDS);
             Predicate<ItemVariant> SILICON = new TagPredicate<>(GalacticraftTag.SILICONS);
             Predicate<ItemVariant> REDSTONE = new TagPredicate<>(GalacticraftTag.REDSTONES);
 
@@ -700,7 +666,7 @@ public interface Constant {
             }
         }
         
-        interface Translations {
+        interface TranslationKey {
               String NOT_ENOUGH_LEAVES = "ui.galacticraft.machine.status.not_enough_leaves";
               String ACTIVE = "ui.galacticraft.machine.status.active";
               String IDLE = "ui.galacticraft.machine.status.idle";
@@ -768,7 +734,6 @@ public interface Constant {
     interface Misc {
         Identifier EMPTY = new Identifier("empty");
         Direction[] DIRECTIONS = Direction.values();
-        BlockFace[] BLOCK_FACES = BlockFace.values();
         String LOGGER_PREFIX = "[Galacticraft] ";
         boolean DEBUG = false;
         int MAX_STRING_READ = 32767;

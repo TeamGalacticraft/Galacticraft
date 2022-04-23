@@ -177,6 +177,7 @@ dependencies {
         "fabric-blockrenderlayer-v1",
         "fabric-command-api-v1",
         "fabric-content-registries-v0",
+        "fabric-convention-tags-v1",
         "fabric-data-generation-api-v1",
         "fabric-gametest-api-v1",
         "fabric-item-groups-v0",
