@@ -76,8 +76,8 @@ public class GalacticraftBlockEntityType {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.BASIC_SOLAR_PANEL), BASIC_SOLAR_PANEL);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.ADVANCED_SOLAR_PANEL), ADVANCED_SOLAR_PANEL);
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.WIRE_T1), WIRE_T1);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.WIRE_T2), WIRE_T2);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.ALUMINUM_WIRE), WIRE_T1);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.HEAVY_ALUMINUM_WIRE), WIRE_T2);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.GLASS_FLUID_PIPE), GLASS_FLUID_PIPE);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.WALKWAY), WALKWAY);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constant.MOD_ID, Constant.Block.WIRE_WALKWAY), WIRE_WALKWAY);
