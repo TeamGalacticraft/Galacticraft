@@ -25,7 +25,8 @@ package dev.galacticraft.mod.data;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.data.client.model.BlockStateModelGenerator;
+import net.minecraft.data.client.model.*;
+import net.minecraft.state.property.Properties;
 
 import static dev.galacticraft.mod.block.GalacticraftBlock.*;
 
@@ -35,99 +36,187 @@ public class GalacticraftModelProvider extends FabricModelProvider {
     }
 
     @Override
-    public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
-//        blockStateModelGenerator.registerSimpleState(GLOWSTONE_TORCH, GalacticraftItem.GLOWSTONE_TORCH);
-//        blockStateModelGenerator.registerSimpleState(GLOWSTONE_WALL_TORCH, GalacticraftItem.GLOWSTONE_TORCH);
-//        blockStateModelGenerator.registerSimpleState(UNLIT_TORCH, GalacticraftItem.UNLIT_TORCH);
-//        blockStateModelGenerator.registerSimpleState(UNLIT_WALL_TORCH, GalacticraftItem.UNLIT_TORCH);
+    public void generateBlockStateModels(BlockStateModelGenerator generator) {
+//        generator.registerSimpleState(GLOWSTONE_TORCH, GalacticraftItem.GLOWSTONE_TORCH);
+//        generator.registerSimpleState(GLOWSTONE_WALL_TORCH, GalacticraftItem.GLOWSTONE_TORCH);
+//        generator.registerSimpleState(UNLIT_TORCH, GalacticraftItem.UNLIT_TORCH);
+//        generator.registerSimpleState(UNLIT_WALL_TORCH, GalacticraftItem.UNLIT_TORCH);
 
-//        for (Block decor : ALUMINUM_DECORATIONS) blockStateModelGenerator.registerSimpleState(decor);
-//        for (Block decor : BRONZE_DECORATIONS) blockStateModelGenerator.registerSimpleState(decor);
-//        for (Block decor : COPPER_DECORATIONS) blockStateModelGenerator.registerSimpleState(decor);
-//        for (Block decor : DARK_DECORATIONS) blockStateModelGenerator.registerSimpleState(decor);
-//        for (Block decor : IRON_DECORATIONS) blockStateModelGenerator.registerSimpleState(decor);
-//        for (Block decor : METEORIC_IRON_DECORATIONS) blockStateModelGenerator.registerSimpleState(decor);
-//        for (Block decor : STEEL_DECORATIONS) blockStateModelGenerator.registerSimpleState(decor);
-//        for (Block decor : TIN_DECORATIONS) blockStateModelGenerator.registerSimpleState(decor);
-//        for (Block decor : TITANIUM_DECORATIONS) blockStateModelGenerator.registerSimpleState(decor);
+        generator.registerCubeAllModelTexturePool(ALUMINUM_DECORATION)
+                .slab(ALUMINUM_DECORATION_SLAB)
+                .stairs(ALUMINUM_DECORATION_STAIRS)
+                .wall(ALUMINUM_DECORATION_WALL)
+                .build();
+        generator.registerCubeAllModelTexturePool(DETAILED_ALUMINUM_DECORATION)
+                .slab(DETAILED_ALUMINUM_DECORATION_SLAB)
+                .stairs(DETAILED_ALUMINUM_DECORATION_STAIRS)
+                .wall(DETAILED_ALUMINUM_DECORATION_WALL)
+                .build();
 
-        blockStateModelGenerator.registerSimpleCubeAll(MOON_TURF);
-        blockStateModelGenerator.registerSimpleCubeAll(MOON_DIRT);
-        blockStateModelGenerator.registerSimpleCubeAll(MOON_SURFACE_ROCK);
-//        for (Block decor : MOON_ROCKS) blockStateModelGenerator.registerSimpleState(decor);
-//        for (Block decor : COBBLED_MOON_ROCKS) blockStateModelGenerator.registerSimpleState(decor);
-//        for (Block decor : LUNASLATES) blockStateModelGenerator.registerSimpleState(decor);
-//        for (Block decor : COBBLED_LUNASLATES) blockStateModelGenerator.registerSimpleState(decor);
-//        for (Block decor : MOON_BASALTS) blockStateModelGenerator.registerSimpleState(decor);
-//        for (Block decor : MOON_BASALT_BRICKS) blockStateModelGenerator.registerSimpleState(decor);
-//        for (Block decor : CRACKED_MOON_BASALT_BRICKS) blockStateModelGenerator.registerSimpleState(decor);
+        generator.registerCubeAllModelTexturePool(COPPER_DECORATION)
+                .slab(COPPER_DECORATION_SLAB)
+                .stairs(COPPER_DECORATION_STAIRS)
+                .wall(COPPER_DECORATION_WALL)
+                .build();
+        generator.registerCubeAllModelTexturePool(DETAILED_COPPER_DECORATION)
+                .slab(DETAILED_COPPER_DECORATION_SLAB)
+                .stairs(DETAILED_COPPER_DECORATION_STAIRS)
+                .wall(DETAILED_COPPER_DECORATION_WALL)
+                .build();
 
-        blockStateModelGenerator.registerSimpleCubeAll(MARS_SURFACE_ROCK);
-        blockStateModelGenerator.registerSimpleCubeAll(MARS_SUB_SURFACE_ROCK);
-        blockStateModelGenerator.registerSimpleCubeAll(MARS_STONE);
+        generator.registerCubeAllModelTexturePool(IRON_DECORATION)
+                .slab(IRON_DECORATION_SLAB)
+                .stairs(IRON_DECORATION_STAIRS)
+                .wall(IRON_DECORATION_WALL)
+                .build();
+        generator.registerCubeAllModelTexturePool(DETAILED_IRON_DECORATION)
+                .slab(DETAILED_IRON_DECORATION_SLAB)
+                .stairs(DETAILED_IRON_DECORATION_STAIRS)
+                .wall(DETAILED_IRON_DECORATION_WALL)
+                .build();
 
-        blockStateModelGenerator.registerSimpleCubeAll(ASTEROID_ROCK);
-        blockStateModelGenerator.registerSimpleCubeAll(ASTEROID_ROCK_1);
-        blockStateModelGenerator.registerSimpleCubeAll(ASTEROID_ROCK_2);
+        generator.registerCubeAllModelTexturePool(METEORIC_IRON_DECORATION)
+                .slab(METEORIC_IRON_DECORATION_SLAB)
+                .stairs(METEORIC_IRON_DECORATION_STAIRS)
+                .wall(METEORIC_IRON_DECORATION_WALL)
+                .build();
+        generator.registerCubeAllModelTexturePool(DETAILED_METEORIC_IRON_DECORATION)
+                .slab(DETAILED_METEORIC_IRON_DECORATION_SLAB)
+                .stairs(DETAILED_METEORIC_IRON_DECORATION_STAIRS)
+                .wall(DETAILED_METEORIC_IRON_DECORATION_WALL)
+                .build();
 
-        blockStateModelGenerator.registerSimpleCubeAll(SOFT_VENUS_ROCK);
-        blockStateModelGenerator.registerSimpleCubeAll(HARD_VENUS_ROCK);
-        blockStateModelGenerator.registerSimpleCubeAll(SCORCHED_VENUS_ROCK);
-        blockStateModelGenerator.registerSimpleCubeAll(VOLCANIC_ROCK);
-        blockStateModelGenerator.registerSimpleCubeAll(PUMICE);
-//        blockStateModelGenerator.registerSimpleState(VAPOR_SPOUT);
+        generator.registerCubeAllModelTexturePool(STEEL_DECORATION)
+                .slab(STEEL_DECORATION_SLAB)
+                .stairs(STEEL_DECORATION_STAIRS)
+                .wall(STEEL_DECORATION_WALL)
+                .build();
+        generator.registerCubeAllModelTexturePool(DETAILED_STEEL_DECORATION)
+                .slab(DETAILED_STEEL_DECORATION_SLAB)
+                .stairs(DETAILED_STEEL_DECORATION_STAIRS)
+                .wall(DETAILED_STEEL_DECORATION_WALL)
+                .build();
 
-//        blockStateModelGenerator.registerSimpleState(WALKWAY);
-//        blockStateModelGenerator.registerSimpleState(PIPE_WALKWAY);
-//        blockStateModelGenerator.registerSimpleState(WIRE_WALKWAY);
-//        blockStateModelGenerator.registerSimpleState(TIN_LADDER);
-//        blockStateModelGenerator.registerSimpleState(GRATING);
+        generator.registerCubeAllModelTexturePool(TIN_DECORATION)
+                .slab(TIN_DECORATION_SLAB)
+                .stairs(TIN_DECORATION_STAIRS)
+                .wall(TIN_DECORATION_WALL)
+                .build();
+        generator.registerCubeAllModelTexturePool(DETAILED_TIN_DECORATION)
+                .slab(DETAILED_TIN_DECORATION_SLAB)
+                .stairs(DETAILED_TIN_DECORATION_STAIRS)
+                .wall(DETAILED_TIN_DECORATION_WALL)
+                .build();
 
-//        blockStateModelGenerator.registerSimpleState(ALUMINUM_WIRE);
-//        blockStateModelGenerator.registerSimpleState(SEALABLE_ALUMINUM_WIRE);
-//        blockStateModelGenerator.registerSimpleState(HEAVY_SEALABLE_ALUMINUM_WIRE);
-//        blockStateModelGenerator.registerSimpleState(GLASS_FLUID_PIPE);
+        generator.registerCubeAllModelTexturePool(TITANIUM_DECORATION)
+                .slab(TITANIUM_DECORATION_SLAB)
+                .stairs(TITANIUM_DECORATION_STAIRS)
+                .wall(TITANIUM_DECORATION_WALL)
+                .build();
+        generator.registerCubeAllModelTexturePool(DETAILED_TITANIUM_DECORATION)
+                .slab(DETAILED_TITANIUM_DECORATION_SLAB)
+                .stairs(DETAILED_TITANIUM_DECORATION_STAIRS)
+                .wall(DETAILED_TITANIUM_DECORATION_WALL)
+                .build();
 
-//        blockStateModelGenerator.registerSimpleState(SQUARE_LIGHT_PANEL);
-//        blockStateModelGenerator.registerSimpleState(SPOTLIGHT_LIGHT_PANEL);
-//        blockStateModelGenerator.registerSimpleState(LINEAR_LIGHT_PANEL);
-//        blockStateModelGenerator.registerSimpleState(DASHED_LIGHT_PANEL);
-//        blockStateModelGenerator.registerSimpleState(DIAGONAL_LIGHT_PANEL);
 
-//        blockStateModelGenerator.registerSimpleState(VACUUM_GLASS);
-//        blockStateModelGenerator.registerSimpleState(CLEAR_VACUUM_GLASS);
-//        blockStateModelGenerator.registerSimpleState(STRONG_VACUUM_GLASS);
+        generator.registerCubeAllModelTexturePool(DARK_DECORATION)
+                .slab(DARK_DECORATION_SLAB)
+                .stairs(DARK_DECORATION_STAIRS)
+                .wall(DARK_DECORATION_WALL)
+                .build();
+        generator.registerCubeAllModelTexturePool(DETAILED_DARK_DECORATION)
+                .slab(DETAILED_DARK_DECORATION_SLAB)
+                .stairs(DETAILED_DARK_DECORATION_STAIRS)
+                .wall(DETAILED_DARK_DECORATION_WALL)
+                .build();
 
-        blockStateModelGenerator.registerSimpleCubeAll(MOON_CHEESE_BLOCK);
-        blockStateModelGenerator.registerSimpleCubeAll(SILICON_BLOCK);
-        blockStateModelGenerator.registerSimpleCubeAll(METEORIC_IRON_BLOCK);
-        blockStateModelGenerator.registerSimpleCubeAll(DESH_BLOCK);
-        blockStateModelGenerator.registerSimpleCubeAll(TITANIUM_BLOCK);
-        blockStateModelGenerator.registerSimpleCubeAll(LEAD_BLOCK);
-        blockStateModelGenerator.registerSimpleCubeAll(LUNAR_SAPPHIRE_BLOCK);
+        generator.registerSimpleCubeAll(MOON_TURF);
+        generator.registerSimpleCubeAll(MOON_DIRT);
+        generator.registerSimpleCubeAll(MOON_SURFACE_ROCK);
+//        for (Block decor : MOON_ROCKS) generator.registerSimpleState(decor);
+//        for (Block decor : COBBLED_MOON_ROCKS) generator.registerSimpleState(decor);
+//        for (Block decor : LUNASLATES) generator.registerSimpleState(decor);
+//        for (Block decor : COBBLED_LUNASLATES) generator.registerSimpleState(decor);
+//        for (Block decor : MOON_BASALTS) generator.registerSimpleState(decor);
+//        for (Block decor : MOON_BASALT_BRICKS) generator.registerSimpleState(decor);
+//        for (Block decor : CRACKED_MOON_BASALT_BRICKS) generator.registerSimpleState(decor);
 
-//        blockStateModelGenerator.registerSimpleState(LUNAR_CARTOGRAPHY_TABLE);
+        generator.registerSimpleCubeAll(MARS_SURFACE_ROCK);
+        generator.registerSimpleCubeAll(MARS_SUB_SURFACE_ROCK);
+        generator.registerSimpleCubeAll(MARS_STONE);
 
-//        blockStateModelGenerator.registerSimpleState(CAVERNOUS_VINE);
-//        blockStateModelGenerator.registerSimpleState(POISONOUS_CAVERNOUS_VINE);
-//        blockStateModelGenerator.registerSimpleState(MOON_BERRY_BUSH);
+        generator.registerSimpleCubeAll(ASTEROID_ROCK);
+        generator.registerSimpleCubeAll(ASTEROID_ROCK_1);
+        generator.registerSimpleCubeAll(ASTEROID_ROCK_2);
 
-//        blockStateModelGenerator.registerSingleton(CIRCUIT_FABRICATOR, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(ELECTRIC_COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(COAL_GENERATOR, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(BASIC_SOLAR_PANEL, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(ADVANCED_SOLAR_PANEL, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(ENERGY_STORAGE_MODULE, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(ELECTRIC_FURNACE, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(ELECTRIC_ARC_FURNACE, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(REFINERY, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(OXYGEN_COLLECTOR, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(OXYGEN_SEALER, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(BUBBLE_DISTRIBUTOR, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(OXYGEN_DECOMPRESSOR, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(OXYGEN_COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER);
-//        blockStateModelGenerator.registerSingleton(OXYGEN_STORAGE_MODULE, MachineUnbakedModel.MACHINE_MARKER);
+        generator.registerSimpleCubeAll(SOFT_VENUS_ROCK);
+        generator.registerSimpleCubeAll(HARD_VENUS_ROCK);
+        generator.registerSimpleCubeAll(SCORCHED_VENUS_ROCK);
+        generator.registerSimpleCubeAll(VOLCANIC_ROCK);
+        generator.registerSimpleCubeAll(PUMICE);
+//        generator.registerSimpleState(VAPOR_SPOUT);
+
+//        generator.registerSimpleState(WALKWAY);
+//        generator.registerSimpleState(PIPE_WALKWAY);
+//        generator.registerSimpleState(WIRE_WALKWAY);
+//        generator.registerSimpleState(TIN_LADDER);
+//        generator.registerSimpleState(GRATING);
+
+//        generator.registerSimpleState(ALUMINUM_WIRE);
+//        generator.registerSimpleState(SEALABLE_ALUMINUM_WIRE);
+//        generator.registerSimpleState(HEAVY_SEALABLE_ALUMINUM_WIRE);
+//        generator.registerSimpleState(GLASS_FLUID_PIPE);
+
+//        generator.registerSimpleState(SQUARE_LIGHT_PANEL);
+//        generator.registerSimpleState(SPOTLIGHT_LIGHT_PANEL);
+//        generator.registerSimpleState(LINEAR_LIGHT_PANEL);
+//        generator.registerSimpleState(DASHED_LIGHT_PANEL);
+//        generator.registerSimpleState(DIAGONAL_LIGHT_PANEL);
+
+//        generator.registerSimpleState(VACUUM_GLASS);
+//        generator.registerSimpleState(CLEAR_VACUUM_GLASS);
+//        generator.registerSimpleState(STRONG_VACUUM_GLASS);
+
+        generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(MOON_CHEESE_BLOCK).coordinate(
+                BlockStateVariantMap.create(Properties.BITES)
+                        .register(0, BlockStateVariant.create().put(VariantSettings.MODEL, ModelIds.getBlockModelId(MOON_CHEESE_BLOCK)))
+                        .register(1, BlockStateVariant.create().put(VariantSettings.MODEL, ModelIds.getBlockSubModelId(MOON_CHEESE_BLOCK, "_slice1")))
+                        .register(2, BlockStateVariant.create().put(VariantSettings.MODEL, ModelIds.getBlockSubModelId(MOON_CHEESE_BLOCK, "_slice2")))
+                        .register(3, BlockStateVariant.create().put(VariantSettings.MODEL, ModelIds.getBlockSubModelId(MOON_CHEESE_BLOCK, "_slice3")))
+                        .register(4, BlockStateVariant.create().put(VariantSettings.MODEL, ModelIds.getBlockSubModelId(MOON_CHEESE_BLOCK, "_slice4")))
+                        .register(5, BlockStateVariant.create().put(VariantSettings.MODEL, ModelIds.getBlockSubModelId(MOON_CHEESE_BLOCK, "_slice5")))
+                        .register(6, BlockStateVariant.create().put(VariantSettings.MODEL, ModelIds.getBlockSubModelId(MOON_CHEESE_BLOCK, "_slice6")))
+        ));
+        generator.registerSimpleCubeAll(SILICON_BLOCK);
+        generator.registerSimpleCubeAll(METEORIC_IRON_BLOCK);
+        generator.registerSimpleCubeAll(DESH_BLOCK);
+        generator.registerSimpleCubeAll(TITANIUM_BLOCK);
+        generator.registerSimpleCubeAll(LEAD_BLOCK);
+        generator.registerSimpleCubeAll(LUNAR_SAPPHIRE_BLOCK);
+
+//        generator.registerSimpleState(LUNAR_CARTOGRAPHY_TABLE);
+
+//        generator.registerSimpleState(CAVERNOUS_VINE);
+//        generator.registerSimpleState(POISONOUS_CAVERNOUS_VINE);
+//        generator.registerSimpleState(MOON_BERRY_BUSH);
+
+//        generator.registerSingleton(CIRCUIT_FABRICATOR, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(ELECTRIC_COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(COAL_GENERATOR, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(BASIC_SOLAR_PANEL, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(ADVANCED_SOLAR_PANEL, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(ENERGY_STORAGE_MODULE, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(ELECTRIC_FURNACE, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(ELECTRIC_ARC_FURNACE, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(REFINERY, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(OXYGEN_COLLECTOR, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(OXYGEN_SEALER, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(BUBBLE_DISTRIBUTOR, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(OXYGEN_DECOMPRESSOR, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(OXYGEN_COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER);
+//        generator.registerSingleton(OXYGEN_STORAGE_MODULE, MachineUnbakedModel.MACHINE_MARKER);
     }
 
     @Override
