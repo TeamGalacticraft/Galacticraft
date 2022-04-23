@@ -46,6 +46,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.fabricmc.fabric.api.registry.FlattenableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -93,33 +94,136 @@ public class GalacticraftBlock {
             .strength(50.0F, 50.0F).dropsNothing()), Constant.Block.FUEL);
 
     // DECORATION BLOCKS
-    public static final Block[] ALUMINUM_DECORATIONS = createDecorationBlocks(Constant.Block.ALUMINUM_DECORATION, FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 2.0F), true);
-    public static final Block[] BRONZE_DECORATIONS = createDecorationBlocks(Constant.Block.BRONZE_DECORATION, FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 2.0F), true);
-    public static final Block[] COPPER_DECORATIONS = createDecorationBlocks(Constant.Block.COPPER_DECORATION, FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 2.0F), true);
-    public static final Block[] DARK_DECORATIONS = createDecorationBlocks(Constant.Block.DARK_DECORATION, FabricBlockSettings.of(Material.STONE, MapColor.BLACK).strength(2.0F, 2.0F), false);
-    public static final Block[] IRON_DECORATIONS = createDecorationBlocks(Constant.Block.IRON_DECORATION, FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 2.0F), true);
-    public static final Block[] METEORIC_IRON_DECORATIONS = createDecorationBlocks(Constant.Block.METEORIC_IRON_DECORATION, FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 2.0F), true);
-    public static final Block[] STEEL_DECORATIONS = createDecorationBlocks(Constant.Block.STEEL_DECORATION, FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 2.0F), true);
-    public static final Block[] TIN_DECORATIONS = createDecorationBlocks(Constant.Block.TIN_DECORATION, FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 2.0F), true);
-    public static final Block[] TITANIUM_DECORATIONS = createDecorationBlocks(Constant.Block.TITANIUM_DECORATION, FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 2.0F), true);
+    public static final Block ALUMINUM_DECORATION = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 3.0F)), Constant.Block.ALUMINUM_DECORATION);
+    public static final Block ALUMINUM_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(ALUMINUM_DECORATION).strength(2.5F, 3.0F)), Constant.Block.ALUMINUM_DECORATION_SLAB);
+    public static final Block ALUMINUM_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(ALUMINUM_DECORATION)), Constant.Block.ALUMINUM_DECORATION_STAIRS);
+    public static final Block ALUMINUM_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(ALUMINUM_DECORATION)), Constant.Block.ALUMINUM_DECORATION_WALL);
+    public static final Block DETAILED_ALUMINUM_DECORATION = registerBlock(new Block(FabricBlockSettings.copyOf(ALUMINUM_DECORATION)), Constant.Block.DETAILED_ALUMINUM_DECORATION);
+    public static final Block DETAILED_ALUMINUM_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_ALUMINUM_DECORATION).strength(2.5F, 3.0F)), Constant.Block.DETAILED_ALUMINUM_DECORATION_SLAB);
+    public static final Block DETAILED_ALUMINUM_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_ALUMINUM_DECORATION)), Constant.Block.DETAILED_ALUMINUM_DECORATION_STAIRS);
+    public static final Block DETAILED_ALUMINUM_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_ALUMINUM_DECORATION)), Constant.Block.DETAILED_ALUMINUM_DECORATION_WALL);
+
+    public static final Block BRONZE_DECORATION = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 3.0F)), Constant.Block.BRONZE_DECORATION);
+    public static final Block BRONZE_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(BRONZE_DECORATION).strength(2.5F, 3.0F)), Constant.Block.BRONZE_DECORATION_SLAB);
+    public static final Block BRONZE_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(BRONZE_DECORATION)), Constant.Block.BRONZE_DECORATION_STAIRS);
+    public static final Block BRONZE_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(BRONZE_DECORATION)), Constant.Block.BRONZE_DECORATION_WALL);
+    public static final Block DETAILED_BRONZE_DECORATION = registerBlock(new Block(FabricBlockSettings.copyOf(BRONZE_DECORATION)), Constant.Block.DETAILED_BRONZE_DECORATION);
+    public static final Block DETAILED_BRONZE_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_BRONZE_DECORATION).strength(2.5F, 3.0F)), Constant.Block.DETAILED_BRONZE_DECORATION_SLAB);
+    public static final Block DETAILED_BRONZE_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_BRONZE_DECORATION)), Constant.Block.DETAILED_BRONZE_DECORATION_STAIRS);
+    public static final Block DETAILED_BRONZE_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_BRONZE_DECORATION)), Constant.Block.DETAILED_BRONZE_DECORATION_WALL);
+
+    public static final Block COPPER_DECORATION = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 3.0F)), Constant.Block.COPPER_DECORATION);
+    public static final Block COPPER_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(COPPER_DECORATION).strength(2.5F, 3.0F)), Constant.Block.COPPER_DECORATION_SLAB);
+    public static final Block COPPER_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(COPPER_DECORATION)), Constant.Block.COPPER_DECORATION_STAIRS);
+    public static final Block COPPER_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(COPPER_DECORATION)), Constant.Block.COPPER_DECORATION_WALL);
+    public static final Block DETAILED_COPPER_DECORATION = registerBlock(new Block(FabricBlockSettings.copyOf(COPPER_DECORATION)), Constant.Block.DETAILED_COPPER_DECORATION);
+    public static final Block DETAILED_COPPER_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_COPPER_DECORATION).strength(2.5F, 3.0F)), Constant.Block.DETAILED_COPPER_DECORATION_SLAB);
+    public static final Block DETAILED_COPPER_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_COPPER_DECORATION)), Constant.Block.DETAILED_COPPER_DECORATION_STAIRS);
+    public static final Block DETAILED_COPPER_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_COPPER_DECORATION)), Constant.Block.DETAILED_COPPER_DECORATION_WALL);
+
+    public static final Block IRON_DECORATION = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 3.0F)), Constant.Block.IRON_DECORATION);
+    public static final Block IRON_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(IRON_DECORATION).strength(2.5F, 3.0F)), Constant.Block.IRON_DECORATION_SLAB);
+    public static final Block IRON_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(IRON_DECORATION)), Constant.Block.IRON_DECORATION_STAIRS);
+    public static final Block IRON_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(IRON_DECORATION)), Constant.Block.IRON_DECORATION_WALL);
+    public static final Block DETAILED_IRON_DECORATION = registerBlock(new Block(FabricBlockSettings.copyOf(IRON_DECORATION)), Constant.Block.DETAILED_IRON_DECORATION);
+    public static final Block DETAILED_IRON_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_IRON_DECORATION).strength(2.5F, 3.0F)), Constant.Block.DETAILED_IRON_DECORATION_SLAB);
+    public static final Block DETAILED_IRON_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_IRON_DECORATION)), Constant.Block.DETAILED_IRON_DECORATION_STAIRS);
+    public static final Block DETAILED_IRON_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_IRON_DECORATION)), Constant.Block.DETAILED_IRON_DECORATION_WALL);
+
+    public static final Block METEORIC_IRON_DECORATION = registerBlock(new Block(FabricBlockSettings.copyOf(IRON_DECORATION)), Constant.Block.METEORIC_IRON_DECORATION);
+    public static final Block METEORIC_IRON_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(METEORIC_IRON_DECORATION).strength(2.5F, 3.0F)), Constant.Block.METEORIC_IRON_DECORATION_SLAB);
+    public static final Block METEORIC_IRON_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(METEORIC_IRON_DECORATION)), Constant.Block.METEORIC_IRON_DECORATION_STAIRS);
+    public static final Block METEORIC_IRON_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(METEORIC_IRON_DECORATION)), Constant.Block.METEORIC_IRON_DECORATION_WALL);
+    public static final Block DETAILED_METEORIC_IRON_DECORATION = registerBlock(new Block(FabricBlockSettings.copyOf(METEORIC_IRON_DECORATION)), Constant.Block.DETAILED_METEORIC_IRON_DECORATION);
+    public static final Block DETAILED_METEORIC_IRON_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_METEORIC_IRON_DECORATION).strength(2.5F, 3.0F)), Constant.Block.DETAILED_METEORIC_IRON_DECORATION_SLAB);
+    public static final Block DETAILED_METEORIC_IRON_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_METEORIC_IRON_DECORATION)), Constant.Block.DETAILED_METEORIC_IRON_DECORATION_STAIRS);
+    public static final Block DETAILED_METEORIC_IRON_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_METEORIC_IRON_DECORATION)), Constant.Block.DETAILED_METEORIC_IRON_DECORATION_WALL);
+
+    public static final Block STEEL_DECORATION = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 3.0F)), Constant.Block.STEEL_DECORATION);
+    public static final Block STEEL_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(STEEL_DECORATION).strength(2.5F, 3.0F)), Constant.Block.STEEL_DECORATION_SLAB);
+    public static final Block STEEL_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(STEEL_DECORATION)), Constant.Block.STEEL_DECORATION_STAIRS);
+    public static final Block STEEL_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(STEEL_DECORATION)), Constant.Block.STEEL_DECORATION_WALL);
+    public static final Block DETAILED_STEEL_DECORATION = registerBlock(new Block(FabricBlockSettings.copyOf(STEEL_DECORATION)), Constant.Block.DETAILED_STEEL_DECORATION);
+    public static final Block DETAILED_STEEL_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_STEEL_DECORATION).strength(2.5F, 3.0F)), Constant.Block.DETAILED_STEEL_DECORATION_SLAB);
+    public static final Block DETAILED_STEEL_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_STEEL_DECORATION)), Constant.Block.DETAILED_STEEL_DECORATION_STAIRS);
+    public static final Block DETAILED_STEEL_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_STEEL_DECORATION)), Constant.Block.DETAILED_STEEL_DECORATION_WALL);
+
+    public static final Block TIN_DECORATION = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 3.0F)), Constant.Block.TIN_DECORATION);
+    public static final Block TIN_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(TIN_DECORATION).strength(2.5F, 3.0F)), Constant.Block.TIN_DECORATION_SLAB);
+    public static final Block TIN_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(TIN_DECORATION)), Constant.Block.TIN_DECORATION_STAIRS);
+    public static final Block TIN_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(TIN_DECORATION)), Constant.Block.TIN_DECORATION_WALL);
+    public static final Block DETAILED_TIN_DECORATION = registerBlock(new Block(FabricBlockSettings.copyOf(TIN_DECORATION)), Constant.Block.DETAILED_TIN_DECORATION);
+    public static final Block DETAILED_TIN_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_TIN_DECORATION).strength(2.5F, 3.0F)), Constant.Block.DETAILED_TIN_DECORATION_SLAB);
+    public static final Block DETAILED_TIN_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_TIN_DECORATION)), Constant.Block.DETAILED_TIN_DECORATION_STAIRS);
+    public static final Block DETAILED_TIN_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_TIN_DECORATION)), Constant.Block.DETAILED_TIN_DECORATION_WALL);
+
+    public static final Block TITANIUM_DECORATION = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 3.0F)), Constant.Block.TITANIUM_DECORATION);
+    public static final Block TITANIUM_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(TITANIUM_DECORATION).strength(2.5F, 3.0F)), Constant.Block.TITANIUM_DECORATION_SLAB);
+    public static final Block TITANIUM_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(TITANIUM_DECORATION)), Constant.Block.TITANIUM_DECORATION_STAIRS);
+    public static final Block TITANIUM_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(TITANIUM_DECORATION)), Constant.Block.TITANIUM_DECORATION_WALL);
+    public static final Block DETAILED_TITANIUM_DECORATION = registerBlock(new Block(FabricBlockSettings.copyOf(TITANIUM_DECORATION)), Constant.Block.DETAILED_TITANIUM_DECORATION);
+    public static final Block DETAILED_TITANIUM_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_TITANIUM_DECORATION).strength(2.5F, 3.0F)), Constant.Block.DETAILED_TITANIUM_DECORATION_SLAB);
+    public static final Block DETAILED_TITANIUM_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_TITANIUM_DECORATION)), Constant.Block.DETAILED_TITANIUM_DECORATION_STAIRS);
+    public static final Block DETAILED_TITANIUM_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_TITANIUM_DECORATION)), Constant.Block.DETAILED_TITANIUM_DECORATION_WALL);
+
+    public static final Block DARK_DECORATION = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).strength(2.0F, 3.0F)), Constant.Block.DARK_DECORATION);
+    public static final Block DARK_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DARK_DECORATION).strength(2.5F, 3.0F)), Constant.Block.DARK_DECORATION_SLAB);
+    public static final Block DARK_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DARK_DECORATION)), Constant.Block.DARK_DECORATION_STAIRS);
+    public static final Block DARK_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DARK_DECORATION)), Constant.Block.DARK_DECORATION_WALL);
+    public static final Block DETAILED_DARK_DECORATION = registerBlock(new Block(FabricBlockSettings.copyOf(DARK_DECORATION)), Constant.Block.DETAILED_DARK_DECORATION);
+    public static final Block DETAILED_DARK_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_DARK_DECORATION).strength(2.5F, 3.0F)), Constant.Block.DETAILED_DARK_DECORATION_SLAB);
+    public static final Block DETAILED_DARK_DECORATION_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_DARK_DECORATION)), Constant.Block.DETAILED_DARK_DECORATION_STAIRS);
+    public static final Block DETAILED_DARK_DECORATION_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(DETAILED_DARK_DECORATION)), Constant.Block.DETAILED_DARK_DECORATION_WALL);
 
     // MOON NATURAL
     public static final Block MOON_TURF = registerBlock(new Block(FabricBlockSettings.of(Material.SOLID_ORGANIC, MapColor.LIGHT_GRAY).strength(0.5F, 0.5F)), Constant.Block.MOON_TURF);
     public static final Block MOON_DIRT = registerBlock(new Block(FabricBlockSettings.of(Material.SOIL, MapColor.LIGHT_GRAY).strength(0.5F, 0.5F).sounds(BlockSoundGroup.GRAVEL)), Constant.Block.MOON_DIRT);
+    public static final Block MOON_DIRT_PATH = registerBlock(new MoonDirtPathBlock(FabricBlockSettings.copyOf(MOON_DIRT).strength(0.5F, 0.5F)), Constant.Block.MOON_DIRT_PATH);
     public static final Block MOON_SURFACE_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.GRAY).strength(1.5F, 6.0F)), Constant.Block.MOON_SURFACE_ROCK);
-    public static final Block[] MOON_ROCKS = createDecorationBlocks(Constant.Block.MOON_ROCK, FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).requiresTool().strength(2.0F, 5.0F), false);
-    public static final Block[] COBBLED_MOON_ROCKS = createDecorationBlocks(Constant.Block.COBBLED_MOON_ROCK, FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).requiresTool().strength(2.0F, 5.0F), false);
-    public static final Block[] LUNASLATES = createDecorationBlocks(Constant.Block.LUNASLATE, FabricBlockSettings.of(Material.STONE, MapColor.DEEPSLATE_GRAY).sounds(BlockSoundGroup.DEEPSLATE).requiresTool().strength(3.5F, 5.0F), false);
-    public static final Block[] COBBLED_LUNASLATES = createDecorationBlocks(Constant.Block.COBBLED_LUNASLATE, FabricBlockSettings.of(Material.STONE, MapColor.DEEPSLATE_GRAY).sounds(BlockSoundGroup.DEEPSLATE).requiresTool().strength(3.5F, 5.0F), false);
-    public static final Block[] MOON_BASALTS = createDecorationBlocks(Constant.Block.MOON_BASALT, FabricBlockSettings.of(Material.STONE, MapColor.TERRACOTTA_BLACK).strength(2.0F, 6.0F), false);
-    public static final Block[] MOON_BASALT_BRICKS = createDecorationBlocks(Constant.Block.MOON_BASALT_BRICK, FabricBlockSettings.of(Material.STONE, MapColor.TERRACOTTA_BLACK).strength(2.0F, 6.0F), false);
-    public static final Block[] CRACKED_MOON_BASALT_BRICKS = createDecorationBlocks(Constant.Block.CRACKED_MOON_BASALT_BRICK, FabricBlockSettings.of(Material.STONE, MapColor.TERRACOTTA_BLACK).strength(2.0F, 6.0F), false);
+
+    public static final Block MOON_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.GRAY).strength(2.0F, 6.0F)), Constant.Block.MOON_ROCK);
+    public static final Block MOON_ROCK_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(MOON_ROCK).strength(2.5F, 6.0F)), Constant.Block.MOON_ROCK_SLAB);
+    public static final Block MOON_ROCK_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(MOON_ROCK)), Constant.Block.MOON_ROCK_STAIRS);
+    public static final Block MOON_ROCK_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(MOON_ROCK)), Constant.Block.MOON_ROCK_WALL);
+
+    public static final Block COBBLED_MOON_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.GRAY).strength(2.0F, 6.0F)), Constant.Block.COBBLED_MOON_ROCK);
+    public static final Block COBBLED_MOON_ROCK_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(COBBLED_MOON_ROCK).strength(2.5F, 6.0F)), Constant.Block.COBBLED_MOON_ROCK_SLAB);
+    public static final Block COBBLED_MOON_ROCK_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(COBBLED_MOON_ROCK)), Constant.Block.COBBLED_MOON_ROCK_STAIRS);
+    public static final Block COBBLED_MOON_ROCK_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(COBBLED_MOON_ROCK)), Constant.Block.COBBLED_MOON_ROCK_WALL);
+
+    public static final Block LUNASLATE = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.DEEPSLATE_GRAY).strength(3.5F, 6.0F)), Constant.Block.LUNASLATE);
+    public static final Block LUNASLATE_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(LUNASLATE).strength(4.0F, 6.0F)), Constant.Block.LUNASLATE_SLAB);
+    public static final Block LUNASLATE_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(LUNASLATE)), Constant.Block.LUNASLATE_STAIRS);
+    public static final Block LUNASLATE_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(LUNASLATE)), Constant.Block.LUNASLATE_WALL);
+
+    public static final Block COBBLED_LUNASLATE = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.DEEPSLATE_GRAY).strength(3.5F, 6.0F)), Constant.Block.COBBLED_LUNASLATE);
+    public static final Block COBBLED_LUNASLATE_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(COBBLED_LUNASLATE).strength(4.0F, 6.0F)), Constant.Block.COBBLED_LUNASLATE_SLAB);
+    public static final Block COBBLED_LUNASLATE_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(COBBLED_LUNASLATE)), Constant.Block.COBBLED_LUNASLATE_STAIRS);
+    public static final Block COBBLED_LUNASLATE_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(COBBLED_LUNASLATE)), Constant.Block.COBBLED_LUNASLATE_WALL);
+
+    public static final Block MOON_BASALT = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.TERRACOTTA_BLACK).strength(2.0F, 6.0F)), Constant.Block.MOON_BASALT);
+    public static final Block MOON_BASALT_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(MOON_BASALT).strength(2.5F, 6.0F)), Constant.Block.MOON_BASALT_SLAB);
+    public static final Block MOON_BASALT_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(MOON_BASALT)), Constant.Block.MOON_BASALT_STAIRS);
+    public static final Block MOON_BASALT_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(MOON_BASALT)), Constant.Block.MOON_BASALT_WALL);
+
+    public static final Block MOON_BASALT_BRICK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.TERRACOTTA_BLACK).strength(2.5F, 6.0F)), Constant.Block.MOON_BASALT_BRICK);
+    public static final Block MOON_BASALT_BRICK_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(MOON_BASALT_BRICK).strength(3.0F, 6.0F)), Constant.Block.MOON_BASALT_BRICK_SLAB);
+    public static final Block MOON_BASALT_BRICK_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(MOON_BASALT_BRICK)), Constant.Block.MOON_BASALT_BRICK_STAIRS);
+    public static final Block MOON_BASALT_BRICK_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(MOON_BASALT_BRICK)), Constant.Block.MOON_BASALT_BRICK_WALL);
+
+    public static final Block CRACKED_MOON_BASALT_BRICK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.TERRACOTTA_BLACK).strength(2.0F, 6.0F)), Constant.Block.CRACKED_MOON_BASALT_BRICK);
+    public static final Block CRACKED_MOON_BASALT_BRICK_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(CRACKED_MOON_BASALT_BRICK).strength(2.5F, 6.0F)), Constant.Block.CRACKED_MOON_BASALT_BRICK_SLAB);
+    public static final Block CRACKED_MOON_BASALT_BRICK_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(CRACKED_MOON_BASALT_BRICK)), Constant.Block.CRACKED_MOON_BASALT_BRICK_STAIRS);
+    public static final Block CRACKED_MOON_BASALT_BRICK_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(CRACKED_MOON_BASALT_BRICK)), Constant.Block.CRACKED_MOON_BASALT_BRICK_WALL);
 
     // MARS NATURAL
     public static final Block MARS_SURFACE_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.DIRT_BROWN).hardness(2.2F)), Constant.Block.MARS_SURFACE_ROCK);
     public static final Block MARS_SUB_SURFACE_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.RED).hardness(2.6F)), Constant.Block.MARS_SUB_SURFACE_ROCK);
     public static final Block MARS_STONE = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.RED).hardness(3.0F)), Constant.Block.MARS_STONE);
-    public static final Block[] MARS_COBBLESTONES = createDecorationBlocks(Constant.Block.MARS_COBBLESTONE, FabricBlockSettings.of(Material.STONE, MapColor.RED).hardness(2.8F), false);
+    public static final Block MARS_COBBLESTONE = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.RED).hardness(3.0F)), Constant.Block.MARS_COBBLESTONE);
+    public static final Block MARS_COBBLESTONE_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(MARS_COBBLESTONE).strength(3.5F, 6.0F)), Constant.Block.MARS_COBBLESTONE_SLAB);
+    public static final Block MARS_COBBLESTONE_STAIRS = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(MARS_COBBLESTONE)), Constant.Block.MARS_COBBLESTONE_STAIRS);
+    public static final Block MARS_COBBLESTONE_WALL = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(MARS_COBBLESTONE)), Constant.Block.MARS_COBBLESTONE_WALL);
 
     // ASTEROID NATURAL
     public static final Block ASTEROID_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MapColor.BROWN).hardness(3.0F)), Constant.Block.ASTEROID_ROCK);
@@ -143,8 +247,8 @@ public class GalacticraftBlock {
 
     // SPECIAL
     public static final Block ALUMINUM_WIRE = registerBlock(new AluminumWireBlock(FabricBlockSettings.copy(Blocks.WHITE_WOOL)), Constant.Block.WIRE_T1);
-    public static final Block SEALABLE_ALUMINUM_WIRE = registerBlock(new SealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATIONS[0])), Constant.Block.SEALABLE_ALUMINUM_WIRE);
-    public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = registerBlock(new HeavySealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATIONS[0])), Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE);
+    public static final Block SEALABLE_ALUMINUM_WIRE = registerBlock(new SealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATION)), Constant.Block.SEALABLE_ALUMINUM_WIRE);
+    public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = registerBlock(new HeavySealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATION)), Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE);
     public static final Block GLASS_FLUID_PIPE = registerBlock(new GlassFluidPipeBlock(FabricBlockSettings.of(Material.GLASS).breakByHand(true).sounds(BlockSoundGroup.GLASS)), Constant.Block.GLASS_FLUID_PIPE);
 
     // LIGHT PANELS
@@ -221,39 +325,13 @@ public class GalacticraftBlock {
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);
         FlammableBlockRegistry.getDefaultInstance().add(CRUDE_OIL, 60, 100);
+        FlattenableBlockRegistry.register(MOON_DIRT, MOON_DIRT_PATH.getDefaultState());
         BLOCKS.forEach((identifier, block) -> Registry.register(Registry.BLOCK, identifier, block));
     }
 
     private static FabricBlockSettings oreSettings(float hardness, float resistance, boolean deepslate) {
         if (deepslate) return FabricBlockSettings.of(Material.STONE, MapColor.DEEPSLATE_GRAY).strength(hardness, resistance).requiresTool().sounds(BlockSoundGroup.DEEPSLATE);
         return FabricBlockSettings.of(Material.STONE).strength(hardness, resistance).requiresTool();
-    }
-
-    private static Block[] createDecorationBlocks(String baseId, AbstractBlock.Settings settings, boolean detailedVariant) {
-        return createDecorationBlocks(baseId, new Block(settings), detailedVariant);
-    }
-
-    /**
-     * Generates a stair, slab and wall block for the given block.
-     * @param baseId The base registry id for all the blocks.
-     * @param baseBlock The block to model the variants on.
-     * @param hasDetailed Whether to create 4 additional 'detailed' blocks.
-     * @return An array of different variants of the same block.
-     */
-    private static Block[] createDecorationBlocks(String baseId, Block baseBlock, boolean hasDetailed) {
-        Block[] blocks = new Block[hasDetailed ? 8 : 4];
-        blocks[0] = registerBlock(baseBlock, baseId);
-        blocks[1] = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(baseBlock)), baseId + "_slab");
-        blocks[2] = registerBlock(new StairsBlock(baseBlock.getDefaultState(), FabricBlockSettings.copyOf(baseBlock)), baseId + "_stairs");
-        blocks[3] = registerBlock(new WallBlock(FabricBlockSettings.copyOf(baseBlock)), baseId + "_wall");
-
-        if (hasDetailed) {
-            blocks[4] = registerBlock(new Block(FabricBlockSettings.copyOf(baseBlock)), "detailed_" + baseId);
-            blocks[5] = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(baseBlock)), "detailed_" + baseId + "_slab");
-            blocks[6] = registerBlock(new StairsBlock(baseBlock.getDefaultState(), FabricBlockSettings.copyOf(baseBlock)), "detailed_" + baseId + "_stairs");
-            blocks[7] = registerBlock(new WallBlock(FabricBlockSettings.copyOf(baseBlock)), "detailed_" + baseId + "_wall");
-        }
-        return blocks;
     }
 
     private static <T extends Block> T registerBlock(T block, String id) {
@@ -275,22 +353,5 @@ public class GalacticraftBlock {
     private static <T extends Block> T registerBlockWithoutItem(T block, String id) {
         BLOCKS.put(new Identifier(Constant.MOD_ID, id), block);
         return block;
-    }
-
-    private static Block[] registerOres(String id, boolean overworld, boolean moon) {
-        Block[] blocks = new Block[(overworld ? 2 : 0) + (moon ? 2 : 0)];
-        if (overworld) {
-            blocks[0] = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F));
-            BLOCKS.put(new Identifier(Constant.MOD_ID, id + "_ore"), blocks[0]);
-            blocks[1] = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F));
-            BLOCKS.put(new Identifier(Constant.MOD_ID, "deepslate_" + id + "_ore"), blocks[1]);
-        }
-        if (moon) {
-            blocks[overworld ? 2 : 0] = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F));
-            BLOCKS.put(new Identifier(Constant.MOD_ID, "moon_" + id + "_ore"), blocks[overworld ? 2 : 0]);
-            blocks[overworld ? 3 : 1] = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F));
-            BLOCKS.put(new Identifier(Constant.MOD_ID, "moon_basalt_" + id + "_ore"), blocks[overworld ? 3 : 1]);
-        }
-        return blocks;
     }
 }

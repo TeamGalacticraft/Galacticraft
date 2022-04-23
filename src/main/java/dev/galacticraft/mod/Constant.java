@@ -69,15 +69,43 @@ public interface Constant {
         String MOON_TURF = "moon_turf";
         String MOON_SURFACE_ROCK = "moon_surface_rock";
         String MOON_ROCK = "moon_rock";
+        String MOON_ROCK_SLAB = "moon_rock_slab";
+        String MOON_ROCK_STAIRS = "moon_rock_stairs";
+        String MOON_ROCK_WALL = "moon_rock_wall";
         String COBBLED_MOON_ROCK = "cobbled_moon_rock";
+        String COBBLED_MOON_ROCK_SLAB = "cobbled_moon_rock_slab";
+        String COBBLED_MOON_ROCK_STAIRS = "cobbled_moon_rock_stairs";
+        String COBBLED_MOON_ROCK_WALL = "cobbled_moon_rock_wall";
         String LUNASLATE = "lunaslate";
+        String LUNASLATE_SLAB = "lunaslate_slab";
+        String LUNASLATE_STAIRS = "lunaslate_stairs";
+        String LUNASLATE_WALL = "lunaslate_wall";
         String COBBLED_LUNASLATE = "cobbled_lunaslate";
+        String COBBLED_LUNASLATE_SLAB = "cobbled_lunaslate_slab";
+        String COBBLED_LUNASLATE_STAIRS = "cobbled_lunaslate_stairs";
+        String COBBLED_LUNASLATE_WALL = "cobbled_lunaslate_wall";
         String MOON_BASALT = "moon_basalt";
+        String MOON_BASALT_SLAB = "moon_basalt_slab";
+        String MOON_BASALT_STAIRS = "moon_basalt_stairs";
+        String MOON_BASALT_WALL = "moon_basalt_wall";
+        String MOON_BASALT_BRICK = "moon_basalt_brick";
+        String MOON_BASALT_BRICK_SLAB = "moon_basalt_brick_slab";
+        String MOON_BASALT_BRICK_STAIRS = "moon_basalt_brick_stairs";
+        String MOON_BASALT_BRICK_WALL = "moon_basalt_brick_wall";
+        String CRACKED_MOON_BASALT_BRICK = "cracked_moon_basalt_brick";
+        String CRACKED_MOON_BASALT_BRICK_SLAB = "cracked_moon_basalt_brick_slab";
+        String CRACKED_MOON_BASALT_BRICK_STAIRS = "cracked_moon_basalt_brick_stairs";
+        String CRACKED_MOON_BASALT_BRICK_WALL = "cracked_moon_basalt_brick_wall";
+
         String MOON_DIRT = "moon_dirt";
         String MARS_SURFACE_ROCK = "mars_surface_rock";
         String MARS_SUB_SURFACE_ROCK = "mars_sub_surface_rock";
         String MARS_STONE = "mars_stone";
         String MARS_COBBLESTONE = "mars_cobblestone";
+        String MARS_COBBLESTONE_SLAB = "mars_cobblestone_slab";
+        String MARS_COBBLESTONE_STAIRS = "mars_cobblestone_stairs";
+        String MARS_COBBLESTONE_WALL = "mars_cobblestone_wall";
+
         String ASTEROID_ROCK = "asteroid_rock";
         String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
         String ASTEROID_ROCK_2 = "asteroid_rock_block_2";
@@ -114,14 +142,86 @@ public interface Constant {
 
         // Decorative BLocks
         String ALUMINUM_DECORATION = "aluminum_decoration";
+        String ALUMINUM_DECORATION_SLAB = "aluminum_decoration_slab";
+        String ALUMINUM_DECORATION_STAIRS = "aluminum_decoration_stairs";
+        String ALUMINUM_DECORATION_WALL = "aluminum_decoration_wall";
+        String DETAILED_ALUMINUM_DECORATION = "detailed_aluminum_decoration";
+        String DETAILED_ALUMINUM_DECORATION_SLAB = "detailed_aluminum_decoration_slab";
+        String DETAILED_ALUMINUM_DECORATION_STAIRS = "detailed_aluminum_decoration_stairs";
+        String DETAILED_ALUMINUM_DECORATION_WALL = "detailed_aluminum_decoration_wall";
+
         String BRONZE_DECORATION = "bronze_decoration";
+        String BRONZE_DECORATION_SLAB = "bronze_decoration_slab";
+        String BRONZE_DECORATION_STAIRS = "bronze_decoration_stairs";
+        String BRONZE_DECORATION_WALL = "bronze_decoration_wall";
+        String DETAILED_BRONZE_DECORATION = "detailed_bronze_decoration";
+        String DETAILED_BRONZE_DECORATION_SLAB = "detailed_bronze_decoration_slab";
+        String DETAILED_BRONZE_DECORATION_STAIRS = "detailed_bronze_decoration_stairs";
+        String DETAILED_BRONZE_DECORATION_WALL = "detailed_bronze_decoration_wall";
+
         String COPPER_DECORATION = "copper_decoration";
+        String COPPER_DECORATION_SLAB = "copper_decoration_slab";
+        String COPPER_DECORATION_STAIRS = "copper_decoration_stairs";
+        String COPPER_DECORATION_WALL = "copper_decoration_wall";
+        String DETAILED_COPPER_DECORATION = "detailed_copper_decoration";
+        String DETAILED_COPPER_DECORATION_SLAB = "detailed_copper_decoration_slab";
+        String DETAILED_COPPER_DECORATION_STAIRS = "detailed_copper_decoration_stairs";
+        String DETAILED_COPPER_DECORATION_WALL = "detailed_copper_decoration_wall";
+
         String IRON_DECORATION = "iron_decoration";
+        String IRON_DECORATION_SLAB = "iron_decoration_slab";
+        String IRON_DECORATION_STAIRS = "iron_decoration_stairs";
+        String IRON_DECORATION_WALL = "iron_decoration_wall";
+        String DETAILED_IRON_DECORATION = "detailed_iron_decoration";
+        String DETAILED_IRON_DECORATION_SLAB = "detailed_iron_decoration_slab";
+        String DETAILED_IRON_DECORATION_STAIRS = "detailed_iron_decoration_stairs";
+        String DETAILED_IRON_DECORATION_WALL = "detailed_iron_decoration_wall";
+
         String METEORIC_IRON_DECORATION = "meteoric_iron_decoration";
+        String METEORIC_IRON_DECORATION_SLAB = "meteoric_iron_decoration_slab";
+        String METEORIC_IRON_DECORATION_STAIRS = "meteoric_iron_decoration_stairs";
+        String METEORIC_IRON_DECORATION_WALL = "meteoric_iron_decoration_wall";
+        String DETAILED_METEORIC_IRON_DECORATION = "detailed_meteoric_iron_decoration";
+        String DETAILED_METEORIC_IRON_DECORATION_SLAB = "detailed_meteoric_iron_decoration_slab";
+        String DETAILED_METEORIC_IRON_DECORATION_STAIRS = "detailed_meteoric_iron_decoration_stairs";
+        String DETAILED_METEORIC_IRON_DECORATION_WALL = "detailed_meteoric_iron_decoration_wall";
+
         String STEEL_DECORATION = "steel_decoration";
+        String STEEL_DECORATION_SLAB = "steel_decoration_slab";
+        String STEEL_DECORATION_STAIRS = "steel_decoration_stairs";
+        String STEEL_DECORATION_WALL = "steel_decoration_wall";
+        String DETAILED_STEEL_DECORATION = "detailed_steel_decoration";
+        String DETAILED_STEEL_DECORATION_SLAB = "detailed_steel_decoration_slab";
+        String DETAILED_STEEL_DECORATION_STAIRS = "detailed_steel_decoration_stairs";
+        String DETAILED_STEEL_DECORATION_WALL = "detailed_steel_decoration_wall";
+
         String TIN_DECORATION = "tin_decoration";
+        String TIN_DECORATION_SLAB = "tin_decoration_slab";
+        String TIN_DECORATION_STAIRS = "tin_decoration_stairs";
+        String TIN_DECORATION_WALL = "tin_decoration_wall";
+        String DETAILED_TIN_DECORATION = "detailed_tin_decoration";
+        String DETAILED_TIN_DECORATION_SLAB = "detailed_tin_decoration_slab";
+        String DETAILED_TIN_DECORATION_STAIRS = "detailed_tin_decoration_stairs";
+        String DETAILED_TIN_DECORATION_WALL = "detailed_tin_decoration_wall";
+
         String TITANIUM_DECORATION = "titanium_decoration";
+        String TITANIUM_DECORATION_SLAB = "titanium_decoration_slab";
+        String TITANIUM_DECORATION_STAIRS = "titanium_decoration_stairs";
+        String TITANIUM_DECORATION_WALL = "titanium_decoration_wall";
+        String DETAILED_TITANIUM_DECORATION = "detailed_titanium_decoration";
+        String DETAILED_TITANIUM_DECORATION_SLAB = "detailed_titanium_decoration_slab";
+        String DETAILED_TITANIUM_DECORATION_STAIRS = "detailed_titanium_decoration_stairs";
+        String DETAILED_TITANIUM_DECORATION_WALL = "detailed_titanium_decoration_wall";
+
         String DARK_DECORATION = "dark_decoration";
+        String DARK_DECORATION_SLAB = "dark_decoration_slab";
+        String DARK_DECORATION_STAIRS = "dark_decoration_stairs";
+        String DARK_DECORATION_WALL = "dark_decoration_wall";
+        String DETAILED_DARK_DECORATION = "detailed_dark_decoration";
+        String DETAILED_DARK_DECORATION_SLAB = "detailed_dark_decoration_slab";
+        String DETAILED_DARK_DECORATION_STAIRS = "detailed_dark_decoration_stairs";
+        String DETAILED_DARK_DECORATION_WALL = "detailed_dark_decoration_wall";
+
         String GRATING = "grating";
         String TIN_LADDER = "tin_ladder";
         String SQUARE_LIGHT_PANEL = "square_light_panel";
@@ -231,6 +331,7 @@ public interface Constant {
         String CRACKED_MOON_BASALT_BRICK = "cracked_moon_basalt_brick";
         String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
         String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
+        String MOON_DIRT_PATH = "moon_dirt_path";
     }
 
     interface Fluid {
