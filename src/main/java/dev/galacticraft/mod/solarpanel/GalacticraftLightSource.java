@@ -32,10 +32,10 @@ import net.minecraft.text.TranslatableText;
 public class GalacticraftLightSource {
     private static final WorldLightSources MOON = new WorldLightSources(
             Constant.ScreenTexture.MOON_LIGHT_SOURCES,
-            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.sun").setStyle(Constant.Text.YELLOW_STYLE), 1.0, 1.0),
-            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.earth").setStyle(Constant.Text.GREEN_STYLE), 0.07, 1.0),
-            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.invalid").setStyle(Constant.Text.BLUE_STYLE), 0.0, 1.0),
-            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.unknown").setStyle(Constant.Text.WHITE_STYLE), 0.0, 1.0));
+            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.sun").setStyle(Constant.Text.Color.YELLOW_STYLE), 1.0, 1.0),
+            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.earth").setStyle(Constant.Text.Color.GREEN_STYLE), 0.07, 1.0),
+            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.invalid").setStyle(Constant.Text.Color.BLUE_STYLE), 0.0, 1.0),
+            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.unknown").setStyle(Constant.Text.Color.WHITE_STYLE), 0.0, 1.0));
 
     public static void register() {
         SolarPanelRegistry.registerLightSources(GalacticraftDimensionType.MOON_KEY, MOON);

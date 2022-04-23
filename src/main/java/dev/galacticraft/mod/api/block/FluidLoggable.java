@@ -30,7 +30,6 @@ import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Property;
@@ -40,8 +39,8 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,7 +55,7 @@ public interface FluidLoggable extends FluidDrainable, FluidFillable {
     String COLON_REP = "_gc_colon_";
 
     Property<Identifier> FLUID = new Property<>("fluid", Identifier.class) {
-        private static final List<Identifier> VALUES = new LinkedList<>();
+        private static final List<Identifier> VALUES = new ArrayList<>();
 
         @Override
         public Collection<Identifier> getValues() {
@@ -129,7 +128,6 @@ public interface FluidLoggable extends FluidDrainable, FluidFillable {
         return state.get(FLUID).equals(Constant.Misc.EMPTY) || state.get(FLUID).equals(INVALID);
     }
 
-    BlockState getPlacementState(ItemPlacementContext context);
 
     @Override
     default Optional<SoundEvent> getBucketFillSound() {

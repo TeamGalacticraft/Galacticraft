@@ -22,28 +22,25 @@
 
 package dev.galacticraft.mod.block.entity;
 
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.api.machine.MachineStatuses;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
-import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,27 +65,30 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
     }
 
     @Override
-    protected void tickClient() {
+    protected void tickClient(@NotNull World world, @NotNull BlockPos pos, @NotNull BlockState state) {
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
-                this.blockage[(z + 1) * 3 + (x + 1)] = !this.world.isSkyVisible(pos.add(x, 2, z));
+                this.blockage[(z + 1) * 3 + (x + 1)] = !world.isSkyVisible(pos.add(x, 2, z));
             }
         }
 
         double multiplier = this.blocked / 9.0;
-        if (this.world.isRaining() || this.world.isThundering()) multiplier *= 0.5;
-        double time = this.world.getTimeOfDay() % 24000;
+        if (world.isRaining() || world.isThundering()) multiplier *= 0.5;
+        double time = world.getTimeOfDay() % 24000;
         if (time > 6000) time = 12000L - time;
         this.currentEnergyGeneration = (long)(Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * (time / 6000.0) * multiplier) * 4L;
     }
 
     @Override
-    public void tickConstant() {
+    public void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        world.getProfiler().push("charge");
+        this.attemptDrainPowerToStack(CHARGE_SLOT);
+        world.getProfiler().pop();
         this.blocked = 0;
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
                 //noinspection AssignmentUsedAsCondition
-                if (this.blockage[(z + 1) * 3 + (x + 1)] = !this.world.isSkyVisible(pos.add(x, 2, z))) {
+                if (this.blockage[(z + 1) * 3 + (x + 1)] = !world.isSkyVisible(pos.add(x, 2, z))) {
                     this.blocked++;
                 }
             }
@@ -96,29 +96,28 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
     }
 
     @Override
-    public @NotNull MachineStatus tick() {
-        this.world.getProfiler().push("transfer");
-        this.attemptDrainPowerToStack(CHARGE_SLOT);
+    public @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        world.getProfiler().push("transfer");
         this.trySpreadEnergy();
-        this.world.getProfiler().pop();
+        world.getProfiler().pop();
         if (this.blocked == 9) return GalacticraftMachineStatus.BLOCKED;
         if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
         MachineStatus status = null;
         double multiplier = this.blocked / 9.0;
         if (this.blocked > 0) status = GalacticraftMachineStatus.PARTIALLY_BLOCKED;
-        if (this.world.isRaining() || this.world.isThundering()) {
+        if (world.isRaining() || world.isThundering()) {
             if (status == null) status = GalacticraftMachineStatus.RAIN;
             multiplier *= 0.5;
         }
-        if (!this.world.isDay()) status = GalacticraftMachineStatus.NIGHT;
-        double time = this.world.getTimeOfDay() % 24000;
+        if (!world.isDay()) status = GalacticraftMachineStatus.NIGHT;
+        double time = world.getTimeOfDay() % 24000;
         if (time > 6000) time = 12000L - time;
-        this.world.getProfiler().push("transaction");
+        world.getProfiler().push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             this.energyStorage().insert((long)(Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * (time / 6000.0) * multiplier) * 4L, transaction);
             transaction.commit();
         }
-        this.world.getProfiler().pop();
+        world.getProfiler().pop();
         return status == null ? GalacticraftMachineStatus.COLLECTING : status;
     }
 

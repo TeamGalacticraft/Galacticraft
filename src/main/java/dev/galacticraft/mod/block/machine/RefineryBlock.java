@@ -22,15 +22,10 @@
 
 package dev.galacticraft.mod.block.machine;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.RefineryBlockEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -39,20 +34,13 @@ import java.util.Random;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RefineryBlock extends SimpleMachineBlock<RefineryBlockEntity> {
-    private static final Text TOOLTIP_TEXT = new TranslatableText("tooltip.galacticraft.refinery").setStyle(Constant.Text.DARK_GRAY_STYLE);
-
     public RefineryBlock(Settings settings) {
-        super(settings, RefineryBlockEntity::new, TOOLTIP_TEXT);
+        super(settings, RefineryBlockEntity::new);
     }
 
     @Override
     public RefineryBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new RefineryBlockEntity(pos, state);
-    }
-
-    @Override
-    public Text machineDescription(ItemStack stack, BlockView view, boolean advanced) {
-        return TOOLTIP_TEXT;
     }
 
     @Override

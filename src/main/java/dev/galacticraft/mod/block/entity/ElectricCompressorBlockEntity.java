@@ -42,12 +42,9 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
@@ -82,14 +79,19 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    public @NotNull MachineStatus tick() {
+    protected void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        super.tickConstant(world, pos, state);
         this.attemptChargeFromStack(CHARGE_SLOT);
+    }
+
+    @Override
+    public @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
         if (this.getStatus().getType().isActive() && this.getMaxProgress() > 0) {
             if (this.getProgress() % (this.getMaxProgress() / 5) == 0 && this.getProgress() > this.getMaxProgress() / 2) {
-                this.world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+                world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
             }
         }
-        return super.tick();
+        return super.tick(world, pos, state);
     }
 
     @Override
@@ -111,7 +113,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    protected boolean outputStacks(CompressingRecipe recipe, TransactionContext transaction) {
+    protected boolean outputStacks(@NotNull CompressingRecipe recipe, TransactionContext transaction) {
         ItemStack output = recipe.getOutput();
         ItemVariant variant = ItemVariant.of(output);
         long count = output.getCount() * 2;
@@ -122,7 +124,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    protected boolean extractCraftingMaterials(CompressingRecipe recipe, TransactionContext transaction) {
+    protected boolean extractCraftingMaterials(@NotNull CompressingRecipe recipe, TransactionContext transaction) {
         DefaultedList<ItemStack> remainder = recipe.getRemainder(this.craftingInv);
         for (int i = 0; i < 9; i++) {
             ItemStack stack = remainder.get(i);

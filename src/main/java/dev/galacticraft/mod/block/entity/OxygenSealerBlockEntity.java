@@ -23,7 +23,11 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.api.accessor.WorldOxygenAccessor;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.api.machine.MachineStatuses;
+import dev.galacticraft.api.machine.storage.MachineFluidStorage;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.machine.storage.display.TankDisplay;
 import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
@@ -31,10 +35,6 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerWorldAccessor;
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.storage.MachineFluidStorage;
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
@@ -45,6 +45,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -101,37 +102,42 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         this.oxygenWorld = CelestialBody.getByDimension(world).map(body -> body.atmosphere().breathable()).orElse(true);
         if (!world.isClient) ((ServerWorldAccessor) world).addSealer(this);
     }
+
     @Override
-    protected @NotNull MachineStatus tick() {
+    protected void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        super.tickConstant(world, pos, state);
+        this.attemptChargeFromStack(BATTERY_SLOT);
+    }
+
+    @Override
+    protected @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
         assert world != null;
         if (this.disabled != (this.disabled = false)) {
             ((ServerWorldAccessor) world).addSealer(this);
         }
-        this.attemptChargeFromStack(BATTERY_SLOT);
 
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate()) {
                 if (!this.fluidStorage().isEmpty(OXYGEN_TANK)) {
                     if (this.sealCheckTime > 0) this.sealCheckTime--;
                     if (this.updateQueued && this.sealCheckTime == 0) {
-                        this.world.getProfiler().push("check_seal");
+                        world.getProfiler().push("check_seal");
                         this.updateQueued = false;
                         this.sealCheckTime = SEAL_CHECK_TIME;
-                        BlockPos pos = this.pos.toImmutable();
-                        if (this.oxygenWorld || (this.breathablePositions.isEmpty() && ((WorldOxygenAccessor) world).isBreathable(pos.up()))) {
-                            this.world.getProfiler().pop();
+                        BlockPos pos1 = pos.offset(Direction.UP);
+                        if (this.oxygenWorld || (this.breathablePositions.isEmpty() && ((WorldOxygenAccessor) world).isBreathable(pos1))) {
+                            world.getProfiler().pop();
                             return GalacticraftMachineStatus.ALREADY_SEALED;
                         }
                         for (BlockPos pos2 : this.breathablePositions) {
-                            ((WorldOxygenAccessor) this.world).setBreathable(pos2, false);
+                            ((WorldOxygenAccessor) world).setBreathable(pos2, false);
                         }
                         this.breathablePositions.clear();
                         this.watching.clear();
                         Queue<Pair<BlockPos, Direction>> queue = new LinkedList<>();
                         Set<Pair<BlockPos, Direction>> checked = new HashSet<>();
                         Set<BlockPos> added = new HashSet<>();
-                        BlockPos pos1 = pos.offset(Direction.UP);
-                        BlockState state;
+                        BlockState state1;
                         Pair<BlockPos, Direction> pair;
                         BlockPos.Mutable mutable = new BlockPos.Mutable();
                         queue.add(new Pair<>(pos1, Direction.UP));
@@ -139,15 +145,15 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                         while (!queue.isEmpty()) {
                             pair = queue.poll();
                             pos1 = pair.getLeft();
-                            state = world.getBlockState(pos1);
-                            if (state.isAir() || (!Block.isFaceFullSquare(state.getCollisionShape(world, pos1), pair.getRight().getOpposite()))) {
+                            state1 = world.getBlockState(pos1);
+                            if (state1.isAir() || (!Block.isFaceFullSquare(state1.getCollisionShape(world, pos1), pair.getRight().getOpposite()))) {
                                 this.breathablePositions.add(pos1);
                                 if (this.breathablePositions.size() > 1000) {
                                     this.breathablePositions.clear();
                                     this.watching.clear();
                                     this.updateQueued = true;
                                     this.sealCheckTime = SEAL_CHECK_TIME * 5;
-                                    this.world.getProfiler().pop();
+                                    world.getProfiler().pop();
                                     return GalacticraftMachineStatus.AREA_TOO_LARGE;
                                 }
                                 added.add(pos1);
@@ -156,7 +162,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                                 for (Direction direction : Constant.Misc.DIRECTIONS) {
                                     final Pair<BlockPos, Direction> e = new Pair<>(mutable.set(pos1).move(direction).toImmutable(), direction);
                                     if (!added.contains(e.getLeft()) && checked.add(e)) {
-                                        if (!Block.isFaceFullSquare(state.getCollisionShape(world, pos1), e.getRight())) {
+                                        if (!Block.isFaceFullSquare(state1.getCollisionShape(world, pos1), e.getRight())) {
                                             queue.add(e);
                                         }
                                     }
@@ -166,14 +172,14 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                             }
                         }
                         for (BlockPos pos2 : this.breathablePositions) {
-                            ((WorldOxygenAccessor) this.world).setBreathable(pos2, true);
+                            ((WorldOxygenAccessor) world).setBreathable(pos2, true);
                         }
-                        this.world.getProfiler().pop();
+                        world.getProfiler().pop();
                     }
-                    this.world.getProfiler().push("extract_oxygen");
+                    world.getProfiler().push("extract_oxygen");
                     this.fluidStorage().extract(OXYGEN_TANK, breathablePositions.size() * 2L, transaction);
                     transaction.commit();
-                    this.world.getProfiler().pop();
+                    world.getProfiler().pop();
                     return GalacticraftMachineStatus.SEALED;
                 } else {
                     this.sealCheckTime = 0;
@@ -187,11 +193,11 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickDisabled() {
+    protected void tickDisabled(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
         this.disabled = true;
-        ((ServerWorldAccessor) this.world).removeSealer(this);
-        for (BlockPos pos : this.breathablePositions) {
-            ((WorldOxygenAccessor) world).setBreathable(pos, false);
+        ((ServerWorldAccessor) world).removeSealer(this);
+        for (BlockPos pos1 : this.breathablePositions) {
+            ((WorldOxygenAccessor) world).setBreathable(pos1, false);
         }
         this.breathablePositions.clear();
         this.watching.clear();
@@ -204,7 +210,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
             ((ServerWorldAccessor) this.world).removeSealer(this);
         }
         for (BlockPos pos : this.breathablePositions) {
-            ((WorldOxygenAccessor) world).setBreathable(pos, false);
+            ((WorldOxygenAccessor) this.world).setBreathable(pos, false);
         }
         this.breathablePositions.clear();
         this.watching.clear();

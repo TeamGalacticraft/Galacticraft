@@ -22,22 +22,24 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
-import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
-import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
+import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.api.transfer.StateCachingStorageProvider;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -45,6 +47,9 @@ import org.jetbrains.annotations.Nullable;
 public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_TO_BATTERY_SLOT = 0;
     public static final int DRAIN_FROM_BATTERY_SLOT = 1;
+
+    private final StateCachingStorageProvider<EnergyStorage> batteryChargeSlot = StateCachingStorageProvider.create(this.itemStorage().getSlot(CHARGE_TO_BATTERY_SLOT), EnergyStorage.ITEM);
+    private final StateCachingStorageProvider<EnergyStorage> batteryDrainSlot = StateCachingStorageProvider.create(this.itemStorage().getSlot(DRAIN_FROM_BATTERY_SLOT), EnergyStorage.ITEM);
 
     public EnergyStorageModuleBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE, pos, state);
@@ -74,10 +79,15 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @NotNull MachineStatus tick() {
+    protected void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        super.tickConstant(world, pos, state);
+        this.attemptChargeFromStack(this.batteryDrainSlot);
+        this.attemptDrainPowerToStack(this.batteryChargeSlot);
+    }
+
+    @Override
+    protected @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
         this.trySpreadEnergy();
-        this.attemptChargeFromStack(DRAIN_FROM_BATTERY_SLOT);
-        this.attemptDrainPowerToStack(CHARGE_TO_BATTERY_SLOT);
         return MachineStatus.INVALID;
     }
 

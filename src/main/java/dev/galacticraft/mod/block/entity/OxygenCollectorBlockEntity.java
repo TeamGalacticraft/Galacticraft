@@ -38,6 +38,7 @@ import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.OxygenCollectorScreenHandler;
 import dev.galacticraft.mod.util.FluidUtil;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
@@ -45,6 +46,7 @@ import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -84,19 +86,19 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 .build();
     }
 
-    private int collectOxygen() {
+    private int collectOxygen(@NotNull ServerWorld world, @NotNull BlockPos pos) {
         if (!this.oxygenWorld) {
-            int minX = this.pos.getX() - 5;
-            int minY = this.pos.getY() - 5;
-            int minZ = this.pos.getZ() - 5;
-            int maxX = this.pos.getX() + 5;
-            int maxY = this.pos.getY() + 5;
-            int maxZ = this.pos.getZ() + 5;
+            int minX = pos.getX() - 5;
+            int minY = pos.getY() - 5;
+            int minZ = pos.getZ() - 5;
+            int maxX = pos.getX() + 5;
+            int maxY = pos.getY() + 5;
+            int maxZ = pos.getZ() + 5;
 
             float leafBlocks = 0;
 
-            for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
-                BlockState state = world.getBlockState(pos);
+            for (BlockPos pos1 : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
+                BlockState state = world.getBlockState(pos1);
                 if (state.isAir()) {
                     continue;
                 }
@@ -116,18 +118,23 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @NotNull MachineStatus tick() {
-        this.world.getProfiler().push("transfer");
+    protected void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        super.tickConstant(world, pos, state);
         this.attemptChargeFromStack(CHARGE_SLOT);
-        this.trySpreadGases();
+    }
+
+    @Override
+    protected @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        world.getProfiler().push("transfer");
+        this.trySpreadFluids();
 
         if (this.fluidStorage().isFull(OXYGEN_TANK)) return GalacticraftMachineStatus.OXYGEN_TANK_FULL;
-        this.world.getProfiler().swap("transaction");
+        world.getProfiler().swap("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate()) {
-                this.world.getProfiler().push("collect");
-                this.collectionAmount = collectOxygen();
-                this.world.getProfiler().pop();
+                world.getProfiler().push("collect");
+                this.collectionAmount = collectOxygen(world, pos);
+                world.getProfiler().pop();
                 if (this.collectionAmount > 0) {
                     this.fluidStorage().insert(OXYGEN_TANK, FluidVariant.of(Gases.OXYGEN), FluidUtil.bucketsToDroplets(this.collectionAmount), transaction);
                     transaction.commit();
@@ -140,7 +147,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
             }
         } finally {
-            this.world.getProfiler().pop();
+            world.getProfiler().pop();
         }
     }
 

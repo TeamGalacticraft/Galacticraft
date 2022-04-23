@@ -52,9 +52,9 @@ public class GlowstoneWallTorchBlock extends WallTorchBlock {
     @Override
     public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableText("tooltip.galacticraft.glowstone_torch").setStyle(Constant.Text.GRAY_STYLE));
+            list.add(new TranslatableText("tooltip.galacticraft.glowstone_torch").setStyle(Constant.Text.Color.GRAY_STYLE));
         } else {
-            list.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Constant.Text.GRAY_STYLE));
+            list.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Constant.Text.Color.GRAY_STYLE));
         }
     }
 }

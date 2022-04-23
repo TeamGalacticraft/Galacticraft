@@ -42,6 +42,8 @@ import dev.galacticraft.mod.util.GenericStorageUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
@@ -93,63 +95,69 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @NotNull MachineStatus tick() {
-        this.world.getProfiler().push("transfer");
+    protected void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        super.tickConstant(world, pos, state);
+        world.getProfiler().push("extract_resources");
         this.attemptChargeFromStack(BATTERY_SLOT);
         this.drainOxygenFromStack(OXYGEN_TANK_SLOT);
-        this.world.getProfiler().swap("transaction");
+        world.getProfiler().pop();
+    }
+
+    @Override
+    protected @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        world.getProfiler().push("transaction");
         MachineStatus status;
         this.players = world.getPlayers().size();
         this.prevSize = this.size;
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate()) {
-                this.world.getProfiler().push("bubble");
+                world.getProfiler().push("bubble");
                 if (this.size > this.targetSize) {
                     this.setSize(Math.max(this.size - 0.1F, this.targetSize));
                 }
-                if (this.size > 0.0D && this.bubbleVisible && this.bubbleId == -1 && this.world instanceof ServerWorld serverWorld) {
+                if (this.size > 0.0D && this.bubbleVisible && this.bubbleId == -1) {
                     BubbleEntity entity = new BubbleEntity(GalacticraftEntityType.BUBBLE, world);
                     entity.setPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
                     entity.prevX = this.getPos().getX();
                     entity.prevY = this.getPos().getY();
                     entity.prevZ = this.getPos().getZ();
-                    this.world.spawnEntity(entity);
+                    world.spawnEntity(entity);
                     this.bubbleId = entity.getId();
-                    for (ServerPlayerEntity player : serverWorld.getPlayers()) {
+                    for (ServerPlayerEntity player : world.getPlayers()) {
                         player.networkHandler.sendPacket(entity.createSpawnPacket());
                     }
                 }
-                this.world.getProfiler().pop();
-                if (this.prevSize != this.size || this.players != this.world.getPlayers().size()) {
-                    this.world.getProfiler().push("network");
-                    for (ServerPlayerEntity player : ((ServerWorld) this.world).getPlayers()) {
-                        ServerPlayNetworking.send(player, new Identifier(Constant.MOD_ID, "bubble_size"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(this.pos).writeDouble(this.size)));
+                world.getProfiler().pop();
+                if (this.prevSize != this.size || this.players != world.getPlayers().size()) {
+                    world.getProfiler().push("network");
+                    for (ServerPlayerEntity player : world.getPlayers()) {
+                        ServerPlayNetworking.send(player, new Identifier(Constant.MOD_ID, "bubble_size"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
                     }
-                    this.world.getProfiler().pop();
+                    world.getProfiler().pop();
                 }
-                this.world.getProfiler().push("bubbler_distributor_transfer");
+                world.getProfiler().push("bubbler_distributor_transfer");
                 long oxygenRequired = ((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size));
                 if (this.fluidStorage().extract(OXYGEN_TANK, oxygenRequired, transaction).getAmount() == oxygenRequired) {
                     if (this.size < this.targetSize) {
                         setSize(this.size + 0.05D);
                     }
                     transaction.commit();
-                    this.world.getProfiler().pop();
+                    world.getProfiler().pop();
                     return GalacticraftMachineStatus.DISTRIBUTING;
                 } else {
                     status = GalacticraftMachineStatus.NOT_ENOUGH_OXYGEN;
-                    this.world.getProfiler().pop();
+                    world.getProfiler().pop();
                 }
             } else {
                 status = MachineStatuses.NOT_ENOUGH_ENERGY;
             }
         } finally {
-            this.world.getProfiler().pop();
+            world.getProfiler().pop();
         }
-        this.world.getProfiler().push("size");
+        world.getProfiler().push("size");
         if (this.bubbleId != -1 && this.size <= 0) {
-            this.world.getEntityById(bubbleId).remove(Entity.RemovalReason.DISCARDED);
-            this.world.getEntityById(bubbleId).onRemoved();
+            world.getEntityById(bubbleId).remove(Entity.RemovalReason.DISCARDED);
+            world.getEntityById(bubbleId).onRemoved();
             this.bubbleId = -1;
         }
 
@@ -160,7 +168,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
         if (this.size < 0) {
             this.setSize(0);
         }
-        this.world.getProfiler().pop();
+        world.getProfiler().pop();
         return status;
     }
 

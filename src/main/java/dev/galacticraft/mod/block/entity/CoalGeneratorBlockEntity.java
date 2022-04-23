@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.block.entity;
 
 import com.google.common.annotations.VisibleForTesting;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.api.machine.MachineStatuses;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
@@ -32,7 +33,6 @@ import dev.galacticraft.api.machine.storage.io.ResourceType;
 import dev.galacticraft.api.machine.storage.io.SlotType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
@@ -48,6 +48,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -96,24 +97,26 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickConstant() {
-        super.tickConstant();
+    protected void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        super.tickConstant(world, pos, state);
         if (this.fuelLength == 0) {
             if (this.heat > 0) {
                 this.setHeat(Math.max(0, this.heat - 0.02d));
             }
         }
+        world.getProfiler().push("charge");
+        this.attemptDrainPowerToStack(CHARGE_SLOT);
+        world.getProfiler().pop();
     }
 
     @Override
-    public @NotNull MachineStatus tick() {
-        this.world.getProfiler().push("transaction");
+    public @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        world.getProfiler().push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             this.energyStorage().insert((long) (Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate() * this.heat), transaction);
         }
-        this.attemptDrainPowerToStack(CHARGE_SLOT);
         this.trySpreadEnergy();
-        this.world.getProfiler().swap("fuel_reset");
+        world.getProfiler().swap("fuel_reset");
         if (this.fuelLength == 0) {
             this.consumeFuel();
             if (this.fuelLength == 0) {
@@ -124,13 +127,13 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
                 }
             }
         }
-        this.world.getProfiler().swap("fuel_tick");
+        world.getProfiler().swap("fuel_tick");
         if (this.fuelTime++ >= this.fuelLength) {
             this.fuelLength = 0;
             this.consumeFuel();
         }
         this.setHeat(Math.min(1, this.heat + 0.004));
-        this.world.getProfiler().pop();
+        world.getProfiler().pop();
 
         if (this.energyStorage().isFull()) {
             return MachineStatuses.CAPACITOR_FULL;

@@ -47,6 +47,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -80,15 +81,20 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @NotNull MachineStatus tick() {
-        this.world.getProfiler().push("transfer");
+    protected void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        super.tickConstant(world, pos, state);
         this.attemptChargeFromStack(CHARGE_SLOT);
+    }
 
+    @Override
+    protected @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
         if (this.fluidStorage().isEmpty(OXYGEN_TANK)) return GalacticraftMachineStatus.NOT_ENOUGH_OXYGEN;
+        world.getProfiler().push("find_storage");
         Storage<FluidVariant> fluidStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(FluidStorage.ITEM);
+        world.getProfiler().pop();
         if (fluidStorage == null) return GalacticraftMachineStatus.MISSING_OXYGEN_TANK;
         if (!fluidStorage.supportsInsertion() || fluidStorage.simulateInsert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GalacticraftMachineStatus.OXYGEN_TANK_FULL;
-        this.world.getProfiler().swap("transaction");
+        world.getProfiler().push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate()) {
                 FluidStack gasStack;
@@ -103,7 +109,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
             }
         } finally {
-            this.world.getProfiler().pop();
+            world.getProfiler().pop();
         }
 
         return GalacticraftMachineStatus.COMPRESSING;

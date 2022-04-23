@@ -666,7 +666,7 @@ public interface Constant {
         }
 
         interface Gas {
-            Predicate<FluidVariant> OXYGEN = v -> GalacticraftTag.OXYGEN.contains(v.getGas());
+            Predicate<FluidVariant> OXYGEN = v -> GalacticraftTag.OXYGEN.contains(v.getFluid());
         }
 
         interface Fluid {
@@ -677,25 +677,49 @@ public interface Constant {
     }
 
     interface Text {
-        Style DARK_GRAY_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
-        Style GOLD_STYLE = Style.EMPTY.withColor(Formatting.GOLD);
-        Style GREEN_STYLE = Style.EMPTY.withColor(Formatting.GREEN);
-        Style RED_STYLE = Style.EMPTY.withColor(Formatting.RED);
-        Style BLUE_STYLE = Style.EMPTY.withColor(Formatting.BLUE);
-        Style AQUA_STYLE = Style.EMPTY.withColor(Formatting.AQUA);
-        Style GRAY_STYLE = Style.EMPTY.withColor(Formatting.GRAY);
-        Style DARK_RED_STYLE = Style.EMPTY.withColor(Formatting.DARK_RED);
-        Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(Formatting.LIGHT_PURPLE);
-        Style YELLOW_STYLE = Style.EMPTY.withColor(Formatting.YELLOW);
-        Style WHITE_STYLE = Style.EMPTY.withColor(Formatting.WHITE);
-        Style DARK_BLUE_STYLE = Style.EMPTY.withColor(Formatting.DARK_BLUE);
+        interface Color {
+            Style DARK_GRAY_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
+            Style GOLD_STYLE = Style.EMPTY.withColor(Formatting.GOLD);
+            Style GREEN_STYLE = Style.EMPTY.withColor(Formatting.GREEN);
+            Style RED_STYLE = Style.EMPTY.withColor(Formatting.RED);
+            Style BLUE_STYLE = Style.EMPTY.withColor(Formatting.BLUE);
+            Style AQUA_STYLE = Style.EMPTY.withColor(Formatting.AQUA);
+            Style GRAY_STYLE = Style.EMPTY.withColor(Formatting.GRAY);
+            Style DARK_RED_STYLE = Style.EMPTY.withColor(Formatting.DARK_RED);
+            Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(Formatting.LIGHT_PURPLE);
+            Style YELLOW_STYLE = Style.EMPTY.withColor(Formatting.YELLOW);
+            Style WHITE_STYLE = Style.EMPTY.withColor(Formatting.WHITE);
+            Style DARK_BLUE_STYLE = Style.EMPTY.withColor(Formatting.DARK_BLUE);
 
-        static Style getStorageLevelColor(double scale) {
-            return Style.EMPTY.withColor(TextColor.fromRgb(((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8)));
+            static Style getStorageLevelColor(double scale) {
+                return Style.EMPTY.withColor(TextColor.fromRgb(((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8)));
+            }
+
+            static Style getRainbow(int ticks) {
+                return Style.EMPTY.withColor(TextColor.fromRgb(MathHelper.hsvToRgb(ticks / 1000.0f, 1, 1)));
+            }
         }
-
-        static Style getRainbow(int ticks) {
-            return Style.EMPTY.withColor(TextColor.fromRgb(MathHelper.hsvToRgb(ticks / 1000.0f, 1, 1)));
+        
+        interface Translations {
+              String NOT_ENOUGH_LEAVES = "ui.galacticraft.machine.status.not_enough_leaves";
+              String ACTIVE = "ui.galacticraft.machine.status.active";
+              String IDLE = "ui.galacticraft.machine.status.idle";
+              String WARMING = "ui.galacticraft.machine.status.warming";
+              String INACTIVE = "ui.galacticraft.machine.status.inactive";
+              String NOT_ENOUGH_ENERGY = "ui.galacticraft.machine.status.not_enough_energy";
+              String OFF = "ui.galacticraft.machine.status.off";
+              String PROCESSING = "ui.galacticraft.machine.status.processing";
+              String COLLECTING = "ui.galacticraft.machine.status.collecting";
+              String COMPRESSING = "ui.galacticraft.machine.status.compressing";
+              String DECOMPRESSING = "ui.galacticraft.machine.status.decompressing";
+              String PARTIALLY_BLOCKED = "ui.galacticraft.machine.status.partially_blocked";
+              String NIGHT = "ui.galacticraft.machine.status.night";
+              String FULL = "ui.galacticraft.machine.status.full";
+              String EMPTY_CANISTER = "ui.galacticraft.machine.status.empty_canister";
+              String BLOCKED = "ui.galacticraft.machine.status.blocked";
+              String DISTRIBUTING = "ui.galacticraft.machine.status.distributing";
+              String NOT_ENOUGH_OXYGEN = "ui.galacticraft.machine.status.not_enough_oxygen";
+              String NOT_ENOUGH_ITEMS = "ui.galacticraft.machine.status.not_enough_items";
         }
     }
 

@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.block.machine;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.api.block.MachineBlock;
 import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
@@ -34,6 +34,8 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -43,16 +45,16 @@ public class SimpleMachineBlock<T extends MachineBlockEntity> extends MachineBlo
             .strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL);
 
     private final BlockEntityFactory<T> factory;
-    private final Text information;
+    private Text information = null;
 
-    public static <T extends MachineBlockEntity> SimpleMachineBlock<T> create(BlockEntityFactory<T> factory, String key) {
-        return new SimpleMachineBlock<>(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS), factory, new TranslatableText(key).setStyle(Constant.Text.DARK_GRAY_STYLE));
+    @Contract("_ -> new")
+    public static <T extends MachineBlockEntity> @NotNull SimpleMachineBlock<T> create(BlockEntityFactory<T> factory) {
+        return new SimpleMachineBlock<>(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS), factory);
     }
 
-    protected SimpleMachineBlock(Settings settings, BlockEntityFactory<T> factory, Text information) {
+    protected SimpleMachineBlock(Settings settings, BlockEntityFactory<T> factory) {
         super(settings);
         this.factory = factory;
-        this.information = information;
     }
 
     @Override
@@ -62,6 +64,9 @@ public class SimpleMachineBlock<T extends MachineBlockEntity> extends MachineBlo
 
     @Override
     public Text machineDescription(ItemStack stack, BlockView view, boolean advanced) {
+        if (this.information == null) {
+            this.information = new TranslatableText(this.getTranslationKey() + ".description").setStyle(Constant.Text.Color.DARK_GRAY_STYLE);
+        }
         return this.information;
     }
 

@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.world.dimension;
 
 import dev.galacticraft.api.gas.GasFluid;
-import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.text.TranslatableText;
@@ -51,7 +50,7 @@ public class GalacticraftGas {
             );
 
     public static void register() {
-        Registry.register(Gas.REGISTRY, HYDROGEN_DEUTERIUM_OXYGEN_ID, HYDROGEN_DEUTERIUM_OXYGEN);
-        Registry.register(Gas.REGISTRY, NITROGEN_OXIDE_ID, NITROGEN_OXIDE);
+        Registry.register(Registry.FLUID, HYDROGEN_DEUTERIUM_OXYGEN_ID, HYDROGEN_DEUTERIUM_OXYGEN);
+        Registry.register(Registry.FLUID, NITROGEN_OXIDE_ID, NITROGEN_OXIDE);
     }
 }

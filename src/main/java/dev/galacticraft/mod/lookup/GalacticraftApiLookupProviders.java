@@ -32,6 +32,7 @@ import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.item.OxygenTankItem;
 import dev.galacticraft.mod.storage.SingleTypeStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.block.entity.BlockEntityType;
 import team.reborn.energy.api.EnergyStorage;
 

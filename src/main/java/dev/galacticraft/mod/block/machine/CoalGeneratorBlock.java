@@ -22,19 +22,14 @@
 
 package dev.galacticraft.mod.block.machine;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.CoalGeneratorBlockEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -43,11 +38,8 @@ import java.util.Random;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CoalGeneratorBlock extends SimpleMachineBlock<CoalGeneratorBlockEntity> {
-    private static final Text TOOLTIP_INFO = new TranslatableText("tooltip.galacticraft.coal_generator")
-            .setStyle(Constant.Text.DARK_GRAY_STYLE);
-
     public CoalGeneratorBlock(Settings settings) {
-        super(settings, CoalGeneratorBlockEntity::new, TOOLTIP_INFO);
+        super(settings, CoalGeneratorBlockEntity::new);
     }
 
     @Override
@@ -74,10 +66,5 @@ public class CoalGeneratorBlock extends SimpleMachineBlock<CoalGeneratorBlockEnt
     @Override
     public CoalGeneratorBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new CoalGeneratorBlockEntity(pos, state);
-    }
-
-    @Override
-    public Text machineDescription(ItemStack stack, BlockView view, boolean advanced) {
-        return TOOLTIP_INFO;
     }
 }

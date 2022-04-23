@@ -23,24 +23,23 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.api.machine.MachineStatuses;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.machine.storage.io.ResourceFlow;
 import dev.galacticraft.api.machine.storage.io.ResourceType;
+import dev.galacticraft.api.machine.storage.io.SlotType;
 import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
-import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.mod.api.Tier1EnergyMachine;
 import dev.galacticraft.mod.item.GalacticraftItem;
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
-import dev.galacticraft.api.machine.storage.io.SlotType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -52,10 +51,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,9 +103,11 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     }
 
     @Override
-    public @NotNull MachineStatus tick() {
+    public void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        super.tickConstant(world, pos, state);
+        world.getProfiler().push("charge");
         this.attemptChargeFromStack(CHARGE_SLOT);
-        return super.tick();
+        world.getProfiler().pop();
     }
 
     @Override
@@ -121,7 +124,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     }
 
     @Override
-    protected boolean outputStacks(@NotNull FabricationRecipe recipe, TransactionContext context) {
+    protected boolean outputStacks(@NotNull FabricationRecipe recipe, @NotNull TransactionContext context) {
         ItemStack output = recipe.getOutput();
         try (Transaction transaction = Transaction.openNested(context)) {
             if (this.itemStorage().insert(OUTPUT_SLOT, ItemVariant.of(output), output.getCount(), transaction) == output.getCount()) {
@@ -133,7 +136,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     }
 
     @Override
-    protected boolean extractCraftingMaterials(FabricationRecipe recipe, TransactionContext context) {
+    protected boolean extractCraftingMaterials(@NotNull FabricationRecipe recipe, @NotNull TransactionContext context) {
         try (Transaction transaction = Transaction.openNested(context)) {
             if (this.itemStorage().extract(INPUT_SLOT_DIAMOND, Items.DIAMOND, 1, transaction) == 1) {
                 if (this.itemStorage().extract(INPUT_SLOT_SILICON, GalacticraftItem.RAW_SILICON, 1, transaction) == 1) {
@@ -157,13 +160,13 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     }
 
     @Override
-    protected @NotNull Optional<FabricationRecipe> findValidRecipe() {
+    protected @NotNull Optional<FabricationRecipe> findValidRecipe(@NotNull World world) {
         try (Transaction transaction = Transaction.openOuter()) {
-            if (this.itemStorage().getSlot(INPUT_SLOT_DIAMOND).extract(ItemVariant.of(Items.DIAMOND), 1, transaction) == 1
-                    && this.itemStorage().getSlot(INPUT_SLOT_SILICON).extract(ItemVariant.of(GalacticraftItem.RAW_SILICON), 1, transaction) == 1
-                    && this.itemStorage().getSlot(INPUT_SLOT_SILICON_2).extract(ItemVariant.of(GalacticraftItem.RAW_SILICON), 1, transaction) == 1
-                    && this.itemStorage().getSlot(INPUT_SLOT_REDSTONE).extract(ItemVariant.of(Items.REDSTONE), 1, transaction) == 1) {
-                return super.findValidRecipe();
+            if (this.itemStorage().getSlot(INPUT_SLOT_DIAMOND).simulateExtract(ItemVariant.of(Items.DIAMOND), 1, transaction) == 1
+                    && this.itemStorage().getSlot(INPUT_SLOT_SILICON).simulateExtract(ItemVariant.of(GalacticraftItem.RAW_SILICON), 1, transaction) == 1
+                    && this.itemStorage().getSlot(INPUT_SLOT_SILICON_2).simulateExtract(ItemVariant.of(GalacticraftItem.RAW_SILICON), 1, transaction) == 1
+                    && this.itemStorage().getSlot(INPUT_SLOT_REDSTONE).simulateExtract(ItemVariant.of(Items.REDSTONE), 1, transaction) == 1) {
+                return super.findValidRecipe(world);
             }
         }
         return Optional.empty();

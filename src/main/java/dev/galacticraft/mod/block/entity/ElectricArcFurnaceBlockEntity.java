@@ -23,13 +23,12 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.api.machine.MachineStatuses;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
-import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
@@ -43,11 +42,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.BlastingRecipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -86,9 +81,9 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    public @NotNull MachineStatus tick() {
+    protected void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        super.tickConstant(world, pos, state);
         this.attemptChargeFromStack(CHARGE_SLOT);
-        return super.tick();
     }
 
     @Override
@@ -97,7 +92,7 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    protected boolean outputStacks(@NotNull BlastingRecipe recipe, TransactionContext transaction) {
+    protected boolean outputStacks(@NotNull BlastingRecipe recipe, @NotNull TransactionContext transaction) {
         ItemStack output = recipe.getOutput();
         ItemVariant variant = ItemVariant.of(output);
         long count = output.getCount() * 2L;
@@ -116,7 +111,7 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    protected boolean extractCraftingMaterials(BlastingRecipe recipe, TransactionContext transaction) {
+    protected boolean extractCraftingMaterials(@NotNull BlastingRecipe recipe, @NotNull TransactionContext transaction) {
         return !this.itemStorage().extract(INPUT_SLOT, 1, transaction).isEmpty();
     }
 

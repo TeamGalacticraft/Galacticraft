@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.block.machine;
 
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.MultiBlockMachineBlock;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -46,21 +46,20 @@ import java.util.List;
 public class SimpleMultiBlockMachineBlock<T extends MachineBlockEntity, P extends BlockWithEntity> extends MultiBlockMachineBlock<T> {
     private final List<BlockPos> parts;
     private final SimpleMachineBlock.BlockEntityFactory<T> factory;
-    private final Text information;
+    private Text information = null;
     private final BlockState partState;
 
     /**
      * Note: BlockEntity of the partBlock must implement {@link MultiBlockPart}
      */
-    public static <T extends MachineBlockEntity, P extends BlockWithEntity> SimpleMultiBlockMachineBlock<T, P> create(SimpleMachineBlock.BlockEntityFactory<T> type, List<BlockPos> parts, P partBlock, String key) {
-        return new SimpleMultiBlockMachineBlock<>(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS), parts, type, partBlock, new TranslatableText(key).setStyle(Constant.Text.DARK_GRAY_STYLE));
+    public static <T extends MachineBlockEntity, P extends BlockWithEntity> SimpleMultiBlockMachineBlock<T, P> create(SimpleMachineBlock.BlockEntityFactory<T> type, List<BlockPos> parts, P partBlock) {
+        return new SimpleMultiBlockMachineBlock<>(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS), parts, type, partBlock);
     }
 
-    protected SimpleMultiBlockMachineBlock(Settings settings, List<BlockPos> parts, SimpleMachineBlock.BlockEntityFactory<T> factory, P partBlock, Text information) {
+    protected SimpleMultiBlockMachineBlock(Settings settings, List<BlockPos> parts, SimpleMachineBlock.BlockEntityFactory<T> factory, P partBlock) {
         super(settings);
         this.parts = parts;
         this.factory = factory;
-        this.information = information;
         this.partState = partBlock.getDefaultState();
     }
 
@@ -71,6 +70,9 @@ public class SimpleMultiBlockMachineBlock<T extends MachineBlockEntity, P extend
 
     @Override
     public Text machineDescription(ItemStack stack, BlockView view, boolean advanced) {
+        if (this.information == null) {
+            this.information = new TranslatableText(this.getTranslationKey() + ".description").setStyle(Constant.Text.Color.DARK_GRAY_STYLE);
+        }
         return this.information;
     }
 
