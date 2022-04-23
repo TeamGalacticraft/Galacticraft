@@ -60,10 +60,10 @@ public class GalacticraftBlock {
     public static final Block GLOWSTONE_WALL_TORCH = new GlowstoneWallTorchBlock(FabricBlockSettings.copy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH));
     public static final Block UNLIT_TORCH = new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).luminance(state -> 0));
     public static final Block UNLIT_WALL_TORCH = new UnlitWallTorchBlock(FabricBlockSettings.copy(UNLIT_TORCH).dropsLike(UNLIT_TORCH));
-    public static final Block UNLIT_LANTERN = new UnlitLanternBlock(FabricBlockSettings.copy(Blocks.LANTERN).luminance(state -> 0));
 
     // LANTERNS
     public static final Block GLOWSTONE_LANTERN = new GlowstoneLanternBlock(FabricBlockSettings.copy(Blocks.LANTERN));
+    public static final Block UNLIT_LANTERN = new UnlitLanternBlock(FabricBlockSettings.copy(Blocks.LANTERN).luminance(state -> 0));
 
     // FLUIDS
     public static final FluidBlock CRUDE_OIL = new CrudeOilBlock(GalacticraftFluid.CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MapColor.BLACK)
@@ -215,7 +215,7 @@ public class GalacticraftBlock {
     public static final Block SOFT_VENUS_ROCK = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F));
     public static final Block HARD_VENUS_ROCK = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F));
     public static final Block SCORCHED_VENUS_ROCK = new ScorchedRockBlock(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F));
-    public static final Block VOLCANIC_ROCK = new Block(FabricBlockSettings.of(Material.STONE).strength(2.2F, 0.5F));
+    public static final Block VOLCANIC_ROCK = new VolcanicRockBlock(FabricBlockSettings.of(Material.STONE).strength(2.2F, 0.5F));
     public static final Block PUMICE = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F));
     public static final Block VAPOR_SPOUT = new VaporSpoutBlock(FabricBlockSettings.of(Material.STONE, MapColor.BROWN).dropsNothing().strength(1.5F, 2.0F));
 

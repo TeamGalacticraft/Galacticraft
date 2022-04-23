@@ -50,10 +50,10 @@ public class LunarCaveCarver extends CaveCarver {
     public LunarCaveCarver(Codec<CaveCarverConfig> codec) {
         super(codec);
         this.alwaysCarvableBlocks = ImmutableSet.<Block>builder().addAll(this.alwaysCarvableBlocks)
-                .add(GalacticraftBlock.MOON_ROCKS[0])
+                .add(GalacticraftBlock.MOON_ROCK)
                 .add(GalacticraftBlock.MOON_SURFACE_ROCK)
                 .add(GalacticraftBlock.MOON_TURF)
-                .add(GalacticraftBlock.MOON_BASALTS[0])
+                .add(GalacticraftBlock.MOON_BASALT)
                 .add(GalacticraftBlock.MOON_DIRT)
                 .build();
     }

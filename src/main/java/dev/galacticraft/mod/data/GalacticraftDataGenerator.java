@@ -30,6 +30,7 @@ public class GalacticraftDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(@NotNull FabricDataGenerator fabricDataGenerator) {
         fabricDataGenerator.addProvider(GalacticraftBiomeTagProvider::new);
+        fabricDataGenerator.addProvider(GalacticraftBlockLootTableProvider::new);
         GalacticraftBlockTagProvider provider = new GalacticraftBlockTagProvider(fabricDataGenerator);
         fabricDataGenerator.addProvider(provider);
         fabricDataGenerator.addProvider(new GalacticraftItemTagProvider(fabricDataGenerator, provider));

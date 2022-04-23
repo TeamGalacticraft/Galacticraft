@@ -28,11 +28,7 @@ import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.minecraft.structure.rule.RuleTest;
 import net.minecraft.structure.rule.TagMatchRuleTest;
 import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.FeatureConfig;
-import net.minecraft.world.gen.feature.OreConfiguredFeatures;
-import net.minecraft.world.gen.feature.OreFeatureConfig;
+import net.minecraft.world.gen.feature.*;
 
 import java.util.List;
 
@@ -59,7 +55,7 @@ public class GalacticraftOreConfiguredFeature {
     public static final ConfiguredFeature<OreFeatureConfig, ?> ORE_ALUMINUM_SMALL = register("ore_aluminum_small", Feature.ORE.configure(new OreFeatureConfig(ALUMINUM_ORES, 3)));
 
     // MOON
-    public static final ConfiguredFeature<OreFeatureConfig, ?> BASALT_DISK_MOON = register("basalt_disk_moon", Feature.ORE.configure(new OreFeatureConfig(BASE_STONE_MOON, GalacticraftBlock.MOON_BASALTS[0].getDefaultState(), 33)));
+    public static final ConfiguredFeature<OreFeatureConfig, ?> BASALT_DISK_MOON = register("basalt_disk_moon", Feature.ORE.configure(new OreFeatureConfig(BASE_STONE_MOON, GalacticraftBlock.MOON_BASALT.getDefaultState(), 33)));
 
     public static final ConfiguredFeature<OreFeatureConfig, ?> ORE_COPPER_SMALL_MOON = register("ore_copper_small_moon", Feature.ORE.configure(new OreFeatureConfig(COPPER_ORES_MOON, 10)));
     public static final ConfiguredFeature<OreFeatureConfig, ?> ORE_COPPER_LARGE_MOON = register("ore_copper_large_moon", Feature.ORE.configure(new OreFeatureConfig(COPPER_ORES_MOON, 20)));

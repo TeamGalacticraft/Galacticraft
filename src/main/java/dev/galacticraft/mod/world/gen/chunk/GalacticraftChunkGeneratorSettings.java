@@ -24,9 +24,7 @@ package dev.galacticraft.mod.world.gen.chunk;
 
 import com.google.common.collect.ImmutableMap;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.world.gen.feature.GalacticraftConfiguredStructureFeature;
 import dev.galacticraft.mod.world.gen.feature.GalacticraftStructureFeature;
 import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
 import net.minecraft.block.Blocks;
@@ -36,7 +34,6 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.source.util.VanillaTerrainParametersCreator;
 import net.minecraft.world.gen.chunk.*;
 import net.minecraft.world.gen.feature.StructureFeature;
-import net.minecraft.world.gen.surfacebuilder.VanillaSurfaceRules;
 
 import java.util.Optional;
 
@@ -65,7 +62,7 @@ public class GalacticraftChunkGeneratorSettings {
                         false,
                         false,
                         VanillaTerrainParametersCreator.createSurfaceParameters(false)),
-                GalacticraftBlock.MOON_ROCKS[0].getDefaultState(),
+                GalacticraftBlock.MOON_ROCK.getDefaultState(),
                 Blocks.AIR.getDefaultState(),
                 MoonSurfaceRules.createDefaultRule(),
                 -65, // seaLevel - mapped incorrectly on yarn

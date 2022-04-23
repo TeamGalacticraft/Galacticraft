@@ -41,11 +41,11 @@ public class MoonSurfaceRules {
     private static final MaterialCondition IS_HIGHLANDS = biome(GalacticraftBiomeKey.Moon.HIGHLANDS, GalacticraftBiomeKey.Moon.HIGHLANDS_EDGE, GalacticraftBiomeKey.Moon.HIGHLANDS_FLAT, GalacticraftBiomeKey.Moon.HIGHLANDS_HILLS, GalacticraftBiomeKey.Moon.HIGHLANDS_VALLEY);
 
     private static final MaterialRule BEDROCK = block(Blocks.BEDROCK);
-    private static final MaterialRule LUNASLATE = block(GalacticraftBlock.LUNASLATES[0]);
+    private static final MaterialRule LUNASLATE = block(GalacticraftBlock.LUNASLATE);
     private static final MaterialRule MOON_DIRT = block(GalacticraftBlock.MOON_DIRT);
     private static final MaterialRule MOON_TURF = block(GalacticraftBlock.MOON_TURF);
-    private static final MaterialRule MOON_BASALT = block(GalacticraftBlock.MOON_BASALTS[0]);
-    private static final MaterialRule DEBUG_STATE = block(GalacticraftBlock.ALUMINUM_DECORATIONS[0]);
+    private static final MaterialRule MOON_BASALT = block(GalacticraftBlock.MOON_BASALT);
+    private static final MaterialRule DEBUG_STATE = block(GalacticraftBlock.ALUMINUM_DECORATION);
 
     private static final MaterialRule SECONDARY_MATERIAL = MaterialRules.sequence(
             MaterialRules.condition(IS_MARE, MOON_BASALT),
