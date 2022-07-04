@@ -93,8 +93,7 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
                     }
                 }
             }
-            buffer.end();
-            this.starBuffer.upload(buffer);
+            this.starBuffer.upload(buffer.end());
         }
         context.profiler().push("moon_sky_render");
         RenderSystem.disableTexture();
@@ -112,9 +111,9 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-19.0F));
         RenderSystem.setShaderColor(1.0F, 0.95F, 0.9F, starBrightness);
         RenderSystem.disableTexture();
-        this.starBuffer.setShader(matrices.peek().getPositionMatrix(), context.projectionMatrix(), GameRenderer.getPositionShader());
+        this.starBuffer.draw(matrices.peek().getPositionMatrix(), context.projectionMatrix(), GameRenderer.getPositionShader());
         this.starBuffer.bind();
-        this.starBuffer.drawVertices();
+        this.starBuffer.drawElements();
         VertexBuffer.unbind();
 
         matrices.pop();
@@ -137,8 +136,7 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         buffer.vertex(matrix, size, 100.0F, -size).texture(1.0F, 0.0F).next();
         buffer.vertex(matrix, size, 100.0F, size).texture(1.0F, 1.0F).next();
         buffer.vertex(matrix, -size, 100.0F, size).texture(0.0F, 1.0F).next();
-        buffer.end();
-        BufferRenderer.draw(buffer);
+        BufferRenderer.drawWithShader(buffer.end());
 
         matrices.pop();
         context.profiler().pop();
@@ -161,8 +159,7 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         buffer.vertex(matrix, size, -100.0F, size).texture(1.0F, 1.0F).next();
         buffer.vertex(matrix, size, -100.0F, -size).texture(1.0F, 0.0F).next();
         buffer.vertex(matrix, -size, -100.0F, -size).texture(0.0F, 0.0F).next();
-        buffer.end();
-        BufferRenderer.draw(buffer);
+        BufferRenderer.drawWithShader(buffer.end());
 
         context.profiler().pop();
         matrices.pop();

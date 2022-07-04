@@ -22,38 +22,21 @@
 
 package dev.galacticraft.mod.mixin;
 
-import com.google.common.collect.ImmutableSet;
-import dev.galacticraft.mod.world.gen.feature.GalacticraftConfiguredStructureFeature;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.gen.feature.ConfiguredStructureFeatures;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Set;
-import java.util.function.BiConsumer;
-
-import static dev.galacticraft.mod.world.biome.GalacticraftBiomeKey.*;
-
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(ConfiguredStructureFeatures.class)
+//@Mixin(ConfiguredStructureFeatures.class)
 public abstract class ConfiguredStructureFeaturesMixin {
-    @Shadow private static void register(BiConsumer<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>> registrar, ConfiguredStructureFeature<?, ?> feature, Set<RegistryKey<Biome>> biomes) {}
-
-    @Inject(method = "registerAll", at = @At("RETURN"))
-    private static void registerGalacticraftConfiguredStructureFeatures(BiConsumer<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>> registrar, CallbackInfo ci) { //TODO: See if there is an api for structure feature registration
-        Set<RegistryKey<Biome>> MOON_HIGHLANDS_BIOMES = ImmutableSet.of(Moon.HIGHLANDS, Moon.HIGHLANDS_EDGE, Moon.HIGHLANDS_FLAT, Moon.HIGHLANDS_HILLS, Moon.HIGHLANDS_VALLEY);
-        Set<RegistryKey<Biome>> MOON_MARE_BIOMES = ImmutableSet.of(Moon.MARE, Moon.MARE_EDGE, Moon.MARE_FLAT, Moon.MARE_HILLS, Moon.MARE_VALLEY);
-
-        register(registrar, GalacticraftConfiguredStructureFeature.MOON_RUINS, MOON_MARE_BIOMES);
-        register(registrar, GalacticraftConfiguredStructureFeature.MOON_PILLAGER_OUTPOST, MOON_MARE_BIOMES);
-        register(registrar, GalacticraftConfiguredStructureFeature.MOON_PILLAGER_OUTPOST, MOON_HIGHLANDS_BIOMES);
-        register(registrar, GalacticraftConfiguredStructureFeature.MOON_VILLAGE, MOON_HIGHLANDS_BIOMES);
-    }
+//    @Shadow private static void register(BiConsumer<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>> registrar, ConfiguredStructureFeature<?, ?> feature, Set<RegistryKey<Biome>> biomes) {}
+//
+//    @Inject(method = "registerAll", at = @At("RETURN"))
+//    private static void registerGalacticraftConfiguredStructureFeatures(BiConsumer<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>> registrar, CallbackInfo ci) { //TODO: See if there is an api for structure feature registration
+//        Set<RegistryKey<Biome>> MOON_HIGHLANDS_BIOMES = ImmutableSet.of(Moon.HIGHLANDS, Moon.HIGHLANDS_EDGE, Moon.HIGHLANDS_FLAT, Moon.HIGHLANDS_HILLS, Moon.HIGHLANDS_VALLEY);
+//        Set<RegistryKey<Biome>> MOON_MARE_BIOMES = ImmutableSet.of(Moon.MARE, Moon.MARE_EDGE, Moon.MARE_FLAT, Moon.MARE_HILLS, Moon.MARE_VALLEY);
+//
+//        register(registrar, GalacticraftConfiguredStructureFeature.MOON_RUINS, MOON_MARE_BIOMES);
+//        register(registrar, GalacticraftConfiguredStructureFeature.MOON_PILLAGER_OUTPOST, MOON_MARE_BIOMES);
+//        register(registrar, GalacticraftConfiguredStructureFeature.MOON_PILLAGER_OUTPOST, MOON_HIGHLANDS_BIOMES);
+//        register(registrar, GalacticraftConfiguredStructureFeature.MOON_VILLAGE, MOON_HIGHLANDS_BIOMES);
+//    } TODO: PORT
 }

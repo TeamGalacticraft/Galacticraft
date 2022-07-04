@@ -28,14 +28,15 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.PatrolEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.tag.BiomeTags;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.Spawner;
-
-import java.util.Random;
+import net.minecraft.world.spawner.Spawner;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -76,9 +77,8 @@ public class EvolvedPillagerSpawner implements Spawner {
                         if (!world.isRegionLoaded(mutable.getX() - 10, mutable.getY() - 10, mutable.getZ() - 10, mutable.getX() + 10, mutable.getY() + 10, mutable.getZ() + 10)) {
                            return 0;
                         } else {
-                           Biome biome = world.getBiome(mutable);
-                           Biome.Category category = biome.getCategory();
-                           if (category == Biome.Category.MUSHROOM) {
+                           RegistryEntry<Biome> biome = world.getBiome(mutable);
+                           if (biome.isIn(BiomeTags.WITHOUT_PATROL_SPAWNS)) {
                               return 0;
                            } else {
                               int m = 0;

@@ -113,7 +113,7 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Invento
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) {
+        if (this.getSecurity().hasAccess(player)) {
             return RecipeMachineScreenHandler.create(
                     syncId,
                     player,

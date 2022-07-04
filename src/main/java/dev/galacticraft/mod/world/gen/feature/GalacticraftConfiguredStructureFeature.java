@@ -27,20 +27,22 @@ import dev.galacticraft.mod.structure.MoonPillagerOutpostGenerator;
 import dev.galacticraft.mod.structure.MoonVillageGenerator;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.gen.feature.*;
 
-public class GalacticraftConfiguredStructureFeature {
-    public static final ConfiguredStructureFeature<StructurePoolFeatureConfig, ? extends StructureFeature<StructurePoolFeatureConfig>> MOON_PILLAGER_OUTPOST = GalacticraftStructureFeature.MOON_PILLAGER_OUTPOST.configure(new StructurePoolFeatureConfig(() -> MoonPillagerOutpostGenerator.ENTERANCE_POOL, 10));
-    public static final ConfiguredStructureFeature<DefaultFeatureConfig, ? extends StructureFeature<DefaultFeatureConfig>> MOON_RUINS = GalacticraftStructureFeature.MOON_RUINS.configure(DefaultFeatureConfig.DEFAULT);
-    public static final ConfiguredStructureFeature<StructurePoolFeatureConfig, ? extends StructureFeature<StructurePoolFeatureConfig>> MOON_VILLAGE = StructureFeature.VILLAGE.configure(new StructurePoolFeatureConfig(() -> MoonVillageGenerator.START_POOL, 6));
+public class GalacticraftConfiguredStructureFeature { // TODO: Biome tags
+//    public static final ConfiguredStructureFeature<StructurePoolFeatureConfig, ? extends StructureFeature<StructurePoolFeatureConfig>> MOON_PILLAGER_OUTPOST = GalacticraftStructureFeature.MOON_PILLAGER_OUTPOST.configure(new StructurePoolFeatureConfig(MoonPillagerOutpostGenerator.ENTERANCE_POOL, 10), null);
+//    public static final ConfiguredStructureFeature<DefaultFeatureConfig, ? extends StructureFeature<DefaultFeatureConfig>> MOON_RUINS = GalacticraftStructureFeature.MOON_RUINS.configure(DefaultFeatureConfig.DEFAULT, null);
+//    public static final ConfiguredStructureFeature<StructurePoolFeatureConfig, ? extends StructureFeature<StructurePoolFeatureConfig>> MOON_VILLAGE = StructureFeature.VILLAGE.configure(new StructurePoolFeatureConfig(MoonVillageGenerator.START_POOL, 6), null);
 
     public static void register() {
-        register(Constant.id("moon_pillager_outpost"), MOON_PILLAGER_OUTPOST);
-        register(Constant.id("moon_ruins"), MOON_RUINS);
-        register(Constant.id("moon_village"), MOON_VILLAGE);
+//        register(Constant.id("moon_pillager_outpost"), MOON_PILLAGER_OUTPOST);
+//        register(Constant.id("moon_ruins"), MOON_RUINS);
+//        register(Constant.id("moon_village"), MOON_VILLAGE);
     }
 
-    private static <C extends FeatureConfig, SF extends StructureFeature<C>> ConfiguredStructureFeature<C, SF> register(Identifier id, ConfiguredStructureFeature<C, SF> feature) {
-        return BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, id, feature);
-    }
+//    private static <C extends FeatureConfig, SF extends StructureFeature<C>> RegistryEntry<ConfiguredStructureFeature<?, ?>> register(Identifier id, ConfiguredStructureFeature<C, SF> feature) {
+////        return BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, id, feature);
+//        return null;
+//    }
 }

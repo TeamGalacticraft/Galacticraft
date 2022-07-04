@@ -28,7 +28,6 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -55,8 +54,8 @@ public class InfiniteBatteryItem extends Item implements EnergyStorage {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(new TranslatableText("tooltip.galacticraft.energy_remaining", new TranslatableText("tooltip.galacticraft.infinite").setStyle(Constant.Text.Color.getRainbow(ticks))));
-        tooltip.add(new TranslatableText("tooltip.galacticraft.creative_only").setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+        tooltip.add(Text.translatable("tooltip.galacticraft.energy_remaining", Text.translatable("tooltip.galacticraft.infinite").setStyle(Constant.Text.Color.getRainbow(ticks))));
+        tooltip.add(Text.translatable("tooltip.galacticraft.creative_only").setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
         super.appendTooltip(stack, world, tooltip, context);
     }
 

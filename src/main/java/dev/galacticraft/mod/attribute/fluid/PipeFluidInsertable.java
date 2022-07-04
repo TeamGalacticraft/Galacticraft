@@ -103,7 +103,7 @@ public class PipeFluidInsertable implements Storage<FluidVariant>, StorageView<F
     }
 
     @Override
-    public Iterator<StorageView<FluidVariant>> iterator(TransactionContext transaction) {
+    public Iterator<StorageView<FluidVariant>> iterator() {
         return Collections.emptyIterator();
     }
 }

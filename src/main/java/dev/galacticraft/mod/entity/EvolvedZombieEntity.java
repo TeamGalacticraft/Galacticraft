@@ -37,6 +37,6 @@ public class EvolvedZombieEntity extends ZombieEntity {
 
     @Override
     protected boolean isAffectedByDaylight() {
-        return super.isAffectedByDaylight() && GalacticraftTag.MOON_MARE.contains(this.world.getBiome(this.getBlockPos()));
+        return super.isAffectedByDaylight() && this.world.getBiome(this.getBlockPos()).isIn(GalacticraftTag.MOON_MARE);
     }
 }

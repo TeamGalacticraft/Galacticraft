@@ -41,16 +41,14 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftPlayerInventoryScreen extends HandledScreen<GalacticraftPlayerInventoryScreenHandler> {
     public GalacticraftPlayerInventoryScreen(GalacticraftPlayerInventoryScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, LiteralText.EMPTY);
+        super(handler, inv, Text.empty());
     }
 
     public static boolean isCoordinateBetween(int coordinate, int min, int max) {
@@ -67,10 +65,10 @@ public class GalacticraftPlayerInventoryScreen extends HandledScreen<Galacticraf
                 try (Transaction transaction = Transaction.openOuter()) {
                     StorageView<FluidVariant> exact = storage.exactView(transaction, FluidVariant.of(Gases.OXYGEN));
                     if (exact != null) {
-                        this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, exact.getAmount(), exact.getCapacity()), mouseX, mouseY);
+                        this.renderTooltip(matrices, Text.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, exact.getAmount(), exact.getCapacity()), mouseX, mouseY);
                     } else {
                         long l = storage.extract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
-                        this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, l, "???"), mouseX, mouseY);
+                        this.renderTooltip(matrices, Text.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, l, "???"), mouseX, mouseY);
                     }
                 }
             }
@@ -80,10 +78,10 @@ public class GalacticraftPlayerInventoryScreen extends HandledScreen<Galacticraf
                 try (Transaction transaction = Transaction.openOuter()) {
                     StorageView<FluidVariant> exact = storage.exactView(transaction, FluidVariant.of(Gases.OXYGEN));
                     if (exact != null) {
-                        this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, exact.getAmount(), exact.getCapacity()), mouseX, mouseY);
+                        this.renderTooltip(matrices, Text.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, exact.getAmount(), exact.getCapacity()), mouseX, mouseY);
                     } else {
                         long l = storage.extract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
-                        this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, l, "???"), mouseX, mouseY);
+                        this.renderTooltip(matrices, Text.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, l, "???"), mouseX, mouseY);
                     }
                 }
             }

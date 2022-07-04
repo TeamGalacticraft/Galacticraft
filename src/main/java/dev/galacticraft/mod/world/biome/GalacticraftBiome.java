@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.world.biome;
 
-import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.sound.GalacticraftSound;
 import dev.galacticraft.mod.world.gen.carver.GalacticraftCarver;
@@ -30,11 +29,11 @@ import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
 import dev.galacticraft.mod.world.gen.feature.GalacticraftOrePlacedFeature;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.sound.MusicSound;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.floatprovider.ConstantFloatProvider;
 import net.minecraft.util.math.floatprovider.TrapezoidFloatProvider;
 import net.minecraft.util.math.floatprovider.UniformFloatProvider;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.util.registry.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.biome.GenerationSettings;
@@ -46,16 +45,16 @@ import net.minecraft.world.gen.feature.PlacedFeature;
 import net.minecraft.world.gen.heightprovider.ConstantHeightProvider;
 import net.minecraft.world.gen.heightprovider.UniformHeightProvider;
 
-import java.util.List;
-
 public class GalacticraftBiome {
     private static class Moon {
-        private static final ConfiguredCarver<RavineCarverConfig> CANYON = Carver.RAVINE.configure(new RavineCarverConfig(
+        // TODO Actually register these?
+        private static final RegistryEntry<ConfiguredCarver<RavineCarverConfig>> CANYON = RegistryEntry.of(Carver.RAVINE.configure(new RavineCarverConfig(
                 0.05f,
                 UniformHeightProvider.create(YOffset.fixed(10), YOffset.fixed(67)),
                 ConstantFloatProvider.create(3.0f),
                 YOffset.aboveBottom(8),
                 CarverDebugConfig.DEFAULT,
+                Registry.BLOCK.getOrCreateEntryList(BlockTags.OVERWORLD_CARVER_REPLACEABLES), // TODO: REPLACEABLES tag
                 UniformFloatProvider.create(-0.125f, 0.125f),
                 new RavineCarverConfig.Shape(
                         UniformFloatProvider.create(0.75f, 1.0f),
@@ -64,9 +63,9 @@ public class GalacticraftBiome {
                         UniformFloatProvider.create(0.75f, 1.0f),
                         1.0f,
                         0.0f)
-        ));
+        )));
 
-        private static final ConfiguredCarver<CraterCarverConfig> CRATER = GalacticraftCarver.CRATERS.configure(new CraterCarverConfig(
+        private static final RegistryEntry<ConfiguredCarver<CraterCarverConfig>> CRATER = RegistryEntry.of(GalacticraftCarver.CRATERS.configure(new CraterCarverConfig(
                 0.05f,
                 ConstantHeightProvider.create(YOffset.fixed(128)),
                 UniformFloatProvider.create(0.4f, 0.6f),
@@ -74,7 +73,7 @@ public class GalacticraftBiome {
                 27,
                 8,
                 8
-        ));
+        )));
 
         private static final MusicSound MUSIC = new MusicSound(GalacticraftSound.MUSIC_MOON, 1200, 3600, true);
 
@@ -85,7 +84,7 @@ public class GalacticraftBiome {
                     UniformHeightProvider.create(YOffset.aboveBottom(8), YOffset.fixed(180)),
                     UniformFloatProvider.create(0.1f, 0.9f),
                     YOffset.aboveBottom(-64),
-                    false,
+                    RegistryEntryList.of(),
                     UniformFloatProvider.create(0.7f, 1.4f),
                     UniformFloatProvider.create(0.8f, 1.3f),
                     UniformFloatProvider.create(-1.0f, -0.4f)
@@ -96,7 +95,7 @@ public class GalacticraftBiome {
                     .waterFogColor(4802890)
                     .music(MUSIC)
                     .build(),
-                    ImmutableList.of(
+                    RegistryEntryList.of(
                             GalacticraftOrePlacedFeature.ORE_TIN_SMALL_MOON,
                             GalacticraftOrePlacedFeature.ORE_TIN_MIDDLE_MOON,
                             GalacticraftOrePlacedFeature.ORE_TIN_UPPER_MOON,
@@ -116,7 +115,7 @@ public class GalacticraftBiome {
                     UniformHeightProvider.create(YOffset.aboveBottom(8), YOffset.fixed(180)),
                     UniformFloatProvider.create(0.1f, 0.9f),
                     YOffset.aboveBottom(-64),
-                    false,
+                    RegistryEntryList.of(),
                     UniformFloatProvider.create(0.7f, 1.4f),
                     UniformFloatProvider.create(0.8f, 1.3f),
                     UniformFloatProvider.create(-1.0f, -0.4f)
@@ -127,7 +126,7 @@ public class GalacticraftBiome {
                     .waterFogColor(2828843)
                     .music(MUSIC)
                     .build(),
-                    ImmutableList.of(
+                    RegistryEntryList.of(
                             GalacticraftOrePlacedFeature.ORE_TIN_SMALL_MOON,
                             GalacticraftOrePlacedFeature.ORE_TIN_MIDDLE_MOON,
                             GalacticraftOrePlacedFeature.ORE_TIN_UPPER_MOON,
@@ -145,10 +144,10 @@ public class GalacticraftBiome {
 
             private final ConfiguredCarver<CaveCarverConfig> caves;
             private final BiomeEffects biomeEffects;
-            private final List<PlacedFeature> ores;
+            private final RegistryEntryList<PlacedFeature> ores;
             private final SpawnSettings spawnSettings;
 
-            BiomeType(ConfiguredCarver<CaveCarverConfig> caves, BiomeEffects biomeEffects, List<PlacedFeature> ores, SpawnSettings spawnSettings) {
+            BiomeType(ConfiguredCarver<CaveCarverConfig> caves, BiomeEffects biomeEffects, RegistryEntryList<PlacedFeature> ores, SpawnSettings spawnSettings) {
                 this.caves = caves;
                 this.biomeEffects = biomeEffects;
                 this.ores = ores;
@@ -163,7 +162,7 @@ public class GalacticraftBiome {
                 return biomeEffects;
             }
 
-            public List<PlacedFeature> getOres() {
+            public RegistryEntryList<PlacedFeature> getOres() {
                 return this.ores;
             }
 
@@ -176,7 +175,6 @@ public class GalacticraftBiome {
             return new Biome.Builder()
                     .temperature(2)
                     .downfall(0)
-                    .category(Biome.Category.NONE)
                     .precipitation(Biome.Precipitation.NONE);
         }
 
@@ -184,9 +182,9 @@ public class GalacticraftBiome {
             GenerationSettings.Builder builder = new GenerationSettings.Builder()
                     .carver(GenerationStep.Carver.AIR, CRATER)
                     .carver(GenerationStep.Carver.AIR, CANYON)
-                    .carver(GenerationStep.Carver.AIR, type.getCaves());
+                    .carver(GenerationStep.Carver.AIR, RegistryEntry.of(type.getCaves())); // TODO: getCaves should provide a RegisteyEntry
 
-            for (PlacedFeature ore : type.getOres()) {
+            for (RegistryEntry<PlacedFeature> ore : type.getOres()) {
                 builder.feature(GenerationStep.Feature.UNDERGROUND_ORES, ore);
             }
 
@@ -212,6 +210,6 @@ public class GalacticraftBiome {
     }
 
     private static void register(RegistryKey<Biome> key, Biome biome) {
-        BuiltinRegistries.set(BuiltinRegistries.BIOME, key, biome);
+        BuiltinRegistries.add(BuiltinRegistries.BIOME, key, biome);
     }
 }

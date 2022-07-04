@@ -27,7 +27,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -41,10 +41,10 @@ import java.util.Objects;
 public class SolarPanelRegistry {
     private static final WorldLightSources DEFAULT_LIGHT_SOURCE = new WorldLightSources(
             Constant.ScreenTexture.DEFAULT_LIGHT_SOURCES,
-            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.sun").setStyle(Constant.Text.Color.YELLOW_STYLE), 1.0, 1.0),
-            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.moon").setStyle(Constant.Text.Color.GRAY_STYLE), 0.07, 1.0),
-            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.rain").setStyle(Constant.Text.Color.BLUE_STYLE), 1.0, 2.0),
-            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.unknown").setStyle(Constant.Text.Color.WHITE_STYLE), 0.0, 1.0));
+            new LightSource(Text.translatable("ui.galacticraft.machine.solar_panel.source.sun").setStyle(Constant.Text.Color.YELLOW_STYLE), 1.0, 1.0),
+            new LightSource(Text.translatable("ui.galacticraft.machine.solar_panel.source.moon").setStyle(Constant.Text.Color.GRAY_STYLE), 0.07, 1.0),
+            new LightSource(Text.translatable("ui.galacticraft.machine.solar_panel.source.rain").setStyle(Constant.Text.Color.BLUE_STYLE), 1.0, 2.0),
+            new LightSource(Text.translatable("ui.galacticraft.machine.solar_panel.source.unknown").setStyle(Constant.Text.Color.WHITE_STYLE), 0.0, 1.0));
     private static final Map<RegistryKey<World>, WorldLightSources> LIGHT_SOURCES = new HashMap<>();
     private static final Map<BlockEntityType<? extends SolarPanel>, Identifier> SOLAR_PANEL_TEXTURES = new HashMap<>();
 

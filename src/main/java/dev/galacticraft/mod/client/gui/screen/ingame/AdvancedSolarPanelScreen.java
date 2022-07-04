@@ -29,7 +29,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import java.util.List;
 
@@ -44,8 +43,8 @@ public class AdvancedSolarPanelScreen extends SolarPanelScreen<AdvancedSolarPane
 
     @Override
     public void appendEnergyTooltip(List<Text> list) {
-        if (this.machine.getStatus().getType().isActive()) {
-            list.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", this.machine.currentEnergyGeneration).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+        if (this.machine.getStatus().type().isActive()) {
+            list.add(Text.translatable("ui.galacticraft.machine.gj_per_t", this.machine.currentEnergyGeneration).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
         }
     }
 }

@@ -52,8 +52,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -66,9 +66,9 @@ import java.util.Optional;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inventory, FabricationRecipe> implements Tier1EnergyMachine {
-    private static final SlotType<Item, ItemVariant> DIAMOND_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "diamond_input"), TextColor.fromRgb(0xFF0000), new TranslatableText("slot_type.galacticraft.diamond_input"), v -> v.getItem() == Items.DIAMOND, ResourceFlow.INPUT, ResourceType.ITEM);
-    private static final SlotType<Item, ItemVariant> SILICON_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "silicon_input"), TextColor.fromRgb(0xFF0000), new TranslatableText("slot_type.galacticraft.silicon_input"), v -> v.getItem() == GalacticraftItem.RAW_SILICON, ResourceFlow.INPUT, ResourceType.ITEM);
-    private static final SlotType<Item, ItemVariant> REDSTONE_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "redstone_input"), TextColor.fromRgb(0xFF0000), new TranslatableText("slot_type.galacticraft.redstone_input"), v -> v.getItem() == Items.REDSTONE, ResourceFlow.INPUT, ResourceType.ITEM);
+    private static final SlotType<Item, ItemVariant> DIAMOND_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "diamond_input"), TextColor.fromRgb(0xFF0000), Text.translatable("slot_type.galacticraft.diamond_input"), v -> v.getItem() == Items.DIAMOND, ResourceFlow.INPUT, ResourceType.ITEM);
+    private static final SlotType<Item, ItemVariant> SILICON_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "silicon_input"), TextColor.fromRgb(0xFF0000), Text.translatable("slot_type.galacticraft.silicon_input"), v -> v.getItem() == GalacticraftItem.RAW_SILICON, ResourceFlow.INPUT, ResourceType.ITEM);
+    private static final SlotType<Item, ItemVariant> REDSTONE_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "redstone_input"), TextColor.fromRgb(0xFF0000), Text.translatable("slot_type.galacticraft.redstone_input"), v -> v.getItem() == Items.REDSTONE, ResourceFlow.INPUT, ResourceType.ITEM);
 
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT_DIAMOND = 1;
@@ -180,7 +180,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) {
+        if (this.getSecurity().hasAccess(player)) {
             return RecipeMachineScreenHandler.create(
                     syncId,
                     player,

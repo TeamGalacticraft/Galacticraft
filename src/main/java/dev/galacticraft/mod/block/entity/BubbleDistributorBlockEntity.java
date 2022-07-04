@@ -221,7 +221,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return new BubbleDistributorScreenHandler(syncId, player, this);
+        if (this.getSecurity().hasAccess(player)) return new BubbleDistributorScreenHandler(syncId, player, this);
         return null;
     }
 }

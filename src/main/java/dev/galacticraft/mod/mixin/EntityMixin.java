@@ -29,7 +29,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
@@ -72,7 +72,7 @@ public abstract class EntityMixin {
     }
 
     @Shadow
-    public abstract boolean updateMovementInFluid(Tag<Fluid> tag, double d);
+    public abstract boolean updateMovementInFluid(TagKey<Fluid> tag, double d);
 
     @Shadow
     public abstract boolean isOnFire();

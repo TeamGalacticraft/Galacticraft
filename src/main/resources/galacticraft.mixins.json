@@ -5,9 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AbstractSkeletonEntityAccessor",
-    "BlockTagsAccessor",
     "BucketItemAccessor",
-    "ConfiguredStructureFeaturesMixin",
     "DamageSourceAccessor",
     "DimensionTypeMixin",
     "EntityMixin",
@@ -17,6 +15,7 @@
     "LootTablesAccessor",
     "NoiseChunkGeneratorMixin",
     "ServerWorldMixin",
+    "SimpleRegistryMixin",
     "TorchBlockMixin"
   ],
   "client": [

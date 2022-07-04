@@ -51,7 +51,7 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
     @Override
     protected void renderBackground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.renderBackground(matrices, mouseX, mouseY, delta);
-        if (this.machine.getStatus().getType().isActive()) {
+        if (this.machine.getStatus().type().isActive()) {
             double height = (System.currentTimeMillis() % 2250);
             if (height == 0) return; //prevent dividing by zero
             height /= -125.0;

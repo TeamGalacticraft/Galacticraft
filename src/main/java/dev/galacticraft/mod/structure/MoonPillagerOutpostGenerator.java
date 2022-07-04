@@ -33,11 +33,12 @@ import net.minecraft.structure.pool.StructurePools;
 import net.minecraft.structure.pool.StructurePool.Projection;
 import net.minecraft.structure.processor.StructureProcessorLists;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.RegistryEntry;
 
 import java.util.function.Function;
 
 public class MoonPillagerOutpostGenerator {
-    public static final StructurePool ENTERANCE_POOL = new StructurePool(
+    public static final RegistryEntry<StructurePool> ENTERANCE_POOL = StructurePools.register(new StructurePool(
             Constant.id("moon_pillager_outpost/entrances"),
             Constant.Misc.EMPTY,
             ImmutableList.of(
@@ -45,10 +46,9 @@ public class MoonPillagerOutpostGenerator {
                     Pair.of(StructurePoolElement.ofEmpty(), 1)
             ),
             Projection.RIGID
-    );
+    ));
 
     public static void register() {
-        StructurePools.register(ENTERANCE_POOL);
         StructurePools.register(
                 new StructurePool(
                         Constant.id("moon_pillager_outpost/base"),
@@ -161,6 +161,6 @@ public class MoonPillagerOutpostGenerator {
     }
     
     public static Function<Projection, LegacySinglePoolElement> single(Identifier id) { // Legacy means that air CAN be replaced by worldgen.
-        return projection -> new LegacySinglePoolElement(Either.left(id), () -> StructureProcessorLists.EMPTY, projection);
+        return projection -> new LegacySinglePoolElement(Either.left(id), StructureProcessorLists.EMPTY, projection);
     }
 }

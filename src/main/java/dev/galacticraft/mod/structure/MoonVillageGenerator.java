@@ -34,11 +34,12 @@ import net.minecraft.structure.pool.StructurePoolElement;
 import net.minecraft.structure.pool.StructurePools;
 import net.minecraft.structure.processor.StructureProcessorLists;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.RegistryEntry;
 
 import java.util.function.Function;
 
 public class MoonVillageGenerator {
-    public static final StructurePool START_POOL = new StructurePool(
+    public static final RegistryEntry<StructurePool> START_POOL = StructurePools.register(new StructurePool(
             Constant.id("village/moon/highlands/starts"),
             Constant.Misc.EMPTY,
             ImmutableList.of(
@@ -48,10 +49,9 @@ public class MoonVillageGenerator {
                     Pair.of(StructurePoolElement.ofEmpty(), 1)
             ),
             Projection.RIGID
-    );
+    ));
 
     public static void register() {
-        StructurePools.register(START_POOL);
         StructurePools.register(
                 new StructurePool(
                         Constant.id("village/moon/highlands/animals"),
@@ -175,6 +175,6 @@ public class MoonVillageGenerator {
     }
     
     public static Function<Projection, LegacySinglePoolElement> single(Identifier id) { // Legacy means that air CAN be replaced by worldgen.
-        return projection -> new LegacySinglePoolElement(Either.left(id), () -> StructureProcessorLists.EMPTY, projection);
+        return projection -> new LegacySinglePoolElement(Either.left(id), StructureProcessorLists.EMPTY, projection);
     }
 }

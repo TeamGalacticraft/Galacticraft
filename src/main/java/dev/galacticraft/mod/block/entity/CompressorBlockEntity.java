@@ -168,7 +168,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return new CompressorScreenHandler(syncId, player, this);
+        if (this.getSecurity().hasAccess(player)) return new CompressorScreenHandler(syncId, player, this);
         return null;
     }
 }

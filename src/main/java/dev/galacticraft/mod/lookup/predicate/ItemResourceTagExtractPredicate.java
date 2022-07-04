@@ -26,22 +26,20 @@ import net.fabricmc.fabric.api.lookup.v1.item.ItemApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 
 import java.util.function.Predicate;
 
 public record ItemResourceTagExtractPredicate<R, V extends TransferVariant<R>>(
         ItemApiLookup<Storage<V>, ContainerItemContext> lookup,
-        Tag<R> tag) implements Predicate<ItemVariant> {
+        TagKey<R> tag) implements Predicate<ItemVariant> {
 
     @Override
     public boolean test(ItemVariant variant) {
         Storage<V> storage = ContainerItemContext.withInitial(variant.toStack()).find(this.lookup);
         if (storage != null && storage.supportsExtraction()) {
-            V extractableContent = StorageUtil.findExtractableResource(storage, v -> tag.contains(v.getObject()), null);
+            V extractableContent = null;//StorageUtil.findExtractableResource(storage, v -> tag.contains(v.getObject()), null); TODO: PORT
             if (extractableContent != null && !extractableContent.isBlank()) {
                 return storage.simulateExtract(extractableContent, Long.MAX_VALUE, null) >= 0;
             }

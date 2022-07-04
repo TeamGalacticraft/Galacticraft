@@ -82,7 +82,7 @@ public class BubbleEntity extends Entity {
         this.prevPitch = 0;
         this.prevYaw = 0;
 
-        if (this.getY() < this.world.getDimension().getMinimumY()) {
+        if (this.getY() < this.world.getDimension().minY()) {
             this.discard();
         }
     }

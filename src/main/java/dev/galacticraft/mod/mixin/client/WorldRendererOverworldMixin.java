@@ -27,15 +27,15 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import java.util.Random;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -46,33 +46,33 @@ public abstract class WorldRendererOverworldMixin {
     @Shadow @Nullable private VertexBuffer starsBuffer;
     private @Unique Random starRandom = null;
 
-    @Inject(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BufferBuilder;begin(Lnet/minecraft/client/render/VertexFormat$DrawMode;Lnet/minecraft/client/render/VertexFormat;)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void gc_captureRandom(BufferBuilder buffer, CallbackInfo ci, Random random) {
+    @Inject(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BufferBuilder;begin(Lnet/minecraft/client/render/VertexFormat$DrawMode;Lnet/minecraft/client/render/VertexFormat;)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void gc_captureRandom(BufferBuilder buffer, CallbackInfoReturnable<BufferBuilder.BuiltBuffer> cir, Random random) {
         starRandom = random;
     }
 
-    @Inject(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)V", at = @At(value = "RETURN"))
-    private void gc_releaseRandom(BufferBuilder buffer, CallbackInfo ci) {
+    @Inject(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;", at = @At(value = "RETURN"))
+    private void gc_releaseRandom(BufferBuilder buffer, CallbackInfoReturnable<BufferBuilder.BuiltBuffer> cir) {
         starRandom = null;
     }
 
-    @Redirect(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BufferBuilder;begin(Lnet/minecraft/client/render/VertexFormat$DrawMode;Lnet/minecraft/client/render/VertexFormat;)V"))
+    @Redirect(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BufferBuilder;begin(Lnet/minecraft/client/render/VertexFormat$DrawMode;Lnet/minecraft/client/render/VertexFormat;)V"))
     private void gc_replaceVF(BufferBuilder bufferBuilder, VertexFormat.DrawMode drawMode, VertexFormat format) {
         bufferBuilder.begin(drawMode, VertexFormats.POSITION_COLOR);
     }
 
-    @ModifyConstant(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)V", constant = @Constant(intValue = 1500))
+    @ModifyConstant(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;", constant = @Constant(intValue = 1500))
     private int gc_moreStars(int i) {
         return i * 4;
     }
 
-    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/VertexBuffer;setShader(Lnet/minecraft/util/math/Matrix4f;Lnet/minecraft/util/math/Matrix4f;Lnet/minecraft/client/render/Shader;)V", ordinal = 0), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BackgroundRenderer;method_23792()V")))
-    private void gc_replaceShader(VertexBuffer vertexBuffer, Matrix4f viewMatrix, Matrix4f projectionMatrix, Shader shader) {
-        assert vertexBuffer == starsBuffer;
-        assert shader == GameRenderer.getPositionShader();
-
-        vertexBuffer.setShader(viewMatrix, projectionMatrix, GameRenderer.getPositionColorShader());
-    }
+//    @Redirect(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/util/math/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/VertexBuffer;setShader(Lnet/minecraft/util/math/Matrix4f;Lnet/minecraft/util/math/Matrix4f;Lnet/minecraft/client/render/Shader;)V", ordinal = 0), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BackgroundRenderer;method_23792()V")))
+//    private void gc_replaceShader(VertexBuffer vertexBuffer, Matrix4f viewMatrix, Matrix4f projectionMatrix, Shader shader) {
+//        assert vertexBuffer == starsBuffer;
+//        assert shader == GameRenderer.getPositionShader();
+//
+//        vertexBuffer.setShader(viewMatrix, projectionMatrix, GameRenderer.getPositionColorShader());
+//    } TODO: PORT
 
     private @Unique byte gc_idx = 0;
     private @Unique int r = 255;
@@ -80,7 +80,7 @@ public abstract class WorldRendererOverworldMixin {
     private @Unique int b = 255;
     private @Unique int a = 255;
 
-    @Redirect(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BufferBuilder;vertex(DDD)Lnet/minecraft/client/render/VertexConsumer;"))
+    @Redirect(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BufferBuilder;vertex(DDD)Lnet/minecraft/client/render/VertexConsumer;"))
     private VertexConsumer gc_setColor(BufferBuilder bufferBuilder, double x, double y, double z) {
         if (gc_idx == 4) {
             gc_idx = 0;

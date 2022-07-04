@@ -26,7 +26,7 @@ import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.world.biome.GalacticraftBiomeKey;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.YOffset;
@@ -76,7 +76,7 @@ public class MoonSurfaceRules {
     }
 
     @Contract("_ -> new")
-    public static MaterialRules.@NotNull MaterialCondition biome(@NotNull Tag<Biome> biome) {
+    public static MaterialRules.@NotNull MaterialCondition biome(@NotNull TagKey<Biome> biome) {
         return new BiomeTagRule(biome);
     }
 

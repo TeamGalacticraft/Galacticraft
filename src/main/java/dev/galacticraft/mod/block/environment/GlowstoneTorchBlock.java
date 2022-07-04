@@ -29,13 +29,12 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -53,9 +52,9 @@ public class GlowstoneTorchBlock extends TorchBlock {
     @Override
     public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableText("tooltip.galacticraft.glowstone_torch").setStyle(Constant.Text.Color.GRAY_STYLE));
+            list.add(Text.translatable("tooltip.galacticraft.glowstone_torch").setStyle(Constant.Text.Color.GRAY_STYLE));
         } else {
-            list.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Constant.Text.Color.GRAY_STYLE));
+            list.add(Text.translatable("tooltip.galacticraft.press_shift").setStyle(Constant.Text.Color.GRAY_STYLE));
         }
     }
 }

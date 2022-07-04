@@ -27,12 +27,14 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.biome.source.GalacticraftBiomeParameters;
 import dev.galacticraft.mod.world.dimension.GalacticraftDimensionType;
 import dev.galacticraft.mod.world.gen.chunk.GalacticraftChunkGeneratorSettings;
+import net.minecraft.structure.StructureSet;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
 import net.minecraft.util.registry.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.dimension.DimensionTypeRegistrar;
 import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import net.minecraft.world.gen.chunk.NoiseChunkGenerator;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,16 +46,16 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(DimensionType.class)
+@Mixin(DimensionTypeRegistrar.class)
 public abstract class DimensionTypeMixin {
-    @SuppressWarnings("InvalidInjectorMethodSignature") // MCDev doesn't seem to capture the locals correctly
-    @Inject(method = "createDefaultDimensionOptions(Lnet/minecraft/util/registry/DynamicRegistryManager;JZ)Lnet/minecraft/util/registry/SimpleRegistry;", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void addGCDimOptions(DynamicRegistryManager registryManager, long seed, boolean bl, CallbackInfoReturnable<SimpleRegistry<DimensionOptions>> cir, SimpleRegistry<DimensionOptions> dimOptionsRegistry, Registry<DimensionType> dimTypeRegistry, Registry<Biome> biomeRegistry, Registry<ChunkGeneratorSettings> chunkGenSettingsRegistry, Registry<DoublePerlinNoiseSampler.NoiseParameters> noiseRegistry) {
-        dimOptionsRegistry.add(RegistryKey.of(Registry.DIMENSION_KEY, new Identifier(Constant.MOD_ID, "moon")), new DimensionOptions(() -> dimTypeRegistry.getOrThrow(GalacticraftDimensionType.MOON_DIMENSION_TYPE_KEY), new NoiseChunkGenerator(noiseRegistry, GalacticraftBiomeParameters.MOON.getBiomeSource(biomeRegistry), seed, () -> chunkGenSettingsRegistry.getOrThrow(GalacticraftChunkGeneratorSettings.MOON))), Lifecycle.stable());
-    }
+//    @SuppressWarnings("InvalidInjectorMethodSignature") // MCDev doesn't seem to capture the locals correctly
+//    @Inject(method = "Lnet/minecraft/world/dimension/DimensionType;createDefaultDimensionOptions(Lnet/minecraft/util/registry/DynamicRegistryManager;JZ)Lnet/minecraft/util/registry/Registry;", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
+//    private static void addGCDimOptions(DynamicRegistryManager registryManager, long seed, boolean bl, CallbackInfoReturnable<SimpleRegistry<DimensionOptions>> cir, MutableRegistry<DimensionOptions> dimOptionsRegistry, Registry<DimensionType> dimTypeRegistry, Registry<Biome> biomeRegistry, Registry<StructureSet> noiseRegistry, Registry<ChunkGeneratorSettings> chunkGenSettingsRegistry, Registry<DoublePerlinNoiseSampler.NoiseParameters> structuresRegistry) {
+//        dimOptionsRegistry.add(RegistryKey.of(Registry.DIMENSION_KEY, new Identifier(Constant.MOD_ID, "moon")), new DimensionOptions(dimTypeRegistry.getOrCreateEntry(GalacticraftDimensionType.MOON_DIMENSION_TYPE_KEY), new NoiseChunkGenerator(noiseRegistry, structuresRegistry, GalacticraftBiomeParameters.MOON.getBiomeSource(biomeRegistry), seed, chunkGenSettingsRegistry.getOrCreateEntry(GalacticraftChunkGeneratorSettings.MOON))), Lifecycle.stable());
+//    } TODO: PORT registry is frozen (also why not just use a datapack?)
 
-    @Inject(method = "addRegistryDefaults", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void addGCDimOptions(DynamicRegistryManager registryManager, CallbackInfoReturnable<DynamicRegistryManager> cir, MutableRegistry<DimensionType> registry) {
+    @Inject(method = "initAndGetDefault", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private static void addGCDimOptions(Registry<DimensionType> registry, CallbackInfoReturnable<RegistryEntry<DimensionType>> cir) {
         GalacticraftDimensionType.register(registry);
     }
 }

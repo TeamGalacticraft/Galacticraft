@@ -28,7 +28,7 @@ import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 /**
@@ -37,14 +37,14 @@ import net.minecraft.util.Identifier;
  */
 public class GalacticraftServerPacketReceiver {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory(GalacticraftPlayerInventoryScreenHandler::new, LiteralText.EMPTY))));
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory(GalacticraftPlayerInventoryScreenHandler::new, Text.empty()))));
 
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "bubble_max"), (server, player, handler, buf, responseSender) -> {
             byte max = buf.readByte();
             server.execute(() -> {
                 if (player.currentScreenHandler instanceof BubbleDistributorScreenHandler sHandler) {
                     BubbleDistributorBlockEntity machine = sHandler.machine;
-                    if (machine.security().hasAccess(player)) {
+                    if (machine.getSecurity().hasAccess(player)) {
                         if (max > 0) {
                             machine.setTargetSize(max);
                         }
@@ -58,7 +58,7 @@ public class GalacticraftServerPacketReceiver {
             server.execute(() -> {
                 if (player.currentScreenHandler instanceof BubbleDistributorScreenHandler sHandler) {
                     BubbleDistributorBlockEntity machine = sHandler.machine;
-                    if (machine.security().hasAccess(player)) {
+                    if (machine.getSecurity().hasAccess(player)) {
                         machine.bubbleVisible = visible;
                     }
                 }

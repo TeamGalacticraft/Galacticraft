@@ -88,7 +88,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
         world.getProfiler().push("transfer");
-        this.trySpreadFluids();
+        this.trySpreadFluids(world);
         Storage<FluidVariant> fluidStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(FluidStorage.ITEM);
         world.getProfiler().pop();
         if (fluidStorage == null) return GalacticraftMachineStatus.MISSING_OXYGEN_TANK;
@@ -111,7 +111,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) {
+        if (this.getSecurity().hasAccess(player)) {
             return SimpleMachineScreenHandler.create(
                     syncId,
                     player,

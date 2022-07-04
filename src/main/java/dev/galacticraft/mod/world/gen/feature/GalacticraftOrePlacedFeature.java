@@ -27,50 +27,50 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.YOffset;
-import net.minecraft.world.gen.decorator.*;
 import net.minecraft.world.gen.feature.PlacedFeature;
+import net.minecraft.world.gen.placementmodifier.*;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
 public class GalacticraftOrePlacedFeature {
     // OVERWORLD
-    public static final PlacedFeature ORE_SILICON = register("ore_silicon", GalacticraftOreConfiguredFeature.ORE_SILICON_SMALL.withPlacement(modifiersWithCount(5, HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-80), YOffset.aboveBottom(80))))); //todo actual ore numbers
-    public static final PlacedFeature ORE_SILICON_LARGE = register("ore_silicon_large", GalacticraftOreConfiguredFeature.ORE_SILICON_LARGE.withPlacement(modifiersWithRarity(11, HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-80), YOffset.aboveBottom(80)))));
+    public static final RegistryEntry<PlacedFeature> ORE_SILICON = register("ore_silicon", new PlacedFeature(GalacticraftOreConfiguredFeature.ORE_SILICON_SMALL, modifiersWithCount(5, HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-80), YOffset.aboveBottom(80))))); //todo actual ore numbers
+    public static final RegistryEntry<PlacedFeature> ORE_SILICON_LARGE = register("ore_silicon_large", new PlacedFeature(GalacticraftOreConfiguredFeature.ORE_SILICON_LARGE, modifiersWithRarity(11, HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-80), YOffset.aboveBottom(80)))));
     
-    public static final PlacedFeature ORE_TIN_UPPER = register("ore_tin_upper", GalacticraftOreConfiguredFeature.ORE_TIN.withPlacement(modifiersWithCount(99, HeightRangePlacementModifier.trapezoid(YOffset.fixed(90), YOffset.fixed(384)))));
-    public static final PlacedFeature ORE_TIN_MIDDLE = register("ore_tin_middle", GalacticraftOreConfiguredFeature.ORE_TIN.withPlacement(modifiersWithCount(11, HeightRangePlacementModifier.trapezoid(YOffset.fixed(-16), YOffset.fixed(56)))));
-    public static final PlacedFeature ORE_TIN_SMALL = register("ore_tin_small", GalacticraftOreConfiguredFeature.ORE_TIN_SMALL.withPlacement(modifiersWithCount(11, HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(80)))));
+    public static final RegistryEntry<PlacedFeature> ORE_TIN_UPPER = register("ore_tin_upper", new PlacedFeature(GalacticraftOreConfiguredFeature.ORE_TIN, modifiersWithCount(99, HeightRangePlacementModifier.trapezoid(YOffset.fixed(90), YOffset.fixed(384)))));
+    public static final RegistryEntry<PlacedFeature> ORE_TIN_MIDDLE = register("ore_tin_middle", new PlacedFeature(GalacticraftOreConfiguredFeature.ORE_TIN, modifiersWithCount(11, HeightRangePlacementModifier.trapezoid(YOffset.fixed(-16), YOffset.fixed(56)))));
+    public static final RegistryEntry<PlacedFeature> ORE_TIN_SMALL = register("ore_tin_small", new PlacedFeature(GalacticraftOreConfiguredFeature.ORE_TIN_SMALL, modifiersWithCount(11, HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(80)))));
 
-    public static final PlacedFeature ORE_ALUMINUM_MIDDLE = register("ore_aluminum_middle", GalacticraftOreConfiguredFeature.ORE_ALUMINUM.withPlacement(modifiersWithCount(10, HeightRangePlacementModifier.trapezoid(YOffset.fixed(-96), YOffset.fixed(0)))));
-    public static final PlacedFeature ORE_ALUMINUM_SMALL = register("ore_aluminum_small", GalacticraftOreConfiguredFeature.ORE_ALUMINUM_SMALL.withPlacement(modifiersWithCount(10, HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(16)))));
+    public static final RegistryEntry<PlacedFeature> ORE_ALUMINUM_MIDDLE = register("ore_aluminum_middle", new PlacedFeature(GalacticraftOreConfiguredFeature.ORE_ALUMINUM, modifiersWithCount(10, HeightRangePlacementModifier.trapezoid(YOffset.fixed(-96), YOffset.fixed(0)))));
+    public static final RegistryEntry<PlacedFeature> ORE_ALUMINUM_SMALL = register("ore_aluminum_small", new PlacedFeature(GalacticraftOreConfiguredFeature.ORE_ALUMINUM_SMALL, modifiersWithCount(10, HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(16)))));
 
     // MOON
-    public static final PlacedFeature BASALT_DISK_MOON = register("disk_basalt_moon", GalacticraftOreConfiguredFeature.BASALT_DISK_MOON.withPlacement(modifiersWithCount(14, HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.getTop()))));
+    public static final RegistryEntry<PlacedFeature> BASALT_DISK_MOON = register("disk_basalt_moon", new PlacedFeature(GalacticraftOreConfiguredFeature.BASALT_DISK_MOON, modifiersWithCount(14, HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.getTop()))));
 
-    public static final PlacedFeature ORE_COPPER_MOON = register("ore_copper_moon", GalacticraftOreConfiguredFeature.ORE_COPPER_SMALL_MOON.withPlacement(modifiersWithCount(18, HeightRangePlacementModifier.trapezoid(YOffset.fixed(0), YOffset.fixed(112)))));
-    public static final PlacedFeature ORE_COPPER_LARGE_MOON = register("ore_copper_large_moon", GalacticraftOreConfiguredFeature.ORE_COPPER_LARGE_MOON.withPlacement(modifiersWithCount(17, HeightRangePlacementModifier.trapezoid(YOffset.fixed(0), YOffset.fixed(112)))));
+    public static final RegistryEntry<PlacedFeature> ORE_COPPER_MOON = register("ore_copper_moon", new PlacedFeature(GalacticraftOreConfiguredFeature.ORE_COPPER_SMALL_MOON, modifiersWithCount(18, HeightRangePlacementModifier.trapezoid(YOffset.fixed(0), YOffset.fixed(112)))));
+    public static final RegistryEntry<PlacedFeature> ORE_COPPER_LARGE_MOON = register("ore_copper_large_moon", new PlacedFeature(GalacticraftOreConfiguredFeature.ORE_COPPER_LARGE_MOON, modifiersWithCount(17, HeightRangePlacementModifier.trapezoid(YOffset.fixed(0), YOffset.fixed(112)))));
 
-    public static final PlacedFeature ORE_TIN_UPPER_MOON = register("ore_tin_upper_moon", GalacticraftOreConfiguredFeature.ORE_TIN_MOON.withPlacement(modifiersWithCount(54, HeightRangePlacementModifier.trapezoid(YOffset.fixed(90), YOffset.fixed(384)))));
-    public static final PlacedFeature ORE_TIN_MIDDLE_MOON = register("ore_tin_middle_moon", GalacticraftOreConfiguredFeature.ORE_TIN_MOON.withPlacement(modifiersWithCount(6, HeightRangePlacementModifier.trapezoid(YOffset.fixed(-16), YOffset.fixed(56)))));
-    public static final PlacedFeature ORE_TIN_SMALL_MOON = register("ore_tin_small_moon", GalacticraftOreConfiguredFeature.ORE_TIN_SMALL_MOON.withPlacement(modifiersWithCount(6, HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(80)))));
+    public static final RegistryEntry<PlacedFeature> ORE_TIN_UPPER_MOON = register("ore_tin_upper_moon", new PlacedFeature(GalacticraftOreConfiguredFeature.ORE_TIN_MOON, modifiersWithCount(54, HeightRangePlacementModifier.trapezoid(YOffset.fixed(90), YOffset.fixed(384)))));
+    public static final RegistryEntry<PlacedFeature> ORE_TIN_MIDDLE_MOON = register("ore_tin_middle_moon", new PlacedFeature(GalacticraftOreConfiguredFeature.ORE_TIN_MOON, modifiersWithCount(6, HeightRangePlacementModifier.trapezoid(YOffset.fixed(-16), YOffset.fixed(56)))));
+    public static final RegistryEntry<PlacedFeature> ORE_TIN_SMALL_MOON = register("ore_tin_small_moon", new PlacedFeature(GalacticraftOreConfiguredFeature.ORE_TIN_SMALL_MOON, modifiersWithCount(6, HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(80)))));
 
     public static void register() {
         BiomeModifications.create(Constant.id("ores")).add(ModificationPhase.ADDITIONS, BiomeSelectors.foundInOverworld(), context -> {
-            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_SILICON);
-            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_SILICON_LARGE);
-            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_TIN_UPPER);
-            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_TIN_MIDDLE);
-            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_TIN_SMALL);
-            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_ALUMINUM_MIDDLE);
-            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_ALUMINUM_SMALL);
+            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_SILICON.value());
+            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_SILICON_LARGE.value());
+            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_TIN_UPPER.value());
+            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_TIN_MIDDLE.value());
+            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_TIN_SMALL.value());
+            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_ALUMINUM_MIDDLE.value());
+            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_ALUMINUM_SMALL.value());
         });
     }
 
-    private static PlacedFeature register(String id, PlacedFeature feature) {
+    private static RegistryEntry<PlacedFeature> register(String id, PlacedFeature feature) {
         return BuiltinRegistries.add(BuiltinRegistries.PLACED_FEATURE, Constant.id(id), feature);
     }
 

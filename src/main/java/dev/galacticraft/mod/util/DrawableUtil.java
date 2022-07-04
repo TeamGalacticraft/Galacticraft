@@ -30,7 +30,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Matrix4f;
@@ -43,7 +42,7 @@ public class DrawableUtil {
     private DrawableUtil() {}
 
     public static MutableText getEnergyDisplay(long amount) {
-        return new LiteralText(String.valueOf(amount)); //todo
+        return Text.literal(String.valueOf(amount)); //todo
     }
     
     public static void drawCenteredStringWithoutShadow(MatrixStack matrices, TextRenderer textRenderer, Text text, int x, int y, int color) {
@@ -91,8 +90,7 @@ public class DrawableUtil {
         bufferBuilder.vertex(matrices, x1, y1, z).texture(u1, v1).next();
         bufferBuilder.vertex(matrices, x1, y0, z).texture(u1, v0).next();
         bufferBuilder.vertex(matrices, x0, y0, z).texture(u0, v0).next();
-        bufferBuilder.end();
-        BufferRenderer.draw(bufferBuilder);
+        BufferRenderer.drawWithoutShader(bufferBuilder.end());
     }
 
     public static void drawTextureColor(MatrixStack matrices, int x, int y, int z, float u, float v, int width, int height, int textureHeight, int textureWidth, int red, int green, int blue, int alpha) {
@@ -110,8 +108,7 @@ public class DrawableUtil {
         bufferBuilder.vertex(matrices, (float)x1, (float)y1, (float)z).color(red, green, blue, 255).texture(u1, v1).next();
         bufferBuilder.vertex(matrices, (float)x1, (float)y0, (float)z).color(red, green, blue, 255).texture(u1, v0).next();
         bufferBuilder.vertex(matrices, (float)x0, (float)y0, (float)z).color(red, green, blue, 255).texture(u0, v0).next();
-        bufferBuilder.end();
-        BufferRenderer.draw(bufferBuilder);
+        BufferRenderer.drawWithoutShader(bufferBuilder.end());
     }
 
     public static String roundForDisplay(double d, int places) {

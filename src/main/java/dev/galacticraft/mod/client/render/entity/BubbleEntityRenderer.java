@@ -25,11 +25,11 @@ package dev.galacticraft.mod.client.render.entity;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
 import dev.galacticraft.mod.entity.BubbleEntity;
-import dev.monarkhes.myron.api.Myron;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.*;
+import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.model.BakedModel;
@@ -53,10 +53,10 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
 
     @Override
     public void render(BubbleEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        if (bubbleModel == null) {
-            bubbleModel = Myron.getModel(MODEL);
-            assert bubbleModel != null;
-        }
+//        if (bubbleModel == null) { TODO: PORT new obj system
+//            bubbleModel = Myron.getModel(MODEL);
+//            assert bubbleModel != null;
+//        }
         BlockEntity blockEntity = entity.world.getBlockEntity(entity.getBlockPos());
         if (!(blockEntity instanceof BubbleDistributorBlockEntity machine) || entity.isRemoved()) {
             ((ClientWorld) entity.world).removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);

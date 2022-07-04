@@ -46,6 +46,7 @@ import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.ServerWorldAccess;
@@ -55,7 +56,6 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -74,14 +74,14 @@ public class MoonRuinsGenerator {
       return Util.getRandom(PIECES, random);
    }
 
-   public static void addPieces(StructureManager manager, BlockPos pos, BlockRotation rotation, StructurePiecesHolder structurePiecesHolder, Random random, DefaultFeatureConfig config) {
+   public static void addPiecesToStructure(StructureTemplateManager manager, BlockPos pos, BlockRotation rotation, StructurePiecesHolder structurePiecesHolder, Random random) {
       addPieces(manager, pos, rotation, structurePiecesHolder, random);
       method_14825(manager, random, rotation, pos, structurePiecesHolder);
    }
 
-   private static void method_14825(StructureManager manager, Random random, BlockRotation rotation, BlockPos pos, StructurePiecesHolder structurePiecesHolder) {
+   private static void method_14825(StructureTemplateManager manager, Random random, BlockRotation rotation, BlockPos pos, StructurePiecesHolder structurePiecesHolder) {
       BlockPos blockPos = new BlockPos(pos.getX(), 90, pos.getZ());
-      BlockPos blockPos2 = Structure.transformAround(new BlockPos(15, 0, 15), BlockMirror.NONE, rotation, BlockPos.ORIGIN).add(blockPos);
+      BlockPos blockPos2 = StructureTemplate.transformAround(new BlockPos(15, 0, 15), BlockMirror.NONE, rotation, BlockPos.ORIGIN).add(blockPos);
       BlockBox blockBox = BlockBox.create(blockPos, blockPos2);
       BlockPos blockPos3 = new BlockPos(Math.min(blockPos.getX(), blockPos2.getX()), blockPos.getY(), Math.min(blockPos.getZ(), blockPos2.getZ()));
       List<BlockPos> list = getRoomPositions(random, blockPos3);
@@ -92,7 +92,7 @@ public class MoonRuinsGenerator {
             int k = random.nextInt(list.size());
             BlockPos blockPos4 = list.remove(k);
             BlockRotation blockRotation = BlockRotation.random(random);
-            BlockPos blockPos5 = Structure.transformAround(new BlockPos(5, 0, 6), BlockMirror.NONE, blockRotation, BlockPos.ORIGIN).add(blockPos4);
+            BlockPos blockPos5 = StructureTemplate.transformAround(new BlockPos(5, 0, 6), BlockMirror.NONE, blockRotation, BlockPos.ORIGIN).add(blockPos4);
             BlockBox blockBox2 = BlockBox.create(blockPos4, blockPos5);
             if (!blockBox2.intersects(blockBox)) {
                addPieces(manager, blockPos4, blockRotation, structurePiecesHolder, random);
@@ -115,7 +115,7 @@ public class MoonRuinsGenerator {
       return list;
    }
 
-   private static void addPieces(StructureManager manager, BlockPos pos, BlockRotation rotation, StructurePiecesHolder structurePiecesHolder, Random random) {
+   private static void addPieces(StructureTemplateManager manager, BlockPos pos, BlockRotation rotation, StructurePiecesHolder structurePiecesHolder, Random random) {
       structurePiecesHolder.addPiece(new Piece(manager, getPiece(random), pos, rotation, 0.8F));
       structurePiecesHolder.addPiece(new Piece(manager, getPiece(random), pos, rotation, 0.7F));
       structurePiecesHolder.addPiece(new Piece(manager, getPiece(random), pos, rotation, 0.65F));
@@ -124,12 +124,12 @@ public class MoonRuinsGenerator {
    public static class Piece extends SimpleStructurePiece {
       private final float integrity;
 
-      public Piece(StructureManager structureManager, Identifier template, BlockPos pos, BlockRotation rotation, float integrity) {
+      public Piece(StructureTemplateManager structureManager, Identifier template, BlockPos pos, BlockRotation rotation, float integrity) {
          super(GalacticraftStructurePieceType.MOON_RUINS_PIECE, 0, structureManager, template, template.toString(), method_35446(rotation), pos);
          this.integrity = integrity;
       }
 
-      public Piece(StructureManager structureManager, NbtCompound nbt) {
+      public Piece(StructureTemplateManager structureManager, NbtCompound nbt) {
          super(GalacticraftStructurePieceType.MOON_RUINS_PIECE, nbt, structureManager, (identifier) -> method_35446(BlockRotation.valueOf(nbt.getString("Rot"))));
          this.integrity = nbt.getFloat("Integrity");
       }
@@ -169,7 +169,7 @@ public class MoonRuinsGenerator {
          this.placementData.clearProcessors().addProcessor(new BlockRotStructureProcessor(this.integrity)).addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR_AND_STRUCTURE_BLOCKS);
          int i = world.getTopY(Heightmap.Type.WORLD_SURFACE_WG, this.pos.getX(), this.pos.getZ());
          this.pos = new BlockPos(this.pos.getX(), i, this.pos.getZ());
-         BlockPos blockPos = Structure.transformAround(new BlockPos(this.structure.getSize().getX() - 1, 0, this.structure.getSize().getZ() - 1), BlockMirror.NONE, this.placementData.getRotation(), BlockPos.ORIGIN).add(this.pos);
+         BlockPos blockPos = StructureTemplate.transformAround(new BlockPos(this.template.getSize().getX() - 1, 0, this.template.getSize().getZ() - 1), BlockMirror.NONE, this.placementData.getRotation(), BlockPos.ORIGIN).add(this.pos);
          this.pos = new BlockPos(this.pos.getX(), this.method_14829(this.pos, world, blockPos), this.pos.getZ());
 
          super.generate(world, structureAccessor, chunkGenerator, random, boundingBox, chunkPos, pos);

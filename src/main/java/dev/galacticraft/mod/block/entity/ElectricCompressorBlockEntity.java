@@ -86,7 +86,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
 
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        if (this.getStatus().getType().isActive() && this.getMaxProgress() > 0) {
+        if (this.getStatus().type().isActive() && this.getMaxProgress() > 0) {
             if (this.getProgress() % (this.getMaxProgress() / 5) == 0 && this.getProgress() > this.getMaxProgress() / 2) {
                 world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
             }
@@ -151,7 +151,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) {
+        if (this.getSecurity().hasAccess(player)) {
             return RecipeMachineScreenHandler.create(
                     syncId,
                     player,

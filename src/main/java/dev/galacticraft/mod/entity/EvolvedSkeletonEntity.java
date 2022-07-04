@@ -32,6 +32,7 @@ import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.World;
@@ -45,8 +46,8 @@ public class EvolvedSkeletonEntity extends SkeletonEntity {
     }
 
     @Override
-    protected void initEquipment(LocalDifficulty difficulty) {
-        super.initEquipment(difficulty);
+    protected void initEquipment(Random random, LocalDifficulty difficulty) {
+        super.initEquipment(random, difficulty);
         this.equipStack(EquipmentSlot.OFFHAND, new ItemStack(Items.BOW));
     }
 
@@ -75,6 +76,6 @@ public class EvolvedSkeletonEntity extends SkeletonEntity {
 
     @Override
     protected boolean isAffectedByDaylight() {
-        return super.isAffectedByDaylight() && GalacticraftTag.MOON_MARE.contains(this.world.getBiome(this.getBlockPos()));
+        return super.isAffectedByDaylight() && this.world.getBiome(this.getBlockPos()).isIn(GalacticraftTag.MOON_MARE);
     }
 }

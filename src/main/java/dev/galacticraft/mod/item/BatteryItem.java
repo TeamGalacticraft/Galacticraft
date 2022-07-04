@@ -33,7 +33,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -60,7 +59,7 @@ public class BatteryItem extends Item implements SimpleBatteryItem {
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
-        lines.add(new TranslatableText("tooltip.galacticraft.energy_remaining", DrawableUtil.getEnergyDisplay(energyStorage.getAmount())).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double)energyStorage.getAmount()) / ((double)energyStorage.getCapacity()))));
+        lines.add(Text.translatable("tooltip.galacticraft.energy_remaining", DrawableUtil.getEnergyDisplay(energyStorage.getAmount())).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double)energyStorage.getAmount()) / ((double)energyStorage.getCapacity()))));
         super.appendTooltip(stack, world, lines, context);
     }
 

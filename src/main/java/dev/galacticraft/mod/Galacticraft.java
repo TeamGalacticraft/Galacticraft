@@ -82,7 +82,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftOrePlacedFeature.register();
         GalacticraftStructurePieceType.register();
         GalacticraftStructureFeature.register();
-        GalacticraftConfiguredStructureFeature.register();
+//        GalacticraftConfiguredStructureFeature.register(); TODO: PORT?
         GalacticraftFeature.register();
         GalacticraftCarver.register();
         GalacticraftBiome.register();

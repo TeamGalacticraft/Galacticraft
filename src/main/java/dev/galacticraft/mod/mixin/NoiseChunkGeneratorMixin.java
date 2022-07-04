@@ -22,24 +22,29 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.mod.world.gen.feature.GalacticraftConfiguredStructureFeature;
 import dev.galacticraft.mod.world.gen.feature.GalacticraftStructureFeature;
 import dev.galacticraft.mod.world.gen.feature.MoonPillagerOutpostFeature;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.RegistryEntry;
+import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.chunk.NoiseChunkGenerator;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(NoiseChunkGenerator.class)
+@Mixin(SpawnHelper.class)
 public abstract class NoiseChunkGeneratorMixin {
-    @Inject(method = "getEntitySpawnList", at = @At("HEAD"), cancellable = true)
-    private void getEntityStructureSpawns_gc(Biome biome, StructureAccessor accessor, SpawnGroup group, BlockPos pos, CallbackInfoReturnable<Pool<SpawnSettings.SpawnEntry>> cir) {
+    @Inject(method = "getSpawnEntries", at = @At("HEAD"), cancellable = true)
+    private static void getEntityStructureSpawns_gc(ServerWorld world, StructureAccessor accessor, ChunkGenerator chunkGenerator, SpawnGroup group, BlockPos pos, @Nullable RegistryEntry<Biome> biomeEntry, CallbackInfoReturnable<Pool<SpawnSettings.SpawnEntry>> cir) {
         if (group == SpawnGroup.MONSTER) {
             if (accessor.getStructureAt(pos, GalacticraftStructureFeature.MOON_PILLAGER_OUTPOST).hasChildren()) {
                 cir.setReturnValue(MoonPillagerOutpostFeature.MONSTER_SPAWNS);

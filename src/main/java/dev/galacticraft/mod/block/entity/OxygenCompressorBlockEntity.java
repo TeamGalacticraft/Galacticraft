@@ -118,7 +118,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) {
+        if (this.getSecurity().hasAccess(player)) {
             return SimpleMachineScreenHandler.create(
                     syncId,
                     player,

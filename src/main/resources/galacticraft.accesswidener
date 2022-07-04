@@ -8,11 +8,9 @@ accessible method net/minecraft/block/StairsBlock                              <
 accessible method net/minecraft/client/particle/BlockLeakParticle$Dripping     <init> (Lnet/minecraft/client/world/ClientWorld;DDDLnet/minecraft/fluid/Fluid;Lnet/minecraft/particle/ParticleEffect;)V
 accessible method net/minecraft/item/AxeItem                                   <init> (Lnet/minecraft/item/ToolMaterial;FFLnet/minecraft/item/Item$Settings;)V
 accessible method net/minecraft/item/HoeItem                                   <init> (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
-accessible method net/minecraft/item/MusicDiscItem                             <init> (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V
 accessible method net/minecraft/item/PickaxeItem                               <init> (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
-accessible method net/minecraft/structure/pool/LegacySinglePoolElement         <init> (Lcom/mojang/datafixers/util/Either;Ljava/util/function/Supplier;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
+accessible method net/minecraft/structure/pool/LegacySinglePoolElement         <init> (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/util/registry/RegistryEntry;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
 accessible method net/minecraft/world/biome/source/MultiNoiseBiomeSource       <init> (Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$Entries;Ljava/util/Optional;)V
-accessible method net/minecraft/world/gen/chunk/ChunkGeneratorSettings         <init> (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;Lnet/minecraft/world/gen/surfacebuilder/MaterialRules$MaterialRule;IZZZZZZ)V
 
 # private classes
 accessible class  net/minecraft/client/particle/BlockLeakParticle$Dripping
@@ -24,3 +22,9 @@ accessible class  net/minecraft/world/gen/surfacebuilder/MaterialRules$MaterialR
 accessible field  net/minecraft/world/gen/surfacebuilder/MaterialRules$MaterialRuleContext    biomeSupplier  Ljava/util/function/Supplier;
 
 # final classes
+
+# static methods
+accessible method net/minecraft/world/gen/densityfunction/DensityFunctions method_41211 (Lnet/minecraft/util/registry/Registry;Lnet/minecraft/world/gen/densityfunction/DensityFunction;)Lnet/minecraft/world/gen/noise/NoiseRouter;
+accessible method net/minecraft/world/gen/densityfunction/DensityFunctions method_42365 (Lnet/minecraft/world/gen/densityfunction/DensityFunction;IIIIDIID)Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+accessible method net/minecraft/world/gen/densityfunction/DensityFunctions createCavesNoiseRouter (Lnet/minecraft/util/registry/Registry;)Lnet/minecraft/world/gen/noise/NoiseRouter;
+accessible method net/minecraft/world/gen/structure/Structures createConfig (Lnet/minecraft/tag/TagKey;Lnet/minecraft/world/gen/StructureTerrainAdaptation;)Lnet/minecraft/world/gen/structure/Structure$Config;

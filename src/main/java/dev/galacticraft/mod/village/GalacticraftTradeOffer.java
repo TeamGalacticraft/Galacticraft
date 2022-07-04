@@ -29,15 +29,12 @@ import net.minecraft.item.*;
 import net.minecraft.item.map.MapIcon;
 import net.minecraft.item.map.MapState;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers;
-import net.minecraft.world.gen.feature.StructureFeature;
+import net.minecraft.world.gen.structure.Structure;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Locale;
-import java.util.Random;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -66,12 +63,12 @@ public class GalacticraftTradeOffer {
 
     public static class SellMapFactory implements TradeOffers.Factory {
         private final int price;
-        private final StructureFeature<?> structure;
+        private final Structure structure;
         private final MapIcon.Type iconType;
         private final int maxUses;
         private final int experience;
 
-        public SellMapFactory(int price, StructureFeature<?> feature, MapIcon.Type iconType, int maxUses, int experience) {
+        public SellMapFactory(int price, Structure feature, MapIcon.Type iconType, int maxUses, int experience) {
             this.price = price;
             this.structure = feature;
             this.iconType = iconType;
@@ -84,12 +81,12 @@ public class GalacticraftTradeOffer {
             if (!(entity.world instanceof ServerWorld world)) {
                 return null;
             } else {
-                BlockPos blockPos = world.locateStructure(this.structure, entity.getBlockPos(), 100, true);
+                BlockPos blockPos = null;//world.locateStructure(this.structure, entity.getBlockPos(), 100, true); TODO: PORT
                 if (blockPos != null) {
                     ItemStack itemStack = FilledMapItem.createMap(world, blockPos.getX(), blockPos.getZ(), (byte) 2, true, true);
                     FilledMapItem.fillExplorationMap(world, itemStack);
                     MapState.addDecorationsNbt(itemStack, blockPos, "+", this.iconType);
-                    itemStack.setCustomName(new TranslatableText("filled_map." + this.structure.getName().toLowerCase(Locale.ROOT)));
+//                    itemStack.setCustomName(Text.translatable("filled_map." + this.structure.getName().toLowerCase(Locale.ROOT))); port
                     return new TradeOffer(new ItemStack(GalacticraftItem.LUNAR_SAPPHIRE, this.price), new ItemStack(Items.COMPASS), itemStack, this.maxUses, this.experience, 0.2F);
                 } else {
                     return null;

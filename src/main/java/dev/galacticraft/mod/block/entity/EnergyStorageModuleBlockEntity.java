@@ -87,14 +87,14 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        this.trySpreadEnergy();
+        this.trySpreadEnergy(world);
         return MachineStatus.INVALID;
     }
 
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) {
+        if (this.getSecurity().hasAccess(player)) {
             return SimpleMachineScreenHandler.create(
                     syncId,
                     player,

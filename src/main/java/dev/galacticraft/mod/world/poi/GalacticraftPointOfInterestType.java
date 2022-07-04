@@ -26,15 +26,23 @@ import com.google.common.collect.ImmutableSet;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.poi.PointOfInterestType;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftPointOfInterestType {
-    public static final PointOfInterestType LUNAR_CARTOGRAPHER = PointOfInterestHelper.register(new Identifier(Constant.MOD_ID, "lunar_cartographer"), 1, 1, ImmutableSet.copyOf(GalacticraftBlock.LUNAR_CARTOGRAPHY_TABLE.getStateManager().getStates()));
+    public static final RegistryKey<PointOfInterestType> LUNAR_CARTOGRAPHER = register(new Identifier(Constant.MOD_ID, "lunar_cartographer"), 1, 1, ImmutableSet.copyOf(GalacticraftBlock.LUNAR_CARTOGRAPHY_TABLE.getStateManager().getStates()));
 
     public static void register() {
+    }
+
+    private static RegistryKey<PointOfInterestType> register(Identifier id, int ticketCount, int searchDistance, Iterable<BlockState> blocks) {
+        PointOfInterestHelper.register(id, ticketCount, searchDistance, blocks);
+        return RegistryKey.of(Registry.POINT_OF_INTEREST_TYPE_KEY, id);
     }
 }

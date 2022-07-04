@@ -59,14 +59,14 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        this.trySpreadFluids();
+        this.trySpreadFluids(world);
         return MachineStatus.INVALID;
     }
 
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) {
+        if (this.getSecurity().hasAccess(player)) {
             return SimpleMachineScreenHandler.create(
                     syncId,
                     player,

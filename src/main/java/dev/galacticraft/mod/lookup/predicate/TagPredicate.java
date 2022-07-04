@@ -23,14 +23,14 @@
 package dev.galacticraft.mod.lookup.predicate;
 
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
-public record TagPredicate<T, V extends TransferVariant<T>>(Tag<T> tag) implements Predicate<V> {
+public record TagPredicate<T, V extends TransferVariant<T>>(TagKey<T> tag) implements Predicate<V> {
     @Override
     public boolean test(@NotNull V v) {
-        return tag.values().contains(v.getObject());
+        return /*tag.values().contains(v.getObject())*/false;
     }
 }

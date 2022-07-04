@@ -170,7 +170,7 @@ public class ReadableVanillaSurfaceRules {
                 condition(WATER_ANDSTONE6, sequence(
                         condition(STONE_DEPTH_FLOOR, condition(IS_FROZEN_OCEAN, condition(HOLE, WATER))),
                         condition(STONE_DEPTH_FLOOR_WITH_SURFACE_DEPTH, SECONDARY_MATERIAL),
-                        condition(IS_WARM_SANDY_PLACE, condition(stoneDepth(0, true, true, VerticalSurfaceType.FLOOR), SANDSTONE)))),
+                        condition(IS_WARM_SANDY_PLACE, condition(stoneDepth(0, true, 0, VerticalSurfaceType.FLOOR), SANDSTONE)))),
                 condition(STONE_DEPTH_FLOOR, sequence(
                         condition(biome(BiomeKeys.FROZEN_PEAKS, BiomeKeys.JAGGED_PEAKS), STONE),
                         condition(biome(BiomeKeys.WARM_OCEAN, BiomeKeys.LUKEWARM_OCEAN, BiomeKeys.DEEP_LUKEWARM_OCEAN), SANDSTONE_REP_SAND),

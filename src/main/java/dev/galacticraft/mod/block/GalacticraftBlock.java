@@ -278,9 +278,9 @@ public class GalacticraftBlock {
     public static final Block LUNAR_CARTOGRAPHY_TABLE = new LunarCartographyTableBlock(FabricBlockSettings.of(Material.WOOD).strength(2.5F).sounds(BlockSoundGroup.WOOD));
 
     // MISC WORLD GEN
-    public static final Block CAVERNOUS_VINE = new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MapColor.GREEN).dropsNothing().noCollision().luminance(0).sounds(BlockSoundGroup.GRASS).ticksRandomly());
-    public static final Block POISONOUS_CAVERNOUS_VINE = new PoisonousCavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MapColor.GREEN).dropsNothing().noCollision().luminance(3).sounds(BlockSoundGroup.GRASS).ticksRandomly());
-    public static final Block MOON_BERRY_BUSH = new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MapColor.GREEN).dropsNothing().noCollision().luminance(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly());
+    public static final Block CAVERNOUS_VINE = new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MapColor.GREEN).dropsNothing().noCollision().luminance(blockstate -> 0).sounds(BlockSoundGroup.GRASS).ticksRandomly());
+    public static final Block POISONOUS_CAVERNOUS_VINE = new PoisonousCavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MapColor.GREEN).dropsNothing().noCollision().luminance(blockstate -> 3).sounds(BlockSoundGroup.GRASS).ticksRandomly());
+    public static final Block MOON_BERRY_BUSH = new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MapColor.GREEN).dropsNothing().noCollision().luminance(blockstate -> 3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly());
 
     // DUMMY
     public static final BlockWithEntity SOLAR_PANEL_PART = new SolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL));

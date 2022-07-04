@@ -91,7 +91,7 @@ public class SingleTypeStorage<T, V extends TransferVariant<T>> extends Snapshot
     }
 
     @Override
-    public Iterator<StorageView<V>> iterator(TransactionContext transaction) {
+    public Iterator<StorageView<V>> iterator() {
         return Iterators.singletonIterator(this);
     }
 

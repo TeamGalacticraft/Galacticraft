@@ -28,7 +28,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.world.BlockView;
 
 import java.util.List;
@@ -44,9 +43,9 @@ public class GlowstoneLanternBlock extends LanternBlock {
     @Override
     public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableText("tooltip.galacticraft.glowstone_lantern").setStyle(Constant.Text.Color.GRAY_STYLE));
+            list.add(Text.translatable("tooltip.galacticraft.glowstone_lantern").setStyle(Constant.Text.Color.GRAY_STYLE));
         } else {
-            list.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Constant.Text.Color.GRAY_STYLE));
+            list.add(Text.translatable("tooltip.galacticraft.press_shift").setStyle(Constant.Text.Color.GRAY_STYLE));
         }
     }
 }

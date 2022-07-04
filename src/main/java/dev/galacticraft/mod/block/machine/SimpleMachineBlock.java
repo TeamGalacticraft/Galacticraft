@@ -31,7 +31,6 @@ import net.minecraft.block.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Contract;
@@ -65,7 +64,7 @@ public class SimpleMachineBlock<T extends MachineBlockEntity> extends MachineBlo
     @Override
     public Text machineDescription(ItemStack stack, BlockView view, boolean advanced) {
         if (this.information == null) {
-            this.information = new TranslatableText(this.getTranslationKey() + ".description").setStyle(Constant.Text.Color.DARK_GRAY_STYLE);
+            this.information = Text.translatable(this.getTranslationKey() + ".description").setStyle(Constant.Text.Color.DARK_GRAY_STYLE);
         }
         return this.information;
     }

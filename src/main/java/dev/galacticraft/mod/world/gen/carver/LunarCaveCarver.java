@@ -31,16 +31,18 @@ import net.minecraft.block.Blocks;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.carver.*;
 import net.minecraft.world.gen.chunk.AquiferSampler;
+import net.minecraft.world.gen.densityfunction.DensityFunction;
 import net.minecraft.world.tick.OrderedTick;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
 import java.util.function.Function;
 
 /**
@@ -49,13 +51,13 @@ import java.util.function.Function;
 public class LunarCaveCarver extends CaveCarver {
     public LunarCaveCarver(Codec<CaveCarverConfig> codec) {
         super(codec);
-        this.alwaysCarvableBlocks = ImmutableSet.<Block>builder().addAll(this.alwaysCarvableBlocks)
-                .add(GalacticraftBlock.MOON_ROCK)
-                .add(GalacticraftBlock.MOON_SURFACE_ROCK)
-                .add(GalacticraftBlock.MOON_TURF)
-                .add(GalacticraftBlock.MOON_BASALT)
-                .add(GalacticraftBlock.MOON_DIRT)
-                .build();
+//        this.alwaysCarvableBlocks = ImmutableSet.<Block>builder().addAll(this.alwaysCarvableBlocks) TODO: PORT: replacebles?
+//                .add(GalacticraftBlock.MOON_ROCK)
+//                .add(GalacticraftBlock.MOON_SURFACE_ROCK)
+//                .add(GalacticraftBlock.MOON_TURF)
+//                .add(GalacticraftBlock.MOON_BASALT)
+//                .add(GalacticraftBlock.MOON_DIRT)
+//                .build();
     }
 
     @Override
@@ -73,13 +75,13 @@ public class LunarCaveCarver extends CaveCarver {
     }
 
     @Override
-    protected boolean carveAtPoint(CarverContext context, CaveCarverConfig config, @NotNull Chunk chunk, Function<BlockPos, Biome> posToBiome, CarvingMask carvingMask, BlockPos.Mutable mutable, BlockPos.Mutable mutable2, AquiferSampler aquiferSampler, MutableBoolean mutableBoolean) {
+    protected boolean carveAtPoint(CarverContext context, CaveCarverConfig config, @NotNull Chunk chunk, Function<BlockPos, RegistryEntry<Biome>> posToBiome, CarvingMask carvingMask, BlockPos.Mutable mutable, BlockPos.Mutable mutable2, AquiferSampler aquiferSampler, MutableBoolean mutableBoolean) {
         BlockState blockState = chunk.getBlockState(mutable);
         if (blockState.isOf(GalacticraftBlock.MOON_TURF) || blockState.isOf(Blocks.MYCELIUM)) {
             mutableBoolean.setTrue();
         }
 
-        if (!this.canAlwaysCarveBlock(blockState) && !isDebug(config)) {
+        if (!this.canAlwaysCarveBlock(config, blockState) && !isDebug(config)) {
             return false;
         } else {
             BlockState blockState2 = this.getState(context, config, mutable, aquiferSampler);
@@ -108,7 +110,7 @@ public class LunarCaveCarver extends CaveCarver {
         if (pos.getY() <= config.lavaLevel.getY(context)) {
             return CAVE_AIR; //LAVA.getBlockState();
         } else {
-            BlockState blockState = sampler.apply(pos.getX(), pos.getY(), pos.getZ(), 0.0, 0.0);
+            BlockState blockState = sampler.apply(new DensityFunction.UnblendedNoisePos(pos.getX(), pos.getY(), pos.getZ()), 0.0);
             if (blockState == null) {
                 return isDebug(config) ? config.debugConfig.getBarrierState() : null;
             } else {

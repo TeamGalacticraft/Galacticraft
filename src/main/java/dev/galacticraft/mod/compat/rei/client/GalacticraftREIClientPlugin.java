@@ -83,13 +83,13 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
 
     @Override
     public void registerExclusionZones(ExclusionZones zones) {
-        zones.register(MachineHandledScreen.class, provider -> {
-            if (MachineHandledScreen.Tab.STATS.isOpen()) {
-                return Collections.singletonList(new Rectangle(provider.getX() + provider.width, provider.getY(), MachineHandledScreen.PANEL_WIDTH, MachineHandledScreen.PANEL_HEIGHT));
-            } else {
-                return Collections.singletonList(new Rectangle(provider.getX() + provider.width, provider.getY(), MachineHandledScreen.TAB_WIDTH, MachineHandledScreen.TAB_HEIGHT));
-            }
-        });
+//        zones.register(MachineHandledScreen.class, provider -> { // TODO: Refactor
+//            if (MachineHandledScreen.Tab.STATS.isOpen()) {
+//                return Collections.singletonList(new Rectangle(provider.getX() + provider.width, provider.getY(), MachineHandledScreen.PANEL_WIDTH, MachineHandledScreen.PANEL_HEIGHT));
+//            } else {
+//                return Collections.singletonList(new Rectangle(provider.getX() + provider.width, provider.getY(), MachineHandledScreen.TAB_WIDTH, MachineHandledScreen.TAB_HEIGHT));
+//            }
+//        });
     }
 
     @Override

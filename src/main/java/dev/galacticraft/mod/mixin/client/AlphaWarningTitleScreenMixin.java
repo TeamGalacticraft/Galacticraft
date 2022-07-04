@@ -32,7 +32,6 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
@@ -50,10 +49,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class AlphaWarningTitleScreenMixin extends Screen {
     private static boolean warningHidden = false;
     private static final Identifier ALPHA_WARNING_GC_TEXTURE = new Identifier(Constant.MOD_ID, "textures/gui/alpha_warning.png");
-    private static final TranslatableText ALPHA_WARNING_GC_HEADER = new TranslatableText("ui.galacticraft.alpha_warning.header");
-    private static final TranslatableText ALPHA_WARNING_GC_CONTENT1 = new TranslatableText("ui.galacticraft.alpha_warning.content1");
-    private static final TranslatableText ALPHA_WARNING_GC_CONTENT2 = new TranslatableText("ui.galacticraft.alpha_warning.content2");
-    private static final TranslatableText ALPHA_WARNING_GC_CONTENT3 = new TranslatableText("ui.galacticraft.alpha_warning.content3");
+    private static final Text ALPHA_WARNING_GC_HEADER = Text.translatable("ui.galacticraft.alpha_warning.header");
+    private static final Text ALPHA_WARNING_GC_CONTENT1 = Text.translatable("ui.galacticraft.alpha_warning.content1");
+    private static final Text ALPHA_WARNING_GC_CONTENT2 = Text.translatable("ui.galacticraft.alpha_warning.content2");
+    private static final Text ALPHA_WARNING_GC_CONTENT3 = Text.translatable("ui.galacticraft.alpha_warning.content3");
 
     protected AlphaWarningTitleScreenMixin(Text title) {
         super(title);

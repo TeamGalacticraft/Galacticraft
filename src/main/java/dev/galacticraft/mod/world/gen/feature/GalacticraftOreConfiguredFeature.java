@@ -28,6 +28,7 @@ import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.minecraft.structure.rule.RuleTest;
 import net.minecraft.structure.rule.TagMatchRuleTest;
 import net.minecraft.util.registry.BuiltinRegistries;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.gen.feature.*;
 
 import java.util.List;
@@ -45,27 +46,27 @@ public class GalacticraftOreConfiguredFeature {
     public static final List<OreFeatureConfig.Target> TIN_ORES_MOON = List.of(OreFeatureConfig.createTarget(MOON_STONE_ORE_REPLACEABLES, GalacticraftBlock.TIN_ORE.getDefaultState()), OreFeatureConfig.createTarget(LUNASLATE_ORE_REPLACEABLES, GalacticraftBlock.LUNASLATE_TIN_ORE.getDefaultState()));
 
     // OVERWORLD
-    public static final ConfiguredFeature<OreFeatureConfig, ?> ORE_SILICON_SMALL = register("ore_silicon_small", Feature.ORE.configure(new OreFeatureConfig(SILICON_ORES, 6, 0.5F)));
-    public static final ConfiguredFeature<OreFeatureConfig, ?> ORE_SILICON_LARGE = register("ore_silicon_large", Feature.ORE.configure(new OreFeatureConfig(SILICON_ORES, 9, 0.7F)));
+    public static final RegistryEntry<ConfiguredFeature<?, ?>> ORE_SILICON_SMALL = register("ore_silicon_small", new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(SILICON_ORES, 6, 0.5F)));
+    public static final RegistryEntry<ConfiguredFeature<?, ?>> ORE_SILICON_LARGE = register("ore_silicon_large", new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(SILICON_ORES, 9, 0.7F)));
 
-    public static final ConfiguredFeature<OreFeatureConfig, ?> ORE_TIN = register("ore_tin", Feature.ORE.configure(new OreFeatureConfig(TIN_ORES, 7)));
-    public static final ConfiguredFeature<OreFeatureConfig, ?> ORE_TIN_SMALL = register("ore_tin_small", Feature.ORE.configure(new OreFeatureConfig(TIN_ORES, 3)));
+    public static final RegistryEntry<ConfiguredFeature<?, ?>> ORE_TIN = register("ore_tin", new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(TIN_ORES, 7)));
+    public static final RegistryEntry<ConfiguredFeature<?, ?>> ORE_TIN_SMALL = register("ore_tin_small", new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(TIN_ORES, 3)));
 
-    public static final ConfiguredFeature<OreFeatureConfig, ?> ORE_ALUMINUM = register("ore_aluminum", Feature.ORE.configure(new OreFeatureConfig(ALUMINUM_ORES, 7)));
-    public static final ConfiguredFeature<OreFeatureConfig, ?> ORE_ALUMINUM_SMALL = register("ore_aluminum_small", Feature.ORE.configure(new OreFeatureConfig(ALUMINUM_ORES, 3)));
+    public static final RegistryEntry<ConfiguredFeature<?, ?>> ORE_ALUMINUM = register("ore_aluminum", new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(ALUMINUM_ORES, 7)));
+    public static final RegistryEntry<ConfiguredFeature<?, ?>> ORE_ALUMINUM_SMALL = register("ore_aluminum_small", new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(ALUMINUM_ORES, 3)));
 
     // MOON
-    public static final ConfiguredFeature<OreFeatureConfig, ?> BASALT_DISK_MOON = register("basalt_disk_moon", Feature.ORE.configure(new OreFeatureConfig(BASE_STONE_MOON, GalacticraftBlock.MOON_BASALT.getDefaultState(), 33)));
+    public static final RegistryEntry<ConfiguredFeature<?, ?>> BASALT_DISK_MOON = register("basalt_disk_moon", new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(BASE_STONE_MOON, GalacticraftBlock.MOON_BASALT.getDefaultState(), 33)));
 
-    public static final ConfiguredFeature<OreFeatureConfig, ?> ORE_COPPER_SMALL_MOON = register("ore_copper_small_moon", Feature.ORE.configure(new OreFeatureConfig(COPPER_ORES_MOON, 10)));
-    public static final ConfiguredFeature<OreFeatureConfig, ?> ORE_COPPER_LARGE_MOON = register("ore_copper_large_moon", Feature.ORE.configure(new OreFeatureConfig(COPPER_ORES_MOON, 20)));
+    public static final RegistryEntry<ConfiguredFeature<?, ?>> ORE_COPPER_SMALL_MOON = register("ore_copper_small_moon", new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(COPPER_ORES_MOON, 10)));
+    public static final RegistryEntry<ConfiguredFeature<?, ?>> ORE_COPPER_LARGE_MOON = register("ore_copper_large_moon", new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(COPPER_ORES_MOON, 20)));
 
-    public static final ConfiguredFeature<OreFeatureConfig, ?> ORE_TIN_MOON = register("ore_tin_moon", Feature.ORE.configure(new OreFeatureConfig(TIN_ORES_MOON, 6)));
-    public static final ConfiguredFeature<OreFeatureConfig, ?> ORE_TIN_SMALL_MOON = register("ore_tin_small_moon", Feature.ORE.configure(new OreFeatureConfig(TIN_ORES_MOON, 4)));
+    public static final RegistryEntry<ConfiguredFeature<?, ?>> ORE_TIN_MOON = register("ore_tin_moon", new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(TIN_ORES_MOON, 6)));
+    public static final RegistryEntry<ConfiguredFeature<?, ?>> ORE_TIN_SMALL_MOON = register("ore_tin_small_moon", new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(TIN_ORES_MOON, 4)));
 
     public static void register() {}
 
-    private static <FC extends FeatureConfig, F extends Feature<FC>> ConfiguredFeature<FC, F> register(String id, ConfiguredFeature<FC, F> feature) {
+    private static <FC extends FeatureConfig, F extends Feature<FC>> RegistryEntry<ConfiguredFeature<?, ?>> register(String id, ConfiguredFeature<FC, F> feature) {
         return BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, Constant.id(id), feature);
     }
 }

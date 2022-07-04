@@ -26,6 +26,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.biome.GalacticraftBiomeKey;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil;
@@ -80,7 +81,7 @@ public class GalacticraftBiomeParameters {
     private static final ParameterRange WEIRDNESS_H_MOUNTAINS = ParameterRange.of(0.56666666F, 0.7666667F);
 
     public static final MultiNoiseBiomeSource.Preset MOON = new MultiNoiseBiomeSource.Preset(Constant.id("moon"), (biomeRegistry) -> {
-        ImmutableList.Builder<Pair<MultiNoiseUtil.NoiseHypercube, Supplier<Biome>>> builder = ImmutableList.builder();
+        ImmutableList.Builder<Pair<MultiNoiseUtil.NoiseHypercube, RegistryEntry<Biome>>> builder = ImmutableList.builder();
         // HIGHLANDS
         writeBiomeParameters(builder::add,
                 COLD, //temperature
@@ -89,7 +90,7 @@ public class GalacticraftBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_H_MIXED, // weirdness
                 0.0F,
-                () -> biomeRegistry.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS));
+                biomeRegistry.getEntry(GalacticraftBiomeKey.Moon.HIGHLANDS).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -97,7 +98,7 @@ public class GalacticraftBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_H_PLAINS, // weirdness
                 0.0F,
-                () -> biomeRegistry.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS_FLAT));
+                biomeRegistry.getEntry(GalacticraftBiomeKey.Moon.HIGHLANDS_FLAT).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -105,7 +106,7 @@ public class GalacticraftBiomeParameters {
                 SOMEWHAT_ERODED, //erosion
                 WEIRDNESS_H_MOUNTAINS, // weirdness
                 0.0F,
-                () -> biomeRegistry.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS_HILLS));
+                biomeRegistry.getEntry(GalacticraftBiomeKey.Moon.HIGHLANDS_HILLS).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -113,7 +114,7 @@ public class GalacticraftBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_H_ADJ_RIVER, // weirdness
                 0.0F,
-                () -> biomeRegistry.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS_VALLEY));
+                biomeRegistry.getEntry(GalacticraftBiomeKey.Moon.HIGHLANDS_VALLEY).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -121,7 +122,7 @@ public class GalacticraftBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_RIVER, // weirdness
                 0.0F,
-                () -> biomeRegistry.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS_EDGE));
+                biomeRegistry.getEntry(GalacticraftBiomeKey.Moon.HIGHLANDS_EDGE).orElseThrow());
 
         // MARE
         writeBiomeParameters(builder::add,
@@ -131,7 +132,7 @@ public class GalacticraftBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_L_MIXED, // weirdness
                 0.0F,
-                () -> biomeRegistry.getOrThrow(GalacticraftBiomeKey.Moon.MARE));
+                biomeRegistry.getEntry(GalacticraftBiomeKey.Moon.MARE).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -139,7 +140,7 @@ public class GalacticraftBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_L_PLAINS, // weirdness
                 0.0F,
-                () -> biomeRegistry.getOrThrow(GalacticraftBiomeKey.Moon.MARE_FLAT));
+                biomeRegistry.getEntry(GalacticraftBiomeKey.Moon.MARE_FLAT).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -147,7 +148,7 @@ public class GalacticraftBiomeParameters {
                 SOMEWHAT_ERODED, //erosion
                 WEIRDNESS_L_MOUNTAINS, // weirdness
                 0.0F,
-                () -> biomeRegistry.getOrThrow(GalacticraftBiomeKey.Moon.MARE_HILLS));
+                biomeRegistry.getEntry(GalacticraftBiomeKey.Moon.MARE_HILLS).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -155,7 +156,7 @@ public class GalacticraftBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_L_ADJ_RIVER, // weirdness
                 0.0F,
-                () -> biomeRegistry.getOrThrow(GalacticraftBiomeKey.Moon.MARE_VALLEY));
+                biomeRegistry.getEntry(GalacticraftBiomeKey.Moon.MARE_VALLEY).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -163,19 +164,19 @@ public class GalacticraftBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_RIVER, // weirdness
                 0.0F,
-                () -> biomeRegistry.getOrThrow(GalacticraftBiomeKey.Moon.MARE_EDGE));
+                biomeRegistry.getEntry(GalacticraftBiomeKey.Moon.MARE_EDGE).orElseThrow());
         return new MultiNoiseUtil.Entries<>(builder.build());
     });
 
     private static void writeBiomeParameters(
-            Consumer<Pair<MultiNoiseUtil.NoiseHypercube, Supplier<Biome>>> parameters,
+            Consumer<Pair<MultiNoiseUtil.NoiseHypercube, RegistryEntry<Biome>>> parameters,
             ParameterRange temperature,
             ParameterRange humidity,
             ParameterRange continentalness,
             ParameterRange erosion,
             ParameterRange weirdness,
             float offset,
-            Supplier<Biome> biome
+            RegistryEntry<Biome> biome
     ) {
         parameters.accept(
                 Pair.of(

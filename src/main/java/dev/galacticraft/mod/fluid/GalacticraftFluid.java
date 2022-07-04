@@ -23,10 +23,8 @@
 package dev.galacticraft.mod.fluid;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.GalacticraftBlock;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -49,7 +47,7 @@ public class GalacticraftFluid {
 
 //        FluidKeys.put(CRUDE_OIL, new SimpleFluidKey( //todo: lba compat?
 //                new FluidKey.FluidKeyBuilder(CRUDE_OIL)
-//                        .setName(new TranslatableText(GalacticraftBlock.CRUDE_OIL.getTranslationKey())
+//                        .setName(Text.translatable(GalacticraftBlock.CRUDE_OIL.getTranslationKey())
 //                                .setStyle(Constant.Text.DARK_GRAY_STYLE)
 //                        )
 //                        .setViscosity(FluidAmount.of(30, 5))
@@ -60,7 +58,7 @@ public class GalacticraftFluid {
 //
 //        FluidKeys.put(FUEL, new SimpleFluidKey(
 //                new FluidKey.FluidKeyBuilder(FUEL)
-//                        .setName(new TranslatableText(GalacticraftBlock.FUEL.getTranslationKey())
+//                        .setName(Text.translatable(GalacticraftBlock.FUEL.getTranslationKey())
 //                                .setStyle(Constant.Text.YELLOW_STYLE)
 //                        )
 //                        .setViscosity(FluidAmount.of(10, 5))
@@ -71,7 +69,7 @@ public class GalacticraftFluid {
 //
 //        FluidKeys.put(LIQUID_OXYGEN, new SimpleFluidKey(
 //                new FluidKey.FluidKeyBuilder(LIQUID_OXYGEN)
-//                        .setName(new TranslatableText("block.galacticraft.oxygen")
+//                        .setName(Text.translatable("block.galacticraft.oxygen")
 //                                .setStyle(Constant.Text.AQUA_STYLE)
 //                        )
 //                        .setGas()

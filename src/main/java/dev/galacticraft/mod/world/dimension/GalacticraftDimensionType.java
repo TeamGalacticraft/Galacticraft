@@ -26,6 +26,8 @@ import com.mojang.serialization.Lifecycle;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.intprovider.ConstantIntProvider;
+import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -43,7 +45,7 @@ public class GalacticraftDimensionType {
     public static final RegistryKey<DimensionType> MOON_DIMENSION_TYPE_KEY = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, MOON_KEY.getValue());
     public static final RegistryKey<DimensionOptions> MOON_DIMENSION_OPTIONS_KEY = RegistryKey.of(Registry.DIMENSION_KEY, MOON_KEY.getValue());
 
-    private static final DimensionType MOON = DimensionType.create(
+    private static final DimensionType MOON = new DimensionType(
             OptionalLong.empty(),
             true,
             false,
@@ -52,18 +54,16 @@ public class GalacticraftDimensionType {
             1.0,
             false,
             false,
-            false,
-            false,
-            true,
             -64,
             384,
             384,
-            GalacticraftTag.INFINIBURN_MOON.getId(),
+            GalacticraftTag.INFINIBURN_MOON,
             MOON_KEY.getValue(),
-            0.1F
+            0.1F,
+            new DimensionType.MonsterSettings(false, false, ConstantIntProvider.create(11), 15)
     );
 
-    public static void register(MutableRegistry<DimensionType> registry) {
-        registry.add(MOON_DIMENSION_TYPE_KEY, MOON, Lifecycle.stable());
+    public static void register(Registry<DimensionType> registry) {
+        BuiltinRegistries.add(registry,MOON_DIMENSION_TYPE_KEY, MOON);
     }
 }

@@ -100,7 +100,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
         world.getProfiler().push("push_energy");
-        this.trySpreadEnergy();
+        this.trySpreadEnergy(world);
         world.getProfiler().pop();
         if (this.blocked == 9) return GalacticraftMachineStatus.BLOCKED;
         if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
@@ -132,7 +132,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) {
+        if (this.getSecurity().hasAccess(player)) {
             return SimpleMachineScreenHandler.create(
                     syncId,
                     player,

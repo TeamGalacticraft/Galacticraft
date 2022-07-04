@@ -41,7 +41,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -66,7 +65,7 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
 
     @Override
     public Text getTitle() {
-        return new TranslatableText("category.rei.compressing");
+        return Text.translatable("category.rei.compressing");
     }
 
     public @NotNull List<Widget> setupDisplay(DefaultCompressingDisplay recipeDisplay, Rectangle bounds) {

@@ -29,8 +29,7 @@ import net.minecraft.block.DirtPathBlock;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 
 public class MoonDirtPathBlock extends DirtPathBlock {
     public MoonDirtPathBlock(Settings settings) {

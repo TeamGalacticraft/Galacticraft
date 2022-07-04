@@ -126,7 +126,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
         world.getProfiler().push("transfer");
-        this.trySpreadFluids();
+        this.trySpreadFluids(world);
 
         if (this.fluidStorage().isFull(OXYGEN_TANK)) return GalacticraftMachineStatus.OXYGEN_TANK_FULL;
         world.getProfiler().swap("transaction");
@@ -154,7 +154,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return new OxygenCollectorScreenHandler(syncId, player, this);
+        if (this.getSecurity().hasAccess(player)) return new OxygenCollectorScreenHandler(syncId, player, this);
         return null;
     }
 }

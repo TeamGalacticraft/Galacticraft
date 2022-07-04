@@ -24,18 +24,19 @@ package dev.galacticraft.mod.world.gen.carver;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
+import dev.galacticraft.mod.world.gen.feature.GalacticraftConfiguredStructureFeature;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.carver.Carver;
 import net.minecraft.world.gen.carver.CarverContext;
 import net.minecraft.world.gen.carver.CarvingMask;
 import net.minecraft.world.gen.chunk.AquiferSampler;
-import net.minecraft.world.gen.feature.StructureFeature;
 
-import java.util.Random;
 import java.util.function.Function;
 
 /**
@@ -47,14 +48,14 @@ public class CraterCarver extends Carver<CraterCarverConfig> {
     }
 
     @Override
-    public boolean carve(CarverContext context, CraterCarverConfig config, Chunk chunk, Function<BlockPos, Biome> posToBiome, Random random, AquiferSampler aquiferSampler, ChunkPos pos, CarvingMask carvingMask) {
+    public boolean carve(CarverContext context, CraterCarverConfig config, Chunk chunk, Function<BlockPos, RegistryEntry<Biome>> posToBiome, Random random, AquiferSampler aquiferSampler, ChunkPos pos, CarvingMask carvingMask) {
         int y = config.y.get(random, context);
         //pos = center chunk pos
         BlockPos craterCenter = pos.getBlockPos(random.nextInt(16), y, random.nextInt(16));
 
-        if (!chunk.getStructureReferences(StructureFeature.VILLAGE).isEmpty()) {
-            return false;
-        }
+//        if (!chunk.getStructureReferences(GalacticraftConfiguredStructureFeature.MOON_VILLAGE).isEmpty()) { // TODO: PORT This should be correct
+//            return false;
+//        }
 
         BlockPos.Mutable mutable = craterCenter.mutableCopy();
 

@@ -27,13 +27,12 @@ import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleViewIterator;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.fabricmc.fabric.impl.transfer.TransferApiImpl;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -66,8 +65,8 @@ public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText("tooltip.galacticraft.oxygen_remaining", new TranslatableText("tooltip.galacticraft.infinite").setStyle(Constant.Text.Color.getRainbow(this.ticks))));
-        tooltip.add(new TranslatableText("tooltip.galacticraft.creative_only").setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+        tooltip.add(Text.translatable("tooltip.galacticraft.oxygen_remaining", Text.translatable("tooltip.galacticraft.infinite").setStyle(Constant.Text.Color.getRainbow(this.ticks))));
+        tooltip.add(Text.translatable("tooltip.galacticraft.creative_only").setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
     }
 
     @Override
@@ -138,8 +137,8 @@ public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant
     }
 
     @Override
-    public Iterator<StorageView<FluidVariant>> iterator(TransactionContext transactionContext) {
-        return SingleViewIterator.create(this, transactionContext);
+    public Iterator<StorageView<FluidVariant>> iterator() {
+        return TransferApiImpl.singletonIterator(this); // TODO: none impl use
     }
 
     @Override

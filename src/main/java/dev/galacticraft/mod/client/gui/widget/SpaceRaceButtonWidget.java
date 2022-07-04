@@ -28,7 +28,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -39,7 +39,7 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
     private final int screenHeight;
 
     public SpaceRaceButtonWidget(MinecraftClient minecraft, int x, int y, int buttonWidth, int buttonHeight, int screenWidth, int screenHeight) {
-        super(x, y, buttonWidth, buttonHeight, LiteralText.EMPTY, (button) -> minecraft.setScreen(new SpaceRaceScreen()));
+        super(x, y, buttonWidth, buttonHeight, Text.empty(), (button) -> minecraft.setScreen(new SpaceRaceScreen()));
         this.textRenderer = minecraft.textRenderer;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;

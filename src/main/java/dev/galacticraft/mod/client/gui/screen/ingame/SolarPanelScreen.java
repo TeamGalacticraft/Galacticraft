@@ -35,7 +35,6 @@ import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import java.util.LinkedList;
@@ -68,11 +67,11 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
     private static final int SOLAR_PANEL_WIDTH = 16;
     private static final int SOLAR_PANEL_HEIGHT = 16;
 
-    private static final Text DAY = new TranslatableText("ui.galacticraft.machine.solar_panel.day").setStyle(Constant.Text.Color.YELLOW_STYLE);
-    private static final Text OVERCAST = new TranslatableText("ui.galacticraft.machine.solar_panel.overcast").setStyle(Constant.Text.Color.GRAY_STYLE);
-    private static final Text NIGHT = new TranslatableText("ui.galacticraft.machine.solar_panel.night").setStyle(Constant.Text.Color.BLUE_STYLE);
-    private static final Text BLOCKED = new TranslatableText("ui.galacticraft.machine.solar_panel.blocked").setStyle(Constant.Text.Color.DARK_RED_STYLE);
-    private static final Text MISSING_SOURCE = new TranslatableText("ui.galacticraft.machine.solar_panel.missing_source").setStyle(Constant.Text.Color.WHITE_STYLE);
+    private static final Text DAY = Text.translatable("ui.galacticraft.machine.solar_panel.day").setStyle(Constant.Text.Color.YELLOW_STYLE);
+    private static final Text OVERCAST = Text.translatable("ui.galacticraft.machine.solar_panel.overcast").setStyle(Constant.Text.Color.GRAY_STYLE);
+    private static final Text NIGHT = Text.translatable("ui.galacticraft.machine.solar_panel.night").setStyle(Constant.Text.Color.BLUE_STYLE);
+    private static final Text BLOCKED = Text.translatable("ui.galacticraft.machine.solar_panel.blocked").setStyle(Constant.Text.Color.DARK_RED_STYLE);
+    private static final Text MISSING_SOURCE = Text.translatable("ui.galacticraft.machine.solar_panel.missing_source").setStyle(Constant.Text.Color.WHITE_STYLE);
 
     private final Identifier solarPanelTexture;
     private final WorldLightSources lightSource;
@@ -119,13 +118,13 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
             for (int x = 0; x < 3; x++) {
                 if (DrawableUtil.isWithin(mouseX, mouseY, this.x + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.y + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT)) {
                     if (this.machine.getBlockage()[y * 3 + x]) {
-                        this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.solar_panel.status").setStyle(Constant.Text.Color.GRAY_STYLE).append(BLOCKED), mouseX, mouseY);
+                        this.renderTooltip(matrices, Text.translatable("ui.galacticraft.machine.solar_panel.status").setStyle(Constant.Text.Color.GRAY_STYLE).append(BLOCKED), mouseX, mouseY);
                     } else {
                         switch (this.machine.getSource()){
-                            case DAY -> this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.solar_panel.status").setStyle(Constant.Text.Color.GRAY_STYLE).append(DAY), mouseX, mouseY);
-                            case OVERCAST -> this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.solar_panel.status").setStyle(Constant.Text.Color.GRAY_STYLE).append(OVERCAST), mouseX, mouseY);
-                            case NIGHT -> this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.solar_panel.status").setStyle(Constant.Text.Color.GRAY_STYLE).append(NIGHT), mouseX, mouseY);
-                            case NO_LIGHT_SOURCE -> this.renderTooltip(matrices, new TranslatableText("ui.galacticraft.machine.solar_panel.status").setStyle(Constant.Text.Color.GRAY_STYLE).append(MISSING_SOURCE), mouseX, mouseY);
+                            case DAY -> this.renderTooltip(matrices, Text.translatable("ui.galacticraft.machine.solar_panel.status").setStyle(Constant.Text.Color.GRAY_STYLE).append(DAY), mouseX, mouseY);
+                            case OVERCAST -> this.renderTooltip(matrices, Text.translatable("ui.galacticraft.machine.solar_panel.status").setStyle(Constant.Text.Color.GRAY_STYLE).append(OVERCAST), mouseX, mouseY);
+                            case NIGHT -> this.renderTooltip(matrices, Text.translatable("ui.galacticraft.machine.solar_panel.status").setStyle(Constant.Text.Color.GRAY_STYLE).append(NIGHT), mouseX, mouseY);
+                            case NO_LIGHT_SOURCE -> this.renderTooltip(matrices, Text.translatable("ui.galacticraft.machine.solar_panel.status").setStyle(Constant.Text.Color.GRAY_STYLE).append(MISSING_SOURCE), mouseX, mouseY);
                         }
                     }
                     return;
@@ -141,9 +140,9 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
                 case NIGHT -> this.lightSource.night();
                 case NO_LIGHT_SOURCE -> this.lightSource.missing();
             };
-            tooltip.add(new TranslatableText("ui.galacticraft.machine.solar_panel.source").setStyle(Constant.Text.Color.AQUA_STYLE).append(source.name()));
-            tooltip.add(new TranslatableText("ui.galacticraft.machine.solar_panel.strength", source.strength()).setStyle(Constant.Text.Color.GREEN_STYLE));
-            tooltip.add(new TranslatableText("ui.galacticraft.machine.solar_panel.atmospheric_interference", source.atmosphericInterference()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+            tooltip.add(Text.translatable("ui.galacticraft.machine.solar_panel.source").setStyle(Constant.Text.Color.AQUA_STYLE).append(source.name()));
+            tooltip.add(Text.translatable("ui.galacticraft.machine.solar_panel.strength", source.strength()).setStyle(Constant.Text.Color.GREEN_STYLE));
+            tooltip.add(Text.translatable("ui.galacticraft.machine.solar_panel.atmospheric_interference", source.atmosphericInterference()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
             this.renderTooltip(matrices, tooltip, mouseX, mouseY);
         }
     }
@@ -158,8 +157,8 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
 
     @Override
     public void appendEnergyTooltip(List<Text> list) {
-        if (this.machine.getStatus().getType().isActive()) {
-            list.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", this.machine.getCurrentEnergyGeneration()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+        if (this.machine.getStatus().type().isActive()) {
+            list.add(Text.translatable("ui.galacticraft.machine.gj_per_t", this.machine.getCurrentEnergyGeneration()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
         }
     }
 }

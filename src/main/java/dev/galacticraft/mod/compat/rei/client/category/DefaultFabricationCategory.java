@@ -37,7 +37,6 @@ import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
@@ -60,7 +59,7 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
     @Override
     public Text getTitle() {
-        return new TranslatableText("category.rei.circuit_fabricator");
+        return Text.translatable("category.rei.circuit_fabricator");
     }
 
     @Override

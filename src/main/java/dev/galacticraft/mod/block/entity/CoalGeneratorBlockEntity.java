@@ -49,8 +49,8 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
@@ -71,7 +71,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
 
     public static final int CHARGE_SLOT = 0;
     public static final int FUEL_SLOT = 1;
-    private static final SlotType<Item, ItemVariant> COAL_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "coal_input"), TextColor.fromRgb(0x000000), new TranslatableText("slot_type.galacticraft.coal_input"), v -> FUEL_MAP.containsKey(v.getItem()), ResourceFlow.INPUT, ResourceType.ITEM);
+    private static final SlotType<Item, ItemVariant> COAL_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "coal_input"), TextColor.fromRgb(0x000000), Text.translatable("slot_type.galacticraft.coal_input"), v -> FUEL_MAP.containsKey(v.getItem()), ResourceFlow.INPUT, ResourceType.ITEM);
 
     private int fuelLength = 0;
     private int inventoryModCount = -1;
@@ -115,7 +115,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         try (Transaction transaction = Transaction.openOuter()) {
             this.energyStorage().insert((long) (Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate() * this.heat), transaction);
         }
-        this.trySpreadEnergy();
+        this.trySpreadEnergy(world);
         world.getProfiler().swap("fuel_reset");
         if (this.fuelLength == 0) {
             this.consumeFuel();
@@ -168,7 +168,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return new CoalGeneratorScreenHandler(syncId, player, this);
+        if (this.getSecurity().hasAccess(player)) return new CoalGeneratorScreenHandler(syncId, player, this);
         return null;
     }
 

@@ -717,9 +717,9 @@ public interface Constant {
         }
 
         interface Item {
-            Predicate<ItemVariant> DIAMOND = new TagPredicate<>(ConventionalItemTags.DIAMONDS);
-            Predicate<ItemVariant> SILICON = new TagPredicate<>(GalacticraftTag.SILICONS);
-            Predicate<ItemVariant> REDSTONE = new TagPredicate<>(GalacticraftTag.REDSTONES);
+//            Predicate<ItemVariant> DIAMOND = new TagPredicate<>(ConventionalItemTags.DIAMONDS); TODO: PORT
+//            Predicate<ItemVariant> SILICON = new TagPredicate<>(GalacticraftTag.SILICONS);
+//            Predicate<ItemVariant> REDSTONE = new TagPredicate<>(GalacticraftTag.REDSTONES);
 
             Predicate<ItemVariant> CAN_EXTRACT_ENERGY = stack -> {
                 EnergyStorage energyStorage = ContainerItemContext.withInitial(stack.toStack()).find(EnergyStorage.ITEM);
@@ -743,7 +743,7 @@ public interface Constant {
         }
 
         interface Gas {
-            Predicate<FluidVariant> OXYGEN = v -> GalacticraftTag.OXYGEN.contains(v.getFluid());
+            Predicate<FluidVariant> OXYGEN = v -> v.getFluid().isIn(GalacticraftTag.OXYGEN);
         }
 
         interface Fluid {

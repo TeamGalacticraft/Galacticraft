@@ -44,7 +44,7 @@ public class CrudeOilBlock extends FluidBlock {
 
     @Override
     public void onEntityCollision(BlockState blockState, World world, BlockPos blockPos, Entity entity) {
-        if (GalacticraftTag.OIL.contains(world.getBlockState(entity.getBlockPos().add(0, (int) Math.floor(entity.getEyeHeight(entity.getPose())), 0)).getFluidState().getFluid())) {
+        if (world.getBlockState(entity.getBlockPos().add(0, (int) Math.floor(entity.getEyeHeight(entity.getPose())), 0)).getFluidState().getFluid().isIn(GalacticraftTag.OIL)) {
             if (entity instanceof LivingEntity living) {
                 if (living instanceof PlayerEntity player) {
                     if (player.isCreative()) {

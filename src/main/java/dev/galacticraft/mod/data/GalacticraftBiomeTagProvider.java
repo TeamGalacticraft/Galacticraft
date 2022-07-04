@@ -29,7 +29,7 @@ import net.minecraft.world.biome.Biome;
 
 public class GalacticraftBiomeTagProvider extends FabricTagProvider.DynamicRegistryTagProvider<Biome> {
     protected GalacticraftBiomeTagProvider(FabricDataGenerator dataGenerator) {
-        super(dataGenerator, Registry.BIOME_KEY, "biomes", "Biome Tags");
+        super(dataGenerator, Registry.BIOME_KEY);
     }
 
     @Override

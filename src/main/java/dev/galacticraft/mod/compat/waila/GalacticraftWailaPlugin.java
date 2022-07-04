@@ -23,14 +23,11 @@
 package dev.galacticraft.mod.compat.waila;
 
 import dev.galacticraft.api.block.MachineBlock;
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.api.machine.MachineConfiguration;
 import dev.galacticraft.mod.Constant;
 import mcp.mobius.waila.api.*;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import java.util.List;
 
@@ -44,15 +41,15 @@ public class GalacticraftWailaPlugin implements IWailaPlugin {
             if (Screen.hasShiftDown()) {
                 MachineConfiguration configuration = MachineConfiguration.create();
                 configuration.readNbt(accessor.getServerData());
-                tooltip.add(new TranslatableText("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneActivation().getName()).setStyle(Constant.Text.Color.RED_STYLE));
-                if (configuration.getSecurity().getOwner() != null) tooltip.add(new TranslatableText("ui.galacticraft.machine.security.owned_by", new LiteralText(configuration.getSecurity().getOwner().getName()).setStyle(Constant.Text.Color.WHITE_STYLE)).setStyle(Constant.Text.Color.AQUA_STYLE));
+                tooltip.add(Text.translatable("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneActivation().getName()).setStyle(Constant.Text.Color.RED_STYLE));
+                if (configuration.getSecurity().getOwner() != null) tooltip.add(Text.translatable("ui.galacticraft.machine.security.owned_by", Text.literal(configuration.getSecurity().getOwner().getName()).setStyle(Constant.Text.Color.WHITE_STYLE)).setStyle(Constant.Text.Color.AQUA_STYLE));
             }
         }
     };
 
     @Override
     public void register(IRegistrar registrar) {
-        registrar.registerBlockDataProvider((data, player, world, blockEntity) -> ((MachineBlockEntity) blockEntity).getConfiguration().writeNbt(data), MachineBlock.class);
+//        registrar.registerBlockDataProvider((data, player, world, blockEntity) -> ((MachineBlockEntity) blockEntity).getConfiguration().writeNbt(data), MachineBlock.class); TODO: WAILA
         registrar.registerComponentProvider(COMPONENT_PROVIDER, TooltipPosition.TAIL, MachineBlock.class);
     }
 }
