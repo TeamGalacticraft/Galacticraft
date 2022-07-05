@@ -165,38 +165,38 @@ public class GalacticraftBlock {
 
     public static final Block MOON_ROCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_GRAY).strength(2.0F, 6.0F));
     public static final Block MOON_ROCK_SLAB = new SlabBlock(FabricBlockSettings.copyOf(MOON_ROCK).strength(2.5F, 6.0F));
-    public static final Block MOON_ROCK_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(MOON_ROCK));
-    public static final Block MOON_ROCK_WALL = new SlabBlock(FabricBlockSettings.copyOf(MOON_ROCK));
+    public static final Block MOON_ROCK_STAIRS = new StairBlock(MOON_ROCK.defaultBlockState(), FabricBlockSettings.copyOf(MOON_ROCK));
+    public static final Block MOON_ROCK_WALL = new WallBlock(FabricBlockSettings.copyOf(MOON_ROCK));
 
     public static final Block COBBLED_MOON_ROCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_GRAY).strength(2.0F, 6.0F));
     public static final Block COBBLED_MOON_ROCK_SLAB = new SlabBlock(FabricBlockSettings.copyOf(COBBLED_MOON_ROCK).strength(2.5F, 6.0F));
-    public static final Block COBBLED_MOON_ROCK_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(COBBLED_MOON_ROCK));
-    public static final Block COBBLED_MOON_ROCK_WALL = new SlabBlock(FabricBlockSettings.copyOf(COBBLED_MOON_ROCK));
+    public static final Block COBBLED_MOON_ROCK_STAIRS = new StairBlock(COBBLED_MOON_ROCK.defaultBlockState(), FabricBlockSettings.copyOf(COBBLED_MOON_ROCK));
+    public static final Block COBBLED_MOON_ROCK_WALL = new WallBlock(FabricBlockSettings.copyOf(COBBLED_MOON_ROCK));
 
     public static final Block LUNASLATE = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.DEEPSLATE).strength(3.5F, 6.0F));
     public static final Block LUNASLATE_SLAB = new SlabBlock(FabricBlockSettings.copyOf(LUNASLATE).strength(4.0F, 6.0F));
-    public static final Block LUNASLATE_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(LUNASLATE));
-    public static final Block LUNASLATE_WALL = new SlabBlock(FabricBlockSettings.copyOf(LUNASLATE));
+    public static final Block LUNASLATE_STAIRS = new StairBlock(LUNASLATE.defaultBlockState(), FabricBlockSettings.copyOf(LUNASLATE));
+    public static final Block LUNASLATE_WALL = new WallBlock(FabricBlockSettings.copyOf(LUNASLATE));
 
     public static final Block COBBLED_LUNASLATE = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.DEEPSLATE).strength(3.5F, 6.0F));
     public static final Block COBBLED_LUNASLATE_SLAB = new SlabBlock(FabricBlockSettings.copyOf(COBBLED_LUNASLATE).strength(4.0F, 6.0F));
-    public static final Block COBBLED_LUNASLATE_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(COBBLED_LUNASLATE));
-    public static final Block COBBLED_LUNASLATE_WALL = new SlabBlock(FabricBlockSettings.copyOf(COBBLED_LUNASLATE));
+    public static final Block COBBLED_LUNASLATE_STAIRS = new StairBlock(COBBLED_LUNASLATE.defaultBlockState(), FabricBlockSettings.copyOf(COBBLED_LUNASLATE));
+    public static final Block COBBLED_LUNASLATE_WALL = new WallBlock(FabricBlockSettings.copyOf(COBBLED_LUNASLATE));
 
     public static final Block MOON_BASALT = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.TERRACOTTA_BLACK).strength(2.0F, 6.0F));
     public static final Block MOON_BASALT_SLAB = new SlabBlock(FabricBlockSettings.copyOf(MOON_BASALT).strength(2.5F, 6.0F));
-    public static final Block MOON_BASALT_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(MOON_BASALT));
-    public static final Block MOON_BASALT_WALL = new SlabBlock(FabricBlockSettings.copyOf(MOON_BASALT));
+    public static final Block MOON_BASALT_STAIRS = new StairBlock(MOON_BASALT.defaultBlockState(), FabricBlockSettings.copyOf(MOON_BASALT));
+    public static final Block MOON_BASALT_WALL = new WallBlock(FabricBlockSettings.copyOf(MOON_BASALT));
 
     public static final Block MOON_BASALT_BRICK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.TERRACOTTA_BLACK).strength(2.5F, 6.0F));
     public static final Block MOON_BASALT_BRICK_SLAB = new SlabBlock(FabricBlockSettings.copyOf(MOON_BASALT_BRICK).strength(3.0F, 6.0F));
-    public static final Block MOON_BASALT_BRICK_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(MOON_BASALT_BRICK));
-    public static final Block MOON_BASALT_BRICK_WALL = new SlabBlock(FabricBlockSettings.copyOf(MOON_BASALT_BRICK));
+    public static final Block MOON_BASALT_BRICK_STAIRS = new StairBlock(MOON_BASALT_BRICK.defaultBlockState(), FabricBlockSettings.copyOf(MOON_BASALT_BRICK));
+    public static final Block MOON_BASALT_BRICK_WALL = new WallBlock(FabricBlockSettings.copyOf(MOON_BASALT_BRICK));
 
     public static final Block CRACKED_MOON_BASALT_BRICK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.TERRACOTTA_BLACK).strength(2.0F, 6.0F));
     public static final Block CRACKED_MOON_BASALT_BRICK_SLAB = new SlabBlock(FabricBlockSettings.copyOf(CRACKED_MOON_BASALT_BRICK).strength(2.5F, 6.0F));
-    public static final Block CRACKED_MOON_BASALT_BRICK_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(CRACKED_MOON_BASALT_BRICK));
-    public static final Block CRACKED_MOON_BASALT_BRICK_WALL = new SlabBlock(FabricBlockSettings.copyOf(CRACKED_MOON_BASALT_BRICK));
+    public static final Block CRACKED_MOON_BASALT_BRICK_STAIRS = new StairBlock(CRACKED_MOON_BASALT_BRICK.defaultBlockState(), FabricBlockSettings.copyOf(CRACKED_MOON_BASALT_BRICK));
+    public static final Block CRACKED_MOON_BASALT_BRICK_WALL = new WallBlock(FabricBlockSettings.copyOf(CRACKED_MOON_BASALT_BRICK));
 
     // MARS NATURAL
     public static final Block MARS_SURFACE_ROCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.DIRT).destroyTime(2.2F));
@@ -204,8 +204,8 @@ public class GalacticraftBlock {
     public static final Block MARS_STONE = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_RED).destroyTime(3.0F));
     public static final Block MARS_COBBLESTONE = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_RED).destroyTime(3.0F));
     public static final Block MARS_COBBLESTONE_SLAB = new SlabBlock(FabricBlockSettings.copyOf(MARS_COBBLESTONE).strength(3.5F, 6.0F));
-    public static final Block MARS_COBBLESTONE_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(MARS_COBBLESTONE));
-    public static final Block MARS_COBBLESTONE_WALL = new SlabBlock(FabricBlockSettings.copyOf(MARS_COBBLESTONE));
+    public static final Block MARS_COBBLESTONE_STAIRS = new StairBlock(MARS_COBBLESTONE.defaultBlockState(), FabricBlockSettings.copyOf(MARS_COBBLESTONE));
+    public static final Block MARS_COBBLESTONE_WALL = new WallBlock(FabricBlockSettings.copyOf(MARS_COBBLESTONE));
 
     // ASTEROID NATURAL
     public static final Block ASTEROID_ROCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_BROWN).destroyTime(3.0F));

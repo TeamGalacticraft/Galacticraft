@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.data;
 
+import dev.galacticraft.impl.client.model.MachineUnbakedModel;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
@@ -32,9 +33,11 @@ import net.minecraft.data.models.blockstates.PropertyDispatch;
 import net.minecraft.data.models.blockstates.Variant;
 import net.minecraft.data.models.blockstates.VariantProperties;
 import net.minecraft.data.models.model.ModelLocationUtils;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import static dev.galacticraft.mod.block.GalacticraftBlock.*;
+import static net.minecraft.data.models.BlockModelGenerators.createRotatedVariant;
 
 public class GalacticraftModelProvider extends FabricModelProvider {
     public GalacticraftModelProvider(FabricDataGenerator dataGenerator) {
@@ -121,6 +124,51 @@ public class GalacticraftModelProvider extends FabricModelProvider {
                 .stairs(DETAILED_DARK_DECORATION_STAIRS)
                 .wall(DETAILED_DARK_DECORATION_WALL);
 
+        generator.family(BRONZE_DECORATION)
+                .slab(BRONZE_DECORATION_SLAB)
+                .stairs(BRONZE_DECORATION_STAIRS)
+                .wall(BRONZE_DECORATION_WALL);
+        generator.family(DETAILED_BRONZE_DECORATION)
+                .slab(DETAILED_BRONZE_DECORATION_SLAB)
+                .stairs(DETAILED_BRONZE_DECORATION_STAIRS)
+                .wall(DETAILED_BRONZE_DECORATION_WALL);
+
+        generator.family(MOON_ROCK)
+                .slab(MOON_ROCK_SLAB)
+                .stairs(MOON_ROCK_STAIRS)
+                .wall(MOON_ROCK_WALL);
+        generator.family(COBBLED_MOON_ROCK)
+                .slab(COBBLED_MOON_ROCK_SLAB)
+                .stairs(COBBLED_MOON_ROCK_STAIRS)
+                .wall(COBBLED_MOON_ROCK_WALL);
+
+        generator.family(LUNASLATE)
+                .slab(LUNASLATE_SLAB)
+                .stairs(LUNASLATE_STAIRS)
+                .wall(LUNASLATE_WALL);
+        generator.family(COBBLED_LUNASLATE)
+                .slab(COBBLED_LUNASLATE_SLAB)
+                .stairs(COBBLED_LUNASLATE_STAIRS)
+                .wall(COBBLED_LUNASLATE_WALL);
+
+        generator.family(MOON_BASALT)
+                .slab(MOON_BASALT_SLAB)
+                .stairs(MOON_BASALT_STAIRS)
+                .wall(MOON_BASALT_WALL);
+        generator.family(MOON_BASALT_BRICK)
+                .slab(MOON_BASALT_BRICK_SLAB)
+                .stairs(MOON_BASALT_BRICK_STAIRS)
+                .wall(MOON_BASALT_BRICK_WALL);
+        generator.family(CRACKED_MOON_BASALT_BRICK)
+                .slab(CRACKED_MOON_BASALT_BRICK_SLAB)
+                .stairs(CRACKED_MOON_BASALT_BRICK_STAIRS)
+                .wall(CRACKED_MOON_BASALT_BRICK_WALL);
+
+        generator.family(MARS_COBBLESTONE)
+                .slab(MARS_COBBLESTONE_SLAB)
+                .stairs(MARS_COBBLESTONE_STAIRS)
+                .wall(MARS_COBBLESTONE_WALL);
+
         generator.createTrivialCube(MOON_TURF);
         generator.createTrivialCube(MOON_DIRT);
         generator.createTrivialCube(MOON_SURFACE_ROCK);
@@ -131,6 +179,21 @@ public class GalacticraftModelProvider extends FabricModelProvider {
 //        for (Block decor : MOON_BASALTS) generator.registerSimpleState(decor);
 //        for (Block decor : MOON_BASALT_BRICKS) generator.registerSimpleState(decor);
 //        for (Block decor : CRACKED_MOON_BASALT_BRICKS) generator.registerSimpleState(decor);
+
+        // ORES
+        generator.createTrivialCube(SILICON_ORE);
+        generator.createTrivialCube(DEEPSLATE_SILICON_ORE);
+        generator.createTrivialCube(MOON_COPPER_ORE);
+        generator.createTrivialCube(LUNASLATE_COPPER_ORE);
+        generator.createTrivialCube(TIN_ORE);
+        generator.createTrivialCube(DEEPSLATE_TIN_ORE);
+        generator.createTrivialCube(MOON_TIN_ORE);
+        generator.createTrivialCube(LUNASLATE_TIN_ORE);
+        generator.createTrivialCube(ALUMINUM_ORE);
+        generator.createTrivialCube(DEEPSLATE_ALUMINUM_ORE);
+        generator.createTrivialCube(DESH_ORE);
+        generator.createTrivialCube(ILMENITE_ORE);
+        generator.createTrivialCube(GALENA_ORE);
 
         generator.createTrivialCube(MARS_SURFACE_ROCK);
         generator.createTrivialCube(MARS_SUB_SURFACE_ROCK);
@@ -145,28 +208,28 @@ public class GalacticraftModelProvider extends FabricModelProvider {
         generator.createTrivialCube(SCORCHED_VENUS_ROCK);
         generator.createTrivialCube(VOLCANIC_ROCK);
         generator.createTrivialCube(PUMICE);
-//        generator.registerSimpleState(VAPOR_SPOUT);
+        generator.createNonTemplateModelBlock(VAPOR_SPOUT);
 
-//        generator.registerSimpleState(WALKWAY);
-//        generator.registerSimpleState(PIPE_WALKWAY);
-//        generator.registerSimpleState(WIRE_WALKWAY);
-//        generator.registerSimpleState(TIN_LADDER);
-//        generator.registerSimpleState(GRATING);
+        generator.createNonTemplateModelBlock(WALKWAY);
+        generator.createNonTemplateModelBlock(PIPE_WALKWAY);
+        generator.createNonTemplateModelBlock(WIRE_WALKWAY);
+        generator.createNonTemplateModelBlock(TIN_LADDER);
+        generator.createNonTemplateModelBlock(GRATING);
 
-//        generator.registerSimpleState(ALUMINUM_WIRE);
-//        generator.registerSimpleState(SEALABLE_ALUMINUM_WIRE);
-//        generator.registerSimpleState(HEAVY_SEALABLE_ALUMINUM_WIRE);
-//        generator.registerSimpleState(GLASS_FLUID_PIPE);
+        generator.createNonTemplateModelBlock(ALUMINUM_WIRE);
+        generator.createNonTemplateModelBlock(SEALABLE_ALUMINUM_WIRE);
+        generator.createNonTemplateModelBlock(HEAVY_SEALABLE_ALUMINUM_WIRE);
+        generator.createNonTemplateModelBlock(GLASS_FLUID_PIPE);
 
-//        generator.registerSimpleState(SQUARE_LIGHT_PANEL);
-//        generator.registerSimpleState(SPOTLIGHT_LIGHT_PANEL);
-//        generator.registerSimpleState(LINEAR_LIGHT_PANEL);
-//        generator.registerSimpleState(DASHED_LIGHT_PANEL);
-//        generator.registerSimpleState(DIAGONAL_LIGHT_PANEL);
+        generator.createNonTemplateModelBlock(SQUARE_LIGHT_PANEL);
+        generator.createNonTemplateModelBlock(SPOTLIGHT_LIGHT_PANEL);
+        generator.createNonTemplateModelBlock(LINEAR_LIGHT_PANEL);
+        generator.createNonTemplateModelBlock(DASHED_LIGHT_PANEL);
+        generator.createNonTemplateModelBlock(DIAGONAL_LIGHT_PANEL);
 
-//        generator.registerSimpleState(VACUUM_GLASS);
-//        generator.registerSimpleState(CLEAR_VACUUM_GLASS);
-//        generator.registerSimpleState(STRONG_VACUUM_GLASS);
+        generator.createNonTemplateModelBlock(VACUUM_GLASS);
+        generator.createNonTemplateModelBlock(CLEAR_VACUUM_GLASS);
+        generator.createNonTemplateModelBlock(STRONG_VACUUM_GLASS);
 
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(MOON_CHEESE_BLOCK).with(
                 PropertyDispatch.property(BlockStateProperties.BITES)
@@ -185,28 +248,39 @@ public class GalacticraftModelProvider extends FabricModelProvider {
         generator.createTrivialCube(LEAD_BLOCK);
         generator.createTrivialCube(LUNAR_SAPPHIRE_BLOCK);
 
-//        generator.registerSimpleState(LUNAR_CARTOGRAPHY_TABLE);
+        generator.createTrivialCube(SOLAR_PANEL_PART);
 
-//        generator.registerSimpleState(CAVERNOUS_VINE);
-//        generator.registerSimpleState(POISONOUS_CAVERNOUS_VINE);
-//        generator.registerSimpleState(MOON_BERRY_BUSH);
+        generator.createNonTemplateModelBlock(LUNAR_CARTOGRAPHY_TABLE);
 
-//        generator.registerSingleton(CIRCUIT_FABRICATOR, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(ELECTRIC_COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(COAL_GENERATOR, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(BASIC_SOLAR_PANEL, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(ADVANCED_SOLAR_PANEL, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(ENERGY_STORAGE_MODULE, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(ELECTRIC_FURNACE, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(ELECTRIC_ARC_FURNACE, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(REFINERY, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(OXYGEN_COLLECTOR, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(OXYGEN_SEALER, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(BUBBLE_DISTRIBUTOR, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(OXYGEN_DECOMPRESSOR, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(OXYGEN_COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER);
-//        generator.registerSingleton(OXYGEN_STORAGE_MODULE, MachineUnbakedModel.MACHINE_MARKER);
+        generator.createNonTemplateModelBlock(CAVERNOUS_VINE);
+        generator.createNonTemplateModelBlock(POISONOUS_CAVERNOUS_VINE);
+        generator.createNonTemplateModelBlock(MOON_BERRY_BUSH);
+
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(CIRCUIT_FABRICATOR, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(ELECTRIC_COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(COAL_GENERATOR, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(BASIC_SOLAR_PANEL, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(ADVANCED_SOLAR_PANEL, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(ENERGY_STORAGE_MODULE, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(ELECTRIC_FURNACE, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(ELECTRIC_ARC_FURNACE, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(REFINERY, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(OXYGEN_COLLECTOR, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(OXYGEN_SEALER, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(BUBBLE_DISTRIBUTOR, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(OXYGEN_DECOMPRESSOR, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(OXYGEN_COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(OXYGEN_STORAGE_MODULE, MachineUnbakedModel.MACHINE_MARKER));
+
+        generator.createLantern(GLOWSTONE_LANTERN);
+        generator.createLantern(UNLIT_LANTERN);
+
+        generator.createNonTemplateModelBlock(CRUDE_OIL);
+        generator.createNonTemplateModelBlock(FUEL);
+
+        generator.blockStateOutput.accept(createRotatedVariant(MOON_DIRT_PATH, ModelLocationUtils.getModelLocation(MOON_DIRT_PATH)));
+
     }
 
     @Override
