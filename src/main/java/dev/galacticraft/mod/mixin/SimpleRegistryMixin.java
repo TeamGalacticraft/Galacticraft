@@ -37,7 +37,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
-@Mixin(MappedRegistry.class) // TODO: Nuke this class once registries are fixed
+@Mixin(MappedRegistry.class)
 public abstract class SimpleRegistryMixin<T> extends Registry<T> {
     @Shadow private boolean frozen;
 
@@ -50,8 +50,8 @@ public abstract class SimpleRegistryMixin<T> extends Registry<T> {
     }
 
     /**
-     * @author
-     * @reason
+     * @author AlphaMode
+     * @reason Give more debug information for intrusive holders
      */
     @Overwrite
     public Registry<T> freeze() {
@@ -70,7 +70,14 @@ public abstract class SimpleRegistryMixin<T> extends Registry<T> {
                     return !entry.isBound();
                 }).toList();
                 if (!list2.isEmpty()) {
-//                    throw new IllegalStateException("Some intrusive holders were not added to registry: " + list2);
+                    StringBuilder entriesToDisplay = new StringBuilder();
+                    for (int i = 0; i < list2.size(); i++) {
+                        entriesToDisplay.append(list2.get(i).value().getClass());
+                        if (i != list2.size() - 1) {
+                            entriesToDisplay.append(", ");
+                        }
+                    }
+                    throw new IllegalStateException("Some intrusive holders were not added to registry: " + entriesToDisplay);
                 }
 
                 this.intrusiveHolderCache = null;

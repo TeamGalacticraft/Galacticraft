@@ -58,10 +58,6 @@ public class GalacticraftItem {
     // LANTERNS
     public static final Item GLOWSTONE_LANTERN = new BlockItem(GalacticraftBlock.GLOWSTONE_LANTERN, new Item.Properties().tab(GalacticraftItemGroup.BLOCKS_GROUP));
 
-    // FLUIDS
-    public static final Item CRUDE_OIL = new BlockItem(GalacticraftBlock.CRUDE_OIL, new Item.Properties().tab(GalacticraftItemGroup.BLOCKS_GROUP));
-    public static final Item FUEL = new BlockItem(GalacticraftBlock.FUEL, new Item.Properties().tab(GalacticraftItemGroup.BLOCKS_GROUP));
-
     // DECORATION BLOCKS
     public static final Item ALUMINUM_DECORATION = new BlockItem(GalacticraftBlock.ALUMINUM_DECORATION, new Item.Properties().tab(GalacticraftItemGroup.BLOCKS_GROUP));
     public static final Item ALUMINUM_DECORATION_SLAB = new BlockItem(GalacticraftBlock.ALUMINUM_DECORATION_SLAB, new Item.Properties().tab(GalacticraftItemGroup.BLOCKS_GROUP));
