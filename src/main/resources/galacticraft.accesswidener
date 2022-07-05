@@ -1,19 +1,13 @@
 accessWidener v1 named
 
 # constructors
-accessible method net/minecraft/block/CakeBlock                                              <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible method net/minecraft/block/FluidBlock                                             <init> (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible method net/minecraft/block/LadderBlock                                            <init> (Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible method net/minecraft/block/StairsBlock                                            <init> (Lnet/minecraft/block/BlockState;Lnet/minecraft/block/AbstractBlock$Settings;)V
 accessible method net/minecraft/client/particle/DripParticle$DripHangParticle                <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDLnet/minecraft/world/level/material/Fluid;Lnet/minecraft/core/particles/ParticleOptions;)V
 accessible method net/minecraft/world/item/AxeItem                                           <init> (Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V
 accessible method net/minecraft/world/item/HoeItem                                           <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V
 accessible method net/minecraft/world/item/PickaxeItem                                       <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V
 accessible method net/minecraft/world/level/levelgen/structure/pools/LegacySinglePoolElement <init> (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;)V
-accessible method net/minecraft/world/biome/source/MultiNoiseBiomeSource                     <init> (Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$Entries;Ljava/util/Optional;)V
 
 # private classes
-accessible class  net/minecraft/client/particle/BlockLeakParticle$Dripping
 accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Condition
 accessible class  net/minecraft/world/level/levelgen/SurfaceRules$LazyYCondition
 accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Context
@@ -24,7 +18,5 @@ accessible field  net/minecraft/world/level/levelgen/SurfaceRules$Context   biom
 # final classes
 
 # static methods
-accessible method net/minecraft/world/gen/densityfunction/DensityFunctions method_41211 (Lnet/minecraft/util/registry/Registry;Lnet/minecraft/world/gen/densityfunction/DensityFunction;)Lnet/minecraft/world/gen/noise/NoiseRouter;
-accessible method net/minecraft/world/gen/densityfunction/DensityFunctions method_42365 (Lnet/minecraft/world/gen/densityfunction/DensityFunction;IIIIDIID)Lnet/minecraft/world/gen/densityfunction/DensityFunction;
 accessible method net/minecraft/world/level/levelgen/NoiseRouterData caves (Lnet/minecraft/core/Registry;)Lnet/minecraft/world/level/levelgen/NoiseRouter;
 accessible method net/minecraft/data/worldgen/Structures structure (Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/level/levelgen/structure/TerrainAdjustment;)Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;

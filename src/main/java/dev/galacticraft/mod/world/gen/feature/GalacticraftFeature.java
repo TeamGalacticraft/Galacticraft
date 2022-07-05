@@ -22,15 +22,36 @@
 
 package dev.galacticraft.mod.world.gen.feature;
 
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.block.GalacticraftBlock;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.LakeFeature;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftFeature { //FIXME: when fabric implements 1.18 biome api
-//    public static final RegistryKey<ConfiguredFeature<?, ?>> OIL_LAKE_KEY = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, new Identifier(Constant.MOD_ID, "oil_lake"));
-//    public static final ConfiguredFeature<?, ?> OIL_LAKE = Feature.LAKE.configure(new SingleStateFeatureConfig(GalacticraftBlock.CRUDE_OIL.getDefaultState())).decorate(Decorator.LAVA_LAKE.configure(new ChanceDecoratorConfig(70)));
+public class GalacticraftFeature {
+    public static final ResourceKey<ConfiguredFeature<?, ?>> OIL_LAKE_KEY = ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, new ResourceLocation(Constant.MOD_ID, "oil_lake"));
+    public static final Holder<ConfiguredFeature<?, ?>> OIL_LAKE = register(OIL_LAKE_KEY, new ConfiguredFeature<>(Feature.LAKE, new LakeFeature.Configuration(
+            BlockStateProvider.simple(GalacticraftBlock.CRUDE_OIL),
+            BlockStateProvider.simple(Blocks.STONE.defaultBlockState()))
+    ));
+
+    public static Holder<ConfiguredFeature<?, ?>> register(ResourceKey<ConfiguredFeature<?, ?>> id, ConfiguredFeature<?, ?> configuredFeature) {
+        return BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_FEATURE, id.location(), configuredFeature);
+    }
 
     public static void register() {
-//        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, OIL_LAKE_KEY.getValue(), OIL_LAKE);
-//        BiomeModifications.addFeature(biomeSelectionContext -> biomeSelectionContext.hasFeature(RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, new Identifier("lake_lava"))), GenerationStep.Feature.LAKES, OIL_LAKE_KEY);
+        BiomeModifications.addFeature(biomeSelectionContext -> biomeSelectionContext.hasFeature(ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, new ResourceLocation("lake_lava"))), GenerationStep.Decoration.LAKES, GalacticraftPlacedFeature.OIL_LAKE_KEY);
     }
 }
