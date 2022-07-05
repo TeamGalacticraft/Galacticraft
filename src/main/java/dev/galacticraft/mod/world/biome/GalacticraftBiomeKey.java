@@ -23,29 +23,28 @@
 package dev.galacticraft.mod.world.biome;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface GalacticraftBiomeKey {
     interface Moon {
-        RegistryKey<Biome> HIGHLANDS = key(Constant.Biome.Moon.HIGHLANDS);
-        RegistryKey<Biome> HIGHLANDS_FLAT = key(Constant.Biome.Moon.HIGHLANDS_FLAT);
-        RegistryKey<Biome> HIGHLANDS_HILLS = key(Constant.Biome.Moon.HIGHLANDS_HILLS);
-        RegistryKey<Biome> HIGHLANDS_EDGE = key(Constant.Biome.Moon.HIGHLANDS_EDGE);
-        RegistryKey<Biome> HIGHLANDS_VALLEY = key(Constant.Biome.Moon.HIGHLANDS_VALLEY);
-        RegistryKey<Biome> MARE = key(Constant.Biome.Moon.MARE);
-        RegistryKey<Biome> MARE_FLAT = key(Constant.Biome.Moon.MARE_FLAT);
-        RegistryKey<Biome> MARE_HILLS = key(Constant.Biome.Moon.MARE_HILLS);
-        RegistryKey<Biome> MARE_EDGE = key(Constant.Biome.Moon.MARE_EDGE);
-        RegistryKey<Biome> MARE_VALLEY = key(Constant.Biome.Moon.MARE_VALLEY);
+        ResourceKey<Biome> HIGHLANDS = key(Constant.Biome.Moon.HIGHLANDS);
+        ResourceKey<Biome> HIGHLANDS_FLAT = key(Constant.Biome.Moon.HIGHLANDS_FLAT);
+        ResourceKey<Biome> HIGHLANDS_HILLS = key(Constant.Biome.Moon.HIGHLANDS_HILLS);
+        ResourceKey<Biome> HIGHLANDS_EDGE = key(Constant.Biome.Moon.HIGHLANDS_EDGE);
+        ResourceKey<Biome> HIGHLANDS_VALLEY = key(Constant.Biome.Moon.HIGHLANDS_VALLEY);
+        ResourceKey<Biome> MARE = key(Constant.Biome.Moon.MARE);
+        ResourceKey<Biome> MARE_FLAT = key(Constant.Biome.Moon.MARE_FLAT);
+        ResourceKey<Biome> MARE_HILLS = key(Constant.Biome.Moon.MARE_HILLS);
+        ResourceKey<Biome> MARE_EDGE = key(Constant.Biome.Moon.MARE_EDGE);
+        ResourceKey<Biome> MARE_VALLEY = key(Constant.Biome.Moon.MARE_VALLEY);
     }
 
-    private static RegistryKey<Biome> key(String id) {
-        return RegistryKey.of(Registry.BIOME_KEY, Constant.id(id));
+    private static ResourceKey<Biome> key(String id) {
+        return ResourceKey.create(Registry.BIOME_REGISTRY, Constant.id(id));
     }
 }

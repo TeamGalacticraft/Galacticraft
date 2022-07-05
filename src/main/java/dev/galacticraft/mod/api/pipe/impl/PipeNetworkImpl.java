@@ -32,10 +32,10 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +46,7 @@ import java.util.function.BiFunction;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class PipeNetworkImpl implements PipeNetwork {
-    private final @NotNull ServerWorld world;
+    private final @NotNull ServerLevel world;
     private final @NotNull Object2ObjectOpenHashMap<BlockPos, Storage<FluidVariant>> insertable = new Object2ObjectOpenHashMap<>();
     private final @NotNull ObjectSet<BlockPos> pipes = new ObjectLinkedOpenHashSet<>(1);
     private final @NotNull ObjectSet<PipeNetwork> peerNetworks = new ObjectLinkedOpenHashSet<>(0);
@@ -56,10 +56,10 @@ public class PipeNetworkImpl implements PipeNetwork {
     private @NotNull long transferred = 0;
     private @Nullable FluidVariant fluidTransferred = null; //can transfer <maxTransferRate> amount of fluid of 1 type per tick
 
-    public PipeNetworkImpl(@NotNull ServerWorld world, long maxTransferRate) {
+    public PipeNetworkImpl(@NotNull ServerLevel world, long maxTransferRate) {
         this.world = world;
         this.maxTransferRate = maxTransferRate;
-        this.tickId = world.getServer().getTicks();
+        this.tickId = world.getServer().getTickCount();
     }
 
     @Override
@@ -69,19 +69,19 @@ public class PipeNetworkImpl implements PipeNetwork {
             pipe = (Pipe) world.getBlockEntity(pos);
         }
         assert pipe != null : "Attempted to add pipe that does not exist!";
-        assert pos.equals(((BlockEntity) pipe).getPos());
+        assert pos.equals(((BlockEntity) pipe).getBlockPos());
         if (this.isCompatibleWith(pipe)) {
             pipe.setNetwork(this);
             this.pipes.add(pos);
             for (Direction direction : Constant.Misc.DIRECTIONS) {
                 if (pipe.canConnect(direction)) {
-                    BlockEntity blockEntity = world.getBlockEntity(pos.offset(direction));
+                    BlockEntity blockEntity = world.getBlockEntity(pos.relative(direction));
                     if (blockEntity != null && !blockEntity.isRemoved()) {
                         if (blockEntity instanceof Pipe adjacentPipe) {
                             if (adjacentPipe.canConnect(direction.getOpposite())) {
                                 if (this.isCompatibleWith(adjacentPipe)) {
                                     if (adjacentPipe.getNetwork() == null || adjacentPipe.getNetwork().markedForRemoval()) {
-                                        this.addPipe(pos.offset(direction), adjacentPipe);
+                                        this.addPipe(pos.relative(direction), adjacentPipe);
                                     } else {
                                         assert adjacentPipe.getNetwork().getMaxTransferRate() == this.getMaxTransferRate();
                                         if (adjacentPipe.getNetwork() != this) {
@@ -95,9 +95,9 @@ public class PipeNetworkImpl implements PipeNetwork {
                             continue;
                         }
                     }
-                    Storage<FluidVariant> insertable = FluidStorage.SIDED.find(world, pos.offset(direction), direction.getOpposite());
+                    Storage<FluidVariant> insertable = FluidStorage.SIDED.find(world, pos.relative(direction), direction.getOpposite());
                     if (insertable != null) {
-                        this.insertable.put(pos.offset(direction), insertable);
+                        this.insertable.put(pos.relative(direction), insertable);
                     }
                 }
             }
@@ -143,7 +143,7 @@ public class PipeNetworkImpl implements PipeNetwork {
 
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             if (pipe.canConnect(direction)) {
-                BlockPos adjacentPipePos = removedPos.offset(direction);
+                BlockPos adjacentPipePos = removedPos.relative(direction);
                 if (this.pipes.contains(adjacentPipePos)) {
                     if (((Pipe) Objects.requireNonNull(this.world.getBlockEntity(adjacentPipePos))).canConnect(direction.getOpposite())) {
                         adjacent.add(adjacentPipePos); // Don't bother testing if it was unable to connect
@@ -182,7 +182,7 @@ public class PipeNetworkImpl implements PipeNetwork {
             if (direction.getOpposite() == ignore) continue;
             Pipe pipe = (Pipe) world.getBlockEntity(pos);
             if (pipe.canConnect(direction)) {
-                pos1 = pos.offset(direction);
+                pos1 = pos.relative(direction);
                 if (this.pipes.contains(pos1)) {
                     if (world.getBlockEntity(pos1) instanceof Pipe pipe1 && pipe1.canConnect(direction.getOpposite())) {
                         if (!list.contains(pos1)) {
@@ -197,12 +197,12 @@ public class PipeNetworkImpl implements PipeNetwork {
 
     private <T> void reattachAdjacent(BlockPos pos, Object2ObjectOpenHashMap<BlockPos, T> map, BiFunction<BlockPos, Direction, T> function, List<BlockPos> optionalList) {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
-            BlockPos adjacentPos = pos.offset(direction);
+            BlockPos adjacentPos = pos.relative(direction);
             if (map.remove(adjacentPos) != null) {
                 for (Direction direction1 : Constant.Misc.DIRECTIONS) {
                     if (direction1 == direction.getOpposite()) continue;
-                    if (this.pipes.contains(adjacentPos.offset(direction1))) {
-                        if (((Pipe) world.getBlockEntity(adjacentPos.offset(direction1))).canConnect(direction1.getOpposite())) {
+                    if (this.pipes.contains(adjacentPos.relative(direction1))) {
+                        if (((Pipe) world.getBlockEntity(adjacentPos.relative(direction1))).canConnect(direction1.getOpposite())) {
                             T value = function.apply(adjacentPos, direction1);
                             if (value != null) {
                                 optionalList.add(adjacentPos);
@@ -221,7 +221,7 @@ public class PipeNetworkImpl implements PipeNetwork {
         assert !(world.getBlockEntity(updatedPos) instanceof Pipe);
         this.insertable.remove(updatedPos);
         BlockPos vector = updatedPos.subtract(adjacentToUpdated);
-        Direction direction = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
+        Direction direction = Direction.fromNormal(vector.getX(), vector.getY(), vector.getZ());
         Storage<FluidVariant> insertable = FluidStorage.SIDED.find(world, updatedPos, direction.getOpposite());
         if (insertable != null) {
             this.insertable.put(updatedPos, insertable);
@@ -232,8 +232,8 @@ public class PipeNetworkImpl implements PipeNetwork {
 
     @Override
     public long insert(@NotNull BlockPos fromPipe, FluidStack stack, Direction direction, @NotNull TransactionContext context) {
-        BlockPos source = fromPipe.offset(direction.getOpposite());
-        if (this.tickId != (this.tickId = world.getServer().getTicks())) {
+        BlockPos source = fromPipe.relative(direction.getOpposite());
+        if (this.tickId != (this.tickId = world.getServer().getTickCount())) {
             this.transferred = 0;
             this.fluidTransferred = null;
         } else {
@@ -266,7 +266,7 @@ public class PipeNetworkImpl implements PipeNetwork {
 
     @Override
     public FluidStack insertInternal(FluidStack amount, double ratio, FluidStack available, TransactionContext context) {
-        if (this.tickId != (this.tickId = world.getServer().getTicks())) {
+        if (this.tickId != (this.tickId = world.getServer().getTickCount())) {
             this.transferred = 0;
             this.fluidTransferred = null;
         } else {
@@ -291,7 +291,7 @@ public class PipeNetworkImpl implements PipeNetwork {
 
     @Override
     public void getNonFullInsertables(Object2LongMap<PipeNetwork> fluidRequirement, BlockPos source, FluidStack stack, TransactionContext context) {
-        if (this.tickId != (this.tickId = world.getServer().getTicks())) {
+        if (this.tickId != (this.tickId = world.getServer().getTickCount())) {
             this.transferred = 0;
             this.fluidTransferred = null;
         } else {
@@ -361,7 +361,7 @@ public class PipeNetworkImpl implements PipeNetwork {
     @Override
     public String toString() {
         return "PipeNetworkImpl{" +
-                "world=" + world.getRegistryKey().getValue() +
+                "world=" + world.dimension().location() +
                 ", insertable=" + insertable +
                 ", pipes=" + pipes +
                 ", markedForRemoval=" + markedForRemoval +

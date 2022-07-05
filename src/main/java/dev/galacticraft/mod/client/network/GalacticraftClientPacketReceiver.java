@@ -27,14 +27,13 @@ import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.UUID;
 
 /**
@@ -44,28 +43,28 @@ import java.util.UUID;
 @Environment(EnvType.CLIENT)
 public class GalacticraftClientPacketReceiver {
     public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "entity_spawn"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
-            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "entity_spawn"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
+            FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
             client.execute(() -> {
                 int id = buffer.readVarInt();
-                UUID uuid = buffer.readUuid();
-                Entity entity = Registry.ENTITY_TYPE.get(buffer.readVarInt()).create(MinecraftClient.getInstance().world);
+                UUID uuid = buffer.readUUID();
+                Entity entity = Registry.ENTITY_TYPE.byId(buffer.readVarInt()).create(Minecraft.getInstance().level);
                 entity.setId(id);
-                entity.setUuid(uuid);
-                entity.setPos(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-                entity.setYaw((float) (buffer.readByte() * 360) / 256.0F);
-                entity.setPitch((float) (buffer.readByte() * 360) / 256.0F);
-                entity.setVelocity(buffer.readShort(), buffer.readShort(), buffer.readShort());
-                MinecraftClient.getInstance().world.addEntity(id, entity);
+                entity.setUUID(uuid);
+                entity.setPosRaw(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
+                entity.setYRot((float) (buffer.readByte() * 360) / 256.0F);
+                entity.setXRot((float) (buffer.readByte() * 360) / 256.0F);
+                entity.setDeltaMovement(buffer.readShort(), buffer.readShort(), buffer.readShort());
+                Minecraft.getInstance().level.putNonPlayerEntity(id, entity);
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "bubble_size"), (client, handler, buf, responseSender) -> {
-            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "bubble_size"), (client, handler, buf, responseSender) -> {
+            FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
             client.execute(() -> {
                 BlockPos pos = buffer.readBlockPos();
-                if (client.world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
-                    BlockEntity entity = client.world.getBlockEntity(pos);
+                if (client.level.hasChunk(pos.getX() >> 4, pos.getZ() >> 4)) {
+                    BlockEntity entity = client.level.getBlockEntity(pos);
                     if (entity instanceof BubbleDistributorBlockEntity machine) {
                         machine.setSize(buffer.readDouble());
                     }
@@ -73,7 +72,7 @@ public class GalacticraftClientPacketReceiver {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "open_screen"), (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "open_screen"), (client, handler, buf, responseSender) -> {
 
         });
     }

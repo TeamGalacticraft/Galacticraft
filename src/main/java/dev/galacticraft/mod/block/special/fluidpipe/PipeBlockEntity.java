@@ -26,14 +26,14 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import dev.galacticraft.mod.attribute.fluid.PipeFluidInsertable;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,22 +64,22 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe {
     @Override
     public @NotNull PipeNetwork getOrCreateNetwork() {
         if (this.network == null) {
-            if (!this.world.isClient()) {
+            if (!this.level.isClientSide()) {
                 for (Direction direction : Constant.Misc.DIRECTIONS) {
                     if (this.canConnect(direction)) {
-                        BlockEntity entity = world.getBlockEntity(pos.offset(direction));
+                        BlockEntity entity = level.getBlockEntity(worldPosition.relative(direction));
                         if (entity instanceof Pipe pipe && pipe.getNetwork() != null) {
                             if (pipe.canConnect(direction.getOpposite())) {
                                 if (pipe.getOrCreateNetwork().isCompatibleWith(this)) {
-                                    pipe.getNetwork().addPipe(pos, this);
+                                    pipe.getNetwork().addPipe(worldPosition, this);
                                 }
                             }
                         }
                     }
                 }
                 if (this.network == null) {
-                    this.setNetwork(PipeNetwork.create((ServerWorld) world, this.getMaxTransferRate()));
-                    this.network.addPipe(pos, this);
+                    this.setNetwork(PipeNetwork.create((ServerLevel) level, this.getMaxTransferRate()));
+                    this.network.addPipe(worldPosition, this);
                 }
             }
         }
@@ -95,7 +95,7 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe {
         if (this.insertables == null) {
             this.insertables = new PipeFluidInsertable[6];
             for (Direction direction : Constant.Misc.DIRECTIONS) {
-                this.insertables[direction.ordinal()] = new PipeFluidInsertable(direction, this.getMaxTransferRate(), this.pos);
+                this.insertables[direction.ordinal()] = new PipeFluidInsertable(direction, this.getMaxTransferRate(), this.worldPosition);
             }
         }
         return this.insertables;
@@ -122,24 +122,24 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         this.readColorNbt(nbt);
         this.readConnectionNbt(nbt);
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         this.writeColorNbt(nbt);
         this.writeConnectionNbt(nbt);
     }
 
     @Override
-    public void markRemoved() {
-        super.markRemoved();
+    public void setRemoved() {
+        super.setRemoved();
         if (this.getNetwork() != null) {
-            this.getNetwork().removePipe(this, this.pos);
+            this.getNetwork().removePipe(this, this.worldPosition);
         }
     }
 }

@@ -46,17 +46,17 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,7 +95,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         super.tickConstant(world, pos, state);
         world.getProfiler().push("extract_resources");
         this.attemptChargeFromStack(BATTERY_SLOT);
@@ -104,10 +104,10 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         world.getProfiler().push("transaction");
         MachineStatus status;
-        this.players = world.getPlayers().size();
+        this.players = world.players().size();
         this.prevSize = this.size;
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate()) {
@@ -117,21 +117,21 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
                 }
                 if (this.size > 0.0D && this.bubbleVisible && this.bubbleId == -1) {
                     BubbleEntity entity = new BubbleEntity(GalacticraftEntityType.BUBBLE, world);
-                    entity.setPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
-                    entity.prevX = this.getPos().getX();
-                    entity.prevY = this.getPos().getY();
-                    entity.prevZ = this.getPos().getZ();
-                    world.spawnEntity(entity);
+                    entity.setPosRaw(this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
+                    entity.xo = this.getBlockPos().getX();
+                    entity.yo = this.getBlockPos().getY();
+                    entity.zo = this.getBlockPos().getZ();
+                    world.addFreshEntity(entity);
                     this.bubbleId = entity.getId();
-                    for (ServerPlayerEntity player : world.getPlayers()) {
-                        player.networkHandler.sendPacket(entity.createSpawnPacket());
+                    for (ServerPlayer player : world.players()) {
+                        player.connection.send(entity.getAddEntityPacket());
                     }
                 }
                 world.getProfiler().pop();
-                if (this.prevSize != this.size || this.players != world.getPlayers().size()) {
+                if (this.prevSize != this.size || this.players != world.players().size()) {
                     world.getProfiler().push("network");
-                    for (ServerPlayerEntity player : world.getPlayers()) {
-                        ServerPlayNetworking.send(player, new Identifier(Constant.MOD_ID, "bubble_size"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
+                    for (ServerPlayer player : world.players()) {
+                        ServerPlayNetworking.send(player, new ResourceLocation(Constant.MOD_ID, "bubble_size"), new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
                     }
                     world.getProfiler().pop();
                 }
@@ -156,8 +156,8 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
         }
         world.getProfiler().push("size");
         if (this.bubbleId != -1 && this.size <= 0) {
-            world.getEntityById(bubbleId).remove(Entity.RemovalReason.DISCARDED);
-            world.getEntityById(bubbleId).onRemoved();
+            world.getEntity(bubbleId).remove(Entity.RemovalReason.DISCARDED);
+            world.getEntity(bubbleId).onClientRemoval();
             this.bubbleId = -1;
         }
 
@@ -181,15 +181,15 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putByte(Constant.Nbt.MAX_SIZE, this.targetSize);
         tag.putDouble(Constant.Nbt.SIZE, this.size);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         this.size = nbt.getDouble(Constant.Nbt.SIZE);
         if (this.size < 0) this.size = 0;
         this.targetSize = nbt.getByte(Constant.Nbt.MAX_SIZE);
@@ -220,7 +220,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new BubbleDistributorScreenHandler(syncId, player, this);
         return null;
     }

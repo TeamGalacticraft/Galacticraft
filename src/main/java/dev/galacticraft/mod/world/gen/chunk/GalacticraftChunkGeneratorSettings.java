@@ -22,32 +22,29 @@
 
 package dev.galacticraft.mod.world.gen.chunk;
 
-import com.google.common.collect.ImmutableMap;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.world.gen.feature.GalacticraftStructureFeature;
 import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.biome.source.util.VanillaTerrainParametersCreator;
-import net.minecraft.world.gen.chunk.*;
-import net.minecraft.world.gen.densityfunction.DensityFunctions;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.NoiseRouterData;
+import net.minecraft.world.level.levelgen.NoiseSettings;
 
 import java.util.Collections;
-import java.util.Optional;
 
 public class GalacticraftChunkGeneratorSettings {
-    public static final RegistryKey<ChunkGeneratorSettings> MOON = RegistryKey.of(Registry.CHUNK_GENERATOR_SETTINGS_KEY, Constant.id("moon"));
+    public static final ResourceKey<NoiseGeneratorSettings> MOON = ResourceKey.create(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY, Constant.id("moon"));
 
     public static void register() { // TODO: PORT
-        GenerationShapeConfig shapeConfig = GenerationShapeConfig.create(
+        NoiseSettings shapeConfig = NoiseSettings.create(
                 -64,
                 384,
                 4,
                 8);
-        BuiltinRegistries.add(BuiltinRegistries.CHUNK_GENERATOR_SETTINGS, MOON, new ChunkGeneratorSettings(
+        BuiltinRegistries.register(BuiltinRegistries.NOISE_GENERATOR_SETTINGS, MOON, new NoiseGeneratorSettings(
 //                new StructuresConfig(
 //                        Optional.empty(),
 //                        ImmutableMap.of(
@@ -57,9 +54,9 @@ public class GalacticraftChunkGeneratorSettings {
 //                        )
 //                ),
                 shapeConfig,
-                GalacticraftBlock.MOON_ROCK.getDefaultState(),
-                Blocks.AIR.getDefaultState(),
-                DensityFunctions.createCavesNoiseRouter(BuiltinRegistries.DENSITY_FUNCTION), // TODO: PORT
+                GalacticraftBlock.MOON_ROCK.defaultBlockState(),
+                Blocks.AIR.defaultBlockState(),
+                NoiseRouterData.caves(BuiltinRegistries.DENSITY_FUNCTION), // TODO: PORT
                 MoonSurfaceRules.createDefaultRule(),
                 Collections.emptyList(),
                 -65, // seaLevel - mapped incorrectly on yarn

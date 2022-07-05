@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.api.solarpanel;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
-public record LightSource(Text name, double strength, double atmosphericInterference) {
+public record LightSource(Component name, double strength, double atmosphericInterference) {
 }

@@ -27,75 +27,83 @@ import dev.galacticraft.mod.sound.GalacticraftSound;
 import dev.galacticraft.mod.world.gen.carver.GalacticraftCarver;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
 import dev.galacticraft.mod.world.gen.feature.GalacticraftOrePlacedFeature;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.sound.MusicSound;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.util.math.floatprovider.ConstantFloatProvider;
-import net.minecraft.util.math.floatprovider.TrapezoidFloatProvider;
-import net.minecraft.util.math.floatprovider.UniformFloatProvider;
-import net.minecraft.util.registry.*;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeEffects;
-import net.minecraft.world.biome.GenerationSettings;
-import net.minecraft.world.biome.SpawnSettings;
-import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.YOffset;
-import net.minecraft.world.gen.carver.*;
-import net.minecraft.world.gen.feature.PlacedFeature;
-import net.minecraft.world.gen.heightprovider.ConstantHeightProvider;
-import net.minecraft.world.gen.heightprovider.UniformHeightProvider;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.Music;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.valueproviders.ConstantFloat;
+import net.minecraft.util.valueproviders.TrapezoidFloat;
+import net.minecraft.util.valueproviders.UniformFloat;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
+import net.minecraft.world.level.biome.BiomeSpecialEffects;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.carver.CanyonCarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.CarverDebugSettings;
+import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.carver.WorldCarver;
+import net.minecraft.world.level.levelgen.heightproviders.ConstantHeight;
+import net.minecraft.world.level.levelgen.heightproviders.UniformHeight;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class GalacticraftBiome {
     private static class Moon {
         // TODO Actually register these?
-        private static final RegistryEntry<ConfiguredCarver<RavineCarverConfig>> CANYON = RegistryEntry.of(Carver.RAVINE.configure(new RavineCarverConfig(
+        private static final Holder<ConfiguredWorldCarver<CanyonCarverConfiguration>> CANYON = Holder.direct(WorldCarver.CANYON.configured(new CanyonCarverConfiguration(
                 0.05f,
-                UniformHeightProvider.create(YOffset.fixed(10), YOffset.fixed(67)),
-                ConstantFloatProvider.create(3.0f),
-                YOffset.aboveBottom(8),
-                CarverDebugConfig.DEFAULT,
-                Registry.BLOCK.getOrCreateEntryList(BlockTags.OVERWORLD_CARVER_REPLACEABLES), // TODO: REPLACEABLES tag
-                UniformFloatProvider.create(-0.125f, 0.125f),
-                new RavineCarverConfig.Shape(
-                        UniformFloatProvider.create(0.75f, 1.0f),
-                        TrapezoidFloatProvider.create(0, 6, 2),
+                UniformHeight.of(VerticalAnchor.absolute(10), VerticalAnchor.absolute(67)),
+                ConstantFloat.of(3.0f),
+                VerticalAnchor.aboveBottom(8),
+                CarverDebugSettings.DEFAULT,
+                Registry.BLOCK.getOrCreateTag(BlockTags.OVERWORLD_CARVER_REPLACEABLES), // TODO: REPLACEABLES tag
+                UniformFloat.of(-0.125f, 0.125f),
+                new CanyonCarverConfiguration.CanyonShapeConfiguration(
+                        UniformFloat.of(0.75f, 1.0f),
+                        TrapezoidFloat.of(0, 6, 2),
                         3,
-                        UniformFloatProvider.create(0.75f, 1.0f),
+                        UniformFloat.of(0.75f, 1.0f),
                         1.0f,
                         0.0f)
         )));
 
-        private static final RegistryEntry<ConfiguredCarver<CraterCarverConfig>> CRATER = RegistryEntry.of(GalacticraftCarver.CRATERS.configure(new CraterCarverConfig(
+        private static final Holder<ConfiguredWorldCarver<CraterCarverConfig>> CRATER = Holder.direct(GalacticraftCarver.CRATERS.configured(new CraterCarverConfig(
                 0.05f,
-                ConstantHeightProvider.create(YOffset.fixed(128)),
-                UniformFloatProvider.create(0.4f, 0.6f),
-                CarverDebugConfig.DEFAULT,
+                ConstantHeight.of(VerticalAnchor.absolute(128)),
+                UniformFloat.of(0.4f, 0.6f),
+                CarverDebugSettings.DEFAULT,
                 27,
                 8,
                 8
         )));
 
-        private static final MusicSound MUSIC = new MusicSound(GalacticraftSound.MUSIC_MOON, 1200, 3600, true);
+        private static final Music MUSIC = new Music(GalacticraftSound.MUSIC_MOON, 1200, 3600, true);
 
         private enum BiomeType {
-            HIGHLANDS(GalacticraftCarver.LUNAR_CAVE.configure(
-                    new CaveCarverConfig(
+            HIGHLANDS(GalacticraftCarver.LUNAR_CAVE.configured(
+                    new CaveCarverConfiguration(
                     0.15f,
-                    UniformHeightProvider.create(YOffset.aboveBottom(8), YOffset.fixed(180)),
-                    UniformFloatProvider.create(0.1f, 0.9f),
-                    YOffset.aboveBottom(-64),
-                    RegistryEntryList.of(),
-                    UniformFloatProvider.create(0.7f, 1.4f),
-                    UniformFloatProvider.create(0.8f, 1.3f),
-                    UniformFloatProvider.create(-1.0f, -0.4f)
-            )), new BiomeEffects.Builder()
+                    UniformHeight.of(VerticalAnchor.aboveBottom(8), VerticalAnchor.absolute(180)),
+                    UniformFloat.of(0.1f, 0.9f),
+                    VerticalAnchor.aboveBottom(-64),
+                    HolderSet.direct(),
+                    UniformFloat.of(0.7f, 1.4f),
+                    UniformFloat.of(0.8f, 1.3f),
+                    UniformFloat.of(-1.0f, -0.4f)
+            )), new BiomeSpecialEffects.Builder()
                     .skyColor(0)
                     .fogColor(1447445)
                     .waterColor(4013374)
                     .waterFogColor(4802890)
-                    .music(MUSIC)
+                    .backgroundMusic(MUSIC)
                     .build(),
-                    RegistryEntryList.of(
+                    HolderSet.direct(
                             GalacticraftOrePlacedFeature.ORE_TIN_SMALL_MOON,
                             GalacticraftOrePlacedFeature.ORE_TIN_MIDDLE_MOON,
                             GalacticraftOrePlacedFeature.ORE_TIN_UPPER_MOON,
@@ -103,30 +111,30 @@ public class GalacticraftBiome {
                             GalacticraftOrePlacedFeature.ORE_COPPER_LARGE_MOON,
                             GalacticraftOrePlacedFeature.BASALT_DISK_MOON
                     ),
-                    new SpawnSettings.Builder()
-                            .spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(GalacticraftEntityType.EVOLVED_ZOMBIE, 95, 4, 5))
-                            .spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(GalacticraftEntityType.EVOLVED_CREEPER, 100, 4, 4))
-                            .spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(GalacticraftEntityType.EVOLVED_SKELETON, 100, 4, 4))
-                            .spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(GalacticraftEntityType.EVOLVED_SPIDER, 100, 4, 4))
+                    new MobSpawnSettings.Builder()
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_ZOMBIE, 95, 4, 5))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_CREEPER, 100, 4, 4))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_SKELETON, 100, 4, 4))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_SPIDER, 100, 4, 4))
                             .build()
             ),
 
-            MARE(GalacticraftCarver.LUNAR_CAVE.configure(new CaveCarverConfig(0.18f,
-                    UniformHeightProvider.create(YOffset.aboveBottom(8), YOffset.fixed(180)),
-                    UniformFloatProvider.create(0.1f, 0.9f),
-                    YOffset.aboveBottom(-64),
-                    RegistryEntryList.of(),
-                    UniformFloatProvider.create(0.7f, 1.4f),
-                    UniformFloatProvider.create(0.8f, 1.3f),
-                    UniformFloatProvider.create(-1.0f, -0.4f)
-            )), new BiomeEffects.Builder()
+            MARE(GalacticraftCarver.LUNAR_CAVE.configured(new CaveCarverConfiguration(0.18f,
+                    UniformHeight.of(VerticalAnchor.aboveBottom(8), VerticalAnchor.absolute(180)),
+                    UniformFloat.of(0.1f, 0.9f),
+                    VerticalAnchor.aboveBottom(-64),
+                    HolderSet.direct(),
+                    UniformFloat.of(0.7f, 1.4f),
+                    UniformFloat.of(0.8f, 1.3f),
+                    UniformFloat.of(-1.0f, -0.4f)
+            )), new BiomeSpecialEffects.Builder()
                     .skyColor(0)
                     .fogColor(1447445)
                     .waterColor(2170913)
                     .waterFogColor(2828843)
-                    .music(MUSIC)
+                    .backgroundMusic(MUSIC)
                     .build(),
-                    RegistryEntryList.of(
+                    HolderSet.direct(
                             GalacticraftOrePlacedFeature.ORE_TIN_SMALL_MOON,
                             GalacticraftOrePlacedFeature.ORE_TIN_MIDDLE_MOON,
                             GalacticraftOrePlacedFeature.ORE_TIN_UPPER_MOON,
@@ -134,64 +142,64 @@ public class GalacticraftBiome {
                             GalacticraftOrePlacedFeature.ORE_COPPER_LARGE_MOON,
                             GalacticraftOrePlacedFeature.BASALT_DISK_MOON
                     ),
-                    new SpawnSettings.Builder()
-                            .spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(GalacticraftEntityType.EVOLVED_ZOMBIE, 95, 4, 5))
-                            .spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(GalacticraftEntityType.EVOLVED_CREEPER, 100, 4, 5))
-                            .spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(GalacticraftEntityType.EVOLVED_SKELETON, 100, 4, 5))
-                            .spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(GalacticraftEntityType.EVOLVED_SPIDER, 100, 4, 5))
+                    new MobSpawnSettings.Builder()
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_ZOMBIE, 95, 4, 5))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_CREEPER, 100, 4, 5))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_SKELETON, 100, 4, 5))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_SPIDER, 100, 4, 5))
                             .build()
             );
 
-            private final ConfiguredCarver<CaveCarverConfig> caves;
-            private final BiomeEffects biomeEffects;
-            private final RegistryEntryList<PlacedFeature> ores;
-            private final SpawnSettings spawnSettings;
+            private final ConfiguredWorldCarver<CaveCarverConfiguration> caves;
+            private final BiomeSpecialEffects biomeEffects;
+            private final HolderSet<PlacedFeature> ores;
+            private final MobSpawnSettings spawnSettings;
 
-            BiomeType(ConfiguredCarver<CaveCarverConfig> caves, BiomeEffects biomeEffects, RegistryEntryList<PlacedFeature> ores, SpawnSettings spawnSettings) {
+            BiomeType(ConfiguredWorldCarver<CaveCarverConfiguration> caves, BiomeSpecialEffects biomeEffects, HolderSet<PlacedFeature> ores, MobSpawnSettings spawnSettings) {
                 this.caves = caves;
                 this.biomeEffects = biomeEffects;
                 this.ores = ores;
                 this.spawnSettings = spawnSettings;
             }
 
-            public ConfiguredCarver<CaveCarverConfig> getCaves() {
+            public ConfiguredWorldCarver<CaveCarverConfiguration> getCaves() {
                 return this.caves;
             }
 
-            public BiomeEffects getBiomeEffects() {
+            public BiomeSpecialEffects getBiomeEffects() {
                 return biomeEffects;
             }
 
-            public RegistryEntryList<PlacedFeature> getOres() {
+            public HolderSet<PlacedFeature> getOres() {
                 return this.ores;
             }
 
-            public SpawnSettings getSpawnSettings() {
+            public MobSpawnSettings getSpawnSettings() {
                 return spawnSettings;
             }
         }
 
-        private static Biome.Builder createBuilder() {
-            return new Biome.Builder()
+        private static Biome.BiomeBuilder createBuilder() {
+            return new Biome.BiomeBuilder()
                     .temperature(2)
                     .downfall(0)
                     .precipitation(Biome.Precipitation.NONE);
         }
 
         private static Biome createMoon(BiomeType type) {
-            GenerationSettings.Builder builder = new GenerationSettings.Builder()
-                    .carver(GenerationStep.Carver.AIR, CRATER)
-                    .carver(GenerationStep.Carver.AIR, CANYON)
-                    .carver(GenerationStep.Carver.AIR, RegistryEntry.of(type.getCaves())); // TODO: getCaves should provide a RegisteyEntry
+            BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder()
+                    .addCarver(GenerationStep.Carving.AIR, CRATER)
+                    .addCarver(GenerationStep.Carving.AIR, CANYON)
+                    .addCarver(GenerationStep.Carving.AIR, Holder.direct(type.getCaves())); // TODO: getCaves should provide a RegisteyEntry
 
-            for (RegistryEntry<PlacedFeature> ore : type.getOres()) {
-                builder.feature(GenerationStep.Feature.UNDERGROUND_ORES, ore);
+            for (Holder<PlacedFeature> ore : type.getOres()) {
+                builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ore);
             }
 
             return Moon.createBuilder()
                     .generationSettings(builder.build())
-                    .effects(type.getBiomeEffects())
-                    .spawnSettings(type.getSpawnSettings()).build();
+                    .specialEffects(type.getBiomeEffects())
+                    .mobSpawnSettings(type.getSpawnSettings()).build();
         }
     }
 
@@ -209,7 +217,7 @@ public class GalacticraftBiome {
         register(GalacticraftBiomeKey.Moon.MARE_VALLEY, Moon.createMoon(Moon.BiomeType.MARE));
     }
 
-    private static void register(RegistryKey<Biome> key, Biome biome) {
-        BuiltinRegistries.add(BuiltinRegistries.BIOME, key, biome);
+    private static void register(ResourceKey<Biome> key, Biome biome) {
+        BuiltinRegistries.register(BuiltinRegistries.BIOME, key, biome);
     }
 }

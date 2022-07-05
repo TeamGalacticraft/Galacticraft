@@ -23,11 +23,11 @@
 package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.mod.api.block.FluidLoggable;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FlowingFluid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -35,26 +35,26 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(FlowableFluid.class)
+@Mixin(FlowingFluid.class)
 public abstract class FlowableFluidMixin {
-    @Redirect(method = "onScheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 1))
-    private boolean onScheduledTickFill_gc(World world, BlockPos pos, BlockState state, int flags) {
+    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 1))
+    private boolean onScheduledTickFill_gc(Level world, BlockPos pos, BlockState state, int flags) {
         BlockState blockState = world.getBlockState(pos);
         if (blockState.getBlock() instanceof FluidLoggable fillable) {
-            fillable.tryFillWithFluid(world, pos, blockState, state.getFluidState());
+            fillable.placeLiquid(world, pos, blockState, state.getFluidState());
             return true;
         }
-        return world.setBlockState(pos, state, flags);
+        return world.setBlock(pos, state, flags);
     }
 
-    @Redirect(method = "onScheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 0))
-    private boolean onScheduledTickDrain_gc(World world, BlockPos pos, BlockState state, int flags) {
+    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 0))
+    private boolean onScheduledTickDrain_gc(Level world, BlockPos pos, BlockState state, int flags) {
         BlockState blockState = world.getBlockState(pos);
         Block block = blockState.getBlock();
         if (block instanceof FluidLoggable drainable) {
-            drainable.tryDrainFluid(world, pos, blockState);
+            drainable.pickupBlock(world, pos, blockState);
             return true;
         }
-        return world.setBlockState(pos, state, flags);
+        return world.setBlock(pos, state, flags);
     }
 }

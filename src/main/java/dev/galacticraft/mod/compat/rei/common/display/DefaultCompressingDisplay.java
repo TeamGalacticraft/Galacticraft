@@ -28,9 +28,9 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.DisplaySerializer;
 import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
@@ -56,14 +56,14 @@ public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
         INSTANCE;
 
         @Override
-        public NbtCompound save(NbtCompound tag, DefaultCompressingDisplay display) {
+        public CompoundTag save(CompoundTag tag, DefaultCompressingDisplay display) {
             tag.putBoolean(Constant.Nbt.SHAPED, display instanceof DefaultShapedCompressingDisplay);
-            NbtList list = new NbtList();
+            ListTag list = new ListTag();
             for (EntryIngredient inputEntry : display.getInputEntries()) {
                 list.add(inputEntry.save());
             }
             tag.put(Constant.Nbt.INPUTS, list);
-            list = new NbtList();
+            list = new ListTag();
             for (EntryIngredient outputEntry : display.getOutputEntries()) {
                 list.add(outputEntry.save());
             }
@@ -73,16 +73,16 @@ public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
         }
 
         @Override
-        public DefaultCompressingDisplay read(NbtCompound tag) {
-            NbtList list = tag.getList(Constant.Nbt.INPUTS, NbtElement.LIST_TYPE);
+        public DefaultCompressingDisplay read(CompoundTag tag) {
+            ListTag list = tag.getList(Constant.Nbt.INPUTS, Tag.TAG_LIST);
             List<EntryIngredient> inputs = new LinkedList<>();
             List<EntryIngredient> outputs = new LinkedList<>();
-            for (NbtElement element : list) {
-                inputs.add(EntryIngredient.read(((NbtList)element)));
+            for (Tag element : list) {
+                inputs.add(EntryIngredient.read(((ListTag)element)));
             }
-            list = tag.getList(Constant.Nbt.OUTPUTS, NbtElement.LIST_TYPE);
-            for (NbtElement element : list) {
-                outputs.add(EntryIngredient.read(((NbtList)element)));
+            list = tag.getList(Constant.Nbt.OUTPUTS, Tag.TAG_LIST);
+            for (Tag element : list) {
+                outputs.add(EntryIngredient.read(((ListTag)element)));
             }
             if (tag.getBoolean(Constant.Nbt.SHAPED)) {
                 return new DefaultShapedCompressingDisplay(inputs, outputs);

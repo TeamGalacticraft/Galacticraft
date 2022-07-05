@@ -23,18 +23,18 @@
 package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public interface Pullable {
     boolean isPull();
 
     void setPull(boolean pull);
 
-    default void writePullNbt(NbtCompound nbt) {
+    default void writePullNbt(CompoundTag nbt) {
         nbt.putBoolean(Constant.Nbt.PULL, this.isPull());
     }
 
-    default void readPullNbt(NbtCompound nbt) {
+    default void readPullNbt(CompoundTag nbt) {
         this.setPull(nbt.getBoolean(Constant.Nbt.PULL));
     }
 }

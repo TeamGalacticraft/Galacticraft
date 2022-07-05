@@ -24,17 +24,17 @@ package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.block.entity.CoalGeneratorBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.Property;
-import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.MenuType;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CoalGeneratorScreenHandler extends MachineScreenHandler<CoalGeneratorBlockEntity> {
-    public final Property fuelTime = new Property() {
+    public final DataSlot fuelTime = new DataSlot() {
         @Override
         public int get() {
             return CoalGeneratorScreenHandler.this.machine.getFuelTime();
@@ -46,7 +46,7 @@ public class CoalGeneratorScreenHandler extends MachineScreenHandler<CoalGenerat
         }
     };
 
-    public final Property fuelLength = new Property() {
+    public final DataSlot fuelLength = new DataSlot() {
         @Override
         public int get() {
             return CoalGeneratorScreenHandler.this.machine.getFuelLength();
@@ -58,19 +58,19 @@ public class CoalGeneratorScreenHandler extends MachineScreenHandler<CoalGenerat
         }
     };
 
-    public CoalGeneratorScreenHandler(int syncId, PlayerEntity player, CoalGeneratorBlockEntity machine) {
+    public CoalGeneratorScreenHandler(int syncId, Player player, CoalGeneratorBlockEntity machine) {
         super(syncId, player, machine, null);
-        this.addProperty(this.fuelTime);
-        this.addProperty(this.fuelLength);
+        this.addDataSlot(this.fuelTime);
+        this.addDataSlot(this.fuelLength);
         this.addPlayerInventorySlots(8, 84);
     }
 
-    public CoalGeneratorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (CoalGeneratorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public CoalGeneratorScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (CoalGeneratorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 
     @Override
-    public ScreenHandlerType<?> getType() {
+    public MenuType<?> getType() {
         return GalacticraftScreenHandlerType.COAL_GENERATOR_HANDLER;
     }
 }

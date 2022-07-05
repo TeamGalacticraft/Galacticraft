@@ -24,12 +24,12 @@ package dev.galacticraft.mod.item;
 
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
@@ -41,33 +41,33 @@ import java.util.List;
 public class InfiniteBatteryItem extends Item implements EnergyStorage {
     private int ticks = (int) (Math.random() * 1000.0);
 
-    public InfiniteBatteryItem(Settings settings) {
-        super(settings.maxCount(1));
+    public InfiniteBatteryItem(Properties settings) {
+        super(settings.stacksTo(1));
 
         EnergyStorage.ITEM.registerSelf(this);
     }
 
     @Override
-    public boolean hasGlint(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return true;
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(Text.translatable("tooltip.galacticraft.energy_remaining", Text.translatable("tooltip.galacticraft.infinite").setStyle(Constant.Text.Color.getRainbow(ticks))));
-        tooltip.add(Text.translatable("tooltip.galacticraft.creative_only").setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
-        super.appendTooltip(stack, world, tooltip, context);
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+        tooltip.add(Component.translatable("tooltip.galacticraft.energy_remaining", Component.translatable("tooltip.galacticraft.infinite").setStyle(Constant.Text.Color.getRainbow(ticks))));
+        tooltip.add(Component.translatable("tooltip.galacticraft.creative_only").setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+        super.appendHoverText(stack, world, tooltip, context);
     }
 
     @Override
-    public int getItemBarStep(ItemStack stack) {
+    public int getBarWidth(ItemStack stack) {
         return 13;
     }
 
     @Override
-    public int getItemBarColor(ItemStack stack) {
+    public int getBarColor(ItemStack stack) {
         if (++ticks > 1000) ticks -= 1000;
-        return MathHelper.hsvToRgb(this.ticks / 1000.0f, 1, 1);
+        return Mth.hsvToRgb(this.ticks / 1000.0f, 1, 1);
     }
 
     @Override

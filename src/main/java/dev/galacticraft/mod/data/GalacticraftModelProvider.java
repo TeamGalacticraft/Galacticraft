@@ -24,8 +24,14 @@ package dev.galacticraft.mod.data;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.client.*;
-import net.minecraft.state.property.Properties;
+import net.minecraft.data.models.BlockModelGenerators;
+import net.minecraft.data.models.ItemModelGenerators;
+import net.minecraft.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.data.models.blockstates.PropertyDispatch;
+import net.minecraft.data.models.blockstates.Variant;
+import net.minecraft.data.models.blockstates.VariantProperties;
+import net.minecraft.data.models.model.ModelLocationUtils;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import static dev.galacticraft.mod.block.GalacticraftBlock.*;
 
@@ -35,7 +41,7 @@ public class GalacticraftModelProvider extends FabricModelProvider {
     }
 
     @Override
-    public void generateBlockStateModels(BlockStateModelGenerator generator) {
+    public void generateBlockStateModels(BlockModelGenerators generator) {
 //        generator.registerSimpleState(GLOWSTONE_TORCH, GalacticraftItem.GLOWSTONE_TORCH);
 //        generator.registerSimpleState(GLOWSTONE_WALL_TORCH, GalacticraftItem.GLOWSTONE_TORCH);
 //        generator.registerSimpleState(UNLIT_TORCH, GalacticraftItem.UNLIT_TORCH);
@@ -130,9 +136,9 @@ public class GalacticraftModelProvider extends FabricModelProvider {
 //                .wall(DETAILED_DARK_DECORATION_WALL)
 //                .build();
 
-        generator.registerSimpleCubeAll(MOON_TURF);
-        generator.registerSimpleCubeAll(MOON_DIRT);
-        generator.registerSimpleCubeAll(MOON_SURFACE_ROCK);
+        generator.createTrivialCube(MOON_TURF);
+        generator.createTrivialCube(MOON_DIRT);
+        generator.createTrivialCube(MOON_SURFACE_ROCK);
 //        for (Block decor : MOON_ROCKS) generator.registerSimpleState(decor);
 //        for (Block decor : COBBLED_MOON_ROCKS) generator.registerSimpleState(decor);
 //        for (Block decor : LUNASLATES) generator.registerSimpleState(decor);
@@ -141,19 +147,19 @@ public class GalacticraftModelProvider extends FabricModelProvider {
 //        for (Block decor : MOON_BASALT_BRICKS) generator.registerSimpleState(decor);
 //        for (Block decor : CRACKED_MOON_BASALT_BRICKS) generator.registerSimpleState(decor);
 
-        generator.registerSimpleCubeAll(MARS_SURFACE_ROCK);
-        generator.registerSimpleCubeAll(MARS_SUB_SURFACE_ROCK);
-        generator.registerSimpleCubeAll(MARS_STONE);
+        generator.createTrivialCube(MARS_SURFACE_ROCK);
+        generator.createTrivialCube(MARS_SUB_SURFACE_ROCK);
+        generator.createTrivialCube(MARS_STONE);
 
-        generator.registerSimpleCubeAll(ASTEROID_ROCK);
-        generator.registerSimpleCubeAll(ASTEROID_ROCK_1);
-        generator.registerSimpleCubeAll(ASTEROID_ROCK_2);
+        generator.createTrivialCube(ASTEROID_ROCK);
+        generator.createTrivialCube(ASTEROID_ROCK_1);
+        generator.createTrivialCube(ASTEROID_ROCK_2);
 
-        generator.registerSimpleCubeAll(SOFT_VENUS_ROCK);
-        generator.registerSimpleCubeAll(HARD_VENUS_ROCK);
-        generator.registerSimpleCubeAll(SCORCHED_VENUS_ROCK);
-        generator.registerSimpleCubeAll(VOLCANIC_ROCK);
-        generator.registerSimpleCubeAll(PUMICE);
+        generator.createTrivialCube(SOFT_VENUS_ROCK);
+        generator.createTrivialCube(HARD_VENUS_ROCK);
+        generator.createTrivialCube(SCORCHED_VENUS_ROCK);
+        generator.createTrivialCube(VOLCANIC_ROCK);
+        generator.createTrivialCube(PUMICE);
 //        generator.registerSimpleState(VAPOR_SPOUT);
 
 //        generator.registerSimpleState(WALKWAY);
@@ -177,22 +183,22 @@ public class GalacticraftModelProvider extends FabricModelProvider {
 //        generator.registerSimpleState(CLEAR_VACUUM_GLASS);
 //        generator.registerSimpleState(STRONG_VACUUM_GLASS);
 
-        generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(MOON_CHEESE_BLOCK).coordinate(
-                BlockStateVariantMap.create(Properties.BITES)
-                        .register(0, BlockStateVariant.create().put(VariantSettings.MODEL, ModelIds.getBlockModelId(MOON_CHEESE_BLOCK)))
-                        .register(1, BlockStateVariant.create().put(VariantSettings.MODEL, ModelIds.getBlockSubModelId(MOON_CHEESE_BLOCK, "_slice1")))
-                        .register(2, BlockStateVariant.create().put(VariantSettings.MODEL, ModelIds.getBlockSubModelId(MOON_CHEESE_BLOCK, "_slice2")))
-                        .register(3, BlockStateVariant.create().put(VariantSettings.MODEL, ModelIds.getBlockSubModelId(MOON_CHEESE_BLOCK, "_slice3")))
-                        .register(4, BlockStateVariant.create().put(VariantSettings.MODEL, ModelIds.getBlockSubModelId(MOON_CHEESE_BLOCK, "_slice4")))
-                        .register(5, BlockStateVariant.create().put(VariantSettings.MODEL, ModelIds.getBlockSubModelId(MOON_CHEESE_BLOCK, "_slice5")))
-                        .register(6, BlockStateVariant.create().put(VariantSettings.MODEL, ModelIds.getBlockSubModelId(MOON_CHEESE_BLOCK, "_slice6")))
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(MOON_CHEESE_BLOCK).with(
+                PropertyDispatch.property(BlockStateProperties.BITES)
+                        .select(0, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(MOON_CHEESE_BLOCK)))
+                        .select(1, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(MOON_CHEESE_BLOCK, "_slice1")))
+                        .select(2, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(MOON_CHEESE_BLOCK, "_slice2")))
+                        .select(3, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(MOON_CHEESE_BLOCK, "_slice3")))
+                        .select(4, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(MOON_CHEESE_BLOCK, "_slice4")))
+                        .select(5, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(MOON_CHEESE_BLOCK, "_slice5")))
+                        .select(6, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(MOON_CHEESE_BLOCK, "_slice6")))
         ));
-        generator.registerSimpleCubeAll(SILICON_BLOCK);
-        generator.registerSimpleCubeAll(METEORIC_IRON_BLOCK);
-        generator.registerSimpleCubeAll(DESH_BLOCK);
-        generator.registerSimpleCubeAll(TITANIUM_BLOCK);
-        generator.registerSimpleCubeAll(LEAD_BLOCK);
-        generator.registerSimpleCubeAll(LUNAR_SAPPHIRE_BLOCK);
+        generator.createTrivialCube(SILICON_BLOCK);
+        generator.createTrivialCube(METEORIC_IRON_BLOCK);
+        generator.createTrivialCube(DESH_BLOCK);
+        generator.createTrivialCube(TITANIUM_BLOCK);
+        generator.createTrivialCube(LEAD_BLOCK);
+        generator.createTrivialCube(LUNAR_SAPPHIRE_BLOCK);
 
 //        generator.registerSimpleState(LUNAR_CARTOGRAPHY_TABLE);
 
@@ -219,7 +225,7 @@ public class GalacticraftModelProvider extends FabricModelProvider {
     }
 
     @Override
-    public void generateItemModels(ItemModelGenerator itemModelGenerator) {
+    public void generateItemModels(ItemModelGenerators itemModelGenerator) {
 
     }
 }

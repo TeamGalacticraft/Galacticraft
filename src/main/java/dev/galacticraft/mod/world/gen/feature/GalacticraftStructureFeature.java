@@ -27,17 +27,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.structure.MoonPillagerOutpostGenerator;
 import dev.galacticraft.mod.structure.MoonVillageGenerator;
-import net.minecraft.structure.pool.StructurePool;
-import net.minecraft.tag.BiomeTags;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.StructureTerrainAdaptation;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.structure.JigsawStructure;
-import net.minecraft.world.gen.structure.Structure;
-import net.minecraft.world.gen.structure.Structures;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.data.worldgen.Structures;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
+import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 
 public class GalacticraftStructureFeature {
 //    private static final Structure.Config CODEC = RecordCodecBuilder.create((instance) -> instance.group(
@@ -46,13 +41,13 @@ public class GalacticraftStructureFeature {
 //    ).apply(instance, Structure.Config::new));
 
     public static final JigsawStructure MOON_PILLAGER_OUTPOST = MoonPillagerOutpostFeature.createStructure();
-    public static final MoonRuinsFeature MOON_RUINS = new MoonRuinsFeature(Structures.createConfig(BiomeTags.VILLAGE_PLAINS_HAS_STRUCTURE, StructureTerrainAdaptation.BEARD_THIN));
+    public static final MoonRuinsFeature MOON_RUINS = new MoonRuinsFeature(Structures.structure(BiomeTags.HAS_VILLAGE_PLAINS, TerrainAdjustment.BEARD_THIN));
 
     public static void register() {
         MoonPillagerOutpostGenerator.register();
         MoonVillageGenerator.register();
 
-        BuiltinRegistries.add(BuiltinRegistries.STRUCTURE, new Identifier(Constant.MOD_ID, "moon_pillager_outpost"), GalacticraftStructureFeature.MOON_PILLAGER_OUTPOST);
+        BuiltinRegistries.register(BuiltinRegistries.STRUCTURES, new ResourceLocation(Constant.MOD_ID, "moon_pillager_outpost"), GalacticraftStructureFeature.MOON_PILLAGER_OUTPOST);
 //        FabricStructureBuilder.create(new Identifier(Constant.MOD_ID, "moon_ruins"), GalacticraftStructureFeature.MOON_RUINS)
 //                .step(GenerationStep.Feature.SURFACE_STRUCTURES)
 //                .defaultConfig(24, 8, 1903453)

@@ -23,29 +23,29 @@
 package dev.galacticraft.mod.block.machine;
 
 import dev.galacticraft.mod.block.entity.RefineryBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RefineryBlock extends SimpleMachineBlock<RefineryBlockEntity> {
-    public RefineryBlock(Settings settings) {
+    public RefineryBlock(Properties settings) {
         super(settings, RefineryBlockEntity::new);
     }
 
     @Override
-    public RefineryBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public RefineryBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new RefineryBlockEntity(pos, state);
     }
 
     @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        super.randomDisplayTick(state, world, pos, random);
-        if (state.get(ACTIVE)) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
+        super.animateTick(state, world, pos, random);
+        if (state.getValue(ACTIVE)) {
             world.addParticle(ParticleTypes.SMOKE, pos.getX() + random.nextDouble(), pos.getY() + 1, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
         }
     }

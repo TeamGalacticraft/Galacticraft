@@ -25,10 +25,6 @@ package dev.galacticraft.mod.world.gen.feature;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.structure.MoonPillagerOutpostGenerator;
 import dev.galacticraft.mod.structure.MoonVillageGenerator;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.world.gen.feature.*;
 
 public class GalacticraftConfiguredStructureFeature { // TODO: Biome tags
 //    public static final ConfiguredStructureFeature<StructurePoolFeatureConfig, ? extends StructureFeature<StructurePoolFeatureConfig>> MOON_PILLAGER_OUTPOST = GalacticraftStructureFeature.MOON_PILLAGER_OUTPOST.configure(new StructurePoolFeatureConfig(MoonPillagerOutpostGenerator.ENTERANCE_POOL, 10), null);

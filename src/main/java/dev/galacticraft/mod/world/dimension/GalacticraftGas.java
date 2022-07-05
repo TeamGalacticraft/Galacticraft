@@ -24,28 +24,28 @@ package dev.galacticraft.mod.world.dimension;
 
 import dev.galacticraft.api.gas.GasFluid;
 import dev.galacticraft.mod.Constant;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftGas {
-    public static final Identifier NITROGEN_OXIDE_ID = new Identifier(Constant.MOD_ID, "nitrogen_oxide");
+    public static final ResourceLocation NITROGEN_OXIDE_ID = new ResourceLocation(Constant.MOD_ID, "nitrogen_oxide");
     public static final Fluid NITROGEN_OXIDE =
             GasFluid.create(
-                    Text.translatable("ui.galacticraft.nitrogen_oxide"),
-                    new Identifier(Constant.MOD_ID, "gas/nitrogen_oxide"),
+                    Component.translatable("ui.galacticraft.nitrogen_oxide"),
+                    new ResourceLocation(Constant.MOD_ID, "gas/nitrogen_oxide"),
                     "NO"
             );
 
-    public static final Identifier HYDROGEN_DEUTERIUM_OXYGEN_ID = new Identifier(Constant.MOD_ID, "hydrogen_deuterium_oxygen");
+    public static final ResourceLocation HYDROGEN_DEUTERIUM_OXYGEN_ID = new ResourceLocation(Constant.MOD_ID, "hydrogen_deuterium_oxygen");
     public static final Fluid HYDROGEN_DEUTERIUM_OXYGEN =
             GasFluid.create(
-                    Text.translatable("ui.galacticraft.hydrogen_deuterium_oxygen"),
-                    new Identifier(Constant.MOD_ID, "gas/hydrogen_deuterium_oxygen"),
+                    Component.translatable("ui.galacticraft.hydrogen_deuterium_oxygen"),
+                    new ResourceLocation(Constant.MOD_ID, "gas/hydrogen_deuterium_oxygen"),
                     "HDO"
             );
 

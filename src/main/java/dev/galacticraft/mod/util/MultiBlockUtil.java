@@ -23,10 +23,10 @@
 package dev.galacticraft.mod.util;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import net.minecraft.core.BlockPos;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -38,7 +38,7 @@ public class MultiBlockUtil {
     public static List<BlockPos> generateSolarPanelParts() {
         ImmutableList.Builder<BlockPos> parts = ImmutableList.builder();
         BlockPos rod = new BlockPos(0, 1, 0);
-        BlockPos mid = rod.up();
+        BlockPos mid = rod.above();
         BlockPos front = mid.north();
         BlockPos back = mid.south();
 

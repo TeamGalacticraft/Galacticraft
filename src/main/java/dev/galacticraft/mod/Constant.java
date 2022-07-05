@@ -36,13 +36,13 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.text.Style;
-import net.minecraft.text.TextColor;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import team.reborn.energy.api.EnergyStorage;
@@ -57,8 +57,8 @@ public interface Constant {
     String ADDON_API_ID = "galacticraft-api";
     String COMMON_NAMESPACE = "c";
 
-    static Identifier id(String id) {
-        return new Identifier(MOD_ID, id);  
+    static ResourceLocation id(String id) {
+        return new ResourceLocation(MOD_ID, id);  
     }
 
     interface Block {
@@ -344,8 +344,8 @@ public interface Constant {
         String OXYGEN_GAS = "oxygen_gas";
         String LIQUID_OXYGEN = "liquid_oxygen";
 
-        static Identifier getId(String s) {
-            return new Identifier(Constant.MOD_ID, "block/" + s);
+        static ResourceLocation getId(String s) {
+            return new ResourceLocation(Constant.MOD_ID, "block/" + s);
         }
     }
 
@@ -566,33 +566,33 @@ public interface Constant {
     }
 
     interface ScreenTexture {
-        Identifier COAL_GENERATOR_SCREEN = id("textures/gui/coal_generator_screen.png");
-        Identifier SOLAR_PANEL_SCREEN = id("textures/gui/solar_panel_screen.png");
-        Identifier CIRCUIT_FABRICATOR_SCREEN = id("textures/gui/circuit_fabricator_screen.png");
-        Identifier REFINERY_SCREEN = id("textures/gui/refinery_screen.png");
-        Identifier ELECTRIC_FURNACE_SCREEN = id("textures/gui/electric_furnace_screen.png");
-        Identifier ELECTRIC_ARC_FURNACE_SCREEN = id("textures/gui/electric_arc_furnace_screen.png");
-        Identifier COMPRESSOR_SCREEN = id("textures/gui/compressor_screen.png");
-        Identifier ELECTRIC_COMPRESSOR_SCREEN = id("textures/gui/electric_compressor_screen.png");
-        Identifier ENERGY_STORAGE_MODULE_SCREEN = id("textures/gui/energy_storage_module_screen.png");
-        Identifier OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
+        ResourceLocation COAL_GENERATOR_SCREEN = id("textures/gui/coal_generator_screen.png");
+        ResourceLocation SOLAR_PANEL_SCREEN = id("textures/gui/solar_panel_screen.png");
+        ResourceLocation CIRCUIT_FABRICATOR_SCREEN = id("textures/gui/circuit_fabricator_screen.png");
+        ResourceLocation REFINERY_SCREEN = id("textures/gui/refinery_screen.png");
+        ResourceLocation ELECTRIC_FURNACE_SCREEN = id("textures/gui/electric_furnace_screen.png");
+        ResourceLocation ELECTRIC_ARC_FURNACE_SCREEN = id("textures/gui/electric_arc_furnace_screen.png");
+        ResourceLocation COMPRESSOR_SCREEN = id("textures/gui/compressor_screen.png");
+        ResourceLocation ELECTRIC_COMPRESSOR_SCREEN = id("textures/gui/electric_compressor_screen.png");
+        ResourceLocation ENERGY_STORAGE_MODULE_SCREEN = id("textures/gui/energy_storage_module_screen.png");
+        ResourceLocation OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
 
-        Identifier MACHINE_CONFIG_PANELS = id("textures/gui/machine_config.png");
-        Identifier PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
-        Identifier PLAYER_INVENTORY_TABS = id("textures/gui/player_inventory_switch_tabs.png");
-        Identifier OVERLAY = id("textures/gui/overlay.png");
+        ResourceLocation MACHINE_CONFIG_PANELS = id("textures/gui/machine_config.png");
+        ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
+        ResourceLocation PLAYER_INVENTORY_TABS = id("textures/gui/player_inventory_switch_tabs.png");
+        ResourceLocation OVERLAY = id("textures/gui/overlay.png");
 
-        Identifier MAP_SCREEN = id("textures/gui/map.png");
-        Identifier PLANET_ICONS = id("textures/gui/planet_icons.png");
-        Identifier BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
-        Identifier OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
-        Identifier OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
-        Identifier OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
-        Identifier DEFAULT_SOLAR_PANELS = id("textures/solar_panel/default_solar_panels.png");
-        Identifier DEFAULT_LIGHT_SOURCES = id("textures/solar_panel/default_light_sources.png");
-        Identifier MOON_LIGHT_SOURCES = id("textures/solar_panel/moon_light_sources.png");
+        ResourceLocation MAP_SCREEN = id("textures/gui/map.png");
+        ResourceLocation PLANET_ICONS = id("textures/gui/planet_icons.png");
+        ResourceLocation BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
+        ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
+        ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
+        ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
+        ResourceLocation DEFAULT_SOLAR_PANELS = id("textures/solar_panel/default_solar_panels.png");
+        ResourceLocation DEFAULT_LIGHT_SOURCES = id("textures/solar_panel/default_light_sources.png");
+        ResourceLocation MOON_LIGHT_SOURCES = id("textures/solar_panel/moon_light_sources.png");
 
-        Identifier REI_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
+        ResourceLocation REI_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
     }
 
     interface SlotSprite {
@@ -743,7 +743,7 @@ public interface Constant {
         }
 
         interface Gas {
-            Predicate<FluidVariant> OXYGEN = v -> v.getFluid().isIn(GalacticraftTag.OXYGEN);
+            Predicate<FluidVariant> OXYGEN = v -> v.getFluid().is(GalacticraftTag.OXYGEN);
         }
 
         interface Fluid {
@@ -755,25 +755,25 @@ public interface Constant {
 
     interface Text {
         interface Color {
-            Style DARK_GRAY_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
-            Style GOLD_STYLE = Style.EMPTY.withColor(Formatting.GOLD);
-            Style GREEN_STYLE = Style.EMPTY.withColor(Formatting.GREEN);
-            Style RED_STYLE = Style.EMPTY.withColor(Formatting.RED);
-            Style BLUE_STYLE = Style.EMPTY.withColor(Formatting.BLUE);
-            Style AQUA_STYLE = Style.EMPTY.withColor(Formatting.AQUA);
-            Style GRAY_STYLE = Style.EMPTY.withColor(Formatting.GRAY);
-            Style DARK_RED_STYLE = Style.EMPTY.withColor(Formatting.DARK_RED);
-            Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(Formatting.LIGHT_PURPLE);
-            Style YELLOW_STYLE = Style.EMPTY.withColor(Formatting.YELLOW);
-            Style WHITE_STYLE = Style.EMPTY.withColor(Formatting.WHITE);
-            Style DARK_BLUE_STYLE = Style.EMPTY.withColor(Formatting.DARK_BLUE);
+            Style DARK_GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_GRAY);
+            Style GOLD_STYLE = Style.EMPTY.withColor(ChatFormatting.GOLD);
+            Style GREEN_STYLE = Style.EMPTY.withColor(ChatFormatting.GREEN);
+            Style RED_STYLE = Style.EMPTY.withColor(ChatFormatting.RED);
+            Style BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.BLUE);
+            Style AQUA_STYLE = Style.EMPTY.withColor(ChatFormatting.AQUA);
+            Style GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY);
+            Style DARK_RED_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_RED);
+            Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(ChatFormatting.LIGHT_PURPLE);
+            Style YELLOW_STYLE = Style.EMPTY.withColor(ChatFormatting.YELLOW);
+            Style WHITE_STYLE = Style.EMPTY.withColor(ChatFormatting.WHITE);
+            Style DARK_BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_BLUE);
 
             static Style getStorageLevelColor(double scale) {
                 return Style.EMPTY.withColor(TextColor.fromRgb(((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8)));
             }
 
             static Style getRainbow(int ticks) {
-                return Style.EMPTY.withColor(TextColor.fromRgb(MathHelper.hsvToRgb(ticks / 1000.0f, 1, 1)));
+                return Style.EMPTY.withColor(TextColor.fromRgb(Mth.hsvToRgb(ticks / 1000.0f, 1, 1)));
             }
         }
         
@@ -833,7 +833,7 @@ public interface Constant {
     }
 
     interface Property {
-        BooleanProperty ACTIVE = BooleanProperty.of("active");
+        BooleanProperty ACTIVE = BooleanProperty.create("active");
     }
 
     interface Energy {
@@ -843,7 +843,7 @@ public interface Constant {
 
     @ApiStatus.Internal
     interface Misc {
-        Identifier EMPTY = new Identifier("empty");
+        ResourceLocation EMPTY = new ResourceLocation("empty");
         Direction[] DIRECTIONS = Direction.values();
         String LOGGER_PREFIX = "[Galacticraft] ";
         boolean DEBUG = false;

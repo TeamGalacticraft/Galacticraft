@@ -27,9 +27,8 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.BasicSolarPanelBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import java.util.List;
 
 /**
@@ -37,14 +36,14 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public class BasicSolarPanelScreen extends SolarPanelScreen<BasicSolarPanelBlockEntity, SimpleMachineScreenHandler<BasicSolarPanelBlockEntity>> {
-    public BasicSolarPanelScreen(SimpleMachineScreenHandler<BasicSolarPanelBlockEntity> handler, PlayerInventory inv, Text title) {
+    public BasicSolarPanelScreen(SimpleMachineScreenHandler<BasicSolarPanelBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title);
     }
 
     @Override
-    public void appendEnergyTooltip(List<Text> list) {
+    public void appendEnergyTooltip(List<Component> list) {
         if (this.machine.getStatus().type().isActive()) {
-            list.add(Text.translatable("ui.galacticraft.machine.gj_per_t", this.machine.currentEnergyGeneration).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+            list.add(Component.translatable("ui.galacticraft.machine.gj_per_t", this.machine.currentEnergyGeneration).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
         }
     }
 }

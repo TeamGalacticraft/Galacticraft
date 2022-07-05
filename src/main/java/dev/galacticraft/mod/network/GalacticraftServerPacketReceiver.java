@@ -27,9 +27,9 @@ import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.SimpleMenuProvider;
 
 /**
  * Handles server-bound (C2S) packets.
@@ -37,12 +37,12 @@ import net.minecraft.util.Identifier;
  */
 public class GalacticraftServerPacketReceiver {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory(GalacticraftPlayerInventoryScreenHandler::new, Text.empty()))));
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openMenu(new SimpleMenuProvider(GalacticraftPlayerInventoryScreenHandler::new, Component.empty()))));
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "bubble_max"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "bubble_max"), (server, player, handler, buf, responseSender) -> {
             byte max = buf.readByte();
             server.execute(() -> {
-                if (player.currentScreenHandler instanceof BubbleDistributorScreenHandler sHandler) {
+                if (player.containerMenu instanceof BubbleDistributorScreenHandler sHandler) {
                     BubbleDistributorBlockEntity machine = sHandler.machine;
                     if (machine.getSecurity().hasAccess(player)) {
                         if (max > 0) {
@@ -53,10 +53,10 @@ public class GalacticraftServerPacketReceiver {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "bubble_visible"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "bubble_visible"), (server, player, handler, buf, responseSender) -> {
             boolean visible = buf.readBoolean();
             server.execute(() -> {
-                if (player.currentScreenHandler instanceof BubbleDistributorScreenHandler sHandler) {
+                if (player.containerMenu instanceof BubbleDistributorScreenHandler sHandler) {
                     BubbleDistributorBlockEntity machine = sHandler.machine;
                     if (machine.getSecurity().hasAccess(player)) {
                         machine.bubbleVisible = visible;

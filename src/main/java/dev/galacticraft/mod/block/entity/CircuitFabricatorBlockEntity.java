@@ -43,20 +43,20 @@ import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,10 +65,10 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inventory, FabricationRecipe> implements Tier1EnergyMachine {
-    private static final SlotType<Item, ItemVariant> DIAMOND_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "diamond_input"), TextColor.fromRgb(0xFF0000), Text.translatable("slot_type.galacticraft.diamond_input"), v -> v.getItem() == Items.DIAMOND, ResourceFlow.INPUT, ResourceType.ITEM);
-    private static final SlotType<Item, ItemVariant> SILICON_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "silicon_input"), TextColor.fromRgb(0xFF0000), Text.translatable("slot_type.galacticraft.silicon_input"), v -> v.getItem() == GalacticraftItem.RAW_SILICON, ResourceFlow.INPUT, ResourceType.ITEM);
-    private static final SlotType<Item, ItemVariant> REDSTONE_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "redstone_input"), TextColor.fromRgb(0xFF0000), Text.translatable("slot_type.galacticraft.redstone_input"), v -> v.getItem() == Items.REDSTONE, ResourceFlow.INPUT, ResourceType.ITEM);
+public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Container, FabricationRecipe> implements Tier1EnergyMachine {
+    private static final SlotType<Item, ItemVariant> DIAMOND_INPUT = SlotType.create(new ResourceLocation(Constant.MOD_ID, "diamond_input"), TextColor.fromRgb(0xFF0000), Component.translatable("slot_type.galacticraft.diamond_input"), v -> v.getItem() == Items.DIAMOND, ResourceFlow.INPUT, ResourceType.ITEM);
+    private static final SlotType<Item, ItemVariant> SILICON_INPUT = SlotType.create(new ResourceLocation(Constant.MOD_ID, "silicon_input"), TextColor.fromRgb(0xFF0000), Component.translatable("slot_type.galacticraft.silicon_input"), v -> v.getItem() == GalacticraftItem.RAW_SILICON, ResourceFlow.INPUT, ResourceType.ITEM);
+    private static final SlotType<Item, ItemVariant> REDSTONE_INPUT = SlotType.create(new ResourceLocation(Constant.MOD_ID, "redstone_input"), TextColor.fromRgb(0xFF0000), Component.translatable("slot_type.galacticraft.redstone_input"), v -> v.getItem() == Items.REDSTONE, ResourceFlow.INPUT, ResourceType.ITEM);
 
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT_DIAMOND = 1;
@@ -78,7 +78,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     public static final int INPUT_SLOT = 5;
     public static final int OUTPUT_SLOT = 6;
 
-    private final Inventory craftingInv = this.itemStorage().subInv(INPUT_SLOT, 1);
+    private final Container craftingInv = this.itemStorage().subInv(INPUT_SLOT, 1);
 
     public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.CIRCUIT_FABRICATOR, pos, state, GalacticraftRecipe.FABRICATION_TYPE);
@@ -103,7 +103,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     }
 
     @Override
-    public void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         super.tickConstant(world, pos, state);
         world.getProfiler().push("charge");
         this.attemptChargeFromStack(CHARGE_SLOT);
@@ -119,13 +119,13 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     }
 
     @Override
-    public @NotNull Inventory craftingInv() {
+    public @NotNull Container craftingInv() {
         return this.craftingInv;
     }
 
     @Override
     protected boolean outputStacks(@NotNull FabricationRecipe recipe, @NotNull TransactionContext context) {
-        ItemStack output = recipe.getOutput();
+        ItemStack output = recipe.getResultItem();
         try (Transaction transaction = Transaction.openNested(context)) {
             if (this.itemStorage().insert(OUTPUT_SLOT, ItemVariant.of(output), output.getCount(), transaction) == output.getCount()) {
                 transaction.commit();
@@ -160,7 +160,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
     }
 
     @Override
-    protected @NotNull Optional<FabricationRecipe> findValidRecipe(@NotNull World world) {
+    protected @NotNull Optional<FabricationRecipe> findValidRecipe(@NotNull Level world) {
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.itemStorage().getSlot(INPUT_SLOT_DIAMOND).simulateExtract(ItemVariant.of(Items.DIAMOND), 1, transaction) == 1
                     && this.itemStorage().getSlot(INPUT_SLOT_SILICON).simulateExtract(ItemVariant.of(GalacticraftItem.RAW_SILICON), 1, transaction) == 1
@@ -179,7 +179,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Inven
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) {
             return RecipeMachineScreenHandler.create(
                     syncId,

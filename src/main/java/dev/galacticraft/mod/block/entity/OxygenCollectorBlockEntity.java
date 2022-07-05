@@ -40,15 +40,15 @@ import dev.galacticraft.mod.screen.OxygenCollectorScreenHandler;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CropBlock;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,8 +68,8 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void setWorld(World world) {
-        super.setWorld(world);
+    public void setLevel(Level world) {
+        super.setLevel(world);
         CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(world).orElse(null);
         this.oxygenWorld = body == null || body.atmosphere().breathable();
     }
@@ -86,7 +86,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 .build();
     }
 
-    private int collectOxygen(@NotNull ServerWorld world, @NotNull BlockPos pos) {
+    private int collectOxygen(@NotNull ServerLevel world, @NotNull BlockPos pos) {
         if (!this.oxygenWorld) {
             int minX = pos.getX() - 5;
             int minY = pos.getY() - 5;
@@ -97,12 +97,12 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
 
             float leafBlocks = 0;
 
-            for (BlockPos pos1 : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
+            for (BlockPos pos1 : BlockPos.betweenClosed(minX, minY, minZ, maxX, maxY, maxZ)) {
                 BlockState state = world.getBlockState(pos1);
                 if (state.isAir()) {
                     continue;
                 }
-                if (state.getBlock() instanceof LeavesBlock && !state.get(LeavesBlock.PERSISTENT)) {
+                if (state.getBlock() instanceof LeavesBlock && !state.getValue(LeavesBlock.PERSISTENT)) {
                     leafBlocks++;
                 } else if (state.getBlock() instanceof CropBlock) {
                     leafBlocks += 0.75F;
@@ -118,18 +118,18 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         super.tickConstant(world, pos, state);
         this.attemptChargeFromStack(CHARGE_SLOT);
     }
 
     @Override
-    protected @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         world.getProfiler().push("transfer");
         this.trySpreadFluids(world);
 
         if (this.fluidStorage().isFull(OXYGEN_TANK)) return GalacticraftMachineStatus.OXYGEN_TANK_FULL;
-        world.getProfiler().swap("transaction");
+        world.getProfiler().popPush("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate()) {
                 world.getProfiler().push("collect");
@@ -153,7 +153,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new OxygenCollectorScreenHandler(syncId, player, this);
         return null;
     }

@@ -26,12 +26,16 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import net.minecraft.block.*;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.TorchBlock;
+import net.minecraft.world.level.block.WallTorchBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 
 /**
@@ -39,23 +43,23 @@ import org.spongepowered.asm.mixin.Mixin;
  */
 @Mixin(TorchBlock.class)
 public abstract class TorchBlockMixin extends Block {
-    public TorchBlockMixin(Settings settings) {
+    public TorchBlockMixin(Properties settings) {
         super(settings);
     }
 
     @Override
     @Deprecated
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
-        super.onBlockAdded(state, world, pos, oldState, moved);
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean moved) {
+        super.onPlace(state, world, pos, oldState, moved);
         CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(world).orElse(null);
         if (body != null && !body.atmosphere().breathable()) {
             if (state.getBlock() == Blocks.TORCH) {
-                world.setBlockState(pos, GalacticraftBlock.UNLIT_TORCH.getDefaultState());
+                world.setBlockAndUpdate(pos, GalacticraftBlock.UNLIT_TORCH.defaultBlockState());
             } else if (state.getBlock() == Blocks.WALL_TORCH) {
-                world.setBlockState(pos, GalacticraftBlock.UNLIT_WALL_TORCH.getDefaultState().with(WallTorchBlock.FACING, state.get(WallTorchBlock.FACING)));
+                world.setBlockAndUpdate(pos, GalacticraftBlock.UNLIT_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, state.getValue(WallTorchBlock.FACING)));
             }
             world.addParticle(ParticleTypes.SMOKE, pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D);
-            world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 1.0F, 0.9F, false);
+            world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1.0F, 0.9F, false);
         }
     }
 }

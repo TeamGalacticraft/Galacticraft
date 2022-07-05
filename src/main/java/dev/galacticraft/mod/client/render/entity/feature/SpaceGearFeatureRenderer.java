@@ -22,41 +22,44 @@
 
 package dev.galacticraft.mod.client.render.entity.feature;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.client.AnimalModelInvoker;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.entity.model.EntityModelPartNames;
-import net.minecraft.client.render.entity.model.SinglePartEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartNames;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
-    private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/oxygen_gear.png");
+public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/entity/oxygen_gear.png");
     private final @Nullable ModelPart mask;
     private final @Nullable ModelPart tank;
     private final @Nullable ModelPart pipe;
 
-    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context) {
+    public SpaceGearFeatureRenderer(RenderLayerParent<T, M> context) {
         super(context);
         ModelPart root, head, body;
-        if (context.getModel() instanceof SinglePartEntityModel<?> model) {
-            root = model.getPart();
-            head = root.getChild(EntityModelPartNames.HEAD);
-            body = root.getChild(EntityModelPartNames.BODY);
-        } else if (context.getModel() instanceof BipedEntityModel<?> model){
+        if (context.getModel() instanceof HierarchicalModel<?> model) {
+            root = model.root();
+            head = root.getChild(PartNames.HEAD);
+            body = root.getChild(PartNames.BODY);
+        } else if (context.getModel() instanceof HumanoidModel<?> model){
             head = model.head;
             body = model.body;
         } else if (context.getModel() instanceof AnimalModelInvoker model){
@@ -68,18 +71,18 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
             this.pipe = null;
             return;
         }
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
         if (head != null) {
-            modelPartData.addChild(Constant.ModelPartName.OXYGEN_MASK, ModelPartBuilder.create().uv(0, 10).cuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, Dilation.NONE), ModelTransform.pivot(head.pivotX, head.pivotY, head.pivotZ));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 10).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
         }
 
         if (body != null) {
-            modelPartData.addChild(Constant.ModelPartName.OXYGEN_TANK, ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, Dilation.NONE), ModelTransform.pivot(body.pivotX, body.pivotY, body.pivotZ));
-            modelPartData.addChild(Constant.ModelPartName.OXYGEN_PIPE, ModelPartBuilder.create().uv(40, 17).cuboid(-2.0F, -3.0F, 0.0F, 4, 5, 8, Dilation.NONE), ModelTransform.pivot(body.pivotX, body.pivotY, body.pivotZ));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, 1.0F, 2.0F, 8, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 17).addBox(-2.0F, -3.0F, 0.0F, 4, 5, 8, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
         }
 
-        root = modelPartData.createPart(64, 32);
+        root = modelPartData.bake(64, 32);
 
         if (head != null) {
             this.mask = root.getChild(Constant.ModelPartName.OXYGEN_MASK);
@@ -97,22 +100,22 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
     }
 
     @Override
-    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(this.getTexture(entity), true));
+    public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
         if (mask != null) {
-            this.mask.yaw = headYaw;
-            this.mask.pitch = headPitch;
-            this.mask.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+            this.mask.yRot = headYaw;
+            this.mask.xRot = headPitch;
+            this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
         if (this.tank != null) {
             assert this.pipe != null;
-            this.tank.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-            this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
+            this.tank.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+            this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
     }
 
     @Override
-    protected Identifier getTexture(T entity) {
+    protected ResourceLocation getTextureLocation(T entity) {
         return TEXTURE;
     }
 }

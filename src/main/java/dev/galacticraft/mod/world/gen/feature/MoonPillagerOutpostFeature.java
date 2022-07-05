@@ -26,35 +26,31 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.structure.MoonPillagerOutpostGenerator;
-import net.minecraft.structure.PlainsVillageData;
-import net.minecraft.structure.StructureGeneratorFactory;
-import net.minecraft.tag.BiomeTags;
-import net.minecraft.util.collection.Pool;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.random.ChunkRandom;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.biome.SpawnSettings;
-import net.minecraft.world.gen.StructureTerrainAdaptation;
-import net.minecraft.world.gen.YOffset;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.heightprovider.ConstantHeightProvider;
-import net.minecraft.world.gen.structure.JigsawStructure;
-import net.minecraft.world.gen.structure.Structure;
-import net.minecraft.world.gen.structure.Structures;
+import net.minecraft.data.worldgen.Structures;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.util.random.WeightedRandomList;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.heightproviders.ConstantHeight;
+import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
+import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonPillagerOutpostFeature {
-    public static final Pool<SpawnSettings.SpawnEntry> MONSTER_SPAWNS = Pool.of(ImmutableList.<SpawnSettings.SpawnEntry>builder().add(new SpawnSettings.SpawnEntry(GalacticraftEntityType.EVOLVED_PILLAGER, 1, 1, 2)).build());
+    public static final WeightedRandomList<MobSpawnSettings.SpawnerData> MONSTER_SPAWNS = WeightedRandomList.create(ImmutableList.<MobSpawnSettings.SpawnerData>builder().add(new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_PILLAGER, 1, 1, 2)).build());
 
     public static JigsawStructure createStructure() {
         return new JigsawStructure(
-                Structures.createConfig(BiomeTags.VILLAGE_PLAINS_HAS_STRUCTURE, StructureTerrainAdaptation.BEARD_THIN),
+                Structures.structure(BiomeTags.HAS_VILLAGE_PLAINS, TerrainAdjustment.BEARD_THIN),
                 MoonPillagerOutpostGenerator.ENTERANCE_POOL, 10,
-                ConstantHeightProvider.create(YOffset.fixed(0)),
+                ConstantHeight.of(VerticalAnchor.absolute(0)),
                 true,
-                Heightmap.Type.WORLD_SURFACE_WG
+                Heightmap.Types.WORLD_SURFACE_WG
         );
     }
 

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.lookup.predicate;
 
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
-import net.minecraft.tag.TagKey;
+import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;

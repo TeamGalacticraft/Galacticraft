@@ -22,18 +22,18 @@
 
 package dev.galacticraft.mod.mixin;
 
-import net.minecraft.loot.LootTables;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(LootTables.class)
+@Mixin(BuiltInLootTables.class)
 public interface LootTablesAccessor {
-    @Invoker
-    static Identifier callRegisterLootTable(Identifier id) {
+    @Invoker("register")
+    static ResourceLocation callRegisterLootTable(ResourceLocation id) {
         throw new UnsupportedOperationException("Invoker was not transformed.");
     }
 }

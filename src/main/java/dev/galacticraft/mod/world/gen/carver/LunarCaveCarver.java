@@ -22,23 +22,25 @@
 
 package dev.galacticraft.mod.world.gen.carver;
 
-import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.carver.*;
-import net.minecraft.world.gen.chunk.AquiferSampler;
-import net.minecraft.world.gen.densityfunction.DensityFunction;
-import net.minecraft.world.tick.OrderedTick;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.chunk.CarvingMask;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.Aquifer;
+import net.minecraft.world.level.levelgen.DensityFunction;
+import net.minecraft.world.level.levelgen.carver.CarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.CarvingContext;
+import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.CaveWorldCarver;
+import net.minecraft.world.ticks.ScheduledTick;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,8 +50,8 @@ import java.util.function.Function;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class LunarCaveCarver extends CaveCarver {
-    public LunarCaveCarver(Codec<CaveCarverConfig> codec) {
+public class LunarCaveCarver extends CaveWorldCarver {
+    public LunarCaveCarver(Codec<CaveCarverConfiguration> codec) {
         super(codec);
 //        this.alwaysCarvableBlocks = ImmutableSet.<Block>builder().addAll(this.alwaysCarvableBlocks) TODO: PORT: replacebles?
 //                .add(GalacticraftBlock.MOON_ROCK)
@@ -61,12 +63,12 @@ public class LunarCaveCarver extends CaveCarver {
     }
 
     @Override
-    protected int getMaxCaveCount() {
+    protected int getCaveBound() {
         return 13;
     }
 
     @Override
-    protected float getTunnelSystemWidth(Random random) {
+    protected float getThickness(RandomSource random) {
         float f = (random.nextFloat() * 2.1F) + random.nextFloat();
         if (random.nextInt(10) == 0) {
             f *= random.nextFloat() * random.nextFloat() * 3.0F + 1.1F; //slightly wider caves
@@ -75,13 +77,13 @@ public class LunarCaveCarver extends CaveCarver {
     }
 
     @Override
-    protected boolean carveAtPoint(CarverContext context, CaveCarverConfig config, @NotNull Chunk chunk, Function<BlockPos, RegistryEntry<Biome>> posToBiome, CarvingMask carvingMask, BlockPos.Mutable mutable, BlockPos.Mutable mutable2, AquiferSampler aquiferSampler, MutableBoolean mutableBoolean) {
+    protected boolean carveBlock(CarvingContext context, CaveCarverConfiguration config, @NotNull ChunkAccess chunk, Function<BlockPos, Holder<Biome>> posToBiome, CarvingMask carvingMask, BlockPos.MutableBlockPos mutable, BlockPos.MutableBlockPos mutable2, Aquifer aquiferSampler, MutableBoolean mutableBoolean) {
         BlockState blockState = chunk.getBlockState(mutable);
-        if (blockState.isOf(GalacticraftBlock.MOON_TURF) || blockState.isOf(Blocks.MYCELIUM)) {
+        if (blockState.is(GalacticraftBlock.MOON_TURF) || blockState.is(Blocks.MYCELIUM)) {
             mutableBoolean.setTrue();
         }
 
-        if (!this.canAlwaysCarveBlock(config, blockState) && !isDebug(config)) {
+        if (!this.canReplaceBlock(config, blockState) && !isDebugEnabled(config)) {
             return false;
         } else {
             BlockState blockState2 = this.getState(context, config, mutable, aquiferSampler);
@@ -89,14 +91,14 @@ public class LunarCaveCarver extends CaveCarver {
                 return false;
             } else {
                 chunk.setBlockState(mutable, blockState2, false);
-                if (aquiferSampler.needsFluidTick() && !blockState2.getFluidState().isEmpty()) {
-                    chunk.getFluidTickScheduler().scheduleTick(OrderedTick.create(blockState2.getFluidState().getFluid(), mutable));
+                if (aquiferSampler.shouldScheduleFluidUpdate() && !blockState2.getFluidState().isEmpty()) {
+                    chunk.getFluidTicks().schedule(ScheduledTick.probe(blockState2.getFluidState().getType(), mutable));
                 }
 
                 if (mutableBoolean.isTrue()) {
-                    mutable2.set(mutable, Direction.DOWN);
-                    if (chunk.getBlockState(mutable2).isOf(GalacticraftBlock.MOON_DIRT)) {
-                        context.applyMaterialRule(posToBiome, chunk, mutable2, !blockState2.getFluidState().isEmpty()).ifPresent(blockStatex -> chunk.setBlockState(mutable2, blockStatex, false));
+                    mutable2.setWithOffset(mutable, Direction.DOWN);
+                    if (chunk.getBlockState(mutable2).is(GalacticraftBlock.MOON_DIRT)) {
+                        context.topMaterial(posToBiome, chunk, mutable2, !blockState2.getFluidState().isEmpty()).ifPresent(blockStatex -> chunk.setBlockState(mutable2, blockStatex, false));
                     }
                 }
 
@@ -106,31 +108,31 @@ public class LunarCaveCarver extends CaveCarver {
     }
 
     @Nullable
-    private BlockState getState(CarverContext context, CaveCarverConfig config, BlockPos pos, AquiferSampler sampler) {
-        if (pos.getY() <= config.lavaLevel.getY(context)) {
+    private BlockState getState(CarvingContext context, CaveCarverConfiguration config, BlockPos pos, Aquifer sampler) {
+        if (pos.getY() <= config.lavaLevel.resolveY(context)) {
             return CAVE_AIR; //LAVA.getBlockState();
         } else {
-            BlockState blockState = sampler.apply(new DensityFunction.UnblendedNoisePos(pos.getX(), pos.getY(), pos.getZ()), 0.0);
+            BlockState blockState = sampler.computeSubstance(new DensityFunction.SinglePointContext(pos.getX(), pos.getY(), pos.getZ()), 0.0);
             if (blockState == null) {
-                return isDebug(config) ? config.debugConfig.getBarrierState() : null;
+                return isDebugEnabled(config) ? config.debugSettings.getBarrierState() : null;
             } else {
-                return isDebug(config) ? getDebugState(config, blockState) : blockState;
+                return isDebugEnabled(config) ? getDebugState(config, blockState) : blockState;
             }
         }
     }
 
-    private static boolean isDebug(CarverConfig config) {
-        return config.debugConfig.isDebugMode();
+    private static boolean isDebugEnabled(CarverConfiguration config) {
+        return config.debugSettings.isDebugMode();
     }
 
-    private static BlockState getDebugState(CarverConfig config, BlockState state) {
-        if (state.isOf(Blocks.AIR)) {
-            return config.debugConfig.getAirState();
-        } else if (state.isOf(Blocks.WATER)) {
-            BlockState blockState = config.debugConfig.getWaterState();
-            return blockState.contains(Properties.WATERLOGGED) ? blockState.with(Properties.WATERLOGGED, true) : blockState;
+    private static BlockState getDebugState(CarverConfiguration config, BlockState state) {
+        if (state.is(Blocks.AIR)) {
+            return config.debugSettings.getAirState();
+        } else if (state.is(Blocks.WATER)) {
+            BlockState blockState = config.debugSettings.getWaterState();
+            return blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, true) : blockState;
         } else {
-            return state.isOf(Blocks.LAVA) ? config.debugConfig.getLavaState() : state;
+            return state.is(Blocks.LAVA) ? config.debugSettings.getLavaState() : state;
         }
     }
 }

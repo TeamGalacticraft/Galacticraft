@@ -22,7 +22,9 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.item.GalacticraftItem;
@@ -34,21 +36,19 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Items;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Items;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftPlayerInventoryScreen extends HandledScreen<GalacticraftPlayerInventoryScreenHandler> {
-    public GalacticraftPlayerInventoryScreen(GalacticraftPlayerInventoryScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, Text.empty());
+public class GalacticraftPlayerInventoryScreen extends AbstractContainerScreen<GalacticraftPlayerInventoryScreenHandler> {
+    public GalacticraftPlayerInventoryScreen(GalacticraftPlayerInventoryScreenHandler handler, Inventory inv, Component title) {
+        super(handler, inv, Component.empty());
     }
 
     public static boolean isCoordinateBetween(int coordinate, int min, int max) {
@@ -58,53 +58,53 @@ public class GalacticraftPlayerInventoryScreen extends HandledScreen<Galacticraf
     }
 
     @Override
-    protected void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
-        if (DrawableUtil.isWithin(mouseX, mouseY, this.x + 129, this.y + 8, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
-            Storage<FluidVariant> storage = ContainerItemContext.withInitial(this.handler.inventory.getStack(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
+    protected void renderTooltip(PoseStack matrices, int mouseX, int mouseY) {
+        if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 129, this.topPos + 8, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
+            Storage<FluidVariant> storage = ContainerItemContext.withInitial(this.menu.inventory.getItem(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
             if (storage != null) {
                 try (Transaction transaction = Transaction.openOuter()) {
                     StorageView<FluidVariant> exact = storage.exactView(transaction, FluidVariant.of(Gases.OXYGEN));
                     if (exact != null) {
-                        this.renderTooltip(matrices, Text.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, exact.getAmount(), exact.getCapacity()), mouseX, mouseY);
+                        this.renderTooltip(matrices, Component.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, exact.getAmount(), exact.getCapacity()), mouseX, mouseY);
                     } else {
                         long l = storage.extract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
-                        this.renderTooltip(matrices, Text.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, l, "???"), mouseX, mouseY);
+                        this.renderTooltip(matrices, Component.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, l, "???"), mouseX, mouseY);
                     }
                 }
             }
-        } else if (DrawableUtil.isWithin(mouseX, mouseY, this.x + 152, this.y + 8, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
-            Storage<FluidVariant> storage = ContainerItemContext.withInitial(this.handler.inventory.getStack(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
+        } else if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 152, this.topPos + 8, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
+            Storage<FluidVariant> storage = ContainerItemContext.withInitial(this.menu.inventory.getItem(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
             if (storage != null) {
                 try (Transaction transaction = Transaction.openOuter()) {
                     StorageView<FluidVariant> exact = storage.exactView(transaction, FluidVariant.of(Gases.OXYGEN));
                     if (exact != null) {
-                        this.renderTooltip(matrices, Text.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, exact.getAmount(), exact.getCapacity()), mouseX, mouseY);
+                        this.renderTooltip(matrices, Component.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, exact.getAmount(), exact.getCapacity()), mouseX, mouseY);
                     } else {
                         long l = storage.extract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
-                        this.renderTooltip(matrices, Text.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, l, "???"), mouseX, mouseY);
+                        this.renderTooltip(matrices, Component.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, l, "???"), mouseX, mouseY);
                     }
                 }
             }
         }
-        super.drawMouseoverTooltip(matrices, mouseX, mouseY);
+        super.renderTooltip(matrices, mouseX, mouseY);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         super.render(matrices, mouseX, mouseY, delta);
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+        this.renderTooltip(matrices, mouseX, mouseY);
 
-        DiffuseLighting.enableGuiDepthLighting();
-        this.itemRenderer.renderInGuiWithOverrides(Items.CRAFTING_TABLE.getDefaultStack(), this.x + 6, this.y - 20);
-        this.itemRenderer.renderInGuiWithOverrides(GalacticraftItem.OXYGEN_MASK.getDefaultStack(), this.x + 35, this.y - 20);
+        Lighting.setupFor3DItems();
+        this.itemRenderer.renderAndDecorateItem(Items.CRAFTING_TABLE.getDefaultInstance(), this.leftPos + 6, this.topPos - 20);
+        this.itemRenderer.renderAndDecorateItem(GalacticraftItem.OXYGEN_MASK.getDefaultInstance(), this.leftPos + 35, this.topPos - 20);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseX), this.x, this.x + 29)
-                && GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseY), this.y - 26, this.y)) {
-            this.client.setScreen(new InventoryScreen(this.handler.player));
+        if (GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseX), this.leftPos, this.leftPos + 29)
+                && GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseY), this.topPos - 26, this.topPos)) {
+            this.minecraft.setScreen(new InventoryScreen(this.menu.player));
             return true;
         }
 
@@ -112,32 +112,32 @@ public class GalacticraftPlayerInventoryScreen extends HandledScreen<Galacticraf
     }
 
     @Override
-    public void drawBackground(MatrixStack matrices, float v, int mouseX, int mouseY) {
+    public void renderBg(PoseStack matrices, float v, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.PLAYER_INVENTORY_SCREEN);
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        Storage<FluidVariant> storage1 = ContainerItemContext.withInitial(this.handler.inventory.getStack(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
+        this.blit(matrices, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        Storage<FluidVariant> storage1 = ContainerItemContext.withInitial(this.menu.inventory.getItem(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
         if (storage1 != null) {
             try (Transaction transaction = Transaction.openOuter()) {
                 StorageView<FluidVariant> exact = storage1.exactView(transaction, FluidVariant.of(Gases.OXYGEN));
                 if (exact != null) {
-                    DrawableUtil.drawOxygenBuffer(matrices, this.x + 129, this.y + 8, exact.getAmount(), exact.getCapacity());
+                    DrawableUtil.drawOxygenBuffer(matrices, this.leftPos + 129, this.topPos + 8, exact.getAmount(), exact.getCapacity());
                 }
             }
         }
-        Storage<FluidVariant> storage2 = ContainerItemContext.withInitial(this.handler.inventory.getStack(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
+        Storage<FluidVariant> storage2 = ContainerItemContext.withInitial(this.menu.inventory.getItem(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
         if (storage2 != null) {
             try (Transaction transaction = Transaction.openOuter()) {
                 StorageView<FluidVariant> exact = storage2.exactView(transaction, FluidVariant.of(Gases.OXYGEN));
                 if (exact != null) {
-                    DrawableUtil.drawOxygenBuffer(matrices, this.x + 152, this.y + 8, exact.getAmount(), exact.getCapacity());
+                    DrawableUtil.drawOxygenBuffer(matrices, this.leftPos + 152, this.topPos + 8, exact.getAmount(), exact.getCapacity());
                 }
             }
         }
 
-        InventoryScreen.drawEntity(this.x + 51, this.y + 75, 30, (float) (this.x + 51) - mouseX, (float) (this.y + 75 - 50) - mouseY, this.client.player);
+        InventoryScreen.renderEntityInInventory(this.leftPos + 51, this.topPos + 75, 30, (float) (this.leftPos + 51) - mouseX, (float) (this.topPos + 75 - 50) - mouseY, this.minecraft.player);
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.PLAYER_INVENTORY_TABS);
-        this.drawTexture(matrices, this.x, this.y - 28, 0, 32, 57, 62);
+        this.blit(matrices, this.leftPos, this.topPos - 28, 0, 32, 57, 62);
     }
 }

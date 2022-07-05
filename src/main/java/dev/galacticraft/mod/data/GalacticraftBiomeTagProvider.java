@@ -24,12 +24,12 @@ package dev.galacticraft.mod.data;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.biome.Biome;
 
 public class GalacticraftBiomeTagProvider extends FabricTagProvider.DynamicRegistryTagProvider<Biome> {
     protected GalacticraftBiomeTagProvider(FabricDataGenerator dataGenerator) {
-        super(dataGenerator, Registry.BIOME_KEY);
+        super(dataGenerator, Registry.BIOME_REGISTRY);
     }
 
     @Override

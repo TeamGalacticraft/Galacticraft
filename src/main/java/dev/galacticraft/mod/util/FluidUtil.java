@@ -29,9 +29,9 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,7 +52,7 @@ public class FluidUtil {
         return GenericStorageUtil.move(variant, from, to, maxAmount, transaction);
     }
 
-    public static boolean canAccessFluid(World world, BlockPos offset, @NotNull Direction direction) {
+    public static boolean canAccessFluid(Level world, BlockPos offset, @NotNull Direction direction) {
         Storage<FluidVariant> fluidVariantStorage = FluidStorage.SIDED.find(world, offset, direction.getOpposite());
         return fluidVariantStorage != null && (fluidVariantStorage.supportsExtraction() || fluidVariantStorage.supportsInsertion());
     }

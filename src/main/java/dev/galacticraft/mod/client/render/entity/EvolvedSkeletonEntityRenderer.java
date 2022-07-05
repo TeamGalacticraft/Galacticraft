@@ -23,15 +23,15 @@
 package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.client.render.entity.feature.SpaceGearFeatureRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.SkeletonEntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.SkeletonRenderer;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class EvolvedSkeletonEntityRenderer extends SkeletonEntityRenderer {
-    public EvolvedSkeletonEntityRenderer(EntityRendererFactory.Context context) {
+public class EvolvedSkeletonEntityRenderer extends SkeletonRenderer {
+    public EvolvedSkeletonEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
-        this.addFeature(new SpaceGearFeatureRenderer<>(this));
+        this.addLayer(new SpaceGearFeatureRenderer<>(this));
     }
 }

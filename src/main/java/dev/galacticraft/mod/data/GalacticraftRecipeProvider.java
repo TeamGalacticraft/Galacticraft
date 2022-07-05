@@ -24,8 +24,7 @@ package dev.galacticraft.mod.data;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
-
+import net.minecraft.data.recipes.FinishedRecipe;
 import java.util.function.Consumer;
 
 public class GalacticraftRecipeProvider extends FabricRecipeProvider {
@@ -34,6 +33,6 @@ public class GalacticraftRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    protected void generateRecipes(Consumer<RecipeJsonProvider> exporter) {
+    protected void generateRecipes(Consumer<FinishedRecipe> exporter) {
     }
 }

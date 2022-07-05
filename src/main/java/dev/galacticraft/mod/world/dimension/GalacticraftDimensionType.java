@@ -25,25 +25,23 @@ package dev.galacticraft.mod.world.dimension;
 import com.mojang.serialization.Lifecycle;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.tag.GalacticraftTag;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.intprovider.ConstantIntProvider;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.MutableRegistry;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.dimension.DimensionType;
-
 import java.util.OptionalLong;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftDimensionType {
-    public static final RegistryKey<World> MOON_KEY = RegistryKey.of(Registry.WORLD_KEY, new Identifier(Constant.MOD_ID, "moon"));
-    public static final RegistryKey<DimensionType> MOON_DIMENSION_TYPE_KEY = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, MOON_KEY.getValue());
-    public static final RegistryKey<DimensionOptions> MOON_DIMENSION_OPTIONS_KEY = RegistryKey.of(Registry.DIMENSION_KEY, MOON_KEY.getValue());
+    public static final ResourceKey<Level> MOON_KEY = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon"));
+    public static final ResourceKey<DimensionType> MOON_DIMENSION_TYPE_KEY = ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, MOON_KEY.location());
+    public static final ResourceKey<LevelStem> MOON_DIMENSION_OPTIONS_KEY = ResourceKey.create(Registry.LEVEL_STEM_REGISTRY, MOON_KEY.location());
 
     private static final DimensionType MOON = new DimensionType(
             OptionalLong.empty(),
@@ -58,12 +56,12 @@ public class GalacticraftDimensionType {
             384,
             384,
             GalacticraftTag.INFINIBURN_MOON,
-            MOON_KEY.getValue(),
+            MOON_KEY.location(),
             0.1F,
-            new DimensionType.MonsterSettings(false, false, ConstantIntProvider.create(11), 15)
+            new DimensionType.MonsterSettings(false, false, ConstantInt.of(11), 15)
     );
 
     public static void register(Registry<DimensionType> registry) {
-        BuiltinRegistries.add(registry,MOON_DIMENSION_TYPE_KEY, MOON);
+        BuiltinRegistries.register(registry,MOON_DIMENSION_TYPE_KEY, MOON);
     }
 }

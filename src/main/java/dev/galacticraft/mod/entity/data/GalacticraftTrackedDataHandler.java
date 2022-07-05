@@ -24,21 +24,21 @@ package dev.galacticraft.mod.entity.data;
 
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.part.RocketPartType;
-import net.minecraft.entity.data.TrackedDataHandler;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.resources.ResourceLocation;
 
 public class GalacticraftTrackedDataHandler {
-    public static final TrackedDataHandler<LaunchStage> LAUNCH_STAGE = new TrackedDataHandler<>() {
+    public static final EntityDataSerializer<LaunchStage> LAUNCH_STAGE = new EntityDataSerializer<>() {
         @Override
-        public void write(PacketByteBuf buf, LaunchStage stage) {
-            buf.writeEnumConstant(stage);
+        public void write(FriendlyByteBuf buf, LaunchStage stage) {
+            buf.writeEnum(stage);
         }
 
         @Override
-        public LaunchStage read(PacketByteBuf buf) {
-            return buf.readEnumConstant(LaunchStage.class);
+        public LaunchStage read(FriendlyByteBuf buf) {
+            return buf.readEnum(LaunchStage.class);
         }
 
         @Override
@@ -47,14 +47,14 @@ public class GalacticraftTrackedDataHandler {
         }
     };
 
-    public static final TrackedDataHandler<Double> DOUBLE = new TrackedDataHandler<>() {
+    public static final EntityDataSerializer<Double> DOUBLE = new EntityDataSerializer<>() {
         @Override
-        public void write(PacketByteBuf buf, Double value) {
+        public void write(FriendlyByteBuf buf, Double value) {
             buf.writeDouble(value);
         }
 
         @Override
-        public Double read(PacketByteBuf buf) {
+        public Double read(FriendlyByteBuf buf) {
             return buf.readDouble();
         }
 
@@ -64,39 +64,39 @@ public class GalacticraftTrackedDataHandler {
         }
     };
 
-    public static final TrackedDataHandler<Identifier[]> ROCKET_PART_IDS = new TrackedDataHandler<>() {
+    public static final EntityDataSerializer<ResourceLocation[]> ROCKET_PART_IDS = new EntityDataSerializer<>() {
         @Override
-        public void write(PacketByteBuf buf, Identifier[] parts) {
+        public void write(FriendlyByteBuf buf, ResourceLocation[] parts) {
             for (byte i = 0; i < RocketPartType.values().length; i++) {
                 buf.writeBoolean(parts[i] != null);
                 if (parts[i] != null) {
-                    buf.writeIdentifier(parts[i]);
+                    buf.writeResourceLocation(parts[i]);
                 }
             }
         }
 
         @Override
-        public Identifier[] read(PacketByteBuf buf) {
-            Identifier[] array = new Identifier[RocketPartType.values().length];
+        public ResourceLocation[] read(FriendlyByteBuf buf) {
+            ResourceLocation[] array = new ResourceLocation[RocketPartType.values().length];
             for (byte i = 0; i < RocketPartType.values().length; i++) {
                 if (buf.readBoolean()) {
-                    array[i] = buf.readIdentifier();
+                    array[i] = buf.readResourceLocation();
                 }
             }
             return array;
         }
 
         @Override
-        public Identifier[] copy(Identifier[] buf) {
-            Identifier[] parts = new Identifier[RocketPartType.values().length];
+        public ResourceLocation[] copy(ResourceLocation[] buf) {
+            ResourceLocation[] parts = new ResourceLocation[RocketPartType.values().length];
             System.arraycopy(buf, 0, parts, 0, buf.length);
             return parts;
         }
     };
 
     public static void register() {
-        TrackedDataHandlerRegistry.register(LAUNCH_STAGE);
-        TrackedDataHandlerRegistry.register(DOUBLE);
-        TrackedDataHandlerRegistry.register(ROCKET_PART_IDS);
+        EntityDataSerializers.registerSerializer(LAUNCH_STAGE);
+        EntityDataSerializers.registerSerializer(DOUBLE);
+        EntityDataSerializers.registerSerializer(ROCKET_PART_IDS);
     }
 }

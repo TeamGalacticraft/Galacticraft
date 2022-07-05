@@ -25,18 +25,13 @@ package dev.galacticraft.mod.world.gen.feature;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.structure.MoonRuinsGenerator;
-import net.minecraft.structure.StructureGeneratorFactory;
-import net.minecraft.structure.StructurePiecesCollector;
-import net.minecraft.structure.StructurePiecesGenerator;
-import net.minecraft.structure.pool.StructurePool;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.structure.Structure;
-import net.minecraft.world.gen.structure.StructureType;
-
 import java.util.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureType;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -47,23 +42,23 @@ public class MoonRuinsFeature extends Structure {
 //           Codec.INT.fieldOf("size").forGetter(StructurePoolFeatureConfig::getSize)
 //   ).apply(instance, MoonRuinsFeature::new));
 
-   public MoonRuinsFeature(Structure.Config codec) {
+   public MoonRuinsFeature(Structure.StructureSettings codec) {
       super(codec);
    }
 
-   private static void addPieces(StructurePiecesCollector collector, Structure.Context context) {
-      BlockPos blockPos = new BlockPos(context.chunkPos().getStartX(), 90, context.chunkPos().getStartZ());
-      BlockRotation blockRotation = BlockRotation.random(context.random());
+   private static void addPieces(StructurePiecesBuilder collector, Structure.GenerationContext context) {
+      BlockPos blockPos = new BlockPos(context.chunkPos().getMinBlockX(), 90, context.chunkPos().getMinBlockZ());
+      Rotation blockRotation = Rotation.getRandom(context.random());
       MoonRuinsGenerator.addPiecesToStructure(context.structureTemplateManager(), blockPos, blockRotation, collector, context.random());
    }
 
    @Override
-   public Optional<Structure.StructurePosition> getStructurePosition(Structure.Context context) {
-      return getStructurePosition(context, Heightmap.Type.WORLD_SURFACE_WG, collector -> this.addPieces(collector, context));
+   public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
+      return onTopOfChunkCenter(context, Heightmap.Types.WORLD_SURFACE_WG, collector -> this.addPieces(collector, context));
    }
 
    @Override
-   public StructureType<?> getType() {
+   public StructureType<?> type() {
       return null;//GalacticraftStructureFeature.MOON_RUINS;
    }
 }

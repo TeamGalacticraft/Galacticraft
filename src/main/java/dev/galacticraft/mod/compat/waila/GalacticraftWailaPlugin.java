@@ -26,9 +26,8 @@ import dev.galacticraft.api.block.MachineBlock;
 import dev.galacticraft.api.machine.MachineConfiguration;
 import dev.galacticraft.mod.Constant;
 import mcp.mobius.waila.api.*;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
-
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import java.util.List;
 
 /**
@@ -37,12 +36,12 @@ import java.util.List;
 public class GalacticraftWailaPlugin implements IWailaPlugin {
     private static final IComponentProvider COMPONENT_PROVIDER = new IComponentProvider() {
         @Override
-        public void appendTail(List<Text> tooltip, IDataAccessor accessor, IPluginConfig config) {
+        public void appendTail(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
             if (Screen.hasShiftDown()) {
                 MachineConfiguration configuration = MachineConfiguration.create();
                 configuration.readNbt(accessor.getServerData());
-                tooltip.add(Text.translatable("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneActivation().getName()).setStyle(Constant.Text.Color.RED_STYLE));
-                if (configuration.getSecurity().getOwner() != null) tooltip.add(Text.translatable("ui.galacticraft.machine.security.owned_by", Text.literal(configuration.getSecurity().getOwner().getName()).setStyle(Constant.Text.Color.WHITE_STYLE)).setStyle(Constant.Text.Color.AQUA_STYLE));
+                tooltip.add(Component.translatable("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneActivation().getName()).setStyle(Constant.Text.Color.RED_STYLE));
+                if (configuration.getSecurity().getOwner() != null) tooltip.add(Component.translatable("ui.galacticraft.machine.security.owned_by", Component.literal(configuration.getSecurity().getOwner().getName()).setStyle(Constant.Text.Color.WHITE_STYLE)).setStyle(Constant.Text.Color.AQUA_STYLE));
             }
         }
     };

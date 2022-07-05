@@ -22,34 +22,34 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.EvolvedCreeperEntityModel;
 import dev.galacticraft.mod.client.render.entity.feature.EvolvedCreeperChargeFeatureRenderer;
 import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLayer;
 import dev.galacticraft.mod.entity.EvolvedCreeperEntity;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class EvolvedCreeperEntityRenderer extends MobEntityRenderer<EvolvedCreeperEntity, EvolvedCreeperEntityModel> {
-    private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/evolved/creeper.png");
+public class EvolvedCreeperEntityRenderer extends MobRenderer<EvolvedCreeperEntity, EvolvedCreeperEntityModel> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/entity/evolved/creeper.png");
 
-    public EvolvedCreeperEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new EvolvedCreeperEntityModel(context.getPart(GalacticraftEntityModelLayer.EVOLVED_CREEPER), true), 0.5F);
-        this.addFeature(new EvolvedCreeperChargeFeatureRenderer(this, context.getModelLoader()));
+    public EvolvedCreeperEntityRenderer(EntityRendererProvider.Context context) {
+        super(context, new EvolvedCreeperEntityModel(context.bakeLayer(GalacticraftEntityModelLayer.EVOLVED_CREEPER), true), 0.5F);
+        this.addLayer(new EvolvedCreeperChargeFeatureRenderer(this, context.getModelSet()));
     }
 
     @Override
-    protected void scale(EvolvedCreeperEntity entity, MatrixStack matrices, float tickDelta) {
-        float g = entity.getClientFuseTime(tickDelta);
-        float h = 1.0F + MathHelper.sin(g * 100.0F) * g * 0.01F;
-        g = MathHelper.clamp(g, 0.0F, 1.0F);
+    protected void scale(EvolvedCreeperEntity entity, PoseStack matrices, float tickDelta) {
+        float g = entity.getSwelling(tickDelta);
+        float h = 1.0F + Mth.sin(g * 100.0F) * g * 0.01F;
+        g = Mth.clamp(g, 0.0F, 1.0F);
         g *= g;
         g *= g;
         float i = (1.0F + g * 0.4F) * h;
@@ -58,18 +58,18 @@ public class EvolvedCreeperEntityRenderer extends MobEntityRenderer<EvolvedCreep
     }
 
     @Override
-    protected float getAnimationCounter(EvolvedCreeperEntity entity, float tickDelta) {
-        float g = entity.getClientFuseTime(tickDelta);
-        return (int) (g * 10.0F) % 2 == 0 ? 0.0F : MathHelper.clamp(g, 0.5F, 1.0F);
+    protected float getWhiteOverlayProgress(EvolvedCreeperEntity entity, float tickDelta) {
+        float g = entity.getSwelling(tickDelta);
+        return (int) (g * 10.0F) % 2 == 0 ? 0.0F : Mth.clamp(g, 0.5F, 1.0F);
     }
 
     @Override
-    public void render(EvolvedCreeperEntity mobEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+    public void render(EvolvedCreeperEntity mobEntity, float f, float g, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i) {
         super.render(mobEntity, f, g, matrixStack, vertexConsumerProvider, i);
     }
 
     @Override
-    public Identifier getTexture(EvolvedCreeperEntity entity) {
+    public ResourceLocation getTextureLocation(EvolvedCreeperEntity entity) {
         return TEXTURE;
     }
 }

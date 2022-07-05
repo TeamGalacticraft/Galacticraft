@@ -26,9 +26,9 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.village.MoonVillagerType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.entity.VillagerEntityRenderer;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.entity.VillagerRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.npc.Villager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,13 +38,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(VillagerEntityRenderer.class)
+@Mixin(VillagerRenderer.class)
 @Environment(EnvType.CLIENT)
 public abstract class VillagerEntityRendererMixin {
-    private static final @Unique Identifier MOON_TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/villager/moon_villager.png");
+    private static final @Unique ResourceLocation MOON_TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/entity/villager/moon_villager.png");
 
-    @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
-    private void getMoonTexture_gc(VillagerEntity villagerEntity, CallbackInfoReturnable<Identifier> cir) {
+    @Inject(method = "getTextureLocation", at = @At("HEAD"), cancellable = true)
+    private void getMoonTexture_gc(Villager villagerEntity, CallbackInfoReturnable<ResourceLocation> cir) {
         if (MoonVillagerType.MOON_VILLAGER_TYPE_REGISTRY.contains(villagerEntity.getVillagerData().getType())) {
             cir.setReturnValue(MOON_TEXTURE);
         }

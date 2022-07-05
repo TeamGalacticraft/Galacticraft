@@ -23,11 +23,6 @@
 package dev.galacticraft.mod.mixin;
 
 import com.mojang.serialization.Lifecycle;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.util.registry.SimpleRegistry;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,16 +31,21 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.List;
 import java.util.Map;
+import net.minecraft.core.Holder;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 
-@Mixin(SimpleRegistry.class)
+@Mixin(MappedRegistry.class) // TODO: Nuke this class once registries are fixed
 public abstract class SimpleRegistryMixin<T> extends Registry<T> {
     @Shadow private boolean frozen;
 
-    @Shadow @Final private Map<RegistryKey<T>, RegistryEntry.Reference<T>> keyToEntry;
+    @Shadow @Final private Map<ResourceKey<T>, Holder.Reference<T>> byKey;
 
-    @Shadow @Nullable private Map<T, RegistryEntry.Reference<T>> unfrozenValueToEntry;
+    @Shadow @Nullable private Map<T, Holder.Reference<T>> intrusiveHolderCache;
 
-    protected SimpleRegistryMixin(RegistryKey<? extends Registry<T>> key, Lifecycle lifecycle) {
+    protected SimpleRegistryMixin(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle) {
         super(key, lifecycle);
     }
 
@@ -56,24 +56,24 @@ public abstract class SimpleRegistryMixin<T> extends Registry<T> {
     @Overwrite
     public Registry<T> freeze() {
         this.frozen = true;
-        List<Identifier> list = this.keyToEntry.entrySet().stream().filter((entry) -> {
-            return !entry.getValue().hasKeyAndValue();
+        List<ResourceLocation> list = this.byKey.entrySet().stream().filter((entry) -> {
+            return !entry.getValue().isBound();
         }).map((entry) -> {
-            return entry.getKey().getValue();
+            return entry.getKey().location();
         }).sorted().toList();
         if (!list.isEmpty()) {
-            RegistryKey var10002 = this.getKey();
+            ResourceKey var10002 = this.key();
             throw new IllegalStateException("Unbound values in registry " + var10002 + ": " + list);
         } else {
-            if (this.unfrozenValueToEntry != null) {
-                List<RegistryEntry.Reference<T>> list2 = this.unfrozenValueToEntry.values().stream().filter((entry) -> {
-                    return !entry.hasKeyAndValue();
+            if (this.intrusiveHolderCache != null) {
+                List<Holder.Reference<T>> list2 = this.intrusiveHolderCache.values().stream().filter((entry) -> {
+                    return !entry.isBound();
                 }).toList();
                 if (!list2.isEmpty()) {
 //                    throw new IllegalStateException("Some intrusive holders were not added to registry: " + list2);
                 }
 
-                this.unfrozenValueToEntry = null;
+                this.intrusiveHolderCache = null;
             }
 
             return this;

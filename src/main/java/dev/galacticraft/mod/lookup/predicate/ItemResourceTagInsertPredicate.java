@@ -28,8 +28,6 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
-import net.minecraft.item.ItemStack;
-
 import java.util.function.Predicate;
 
 public record ItemResourceTagInsertPredicate<R, V extends TransferVariant<R>>(

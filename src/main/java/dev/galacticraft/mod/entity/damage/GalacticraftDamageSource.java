@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.entity.damage;
 
 import dev.galacticraft.mod.mixin.DamageSourceAccessor;
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.world.damagesource.DamageSource;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>

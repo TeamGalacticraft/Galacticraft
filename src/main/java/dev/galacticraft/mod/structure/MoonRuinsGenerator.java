@@ -25,75 +25,78 @@ package dev.galacticraft.mod.structure;
 import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.loot.GalacticraftLootTable;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.ChestBlockEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.structure.*;
-import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
-import net.minecraft.structure.processor.BlockRotStructureProcessor;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.FluidTags;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
+import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.BlockRotProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+import net.minecraft.world.level.material.FluidState;
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonRuinsGenerator {
-   private static final Identifier[] PIECES = new Identifier[]{
+   private static final ResourceLocation[] PIECES = new ResourceLocation[]{
            //new Identifier(Constant.MOD_ID, "moon_ruins/ruin_1"),
            //new Identifier(Constant.MOD_ID, "moon_ruins/ruin_2"),
-           new Identifier(Constant.MOD_ID, "moon_ruins/ruin_3"),
-           new Identifier(Constant.MOD_ID, "moon_ruins/ruin_4"),
-           new Identifier(Constant.MOD_ID, "moon_ruins/ruin_5"),
-           new Identifier(Constant.MOD_ID, "moon_ruins/ruin_6"),
+           new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_3"),
+           new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_4"),
+           new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_5"),
+           new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_6"),
    };
 
-   private static Identifier getPiece(Random random) {
+   private static ResourceLocation getPiece(RandomSource random) {
       return Util.getRandom(PIECES, random);
    }
 
-   public static void addPiecesToStructure(StructureTemplateManager manager, BlockPos pos, BlockRotation rotation, StructurePiecesHolder structurePiecesHolder, Random random) {
+   public static void addPiecesToStructure(StructureTemplateManager manager, BlockPos pos, Rotation rotation, StructurePieceAccessor structurePiecesHolder, RandomSource random) {
       addPieces(manager, pos, rotation, structurePiecesHolder, random);
       method_14825(manager, random, rotation, pos, structurePiecesHolder);
    }
 
-   private static void method_14825(StructureTemplateManager manager, Random random, BlockRotation rotation, BlockPos pos, StructurePiecesHolder structurePiecesHolder) {
+   private static void method_14825(StructureTemplateManager manager, RandomSource random, Rotation rotation, BlockPos pos, StructurePieceAccessor structurePiecesHolder) {
       BlockPos blockPos = new BlockPos(pos.getX(), 90, pos.getZ());
-      BlockPos blockPos2 = StructureTemplate.transformAround(new BlockPos(15, 0, 15), BlockMirror.NONE, rotation, BlockPos.ORIGIN).add(blockPos);
-      BlockBox blockBox = BlockBox.create(blockPos, blockPos2);
+      BlockPos blockPos2 = StructureTemplate.transform(new BlockPos(15, 0, 15), Mirror.NONE, rotation, BlockPos.ZERO).offset(blockPos);
+      BoundingBox blockBox = BoundingBox.fromCorners(blockPos, blockPos2);
       BlockPos blockPos3 = new BlockPos(Math.min(blockPos.getX(), blockPos2.getX()), blockPos.getY(), Math.min(blockPos.getZ(), blockPos2.getZ()));
       List<BlockPos> list = getRoomPositions(random, blockPos3);
-      int i = MathHelper.nextInt(random, 4, 8);
+      int i = Mth.nextInt(random, 4, 8);
 
       for (int j = 0; j < i; ++j) {
          if (!list.isEmpty()) {
             int k = random.nextInt(list.size());
             BlockPos blockPos4 = list.remove(k);
-            BlockRotation blockRotation = BlockRotation.random(random);
-            BlockPos blockPos5 = StructureTemplate.transformAround(new BlockPos(5, 0, 6), BlockMirror.NONE, blockRotation, BlockPos.ORIGIN).add(blockPos4);
-            BlockBox blockBox2 = BlockBox.create(blockPos4, blockPos5);
+            Rotation blockRotation = Rotation.getRandom(random);
+            BlockPos blockPos5 = StructureTemplate.transform(new BlockPos(5, 0, 6), Mirror.NONE, blockRotation, BlockPos.ZERO).offset(blockPos4);
+            BoundingBox blockBox2 = BoundingBox.fromCorners(blockPos4, blockPos5);
             if (!blockBox2.intersects(blockBox)) {
                addPieces(manager, blockPos4, blockRotation, structurePiecesHolder, random);
             }
@@ -102,53 +105,53 @@ public class MoonRuinsGenerator {
 
    }
 
-   private static List<BlockPos> getRoomPositions(Random random, BlockPos blockPos) {
+   private static List<BlockPos> getRoomPositions(RandomSource random, BlockPos blockPos) {
       List<BlockPos> list = Lists.newArrayList();
-      list.add(blockPos.add(-16 + MathHelper.nextInt(random, 1, 8), 0, 16 + MathHelper.nextInt(random, 1, 7)));
-      list.add(blockPos.add(-16 + MathHelper.nextInt(random, 1, 8), 0, MathHelper.nextInt(random, 1, 7)));
-      list.add(blockPos.add(-16 + MathHelper.nextInt(random, 1, 8), 0, -16 + MathHelper.nextInt(random, 4, 8)));
-      list.add(blockPos.add(MathHelper.nextInt(random, 1, 7), 0, 16 + MathHelper.nextInt(random, 1, 7)));
-      list.add(blockPos.add(MathHelper.nextInt(random, 1, 7), 0, -16 + MathHelper.nextInt(random, 4, 6)));
-      list.add(blockPos.add(16 + MathHelper.nextInt(random, 1, 7), 0, 16 + MathHelper.nextInt(random, 3, 8)));
-      list.add(blockPos.add(16 + MathHelper.nextInt(random, 1, 7), 0, MathHelper.nextInt(random, 1, 7)));
-      list.add(blockPos.add(16 + MathHelper.nextInt(random, 1, 7), 0, -16 + MathHelper.nextInt(random, 4, 8)));
+      list.add(blockPos.offset(-16 + Mth.nextInt(random, 1, 8), 0, 16 + Mth.nextInt(random, 1, 7)));
+      list.add(blockPos.offset(-16 + Mth.nextInt(random, 1, 8), 0, Mth.nextInt(random, 1, 7)));
+      list.add(blockPos.offset(-16 + Mth.nextInt(random, 1, 8), 0, -16 + Mth.nextInt(random, 4, 8)));
+      list.add(blockPos.offset(Mth.nextInt(random, 1, 7), 0, 16 + Mth.nextInt(random, 1, 7)));
+      list.add(blockPos.offset(Mth.nextInt(random, 1, 7), 0, -16 + Mth.nextInt(random, 4, 6)));
+      list.add(blockPos.offset(16 + Mth.nextInt(random, 1, 7), 0, 16 + Mth.nextInt(random, 3, 8)));
+      list.add(blockPos.offset(16 + Mth.nextInt(random, 1, 7), 0, Mth.nextInt(random, 1, 7)));
+      list.add(blockPos.offset(16 + Mth.nextInt(random, 1, 7), 0, -16 + Mth.nextInt(random, 4, 8)));
       return list;
    }
 
-   private static void addPieces(StructureTemplateManager manager, BlockPos pos, BlockRotation rotation, StructurePiecesHolder structurePiecesHolder, Random random) {
+   private static void addPieces(StructureTemplateManager manager, BlockPos pos, Rotation rotation, StructurePieceAccessor structurePiecesHolder, RandomSource random) {
       structurePiecesHolder.addPiece(new Piece(manager, getPiece(random), pos, rotation, 0.8F));
       structurePiecesHolder.addPiece(new Piece(manager, getPiece(random), pos, rotation, 0.7F));
       structurePiecesHolder.addPiece(new Piece(manager, getPiece(random), pos, rotation, 0.65F));
    }
 
-   public static class Piece extends SimpleStructurePiece {
+   public static class Piece extends TemplateStructurePiece {
       private final float integrity;
 
-      public Piece(StructureTemplateManager structureManager, Identifier template, BlockPos pos, BlockRotation rotation, float integrity) {
+      public Piece(StructureTemplateManager structureManager, ResourceLocation template, BlockPos pos, Rotation rotation, float integrity) {
          super(GalacticraftStructurePieceType.MOON_RUINS_PIECE, 0, structureManager, template, template.toString(), method_35446(rotation), pos);
          this.integrity = integrity;
       }
 
-      public Piece(StructureTemplateManager structureManager, NbtCompound nbt) {
-         super(GalacticraftStructurePieceType.MOON_RUINS_PIECE, nbt, structureManager, (identifier) -> method_35446(BlockRotation.valueOf(nbt.getString("Rot"))));
+      public Piece(StructureTemplateManager structureManager, CompoundTag nbt) {
+         super(GalacticraftStructurePieceType.MOON_RUINS_PIECE, nbt, structureManager, (identifier) -> method_35446(Rotation.valueOf(nbt.getString("Rot"))));
          this.integrity = nbt.getFloat("Integrity");
       }
 
-      private static StructurePlacementData method_35446(BlockRotation blockRotation) {
-         return (new StructurePlacementData()).setRotation(blockRotation).setMirror(BlockMirror.NONE).addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR_AND_STRUCTURE_BLOCKS);
+      private static StructurePlaceSettings method_35446(Rotation blockRotation) {
+         return (new StructurePlaceSettings()).setRotation(blockRotation).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_AND_AIR);
       }
 
       @Override
-      protected void writeNbt(StructureContext context, NbtCompound nbt) {
-         super.writeNbt(context, nbt);
-         nbt.putString("Rot", this.placementData.getRotation().name());
+      protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag nbt) {
+         super.addAdditionalSaveData(context, nbt);
+         nbt.putString("Rot", this.placeSettings.getRotation().name());
          nbt.putFloat("Integrity", this.integrity);
       }
 
       @Override
-      protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess world, Random random, BlockBox boundingBox) {
+      protected void handleDataMarker(String metadata, BlockPos pos, ServerLevelAccessor world, RandomSource random, BoundingBox boundingBox) {
          if ("chest".equals(metadata)) {
-            world.setBlockState(pos, Blocks.CHEST.getDefaultState().with(ChestBlock.WATERLOGGED, world.getFluidState(pos).isIn(FluidTags.WATER)), Block.NOTIFY_LISTENERS);
+            world.setBlock(pos, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.WATERLOGGED, world.getFluidState(pos).is(FluidTags.WATER)), Block.UPDATE_CLIENTS);
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof ChestBlockEntity chest) {
                chest.setLootTable(GalacticraftLootTable.BASIC_MOON_RUINS_CHEST, random.nextLong());
@@ -165,30 +168,30 @@ public class MoonRuinsGenerator {
       }
 
       @Override
-      public void generate(StructureWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, Random random, BlockBox boundingBox, ChunkPos chunkPos, BlockPos pos) {
-         this.placementData.clearProcessors().addProcessor(new BlockRotStructureProcessor(this.integrity)).addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR_AND_STRUCTURE_BLOCKS);
-         int i = world.getTopY(Heightmap.Type.WORLD_SURFACE_WG, this.pos.getX(), this.pos.getZ());
-         this.pos = new BlockPos(this.pos.getX(), i, this.pos.getZ());
-         BlockPos blockPos = StructureTemplate.transformAround(new BlockPos(this.template.getSize().getX() - 1, 0, this.template.getSize().getZ() - 1), BlockMirror.NONE, this.placementData.getRotation(), BlockPos.ORIGIN).add(this.pos);
-         this.pos = new BlockPos(this.pos.getX(), this.method_14829(this.pos, world, blockPos), this.pos.getZ());
+      public void postProcess(WorldGenLevel world, StructureManager structureAccessor, ChunkGenerator chunkGenerator, RandomSource random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos pos) {
+         this.placeSettings.clearProcessors().addProcessor(new BlockRotProcessor(this.integrity)).addProcessor(BlockIgnoreProcessor.STRUCTURE_AND_AIR);
+         int i = world.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.templatePosition.getX(), this.templatePosition.getZ());
+         this.templatePosition = new BlockPos(this.templatePosition.getX(), i, this.templatePosition.getZ());
+         BlockPos blockPos = StructureTemplate.transform(new BlockPos(this.template.getSize().getX() - 1, 0, this.template.getSize().getZ() - 1), Mirror.NONE, this.placeSettings.getRotation(), BlockPos.ZERO).offset(this.templatePosition);
+         this.templatePosition = new BlockPos(this.templatePosition.getX(), this.method_14829(this.templatePosition, world, blockPos), this.templatePosition.getZ());
 
-         super.generate(world, structureAccessor, chunkGenerator, random, boundingBox, chunkPos, pos);
+         super.postProcess(world, structureAccessor, chunkGenerator, random, boundingBox, chunkPos, pos);
       }
 
-      private int method_14829(BlockPos blockPos, BlockView blockView, BlockPos blockPos2) {
+      private int method_14829(BlockPos blockPos, BlockGetter blockView, BlockPos blockPos2) {
          int i = blockPos.getY();
          int j = 512;
          int k = i - 1;
          int l = 0;
 
-         for (BlockPos blockPos3 : BlockPos.iterate(blockPos, blockPos2)) {
+         for (BlockPos blockPos3 : BlockPos.betweenClosed(blockPos, blockPos2)) {
             int m = blockPos3.getX();
             int n = blockPos3.getZ();
             int o = blockPos.getY() - 1;
-            BlockPos.Mutable mutable = new BlockPos.Mutable(m, o, n);
+            BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(m, o, n);
             BlockState blockState = blockView.getBlockState(mutable);
 
-            for (FluidState fluidState = blockView.getFluidState(mutable); (blockState.isAir() || fluidState.isIn(FluidTags.WATER) || blockState.isIn(BlockTags.ICE)) && o > blockView.getBottomY() + 1; fluidState = blockView.getFluidState(mutable)) {
+            for (FluidState fluidState = blockView.getFluidState(mutable); (blockState.isAir() || fluidState.is(FluidTags.WATER) || blockState.is(BlockTags.ICE)) && o > blockView.getMinBuildHeight() + 1; fluidState = blockView.getFluidState(mutable)) {
                --o;
                mutable.set(m, o, n);
                blockState = blockView.getBlockState(mutable);

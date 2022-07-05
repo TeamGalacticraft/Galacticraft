@@ -26,7 +26,7 @@ import com.google.common.collect.Lists;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -42,11 +42,11 @@ public class DefaultShapelessCompressingDisplay implements DefaultCompressingDis
     public DefaultShapelessCompressingDisplay(ShapelessCompressingRecipe recipe) {
         this.input = Lists.newArrayList();
         recipe.getIngredients().forEach((ingredient) -> {
-            for (ItemStack stack : ingredient.getMatchingStacks()) {
+            for (ItemStack stack : ingredient.getItems()) {
                 input.add(EntryIngredients.of(stack));
             }
         });
-        this.output = Collections.singletonList(EntryIngredients.of(recipe.getOutput()));
+        this.output = Collections.singletonList(EntryIngredients.of(recipe.getResultItem()));
     }
 
     public DefaultShapelessCompressingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs) {

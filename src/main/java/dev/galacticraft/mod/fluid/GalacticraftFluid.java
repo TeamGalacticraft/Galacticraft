@@ -23,19 +23,19 @@
 package dev.galacticraft.mod.fluid;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftFluid {
-    public static final FlowableFluid CRUDE_OIL = new CrudeOilFluid.Still();
-    public static final FlowableFluid FLOWING_CRUDE_OIL = new CrudeOilFluid.Flowing();
-    public static final FlowableFluid FUEL = new FuelFluid.Still();
-    public static final FlowableFluid FLOWING_FUEL = new FuelFluid.Flowing();
+    public static final FlowingFluid CRUDE_OIL = new CrudeOilFluid.Still();
+    public static final FlowingFluid FLOWING_CRUDE_OIL = new CrudeOilFluid.Flowing();
+    public static final FlowingFluid FUEL = new FuelFluid.Still();
+    public static final FlowingFluid FLOWING_FUEL = new FuelFluid.Flowing();
     public static final Fluid LIQUID_OXYGEN = new OxygenFluid();
 
     public static void register() {
@@ -77,6 +77,6 @@ public class GalacticraftFluid {
     }
 
     private static void register(String id, Fluid fluid) {
-        Registry.register(Registry.FLUID, new Identifier(Constant.MOD_ID, id), fluid);
+        Registry.register(Registry.FLUID, new ResourceLocation(Constant.MOD_ID, id), fluid);
     }
 }

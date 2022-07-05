@@ -26,13 +26,13 @@ import dev.galacticraft.api.block.MachineBlock;
 import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,31 +40,31 @@ import org.jetbrains.annotations.NotNull;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SimpleMachineBlock<T extends MachineBlockEntity> extends MachineBlock<T> {
-    public static final Settings MACHINE_DEFAULT_SETTINGS = FabricBlockSettings.of(Material.METAL)
-            .strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL);
+    public static final Properties MACHINE_DEFAULT_SETTINGS = FabricBlockSettings.of(Material.METAL)
+            .strength(3.0F, 5.0F).sound(SoundType.METAL);
 
     private final BlockEntityFactory<T> factory;
-    private Text information = null;
+    private Component information = null;
 
     @Contract("_ -> new")
     public static <T extends MachineBlockEntity> @NotNull SimpleMachineBlock<T> create(BlockEntityFactory<T> factory) {
         return new SimpleMachineBlock<>(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS), factory);
     }
 
-    protected SimpleMachineBlock(Settings settings, BlockEntityFactory<T> factory) {
+    protected SimpleMachineBlock(Properties settings, BlockEntityFactory<T> factory) {
         super(settings);
         this.factory = factory;
     }
 
     @Override
-    public T createBlockEntity(BlockPos pos, BlockState state) {
+    public T newBlockEntity(BlockPos pos, BlockState state) {
         return this.factory.create(pos, state);
     }
 
     @Override
-    public Text machineDescription(ItemStack stack, BlockView view, boolean advanced) {
+    public Component machineDescription(ItemStack stack, BlockGetter view, boolean advanced) {
         if (this.information == null) {
-            this.information = Text.translatable(this.getTranslationKey() + ".description").setStyle(Constant.Text.Color.DARK_GRAY_STYLE);
+            this.information = Component.translatable(this.getDescriptionId() + ".description").setStyle(Constant.Text.Color.DARK_GRAY_STYLE);
         }
         return this.information;
     }
