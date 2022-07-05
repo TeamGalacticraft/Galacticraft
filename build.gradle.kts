@@ -43,7 +43,7 @@ val galacticraftApiVersion = project.property("galacticraft.api.version").toStri
 val machineLibVersion      = project.property("machinelib.version").toString()
 val reiVersion             = project.property("rei.version").toString()
 val myronVersion           = project.property("myron.version").toString()
-val bannerppVersion        = project.property("bannerpp.version").toString()
+val badpacketsVersion      = project.property("badpackets.version").toString()
 val wthitVersion           = project.property("wthit.version").toString()
 val runtimeOptional        = project.property("optional_dependencies.enabled").toString().toBoolean()
 
@@ -156,9 +156,10 @@ repositories {
             includeGroup("io.github.fablabsmc")
         }
     }
-    maven("https://bai.jfrog.io/artifactory/maven/") {
+    maven("https://maven.bai.lol") {
         content {
             includeGroup("mcp.mobius.waila")
+            includeGroup("lol.bai")
         }
     }
 }
@@ -230,8 +231,8 @@ dependencies {
     }
     // Optional Dependencies
     optionalDependency("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
+    optionalDependency("lol.bai:badpackets:fabric-$badpacketsVersion") { isTransitive = false }
     optionalDependency("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
-    optionalDependency("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false }
     optionalDependency("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
         exclude(group = "net.fabricmc")
@@ -338,6 +339,8 @@ fun getFabricApiModule(moduleName: String): String {
 fun DependencyHandler.optionalDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
     modCompileOnly(dependencyNotation, dependencyConfiguration)
     if (!net.fabricmc.loom.util.OperatingSystem.isCIBuild() && runtimeOptional) {
+        if (dependencyNotation.contains("shedaniel"))
+            return
         modRuntimeOnly(dependencyNotation, dependencyConfiguration)
     }
 }

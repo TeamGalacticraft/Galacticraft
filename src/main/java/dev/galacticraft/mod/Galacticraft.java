@@ -33,6 +33,7 @@ import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.lookup.GalacticraftApiLookupProviders;
 import dev.galacticraft.mod.loot.GalacticraftLootTable;
+import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.misc.banner.GalacticraftBannerPattern;
 import dev.galacticraft.mod.network.GalacticraftServerPacketReceiver;
 import dev.galacticraft.mod.particle.GalacticraftParticleType;
@@ -97,6 +98,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftPointOfInterestType.register();
         MoonVillagerType.register();
         GalacticraftVillagerProfession.register();
+        GalacticraftMachineStatus.register();
 
         if (FabricLoader.getInstance().isModLoaded("bannerpp")) {
             GalacticraftBannerPattern.register();

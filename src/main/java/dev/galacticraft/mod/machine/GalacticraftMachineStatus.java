@@ -51,4 +51,6 @@ public final class GalacticraftMachineStatus {
     public static final MachineStatus AREA_TOO_LARGE = MachineStatus.createAndRegister(new ResourceLocation(Constant.MOD_ID, "area_too_large"), Component.translatable("machine_status.galacticraft.area_too_large").setStyle(Constant.Text.Color.RED_STYLE), MachineStatus.Type.OTHER);
     public static final MachineStatus SEALED = MachineStatus.createAndRegister(new ResourceLocation(Constant.MOD_ID, "sealed"), Component.translatable("machine_status.galacticraft.sealed").setStyle(Constant.Text.Color.GREEN_STYLE), MachineStatus.Type.WORKING);
     public static final MachineStatus DISTRIBUTING = MachineStatus.createAndRegister(new ResourceLocation(Constant.MOD_ID, "distributing"), Component.translatable("machine_status.galacticraft.distributing").setStyle(Constant.Text.Color.GREEN_STYLE), MachineStatus.Type.WORKING);
+
+    public static void register() {}
 }

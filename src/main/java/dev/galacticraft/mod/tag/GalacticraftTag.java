@@ -44,26 +44,14 @@ public class GalacticraftTag {
     public static final TagKey<Block> MOON_STONE_ORE_REPLACABLES = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_stone_ore_replaceables"));
     public static final TagKey<Block> LUNASLATE_ORE_REPLACABLES = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(Constant.MOD_ID, "lunaslate_ore_replaceables"));
 
-    public static final TagKey<Biome> MOON_HIGHLANDS = null;//new LazyDefaultedTag<>(TagFactory.BIOME, new Identifier(Constant.MOD_ID, "moon_highlands"), () -> ImmutableList.of(
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS_HILLS),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS_VALLEY),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS_FLAT),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS_EDGE)
-//    ));
+    public static final TagKey<Biome> MOON_HIGHLANDS = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_highlands"));
 
-    public static final TagKey<Biome> MOON_MARE = null;//new LazyDefaultedTag<>(TagFactory.BIOME, new Identifier(Constant.MOD_ID, "moon_mare"), () -> ImmutableList.of( //fixme
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.MARE),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.MARE_HILLS),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.MARE_VALLEY),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.MARE_FLAT),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.MARE_EDGE)
-//    ));
+    public static final TagKey<Biome> MOON_MARE = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_mare"));
 
-    public static final TagKey<Fluid> OXYGEN = null;//FluidTags.getTagGroup().getTag(new Identifier(Constant.MOD_ID, "oxygen"));
+    public static final TagKey<Fluid> OXYGEN = TagKey.create(Registry.FLUID_REGISTRY, new ResourceLocation(Constant.MOD_ID, "oxygen"));
 
-    public static final TagKey<Item> SILICONS = null;//TagFactory.ITEM.create(new Identifier(Constant.COMMON_NAMESPACE, "silicons"));
-    public static final TagKey<Item> REDSTONES = null;//TagFactory.ITEM.create(new Identifier(Constant.COMMON_NAMESPACE, "redstones"));
+    public static final TagKey<Item> SILICONS = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(Constant.COMMON_NAMESPACE, "silicons"));
+    public static final TagKey<Item> REDSTONES = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(Constant.COMMON_NAMESPACE, "redstones"));
 
     public static void register() {
 //        BlockTagsAccessor.getRequiredTags().add(MOON_STONE_ORE_REPLACABLES.getId().toString());

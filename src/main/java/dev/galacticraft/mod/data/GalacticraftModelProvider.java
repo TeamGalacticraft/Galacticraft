@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.data;
 
+import dev.galacticraft.mod.item.GalacticraftItem;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.models.BlockModelGenerators;
@@ -42,99 +43,83 @@ public class GalacticraftModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockModelGenerators generator) {
-//        generator.registerSimpleState(GLOWSTONE_TORCH, GalacticraftItem.GLOWSTONE_TORCH);
-//        generator.registerSimpleState(GLOWSTONE_WALL_TORCH, GalacticraftItem.GLOWSTONE_TORCH);
-//        generator.registerSimpleState(UNLIT_TORCH, GalacticraftItem.UNLIT_TORCH);
-//        generator.registerSimpleState(UNLIT_WALL_TORCH, GalacticraftItem.UNLIT_TORCH);
+        generator.createAirLikeBlock(GLOWSTONE_TORCH, GalacticraftItem.GLOWSTONE_TORCH);
+        generator.createAirLikeBlock(GLOWSTONE_WALL_TORCH, GalacticraftItem.GLOWSTONE_TORCH);
+        generator.createAirLikeBlock(UNLIT_TORCH, GalacticraftItem.UNLIT_TORCH);
+        generator.createAirLikeBlock(UNLIT_WALL_TORCH, GalacticraftItem.UNLIT_TORCH);
 
-//        generator.registerCubeAllModelTexturePool(ALUMINUM_DECORATION) TODO: PORT ?
-//                .slab(ALUMINUM_DECORATION_SLAB)
-//                .stairs(ALUMINUM_DECORATION_STAIRS)
-//                .wall(ALUMINUM_DECORATION_WALL)
-//                .build();
-//        generator.registerCubeAllModelTexturePool(DETAILED_ALUMINUM_DECORATION)
-//                .slab(DETAILED_ALUMINUM_DECORATION_SLAB)
-//                .stairs(DETAILED_ALUMINUM_DECORATION_STAIRS)
-//                .wall(DETAILED_ALUMINUM_DECORATION_WALL)
-//                .build();
-//
-//        generator.registerCubeAllModelTexturePool(COPPER_DECORATION)
-//                .slab(COPPER_DECORATION_SLAB)
-//                .stairs(COPPER_DECORATION_STAIRS)
-//                .wall(COPPER_DECORATION_WALL)
-//                .build();
-//        generator.registerCubeAllModelTexturePool(DETAILED_COPPER_DECORATION)
-//                .slab(DETAILED_COPPER_DECORATION_SLAB)
-//                .stairs(DETAILED_COPPER_DECORATION_STAIRS)
-//                .wall(DETAILED_COPPER_DECORATION_WALL)
-//                .build();
-//
-//        generator.registerCubeAllModelTexturePool(IRON_DECORATION)
-//                .slab(IRON_DECORATION_SLAB)
-//                .stairs(IRON_DECORATION_STAIRS)
-//                .wall(IRON_DECORATION_WALL)
-//                .build();
-//        generator.registerCubeAllModelTexturePool(DETAILED_IRON_DECORATION)
-//                .slab(DETAILED_IRON_DECORATION_SLAB)
-//                .stairs(DETAILED_IRON_DECORATION_STAIRS)
-//                .wall(DETAILED_IRON_DECORATION_WALL)
-//                .build();
-//
-//        generator.registerCubeAllModelTexturePool(METEORIC_IRON_DECORATION)
-//                .slab(METEORIC_IRON_DECORATION_SLAB)
-//                .stairs(METEORIC_IRON_DECORATION_STAIRS)
-//                .wall(METEORIC_IRON_DECORATION_WALL)
-//                .build();
-//        generator.registerCubeAllModelTexturePool(DETAILED_METEORIC_IRON_DECORATION)
-//                .slab(DETAILED_METEORIC_IRON_DECORATION_SLAB)
-//                .stairs(DETAILED_METEORIC_IRON_DECORATION_STAIRS)
-//                .wall(DETAILED_METEORIC_IRON_DECORATION_WALL)
-//                .build();
-//
-//        generator.registerCubeAllModelTexturePool(STEEL_DECORATION)
-//                .slab(STEEL_DECORATION_SLAB)
-//                .stairs(STEEL_DECORATION_STAIRS)
-//                .wall(STEEL_DECORATION_WALL)
-//                .build();
-//        generator.registerCubeAllModelTexturePool(DETAILED_STEEL_DECORATION)
-//                .slab(DETAILED_STEEL_DECORATION_SLAB)
-//                .stairs(DETAILED_STEEL_DECORATION_STAIRS)
-//                .wall(DETAILED_STEEL_DECORATION_WALL)
-//                .build();
-//
-//        generator.registerCubeAllModelTexturePool(TIN_DECORATION)
-//                .slab(TIN_DECORATION_SLAB)
-//                .stairs(TIN_DECORATION_STAIRS)
-//                .wall(TIN_DECORATION_WALL)
-//                .build();
-//        generator.registerCubeAllModelTexturePool(DETAILED_TIN_DECORATION)
-//                .slab(DETAILED_TIN_DECORATION_SLAB)
-//                .stairs(DETAILED_TIN_DECORATION_STAIRS)
-//                .wall(DETAILED_TIN_DECORATION_WALL)
-//                .build();
-//
-//        generator.registerCubeAllModelTexturePool(TITANIUM_DECORATION)
-//                .slab(TITANIUM_DECORATION_SLAB)
-//                .stairs(TITANIUM_DECORATION_STAIRS)
-//                .wall(TITANIUM_DECORATION_WALL)
-//                .build();
-//        generator.registerCubeAllModelTexturePool(DETAILED_TITANIUM_DECORATION)
-//                .slab(DETAILED_TITANIUM_DECORATION_SLAB)
-//                .stairs(DETAILED_TITANIUM_DECORATION_STAIRS)
-//                .wall(DETAILED_TITANIUM_DECORATION_WALL)
-//                .build();
-//
-//
-//        generator.registerCubeAllModelTexturePool(DARK_DECORATION)
-//                .slab(DARK_DECORATION_SLAB)
-//                .stairs(DARK_DECORATION_STAIRS)
-//                .wall(DARK_DECORATION_WALL)
-//                .build();
-//        generator.registerCubeAllModelTexturePool(DETAILED_DARK_DECORATION)
-//                .slab(DETAILED_DARK_DECORATION_SLAB)
-//                .stairs(DETAILED_DARK_DECORATION_STAIRS)
-//                .wall(DETAILED_DARK_DECORATION_WALL)
-//                .build();
+        generator.family(ALUMINUM_DECORATION)
+                .slab(ALUMINUM_DECORATION_SLAB)
+                .stairs(ALUMINUM_DECORATION_STAIRS)
+                .wall(ALUMINUM_DECORATION_WALL);
+        generator.family(DETAILED_ALUMINUM_DECORATION)
+                .slab(DETAILED_ALUMINUM_DECORATION_SLAB)
+                .stairs(DETAILED_ALUMINUM_DECORATION_STAIRS)
+                .wall(DETAILED_ALUMINUM_DECORATION_WALL);
+
+        generator.family(COPPER_DECORATION)
+                .slab(COPPER_DECORATION_SLAB)
+                .stairs(COPPER_DECORATION_STAIRS)
+                .wall(COPPER_DECORATION_WALL);
+        generator.family(DETAILED_COPPER_DECORATION)
+                .slab(DETAILED_COPPER_DECORATION_SLAB)
+                .stairs(DETAILED_COPPER_DECORATION_STAIRS)
+                .wall(DETAILED_COPPER_DECORATION_WALL);
+
+        generator.family(IRON_DECORATION)
+                .slab(IRON_DECORATION_SLAB)
+                .stairs(IRON_DECORATION_STAIRS)
+                .wall(IRON_DECORATION_WALL);
+        generator.family(DETAILED_IRON_DECORATION)
+                .slab(DETAILED_IRON_DECORATION_SLAB)
+                .stairs(DETAILED_IRON_DECORATION_STAIRS)
+                .wall(DETAILED_IRON_DECORATION_WALL);
+
+        generator.family(METEORIC_IRON_DECORATION)
+                .slab(METEORIC_IRON_DECORATION_SLAB)
+                .stairs(METEORIC_IRON_DECORATION_STAIRS)
+                .wall(METEORIC_IRON_DECORATION_WALL);
+        generator.family(DETAILED_METEORIC_IRON_DECORATION)
+                .slab(DETAILED_METEORIC_IRON_DECORATION_SLAB)
+                .stairs(DETAILED_METEORIC_IRON_DECORATION_STAIRS)
+                .wall(DETAILED_METEORIC_IRON_DECORATION_WALL);
+
+        generator.family(STEEL_DECORATION)
+                .slab(STEEL_DECORATION_SLAB)
+                .stairs(STEEL_DECORATION_STAIRS)
+                .wall(STEEL_DECORATION_WALL);
+        generator.family(DETAILED_STEEL_DECORATION)
+                .slab(DETAILED_STEEL_DECORATION_SLAB)
+                .stairs(DETAILED_STEEL_DECORATION_STAIRS)
+                .wall(DETAILED_STEEL_DECORATION_WALL);
+
+        generator.family(TIN_DECORATION)
+                .slab(TIN_DECORATION_SLAB)
+                .stairs(TIN_DECORATION_STAIRS)
+                .wall(TIN_DECORATION_WALL);
+        generator.family(DETAILED_TIN_DECORATION)
+                .slab(DETAILED_TIN_DECORATION_SLAB)
+                .stairs(DETAILED_TIN_DECORATION_STAIRS)
+                .wall(DETAILED_TIN_DECORATION_WALL);
+
+        generator.family(TITANIUM_DECORATION)
+                .slab(TITANIUM_DECORATION_SLAB)
+                .stairs(TITANIUM_DECORATION_STAIRS)
+                .wall(TITANIUM_DECORATION_WALL);
+        generator.family(DETAILED_TITANIUM_DECORATION)
+                .slab(DETAILED_TITANIUM_DECORATION_SLAB)
+                .stairs(DETAILED_TITANIUM_DECORATION_STAIRS)
+                .wall(DETAILED_TITANIUM_DECORATION_WALL);
+
+
+        generator.family(DARK_DECORATION)
+                .slab(DARK_DECORATION_SLAB)
+                .stairs(DARK_DECORATION_STAIRS)
+                .wall(DARK_DECORATION_WALL);
+        generator.family(DETAILED_DARK_DECORATION)
+                .slab(DETAILED_DARK_DECORATION_SLAB)
+                .stairs(DETAILED_DARK_DECORATION_STAIRS)
+                .wall(DETAILED_DARK_DECORATION_WALL);
 
         generator.createTrivialCube(MOON_TURF);
         generator.createTrivialCube(MOON_DIRT);

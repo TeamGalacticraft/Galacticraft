@@ -47,14 +47,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FlattenableBlockRegistry;
 import net.minecraft.core.Registry;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CakeBlock;
-import net.minecraft.world.level.block.DropExperienceBlock;
-import net.minecraft.world.level.block.LiquidBlock;
-import net.minecraft.world.level.block.SlabBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 
@@ -85,84 +78,84 @@ public class GalacticraftBlock {
     // DECORATION BLOCKS
     public static final Block ALUMINUM_DECORATION = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 3.0F));
     public static final Block ALUMINUM_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(ALUMINUM_DECORATION).strength(2.5F, 3.0F));
-    public static final Block ALUMINUM_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(ALUMINUM_DECORATION));
-    public static final Block ALUMINUM_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(ALUMINUM_DECORATION));
+    public static final Block ALUMINUM_DECORATION_STAIRS = new StairBlock(ALUMINUM_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(ALUMINUM_DECORATION));
+    public static final Block ALUMINUM_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(ALUMINUM_DECORATION));
     public static final Block DETAILED_ALUMINUM_DECORATION = new Block(FabricBlockSettings.copyOf(ALUMINUM_DECORATION));
     public static final Block DETAILED_ALUMINUM_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_ALUMINUM_DECORATION).strength(2.5F, 3.0F));
-    public static final Block DETAILED_ALUMINUM_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_ALUMINUM_DECORATION));
-    public static final Block DETAILED_ALUMINUM_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_ALUMINUM_DECORATION));
+    public static final Block DETAILED_ALUMINUM_DECORATION_STAIRS = new StairBlock(DETAILED_ALUMINUM_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(DETAILED_ALUMINUM_DECORATION));
+    public static final Block DETAILED_ALUMINUM_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(DETAILED_ALUMINUM_DECORATION));
 
     public static final Block BRONZE_DECORATION = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 3.0F));
     public static final Block BRONZE_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(BRONZE_DECORATION).strength(2.5F, 3.0F));
-    public static final Block BRONZE_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(BRONZE_DECORATION));
-    public static final Block BRONZE_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(BRONZE_DECORATION));
+    public static final Block BRONZE_DECORATION_STAIRS = new StairBlock(BRONZE_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(BRONZE_DECORATION));
+    public static final Block BRONZE_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(BRONZE_DECORATION));
     public static final Block DETAILED_BRONZE_DECORATION = new Block(FabricBlockSettings.copyOf(BRONZE_DECORATION));
     public static final Block DETAILED_BRONZE_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_BRONZE_DECORATION).strength(2.5F, 3.0F));
-    public static final Block DETAILED_BRONZE_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_BRONZE_DECORATION));
-    public static final Block DETAILED_BRONZE_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_BRONZE_DECORATION));
+    public static final Block DETAILED_BRONZE_DECORATION_STAIRS = new StairBlock(DETAILED_BRONZE_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(DETAILED_BRONZE_DECORATION));
+    public static final Block DETAILED_BRONZE_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(DETAILED_BRONZE_DECORATION));
 
     public static final Block COPPER_DECORATION = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 3.0F));
     public static final Block COPPER_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(COPPER_DECORATION).strength(2.5F, 3.0F));
-    public static final Block COPPER_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(COPPER_DECORATION));
-    public static final Block COPPER_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(COPPER_DECORATION));
+    public static final Block COPPER_DECORATION_STAIRS = new StairBlock(COPPER_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(COPPER_DECORATION));
+    public static final Block COPPER_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(COPPER_DECORATION));
     public static final Block DETAILED_COPPER_DECORATION = new Block(FabricBlockSettings.copyOf(COPPER_DECORATION));
     public static final Block DETAILED_COPPER_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_COPPER_DECORATION).strength(2.5F, 3.0F));
-    public static final Block DETAILED_COPPER_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_COPPER_DECORATION));
-    public static final Block DETAILED_COPPER_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_COPPER_DECORATION));
+    public static final Block DETAILED_COPPER_DECORATION_STAIRS = new StairBlock(DETAILED_COPPER_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(DETAILED_COPPER_DECORATION));
+    public static final Block DETAILED_COPPER_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(DETAILED_COPPER_DECORATION));
 
     public static final Block IRON_DECORATION = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 3.0F));
     public static final Block IRON_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(IRON_DECORATION).strength(2.5F, 3.0F));
-    public static final Block IRON_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(IRON_DECORATION));
-    public static final Block IRON_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(IRON_DECORATION));
+    public static final Block IRON_DECORATION_STAIRS = new StairBlock(IRON_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(IRON_DECORATION));
+    public static final Block IRON_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(IRON_DECORATION));
     public static final Block DETAILED_IRON_DECORATION = new Block(FabricBlockSettings.copyOf(IRON_DECORATION));
     public static final Block DETAILED_IRON_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_IRON_DECORATION).strength(2.5F, 3.0F));
-    public static final Block DETAILED_IRON_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_IRON_DECORATION));
-    public static final Block DETAILED_IRON_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_IRON_DECORATION));
+    public static final Block DETAILED_IRON_DECORATION_STAIRS = new StairBlock(DETAILED_IRON_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(DETAILED_IRON_DECORATION));
+    public static final Block DETAILED_IRON_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(DETAILED_IRON_DECORATION));
 
     public static final Block METEORIC_IRON_DECORATION = new Block(FabricBlockSettings.copyOf(IRON_DECORATION));
     public static final Block METEORIC_IRON_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(METEORIC_IRON_DECORATION).strength(2.5F, 3.0F));
-    public static final Block METEORIC_IRON_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(METEORIC_IRON_DECORATION));
-    public static final Block METEORIC_IRON_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(METEORIC_IRON_DECORATION));
+    public static final Block METEORIC_IRON_DECORATION_STAIRS = new StairBlock(METEORIC_IRON_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(METEORIC_IRON_DECORATION));
+    public static final Block METEORIC_IRON_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(METEORIC_IRON_DECORATION));
     public static final Block DETAILED_METEORIC_IRON_DECORATION = new Block(FabricBlockSettings.copyOf(METEORIC_IRON_DECORATION));
     public static final Block DETAILED_METEORIC_IRON_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_METEORIC_IRON_DECORATION).strength(2.5F, 3.0F));
-    public static final Block DETAILED_METEORIC_IRON_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_METEORIC_IRON_DECORATION));
-    public static final Block DETAILED_METEORIC_IRON_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_METEORIC_IRON_DECORATION));
+    public static final Block DETAILED_METEORIC_IRON_DECORATION_STAIRS = new StairBlock(DETAILED_METEORIC_IRON_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(DETAILED_METEORIC_IRON_DECORATION));
+    public static final Block DETAILED_METEORIC_IRON_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(DETAILED_METEORIC_IRON_DECORATION));
 
     public static final Block STEEL_DECORATION = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 3.0F));
     public static final Block STEEL_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(STEEL_DECORATION).strength(2.5F, 3.0F));
-    public static final Block STEEL_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(STEEL_DECORATION));
-    public static final Block STEEL_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(STEEL_DECORATION));
+    public static final Block STEEL_DECORATION_STAIRS = new StairBlock(STEEL_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(STEEL_DECORATION));
+    public static final Block STEEL_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(STEEL_DECORATION));
     public static final Block DETAILED_STEEL_DECORATION = new Block(FabricBlockSettings.copyOf(STEEL_DECORATION));
     public static final Block DETAILED_STEEL_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_STEEL_DECORATION).strength(2.5F, 3.0F));
-    public static final Block DETAILED_STEEL_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_STEEL_DECORATION));
-    public static final Block DETAILED_STEEL_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_STEEL_DECORATION));
+    public static final Block DETAILED_STEEL_DECORATION_STAIRS = new StairBlock(DETAILED_STEEL_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(DETAILED_STEEL_DECORATION));
+    public static final Block DETAILED_STEEL_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(DETAILED_STEEL_DECORATION));
 
     public static final Block TIN_DECORATION = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 3.0F));
     public static final Block TIN_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(TIN_DECORATION).strength(2.5F, 3.0F));
-    public static final Block TIN_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(TIN_DECORATION));
-    public static final Block TIN_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(TIN_DECORATION));
+    public static final Block TIN_DECORATION_STAIRS = new StairBlock(TIN_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(TIN_DECORATION));
+    public static final Block TIN_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(TIN_DECORATION));
     public static final Block DETAILED_TIN_DECORATION = new Block(FabricBlockSettings.copyOf(TIN_DECORATION));
     public static final Block DETAILED_TIN_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_TIN_DECORATION).strength(2.5F, 3.0F));
-    public static final Block DETAILED_TIN_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_TIN_DECORATION));
-    public static final Block DETAILED_TIN_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_TIN_DECORATION));
+    public static final Block DETAILED_TIN_DECORATION_STAIRS = new StairBlock(DETAILED_TIN_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(DETAILED_TIN_DECORATION));
+    public static final Block DETAILED_TIN_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(DETAILED_TIN_DECORATION));
 
     public static final Block TITANIUM_DECORATION = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 3.0F));
     public static final Block TITANIUM_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(TITANIUM_DECORATION).strength(2.5F, 3.0F));
-    public static final Block TITANIUM_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(TITANIUM_DECORATION));
-    public static final Block TITANIUM_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(TITANIUM_DECORATION));
+    public static final Block TITANIUM_DECORATION_STAIRS = new StairBlock(TITANIUM_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(TITANIUM_DECORATION));
+    public static final Block TITANIUM_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(TITANIUM_DECORATION));
     public static final Block DETAILED_TITANIUM_DECORATION = new Block(FabricBlockSettings.copyOf(TITANIUM_DECORATION));
     public static final Block DETAILED_TITANIUM_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_TITANIUM_DECORATION).strength(2.5F, 3.0F));
-    public static final Block DETAILED_TITANIUM_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_TITANIUM_DECORATION));
-    public static final Block DETAILED_TITANIUM_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_TITANIUM_DECORATION));
+    public static final Block DETAILED_TITANIUM_DECORATION_STAIRS = new StairBlock(DETAILED_TITANIUM_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(DETAILED_TITANIUM_DECORATION));
+    public static final Block DETAILED_TITANIUM_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(DETAILED_TITANIUM_DECORATION));
 
     public static final Block DARK_DECORATION = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 3.0F));
     public static final Block DARK_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(DARK_DECORATION).strength(2.5F, 3.0F));
-    public static final Block DARK_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(DARK_DECORATION));
-    public static final Block DARK_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(DARK_DECORATION));
+    public static final Block DARK_DECORATION_STAIRS = new StairBlock(DARK_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(DARK_DECORATION));
+    public static final Block DARK_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(DARK_DECORATION));
     public static final Block DETAILED_DARK_DECORATION = new Block(FabricBlockSettings.copyOf(DARK_DECORATION));
     public static final Block DETAILED_DARK_DECORATION_SLAB = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_DARK_DECORATION).strength(2.5F, 3.0F));
-    public static final Block DETAILED_DARK_DECORATION_STAIRS = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_DARK_DECORATION));
-    public static final Block DETAILED_DARK_DECORATION_WALL = new SlabBlock(FabricBlockSettings.copyOf(DETAILED_DARK_DECORATION));
+    public static final Block DETAILED_DARK_DECORATION_STAIRS = new StairBlock(DETAILED_DARK_DECORATION.defaultBlockState(), FabricBlockSettings.copyOf(DETAILED_DARK_DECORATION));
+    public static final Block DETAILED_DARK_DECORATION_WALL = new WallBlock(FabricBlockSettings.copyOf(DETAILED_DARK_DECORATION));
 
     // MOON NATURAL
     public static final Block MOON_TURF = new Block(FabricBlockSettings.of(Material.GRASS, MaterialColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F));

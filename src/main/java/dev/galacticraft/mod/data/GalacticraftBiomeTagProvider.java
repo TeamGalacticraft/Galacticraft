@@ -22,9 +22,12 @@
 
 package dev.galacticraft.mod.data;
 
+import dev.galacticraft.mod.tag.GalacticraftTag;
+import dev.galacticraft.mod.world.biome.GalacticraftBiomeKey;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.Registry;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 
 public class GalacticraftBiomeTagProvider extends FabricTagProvider.DynamicRegistryTagProvider<Biome> {
@@ -34,6 +37,22 @@ public class GalacticraftBiomeTagProvider extends FabricTagProvider.DynamicRegis
 
     @Override
     protected void generateTags() {
+        tag(GalacticraftTag.MOON_HIGHLANDS)
+                .add(GalacticraftBiomeKey.Moon.HIGHLANDS)
+                .add(GalacticraftBiomeKey.Moon.HIGHLANDS_HILLS)
+                .add(GalacticraftBiomeKey.Moon.HIGHLANDS_VALLEY)
+                .add(GalacticraftBiomeKey.Moon.HIGHLANDS_FLAT)
+                .add(GalacticraftBiomeKey.Moon.HIGHLANDS_EDGE);
 
+        tag(GalacticraftTag.MOON_MARE)
+                .add(GalacticraftBiomeKey.Moon.MARE)
+                .add(GalacticraftBiomeKey.Moon.MARE_HILLS)
+                .add(GalacticraftBiomeKey.Moon.MARE_VALLEY)
+                .add(GalacticraftBiomeKey.Moon.MARE_FLAT)
+                .add(GalacticraftBiomeKey.Moon.MARE_EDGE);
+    }
+
+    public FabricTagBuilder<Biome> tag(TagKey<Biome> tag) {
+        return getOrCreateTagBuilder(tag);
     }
 }
