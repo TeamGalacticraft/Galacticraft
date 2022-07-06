@@ -36,6 +36,7 @@ import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.fabricmc.fabric.impl.transfer.transaction.TransactionManagerImpl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
@@ -128,7 +129,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
         NonNullList<ItemStack> remainder = recipe.getRemainingItems(this.craftingInv);
         for (int i = 0; i < 9; i++) {
             ItemStack stack = remainder.get(i);
-            this.itemStorage().extract(i, 1);
+            this.itemStorage().extract(i, 1, transaction);
 
             if (!stack.isEmpty()) {
                 if (this.itemStorage().getAmount(i) == 0) {

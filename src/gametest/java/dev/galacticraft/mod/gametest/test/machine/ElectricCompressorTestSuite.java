@@ -31,29 +31,29 @@ import dev.galacticraft.mod.item.GalacticraftItem;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.test.GameTest;
-import net.minecraft.test.TestContext;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ElectricCompressorTestSuite implements MachineGameTest {
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void electricCompressorPlacementTest(TestContext context) {
-        context.addInstantFinalTask(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GalacticraftBlock.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR));
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void electricCompressorPlacementTest(GameTestHelper context) {
+        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GalacticraftBlock.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR));
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void electricCompressorChargingTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void electricCompressorChargingTest(GameTestHelper context) {
         this.testItemCharging(context, new BlockPos(0, 0, 0), GalacticraftBlock.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR, ElectricCompressorBlockEntity.CHARGE_SLOT);
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 201)
-    public void electricCompressorCraftingTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 201)
+    public void electricCompressorCraftingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var electricCompressor = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR);
         final var inv = electricCompressor.itemStorage();
@@ -62,13 +62,13 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
         runFinalTaskAt(context, 200 + 1, () -> {
             ItemStack output = inv.getStack(ElectricCompressorBlockEntity.OUTPUT_SLOT);
             if (output.getItem() != GalacticraftItem.COMPRESSED_IRON) {
-                context.throwPositionedException(String.format("Expected electric compressor to have made compressed iron but found %s instead!", formatItemStack(output)), pos);
+                context.fail(String.format("Expected electric compressor to have made compressed iron but found %s instead!", formatItemStack(output)), pos);
             }
         });
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void electricCompressorCraftingFullTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void electricCompressorCraftingFullTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var electricCompressor = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR);
         final var inv = electricCompressor.itemStorage();
@@ -78,7 +78,7 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
         fillElectricCompressorSlots(inv);
         runFinalTaskNext(context, () -> {
             if (electricCompressor.getMaxProgress() != 0) {
-                context.throwPositionedException("Expected electric compressor to be unable to craft as the output was full!", pos);
+                context.fail("Expected electric compressor to be unable to craft as the output was full!", pos);
             }
         });
     }

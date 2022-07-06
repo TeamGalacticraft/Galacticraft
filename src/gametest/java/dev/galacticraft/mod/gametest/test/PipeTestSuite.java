@@ -24,58 +24,58 @@ package dev.galacticraft.mod.gametest.test;
 
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import net.minecraft.test.GameTest;
-import net.minecraft.test.TestContext;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class PipeTestSuite implements GalacticraftGameTest {
-    @GameTest(structureName = EMPTY_STRUCTURE)
-    public void pipeConnectionTest(TestContext context) {
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void pipeConnectionTest(GameTestHelper context) {
         final var pos0 = new BlockPos(0, 0, 0);
         final var pos1 = new BlockPos(0, 1, 0);
         final var pos2 = new BlockPos(0, 2, 0);
-        context.setBlockState(pos0, GalacticraftBlock.GLASS_FLUID_PIPE);
-        context.setBlockState(pos1, GalacticraftBlock.GLASS_FLUID_PIPE);
-        context.setBlockState(pos2, GalacticraftBlock.GLASS_FLUID_PIPE);
+        context.setBlock(pos0, GalacticraftBlock.GLASS_FLUID_PIPE);
+        context.setBlock(pos1, GalacticraftBlock.GLASS_FLUID_PIPE);
+        context.setBlock(pos2, GalacticraftBlock.GLASS_FLUID_PIPE);
         final var be0 = context.getBlockEntity(pos0);
         final var be1 = context.getBlockEntity(pos1);
         final var be2 = context.getBlockEntity(pos2);
         if (!(be0 instanceof Pipe pipe0)) {
-            context.throwPositionedException(String.format("Expected a pipe but found %s!", be0), pos0);
+            context.fail(String.format("Expected a pipe but found %s!", be0), pos0);
         } else if (!(be1 instanceof Pipe pipe1)) {
-            context.throwPositionedException(String.format("Expected a pipe but found %s!", be1), pos1);
+            context.fail(String.format("Expected a pipe but found %s!", be1), pos1);
         } else if (!(be2 instanceof Pipe pipe2)) {
-            context.throwPositionedException(String.format("Expected a pipe but found %s!", be2), pos2);
+            context.fail(String.format("Expected a pipe but found %s!", be2), pos2);
         } else {
             if (pipe0.getNetwork() == null) {
-                context.throwPositionedException("Expected a pipe network but got null!", pos0);
+                context.fail("Expected a pipe network but got null!", pos0);
             } else if (pipe1.getNetwork() == null) {
-                context.throwPositionedException("Expected a pipe network but got null!", pos1);
+                context.fail("Expected a pipe network but got null!", pos1);
             } else if (pipe2.getNetwork() == null) {
-                context.throwPositionedException("Expected a pipe network but got null!", pos2);
+                context.fail("Expected a pipe network but got null!", pos2);
             } else {
                 if (pipe0.getNetwork() != pipe1.getNetwork()) {
-                    context.throwGameTestException(String.format("Expected pipe networks at %s and %s to be the same!", pos0, pos1));
+                    context.fail(String.format("Expected pipe networks at %s and %s to be the same!", pos0, pos1));
                 } else if (pipe1.getNetwork() != pipe2.getNetwork()) {
-                    context.throwGameTestException(String.format("Expected pipe networks at %s and %s to be the same!", pos1, pos2));
+                    context.fail(String.format("Expected pipe networks at %s and %s to be the same!", pos1, pos2));
                 } else {
                     if (pipe0.getNetwork().getAllPipes().size() != 3) {
-                        context.throwGameTestException("Not all pipes are registered in the network!");
+                        context.fail("Not all pipes are registered in the network!");
                     } else {
-                        context.addInstantFinalTask(() -> {
-                            context.removeBlock(pos1);
+                        context.succeedWhen(() -> {
+                            context.destroyBlock(pos1);
                             if (pipe0.getNetwork().getAllPipes().size() != 1) {
-                                context.throwPositionedException(String.format("Expected pipe network with 1 pipe but found %s pipes!", pipe0.getNetwork().getAllPipes().size()), pos0);
+                                context.fail(String.format("Expected pipe network with 1 pipe but found %s pipes!", pipe0.getNetwork().getAllPipes().size()), pos0);
                             } else if (pipe2.getNetwork().getAllPipes().size() != 1) {
-                                context.throwPositionedException(String.format("Expected pipe network with 1 pipe but found %s pipes!", pipe2.getNetwork().getAllPipes().size()), pos2);
+                                context.fail(String.format("Expected pipe network with 1 pipe but found %s pipes!", pipe2.getNetwork().getAllPipes().size()), pos2);
                             } else if (!pipe1.getNetwork().markedForRemoval()) {
                                 if (!be1.isRemoved()) {
-                                    context.throwPositionedException("Expected pipe to be removed!", pos1);
+                                    context.fail("Expected pipe to be removed!", pos1);
                                 } else {
-                                    context.throwPositionedException("Expected removed pipe network to be marked for removal!", pos1);
+                                    context.fail("Expected removed pipe network to be marked for removal!", pos1);
                                 }
                             }
                         });

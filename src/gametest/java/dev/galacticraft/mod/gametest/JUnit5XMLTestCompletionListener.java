@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.gametest;
 
 import com.google.common.base.Stopwatch;
-import net.minecraft.test.GameTestState;
+import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.gametest.framework.TestReporter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -41,7 +41,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Modified from {@link net.minecraft.test.XmlReportingTestCompletionListener} to include proper testsuite element attributes.
+ * Modified from {@link net.minecraft.gametest.framework.JUnitLikeTestReporter} to include proper testsuite element attributes.
  */
 public class JUnit5XMLTestCompletionListener implements TestReporter {
     private final Document document;
@@ -62,7 +62,7 @@ public class JUnit5XMLTestCompletionListener implements TestReporter {
     }
 
     @Override
-    public void onTestFailed(GameTestState test) {
+    public void onTestFailed(GameTestInfo test) {
         Element failedStateElement;
         if(test.isRequired()) {
             failedStateElement = this.document.createElement("failure");
@@ -72,18 +72,18 @@ public class JUnit5XMLTestCompletionListener implements TestReporter {
             this.skipped++;
         }
 
-        failedStateElement.setAttribute("message", test.getThrowable().getMessage());
-        this.addTestCase(test, test.getStructurePath()).appendChild(failedStateElement);
+        failedStateElement.setAttribute("message", test.getError().getMessage());
+        this.addTestCase(test, test.getTestName()).appendChild(failedStateElement);
     }
 
     @Override
-    public void onTestPassed(GameTestState test) {
-        this.addTestCase(test, test.getStructurePath());
+    public void onTestSuccess(GameTestInfo test) {
+        this.addTestCase(test, test.getTestName());
         this.tests++;
     }
 
     @Override
-    public void onStopped() {
+    public void finish() {
         this.stopwatch.stop();
         this.testSuiteElement.setAttribute("time", String.valueOf(this.stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000d));
         this.testSuiteElement.setAttribute("tests", String.valueOf(this.tests));
@@ -98,11 +98,11 @@ public class JUnit5XMLTestCompletionListener implements TestReporter {
         }
     }
 
-    private Element addTestCase(GameTestState state, String name) {
+    private Element addTestCase(GameTestInfo state, String name) {
         Element testCase = this.document.createElement("testcase");
         testCase.setAttribute("name", name);
         testCase.setAttribute("classname", state.getStructureName());
-        testCase.setAttribute("time", String.valueOf(state.getElapsedMilliseconds() / 1000d));
+        testCase.setAttribute("time", String.valueOf(state.getRunTime() / 1000d));
         this.testSuiteElement.appendChild(testCase);
         return testCase;
     }

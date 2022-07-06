@@ -30,29 +30,29 @@ import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.test.GameTest;
-import net.minecraft.test.TestContext;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ElectricArcFurnaceTestSuite implements MachineGameTest {
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void electricArcFurnacePlacementTest(TestContext context) {
-        context.addInstantFinalTask(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GalacticraftBlock.ELECTRIC_ARC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE));
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void electricArcFurnacePlacementTest(GameTestHelper context) {
+        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GalacticraftBlock.ELECTRIC_ARC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE));
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void electricArcFurnaceChargeTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void electricArcFurnaceChargeTest(GameTestHelper context) {
         this.testItemCharging(context, new BlockPos(0, 0, 0), GalacticraftBlock.ELECTRIC_ARC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE, ElectricArcFurnaceBlockEntity.CHARGE_SLOT);
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 81)
-    public void electricArcFurnaceBlastingTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 81)
+    public void electricArcFurnaceBlastingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var electricArcFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_ARC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE);
         final var inv = electricArcFurnace.itemStorage();
@@ -61,13 +61,13 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         runFinalTaskAt(context, 80 + 1, () -> {
             ItemStack output = inv.getStack(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1);
             if (output.getItem() != Items.IRON_INGOT && output.getCount() != 2) {
-                context.throwPositionedException(String.format("Expected electric arc furnace to have made two iron ingots but found %s instead!", formatItemStack(output)), pos);
+                context.fail(String.format("Expected electric arc furnace to have made two iron ingots but found %s instead!", formatItemStack(output)), pos);
             }
         });
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void electricArcFurnaceCraftingFullTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void electricArcFurnaceCraftingFullTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var electricArcFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_ARC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE);
         final var inv = electricArcFurnace.itemStorage();
@@ -77,7 +77,7 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         fillElectricArcFurnaceSlots(inv);
         runFinalTaskNext(context, () -> {
             if (electricArcFurnace.getMaxProgress() != 0) {
-                context.throwPositionedException("Expected electric arc furnace to be unable to craft as the output was full!", pos);
+                context.fail("Expected electric arc furnace to be unable to craft as the output was full!", pos);
             }
         });
     }

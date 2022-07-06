@@ -32,30 +32,31 @@ import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.test.GameTest;
-import net.minecraft.test.TestContext;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RefineryTestSuite implements MachineGameTest {
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void refineryPlacementTest(TestContext context) {
-        context.addInstantFinalTask(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY));
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void refineryPlacementTest(GameTestHelper context) {
+        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY));
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void refineryChargingTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void refineryChargingTest(GameTestHelper context) {
         this.testItemCharging(context, new BlockPos(0, 0, 0), GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY, RefineryBlockEntity.CHARGE_SLOT);
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void refineryOilInputTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void refineryOilInputTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY);
         final var inv = refinery.itemStorage();
@@ -67,13 +68,13 @@ public class RefineryTestSuite implements MachineGameTest {
         runFinalTaskNext(context, () -> {
             ItemStack inputStack = inv.getStack(RefineryBlockEntity.FLUID_INPUT_SLOT);
             if (inputStack.getItem() != Items.BUCKET) {
-                context.throwPositionedException(String.format("Expected refinery to return a bucket from fluid transaction but found %s instead!", formatItemStack(inputStack)), pos);
+                context.fail(String.format("Expected refinery to return a bucket from fluid transaction but found %s instead!", formatItemStack(inputStack)), pos);
             }
         });
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 201)
-    public void refineryCraftingTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 201)
+    public void refineryCraftingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY);
         final var inv = refinery.itemStorage();
@@ -83,23 +84,23 @@ public class RefineryTestSuite implements MachineGameTest {
         }
         refinery.energyStorage().setEnergyUnsafe(refinery.getEnergyCapacity());
         try (Transaction transaction = Transaction.openOuter()) {
-            refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, new FluidStack(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), FluidConstants.BUCKET), 1);
+            refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, FluidVariant.of(GalacticraftFluid.CRUDE_OIL), 1);
             transaction.commit();
         }
         runFinalTaskAt(context, 200 + 1, () -> {
             long oil = refinery.fluidStorage().getAmount(RefineryBlockEntity.OIL_TANK);
             long fuel = refinery.fluidStorage().getAmount(RefineryBlockEntity.FUEL_TANK);
             if (oil != 0) {
-                context.throwPositionedException(String.format("Expected refinery to refine all of the oil but found %s remaining!", oil), pos);
+                context.fail(String.format("Expected refinery to refine all of the oil but found %s remaining!", oil), pos);
             }
             if (fuel < FluidConstants.BUCKET) {
-                context.throwPositionedException(String.format("Expected refinery to refine all of the oil into fuel but it only refined %s!", fuel), pos);
+                context.fail(String.format("Expected refinery to refine all of the oil into fuel but it only refined %s!", fuel), pos);
             }
         });
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void refineryRefiningFullTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void refineryRefiningFullTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY);
         final var inv = refinery.itemStorage();
@@ -109,13 +110,13 @@ public class RefineryTestSuite implements MachineGameTest {
         }
         refinery.energyStorage().setEnergyUnsafe(refinery.getEnergyCapacity());
         try (Transaction transaction = Transaction.openOuter()) {
-            refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, new FluidStack(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), FluidConstants.BUCKET), 1);
-            refinery.fluidStorage().setSlot(RefineryBlockEntity.FUEL_TANK, new FluidStack(FluidVariant.of(GalacticraftFluid.FUEL), FluidConstants.BUCKET), 1);
+            refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, FluidVariant.of(GalacticraftFluid.CRUDE_OIL), 1);
+            refinery.fluidStorage().setSlot(RefineryBlockEntity.FUEL_TANK, FluidVariant.of(GalacticraftFluid.FUEL), 1);
             transaction.commit();
         }
         runFinalTaskNext(context, () -> {
             if (refinery.fluidStorage().getAmount(RefineryBlockEntity.OIL_TANK) != FluidConstants.BUCKET) {
-                context.throwPositionedException(String.format("Expected refinery to be unable to refine oil as the fuel tank was full!"), pos);
+                context.fail(String.format("Expected refinery to be unable to refine oil as the fuel tank was full!"), pos);
             }
         });
     }

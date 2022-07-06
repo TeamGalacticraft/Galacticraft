@@ -23,9 +23,9 @@
 package dev.galacticraft.mod.gametest.test;
 
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
-import net.minecraft.item.ItemStack;
-import net.minecraft.test.TestContext;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -33,20 +33,20 @@ import net.minecraft.util.registry.Registry;
 public interface GalacticraftGameTest extends FabricGameTest {
     String SINGLE_BLOCK = "gc-test:single_block";
 
-    default void runNext(TestContext context, Runnable runnable) {
-        context.runAtTick(context.getTick() + 1, runnable);
+    default void runNext(GameTestHelper context, Runnable runnable) {
+        context.runAtTickTime(context.getTick() + 1, runnable);
     }
 
-    default void runAt(TestContext context, int tick, Runnable runnable) {
-        context.runAtTick(context.getTick() + tick, runnable);
+    default void runAt(GameTestHelper context, int tick, Runnable runnable) {
+        context.runAtTickTime(context.getTick() + tick, runnable);
     }
 
-    default void runFinalTaskNext(TestContext context, Runnable runnable) {
-        context.runAtTick(context.getTick() + 1, () -> context.addInstantFinalTask(runnable));
+    default void runFinalTaskNext(GameTestHelper context, Runnable runnable) {
+        context.runAtTickTime(context.getTick() + 1, () -> context.succeedWhen(runnable));
     }
 
-    default void runFinalTaskAt(TestContext context, int time, Runnable runnable) {
-        context.runAtTick(context.getTick() + time, () -> context.addInstantFinalTask(runnable));
+    default void runFinalTaskAt(GameTestHelper context, int time, Runnable runnable) {
+        context.runAtTickTime(context.getTick() + time, () -> context.succeedWhen(runnable));
     }
 
     default String formatItemStack(ItemStack stack) {
