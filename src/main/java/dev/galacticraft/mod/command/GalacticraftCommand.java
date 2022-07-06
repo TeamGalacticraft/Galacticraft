@@ -57,42 +57,20 @@ public class GalacticraftCommand {
 
     public static void register() {
         CommandRegistrationCallback.EVENT.register((commandDispatcher, registryAccess, environment) -> {
-
             commandDispatcher.register(
                     CommandManager.literal("gchouston")
                     .executes(GalacticraftCommand::teleportToEarth));
 
-            /* This looks convoluted, but it works. Essentially, it registers three branches of the same command.
-             * One as the base, one to also teleport entities, and one to also teleport to a specific position.
-             * This is because the command I added, to teleport to a specific position, breaks when combined with
-             * teleporting multiple non-player entities for some reason. So, I made it where you can pick
-             * teleporting entities OR setting a custom position to go to, but not both :P
-             */
-            LiteralCommandNode<ServerCommandSource> dimensiontp_root = commandDispatcher.register(
+            LiteralCommandNode<ServerCommandSource> node = commandDispatcher.register(
                     CommandManager.literal("dimensiontp")
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-                    .executes(GalacticraftCommand::teleport)));
-            // TODO: either fix this or remove it
-             LiteralCommandNode<ServerCommandSource> dimensiontp_entities = commandDispatcher.register(
-                     CommandManager.literal("dimensiontp")
-                    .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
-                    .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-                    .then(CommandManager.argument("entities", EntityArgumentType.entities())
-                    .executes(((GalacticraftCommand::teleportMultiple))))));
-            LiteralCommandNode<ServerCommandSource> dimensiontp_pos = commandDispatcher.register(
-                    CommandManager.literal("dimensiontp")
-                    .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
-                    .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-                    .then(CommandManager.argument("pos", BlockPosArgumentType.blockPos())
-                    .executes(GalacticraftCommand::teleportToCoords))));
-
-            // Because I don't like to type
-            commandDispatcher.register(CommandManager.literal("dimtp")
-                    .redirect(dimensiontp_root)
-                    .redirect(dimensiontp_entities)
-                    .redirect(dimensiontp_pos)
-            );
+                    .executes(GalacticraftCommand::teleport)
+                            .then(CommandManager.argument("entities", EntityArgumentType.entities())
+                                    .executes(((GalacticraftCommand::teleportMultiple))))
+                            .then(CommandManager.argument("pos", BlockPosArgumentType.blockPos())
+                                    .executes(GalacticraftCommand::teleportToCoords))));
+            commandDispatcher.register(CommandManager.literal("dimtp").redirect(node));
         });
     }
 

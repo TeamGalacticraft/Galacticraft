@@ -20,17 +20,16 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.dimension;
+package dev.galacticraft.mod.world.gen.structure;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
+import net.minecraft.world.gen.structure.Structure;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class GalacticraftDimensionType {
-    public static final RegistryKey<World> MOON_KEY = RegistryKey.of(Registry.WORLD_KEY, new Identifier(Constant.MOD_ID, "moon"));
+public class GalacticraftStructureKeys {
+    public static final RegistryKey<Structure> MOON_PILLAGER_BASE = RegistryKey.of(Registry.STRUCTURE_KEY, new Identifier(Constant.MOD_ID, "moon_pillager_base"));
+    public static final RegistryKey<Structure> MOON_RUINS = RegistryKey.of(Registry.STRUCTURE_KEY, new Identifier(Constant.MOD_ID, "moon_ruins"));
+    public static final RegistryKey<Structure> MOON_VILLAGE_HIGHLANDS = RegistryKey.of(Registry.STRUCTURE_KEY, new Identifier(Constant.MOD_ID, "moon_village_highlands"));
 }

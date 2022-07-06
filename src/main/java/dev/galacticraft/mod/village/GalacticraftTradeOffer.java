@@ -29,6 +29,7 @@ import net.minecraft.item.*;
 import net.minecraft.item.map.MapIcon;
 import net.minecraft.item.map.MapState;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.village.TradeOffer;
@@ -63,12 +64,12 @@ public class GalacticraftTradeOffer {
 
     public static class SellMapFactory implements TradeOffers.Factory {
         private final int price;
-        private final Structure structure;
+        private final TagKey<Structure> structure;
         private final MapIcon.Type iconType;
         private final int maxUses;
         private final int experience;
 
-        public SellMapFactory(int price, Structure feature, MapIcon.Type iconType, int maxUses, int experience) {
+        public SellMapFactory(int price, TagKey<Structure> feature, MapIcon.Type iconType, int maxUses, int experience) {
             this.price = price;
             this.structure = feature;
             this.iconType = iconType;
@@ -81,7 +82,7 @@ public class GalacticraftTradeOffer {
             if (!(entity.world instanceof ServerWorld world)) {
                 return null;
             } else {
-                BlockPos blockPos = null;//world.locateStructure(this.structure, entity.getBlockPos(), 100, true); TODO: PORT
+                BlockPos blockPos = world.locateStructure(this.structure, entity.getBlockPos(), 100, true);
                 if (blockPos != null) {
                     ItemStack itemStack = FilledMapItem.createMap(world, blockPos.getX(), blockPos.getZ(), (byte) 2, true, true);
                     FilledMapItem.fillExplorationMap(world, itemStack);

@@ -20,17 +20,15 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.feature;
+package dev.galacticraft.mod.structure;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class GalacticraftFeature { //FIXME: when fabric implements 1.18 biome api
-//    public static final RegistryKey<ConfiguredFeature<?, ?>> OIL_LAKE_KEY = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, new Identifier(Constant.MOD_ID, "oil_lake"));
-//    public static final ConfiguredFeature<?, ?> OIL_LAKE = Feature.LAKE.configure(new SingleStateFeatureConfig(GalacticraftBlock.CRUDE_OIL.getDefaultState())).decorate(Decorator.LAVA_LAKE.configure(new ChanceDecoratorConfig(70)));
+import dev.galacticraft.mod.Constant;
+import net.minecraft.structure.StructureSet;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 
-    public static void register() {
-//        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, OIL_LAKE_KEY.getValue(), OIL_LAKE);
-//        BiomeModifications.addFeature(biomeSelectionContext -> biomeSelectionContext.hasFeature(RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, new Identifier("lake_lava"))), GenerationStep.Feature.LAKES, OIL_LAKE_KEY);
-    }
+public interface GalacticraftStructureSetKeys {
+    RegistryKey<StructureSet> MOON_PILLAGER_BASES = RegistryKey.of(Registry.STRUCTURE_SET_KEY, new Identifier(Constant.MOD_ID, "moon_pillager_bases"));
+    RegistryKey<StructureSet> MOON_RUINS = RegistryKey.of(Registry.STRUCTURE_SET_KEY, new Identifier(Constant.MOD_ID, "moon_ruins"));
 }

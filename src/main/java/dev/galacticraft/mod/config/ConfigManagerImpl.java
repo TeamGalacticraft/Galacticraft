@@ -241,15 +241,6 @@ public class ConfigManagerImpl implements ConfigManager {
 
         SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(Text.translatable(Constant.Config.SKYBOX));
 
-        skybox.add(new BooleanToggleBuilder(
-                Text.translatable(Constant.Config.RESET),
-                Text.translatable(Constant.Config.MULTICOLOR_STARS),
-                this.config.areMoreMulticoloredStarsEnabled())
-                .setSaveConsumer(flag -> this.config.setMoreMulticolorStars(flag))
-                .setDefaultValue(false)
-                .build()
-        );
-
         b.getOrCreateCategory(Text.translatable(Constant.Config.DEBUG)).addEntry(dB.build());
         b.getOrCreateCategory(Text.translatable(Constant.Config.ENERGY)).addEntry(wires.build()).addEntry(machines.build());
         b.getOrCreateCategory(Text.translatable(Constant.Config.CLIENT)).addEntry(skybox.build());

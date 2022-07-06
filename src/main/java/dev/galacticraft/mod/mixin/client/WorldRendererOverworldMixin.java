@@ -25,15 +25,18 @@ package dev.galacticraft.mod.mixin.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gl.VertexBuffer;
-import net.minecraft.client.render.*;
-import net.minecraft.util.math.Matrix4f;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
@@ -43,7 +46,9 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(WorldRenderer.class)
 @Environment(EnvType.CLIENT)
 public abstract class WorldRendererOverworldMixin {
-    @Shadow @Nullable private VertexBuffer starsBuffer;
+    @Shadow
+    @Nullable
+    private VertexBuffer starsBuffer;
     private @Unique Random starRandom = null;
 
     @Inject(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BufferBuilder;begin(Lnet/minecraft/client/render/VertexFormat$DrawMode;Lnet/minecraft/client/render/VertexFormat;)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
@@ -60,65 +65,4 @@ public abstract class WorldRendererOverworldMixin {
     private void gc_replaceVF(BufferBuilder bufferBuilder, VertexFormat.DrawMode drawMode, VertexFormat format) {
         bufferBuilder.begin(drawMode, VertexFormats.POSITION_COLOR);
     }
-
-    @ModifyConstant(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;", constant = @Constant(intValue = 1500))
-    private int gc_moreStars(int i) {
-        return i * 4;
-    }
-
-//    @Redirect(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/util/math/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/VertexBuffer;setShader(Lnet/minecraft/util/math/Matrix4f;Lnet/minecraft/util/math/Matrix4f;Lnet/minecraft/client/render/Shader;)V", ordinal = 0), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BackgroundRenderer;method_23792()V")))
-//    private void gc_replaceShader(VertexBuffer vertexBuffer, Matrix4f viewMatrix, Matrix4f projectionMatrix, Shader shader) {
-//        assert vertexBuffer == starsBuffer;
-//        assert shader == GameRenderer.getPositionShader();
-//
-//        vertexBuffer.setShader(viewMatrix, projectionMatrix, GameRenderer.getPositionColorShader());
-//    } TODO: PORT
-
-    private @Unique byte gc_idx = 0;
-    private @Unique int r = 255;
-    private @Unique int g = 255;
-    private @Unique int b = 255;
-    private @Unique int a = 255;
-
-    @Redirect(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BufferBuilder;vertex(DDD)Lnet/minecraft/client/render/VertexConsumer;"))
-    private VertexConsumer gc_setColor(BufferBuilder bufferBuilder, double x, double y, double z) {
-        if (gc_idx == 4) {
-            gc_idx = 0;
-        }
-
-        if (gc_idx++ == 0) {
-            int r;
-            int g;
-            int b;
-            int a;
-            if (starRandom.nextInt(20) == 0) {
-                r = starRandom.nextInt(255 - 200) + 200;
-                g = starRandom.nextInt(110);
-                b = starRandom.nextInt(110);
-                if (starRandom.nextInt(30) == 0) {
-                    g += starRandom.nextInt(100);
-                }
-                a = (starRandom.nextInt(5) == 0 ? 255 : (starRandom.nextInt(255 - 170) + 170));
-            } else if (starRandom.nextInt(30) == 0) {
-                b = starRandom.nextInt(255 - 170) + 170;
-                r = starRandom.nextInt(70);
-                g = starRandom.nextInt(140);
-                a = (starRandom.nextInt(5) == 0 ? 255 : (starRandom.nextInt(255 - 170) + 170));
-            } else if (starRandom.nextInt(6) == 0) {
-                g = r = starRandom.nextInt(255 - 170) + 170;
-                b = Math.min(g - 70, starRandom.nextInt(150));
-                a = (starRandom.nextInt(5) == 0 ? 255 : (starRandom.nextInt(255 - 170) + 170));
-            } else {
-                r = g = b = starRandom.nextInt(255 - 180) + 180;
-                a = starRandom.nextInt(255 - 150) + 150;
-            }
-            this.r = r;
-            this.b = b;
-            this.g = g;
-            this.a = a;
-        }
-
-        return bufferBuilder.vertex(x, y, z).color(r, g, b, a);
-    }
-
 }

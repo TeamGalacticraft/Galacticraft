@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.structure;
 
-import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.loot.GalacticraftLootTable;
 import net.minecraft.block.Block;
@@ -53,8 +52,8 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -103,7 +102,7 @@ public class MoonRuinsGenerator {
    }
 
    private static List<BlockPos> getRoomPositions(Random random, BlockPos blockPos) {
-      List<BlockPos> list = Lists.newArrayList();
+      List<BlockPos> list = new ArrayList<>(8);
       list.add(blockPos.add(-16 + MathHelper.nextInt(random, 1, 8), 0, 16 + MathHelper.nextInt(random, 1, 7)));
       list.add(blockPos.add(-16 + MathHelper.nextInt(random, 1, 8), 0, MathHelper.nextInt(random, 1, 7)));
       list.add(blockPos.add(-16 + MathHelper.nextInt(random, 1, 8), 0, -16 + MathHelper.nextInt(random, 4, 8)));
@@ -135,7 +134,7 @@ public class MoonRuinsGenerator {
       }
 
       private static StructurePlacementData method_35446(BlockRotation blockRotation) {
-         return (new StructurePlacementData()).setRotation(blockRotation).setMirror(BlockMirror.NONE).addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR_AND_STRUCTURE_BLOCKS);
+         return new StructurePlacementData().setRotation(blockRotation).setMirror(BlockMirror.NONE).addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR_AND_STRUCTURE_BLOCKS);
       }
 
       @Override
@@ -153,15 +152,7 @@ public class MoonRuinsGenerator {
             if (blockEntity instanceof ChestBlockEntity chest) {
                chest.setLootTable(GalacticraftLootTable.BASIC_MOON_RUINS_CHEST, random.nextLong());
             }
-         }/* else if ("drowned".equals(metadata)) {
-            DrownedEntity drownedEntity = EntityType.DROWNED.create(world.toServerWorld());
-            assert drownedEntity != null;
-            drownedEntity.setPersistent();
-            drownedEntity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
-            drownedEntity.initialize(world, world.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null, null);
-            world.spawnEntityAndPassengers(drownedEntity);
-            world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_LISTENERS);
-         }*/
+         }
       }
 
       @Override

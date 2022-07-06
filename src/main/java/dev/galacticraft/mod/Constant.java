@@ -30,7 +30,6 @@ import dev.galacticraft.mod.lookup.predicate.TagPredicate;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -853,7 +852,6 @@ public interface Constant {
     @ApiStatus.Internal
     interface Mixin {
         String STRUCTURE_POOL_DEBUG = "StructurePoolGeneratorMixin";
-        String OVERWORLD_SKY_OVERRIDE = "client.WorldRendererOverworldMixin";
     }
 
     interface Recipe {
@@ -881,5 +879,12 @@ public interface Constant {
         String SOLAR_PANEL_PANEL_VERTICAL_1 = "solar_panel_panel_vertical_1";
         String SOLAR_PANEL_PANEL_VERTICAL_2 = "solar_panel_panel_vertical_2";
         String SOLAR_PANEL_PANEL_VERTICAL_3 = "solar_panel_panel_vertical_3";
+    }
+
+    interface Carver {
+        String MOON_CANYON_CARVER = "moon_canyon_carver";
+        String MOON_CRATER_CARVER = "moon_crater_carver";
+        String MOON_HIGHLANDS_CAVE_CARVER = "moon_highlands_cave_carver";
+        String MOON_MARE_CAVE_CARVER = "moon_mare_cave_carver";
     }
 }

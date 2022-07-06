@@ -26,20 +26,23 @@ import net.fabricmc.fabric.api.lookup.v1.item.ItemApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.minecraft.tag.TagKey;
+import net.minecraft.util.registry.Registry;
 
 import java.util.function.Predicate;
 
 public record ItemResourceTagExtractPredicate<R, V extends TransferVariant<R>>(
-        ItemApiLookup<Storage<V>, ContainerItemContext> lookup,
+        ItemApiLookup<Storage<V>, ContainerItemContext> lookup, Registry<R> registry,
         TagKey<R> tag) implements Predicate<ItemVariant> {
 
     @Override
     public boolean test(ItemVariant variant) {
         Storage<V> storage = ContainerItemContext.withInitial(variant.toStack()).find(this.lookup);
         if (storage != null && storage.supportsExtraction()) {
-            V extractableContent = null;//StorageUtil.findExtractableResource(storage, v -> tag.contains(v.getObject()), null); TODO: PORT
+            //noinspection OptionalGetWithoutIsPresent: We can call get as both items and fluids have intrusive holders
+            V extractableContent = StorageUtil.findExtractableResource(storage, v -> this.registry.getEntry(this.registry.getRawId(v.getObject())).get().isIn(this.tag), null);
             if (extractableContent != null && !extractableContent.isBlank()) {
                 return storage.simulateExtract(extractableContent, Long.MAX_VALUE, null) >= 0;
             }

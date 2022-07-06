@@ -24,7 +24,7 @@ package dev.galacticraft.mod.world.gen.carver.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.tag.BlockTags;
+import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.minecraft.util.math.floatprovider.FloatProvider;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.YOffset;
@@ -51,7 +51,7 @@ public class CraterCarverConfig extends CarverConfig {
     public final int idealRangeOffset;
 
     public CraterCarverConfig(float probability, HeightProvider y, FloatProvider yScale, CarverDebugConfig carverDebugConfig, int maxRadius, int minRadius, int idealRangeOffset) {
-        super(probability, y, yScale, YOffset.fixed(-64), carverDebugConfig, Registry.BLOCK.getOrCreateEntryList(BlockTags.OVERWORLD_CARVER_REPLACEABLES)); // TODO: Crater replaceables
+        super(probability, y, yScale, YOffset.fixed(-64), carverDebugConfig, Registry.BLOCK.getOrCreateEntryList(GalacticraftTag.MOON_CRATER_CARVER_REPLACEABLES));
         this.maxRadius = maxRadius;
         this.minRadius = minRadius;
         this.idealRangeOffset = idealRangeOffset;

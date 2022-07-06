@@ -30,6 +30,7 @@ import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.structure.Structure;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -41,34 +42,24 @@ public class GalacticraftTag {
 
     public static final TagKey<Block> INFINIBURN_MOON = TagKey.of(Registry.BLOCK_KEY, new Identifier(Constant.MOD_ID, "infiniburn_moon"));
     public static final TagKey<Block> BASE_STONE_MOON = TagKey.of(Registry.BLOCK_KEY, new Identifier(Constant.MOD_ID, "base_stone_moon"));
+    public static final TagKey<Block> MOON_CARVER_REPLACEABLES = TagKey.of(Registry.BLOCK_KEY, new Identifier(Constant.MOD_ID, "moon_carver_replacables"));
+    public static final TagKey<Block> MOON_CRATER_CARVER_REPLACEABLES = TagKey.of(Registry.BLOCK_KEY, new Identifier(Constant.MOD_ID, "moon_crater_carver_replaceables"));
     public static final TagKey<Block> MOON_STONE_ORE_REPLACABLES = TagKey.of(Registry.BLOCK_KEY, new Identifier(Constant.MOD_ID, "moon_stone_ore_replaceables"));
     public static final TagKey<Block> LUNASLATE_ORE_REPLACABLES = TagKey.of(Registry.BLOCK_KEY, new Identifier(Constant.MOD_ID, "lunaslate_ore_replaceables"));
 
-    public static final TagKey<Biome> MOON_HIGHLANDS = null;//new LazyDefaultedTag<>(TagFactory.BIOME, new Identifier(Constant.MOD_ID, "moon_highlands"), () -> ImmutableList.of(
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS_HILLS),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS_VALLEY),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS_FLAT),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.HIGHLANDS_EDGE)
-//    ));
+    public static final TagKey<Biome> MOON = TagKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, "moon"));
+    public static final TagKey<Biome> MOON_HIGHLANDS = TagKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, "moon_highlands"));
+    public static final TagKey<Biome> MOON_MARE = TagKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, "moon_mare"));
 
-    public static final TagKey<Biome> MOON_MARE = null;//new LazyDefaultedTag<>(TagFactory.BIOME, new Identifier(Constant.MOD_ID, "moon_mare"), () -> ImmutableList.of( //fixme
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.MARE),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.MARE_HILLS),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.MARE_VALLEY),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.MARE_FLAT),
-//            BuiltinRegistries.BIOME.getOrThrow(GalacticraftBiomeKey.Moon.MARE_EDGE)
-//    ));
+    public static final TagKey<Biome> MOON_PILLAGER_BASE_HAS_STRUCTURE = TagKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, "has_structure/moon_pillager_base"));
+    public static final TagKey<Biome> MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE = TagKey.of(Registry.BIOME_KEY, new Identifier(Constant.MOD_ID, "has_structure/moon_village_highlands"));
 
-    public static final TagKey<Fluid> OXYGEN = null;//FluidTags.getTagGroup().getTag(new Identifier(Constant.MOD_ID, "oxygen"));
+    public static final TagKey<Fluid> OXYGEN = TagKey.of(Registry.FLUID_KEY, new Identifier(Constant.MOD_ID, "oxygen"));
 
-    public static final TagKey<Item> SILICONS = null;//TagFactory.ITEM.create(new Identifier(Constant.COMMON_NAMESPACE, "silicons"));
-    public static final TagKey<Item> REDSTONES = null;//TagFactory.ITEM.create(new Identifier(Constant.COMMON_NAMESPACE, "redstones"));
+    public static final TagKey<Item> SILICON = TagKey.of(Registry.ITEM_KEY, new Identifier(Constant.COMMON_NAMESPACE, "silicon"));
+
+    public static final TagKey<Structure> MOON_RUINS = TagKey.of(Registry.STRUCTURE_KEY, new Identifier(Constant.MOD_ID, "moon_ruins"));
 
     public static void register() {
-//        BlockTagsAccessor.getRequiredTags().add(MOON_STONE_ORE_REPLACABLES.getId().toString());
-//        BlockTagsAccessor.getRequiredTags().add(LUNASLATE_ORE_REPLACABLES.getId().toString());
-//        BlockTagsAccessor.getRequiredTags().add(BASE_STONE_MOON.getId().toString());
-//        BlockTagsAccessor.getRequiredTags().add(INFINIBURN_MOON.getId().toString());
     }
 }

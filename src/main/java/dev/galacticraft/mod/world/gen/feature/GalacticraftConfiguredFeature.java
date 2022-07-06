@@ -20,17 +20,32 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.dimension;
+package dev.galacticraft.mod.world.gen.feature;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.block.GalacticraftBlock;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.LakeFeature;
+import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftDimensionType {
-    public static final RegistryKey<World> MOON_KEY = RegistryKey.of(Registry.WORLD_KEY, new Identifier(Constant.MOD_ID, "moon"));
+public class GalacticraftConfiguredFeature {
+    public static final RegistryKey<ConfiguredFeature<?, ?>> OIL_LAKE_KEY = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, new Identifier(Constant.MOD_ID, "oil_lake"));
+    public static final RegistryEntry<ConfiguredFeature<?, ?>> OIL_LAKE = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE,
+            OIL_LAKE_KEY.getValue(),
+            new ConfiguredFeature<>(Feature.LAKE,
+            new LakeFeature.Config(BlockStateProvider.of(GalacticraftBlock.CRUDE_OIL.getDefaultState()), BlockStateProvider.of(Blocks.STONE.getDefaultState())))
+    );
+
+    public static void register() {
+    }
 }

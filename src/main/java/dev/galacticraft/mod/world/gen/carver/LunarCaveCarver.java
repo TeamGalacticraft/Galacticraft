@@ -22,10 +22,8 @@
 
 package dev.galacticraft.mod.world.gen.carver;
 
-import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.state.property.Properties;
@@ -51,13 +49,6 @@ import java.util.function.Function;
 public class LunarCaveCarver extends CaveCarver {
     public LunarCaveCarver(Codec<CaveCarverConfig> codec) {
         super(codec);
-//        this.alwaysCarvableBlocks = ImmutableSet.<Block>builder().addAll(this.alwaysCarvableBlocks) TODO: PORT: replacebles?
-//                .add(GalacticraftBlock.MOON_ROCK)
-//                .add(GalacticraftBlock.MOON_SURFACE_ROCK)
-//                .add(GalacticraftBlock.MOON_TURF)
-//                .add(GalacticraftBlock.MOON_BASALT)
-//                .add(GalacticraftBlock.MOON_DIRT)
-//                .build();
     }
 
     @Override

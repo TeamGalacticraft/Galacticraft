@@ -20,19 +20,15 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.feature;
+package dev.galacticraft.mod.world.gen.structure;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.structure.MoonRuinsGenerator;
-import net.minecraft.structure.StructureGeneratorFactory;
 import net.minecraft.structure.StructurePiecesCollector;
-import net.minecraft.structure.StructurePiecesGenerator;
-import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureType;
 
@@ -41,13 +37,12 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class MoonRuinsFeature extends Structure {
-//   private static final Structure.Config CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-//           StructurePool.REGISTRY_CODEC.fieldOf("start_pool").forGetter(StructurePoolFeatureConfig::getStartPool),
-//           Codec.INT.fieldOf("size").forGetter(StructurePoolFeatureConfig::getSize)
-//   ).apply(instance, MoonRuinsFeature::new));
+public class MoonRuinsStructure extends Structure {
+   public static final Codec<MoonRuinsStructure> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+           Config.CODEC.fieldOf("config").forGetter((moonRuinsStructure) -> moonRuinsStructure.config)
+   ).apply(instance, MoonRuinsStructure::new));
 
-   public MoonRuinsFeature(Structure.Config codec) {
+   public MoonRuinsStructure(Structure.Config codec) {
       super(codec);
    }
 
@@ -64,6 +59,6 @@ public class MoonRuinsFeature extends Structure {
 
    @Override
    public StructureType<?> getType() {
-      return null;//GalacticraftStructureFeature.MOON_RUINS;
+      return GalacticraftStructureType.MOON_RUINS;
    }
 }

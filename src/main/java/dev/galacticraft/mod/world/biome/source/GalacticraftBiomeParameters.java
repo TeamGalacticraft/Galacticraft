@@ -33,7 +33,6 @@ import net.minecraft.world.biome.source.util.MultiNoiseUtil;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil.ParameterRange;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -191,5 +190,7 @@ public class GalacticraftBiomeParameters {
                 )
         );
     }
+
+    public static void register() {}
 }
 
