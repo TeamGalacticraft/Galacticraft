@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AbstractSkeletonEntityAccessor",
+    "BlockFamilyProviderAccessor",
+    "BlockModelGeneratorsAccessor",
     "BucketItemAccessor",
     "DamageSourceAccessor",
     "DimensionTypeMixin",

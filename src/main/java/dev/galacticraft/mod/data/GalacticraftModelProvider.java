@@ -24,6 +24,7 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.impl.client.model.MachineUnbakedModel;
 import dev.galacticraft.mod.item.GalacticraftItem;
+import dev.galacticraft.mod.mixin.BlockModelGeneratorsAccessor;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.models.BlockModelGenerators;
@@ -33,6 +34,9 @@ import net.minecraft.data.models.blockstates.PropertyDispatch;
 import net.minecraft.data.models.blockstates.Variant;
 import net.minecraft.data.models.blockstates.VariantProperties;
 import net.minecraft.data.models.model.ModelLocationUtils;
+import net.minecraft.data.models.model.ModelTemplates;
+import net.minecraft.data.models.model.TexturedModel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -45,7 +49,8 @@ public class GalacticraftModelProvider extends FabricModelProvider {
     }
 
     @Override
-    public void generateBlockStateModels(BlockModelGenerators generator) {
+    public void generateBlockStateModels(BlockModelGenerators gen) {
+        GalacticraftBlockModelGenerators generator = new GalacticraftBlockModelGenerators(gen);
         generator.createAirLikeBlock(GLOWSTONE_TORCH, GalacticraftItem.GLOWSTONE_TORCH);
         generator.createAirLikeBlock(GLOWSTONE_WALL_TORCH, GalacticraftItem.GLOWSTONE_TORCH);
         generator.createAirLikeBlock(UNLIT_TORCH, GalacticraftItem.UNLIT_TORCH);
@@ -55,7 +60,7 @@ public class GalacticraftModelProvider extends FabricModelProvider {
                 .slab(ALUMINUM_DECORATION_SLAB)
                 .stairs(ALUMINUM_DECORATION_STAIRS)
                 .wall(ALUMINUM_DECORATION_WALL);
-        generator.family(DETAILED_ALUMINUM_DECORATION)
+        generator.family(DETAILED_ALUMINUM_DECORATION, TexturedModel.CUBE_TOP)
                 .slab(DETAILED_ALUMINUM_DECORATION_SLAB)
                 .stairs(DETAILED_ALUMINUM_DECORATION_STAIRS)
                 .wall(DETAILED_ALUMINUM_DECORATION_WALL);
@@ -64,7 +69,7 @@ public class GalacticraftModelProvider extends FabricModelProvider {
                 .slab(COPPER_DECORATION_SLAB)
                 .stairs(COPPER_DECORATION_STAIRS)
                 .wall(COPPER_DECORATION_WALL);
-        generator.family(DETAILED_COPPER_DECORATION)
+        generator.family(DETAILED_COPPER_DECORATION, TexturedModel.CUBE_TOP)
                 .slab(DETAILED_COPPER_DECORATION_SLAB)
                 .stairs(DETAILED_COPPER_DECORATION_STAIRS)
                 .wall(DETAILED_COPPER_DECORATION_WALL);
@@ -73,7 +78,7 @@ public class GalacticraftModelProvider extends FabricModelProvider {
                 .slab(IRON_DECORATION_SLAB)
                 .stairs(IRON_DECORATION_STAIRS)
                 .wall(IRON_DECORATION_WALL);
-        generator.family(DETAILED_IRON_DECORATION)
+        generator.family(DETAILED_IRON_DECORATION, TexturedModel.CUBE_TOP)
                 .slab(DETAILED_IRON_DECORATION_SLAB)
                 .stairs(DETAILED_IRON_DECORATION_STAIRS)
                 .wall(DETAILED_IRON_DECORATION_WALL);
@@ -82,7 +87,7 @@ public class GalacticraftModelProvider extends FabricModelProvider {
                 .slab(METEORIC_IRON_DECORATION_SLAB)
                 .stairs(METEORIC_IRON_DECORATION_STAIRS)
                 .wall(METEORIC_IRON_DECORATION_WALL);
-        generator.family(DETAILED_METEORIC_IRON_DECORATION)
+        generator.family(DETAILED_METEORIC_IRON_DECORATION, TexturedModel.CUBE_TOP)
                 .slab(DETAILED_METEORIC_IRON_DECORATION_SLAB)
                 .stairs(DETAILED_METEORIC_IRON_DECORATION_STAIRS)
                 .wall(DETAILED_METEORIC_IRON_DECORATION_WALL);
@@ -91,7 +96,7 @@ public class GalacticraftModelProvider extends FabricModelProvider {
                 .slab(STEEL_DECORATION_SLAB)
                 .stairs(STEEL_DECORATION_STAIRS)
                 .wall(STEEL_DECORATION_WALL);
-        generator.family(DETAILED_STEEL_DECORATION)
+        generator.family(DETAILED_STEEL_DECORATION, TexturedModel.CUBE_TOP)
                 .slab(DETAILED_STEEL_DECORATION_SLAB)
                 .stairs(DETAILED_STEEL_DECORATION_STAIRS)
                 .wall(DETAILED_STEEL_DECORATION_WALL);
@@ -100,7 +105,7 @@ public class GalacticraftModelProvider extends FabricModelProvider {
                 .slab(TIN_DECORATION_SLAB)
                 .stairs(TIN_DECORATION_STAIRS)
                 .wall(TIN_DECORATION_WALL);
-        generator.family(DETAILED_TIN_DECORATION)
+        generator.family(DETAILED_TIN_DECORATION, TexturedModel.CUBE_TOP)
                 .slab(DETAILED_TIN_DECORATION_SLAB)
                 .stairs(DETAILED_TIN_DECORATION_STAIRS)
                 .wall(DETAILED_TIN_DECORATION_WALL);
@@ -109,7 +114,7 @@ public class GalacticraftModelProvider extends FabricModelProvider {
                 .slab(TITANIUM_DECORATION_SLAB)
                 .stairs(TITANIUM_DECORATION_STAIRS)
                 .wall(TITANIUM_DECORATION_WALL);
-        generator.family(DETAILED_TITANIUM_DECORATION)
+        generator.family(DETAILED_TITANIUM_DECORATION, TexturedModel.CUBE_TOP)
                 .slab(DETAILED_TITANIUM_DECORATION_SLAB)
                 .stairs(DETAILED_TITANIUM_DECORATION_STAIRS)
                 .wall(DETAILED_TITANIUM_DECORATION_WALL);
@@ -119,7 +124,7 @@ public class GalacticraftModelProvider extends FabricModelProvider {
                 .slab(DARK_DECORATION_SLAB)
                 .stairs(DARK_DECORATION_STAIRS)
                 .wall(DARK_DECORATION_WALL);
-        generator.family(DETAILED_DARK_DECORATION)
+        generator.family(DETAILED_DARK_DECORATION, TexturedModel.CUBE_TOP)
                 .slab(DETAILED_DARK_DECORATION_SLAB)
                 .stairs(DETAILED_DARK_DECORATION_STAIRS)
                 .wall(DETAILED_DARK_DECORATION_WALL);
@@ -128,7 +133,7 @@ public class GalacticraftModelProvider extends FabricModelProvider {
                 .slab(BRONZE_DECORATION_SLAB)
                 .stairs(BRONZE_DECORATION_STAIRS)
                 .wall(BRONZE_DECORATION_WALL);
-        generator.family(DETAILED_BRONZE_DECORATION)
+        generator.family(DETAILED_BRONZE_DECORATION, TexturedModel.CUBE_TOP)
                 .slab(DETAILED_BRONZE_DECORATION_SLAB)
                 .stairs(DETAILED_BRONZE_DECORATION_STAIRS)
                 .wall(DETAILED_BRONZE_DECORATION_WALL);
