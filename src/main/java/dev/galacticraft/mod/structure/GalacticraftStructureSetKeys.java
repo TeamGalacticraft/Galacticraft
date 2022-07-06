@@ -23,12 +23,12 @@
 package dev.galacticraft.mod.structure;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.structure.StructureSet;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
 
 public interface GalacticraftStructureSetKeys {
-    RegistryKey<StructureSet> MOON_PILLAGER_BASES = RegistryKey.of(Registry.STRUCTURE_SET_KEY, new Identifier(Constant.MOD_ID, "moon_pillager_bases"));
-    RegistryKey<StructureSet> MOON_RUINS = RegistryKey.of(Registry.STRUCTURE_SET_KEY, new Identifier(Constant.MOD_ID, "moon_ruins"));
+    ResourceKey<StructureSet> MOON_PILLAGER_BASES = ResourceKey.create(Registry.STRUCTURE_SET_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_pillager_bases"));
+    ResourceKey<StructureSet> MOON_RUINS = ResourceKey.create(Registry.STRUCTURE_SET_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_ruins"));
 }

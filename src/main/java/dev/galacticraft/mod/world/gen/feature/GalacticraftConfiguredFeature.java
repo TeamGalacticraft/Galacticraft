@@ -24,26 +24,26 @@ package dev.galacticraft.mod.world.gen.feature;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.LakeFeature;
-import net.minecraft.world.gen.stateprovider.BlockStateProvider;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.LakeFeature;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftConfiguredFeature {
-    public static final RegistryKey<ConfiguredFeature<?, ?>> OIL_LAKE_KEY = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, new Identifier(Constant.MOD_ID, "oil_lake"));
-    public static final RegistryEntry<ConfiguredFeature<?, ?>> OIL_LAKE = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE,
-            OIL_LAKE_KEY.getValue(),
+    public static final ResourceKey<ConfiguredFeature<?, ?>> OIL_LAKE_KEY = ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, new ResourceLocation(Constant.MOD_ID, "oil_lake"));
+    public static final Holder<ConfiguredFeature<?, ?>> OIL_LAKE = BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_FEATURE,
+            OIL_LAKE_KEY.location(),
             new ConfiguredFeature<>(Feature.LAKE,
-            new LakeFeature.Config(BlockStateProvider.of(GalacticraftBlock.CRUDE_OIL.getDefaultState()), BlockStateProvider.of(Blocks.STONE.getDefaultState())))
+            new LakeFeature.Configuration(BlockStateProvider.simple(GalacticraftBlock.CRUDE_OIL), BlockStateProvider.simple(Blocks.STONE)))
     );
 
     public static void register() {

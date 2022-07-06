@@ -25,14 +25,6 @@ package dev.galacticraft.mod.world.gen.structure;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.structure.MoonRuinsGenerator;
-import net.minecraft.structure.StructurePiecesCollector;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.gen.structure.Structure;
-import net.minecraft.world.gen.structure.StructureType;
-
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -40,12 +32,14 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 
+import java.util.Optional;
+
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonRuinsStructure extends Structure {
    public static final Codec<MoonRuinsStructure> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-           Config.CODEC.fieldOf("config").forGetter((moonRuinsStructure) -> moonRuinsStructure.config)
+           StructureSettings.CODEC.fieldOf("config").forGetter((moonRuinsStructure) -> moonRuinsStructure.settings)
    ).apply(instance, MoonRuinsStructure::new));
 
    public MoonRuinsStructure(Structure.StructureSettings codec) {
@@ -60,7 +54,7 @@ public class MoonRuinsStructure extends Structure {
 
    @Override
    public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
-      return onTopOfChunkCenter(context, Heightmap.Types.WORLD_SURFACE_WG, collector -> this.addPieces(collector, context));
+      return onTopOfChunkCenter(context, Heightmap.Types.WORLD_SURFACE_WG, collector -> addPieces(collector, context));
    }
 
    @Override

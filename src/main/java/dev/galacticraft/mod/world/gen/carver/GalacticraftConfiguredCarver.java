@@ -25,69 +25,70 @@ package dev.galacticraft.mod.world.gen.carver;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
-import net.minecraft.util.math.floatprovider.ConstantFloatProvider;
-import net.minecraft.util.math.floatprovider.TrapezoidFloatProvider;
-import net.minecraft.util.math.floatprovider.UniformFloatProvider;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryEntryList;
-import net.minecraft.world.gen.YOffset;
-import net.minecraft.world.gen.carver.*;
-import net.minecraft.world.gen.heightprovider.ConstantHeightProvider;
-import net.minecraft.world.gen.heightprovider.UniformHeightProvider;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.util.valueproviders.ConstantFloat;
+import net.minecraft.util.valueproviders.TrapezoidFloat;
+import net.minecraft.util.valueproviders.UniformFloat;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.carver.*;
+import net.minecraft.world.level.levelgen.heightproviders.ConstantHeight;
+import net.minecraft.world.level.levelgen.heightproviders.UniformHeight;
 
 public class GalacticraftConfiguredCarver {
-    public static final RegistryEntry<ConfiguredCarver<?>> MOON_CANYON_CARVER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_CARVER, Constant.id(Constant.Carver.MOON_CANYON_CARVER),
-            Carver.RAVINE.configure(new RavineCarverConfig(
+    public static final Holder<ConfiguredWorldCarver<?>> MOON_CANYON_CARVER = BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_CARVER, Constant.id(Constant.Carver.MOON_CANYON_CARVER),
+            WorldCarver.CANYON.configured(new CanyonCarverConfiguration(
                     0.05f,
-                    UniformHeightProvider.create(YOffset.fixed(10), YOffset.fixed(67)),
-                    ConstantFloatProvider.create(3.0f),
-                    YOffset.aboveBottom(8),
-                    CarverDebugConfig.DEFAULT,
-                    Registry.BLOCK.getOrCreateEntryList(GalacticraftTag.MOON_CARVER_REPLACEABLES),
-                    UniformFloatProvider.create(-0.125f, 0.125f),
-                    new RavineCarverConfig.Shape(
-                            UniformFloatProvider.create(0.75f, 1.0f),
-                            TrapezoidFloatProvider.create(0, 6, 2),
+                    UniformHeight.of(VerticalAnchor.absolute(10), VerticalAnchor.absolute(67)),
+                    ConstantFloat.of(3.0f),
+                    VerticalAnchor.aboveBottom(8),
+                    CarverDebugSettings.DEFAULT,
+                    Registry.BLOCK.getOrCreateTag(GalacticraftTag.MOON_CARVER_REPLACEABLES),
+                    UniformFloat.of(-0.125f, 0.125f),
+                    new CanyonCarverConfiguration.CanyonShapeConfiguration(
+                            UniformFloat.of(0.75f, 1.0f),
+                            TrapezoidFloat.of(0, 6, 2),
                             3,
-                            UniformFloatProvider.create(0.75f, 1.0f),
+                            UniformFloat.of(0.75f, 1.0f),
                             1.0f,
                             0.0f)
             )));
 
-    public static final RegistryEntry<ConfiguredCarver<?>> MOON_CRATER_CARVER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_CARVER, Constant.id(Constant.Carver.MOON_CRATER_CARVER),
-            GalacticraftCarver.CRATERS.configure(new CraterCarverConfig(
+    public static final Holder<ConfiguredWorldCarver<?>> MOON_CRATER_CARVER = BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_CARVER, Constant.id(Constant.Carver.MOON_CRATER_CARVER),
+            GalacticraftCarver.CRATERS.configured(new CraterCarverConfig(
                     0.05f,
-                    ConstantHeightProvider.create(YOffset.fixed(128)),
-                    UniformFloatProvider.create(0.4f, 0.6f),
-                    CarverDebugConfig.DEFAULT,
+                    ConstantHeight.of(VerticalAnchor.absolute(128)),
+                    UniformFloat.of(0.4f, 0.6f),
+                    CarverDebugSettings.DEFAULT,
                     27,
                     8,
                     8
             )));
 
-    public static final RegistryEntry<ConfiguredCarver<?>> MOON_HIGHLANDS_CAVE_CARVER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_CARVER, Constant.id(Constant.Carver.MOON_HIGHLANDS_CAVE_CARVER),
-            GalacticraftCarver.LUNAR_CAVE.configure(new CaveCarverConfig(
+    public static final Holder<ConfiguredWorldCarver<?>> MOON_HIGHLANDS_CAVE_CARVER = BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_CARVER, Constant.id(Constant.Carver.MOON_HIGHLANDS_CAVE_CARVER),
+            GalacticraftCarver.LUNAR_CAVE.configured(new CaveCarverConfiguration(
                     0.15f,
-                    UniformHeightProvider.create(YOffset.aboveBottom(8), YOffset.fixed(180)),
-                    UniformFloatProvider.create(0.1f, 0.9f),
-                    YOffset.aboveBottom(-64),
-                    RegistryEntryList.of(),
-                    UniformFloatProvider.create(0.7f, 1.4f),
-                    UniformFloatProvider.create(0.8f, 1.3f),
-                    UniformFloatProvider.create(-1.0f, -0.4f)
+                    UniformHeight.of(VerticalAnchor.aboveBottom(8), VerticalAnchor.absolute(180)),
+                    UniformFloat.of(0.1f, 0.9f),
+                    VerticalAnchor.aboveBottom(-64),
+                    HolderSet.direct(),
+                    UniformFloat.of(0.7f, 1.4f),
+                    UniformFloat.of(0.8f, 1.3f),
+                    UniformFloat.of(-1.0f, -0.4f)
             )));
 
-    public static final RegistryEntry<ConfiguredCarver<?>> MOON_MARE_CAVE_CARVER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_CARVER, Constant.id(Constant.Carver.MOON_MARE_CAVE_CARVER),
-            GalacticraftCarver.LUNAR_CAVE.configure(new CaveCarverConfig(0.18f,
-                    UniformHeightProvider.create(YOffset.aboveBottom(8), YOffset.fixed(180)),
-                    UniformFloatProvider.create(0.1f, 0.9f),
-                    YOffset.aboveBottom(-64),
-                    RegistryEntryList.of(),
-                    UniformFloatProvider.create(0.7f, 1.4f),
-                    UniformFloatProvider.create(0.8f, 1.3f),
-                    UniformFloatProvider.create(-1.0f, -0.4f)
+    public static final Holder<ConfiguredWorldCarver<?>> MOON_MARE_CAVE_CARVER = BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_CARVER, Constant.id(Constant.Carver.MOON_MARE_CAVE_CARVER),
+            GalacticraftCarver.LUNAR_CAVE.configured(new CaveCarverConfiguration(
+                    0.18f,
+                    UniformHeight.of(VerticalAnchor.aboveBottom(8), VerticalAnchor.absolute(180)),
+                    UniformFloat.of(0.1f, 0.9f),
+                    VerticalAnchor.aboveBottom(-64),
+                    HolderSet.direct(),
+                    UniformFloat.of(0.7f, 1.4f),
+                    UniformFloat.of(0.8f, 1.3f),
+                    UniformFloat.of(-1.0f, -0.4f)
             )));
 
     public static void register() {

@@ -23,10 +23,13 @@
 package dev.galacticraft.mod.world.gen.structure;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.structure.StructureType;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.structure.StructureType;
 
 public class GalacticraftStructureType {
-    public static final StructureType<MoonRuinsStructure> MOON_RUINS = Registry.register(Registry.STRUCTURE_TYPE, new Identifier(Constant.MOD_ID, "moon_ruins"), () -> MoonRuinsStructure.CODEC);
+    public static final StructureType<MoonRuinsStructure> MOON_RUINS = Registry.register(Registry.STRUCTURE_TYPES, new ResourceLocation(Constant.MOD_ID, "moon_ruins"), () -> MoonRuinsStructure.CODEC);
+
+    public static void register() {
+    }
 }

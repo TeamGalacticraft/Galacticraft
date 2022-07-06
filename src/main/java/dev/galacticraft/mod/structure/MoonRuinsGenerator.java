@@ -32,16 +32,8 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.StructureManager;
-import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ChestBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -51,12 +43,10 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
-import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.BlockRotProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+import net.minecraft.world.level.levelgen.structure.templatesystem.*;
 import net.minecraft.world.level.material.FluidState;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,8 +54,8 @@ import java.util.List;
  */
 public class MoonRuinsGenerator {
    private static final ResourceLocation[] PIECES = new ResourceLocation[]{
-           //new Identifier(Constant.MOD_ID, "moon_ruins/ruin_1"),
-           //new Identifier(Constant.MOD_ID, "moon_ruins/ruin_2"),
+           //new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_1"),
+           //new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_2"),
            new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_3"),
            new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_4"),
            new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_5"),

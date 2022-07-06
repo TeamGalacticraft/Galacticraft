@@ -25,19 +25,6 @@ package dev.galacticraft.mod.world.gen.carver;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
 import dev.galacticraft.mod.world.gen.structure.GalacticraftStructure;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.carver.Carver;
-import net.minecraft.world.gen.carver.CarverContext;
-import net.minecraft.world.gen.carver.CarvingMask;
-import net.minecraft.world.gen.chunk.AquiferSampler;
-
-import java.util.function.Function;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -49,6 +36,8 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Aquifer;
 import net.minecraft.world.level.levelgen.carver.CarvingContext;
 import net.minecraft.world.level.levelgen.carver.WorldCarver;
+
+import java.util.function.Function;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -64,7 +53,7 @@ public class CraterCarver extends WorldCarver<CraterCarverConfig> {
         //pos = center chunk pos
         BlockPos craterCenter = pos.getBlockAt(random.nextInt(16), y, random.nextInt(16));
 
-        if (!chunk.getStructureReferences(GalacticraftStructure.MOON_VILLAGE_HIGHLANDS.value()).isEmpty()) {
+        if (!chunk.getReferencesForStructure(GalacticraftStructure.MOON_VILLAGE_HIGHLANDS.value()).isEmpty()) {
             return false;
         }
 

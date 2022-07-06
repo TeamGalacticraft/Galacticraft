@@ -44,14 +44,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.server.command.Commands;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -70,17 +62,16 @@ public class GalacticraftCommand {
                     Commands.literal("gchouston")
                     .executes(GalacticraftCommand::teleportToEarth));
 
-            LiteralCommandNode<ServerCommandSource> node = commandDispatcher.register(
+            LiteralCommandNode<CommandSourceStack> node = commandDispatcher.register(
                     Commands.literal("dimensiontp")
-                    .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
-                    .then(Commands.argument("dimension", DimensionArgumentType.dimension())
+                    .requires(stack -> stack.hasPermission(2))
+                    .then(Commands.argument("dimension", DimensionArgument.dimension())
                     .executes(GalacticraftCommand::teleport)
-                            .then(Commands.argument("entities", EntityArgumentType.entities())
+                            .then(Commands.argument("entities", EntityArgument.entities())
                                     .executes(((GalacticraftCommand::teleportMultiple))))
-                            .then(Commands.argument("pos", BlockPosArgumentType.blockPos())
+                            .then(Commands.argument("pos", BlockPosArgument.blockPos())
                                     .executes(GalacticraftCommand::teleportToCoords))));
             commandDispatcher.register(Commands.literal("dimtp").redirect(node));
-                    Commands.literal("gchouston")
         });
     }
 

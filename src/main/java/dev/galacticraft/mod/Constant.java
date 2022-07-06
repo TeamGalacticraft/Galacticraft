@@ -23,7 +23,6 @@
 package dev.galacticraft.mod;
 
 import com.google.common.base.Predicates;
-import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagExtractPredicate;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagInsertPredicate;
 import dev.galacticraft.mod.lookup.predicate.TagPredicate;
@@ -37,6 +36,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
@@ -733,12 +733,12 @@ public interface Constant {
                 }
             };
 
-            Predicate<ItemVariant> CAN_EXTRACT_OXYGEN = new ItemResourceTagExtractPredicate(FluidStorage.ITEM, GalacticraftTag.OXYGEN);
-            Predicate<ItemVariant> CAN_INSERT_OXYGEN = new ItemResourceTagInsertPredicate(FluidStorage.ITEM, GalacticraftTag.OXYGEN);
+            Predicate<ItemVariant> CAN_EXTRACT_OXYGEN = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.OXYGEN);
+            Predicate<ItemVariant> CAN_INSERT_OXYGEN = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.OXYGEN);
 
-            Predicate<ItemVariant> CAN_EXTRACT_OIL = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, GalacticraftTag.OIL);
-            Predicate<ItemVariant> CAN_INSERT_FUEL = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, GalacticraftFluid.FUEL);
-            Predicate<ItemVariant> CAN_EXTRACT_LOX = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, GalacticraftTag.LIQUID_OXYGEN);
+            Predicate<ItemVariant> CAN_EXTRACT_OIL = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.OIL);
+            Predicate<ItemVariant> CAN_INSERT_FUEL = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.FUEL);
+            Predicate<ItemVariant> CAN_EXTRACT_LOX = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.LIQUID_OXYGEN);
         }
 
         interface Gas {

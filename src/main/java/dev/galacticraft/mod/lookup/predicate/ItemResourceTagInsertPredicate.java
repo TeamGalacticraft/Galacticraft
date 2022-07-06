@@ -28,17 +28,21 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
+import net.minecraft.core.Registry;
+import net.minecraft.tags.TagKey;
+
 import java.util.function.Predicate;
 
 public record ItemResourceTagInsertPredicate<R, V extends TransferVariant<R>>(
-        ItemApiLookup<Storage<V>, ContainerItemContext> lookup,
-        R type) implements Predicate<ItemVariant> {
+        ItemApiLookup<Storage<V>, ContainerItemContext> lookup, Registry<R> registry,
+        TagKey<R> type) implements Predicate<ItemVariant> {
 
     @Override
     public boolean test(ItemVariant variant) {
         Storage<V> storage = ContainerItemContext.withInitial(variant.toStack()).find(this.lookup);
         if (storage != null && storage.supportsInsertion()) {
-            V extractableContent = StorageUtil.findExtractableResource(storage, v -> this.type == v.getObject(), null);
+            //noinspection OptionalGetWithoutIsPresent: We can call get as both items and fluids have intrusive holders
+            V extractableContent = StorageUtil.findExtractableResource(storage, v -> this.registry.getHolder(this.registry.getId(v.getObject())).get().is(this.type), null);
             if (extractableContent != null && !extractableContent.isBlank()) {
                 return storage.simulateExtract(extractableContent, Long.MAX_VALUE, null) >= 0;
             }

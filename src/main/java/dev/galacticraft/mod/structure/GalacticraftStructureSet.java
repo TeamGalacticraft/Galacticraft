@@ -23,19 +23,19 @@
 package dev.galacticraft.mod.structure;
 
 import dev.galacticraft.mod.world.gen.structure.GalacticraftStructure;
-import net.minecraft.structure.StructureSet;
-import net.minecraft.structure.StructureSets;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.world.gen.chunk.placement.RandomSpreadStructurePlacement;
-import net.minecraft.world.gen.chunk.placement.SpreadType;
-import net.minecraft.world.gen.chunk.placement.StructurePlacement;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Vec3i;
+import net.minecraft.data.worldgen.StructureSets;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
+import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
+import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
+import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
 
 import java.util.List;
 import java.util.Optional;
 
 public class GalacticraftStructureSet {
-    public static final RegistryEntry<StructureSet> MOON_PILLAGER_BASES = StructureSets.register(
+    public static final Holder<StructureSet> MOON_PILLAGER_BASES = StructureSets.register(
             GalacticraftStructureSetKeys.MOON_PILLAGER_BASES,
             GalacticraftStructure.MOON_PILLAGER_BASE,
             new RandomSpreadStructurePlacement(
@@ -46,14 +46,14 @@ public class GalacticraftStructureSet {
                     Optional.of(new StructurePlacement.ExclusionZone(StructureSets.VILLAGES, 10)),
                     32,
                     8,
-                    SpreadType.LINEAR
+                    RandomSpreadType.LINEAR
             )
     );
-    public static final RegistryEntry<StructureSet> MOON_RUINS = StructureSets.register(
+    public static final Holder<StructureSet> MOON_RUINS = StructureSets.register(
             GalacticraftStructureSetKeys.MOON_RUINS,
             new StructureSet(
-                    List.of(StructureSet.createEntry(GalacticraftStructure.MOON_RUINS)),
-                    new RandomSpreadStructurePlacement(32, 8, SpreadType.LINEAR, 38245864)
+                    List.of(StructureSet.entry(GalacticraftStructure.MOON_RUINS)),
+                    new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 38245864)
             )
     );
 
