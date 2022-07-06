@@ -63,13 +63,7 @@ java {
 
 sourceSets {
     main {
-        java {
-            srcDir("src/main/java")
-        }
-        resources {
-            srcDir("src/main/resources")
-            srcDir("src/main/generated")
-        }
+        resources.srcDir("src/main/generated")
     }
     register("gametest") {
         java {
@@ -78,7 +72,6 @@ sourceSets {
         resources {
             srcDir("src/gametest/resources")
         }
-        runtimeClasspath += main.get().runtimeClasspath;
     }
 }
 
@@ -251,8 +244,6 @@ tasks.processResources {
         expand("version" to project.version)
     }
 
-    duplicatesStrategy = DuplicatesStrategy.WARN
-
     // Minify json resources
     // https://stackoverflow.com/questions/41028030/gradle-minimize-json-resources-in-processresources#41029113
     doLast {
@@ -266,10 +257,6 @@ tasks.create<Jar>("javadocJar") {
     from(tasks.javadoc)
     archiveClassifier.set("javadoc")
     tasks.build.get().dependsOn(this)
-}
-
-tasks.named<ProcessResources>("processGametestResources") {
-    duplicatesStrategy = DuplicatesStrategy.WARN
 }
 
 tasks.jar {
