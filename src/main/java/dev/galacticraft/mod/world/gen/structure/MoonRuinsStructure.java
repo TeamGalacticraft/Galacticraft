@@ -33,6 +33,12 @@ import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureType;
 
 import java.util.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureType;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -42,23 +48,23 @@ public class MoonRuinsStructure extends Structure {
            Config.CODEC.fieldOf("config").forGetter((moonRuinsStructure) -> moonRuinsStructure.config)
    ).apply(instance, MoonRuinsStructure::new));
 
-   public MoonRuinsStructure(Structure.Config codec) {
+   public MoonRuinsStructure(Structure.StructureSettings codec) {
       super(codec);
    }
 
-   private static void addPieces(StructurePiecesCollector collector, Structure.Context context) {
-      BlockPos blockPos = new BlockPos(context.chunkPos().getStartX(), 90, context.chunkPos().getStartZ());
-      BlockRotation blockRotation = BlockRotation.random(context.random());
+   private static void addPieces(StructurePiecesBuilder collector, Structure.GenerationContext context) {
+      BlockPos blockPos = new BlockPos(context.chunkPos().getMinBlockX(), 90, context.chunkPos().getMinBlockZ());
+      Rotation blockRotation = Rotation.getRandom(context.random());
       MoonRuinsGenerator.addPiecesToStructure(context.structureTemplateManager(), blockPos, blockRotation, collector, context.random());
    }
 
    @Override
-   public Optional<Structure.StructurePosition> getStructurePosition(Structure.Context context) {
-      return getStructurePosition(context, Heightmap.Type.WORLD_SURFACE_WG, collector -> this.addPieces(collector, context));
+   public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
+      return onTopOfChunkCenter(context, Heightmap.Types.WORLD_SURFACE_WG, collector -> this.addPieces(collector, context));
    }
 
    @Override
-   public StructureType<?> getType() {
+   public StructureType<?> type() {
       return GalacticraftStructureType.MOON_RUINS;
    }
 }

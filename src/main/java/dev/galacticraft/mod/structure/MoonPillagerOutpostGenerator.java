@@ -26,31 +26,30 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.Constant;
-import net.minecraft.structure.pool.LegacySinglePoolElement;
-import net.minecraft.structure.pool.StructurePool;
-import net.minecraft.structure.pool.StructurePoolElement;
-import net.minecraft.structure.pool.StructurePools;
-import net.minecraft.structure.pool.StructurePool.Projection;
-import net.minecraft.structure.processor.StructureProcessorLists;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.RegistryEntry;
-
 import java.util.function.Function;
+import net.minecraft.core.Holder;
+import net.minecraft.data.worldgen.Pools;
+import net.minecraft.data.worldgen.ProcessorLists;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.structure.pools.LegacySinglePoolElement;
+import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool.Projection;
 
 public class MoonPillagerOutpostGenerator {
-    public static final RegistryEntry<StructurePool> ENTERANCE_POOL = StructurePools.register(new StructurePool(
+    public static final Holder<StructureTemplatePool> ENTERANCE_POOL = Pools.register(new StructureTemplatePool(
             Constant.id("moon_pillager_outpost/entrances"),
             Constant.Misc.EMPTY,
             ImmutableList.of(
                     Pair.of(single(Constant.id("moon_pillager_outpost/entrance/entrance_1")), 5),
-                    Pair.of(StructurePoolElement.ofEmpty(), 1)
+                    Pair.of(StructurePoolElement.empty(), 1)
             ),
             Projection.RIGID
     ));
 
     public static void register() {
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("moon_pillager_outpost/base"),
                         Constant.id("moon_pillager_outpost/base_terminators"),
                         ImmutableList.of(
@@ -68,8 +67,8 @@ public class MoonPillagerOutpostGenerator {
                         Projection.RIGID
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("moon_pillager_outpost/base_terminators"),
                         Constant.Misc.EMPTY,
                         ImmutableList.of(
@@ -80,8 +79,8 @@ public class MoonPillagerOutpostGenerator {
                         Projection.RIGID
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("moon_pillager_outpost/connector"),
                         Constant.id("moon_pillager_outpost/connector_terminators"),
                         ImmutableList.of(
@@ -92,8 +91,8 @@ public class MoonPillagerOutpostGenerator {
                         Projection.TERRAIN_MATCHING
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("moon_pillager_outpost/connector_terminators"),
                         Constant.Misc.EMPTY,
                         ImmutableList.of(
@@ -104,8 +103,8 @@ public class MoonPillagerOutpostGenerator {
                         Projection.RIGID
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("moon_pillager_outpost/any_3x3x3"),
                         Constant.Misc.EMPTY,
                         ImmutableList.of(
@@ -113,23 +112,23 @@ public class MoonPillagerOutpostGenerator {
                                 Pair.of(single(Constant.id("moon_pillager_outpost/optional_3x3x3/pillagers")), 3),
                                 Pair.of(single(Constant.id("moon_pillager_outpost/optional_3x3x3/cake")), 1),
                                 Pair.of(single(Constant.id("moon_pillager_outpost/optional_3x3x3/seating")), 4),
-                                Pair.of(StructurePoolElement.ofEmpty(), 2)
+                                Pair.of(StructurePoolElement.empty(), 2)
                         ),
                         Projection.RIGID
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("moon_pillager_outpost/machine_3x1"),
                         Constant.Misc.EMPTY,
                         ImmutableList.of(
-                                Pair.of(StructurePoolElement.ofEmpty(), 2)
+                                Pair.of(StructurePoolElement.empty(), 2)
                         ),
                         Projection.RIGID
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("moon_pillager_outpost/optional_3x3"),
                         Constant.Misc.EMPTY,
                         ImmutableList.of(
@@ -143,24 +142,24 @@ public class MoonPillagerOutpostGenerator {
                                 Pair.of(single(Constant.id("moon_pillager_outpost/optional/exam_tab")), 2),
                                 Pair.of(single(Constant.id("moon_pillager_outpost/optional/computer")), 2),
                                 Pair.of(single(Constant.id("moon_pillager_outpost/optional/seat")), 4),
-                                Pair.of(StructurePoolElement.ofEmpty(), 3)
+                                Pair.of(StructurePoolElement.empty(), 3)
                         ),
                         Projection.RIGID
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("moon_pillager_outpost/pillagers"),
                         Constant.Misc.EMPTY,
                         ImmutableList.of(
-                                Pair.of(StructurePoolElement.ofEmpty(), 1)
+                                Pair.of(StructurePoolElement.empty(), 1)
                         ),
                         Projection.RIGID
                 )
         );
     }
     
-    public static Function<Projection, LegacySinglePoolElement> single(Identifier id) { // Legacy means that air CAN be replaced by worldgen.
-        return projection -> new LegacySinglePoolElement(Either.left(id), StructureProcessorLists.EMPTY, projection);
+    public static Function<Projection, LegacySinglePoolElement> single(ResourceLocation id) { // Legacy means that air CAN be replaced by worldgen.
+        return projection -> new LegacySinglePoolElement(Either.left(id), ProcessorLists.EMPTY, projection);
     }
 }

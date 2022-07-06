@@ -28,9 +28,9 @@ import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +41,7 @@ import java.util.Map;
  * The basic 'Pipe Network' spec
  */
 public interface PipeNetwork {
-    static PipeNetwork create(ServerWorld world, long maxTransferRate) {
+    static PipeNetwork create(ServerLevel world, long maxTransferRate) {
         return new PipeNetworkImpl(world, maxTransferRate);
     }
 

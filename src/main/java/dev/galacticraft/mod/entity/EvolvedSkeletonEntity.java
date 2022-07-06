@@ -24,58 +24,58 @@ package dev.galacticraft.mod.entity;
 
 import dev.galacticraft.mod.mixin.AbstractSkeletonEntityAccessor;
 import dev.galacticraft.mod.tag.GalacticraftTag;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.ai.goal.BowAttackGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.mob.SkeletonEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.World;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class EvolvedSkeletonEntity extends SkeletonEntity {
-    public EvolvedSkeletonEntity(EntityType<? extends SkeletonEntity> entityType, World world) {
+public class EvolvedSkeletonEntity extends Skeleton {
+    public EvolvedSkeletonEntity(EntityType<? extends Skeleton> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    protected void initEquipment(Random random, LocalDifficulty difficulty) {
-        super.initEquipment(random, difficulty);
-        this.equipStack(EquipmentSlot.OFFHAND, new ItemStack(Items.BOW));
+    protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance difficulty) {
+        super.populateDefaultEquipmentSlots(random, difficulty);
+        this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.BOW));
     }
 
     @Override
-    public void updateAttackType() {
-        BowAttackGoal<?> bowAttackGoal = ((AbstractSkeletonEntityAccessor) this).getBowAttackGoal();
+    public void reassessWeaponGoal() {
+        RangedBowAttackGoal<?> bowAttackGoal = ((AbstractSkeletonEntityAccessor) this).getBowAttackGoal();
         MeleeAttackGoal meleeAttackGoal = ((AbstractSkeletonEntityAccessor) this).getMeleeAttackGoal();
-        if (this.world != null && !this.world.isClient && bowAttackGoal != null) {
-            this.goalSelector.remove(meleeAttackGoal);
-            this.goalSelector.remove(bowAttackGoal);
-            ItemStack main = this.getStackInHand(Hand.MAIN_HAND);
-            ItemStack off = this.getStackInHand(Hand.OFF_HAND);
+        if (this.level != null && !this.level.isClientSide && bowAttackGoal != null) {
+            this.goalSelector.removeGoal(meleeAttackGoal);
+            this.goalSelector.removeGoal(bowAttackGoal);
+            ItemStack main = this.getItemInHand(InteractionHand.MAIN_HAND);
+            ItemStack off = this.getItemInHand(InteractionHand.OFF_HAND);
             if (main.getItem() == Items.BOW || off.getItem() == Items.BOW) {
                 int i = 35 - (main.getItem() == Items.BOW ? 10 : 0) - (off.getItem() == Items.BOW ? 10 : 0);
-                if (this.world.getDifficulty() != Difficulty.HARD) {
+                if (this.level.getDifficulty() != Difficulty.HARD) {
                     i = 25;
                 }
 
-                bowAttackGoal.setAttackInterval(i);
-                this.goalSelector.add(4, bowAttackGoal);
+                bowAttackGoal.setMinAttackInterval(i);
+                this.goalSelector.addGoal(4, bowAttackGoal);
             } else {
-                this.goalSelector.add(4, meleeAttackGoal);
+                this.goalSelector.addGoal(4, meleeAttackGoal);
             }
         }
     }
 
     @Override
-    protected boolean isAffectedByDaylight() {
-        return super.isAffectedByDaylight() && this.world.getBiome(this.getBlockPos()).isIn(GalacticraftTag.MOON_MARE);
+    protected boolean isSunBurnTick() {
+        return super.isSunBurnTick() && this.level.getBiome(this.blockPosition()).is(GalacticraftTag.MOON_MARE);
     }
 }

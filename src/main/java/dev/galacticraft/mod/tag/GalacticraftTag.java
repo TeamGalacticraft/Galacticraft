@@ -23,22 +23,21 @@
 package dev.galacticraft.mod.tag;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.block.Block;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.structure.Structure;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftTag {
-    public static final TagKey<Fluid> OIL = TagKey.of(Registry.FLUID_KEY, new Identifier(Constant.COMMON_NAMESPACE, "oil"));
-    public static final TagKey<Fluid> FUEL = TagKey.of(Registry.FLUID_KEY, new Identifier(Constant.COMMON_NAMESPACE, "fuel"));
-    public static final TagKey<Fluid> LIQUID_OXYGEN = TagKey.of(Registry.FLUID_KEY, new Identifier(Constant.COMMON_NAMESPACE, "oxygen"));
+    public static final TagKey<Fluid> OIL = TagKey.create(Registry.FLUID_REGISTRY, new ResourceLocation(Constant.COMMON_NAMESPACE, "oil"));
+    public static final TagKey<Fluid> FUEL = TagKey.create(Registry.FLUID_REGISTRY, new ResourceLocation(Constant.COMMON_NAMESPACE, "fuel"));
+    public static final TagKey<Fluid> LIQUID_OXYGEN = TagKey.create(Registry.FLUID_REGISTRY, new ResourceLocation(Constant.COMMON_NAMESPACE, "oxygen"));
 
     public static final TagKey<Block> INFINIBURN_MOON = TagKey.of(Registry.BLOCK_KEY, new Identifier(Constant.MOD_ID, "infiniburn_moon"));
     public static final TagKey<Block> BASE_STONE_MOON = TagKey.of(Registry.BLOCK_KEY, new Identifier(Constant.MOD_ID, "base_stone_moon"));

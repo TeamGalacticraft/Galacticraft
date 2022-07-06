@@ -28,37 +28,37 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.item.ThermalArmorItem;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
-    private static final Identifier[] EMPTY_ARMOR_SLOT_IDS = new Identifier[]{
-            new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_BOOTS),
-            new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_PANTS),
-            new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_CHEST),
-            new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_HEAD)
+public class GalacticraftPlayerInventoryScreenHandler extends AbstractContainerMenu {
+    private static final ResourceLocation[] EMPTY_ARMOR_SLOT_IDS = new ResourceLocation[]{
+            new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_BOOTS),
+            new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_PANTS),
+            new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_CHEST),
+            new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_HEAD)
     };
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public static final int OXYGEN_TANK_1_SLOT = 4;
     public static final int OXYGEN_TANK_2_SLOT = 5;
 
-    public final Inventory inventory;
+    public final Container inventory;
 
-    public final PlayerEntity player;
+    public final Player player;
 
-    public GalacticraftPlayerInventoryScreenHandler(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+    public GalacticraftPlayerInventoryScreenHandler(int syncId, Inventory playerInventory, Player player) {
         super(GalacticraftScreenHandlerType.PLAYER_INV_GC_HANDLER, syncId);
 
         this.player = player;
@@ -69,23 +69,23 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
             int finalSlotY = slotY;
             this.addSlot(new Slot(inventory, finalSlotY, 8, 8 + slotY * 18) {
                 @Override
-                public int getMaxItemCount() {
+                public int getMaxStackSize() {
                     return 1;
                 }
 
                 @Override
-                public boolean canInsert(ItemStack stack) {
+                public boolean mayPlace(ItemStack stack) {
                     return slot == getPreferredEquipmentSlot(stack);
                 }
 
                 @Override
-                public boolean canTakeItems(PlayerEntity player) {
+                public boolean mayPickup(Player player) {
                     return GalacticraftPlayerInventoryScreenHandler.this.player == player;
                 }
 
                 @Override
-                public Pair<Identifier, Identifier> getBackgroundSprite() {
-                    return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, EMPTY_ARMOR_SLOT_IDS[slot.getEntitySlotId()]);
+                public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+                    return Pair.of(InventoryMenu.BLOCK_ATLAS, EMPTY_ARMOR_SLOT_IDS[slot.getIndex()]);
                 }
             });
         }
@@ -115,7 +115,7 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
         }
     }
 
-    public GalacticraftPlayerInventoryScreenHandler(int syncId, PlayerInventory inv) {
+    public GalacticraftPlayerInventoryScreenHandler(int syncId, Inventory inv) {
         this(syncId, inv, inv.player);
     }
 
@@ -125,38 +125,38 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
-        return player.getUuid().equals(this.player.getUuid());
+    public boolean stillValid(Player player) {
+        return player.getUUID().equals(this.player.getUUID());
     }
 
     private static class OxygenTankSlot extends Slot {
-        public OxygenTankSlot(Inventory gearInventory, int slotId, int x, int y) {
+        public OxygenTankSlot(Container gearInventory, int slotId, int x, int y) {
             super(gearInventory, slotId, x, y);
         }
 
         @Override
-        public boolean canInsert(ItemStack stack) {
+        public boolean mayPlace(ItemStack stack) {
             return Constant.Filter.Item.CAN_EXTRACT_OXYGEN.test(ItemVariant.of(stack));
         }
 
         @Override
-        public int getMaxItemCount() {
+        public int getMaxStackSize() {
             return 1;
         }
 
         @Nullable
         @Override
-        public Pair<Identifier, Identifier> getBackgroundSprite() {
-            return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_TANK));
+        public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+            return Pair.of(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_TANK));
         }
     }
 
     @Override
-    public ItemStack transferSlot(PlayerEntity player, int index) {
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack stack = ItemStack.EMPTY;
         Slot slotFrom = this.slots.get(index);
-        if (slotFrom.hasStack()) {
-            ItemStack stackFrom = slotFrom.getStack();
+        if (slotFrom.hasItem()) {
+            ItemStack stackFrom = slotFrom.getItem();
             stack = stackFrom.copy();
 
             // Index of Indexes :)
@@ -166,36 +166,36 @@ public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
             // 12-38 (27): MC, non-hotbar inventory slots;
             // 39-48 (9): MC, hotbar slots.
             if (index < 12) {
-                if (!this.insertItem(stackFrom, 12, 48, false)) {
+                if (!this.moveItemStackTo(stackFrom, 12, 48, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index < 39) {
-                if (!this.insertItem(stackFrom, 0, 8, true) &&
-                    !this.insertItem(stackFrom, 39, 48, false)) {
+                if (!this.moveItemStackTo(stackFrom, 0, 8, true) &&
+                    !this.moveItemStackTo(stackFrom, 39, 48, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index < 49) {
-                if (!this.insertItem(stackFrom, 0, 8, true) &&
-                    !this.insertItem(stackFrom, 12, 39, false)) {
+                if (!this.moveItemStackTo(stackFrom, 0, 8, true) &&
+                    !this.moveItemStackTo(stackFrom, 12, 39, false)) {
                     return ItemStack.EMPTY;
                 }
             }
 
-            slotFrom.onQuickTransfer(stackFrom, stack);
+            slotFrom.onQuickCraft(stackFrom, stack);
 
             if (stackFrom.isEmpty()) {
-                slotFrom.setStack(ItemStack.EMPTY);
+                slotFrom.set(ItemStack.EMPTY);
             } else {
-                slotFrom.markDirty();
+                slotFrom.setChanged();
             }
 
             if (stackFrom.getCount() == stack.getCount()) {
                 return ItemStack.EMPTY;
             }
 
-            slotFrom.onTakeItem(player, stackFrom);
+            slotFrom.onTake(player, stackFrom);
             if (index == 0) {
-                player.dropItem(stackFrom, false);
+                player.drop(stackFrom, false);
             }
         }
 

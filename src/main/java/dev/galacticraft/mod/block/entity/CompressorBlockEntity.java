@@ -35,29 +35,29 @@ import dev.galacticraft.mod.screen.CompressorScreenHandler;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, CompressingRecipe> {
+public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, CompressingRecipe> {
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
 
-    private final Inventory craftingInv = this.itemStorage().subInv(0, FUEL_INPUT_SLOT);
+    private final Container craftingInv = this.itemStorage().subInv(0, FUEL_INPUT_SLOT);
     public int fuelTime;
     public int fuelLength;
 
@@ -85,19 +85,19 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    public @NotNull Inventory craftingInv() {
+    public @NotNull Container craftingInv() {
         return this.craftingInv;
     }
 
     @Override
     protected boolean outputStacks(@NotNull CompressingRecipe recipe, @NotNull TransactionContext context) {
-        ItemStack output = recipe.getOutput();
+        ItemStack output = recipe.getResultItem();
         return this.itemStorage().insert(OUTPUT_SLOT, ItemVariant.of(output), output.getCount(), context) == output.getCount();
     }
 
     @Override
     protected boolean extractCraftingMaterials(@NotNull CompressingRecipe recipe, @NotNull TransactionContext context) {
-        DefaultedList<ItemStack> remainder = recipe.getRemainder(this.craftingInv);
+        NonNullList<ItemStack> remainder = recipe.getRemainingItems(this.craftingInv);
         for (int i = 0; i < 9; i++) {
             ItemStack stack = remainder.get(i);
             this.itemStorage().extract(i, 1, context);
@@ -115,7 +115,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         super.tickConstant(world, pos, state);
         if (--this.fuelTime <= 0) {
             this.fuelLength = 0;
@@ -124,10 +124,10 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    public @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         if (this.getMaxProgress() > 0) {
             if (this.getProgress() % (this.getMaxProgress() / 8) == 0 && this.getProgress() > this.getMaxProgress() / 2) {
-                world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
+                world.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
             }
         }
 
@@ -152,22 +152,22 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, C
     }
 
     @Override
-    public void writeNbt(@NotNull NbtCompound tag) {
-        super.writeNbt(tag);
+    public void saveAdditional(@NotNull CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt(Constant.Nbt.FUEL_TIME, this.fuelTime);
         tag.putInt(Constant.Nbt.FUEL_LENGTH, this.fuelLength);
     }
 
     @Override
-    public void readNbt(@NotNull NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void load(@NotNull CompoundTag nbt) {
+        super.load(nbt);
         this.fuelTime = nbt.getInt(Constant.Nbt.FUEL_TIME);
         this.fuelLength = nbt.getInt(Constant.Nbt.FUEL_LENGTH);
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new CompressorScreenHandler(syncId, player, this);
         return null;
     }

@@ -20,24 +20,37 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.carver;
+package dev.galacticraft.mod.world.gen.feature;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
-import net.minecraft.world.level.levelgen.carver.WorldCarver;
+import net.minecraft.world.level.levelgen.placement.BiomeFilter;
+import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.RarityFilter;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class GalacticraftCarver {
-    public static final WorldCarver<CaveCarverConfiguration> LUNAR_CAVE = new LunarCaveCarver(CaveCarverConfiguration.CODEC);
-    public static final WorldCarver<CraterCarverConfig> CRATERS = new CraterCarver(CraterCarverConfig.CRATER_CODEC);
+import java.util.List;
+
+public class GalacticraftPlacedFeature {
+
+    public static final ResourceKey<PlacedFeature> OIL_LAKE_KEY = ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, new ResourceLocation(Constant.MOD_ID, "oil_lake"));
+
+    public static final Holder<PlacedFeature> OIL_LAKE = register(OIL_LAKE_KEY, new PlacedFeature(GalacticraftFeature.OIL_LAKE, List.of(
+            PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
+            RarityFilter.onAverageOnceEvery(70),
+            InSquarePlacement.spread(),
+            BiomeFilter.biome()
+    )));
+
+    public static Holder<PlacedFeature> register(ResourceKey<PlacedFeature> id, PlacedFeature placedFeature) {
+        return BuiltinRegistries.register(BuiltinRegistries.PLACED_FEATURE, id, placedFeature);
+    }
 
     public static void register() {
-        Registry.register(Registry.CARVER, new ResourceLocation(Constant.MOD_ID, "lunar_cave"), LUNAR_CAVE);
-        Registry.register(Registry.CARVER, new ResourceLocation(Constant.MOD_ID, "craters"), CRATERS);
     }
 }

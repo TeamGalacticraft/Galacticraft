@@ -22,14 +22,15 @@
 
 package dev.galacticraft.mod.mixin.client;
 
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexBuffer;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gl.VertexBuffer;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -43,26 +44,24 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(WorldRenderer.class)
+@Mixin(LevelRenderer.class)
 @Environment(EnvType.CLIENT)
 public abstract class WorldRendererOverworldMixin {
-    @Shadow
-    @Nullable
-    private VertexBuffer starsBuffer;
-    private @Unique Random starRandom = null;
+    @Shadow @Nullable private VertexBuffer starsBuffer;
+    private @Unique RandomSource starRandom = null;
 
     @Inject(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BufferBuilder;begin(Lnet/minecraft/client/render/VertexFormat$DrawMode;Lnet/minecraft/client/render/VertexFormat;)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void gc_captureRandom(BufferBuilder buffer, CallbackInfoReturnable<BufferBuilder.BuiltBuffer> cir, Random random) {
+    private void gc_captureRandom(BufferBuilder buffer, CallbackInfoReturnable<BufferBuilder.RenderedBuffer> cir, RandomSource random) {
         starRandom = random;
     }
 
     @Inject(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;", at = @At(value = "RETURN"))
-    private void gc_releaseRandom(BufferBuilder buffer, CallbackInfoReturnable<BufferBuilder.BuiltBuffer> cir) {
+    private void gc_releaseRandom(BufferBuilder buffer, CallbackInfoReturnable<BufferBuilder.RenderedBuffer> cir) {
         starRandom = null;
     }
 
     @Redirect(method = "renderStars(Lnet/minecraft/client/render/BufferBuilder;)Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BufferBuilder;begin(Lnet/minecraft/client/render/VertexFormat$DrawMode;Lnet/minecraft/client/render/VertexFormat;)V"))
-    private void gc_replaceVF(BufferBuilder bufferBuilder, VertexFormat.DrawMode drawMode, VertexFormat format) {
-        bufferBuilder.begin(drawMode, VertexFormats.POSITION_COLOR);
+    private void gc_replaceVF(BufferBuilder bufferBuilder, VertexFormat.Mode drawMode, VertexFormat format) {
+        bufferBuilder.begin(drawMode, DefaultVertexFormat.POSITION_COLOR);
     }
 }

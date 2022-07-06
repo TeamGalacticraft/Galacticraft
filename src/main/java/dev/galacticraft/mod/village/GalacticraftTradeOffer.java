@@ -23,32 +23,35 @@
 package dev.galacticraft.mod.village;
 
 import dev.galacticraft.mod.item.GalacticraftItem;
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.*;
-import net.minecraft.item.map.MapIcon;
-import net.minecraft.item.map.MapState;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.village.TradeOffer;
-import net.minecraft.village.TradeOffers;
-import net.minecraft.world.gen.structure.Structure;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftTradeOffer {
-    public static class BuyForOneEmeraldFactory implements TradeOffers.Factory {
+    public static class BuyForOneEmeraldFactory implements VillagerTrades.ItemListing {
         private final Item buy;
         private final int price;
         private final int maxUses;
         private final int experience;
         private final float multiplier;
 
-        public BuyForOneEmeraldFactory(ItemConvertible item, int price, int maxUses, int experience) {
+        public BuyForOneEmeraldFactory(ItemLike item, int price, int maxUses, int experience) {
             this.buy = item.asItem();
             this.price = price;
             this.maxUses = maxUses;
@@ -56,20 +59,20 @@ public class GalacticraftTradeOffer {
             this.multiplier = 0.05F;
         }
 
-        public TradeOffer create(Entity entity, Random random) {
+        public MerchantOffer getOffer(Entity entity, RandomSource random) {
             ItemStack itemStack = new ItemStack(this.buy, this.price);
-            return new TradeOffer(itemStack, new ItemStack(GalacticraftItem.LUNAR_SAPPHIRE), this.maxUses, this.experience, this.multiplier);
+            return new MerchantOffer(itemStack, new ItemStack(GalacticraftItem.LUNAR_SAPPHIRE), this.maxUses, this.experience, this.multiplier);
         }
     }
 
-    public static class SellMapFactory implements TradeOffers.Factory {
+    public static class SellMapFactory implements VillagerTrades.ItemListing {
         private final int price;
         private final TagKey<Structure> structure;
-        private final MapIcon.Type iconType;
+        private final MapDecoration.Type iconType;
         private final int maxUses;
         private final int experience;
 
-        public SellMapFactory(int price, TagKey<Structure> feature, MapIcon.Type iconType, int maxUses, int experience) {
+        public SellMapFactory(int price, TagKey<Structure> feature, MapDecoration.Type iconType, int maxUses, int experience) {
             this.price = price;
             this.structure = feature;
             this.iconType = iconType;
@@ -78,17 +81,17 @@ public class GalacticraftTradeOffer {
         }
 
         @Nullable
-        public TradeOffer create(Entity entity, Random random) {
-            if (!(entity.world instanceof ServerWorld world)) {
+        public MerchantOffer getOffer(Entity entity, RandomSource random) {
+            if (!(entity.level instanceof ServerLevel world)) {
                 return null;
             } else {
                 BlockPos blockPos = world.locateStructure(this.structure, entity.getBlockPos(), 100, true);
                 if (blockPos != null) {
-                    ItemStack itemStack = FilledMapItem.createMap(world, blockPos.getX(), blockPos.getZ(), (byte) 2, true, true);
-                    FilledMapItem.fillExplorationMap(world, itemStack);
-                    MapState.addDecorationsNbt(itemStack, blockPos, "+", this.iconType);
+                    ItemStack itemStack = MapItem.create(world, blockPos.getX(), blockPos.getZ(), (byte) 2, true, true);
+                    MapItem.renderBiomePreviewMap(world, itemStack);
+                    MapItemSavedData.addTargetDecoration(itemStack, blockPos, "+", this.iconType);
 //                    itemStack.setCustomName(Text.translatable("filled_map." + this.structure.getName().toLowerCase(Locale.ROOT))); port
-                    return new TradeOffer(new ItemStack(GalacticraftItem.LUNAR_SAPPHIRE, this.price), new ItemStack(Items.COMPASS), itemStack, this.maxUses, this.experience, 0.2F);
+                    return new MerchantOffer(new ItemStack(GalacticraftItem.LUNAR_SAPPHIRE, this.price), new ItemStack(Items.COMPASS), itemStack, this.maxUses, this.experience, 0.2F);
                 } else {
                     return null;
                 }
@@ -96,7 +99,7 @@ public class GalacticraftTradeOffer {
         }
     }
 
-    public static class SellItemFactory implements TradeOffers.Factory {
+    public static class SellItemFactory implements VillagerTrades.ItemListing {
         private final ItemStack sell;
         private final int price;
         private final int count;
@@ -129,8 +132,8 @@ public class GalacticraftTradeOffer {
             this.multiplier = multiplier;
         }
 
-        public TradeOffer create(Entity entity, Random random) {
-            return new TradeOffer(new ItemStack(GalacticraftItem.LUNAR_SAPPHIRE, this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
+        public MerchantOffer getOffer(Entity entity, RandomSource random) {
+            return new MerchantOffer(new ItemStack(GalacticraftItem.LUNAR_SAPPHIRE, this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
         }
     }
 }

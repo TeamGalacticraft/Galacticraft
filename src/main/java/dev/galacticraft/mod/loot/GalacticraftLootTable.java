@@ -24,13 +24,13 @@ package dev.galacticraft.mod.loot;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.LootTablesAccessor;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftLootTable {
-    public static final Identifier BASIC_MOON_RUINS_CHEST = new Identifier(Constant.MOD_ID, Constant.LootTable.BASIC_MOON_RUINS_CHEST);
+    public static final ResourceLocation BASIC_MOON_RUINS_CHEST = new ResourceLocation(Constant.MOD_ID, Constant.LootTable.BASIC_MOON_RUINS_CHEST);
 
     public static void register() {
         LootTablesAccessor.callRegisterLootTable(BASIC_MOON_RUINS_CHEST);

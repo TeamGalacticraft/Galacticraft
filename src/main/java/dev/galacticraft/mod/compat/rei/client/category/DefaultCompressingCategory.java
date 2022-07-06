@@ -38,9 +38,9 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -64,8 +64,8 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
     }
 
     @Override
-    public Text getTitle() {
-        return Text.translatable("category.rei.compressing");
+    public Component getTitle() {
+        return Component.translatable("category.rei.compressing");
     }
 
     public @NotNull List<Widget> setupDisplay(DefaultCompressingDisplay recipeDisplay, Rectangle bounds) {
@@ -93,7 +93,7 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
         widgets.addAll(slots);
         widgets.add(Widgets.createSlot(new Point(startPoint.x + 120, startPoint.y + (18) + 3)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
 
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4)).markInput().entries(AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().stream().map(EntryStacks::of).collect(Collectors.toList())));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4)).markInput().entries(AbstractFurnaceBlockEntity.getFuel().keySet().stream().map(EntryStacks::of).collect(Collectors.toList())));
         return widgets;
     }
 

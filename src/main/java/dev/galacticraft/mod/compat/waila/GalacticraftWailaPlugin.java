@@ -26,23 +26,22 @@ import dev.galacticraft.api.block.MachineBlock;
 import dev.galacticraft.api.machine.MachineConfiguration;
 import dev.galacticraft.mod.Constant;
 import mcp.mobius.waila.api.*;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
-
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftWailaPlugin implements IWailaPlugin {
-    private static final IComponentProvider COMPONENT_PROVIDER = new IComponentProvider() {
+    private static final IBlockComponentProvider COMPONENT_PROVIDER = new IBlockComponentProvider() {
         @Override
-        public void appendTail(List<Text> tooltip, IDataAccessor accessor, IPluginConfig config) {
+        public void appendTail(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
             if (Screen.hasShiftDown()) {
                 MachineConfiguration configuration = MachineConfiguration.create();
                 configuration.readNbt(accessor.getServerData());
-                tooltip.add(Text.translatable("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneActivation().getName()).setStyle(Constant.Text.Color.RED_STYLE));
-                if (configuration.getSecurity().getOwner() != null) tooltip.add(Text.translatable("ui.galacticraft.machine.security.owned_by", Text.literal(configuration.getSecurity().getOwner().getName()).setStyle(Constant.Text.Color.WHITE_STYLE)).setStyle(Constant.Text.Color.AQUA_STYLE));
+                tooltip.addLine(Component.translatable("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneActivation().getName()).setStyle(Constant.Text.Color.RED_STYLE));
+                if (configuration.getSecurity().getOwner() != null) tooltip.addLine(Component.translatable("ui.galacticraft.machine.security.owned_by", Component.literal(configuration.getSecurity().getOwner().getName()).setStyle(Constant.Text.Color.WHITE_STYLE)).setStyle(Constant.Text.Color.AQUA_STYLE));
             }
         }
     };
@@ -50,6 +49,6 @@ public class GalacticraftWailaPlugin implements IWailaPlugin {
     @Override
     public void register(IRegistrar registrar) {
 //        registrar.registerBlockDataProvider((data, player, world, blockEntity) -> ((MachineBlockEntity) blockEntity).getConfiguration().writeNbt(data), MachineBlock.class); TODO: WAILA
-        registrar.registerComponentProvider(COMPONENT_PROVIDER, TooltipPosition.TAIL, MachineBlock.class);
+        registrar.addComponent(COMPONENT_PROVIDER, TooltipPosition.TAIL, MachineBlock.class);
     }
 }

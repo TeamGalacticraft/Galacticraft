@@ -23,36 +23,36 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
 import dev.galacticraft.mod.screen.OxygenCollectorScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorBlockEntity, OxygenCollectorScreenHandler> {
-    public OxygenCollectorScreen(OxygenCollectorScreenHandler handler, PlayerInventory inv, Text title) {
+    public OxygenCollectorScreen(OxygenCollectorScreenHandler handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.OXYGEN_COLLECTOR_SCREEN);
-        this.backgroundHeight = 181;
+        this.imageHeight = 181;
     }
 
     @Override
     protected void init() {
         super.init();
-        this.titleX += 15;
+        this.titleLabelX += 15;
     }
 
     @Override
-    protected void renderBackground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.renderBackground(matrices, mouseX, mouseY, delta);
-        this.textRenderer.draw(matrices, Text.translatable("ui.galacticraft.machine.collecting", this.machine.collectionAmount).getString(), this.x + 55, this.y + 56, Formatting.DARK_GRAY.getColorValue());
-        this.textRenderer.draw(matrices, Text.translatable("ui.galacticraft.machine.status").append(this.machine.getStatus().name()), this.x + 32, this.y + 66, Formatting.DARK_GRAY.getColorValue());
+        this.font.draw(matrices, Component.translatable("ui.galacticraft.machine.collecting", this.machine.collectionAmount).getString(), this.leftPos + 55, this.topPos + 56, ChatFormatting.DARK_GRAY.getColor());
+        this.font.draw(matrices, Component.translatable("ui.galacticraft.machine.status").append(this.machine.getStatus().name()), this.leftPos + 32, this.topPos + 66, ChatFormatting.DARK_GRAY.getColor());
     }
 }

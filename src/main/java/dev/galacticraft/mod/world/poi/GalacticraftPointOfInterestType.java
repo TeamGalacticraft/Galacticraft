@@ -26,23 +26,23 @@ import com.google.common.collect.ImmutableSet;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.poi.PointOfInterestType;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftPointOfInterestType {
-    public static final RegistryKey<PointOfInterestType> LUNAR_CARTOGRAPHER = register(new Identifier(Constant.MOD_ID, "lunar_cartographer"), 1, 1, ImmutableSet.copyOf(GalacticraftBlock.LUNAR_CARTOGRAPHY_TABLE.getStateManager().getStates()));
+    public static final ResourceKey<PoiType> LUNAR_CARTOGRAPHER = register(new ResourceLocation(Constant.MOD_ID, "lunar_cartographer"), 1, 1, ImmutableSet.copyOf(GalacticraftBlock.LUNAR_CARTOGRAPHY_TABLE.getStateDefinition().getPossibleStates()));
 
     public static void register() {
     }
 
-    private static RegistryKey<PointOfInterestType> register(Identifier id, int ticketCount, int searchDistance, Iterable<BlockState> blocks) {
+    private static ResourceKey<PoiType> register(ResourceLocation id, int ticketCount, int searchDistance, Iterable<BlockState> blocks) {
         PointOfInterestHelper.register(id, ticketCount, searchDistance, blocks);
-        return RegistryKey.of(Registry.POINT_OF_INTEREST_TYPE_KEY, id);
+        return ResourceKey.create(Registry.POINT_OF_INTEREST_TYPE_REGISTRY, id);
     }
 }

@@ -25,29 +25,29 @@ package dev.galacticraft.mod.world.gen.chunk;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
-import net.minecraft.world.gen.chunk.GenerationShapeConfig;
-import net.minecraft.world.gen.densityfunction.DensityFunctions;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.NoiseRouterData;
+import net.minecraft.world.level.levelgen.NoiseSettings;
 
 import java.util.Collections;
 
 public class GalacticraftChunkGeneratorSettings {
-    public static final RegistryKey<ChunkGeneratorSettings> MOON = RegistryKey.of(Registry.CHUNK_GENERATOR_SETTINGS_KEY, Constant.id("moon"));
+    public static final ResourceKey<NoiseGeneratorSettings> MOON = ResourceKey.create(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY, Constant.id("moon"));
 
     public static void register() {
-        BuiltinRegistries.add(BuiltinRegistries.CHUNK_GENERATOR_SETTINGS, MOON, new ChunkGeneratorSettings(
-                GenerationShapeConfig.create(
+        BuiltinRegistries.register(BuiltinRegistries.NOISE_GENERATOR_SETTINGS, MOON, new NoiseGeneratorSettings(
+                NoiseSettings.create(
                         -64,
                         384,
                         4,
                         8),
-                GalacticraftBlock.MOON_ROCK.getDefaultState(),
-                Blocks.AIR.getDefaultState(),
-                DensityFunctions.createCavesNoiseRouter(BuiltinRegistries.DENSITY_FUNCTION), // TODO: PORT
+                GalacticraftBlock.MOON_ROCK.defaultBlockState(),
+                Blocks.AIR.defaultBlockState(),
+                NoiseRouterData.caves(BuiltinRegistries.DENSITY_FUNCTION), // TODO: PORT
                 MoonSurfaceRules.createDefaultRule(),
                 Collections.emptyList(),
                 -65,

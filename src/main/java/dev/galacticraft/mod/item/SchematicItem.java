@@ -23,13 +23,13 @@
 package dev.galacticraft.mod.item;
 
 import dev.galacticraft.api.item.Schematic;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SchematicItem extends Item implements Schematic {
-    public SchematicItem(Settings settings) {
+    public SchematicItem(Properties settings) {
         super(settings);
     }
 }

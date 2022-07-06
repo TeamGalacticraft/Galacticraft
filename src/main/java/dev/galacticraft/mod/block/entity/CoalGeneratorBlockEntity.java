@@ -41,19 +41,19 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,7 +71,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
 
     public static final int CHARGE_SLOT = 0;
     public static final int FUEL_SLOT = 1;
-    private static final SlotType<Item, ItemVariant> COAL_INPUT = SlotType.create(new Identifier(Constant.MOD_ID, "coal_input"), TextColor.fromRgb(0x000000), Text.translatable("slot_type.galacticraft.coal_input"), v -> FUEL_MAP.containsKey(v.getItem()), ResourceFlow.INPUT, ResourceType.ITEM);
+    private static final SlotType<Item, ItemVariant> COAL_INPUT = SlotType.create(new ResourceLocation(Constant.MOD_ID, "coal_input"), TextColor.fromRgb(0x000000), Component.translatable("slot_type.galacticraft.coal_input"), v -> FUEL_MAP.containsKey(v.getItem()), ResourceFlow.INPUT, ResourceType.ITEM);
 
     private int fuelLength = 0;
     private int inventoryModCount = -1;
@@ -97,7 +97,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         super.tickConstant(world, pos, state);
         if (this.fuelLength == 0) {
             if (this.heat > 0) {
@@ -110,13 +110,13 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         world.getProfiler().push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             this.energyStorage().insert((long) (Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate() * this.heat), transaction);
         }
         this.trySpreadEnergy(world);
-        world.getProfiler().swap("fuel_reset");
+        world.getProfiler().popPush("fuel_reset");
         if (this.fuelLength == 0) {
             this.consumeFuel();
             if (this.fuelLength == 0) {
@@ -127,7 +127,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
                 }
             }
         }
-        world.getProfiler().swap("fuel_tick");
+        world.getProfiler().popPush("fuel_tick");
         if (this.fuelTime++ >= this.fuelLength) {
             this.fuelLength = 0;
             this.consumeFuel();
@@ -167,7 +167,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new CoalGeneratorScreenHandler(syncId, player, this);
         return null;
     }
@@ -190,16 +190,16 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         this.fuelLength = nbt.getInt(Constant.Nbt.FUEL_LENGTH);
         this.fuelTime = nbt.getInt(Constant.Nbt.FUEL_TIME);
         this.heat = nbt.getDouble(Constant.Nbt.HEAT);
     }
 
     @Override
-    public void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt(Constant.Nbt.FUEL_LENGTH, this.fuelLength);
         tag.putInt(Constant.Nbt.FUEL_TIME, this.fuelTime);
         tag.putDouble(Constant.Nbt.HEAT, this.heat);

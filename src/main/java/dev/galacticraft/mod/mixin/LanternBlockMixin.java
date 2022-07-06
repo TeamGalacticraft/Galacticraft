@@ -26,15 +26,15 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LanternBlock;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LanternBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 
 /**
@@ -42,21 +42,21 @@ import org.spongepowered.asm.mixin.Mixin;
  */
 @Mixin(LanternBlock.class)
 public abstract class LanternBlockMixin extends Block {
-    public LanternBlockMixin(Settings settings) {
+    public LanternBlockMixin(Properties settings) {
         super(settings);
     }
 
     @Override
     @Deprecated
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
-        super.onBlockAdded(state, world, pos, oldState, moved);
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean moved) {
+        super.onPlace(state, world, pos, oldState, moved);
         CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(world).orElse(null);
         if (body != null && !body.atmosphere().breathable()) {
             if (state.getBlock() == Blocks.LANTERN) {
-                world.setBlockState(pos, GalacticraftBlock.UNLIT_LANTERN.getDefaultState().with(LanternBlock.HANGING, state.get(LanternBlock.HANGING)).with(LanternBlock.WATERLOGGED, state.get(LanternBlock.WATERLOGGED)));
+                world.setBlockAndUpdate(pos, GalacticraftBlock.UNLIT_LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, state.getValue(LanternBlock.HANGING)).setValue(LanternBlock.WATERLOGGED, state.getValue(LanternBlock.WATERLOGGED)));
             }
             world.addParticle(ParticleTypes.SMOKE, pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D);
-            world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 1.0F, 0.9F, false);
+            world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1.0F, 0.9F, false);
         }
     }
 }

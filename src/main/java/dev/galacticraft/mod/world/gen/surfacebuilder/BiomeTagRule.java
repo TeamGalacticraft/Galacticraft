@@ -24,38 +24,38 @@ package dev.galacticraft.mod.world.gen.surfacebuilder;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.dynamic.CodecHolder;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.surfacebuilder.MaterialRules;
+import net.minecraft.core.Registry;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.KeyDispatchDataCodec;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.jetbrains.annotations.NotNull;
 
-public record BiomeTagRule(@NotNull TagKey<Biome> tag) implements MaterialRules.MaterialCondition {
+public record BiomeTagRule(@NotNull TagKey<Biome> tag) implements SurfaceRules.ConditionSource {
     private static final Codec<BiomeTagRule> CODEC;
 
     static {
-        CODEC = RecordCodecBuilder.create(instance -> instance.group(TagKey.unprefixedCodec(Registry.BIOME_KEY).fieldOf("tag").forGetter(rule -> rule.tag)).apply(instance, BiomeTagRule::new));
+        CODEC = RecordCodecBuilder.create(instance -> instance.group(TagKey.codec(Registry.BIOME_REGISTRY).fieldOf("tag").forGetter(rule -> rule.tag)).apply(instance, BiomeTagRule::new));
     }
 
     @Override
-    public CodecHolder<? extends MaterialRules.MaterialCondition> codec() {
-        return CodecHolder.of(CODEC);
+    public KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
+        return KeyDispatchDataCodec.of(CODEC);
     }
 
     @Override
-    public MaterialRules.BooleanSupplier apply(MaterialRules.MaterialRuleContext context) {
+    public SurfaceRules.Condition apply(SurfaceRules.Context context) {
         return new Predicate(context);
     }
 
-    private class Predicate extends MaterialRules.FullLazyAbstractPredicate {
-        protected Predicate(MaterialRules.MaterialRuleContext context) {
+    private class Predicate extends SurfaceRules.LazyYCondition {
+        protected Predicate(SurfaceRules.Context context) {
             super(context);
         }
 
         @Override
-        protected boolean test() {
-            return this.context.biomeSupplier.get().isIn(BiomeTagRule.this.tag);
+        protected boolean compute() {
+            return this.context.biome.get().is(BiomeTagRule.this.tag);
         }
     }
 }

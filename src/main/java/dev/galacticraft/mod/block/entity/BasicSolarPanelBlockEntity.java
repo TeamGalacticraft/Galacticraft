@@ -34,13 +34,13 @@ import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,22 +65,22 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
     }
 
     @Override
-    protected void tickClient(@NotNull World world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    protected void tickClient(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state) {
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
-                this.blockage[(z + 1) * 3 + (x + 1)] = !world.isSkyVisible(pos.add(x, 2, z));
+                this.blockage[(z + 1) * 3 + (x + 1)] = !world.canSeeSky(pos.offset(x, 2, z));
             }
         }
 
         double multiplier = this.blocked / 9.0;
         if (world.isRaining() || world.isThundering()) multiplier *= 0.5;
-        double time = world.getTimeOfDay() % 24000;
+        double time = world.getDayTime() % 24000;
         if (time > 6000) time = 12000L - time;
         this.currentEnergyGeneration = (long)(Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * (time / 6000.0) * multiplier) * 4L;
     }
 
     @Override
-    public void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         world.getProfiler().push("charge");
         this.attemptDrainPowerToStack(CHARGE_SLOT);
         world.getProfiler().pop();
@@ -88,7 +88,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
                 //noinspection AssignmentUsedAsCondition
-                if (this.blockage[(z + 1) * 3 + (x + 1)] = !world.isSkyVisible(pos.add(x, 2, z))) {
+                if (this.blockage[(z + 1) * 3 + (x + 1)] = !world.canSeeSky(pos.offset(x, 2, z))) {
                     this.blocked++;
                 }
             }
@@ -96,7 +96,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
     }
 
     @Override
-    public @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         world.getProfiler().push("transfer");
         this.trySpreadEnergy(world);
         world.getProfiler().pop();
@@ -110,7 +110,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
             multiplier *= 0.5;
         }
         if (!world.isDay()) status = GalacticraftMachineStatus.NIGHT;
-        double time = world.getTimeOfDay() % 24000;
+        double time = world.getDayTime() % 24000;
         if (time > 6000) time = 12000L - time;
         world.getProfiler().push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
@@ -123,7 +123,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) {
             return SimpleMachineScreenHandler.create(
                     syncId,
@@ -152,10 +152,10 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
 
     @Override
     public SolarPanelSource getSource() {
-        assert this.world != null;
-        if (this.world.getDimension().hasCeiling()) return SolarPanelSource.NO_LIGHT_SOURCE;
-        if (this.world.isDay()) {
-            if (this.world.isRaining()) return SolarPanelSource.OVERCAST;
+        assert this.level != null;
+        if (this.level.dimensionType().hasCeiling()) return SolarPanelSource.NO_LIGHT_SOURCE;
+        if (this.level.isDay()) {
+            if (this.level.isRaining()) return SolarPanelSource.OVERCAST;
             return SolarPanelSource.DAY;
         } else {
             return SolarPanelSource.NIGHT;

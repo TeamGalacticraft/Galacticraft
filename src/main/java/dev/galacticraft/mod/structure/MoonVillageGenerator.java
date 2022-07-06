@@ -27,33 +27,32 @@ import com.mojang.datafixers.kinds.Const;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.Constant;
-import net.minecraft.structure.pool.LegacySinglePoolElement;
-import net.minecraft.structure.pool.StructurePool;
-import net.minecraft.structure.pool.StructurePool.Projection;
-import net.minecraft.structure.pool.StructurePoolElement;
-import net.minecraft.structure.pool.StructurePools;
-import net.minecraft.structure.processor.StructureProcessorLists;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.RegistryEntry;
-
 import java.util.function.Function;
+import net.minecraft.core.Holder;
+import net.minecraft.data.worldgen.Pools;
+import net.minecraft.data.worldgen.ProcessorLists;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.structure.pools.LegacySinglePoolElement;
+import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool.Projection;
 
 public class MoonVillageGenerator {
-    public static final RegistryEntry<StructurePool> START_POOL = StructurePools.register(new StructurePool(
+    public static final Holder<StructureTemplatePool> START_POOL = Pools.register(new StructureTemplatePool(
             Constant.id("village/moon/highlands/starts"),
             Constant.Misc.EMPTY,
             ImmutableList.of(
                     Pair.of(single(Constant.id("village/moon/highlands/starts/start_1")), 3),
                     Pair.of(single(Constant.id("village/moon/highlands/starts/start_2")), 4),
                     Pair.of(single(Constant.id("village/moon/highlands/starts/start_3")), 5),
-                    Pair.of(StructurePoolElement.ofEmpty(), 1)
+                    Pair.of(StructurePoolElement.empty(), 1)
             ),
             Projection.RIGID
     ));
 
     public static void register() {
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("village/moon/highlands/animals"),
                         Constant.Misc.EMPTY,
                         ImmutableList.of(
@@ -62,8 +61,8 @@ public class MoonVillageGenerator {
                         Projection.RIGID
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("village/moon/highlands/decor"),
                         Constant.Misc.EMPTY,
                         ImmutableList.of(
@@ -73,8 +72,8 @@ public class MoonVillageGenerator {
                         Projection.RIGID
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("village/moon/highlands/houses"),
                         Constant.id("village/moon/highlands/terminators"),
                         ImmutableList.of(
@@ -85,8 +84,8 @@ public class MoonVillageGenerator {
                         Projection.RIGID
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("village/moon/highlands/iron_golem"),
                         Constant.Misc.EMPTY,
                         ImmutableList.of(
@@ -95,8 +94,8 @@ public class MoonVillageGenerator {
                         Projection.RIGID
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("village/moon/highlands/saplings"),
                         Constant.Misc.EMPTY,
                         ImmutableList.of(
@@ -111,8 +110,8 @@ public class MoonVillageGenerator {
                         Projection.RIGID
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("village/moon/highlands/streets"),
                         Constant.id("village/moon/highlands/terminators"),
                         ImmutableList.of(
@@ -132,13 +131,13 @@ public class MoonVillageGenerator {
                                 Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_05")), 2),
                                 Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_06")), 2),
                                 Pair.of(single(Constant.id("village/moon/highlands/streets/turn_01")), 3),
-                                Pair.of(StructurePoolElement.ofEmpty(), 3)
+                                Pair.of(StructurePoolElement.empty(), 3)
                         ),
                         Projection.TERRAIN_MATCHING
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("village/moon/highlands/terminators"),
                         Constant.Misc.EMPTY,
                         ImmutableList.of(
@@ -150,18 +149,18 @@ public class MoonVillageGenerator {
                         Projection.TERRAIN_MATCHING
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("village/moon/highlands/trees"),
                         Constant.Misc.EMPTY,
                         ImmutableList.of(
-                                Pair.of(StructurePoolElement.ofEmpty(), 1)
+                                Pair.of(StructurePoolElement.empty(), 1)
                         ),
                         Projection.RIGID
                 )
         );
-        StructurePools.register(
-                new StructurePool(
+        Pools.register(
+                new StructureTemplatePool(
                         Constant.id("village/moon/highlands/villagers"),
                         Constant.Misc.EMPTY,
                         ImmutableList.of(
@@ -174,7 +173,7 @@ public class MoonVillageGenerator {
         );
     }
     
-    public static Function<Projection, LegacySinglePoolElement> single(Identifier id) { // Legacy means that air CAN be replaced by worldgen.
-        return projection -> new LegacySinglePoolElement(Either.left(id), StructureProcessorLists.EMPTY, projection);
+    public static Function<Projection, LegacySinglePoolElement> single(ResourceLocation id) { // Legacy means that air CAN be replaced by worldgen.
+        return projection -> new LegacySinglePoolElement(Either.left(id), ProcessorLists.EMPTY, projection);
     }
 }

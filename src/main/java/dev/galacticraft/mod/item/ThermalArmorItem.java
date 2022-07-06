@@ -23,15 +23,15 @@
 package dev.galacticraft.mod.item;
 
 import dev.galacticraft.api.accessor.GearInventoryProvider;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -39,8 +39,8 @@ import net.minecraft.world.World;
 public class ThermalArmorItem extends Item {
     private final EquipmentSlot slotType;
 
-    public ThermalArmorItem(Settings settings, EquipmentSlot slotType) {
-        super(settings.maxCount(1));
+    public ThermalArmorItem(Properties settings, EquipmentSlot slotType) {
+        super(settings.stacksTo(1));
         this.slotType = slotType;
     }
 
@@ -49,12 +49,12 @@ public class ThermalArmorItem extends Item {
     }
 
     @Override //should sync with server
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        Inventory inv = ((GearInventoryProvider)player).getThermalArmor();
-        ItemStack thermalPiece = inv.getStack(this.getSlotIdForType(this.getSlotType()));
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+        Container inv = ((GearInventoryProvider)player).getThermalArmor();
+        ItemStack thermalPiece = inv.getItem(this.getSlotIdForType(this.getSlotType()));
         if (thermalPiece.isEmpty()) {
-            inv.setStack(this.getSlotIdForType(getSlotType()), player.getStackInHand(hand));
-            return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
+            inv.setItem(this.getSlotIdForType(getSlotType()), player.getItemInHand(hand));
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world, player, hand);
     }

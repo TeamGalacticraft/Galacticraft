@@ -25,14 +25,14 @@ package dev.galacticraft.mod.block.entity;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     private Direction direction = null;
@@ -42,18 +42,18 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         nbt.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.direction, Direction.UP).ordinal());
         nbt.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.direction, Direction.UP).ordinal());
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void load(CompoundTag nbt) {
         this.direction = Constant.Misc.DIRECTIONS[nbt.getByte(Constant.Nbt.DIRECTION)];
-        super.readNbt(nbt);
-        assert this.world != null;
-        if (this.world.isClient) MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(this.pos.getX(), this.pos.getY(), this.pos.getZ());
+        super.load(nbt);
+        assert this.level != null;
+        if (this.level.isClientSide) Minecraft.getInstance().levelRenderer.setSectionDirty(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ());
     }
 
     @Override
@@ -65,7 +65,7 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     public void setDirection(@NotNull Direction direction) {
         this.direction = direction;
         this.getConnections()[direction.ordinal()] = false;
-        world.updateNeighborsAlways(pos, this.getCachedState().getBlock());
+        level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock());
     }
 
     @Override

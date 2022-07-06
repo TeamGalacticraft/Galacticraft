@@ -23,21 +23,20 @@
 package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.DyeColor;
-
 import java.util.Objects;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.DyeColor;
 
 public interface Colored {
     DyeColor getColor();
 
     void setColor(DyeColor color);
 
-    default void writeColorNbt(NbtCompound nbt) {
+    default void writeColorNbt(CompoundTag nbt) {
         nbt.putByte(Constant.Nbt.COLOR, (byte) Objects.requireNonNullElse(this.getColor(), DyeColor.WHITE).ordinal());
     }
 
-    default void readColorNbt(NbtCompound nbt) {
+    default void readColorNbt(CompoundTag nbt) {
         this.setColor(DyeColor.values()[nbt.getByte(Constant.Nbt.COLOR)]);
     }
 }

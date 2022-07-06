@@ -22,44 +22,47 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
 import dev.galacticraft.mod.entity.BubbleEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
-    private static final Identifier MODEL = new Identifier(Constant.MOD_ID, "models/misc/sphere");
+    private static final ResourceLocation MODEL = new ResourceLocation(Constant.MOD_ID, "models/misc/sphere");
     public static BakedModel bubbleModel = null;
 
-    public BubbleEntityRenderer(EntityRendererFactory.Context context) {
+    public BubbleEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    public void render(BubbleEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(BubbleEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
 //        if (bubbleModel == null) { TODO: PORT new obj system
 //            bubbleModel = Myron.getModel(MODEL);
 //            assert bubbleModel != null;
 //        }
-        BlockEntity blockEntity = entity.world.getBlockEntity(entity.getBlockPos());
+        BlockEntity blockEntity = entity.level.getBlockEntity(entity.blockPosition());
         if (!(blockEntity instanceof BubbleDistributorBlockEntity machine) || entity.isRemoved()) {
-            ((ClientWorld) entity.world).removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
+            ((ClientLevel) entity.level).removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
             return;
         }
         if (!machine.bubbleVisible) {
@@ -67,14 +70,14 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
         }
         double size = machine.getSize();
 
-        matrices.push();
+        matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
         matrices.scale((float) size, (float) size, (float) size);
-        VertexConsumer consumer = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(getTexture(entity)));
-        for (BakedQuad quad : bubbleModel.getQuads(null, null, entity.world.random)) {
-            consumer.quad(matrices.peek(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.DEFAULT_UV);
+        VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.entityTranslucent(getTextureLocation(entity)));
+        for (BakedQuad quad : bubbleModel.getQuads(null, null, entity.level.random)) {
+            consumer.putBulkData(matrices.last(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.NO_OVERLAY);
         }
-        matrices.pop();
+        matrices.popPose();
     }
 
     @Override
@@ -83,7 +86,7 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
     }
 
     @Override
-    public Identifier getTexture(BubbleEntity entity) {
-        return bubbleModel.getParticleSprite().getId();
+    public ResourceLocation getTextureLocation(BubbleEntity entity) {
+        return bubbleModel.getParticleIcon().getName();
     }
 }

@@ -23,22 +23,22 @@
 package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 
 public interface Walkway extends Connected {
     Direction getDirection();
 
     void setDirection(@NotNull Direction direction);
 
-    default void writeWalkwayNbt(NbtCompound nbt) {
+    default void writeWalkwayNbt(CompoundTag nbt) {
         nbt.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.getDirection(), Direction.UP).ordinal());
     }
 
-    default void readWalkwayNbt(NbtCompound nbt) {
+    default void readWalkwayNbt(CompoundTag nbt) {
         this.setDirection(Direction.values()[nbt.getByte(Constant.Nbt.DIRECTION)]);
     }
 }

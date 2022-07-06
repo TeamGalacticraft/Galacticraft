@@ -23,29 +23,28 @@
 package dev.galacticraft.mod.block.environment;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.block.LanternBlock;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.world.BlockView;
-
 import java.util.List;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.LanternBlock;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GlowstoneLanternBlock extends LanternBlock {
-    public GlowstoneLanternBlock(Settings settings) {
+    public GlowstoneLanternBlock(Properties settings) {
         super(settings);
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
+    public void appendHoverText(ItemStack stack, BlockGetter blockView, List<Component> list, TooltipFlag tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(Text.translatable("tooltip.galacticraft.glowstone_lantern").setStyle(Constant.Text.Color.GRAY_STYLE));
+            list.add(Component.translatable("tooltip.galacticraft.glowstone_lantern").setStyle(Constant.Text.Color.GRAY_STYLE));
         } else {
-            list.add(Text.translatable("tooltip.galacticraft.press_shift").setStyle(Constant.Text.Color.GRAY_STYLE));
+            list.add(Component.translatable("tooltip.galacticraft.press_shift").setStyle(Constant.Text.Color.GRAY_STYLE));
         }
     }
 }

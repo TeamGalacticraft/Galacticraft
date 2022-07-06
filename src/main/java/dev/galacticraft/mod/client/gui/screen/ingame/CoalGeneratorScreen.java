@@ -23,15 +23,15 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.CoalGeneratorBlockEntity;
 import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -45,17 +45,17 @@ public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorBlock
     private static final int FIRE_WIDTH = 14;
     private static final int FIRE_HEIGHT = 14;
 
-    public CoalGeneratorScreen(CoalGeneratorScreenHandler handler, PlayerInventory inv, Text title) {
+    public CoalGeneratorScreen(CoalGeneratorScreenHandler handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.COAL_GENERATOR_SCREEN);
-        this.backgroundHeight = 176;
+        this.imageHeight = 176;
     }
 
     @Override
-    protected void renderBackground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.renderBackground(matrices, mouseX, mouseY, delta);
         if (this.machine.getFuelLength() > 0) {
             double scale = ((double)(this.machine.getFuelLength() - this.machine.getFuelTime())) / (double)this.machine.getFuelLength();
-            DrawableUtil.drawProgressTexture(matrices, this.x + FIRE_X, this.y + FIRE_Y, this.getZOffset(), FIRE_U, FIRE_V, FIRE_WIDTH, (float) (FIRE_HEIGHT * scale));
+            DrawableUtil.drawProgressTexture(matrices, this.leftPos + FIRE_X, this.topPos + FIRE_Y, this.getBlitOffset(), FIRE_U, FIRE_V, FIRE_WIDTH, (float) (FIRE_HEIGHT * scale));
         }
     }
 }

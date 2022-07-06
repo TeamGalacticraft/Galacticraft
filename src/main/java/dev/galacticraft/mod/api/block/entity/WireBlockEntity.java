@@ -26,14 +26,14 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.attribute.energy.WireEnergyStorage;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,22 +70,22 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     @Override
     public @NotNull WireNetwork getOrCreateNetwork() {
         if (this.network == null) {
-            if (!this.world.isClient()) {
+            if (!this.level.isClientSide()) {
                 for (Direction direction : Constant.Misc.DIRECTIONS) {
                     if (this.canConnect(direction)) {
-                        BlockEntity entity = world.getBlockEntity(pos.offset(direction));
+                        BlockEntity entity = level.getBlockEntity(worldPosition.relative(direction));
                         if (entity instanceof Wire wire && wire.getNetwork() != null) {
                             if (wire.canConnect(direction.getOpposite())) {
                                 if (wire.getOrCreateNetwork().isCompatibleWith(this)) {
-                                    wire.getNetwork().addWire(pos, this);
+                                    wire.getNetwork().addWire(worldPosition, this);
                                 }
                             }
                         }
                     }
                 }
                 if (this.network == null) {
-                    this.setNetwork(WireNetwork.create((ServerWorld) world, this.getMaxTransferRate()));
-                    this.network.addWire(pos, this);
+                    this.setNetwork(WireNetwork.create((ServerLevel) level, this.getMaxTransferRate()));
+                    this.network.addWire(worldPosition, this);
                 }
             }
         }
@@ -101,7 +101,7 @@ public class WireBlockEntity extends BlockEntity implements Wire {
         if (this.insertables == null) {
             this.insertables = new WireEnergyStorage[6];
             for (Direction direction : Constant.Misc.DIRECTIONS) {
-                this.insertables[direction.ordinal()] = new WireEnergyStorage(direction, this.getMaxTransferRate(), this.pos);
+                this.insertables[direction.ordinal()] = new WireEnergyStorage(direction, this.getMaxTransferRate(), this.worldPosition);
             }
         }
         return this.insertables;
@@ -113,10 +113,10 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     }
 
     @Override
-    public void markRemoved() {
-        super.markRemoved();
+    public void setRemoved() {
+        super.setRemoved();
         if (this.getNetwork() != null) {
-            this.getOrCreateNetwork().removeWire(this, this.pos);
+            this.getOrCreateNetwork().removeWire(this, this.worldPosition);
         }
     }
 
@@ -126,16 +126,16 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         this.writeConnectionNbt(nbt);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         this.readConnectionNbt(nbt);
-        assert this.world != null;
-        if (this.world.isClient) MinecraftClient.getInstance().worldRenderer.scheduleBlockRender(pos.getX(), pos.getY(), pos.getZ());
+        assert this.level != null;
+        if (this.level.isClientSide) Minecraft.getInstance().levelRenderer.setSectionDirty(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
     }
 }

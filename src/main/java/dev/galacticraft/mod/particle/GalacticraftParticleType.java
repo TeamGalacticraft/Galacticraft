@@ -24,19 +24,19 @@ package dev.galacticraft.mod.particle;
 
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftParticleType {
-    public static final DefaultParticleType DRIPPING_FUEL_PARTICLE = FabricParticleTypes.simple();
-    public static final DefaultParticleType DRIPPING_CRUDE_OIL_PARTICLE = FabricParticleTypes.simple();
+    public static final SimpleParticleType DRIPPING_FUEL_PARTICLE = FabricParticleTypes.simple();
+    public static final SimpleParticleType DRIPPING_CRUDE_OIL_PARTICLE = FabricParticleTypes.simple();
 
     public static void register() {
-        Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constant.MOD_ID, Constant.Particle.DRIPPING_CRUDE_OIL_PARTICLE), DRIPPING_FUEL_PARTICLE);
-        Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constant.MOD_ID, Constant.Particle.DRIPPING_FUEL_PARTICLE), DRIPPING_CRUDE_OIL_PARTICLE);
+        Registry.register(Registry.PARTICLE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Particle.DRIPPING_CRUDE_OIL_PARTICLE), DRIPPING_FUEL_PARTICLE);
+        Registry.register(Registry.PARTICLE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Particle.DRIPPING_FUEL_PARTICLE), DRIPPING_CRUDE_OIL_PARTICLE);
     }
 }

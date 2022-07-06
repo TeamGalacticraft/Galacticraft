@@ -26,15 +26,15 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.SimpleBatteryItem;
@@ -48,8 +48,8 @@ public class BatteryItem extends Item implements SimpleBatteryItem {
     private final long capacity;
     private final long transfer;
 
-    public BatteryItem(Settings settings, long capacity, long transfer) {
-        super(settings.maxCount(1));
+    public BatteryItem(Properties settings, long capacity, long transfer) {
+        super(settings.stacksTo(1));
         this.capacity = capacity;
         this.transfer = transfer;
 
@@ -57,15 +57,15 @@ public class BatteryItem extends Item implements SimpleBatteryItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
+    public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
         EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
-        lines.add(Text.translatable("tooltip.galacticraft.energy_remaining", DrawableUtil.getEnergyDisplay(energyStorage.getAmount())).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double)energyStorage.getAmount()) / ((double)energyStorage.getCapacity()))));
-        super.appendTooltip(stack, world, lines, context);
+        lines.add(Component.translatable("tooltip.galacticraft.energy_remaining", DrawableUtil.getEnergyDisplay(energyStorage.getAmount())).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double)energyStorage.getAmount()) / ((double)energyStorage.getCapacity()))));
+        super.appendHoverText(stack, world, lines, context);
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-        if (this.isIn(group)) {
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {
+        if (this.allowedIn(group)) {
             ItemStack charged = new ItemStack(this);
             try (Transaction transaction = Transaction.openOuter()) {
                 ContainerItemContext.withInitial(charged).find(EnergyStorage.ITEM).insert(Long.MAX_VALUE, transaction);
@@ -83,12 +83,12 @@ public class BatteryItem extends Item implements SimpleBatteryItem {
     }
 
     @Override
-    public boolean isItemBarVisible(ItemStack stack) {
+    public boolean isBarVisible(ItemStack stack) {
         return true;
     }
 
     @Override
-    public int getItemBarStep(ItemStack stack) {
+    public int getBarWidth(ItemStack stack) {
         EnergyStorage storage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
         assert storage != null;
 
@@ -96,7 +96,7 @@ public class BatteryItem extends Item implements SimpleBatteryItem {
     }
 
     @Override
-    public int getItemBarColor(ItemStack stack) {
+    public int getBarColor(ItemStack stack) {
         EnergyStorage storage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
         assert storage != null;
         double scale = 1.0 - Math.max(0.0, (double) storage.getAmount() / (double)storage.getCapacity());
@@ -104,14 +104,14 @@ public class BatteryItem extends Item implements SimpleBatteryItem {
     }
 
     @Override
-    public void onCraft(@NotNull ItemStack battery, World world, PlayerEntity player) {
-        NbtCompound batteryTag = battery.getOrCreateNbt();
-        battery.setDamage(this.getMaxDamage());
-        battery.setNbt(batteryTag);
+    public void onCraftedBy(@NotNull ItemStack battery, Level world, Player player) {
+        CompoundTag batteryTag = battery.getOrCreateTag();
+        battery.setDamageValue(this.getMaxDamage());
+        battery.setTag(batteryTag);
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return -1;
     }
 
@@ -121,7 +121,7 @@ public class BatteryItem extends Item implements SimpleBatteryItem {
     }
 
     @Override
-    public boolean canRepair(ItemStack stack, ItemStack repairMaterial) {
+    public boolean isValidRepairItem(ItemStack stack, ItemStack repairMaterial) {
         return false;
     }
 

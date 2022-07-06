@@ -32,18 +32,17 @@ import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
-
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import java.util.List;
 
 /**
@@ -52,14 +51,14 @@ import java.util.List;
 public class OxygenTankItem extends Item {
     public final int capacity;
 
-    public OxygenTankItem(Settings settings, int capacity) {
-        super(settings.maxDamage(capacity));
+    public OxygenTankItem(Properties settings, int capacity) {
+        super(settings.durability(capacity));
         this.capacity = capacity;
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> list) {
-        if (this.isIn(group)) {
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> list) {
+        if (this.allowedIn(group)) {
             ItemStack charged = new ItemStack(this);
             try (Transaction transaction = Transaction.openOuter()) {
                 ContainerItemContext.withInitial(charged).find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
@@ -77,12 +76,12 @@ public class OxygenTankItem extends Item {
     }
 
     @Override
-    public boolean isItemBarVisible(ItemStack stack) {
+    public boolean isBarVisible(ItemStack stack) {
         return true;
     }
 
     @Override
-    public int getItemBarStep(ItemStack stack) {
+    public int getBarWidth(ItemStack stack) {
         try (Transaction transaction = Transaction.openOuter()) {
             StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(transaction, FluidVariant.of(Gases.OXYGEN));
             assert storage != null;
@@ -92,7 +91,7 @@ public class OxygenTankItem extends Item {
     }
 
     @Override
-    public int getItemBarColor(ItemStack stack) {
+    public int getBarColor(ItemStack stack) {
         try (Transaction transaction = Transaction.openOuter()) {
             StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(transaction, FluidVariant.of(Gases.OXYGEN));
             assert storage != null;
@@ -102,7 +101,7 @@ public class OxygenTankItem extends Item {
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return -1;
     }
 
@@ -112,28 +111,28 @@ public class OxygenTankItem extends Item {
     }
 
     @Override
-    public boolean hasGlint(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return this.capacity <= 0;
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
+    public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
         try (Transaction transaction = Transaction.openOuter()) {
             StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(transaction, FluidVariant.of(Gases.OXYGEN));
             assert storage != null;
-            lines.add(Text.translatable("tooltip.galacticraft.oxygen_remaining", storage.getAmount() + "/" + storage.getCapacity()).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double)storage.getAmount() / (double)storage.getCapacity()))));
+            lines.add(Component.translatable("tooltip.galacticraft.oxygen_remaining", storage.getAmount() + "/" + storage.getCapacity()).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double)storage.getAmount() / (double)storage.getCapacity()))));
         }
-        super.appendTooltip(stack, world, lines, context);
+        super.appendHoverText(stack, world, lines, context);
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack copy = user.getStackInHand(hand).copy();
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        ItemStack copy = user.getItemInHand(hand).copy();
         try (Transaction transaction = Transaction.openOuter()) {
             long l = InventoryStorage.of(((GearInventoryProvider) user).getOxygenTanks(), null).insert(ItemVariant.of(copy), copy.getCount(), transaction);
             if (l == copy.getCount()) {
                 transaction.commit();
-                return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);
             }
         }
         return super.use(world, user, hand);

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.item;
 
 public class FrequencyModuleItem extends AccessoryItem {
-    public FrequencyModuleItem(Settings settings) {
+    public FrequencyModuleItem(Properties settings) {
         super(settings);
     }
 

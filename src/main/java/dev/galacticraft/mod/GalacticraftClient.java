@@ -53,13 +53,12 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.material.Fluids;
 import java.util.Collections;
 
 /**
@@ -73,21 +72,21 @@ public class GalacticraftClient implements ClientModInitializer {
         Galacticraft.LOGGER.info("Starting client initialization.");
         CapesLoader.load();
 
-        ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) -> {
+        ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register((spriteAtlasTexture, registry) -> {
             for (int i = 0; i <= 8; i++) {
-                registry.register(new Identifier(Constant.MOD_ID, "block/energy_storage_module_" + i));
-                registry.register(new Identifier(Constant.MOD_ID, "block/oxygen_storage_module_" + i));
+                registry.register(new ResourceLocation(Constant.MOD_ID, "block/energy_storage_module_" + i));
+                registry.register(new ResourceLocation(Constant.MOD_ID, "block/oxygen_storage_module_" + i));
             }
 
-            registry.register(new Identifier(Constant.MOD_ID, "block/oxygen_sealer_top"));
-            registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_HEAD));
-            registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_CHEST));
-            registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_PANTS));
-            registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.THERMAL_BOOTS));
+            registry.register(new ResourceLocation(Constant.MOD_ID, "block/oxygen_sealer_top"));
+            registry.register(new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_HEAD));
+            registry.register(new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_CHEST));
+            registry.register(new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_PANTS));
+            registry.register(new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_BOOTS));
 
-            registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_MASK));
-            registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_GEAR));
-            registry.register(new Identifier(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_TANK));
+            registry.register(new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_MASK));
+            registry.register(new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_GEAR));
+            registry.register(new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_TANK));
 
             registry.register(Constant.Fluid.getId(Constant.Fluid.CRUDE_OIL_STILL));
             registry.register(Constant.Fluid.getId(Constant.Fluid.CRUDE_OIL_FLOWING));
@@ -95,23 +94,23 @@ public class GalacticraftClient implements ClientModInitializer {
             registry.register(Constant.Fluid.getId(Constant.Fluid.FUEL_FLOWING));
         });
 
-        HandledScreens.register(GalacticraftScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER, BasicSolarPanelScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.ADVANCED_SOLAR_PANEL_HANDLER, AdvancedSolarPanelScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.COAL_GENERATOR_HANDLER, CoalGeneratorScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.CIRCUIT_FABRICATOR_HANDLER, CircuitFabricatorScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.REFINERY_HANDLER, RefineryScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.ELECTRIC_FURNACE_HANDLER, ElectricFurnaceScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER, ElectricArcFurnaceScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.COMPRESSOR_HANDLER, CompressorScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.ELECTRIC_COMPRESSOR_HANDLER, ElectricCompressorScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER, EnergyStorageModuleScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.OXYGEN_COLLECTOR_HANDLER, OxygenCollectorScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER, OxygenCompressorScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER, OxygenDecompressorScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.PLAYER_INV_GC_HANDLER, GalacticraftPlayerInventoryScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.BUBBLE_DISTRIBUTOR_HANDLER, BubbleDistributorScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER, OxygenStorageModuleScreen::new);
-        HandledScreens.register(GalacticraftScreenHandlerType.OXYGEN_SEALER_HANDLER, OxygenSealerScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER, BasicSolarPanelScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.ADVANCED_SOLAR_PANEL_HANDLER, AdvancedSolarPanelScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.COAL_GENERATOR_HANDLER, CoalGeneratorScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.CIRCUIT_FABRICATOR_HANDLER, CircuitFabricatorScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.REFINERY_HANDLER, RefineryScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.ELECTRIC_FURNACE_HANDLER, ElectricFurnaceScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER, ElectricArcFurnaceScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.COMPRESSOR_HANDLER, CompressorScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.ELECTRIC_COMPRESSOR_HANDLER, ElectricCompressorScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER, EnergyStorageModuleScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.OXYGEN_COLLECTOR_HANDLER, OxygenCollectorScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER, OxygenCompressorScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER, OxygenDecompressorScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.PLAYER_INV_GC_HANDLER, GalacticraftPlayerInventoryScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.BUBBLE_DISTRIBUTOR_HANDLER, BubbleDistributorScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER, OxygenStorageModuleScreen::new);
+        MenuScreens.register(GalacticraftScreenHandlerType.OXYGEN_SEALER_HANDLER, OxygenSealerScreen::new);
 
         EntityRendererRegistry.register(GalacticraftEntityType.EVOLVED_ZOMBIE, EvolvedZombieRenderer::new);
         EntityRendererRegistry.register(GalacticraftEntityType.EVOLVED_CREEPER, EvolvedCreeperEntityRenderer::new);
@@ -126,22 +125,22 @@ public class GalacticraftClient implements ClientModInitializer {
         GalacticraftClientPacketReceiver.register();
         GalacticraftEntityModelLayer.register();
 
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.TIN_LADDER, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLASS_FLUID_PIPE, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.WALKWAY, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.WIRE_WALKWAY, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.PIPE_WALKWAY, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.MOON_BERRY_BUSH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLOWSTONE_TORCH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLOWSTONE_WALL_TORCH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.UNLIT_TORCH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.UNLIT_WALL_TORCH, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLOWSTONE_LANTERN, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.UNLIT_LANTERN, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.POISONOUS_CAVERNOUS_VINE, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.CAVERNOUS_VINE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.TIN_LADDER, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLASS_FLUID_PIPE, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.WALKWAY, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.WIRE_WALKWAY, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.PIPE_WALKWAY, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.MOON_BERRY_BUSH, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLOWSTONE_TORCH, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLOWSTONE_WALL_TORCH, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.UNLIT_TORCH, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.UNLIT_WALL_TORCH, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLOWSTONE_LANTERN, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.UNLIT_LANTERN, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.POISONOUS_CAVERNOUS_VINE, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.CAVERNOUS_VINE, RenderType.cutout());
 
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new GalacticraftResourceReloadListener());
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new GalacticraftResourceReloadListener());
 
         ParticleFactoryRegistry.getInstance().register(GalacticraftParticleType.DRIPPING_FUEL_PARTICLE, DrippingFuelFactory::new);
         ParticleFactoryRegistry.getInstance().register(GalacticraftParticleType.DRIPPING_CRUDE_OIL_PARTICLE, DrippingOilFactory::new);
@@ -161,7 +160,7 @@ public class GalacticraftClient implements ClientModInitializer {
             return null;
         });
 
-        DimensionRenderingRegistry.registerDimensionEffects(GalacticraftDimensionType.MOON_KEY.getValue(), MoonDimensionEffects.INSTANCE);
+        DimensionRenderingRegistry.registerDimensionEffects(GalacticraftDimensionType.MOON_KEY.location(), MoonDimensionEffects.INSTANCE);
         DimensionRenderingRegistry.registerCloudRenderer(GalacticraftDimensionType.MOON_KEY, EmptyCloudRenderer.INSTANCE);
         DimensionRenderingRegistry.registerWeatherRenderer(GalacticraftDimensionType.MOON_KEY, EmptyWeatherRenderer.INSTANCE);
         DimensionRenderingRegistry.registerSkyRenderer(GalacticraftDimensionType.MOON_KEY, MoonSkyRenderer.INSTANCE);

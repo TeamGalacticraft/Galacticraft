@@ -23,26 +23,26 @@
 package dev.galacticraft.mod.block.environment;
 
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DirtPathBlock;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DirtPathBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class MoonDirtPathBlock extends DirtPathBlock {
-    public MoonDirtPathBlock(Settings settings) {
+    public MoonDirtPathBlock(Properties settings) {
         super(settings);
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return !this.getDefaultState().canPlaceAt(ctx.getWorld(), ctx.getBlockPos()) ? Block.pushEntitiesUpBeforeBlockChange(this.getDefaultState(), GalacticraftBlock.MOON_DIRT.getDefaultState(), ctx.getWorld(), ctx.getBlockPos()) : super.getPlacementState(ctx);
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return !this.defaultBlockState().canSurvive(ctx.getLevel(), ctx.getClickedPos()) ? Block.pushEntitiesUp(this.defaultBlockState(), GalacticraftBlock.MOON_DIRT.defaultBlockState(), ctx.getLevel(), ctx.getClickedPos()) : super.getStateForPlacement(ctx);
     }
 
     @Override
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        world.setBlockState(pos, pushEntitiesUpBeforeBlockChange(state, GalacticraftBlock.MOON_DIRT.getDefaultState(), world, pos));
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        world.setBlockAndUpdate(pos, pushEntitiesUp(state, GalacticraftBlock.MOON_DIRT.defaultBlockState(), world, pos));
     }
 }

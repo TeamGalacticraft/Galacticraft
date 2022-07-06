@@ -22,25 +22,25 @@
 
 package dev.galacticraft.mod.block.machine;
 
+import com.mojang.math.Vector3f;
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenCollectorBlock extends SimpleMachineBlock<OxygenCollectorBlockEntity> {
-    public OxygenCollectorBlock(Settings settings) {
+    public OxygenCollectorBlock(Properties settings) {
         super(settings, OxygenCollectorBlockEntity::new);
     }
 
     @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (state.get(ACTIVE) && world.getBlockEntity(pos) instanceof OxygenCollectorBlockEntity machine && machine.collectionAmount > 0) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
+        if (state.getValue(ACTIVE) && world.getBlockEntity(pos) instanceof OxygenCollectorBlockEntity machine && machine.collectionAmount > 0) {
             for (int count = 0; count < 10; count++) {
                 for (int i = 0; i < 32; ++i) {
                     double x2 = pos.getX() + random.nextFloat();
@@ -61,7 +61,7 @@ public class OxygenCollectorBlock extends SimpleMachineBlock<OxygenCollectorBloc
                     }
 
                     world.addParticle(
-                            new DustParticleEffect(new Vec3f(0.8f, 0.8f, 1.0f), 1.0F),
+                            new DustParticleOptions(new Vector3f(0.8f, 0.8f, 1.0f), 1.0F),
                             x2, y2, z2,
                             mX, mY, mZ);
                 }

@@ -36,7 +36,7 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
@@ -54,12 +54,12 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(GalacticraftBlock.CIRCUIT_FABRICATOR.asItem().getDefaultStack());
+        return EntryStacks.of(GalacticraftBlock.CIRCUIT_FABRICATOR.asItem().getDefaultInstance());
     }
 
     @Override
-    public Text getTitle() {
-        return Text.translatable("category.rei.circuit_fabricator");
+    public Component getTitle() {
+        return Component.translatable("category.rei.circuit_fabricator");
     }
 
     @Override

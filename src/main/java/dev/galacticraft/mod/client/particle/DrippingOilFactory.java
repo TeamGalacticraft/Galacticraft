@@ -26,24 +26,24 @@ import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.particle.GalacticraftParticleType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.particle.BlockLeakParticle;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.DripParticle;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleFactory;
-import net.minecraft.client.particle.SpriteProvider;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public record DrippingOilFactory(SpriteProvider spriteProvider) implements ParticleFactory<DefaultParticleType> {
+public record DrippingOilFactory(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
     @Override
-    public @NotNull Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-        BlockLeakParticle particle = new BlockLeakParticle.Dripping(world, x, y, z, GalacticraftFluid.CRUDE_OIL, GalacticraftParticleType.DRIPPING_CRUDE_OIL_PARTICLE);
+    public @NotNull Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        DripParticle particle = new DripParticle.DripHangParticle(world, x, y, z, GalacticraftFluid.CRUDE_OIL, GalacticraftParticleType.DRIPPING_CRUDE_OIL_PARTICLE);
         particle.setColor(42f / 255f, 42f / 255f, 42f / 255f);
-        particle.setSprite(this.spriteProvider);
+        particle.pickSprite(this.spriteProvider);
         return particle;
     }
 }

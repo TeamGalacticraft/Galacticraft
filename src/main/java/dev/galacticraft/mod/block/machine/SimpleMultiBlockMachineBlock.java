@@ -27,14 +27,14 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.MultiBlockMachineBlock;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
@@ -42,49 +42,49 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class SimpleMultiBlockMachineBlock<T extends MachineBlockEntity, P extends BlockWithEntity> extends MultiBlockMachineBlock<T> {
+public class SimpleMultiBlockMachineBlock<T extends MachineBlockEntity, P extends BaseEntityBlock> extends MultiBlockMachineBlock<T> {
     private final List<BlockPos> parts;
     private final SimpleMachineBlock.BlockEntityFactory<T> factory;
-    private Text information = null;
+    private Component information = null;
     private final BlockState partState;
 
     /**
      * Note: BlockEntity of the partBlock must implement {@link MultiBlockPart}
      */
-    public static <T extends MachineBlockEntity, P extends BlockWithEntity> SimpleMultiBlockMachineBlock<T, P> create(SimpleMachineBlock.BlockEntityFactory<T> type, List<BlockPos> parts, P partBlock) {
+    public static <T extends MachineBlockEntity, P extends BaseEntityBlock> SimpleMultiBlockMachineBlock<T, P> create(SimpleMachineBlock.BlockEntityFactory<T> type, List<BlockPos> parts, P partBlock) {
         return new SimpleMultiBlockMachineBlock<>(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS), parts, type, partBlock);
     }
 
-    protected SimpleMultiBlockMachineBlock(Settings settings, List<BlockPos> parts, SimpleMachineBlock.BlockEntityFactory<T> factory, P partBlock) {
+    protected SimpleMultiBlockMachineBlock(Properties settings, List<BlockPos> parts, SimpleMachineBlock.BlockEntityFactory<T> factory, P partBlock) {
         super(settings);
         this.parts = parts;
         this.factory = factory;
-        this.partState = partBlock.getDefaultState();
+        this.partState = partBlock.defaultBlockState();
     }
 
     @Override
-    public T createBlockEntity(BlockPos pos, BlockState state) {
+    public T newBlockEntity(BlockPos pos, BlockState state) {
         return this.factory.create(pos, state);
     }
 
     @Override
-    public Text machineDescription(ItemStack stack, BlockView view, boolean advanced) {
+    public Component machineDescription(ItemStack stack, BlockGetter view, boolean advanced) {
         if (this.information == null) {
-            this.information = Text.translatable(this.getTranslationKey() + ".description").setStyle(Constant.Text.Color.DARK_GRAY_STYLE);
+            this.information = Component.translatable(this.getDescriptionId() + ".description").setStyle(Constant.Text.Color.DARK_GRAY_STYLE);
         }
         return this.information;
     }
 
     @Override
-    public void onMultiBlockPlaced(World world, BlockPos pos, BlockState state) {
+    public void onMultiBlockPlaced(Level world, BlockPos pos, BlockState state) {
         for (BlockPos otherPart : this.getOtherParts(state)) {
-            otherPart = otherPart.toImmutable().add(pos);
-            world.setBlockState(otherPart, this.partState);
+            otherPart = otherPart.immutable().offset(pos);
+            world.setBlockAndUpdate(otherPart, this.partState);
 
             BlockEntity part = world.getBlockEntity(otherPart);
             assert part != null; // This will never be null because world.setBlockState will put a blockentity there.
             ((MultiBlockPart) part).setBasePos(pos);
-            part.markDirty();
+            part.setChanged();
         }
     }
 

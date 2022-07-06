@@ -15,7 +15,6 @@
     "LootTablesAccessor",
     "NoiseChunkGeneratorMixin",
     "ServerWorldMixin",
-    "SimpleRegistryMixin",
     "TorchBlockMixin"
   ],
   "client": [

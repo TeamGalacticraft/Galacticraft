@@ -29,12 +29,13 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.fabricmc.fabric.impl.transfer.TransferApiImpl;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
@@ -43,12 +44,12 @@ import java.util.List;
 public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant>, StorageView<FluidVariant> {
     private int ticks = (int) (Math.random() * 1000.0);
 
-    public InfiniteOxygenTankItem(Settings settings) {
+    public InfiniteOxygenTankItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return -1;
     }
 
@@ -58,26 +59,26 @@ public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant
     }
 
     @Override
-    public boolean hasGlint(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return true;
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(Text.translatable("tooltip.galacticraft.oxygen_remaining", Text.translatable("tooltip.galacticraft.infinite").setStyle(Constant.Text.Color.getRainbow(this.ticks))));
-        tooltip.add(Text.translatable("tooltip.galacticraft.creative_only").setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+        super.appendHoverText(stack, world, tooltip, context);
+        tooltip.add(Component.translatable("tooltip.galacticraft.oxygen_remaining", Component.translatable("tooltip.galacticraft.infinite").setStyle(Constant.Text.Color.getRainbow(this.ticks))));
+        tooltip.add(Component.translatable("tooltip.galacticraft.creative_only").setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
     }
 
     @Override
-    public int getItemBarStep(ItemStack stack) {
+    public int getBarWidth(ItemStack stack) {
         return 13;
     }
 
     @Override
-    public int getItemBarColor(ItemStack stack) {
+    public int getBarColor(ItemStack stack) {
         if (++this.ticks > 1000) this.ticks -= 1000;
-        return MathHelper.hsvToRgb(this.ticks / 1000.0f, 1, 1);
+        return Mth.hsvToRgb(this.ticks / 1000.0f, 1, 1);
     }
 
     @Override

@@ -25,14 +25,14 @@ package dev.galacticraft.mod.fluid;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.particle.GalacticraftParticleType;
-import net.minecraft.block.FluidBlock;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.Item;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -48,21 +48,21 @@ public abstract class FuelFluid extends BasicFluid {
     }
 
     @Override
-    public Fluid getStill() {
+    public Fluid getSource() {
         return GalacticraftFluid.FUEL;
     }
 
-    public ParticleEffect getParticle() {
+    public ParticleOptions getDripParticle() {
         return GalacticraftParticleType.DRIPPING_FUEL_PARTICLE;
     }
 
     @Override
-    public Item getBucketItem() {
+    public Item getBucket() {
         return GalacticraftItem.FUEL_BUCKET;
     }
 
     @Override
-    public void randomDisplayTick(World world, BlockPos blockPos, FluidState fluidState, Random random) {
+    public void animateTick(Level world, BlockPos blockPos, FluidState fluidState, RandomSource random) {
         if (random.nextInt(10) == 0) {
             world.addParticle(GalacticraftParticleType.DRIPPING_FUEL_PARTICLE,
                     (double) blockPos.getX() + 0.5D - random.nextGaussian() + random.nextGaussian(),
@@ -73,7 +73,7 @@ public abstract class FuelFluid extends BasicFluid {
     }
 
     @Override
-    protected FluidBlock getBlock() {
+    protected LiquidBlock getBlock() {
         return GalacticraftBlock.FUEL;
     }
 

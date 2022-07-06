@@ -23,39 +23,38 @@
 package dev.galacticraft.mod.entity;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.world.World;
-
 import java.util.UUID;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class EvolvedCreeperEntity extends CreeperEntity {
-    private static final TrackedData<Boolean> BABY = DataTracker.registerData(EvolvedCreeperEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+public class EvolvedCreeperEntity extends Creeper {
+    private static final EntityDataAccessor<Boolean> BABY = SynchedEntityData.defineId(EvolvedCreeperEntity.class, EntityDataSerializers.BOOLEAN);
     private static final UUID BABY_SPEED_ID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
-    private static final EntityAttributeModifier BABY_SPEED_BONUS = new EntityAttributeModifier(BABY_SPEED_ID, "Baby speed boost", 0.8D, EntityAttributeModifier.Operation.MULTIPLY_BASE);
+    private static final AttributeModifier BABY_SPEED_BONUS = new AttributeModifier(BABY_SPEED_ID, "Baby speed boost", 0.8D, AttributeModifier.Operation.MULTIPLY_BASE);
 
-    public EvolvedCreeperEntity(EntityType<? extends CreeperEntity> entityType, World world) {
+    public EvolvedCreeperEntity(EntityType<? extends Creeper> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(BABY, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(BABY, false);
     }
 
     public void tick() {
@@ -63,11 +62,11 @@ public class EvolvedCreeperEntity extends CreeperEntity {
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound tag) {
+    public void readAdditionalSaveData(CompoundTag tag) {
         this.setBaby(tag.getBoolean(Constant.Nbt.BABY));
         tag.putByte("ExplosionRadius", (byte) (this.isBaby() ? 2 : 4)); //overwrite
         tag.putShort("Fuse", (short) 37); //overwrite
-        super.readCustomDataFromNbt(tag);
+        super.readAdditionalSaveData(tag);
     }
 
     @Override
@@ -76,8 +75,8 @@ public class EvolvedCreeperEntity extends CreeperEntity {
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound tag) {
-        super.writeCustomDataToNbt(tag);
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
         tag.putBoolean(Constant.Nbt.BABY, isBaby());
         tag.putByte("ExplosionRadius", (byte) (this.isBaby() ? 2 : 4));
         tag.putShort("Fuse", (short) 37); //overwrite
@@ -85,44 +84,44 @@ public class EvolvedCreeperEntity extends CreeperEntity {
 
     @Override
     public boolean isBaby() {
-        return this.dataTracker.get(BABY);
+        return this.entityData.get(BABY);
     }
 
     public void setBaby(boolean baby) {
-        this.getDataTracker().set(BABY, baby);
-        if (this.world != null && !this.world.isClient) {
-            EntityAttributeInstance entityAttributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+        this.getEntityData().set(BABY, baby);
+        if (this.level != null && !this.level.isClientSide) {
+            AttributeInstance entityAttributeInstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
             entityAttributeInstance.removeModifier(BABY_SPEED_BONUS);
             if (baby) {
-                entityAttributeInstance.addTemporaryModifier(BABY_SPEED_BONUS);
+                entityAttributeInstance.addTransientModifier(BABY_SPEED_BONUS);
             }
         }
     }
 
     @Override
-    public EntityDimensions getDimensions(EntityPose pose) {
+    public EntityDimensions getDimensions(Pose pose) {
         if (this.isBaby()) {
-            return this.getType().getDimensions().scaled(0.75F, 0.5F);
+            return this.getType().getDimensions().scale(0.75F, 0.5F);
         } else {
             return this.getType().getDimensions();
         }
     }
 
     @Override
-    public void onTrackedDataSet(TrackedData<?> data) {
+    public void onSyncedDataUpdated(EntityDataAccessor<?> data) {
         if (BABY.equals(data)) {
-            this.calculateDimensions();
+            this.refreshDimensions();
         }
-        super.onTrackedDataSet(data);
+        super.onSyncedDataUpdated(data);
     }
 
     @Override
-    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+    protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
         return this.isBaby() ? 0.75F : 1.4F;
     }
 
     @Override
-    public double getHeightOffset() {
+    public double getMyRidingOffset() {
         return this.isBaby() ? 0.0D : -0.45D;
     }
 }

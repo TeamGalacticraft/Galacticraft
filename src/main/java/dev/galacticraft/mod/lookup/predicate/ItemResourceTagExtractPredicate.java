@@ -28,7 +28,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
-import net.minecraft.tag.TagKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.registry.Registry;
 
 import java.util.function.Predicate;

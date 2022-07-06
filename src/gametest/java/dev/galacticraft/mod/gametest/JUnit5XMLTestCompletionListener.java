@@ -24,7 +24,7 @@ package dev.galacticraft.mod.gametest;
 
 import com.google.common.base.Stopwatch;
 import net.minecraft.test.GameTestState;
-import net.minecraft.test.TestCompletionListener;
+import net.minecraft.gametest.framework.TestReporter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Modified from {@link net.minecraft.test.XmlReportingTestCompletionListener} to include proper testsuite element attributes.
  */
-public class JUnit5XMLTestCompletionListener implements TestCompletionListener {
+public class JUnit5XMLTestCompletionListener implements TestReporter {
     private final Document document;
     private final Element testSuiteElement;
     private final Stopwatch stopwatch;

@@ -25,22 +25,23 @@ package dev.galacticraft.mod.world.gen.carver.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.tag.GalacticraftTag;
-import net.minecraft.util.math.floatprovider.FloatProvider;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.YOffset;
-import net.minecraft.world.gen.carver.CarverConfig;
-import net.minecraft.world.gen.carver.CarverDebugConfig;
-import net.minecraft.world.gen.heightprovider.HeightProvider;
+import net.minecraft.core.Registry;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.valueproviders.FloatProvider;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.carver.CarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.CarverDebugSettings;
+import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CraterCarverConfig extends CarverConfig {
+public class CraterCarverConfig extends CarverConfiguration {
     public static final Codec<CraterCarverConfig> CRATER_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.FLOAT.fieldOf("probability").forGetter(i -> i.probability),
             HeightProvider.CODEC.fieldOf("y").forGetter(i -> i.y),
-            FloatProvider.VALUE_CODEC.fieldOf("y_scale").forGetter(i -> i.yScale),
-            CarverDebugConfig.CODEC.fieldOf("debug_settings").forGetter(i -> i.debugConfig),
+            FloatProvider.CODEC.fieldOf("y_scale").forGetter(i -> i.yScale),
+            CarverDebugSettings.CODEC.fieldOf("debug_settings").forGetter(i -> i.debugSettings),
             Codec.INT.fieldOf("max_radius").forGetter(i -> i.maxRadius),
             Codec.INT.fieldOf("min_radius").forGetter(i -> i.minRadius),
             Codec.INT.fieldOf("ideal_range_offset").forGetter(i -> i.idealRangeOffset)
@@ -50,8 +51,8 @@ public class CraterCarverConfig extends CarverConfig {
     public final int minRadius;
     public final int idealRangeOffset;
 
-    public CraterCarverConfig(float probability, HeightProvider y, FloatProvider yScale, CarverDebugConfig carverDebugConfig, int maxRadius, int minRadius, int idealRangeOffset) {
-        super(probability, y, yScale, YOffset.fixed(-64), carverDebugConfig, Registry.BLOCK.getOrCreateEntryList(GalacticraftTag.MOON_CRATER_CARVER_REPLACEABLES));
+    public CraterCarverConfig(float probability, HeightProvider y, FloatProvider yScale, CarverDebugSettings carverDebugConfig, int maxRadius, int minRadius, int idealRangeOffset) {
+        super(probability, y, yScale, VerticalAnchor.absolute(-64), carverDebugConfig, Registry.BLOCK.getOrCreateTag(GalacticraftTag.MOON_CRATER_CARVER_REPLACEABLES)); // TODO: Crater replaceables
         this.maxRadius = maxRadius;
         this.minRadius = minRadius;
         this.idealRangeOffset = idealRangeOffset;

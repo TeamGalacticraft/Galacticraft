@@ -22,19 +22,19 @@
 
 package dev.galacticraft.mod.recipe;
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftRecipeType<C extends Inventory, T extends Recipe<C>> implements RecipeType<T> {
+public class GalacticraftRecipeType<C extends Container, T extends Recipe<C>> implements RecipeType<T> {
     @Override
     public String toString() {
-        Identifier id = Registry.RECIPE_TYPE.getId(this);
+        ResourceLocation id = Registry.RECIPE_TYPE.getKey(this);
         return id == null ? "Unregistered GCRecipeType" : id.toString();
     }
 }

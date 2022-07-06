@@ -22,12 +22,12 @@
 
 package dev.galacticraft.mod.api.wire;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public enum WireConnectionType implements StringIdentifiable {
+public enum WireConnectionType implements StringRepresentable {
     /**
      * The wire is not connected to anything.
      */
@@ -54,7 +54,7 @@ public enum WireConnectionType implements StringIdentifiable {
     ENERGY_IO;
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return name().toLowerCase();
     }
 }

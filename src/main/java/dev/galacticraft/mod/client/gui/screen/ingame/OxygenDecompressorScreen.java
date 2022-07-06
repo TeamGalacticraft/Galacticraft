@@ -24,38 +24,38 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.mod.Constant;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.OxygenDecompressorBlockEntity;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class OxygenDecompressorScreen extends MachineHandledScreen<OxygenDecompressorBlockEntity, SimpleMachineScreenHandler<OxygenDecompressorBlockEntity>> {
-    public OxygenDecompressorScreen(SimpleMachineScreenHandler<OxygenDecompressorBlockEntity> handler, PlayerInventory inv, Text title) {
+    public OxygenDecompressorScreen(SimpleMachineScreenHandler<OxygenDecompressorBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
     }
 
     @Override
     protected void init() {
         super.init();
-        this.titleX += 20;
+        this.titleLabelX += 20;
     }
 
     @Override
-    protected void renderBackground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.renderBackground(matrices, mouseX, mouseY, delta);
         if (this.machine.getStatus().type().isActive()) {
             double height = (int) (System.currentTimeMillis() % 2250);
             if (height == 0) return; //prevent dividing by zero
             height /= 125.0;
-            DrawableUtil.drawProgressTexture(matrices, this.x + 82, this.y + 46, 176, 0, 11, (float)height);
+            DrawableUtil.drawProgressTexture(matrices, this.leftPos + 82, this.topPos + 46, 176, 0, 11, (float)height);
         }
     }
 }

@@ -23,21 +23,21 @@
 package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 
 public interface Connected {
     boolean[/*6*/] getConnections();
 
-    default void writeConnectionNbt(NbtCompound nbt) {
+    default void writeConnectionNbt(CompoundTag nbt) {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
-            nbt.putBoolean(direction.asString(), this.getConnections()[direction.ordinal()]);
+            nbt.putBoolean(direction.getSerializedName(), this.getConnections()[direction.ordinal()]);
         }
     }
 
-    default void readConnectionNbt(NbtCompound nbt) {
+    default void readConnectionNbt(CompoundTag nbt) {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
-            this.getConnections()[direction.ordinal()] = nbt.getBoolean(direction.asString());
+            this.getConnections()[direction.ordinal()] = nbt.getBoolean(direction.getSerializedName());
         }
     }
 }

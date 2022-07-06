@@ -43,7 +43,7 @@ val galacticraftApiVersion = project.property("galacticraft.api.version").toStri
 val machineLibVersion      = project.property("machinelib.version").toString()
 val reiVersion             = project.property("rei.version").toString()
 val myronVersion           = project.property("myron.version").toString()
-val bannerppVersion        = project.property("bannerpp.version").toString()
+val badpacketsVersion      = project.property("badpackets.version").toString()
 val wthitVersion           = project.property("wthit.version").toString()
 val runtimeOptional        = project.property("optional_dependencies.enabled").toString().toBoolean()
 
@@ -156,9 +156,10 @@ repositories {
             includeGroup("io.github.fablabsmc")
         }
     }
-    maven("https://bai.jfrog.io/artifactory/maven/") {
+    maven("https://maven.bai.lol") {
         content {
             includeGroup("mcp.mobius.waila")
+            includeGroup("lol.bai")
         }
     }
 }
@@ -166,46 +167,44 @@ repositories {
 dependencies {
     // Minecraft, Mappings, Loader
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings("net.fabricmc:yarn:$minecraftVersion+build.$yarnBuild:v2")
+    mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
 
     // Fabric Api Modules
-//    listOf(
-//        "fabric-api-base",
-//        "fabric-api-lookup-api-v1",
-//        "fabric-biome-api-v1",
-//        "fabric-blockrenderlayer-v1",
-//        "fabric-command-api-v1",
-//        "fabric-content-registries-v0",
-//        "fabric-convention-tags-v1",
-//        "fabric-data-generation-api-v1",
-//        "fabric-gametest-api-v1",
-//        "fabric-item-groups-v0",
-//        "fabric-mining-level-api-v1",
-//        "fabric-models-v0",
-//        "fabric-networking-api-v1",
-//        "fabric-object-builder-api-v1",
-//        "fabric-particles-v1",
-//        "fabric-registry-sync-v0",
-//        "fabric-renderer-api-v1",
-//        "fabric-renderer-indigo",
+    listOf(
+        "fabric-api-base",
+        "fabric-api-lookup-api-v1",
+        "fabric-biome-api-v1",
+        "fabric-blockrenderlayer-v1",
+        "fabric-command-api-v2",
+        "fabric-content-registries-v0",
+        "fabric-convention-tags-v1",
+        "fabric-data-generation-api-v1",
+        "fabric-gametest-api-v1",
+        "fabric-item-groups-v0",
+        "fabric-mining-level-api-v1",
+        "fabric-models-v0",
+        "fabric-networking-api-v1",
+        "fabric-object-builder-api-v1",
+        "fabric-particles-v1",
+        "fabric-registry-sync-v0",
+        "fabric-renderer-api-v1",
+        "fabric-renderer-indigo",
 //        "fabric-renderer-registries-v1",
-//        "fabric-rendering-fluids-v1",
-//        "fabric-rendering-v1",
-//        "fabric-resource-conditions-api-v1",
-//        "fabric-resource-loader-v0",
-//        "fabric-screen-handler-api-v1",
-////        "fabric-structure-api-v1",
-////        "fabric-tag-extensions-v0",
-//        "fabric-textures-v0",
-////        "fabric-tool-attribute-api-v1",
-//        "fabric-transfer-api-v1",
-//        "fabric-transitive-access-wideners-v1"
-//    ).forEach { module ->
-//        modImplementation(getFabricApiModule(module)) { isTransitive = false }
-//    }
-
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
+        "fabric-rendering-fluids-v1",
+        "fabric-rendering-v1",
+        "fabric-resource-conditions-api-v1",
+        "fabric-resource-loader-v0",
+        "fabric-screen-handler-api-v1",
+//        "fabric-structure-api-v1",
+//        "fabric-tag-extensions-v0",
+        "fabric-textures-v0",
+//        "fabric-tool-attribute-api-v1",
+        "fabric-transfer-api-v1",
+        "fabric-transitive-access-wideners-v1"
+    ).forEach { module ->
+        modImplementation(getFabricApiModule(module)) { isTransitive = false }
+    }
 
     // Mandatory Dependencies (Included with Jar-In-Jar)
 //    includedDependency("dev.monarkhes:myron:$myronVersion") {
@@ -232,8 +231,8 @@ dependencies {
     }
     // Optional Dependencies
     optionalDependency("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
+    optionalDependency("lol.bai:badpackets:fabric-$badpacketsVersion") { isTransitive = false }
     optionalDependency("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
-    optionalDependency("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false }
     optionalDependency("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
         exclude(group = "net.fabricmc")
@@ -340,6 +339,8 @@ fun getFabricApiModule(moduleName: String): String {
 fun DependencyHandler.optionalDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
     modCompileOnly(dependencyNotation, dependencyConfiguration)
     if (!net.fabricmc.loom.util.OperatingSystem.isCIBuild() && runtimeOptional) {
+        if (dependencyNotation.contains("shedaniel"))
+            return
         modRuntimeOnly(dependencyNotation, dependencyConfiguration)
     }
 }

@@ -36,29 +36,29 @@ import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, CompressingRecipe> {
+public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Container, CompressingRecipe> {
     public static final int CHARGE_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
 
-    private final Inventory craftingInv = this.itemStorage().subInv(CHARGE_SLOT);
+    private final Container craftingInv = this.itemStorage().subInv(CHARGE_SLOT);
 
     public ElectricCompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE);
@@ -79,16 +79,16 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         super.tickConstant(world, pos, state);
         this.attemptChargeFromStack(CHARGE_SLOT);
     }
 
     @Override
-    public @NotNull MachineStatus tick(@NotNull ServerWorld world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         if (this.getStatus().type().isActive() && this.getMaxProgress() > 0) {
             if (this.getProgress() % (this.getMaxProgress() / 5) == 0 && this.getProgress() > this.getMaxProgress() / 2) {
-                world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
+                world.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
             }
         }
         return super.tick(world, pos, state);
@@ -108,13 +108,13 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
     }
 
     @Override
-    public @NotNull Inventory craftingInv() {
+    public @NotNull Container craftingInv() {
         return this.craftingInv;
     }
 
     @Override
     protected boolean outputStacks(@NotNull CompressingRecipe recipe, TransactionContext transaction) {
-        ItemStack output = recipe.getOutput();
+        ItemStack output = recipe.getResultItem();
         ItemVariant variant = ItemVariant.of(output);
         long count = output.getCount() * 2;
         long outputted = this.itemStorage().insert(OUTPUT_SLOT, variant, count, transaction);
@@ -125,7 +125,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
 
     @Override
     protected boolean extractCraftingMaterials(@NotNull CompressingRecipe recipe, TransactionContext transaction) {
-        DefaultedList<ItemStack> remainder = recipe.getRemainder(this.craftingInv);
+        NonNullList<ItemStack> remainder = recipe.getRemainingItems(this.craftingInv);
         for (int i = 0; i < 9; i++) {
             ItemStack stack = remainder.get(i);
             this.itemStorage().extract(i, 1);
@@ -150,7 +150,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Inve
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) {
             return RecipeMachineScreenHandler.create(
                     syncId,

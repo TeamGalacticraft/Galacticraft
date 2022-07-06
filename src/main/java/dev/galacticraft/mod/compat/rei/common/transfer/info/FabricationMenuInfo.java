@@ -31,12 +31,12 @@ import me.shedaniel.rei.api.common.transfer.info.clean.InputCleanHandler;
 import me.shedaniel.rei.api.common.transfer.info.simple.SimplePlayerInventoryMenuInfo;
 import me.shedaniel.rei.api.common.transfer.info.stack.ContainerSlotAccessor;
 import me.shedaniel.rei.api.common.transfer.info.stack.SlotAccessor;
-import net.minecraft.inventory.Inventory;
+import net.minecraft.world.Container;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public record FabricationMenuInfo<B extends RecipeMachineBlockEntity<Inventory, FabricationRecipe>, T extends RecipeMachineScreenHandler<Inventory, FabricationRecipe, B>, D extends DefaultFabricationDisplay>(D display) implements SimplePlayerInventoryMenuInfo<T, D> {
+public record FabricationMenuInfo<B extends RecipeMachineBlockEntity<Container, FabricationRecipe>, T extends RecipeMachineScreenHandler<Container, FabricationRecipe, B>, D extends DefaultFabricationDisplay>(D display) implements SimplePlayerInventoryMenuInfo<T, D> {
     @Override
     public Iterable<SlotAccessor> getInputSlots(MenuInfoContext<T, ?, D> context) {
         T menu = context.getMenu();
