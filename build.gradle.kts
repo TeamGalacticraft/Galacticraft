@@ -79,6 +79,7 @@ sourceSets {
             srcDir("src/gametest/resources")
         }
         runtimeClasspath += main.get().runtimeClasspath;
+        compileClasspath += main.get().compileClasspath;
     }
 }
 
