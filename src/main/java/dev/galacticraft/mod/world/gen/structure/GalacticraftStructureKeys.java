@@ -20,17 +20,16 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.dimension;
+package dev.galacticraft.mod.world.gen.structure;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.Structure;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class GalacticraftDimensionType {
-    public static final ResourceKey<Level> MOON_KEY = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon"));
+public class GalacticraftStructureKeys {
+    public static final ResourceKey<Structure> MOON_PILLAGER_BASE = ResourceKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_pillager_base"));
+    public static final ResourceKey<Structure> MOON_RUINS = ResourceKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_ruins"));
+    public static final ResourceKey<Structure> MOON_VILLAGE_HIGHLANDS = ResourceKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_village_highlands"));
 }

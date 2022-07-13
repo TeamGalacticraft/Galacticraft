@@ -23,12 +23,14 @@
 package dev.galacticraft.mod.world.gen.feature;
 
 import dev.galacticraft.mod.Constant;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.BiomeFilter;
 import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -37,10 +39,9 @@ import net.minecraft.world.level.levelgen.placement.RarityFilter;
 import java.util.List;
 
 public class GalacticraftPlacedFeature {
-
     public static final ResourceKey<PlacedFeature> OIL_LAKE_KEY = ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, new ResourceLocation(Constant.MOD_ID, "oil_lake"));
 
-    public static final Holder<PlacedFeature> OIL_LAKE = register(OIL_LAKE_KEY, new PlacedFeature(GalacticraftFeature.OIL_LAKE, List.of(
+    public static final Holder<PlacedFeature> OIL_LAKE = register(OIL_LAKE_KEY, new PlacedFeature(GalacticraftConfiguredFeature.OIL_LAKE, List.of(
             PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
             RarityFilter.onAverageOnceEvery(70),
             InSquarePlacement.spread(),
@@ -52,5 +53,6 @@ public class GalacticraftPlacedFeature {
     }
 
     public static void register() {
+        BiomeModifications.addFeature(context -> context.hasFeature(ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, new ResourceLocation("lake_lava"))), GenerationStep.Decoration.LAKES, ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, GalacticraftConfiguredFeature.OIL_LAKE_KEY.location()));
     }
 }

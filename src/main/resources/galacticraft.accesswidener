@@ -20,5 +20,4 @@ accessible field  net/minecraft/world/level/levelgen/SurfaceRules$Context   biom
 # final classes
 
 # static methods
-accessible method net/minecraft/world/level/levelgen/NoiseRouterData caves (Lnet/minecraft/core/Registry;)Lnet/minecraft/world/level/levelgen/NoiseRouter;
 accessible method net/minecraft/data/worldgen/Structures structure (Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/level/levelgen/structure/TerrainAdjustment;)Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;

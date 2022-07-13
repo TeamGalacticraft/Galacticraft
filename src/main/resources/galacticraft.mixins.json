@@ -9,13 +9,11 @@
     "BlockModelGeneratorsAccessor",
     "BucketItemAccessor",
     "DamageSourceAccessor",
-    "DimensionTypeMixin",
     "EntityMixin",
     "FlowableFluidMixin",
     "ItemStackMixin",
     "LanternBlockMixin",
     "LootTablesAccessor",
-    "NoiseChunkGeneratorMixin",
     "ServerWorldMixin",
     "TorchBlockMixin"
   ],

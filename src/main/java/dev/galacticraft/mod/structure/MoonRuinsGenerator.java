@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.structure;
 
-import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.loot.GalacticraftLootTable;
 import net.minecraft.Util;
@@ -33,16 +32,8 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.StructureManager;
-import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ChestBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -52,12 +43,10 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
-import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.BlockRotProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+import net.minecraft.world.level.levelgen.structure.templatesystem.*;
 import net.minecraft.world.level.material.FluidState;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,8 +54,8 @@ import java.util.List;
  */
 public class MoonRuinsGenerator {
    private static final ResourceLocation[] PIECES = new ResourceLocation[]{
-           //new Identifier(Constant.MOD_ID, "moon_ruins/ruin_1"),
-           //new Identifier(Constant.MOD_ID, "moon_ruins/ruin_2"),
+           //new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_1"),
+           //new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_2"),
            new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_3"),
            new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_4"),
            new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_5"),
@@ -106,7 +95,7 @@ public class MoonRuinsGenerator {
    }
 
    private static List<BlockPos> getRoomPositions(RandomSource random, BlockPos blockPos) {
-      List<BlockPos> list = Lists.newArrayList();
+      List<BlockPos> list = new ArrayList<>(8);
       list.add(blockPos.offset(-16 + Mth.nextInt(random, 1, 8), 0, 16 + Mth.nextInt(random, 1, 7)));
       list.add(blockPos.offset(-16 + Mth.nextInt(random, 1, 8), 0, Mth.nextInt(random, 1, 7)));
       list.add(blockPos.offset(-16 + Mth.nextInt(random, 1, 8), 0, -16 + Mth.nextInt(random, 4, 8)));
@@ -138,7 +127,7 @@ public class MoonRuinsGenerator {
       }
 
       private static StructurePlaceSettings method_35446(Rotation blockRotation) {
-         return (new StructurePlaceSettings()).setRotation(blockRotation).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_AND_AIR);
+         return new StructurePlaceSettings().setRotation(blockRotation).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_AND_AIR);
       }
 
       @Override
@@ -156,15 +145,7 @@ public class MoonRuinsGenerator {
             if (blockEntity instanceof ChestBlockEntity chest) {
                chest.setLootTable(GalacticraftLootTable.BASIC_MOON_RUINS_CHEST, random.nextLong());
             }
-         }/* else if ("drowned".equals(metadata)) {
-            DrownedEntity drownedEntity = EntityType.DROWNED.create(world.toServerWorld());
-            assert drownedEntity != null;
-            drownedEntity.setPersistent();
-            drownedEntity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
-            drownedEntity.initialize(world, world.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null, null);
-            world.spawnEntityAndPassengers(drownedEntity);
-            world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_LISTENERS);
-         }*/
+         }
       }
 
       @Override

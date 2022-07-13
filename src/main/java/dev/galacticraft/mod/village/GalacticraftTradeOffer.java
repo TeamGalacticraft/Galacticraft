@@ -25,6 +25,7 @@ package dev.galacticraft.mod.village;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
@@ -38,6 +39,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -67,12 +69,12 @@ public class GalacticraftTradeOffer {
 
     public static class SellMapFactory implements VillagerTrades.ItemListing {
         private final int price;
-        private final Structure structure;
+        private final TagKey<Structure> structure;
         private final MapDecoration.Type iconType;
         private final int maxUses;
         private final int experience;
 
-        public SellMapFactory(int price, Structure feature, MapDecoration.Type iconType, int maxUses, int experience) {
+        public SellMapFactory(int price, TagKey<Structure> feature, MapDecoration.Type iconType, int maxUses, int experience) {
             this.price = price;
             this.structure = feature;
             this.iconType = iconType;
@@ -81,11 +83,11 @@ public class GalacticraftTradeOffer {
         }
 
         @Nullable
-        public MerchantOffer getOffer(Entity entity, RandomSource random) {
+        public MerchantOffer getOffer(Entity entity, @NotNull RandomSource random) {
             if (!(entity.level instanceof ServerLevel world)) {
                 return null;
             } else {
-                BlockPos blockPos = null;//world.locateStructure(this.structure, entity.getBlockPos(), 100, true); TODO: PORT
+                BlockPos blockPos = world.findNearestMapStructure(this.structure, entity.blockPosition(), 100, true);
                 if (blockPos != null) {
                     ItemStack itemStack = MapItem.create(world, blockPos.getX(), blockPos.getZ(), (byte) 2, true, true);
                     MapItem.renderBiomePreviewMap(world, itemStack);

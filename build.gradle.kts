@@ -26,7 +26,6 @@ import java.time.format.DateTimeFormatter
 
 // Minecraft, Mappings, Loader Versions
 val minecraftVersion       = project.property("minecraft.version").toString()
-val yarnBuild              = project.property("yarn.build").toString()
 val loaderVersion          = project.property("loader.version").toString()
 
 // Mod Info
@@ -50,9 +49,9 @@ val runtimeOptional        = project.property("optional_dependencies.enabled").t
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("0.11-SNAPSHOT")
+    id("fabric-loom") version("0.12-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
-    id("io.github.juuxel.loom-quiltflower") version("1.7.0")
+    id("io.github.juuxel.loom-quiltflower") version("1.7.3")
 }
 
 java {
@@ -63,13 +62,7 @@ java {
 
 sourceSets {
     main {
-        java {
-            srcDir("src/main/java")
-        }
-        resources {
-            srcDir("src/main/resources")
-            srcDir("src/main/generated")
-        }
+        resources.srcDir("src/main/generated")
     }
     register("gametest") {
         java {
@@ -78,7 +71,6 @@ sourceSets {
         resources {
             srcDir("src/gametest/resources")
         }
-        runtimeClasspath += main.get().runtimeClasspath;
     }
 }
 
@@ -260,8 +252,6 @@ tasks.processResources {
         expand("version" to project.version)
     }
 
-    duplicatesStrategy = DuplicatesStrategy.WARN
-
     // Minify json resources
     // https://stackoverflow.com/questions/41028030/gradle-minimize-json-resources-in-processresources#41029113
     doLast {
@@ -275,10 +265,6 @@ tasks.create<Jar>("javadocJar") {
     from(tasks.javadoc)
     archiveClassifier.set("javadoc")
     tasks.build.get().dependsOn(this)
-}
-
-tasks.named<ProcessResources>("processGametestResources") {
-    duplicatesStrategy = DuplicatesStrategy.WARN
 }
 
 tasks.jar {

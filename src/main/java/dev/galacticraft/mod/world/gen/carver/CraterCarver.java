@@ -24,8 +24,7 @@ package dev.galacticraft.mod.world.gen.carver;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
-import dev.galacticraft.mod.world.gen.feature.GalacticraftConfiguredStructureFeature;
-import java.util.function.Function;
+import dev.galacticraft.mod.world.gen.structure.GalacticraftStructure;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -37,6 +36,8 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Aquifer;
 import net.minecraft.world.level.levelgen.carver.CarvingContext;
 import net.minecraft.world.level.levelgen.carver.WorldCarver;
+
+import java.util.function.Function;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -52,9 +53,9 @@ public class CraterCarver extends WorldCarver<CraterCarverConfig> {
         //pos = center chunk pos
         BlockPos craterCenter = pos.getBlockAt(random.nextInt(16), y, random.nextInt(16));
 
-//        if (!chunk.getStructureReferences(GalacticraftConfiguredStructureFeature.MOON_VILLAGE).isEmpty()) { // TODO: PORT This should be correct
-//            return false;
-//        }
+        if (!chunk.getReferencesForStructure(GalacticraftStructure.MOON_VILLAGE_HIGHLANDS.value()).isEmpty()) {
+            return false;
+        }
 
         BlockPos.MutableBlockPos mutable = craterCenter.mutable();
 

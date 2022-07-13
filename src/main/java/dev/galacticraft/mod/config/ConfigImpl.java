@@ -76,11 +76,6 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public boolean areMoreMulticoloredStarsEnabled() {
-        return this.moreMulticolorStars;
-    }
-
-    @Override
     public void setMoreMulticolorStars(boolean flag) {
         this.moreMulticolorStars = flag;
     }

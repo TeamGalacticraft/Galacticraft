@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.item;
 
+import com.google.common.collect.Iterators;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -138,7 +139,7 @@ public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant
 
     @Override
     public Iterator<StorageView<FluidVariant>> iterator() {
-        return TransferApiImpl.singletonIterator(this); // TODO: none impl use
+        return Iterators.singletonIterator(this);
     }
 
     @Override
