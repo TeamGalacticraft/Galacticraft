@@ -384,49 +384,6 @@
     }
   ],
   "surface_rule": {
-    "type": "minecraft:sequence",
-    "sequence": [
-      {
-        "type": "minecraft:condition",
-        "if_true": {
-          "type": "minecraft:vertical_gradient",
-          "random_name": "minecraft:bedrock_floor",
-          "true_at_and_below": {
-            "above_bottom": 0
-          },
-          "false_at_and_above": {
-            "above_bottom": 5
-          }
-        },
-        "then_run": {
-          "type": "minecraft:block",
-          "result_state": {
-            "Name": "minecraft:bedrock"
-          }
-        }
-      },
-      {
-        "type": "minecraft:condition",
-        "if_true": {
-          "type": "minecraft:vertical_gradient",
-          "random_name": "galacticraft:lunaslate",
-          "true_at_and_below": {
-            "absolute": 0
-          },
-          "false_at_and_above": {
-            "absolute": 8
-          }
-        },
-        "then_run": {
-          "type": "minecraft:block",
-          "result_state": {
-            "Name": "galacticraft:lunaslate",
-            "Properties": {
-              "axis": "y"
-            }
-          }
-        }
-      }
-    ]
+    "type": "galacticraft:moon"
   }
 }

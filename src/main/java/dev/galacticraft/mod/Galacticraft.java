@@ -56,6 +56,7 @@ import dev.galacticraft.mod.world.gen.feature.GalacticraftOrePlacedFeature;
 import dev.galacticraft.mod.world.gen.feature.GalacticraftPlacedFeature;
 import dev.galacticraft.mod.world.gen.structure.GalacticraftStructure;
 import dev.galacticraft.mod.world.gen.structure.GalacticraftStructureType;
+import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
 import dev.galacticraft.mod.world.poi.GalacticraftPointOfInterestType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -97,6 +98,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftStructure.register();
         GalacticraftCarver.register();
         GalacticraftBiome.register();
+        MoonSurfaceRules.register();
         GalacticraftScreenHandlerType.register();
         GalacticraftParticleType.register();
         GalacticraftCommand.register();
