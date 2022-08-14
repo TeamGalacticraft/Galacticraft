@@ -150,6 +150,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         if (this.itemStorage().getModCount() != this.inventoryModCount) {
             this.inventoryModCount = this.itemStorage().getModCount();
             SingleSlotStorage<ItemVariant> slot = this.itemStorage().getSlot(FUEL_SLOT);
+            if (slot.getResource().isBlank())
+                return;
             try (Transaction transaction = Transaction.openOuter()) {
                 this.fuelLength = FUEL_MAP.getInt(slot.getResource().toStack((int) slot.extract(slot.getResource(), 1, transaction)));
                 transaction.commit();

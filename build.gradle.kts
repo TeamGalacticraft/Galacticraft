@@ -171,41 +171,7 @@ dependencies {
     mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
 
-    // Fabric Api Modules
-    listOf(
-        "fabric-api-base",
-        "fabric-api-lookup-api-v1",
-        "fabric-biome-api-v1",
-        "fabric-blockrenderlayer-v1",
-        "fabric-command-api-v2",
-        "fabric-content-registries-v0",
-        "fabric-convention-tags-v1",
-        "fabric-data-generation-api-v1",
-        "fabric-gametest-api-v1",
-        "fabric-item-groups-v0",
-        "fabric-mining-level-api-v1",
-        "fabric-models-v0",
-        "fabric-networking-api-v1",
-        "fabric-object-builder-api-v1",
-        "fabric-particles-v1",
-        "fabric-registry-sync-v0",
-        "fabric-renderer-api-v1",
-        "fabric-renderer-indigo",
-//        "fabric-renderer-registries-v1",
-        "fabric-rendering-fluids-v1",
-        "fabric-rendering-v1",
-        "fabric-resource-conditions-api-v1",
-        "fabric-resource-loader-v0",
-        "fabric-screen-handler-api-v1",
-//        "fabric-structure-api-v1",
-//        "fabric-tag-extensions-v0",
-        "fabric-textures-v0",
-//        "fabric-tool-attribute-api-v1",
-        "fabric-transfer-api-v1",
-        "fabric-transitive-access-wideners-v1"
-    ).forEach { module ->
-        modImplementation(getFabricApiModule(module)) { isTransitive = false }
-    }
+    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 
     // Mandatory Dependencies (Included with Jar-In-Jar)
 //    includedDependency("dev.monarkhes:myron:$myronVersion") {

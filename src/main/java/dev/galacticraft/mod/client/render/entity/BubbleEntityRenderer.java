@@ -33,14 +33,24 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -48,7 +58,47 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 @Environment(EnvType.CLIENT)
 public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
     private static final ResourceLocation MODEL = new ResourceLocation(Constant.MOD_ID, "models/misc/sphere");
-    public static BakedModel bubbleModel = null;
+    public static BakedModel bubbleModel = new BakedModel() {
+        @Override
+        public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction, RandomSource randomSource) {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public boolean useAmbientOcclusion() {
+            return false;
+        }
+
+        @Override
+        public boolean isGui3d() {
+            return false;
+        }
+
+        @Override
+        public boolean usesBlockLight() {
+            return false;
+        }
+
+        @Override
+        public boolean isCustomRenderer() {
+            return false;
+        }
+
+        @Override
+        public TextureAtlasSprite getParticleIcon() {
+            return null;
+        }
+
+        @Override
+        public ItemTransforms getTransforms() {
+            return ItemTransforms.NO_TRANSFORMS;
+        }
+
+        @Override
+        public ItemOverrides getOverrides() {
+            return ItemOverrides.EMPTY;
+        }
+    };
 
     public BubbleEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -87,6 +137,6 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(BubbleEntity entity) {
-        return bubbleModel.getParticleIcon().getName();
+        return new ResourceLocation("missingno");//bubbleModel.getParticleIcon().getName();
     }
 }
