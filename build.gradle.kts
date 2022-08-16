@@ -40,6 +40,7 @@ val modMenuVersion         = project.property("modmenu.version").toString()
 val energyVersion          = project.property("energy.version").toString()
 val galacticraftApiVersion = project.property("galacticraft.api.version").toString()
 val machineLibVersion      = project.property("machinelib.version").toString()
+val architecturyVersion    = project.property("architectury.version").toString()
 val reiVersion             = project.property("rei.version").toString()
 val myronVersion           = project.property("myron.version").toString()
 val badpacketsVersion      = project.property("badpackets.version").toString()
@@ -200,6 +201,7 @@ dependencies {
     optionalDependency("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
     optionalDependency("lol.bai:badpackets:fabric-$badpacketsVersion") { isTransitive = false }
     optionalDependency("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
+    optionalDependency("dev.architectury:architectury-fabric:${architecturyVersion}") { isTransitive = false }
     optionalDependency("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
         exclude(group = "net.fabricmc")
@@ -300,8 +302,6 @@ fun getFabricApiModule(moduleName: String): String {
 fun DependencyHandler.optionalDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
     modCompileOnly(dependencyNotation, dependencyConfiguration)
     if (!net.fabricmc.loom.util.OperatingSystem.isCIBuild() && runtimeOptional) {
-        if (dependencyNotation.contains("shedaniel"))
-            return
         modRuntimeOnly(dependencyNotation, dependencyConfiguration)
     }
 }

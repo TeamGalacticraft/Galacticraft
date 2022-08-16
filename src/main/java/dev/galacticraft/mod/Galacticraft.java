@@ -76,8 +76,8 @@ public class Galacticraft implements ModInitializer {
         long startInitTime = System.currentTimeMillis();
         LOGGER.info("Starting initialization.");
         GalacticraftTag.register();
-        GalacticraftFluid.register();
         GalacticraftBlock.register();
+        GalacticraftFluid.register();
         GalacticraftBlockEntityType.register();
         GalacticraftItem.register();
         GalacticraftApiLookupProviders.register();
