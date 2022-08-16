@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,31 +22,31 @@
 
 package dev.galacticraft.mod.api.block;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface MultiBlockBase {
-    default void onPartDestroyed(World world, PlayerEntity player, BlockState state, BlockPos pos, BlockState partState, BlockPos partPos) {
-        world.breakBlock(pos, !player.isCreative());
+    default void onPartDestroyed(Level world, Player player, BlockState state, BlockPos pos, BlockState partState, BlockPos partPos) {
+        world.destroyBlock(pos, !player.isCreative());
 
         for (BlockPos otherPart : this.getOtherParts(state)) {
-            otherPart = otherPart.toImmutable().add(pos);
+            otherPart = otherPart.immutable().offset(pos);
             if (!world.getBlockState(otherPart).isAir()) {
-                world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
+                world.setBlock(otherPart, Blocks.AIR.defaultBlockState(), 3);
             }
         }
     }
 
     @Unmodifiable List<BlockPos> getOtherParts(BlockState state);
 
-    void onMultiBlockPlaced(World world, BlockPos pos, BlockState state);
+    void onMultiBlockPlaced(Level world, BlockPos pos, BlockState state);
 }

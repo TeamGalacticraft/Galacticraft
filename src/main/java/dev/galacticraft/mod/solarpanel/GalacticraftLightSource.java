@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,18 +26,18 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.solarpanel.LightSource;
 import dev.galacticraft.mod.api.solarpanel.SolarPanelRegistry;
 import dev.galacticraft.mod.api.solarpanel.WorldLightSources;
-import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
-import net.minecraft.text.TranslatableText;
+import dev.galacticraft.mod.world.dimension.GalacticraftDimensionType;
+import net.minecraft.network.chat.Component;
 
 public class GalacticraftLightSource {
     private static final WorldLightSources MOON = new WorldLightSources(
             Constant.ScreenTexture.MOON_LIGHT_SOURCES,
-            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.sun").setStyle(Constant.Text.YELLOW_STYLE), 1.0, 1.0),
-            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.earth").setStyle(Constant.Text.GREEN_STYLE), 0.07, 1.0),
-            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.invalid").setStyle(Constant.Text.BLUE_STYLE), 0.0, 1.0),
-            new LightSource(new TranslatableText("ui.galacticraft.machine.solar_panel.source.unknown").setStyle(Constant.Text.WHITE_STYLE), 0.0, 1.0));
+            new LightSource(Component.translatable("ui.galacticraft.machine.solar_panel.source.sun").setStyle(Constant.Text.Color.YELLOW_STYLE), 1.0, 1.0),
+            new LightSource(Component.translatable("ui.galacticraft.machine.solar_panel.source.earth").setStyle(Constant.Text.Color.GREEN_STYLE), 0.07, 1.0),
+            new LightSource(Component.translatable("ui.galacticraft.machine.solar_panel.source.invalid").setStyle(Constant.Text.Color.BLUE_STYLE), 0.0, 1.0),
+            new LightSource(Component.translatable("ui.galacticraft.machine.solar_panel.source.unknown").setStyle(Constant.Text.Color.WHITE_STYLE), 0.0, 1.0));
 
     public static void register() {
-        SolarPanelRegistry.registerLightSources(GalacticraftDimension.MOON, MOON);
+        SolarPanelRegistry.registerLightSources(GalacticraftDimensionType.MOON_KEY, MOON);
     }
 }

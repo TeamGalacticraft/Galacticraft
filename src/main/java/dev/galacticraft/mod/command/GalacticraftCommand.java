@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,31 +26,24 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
-import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.minecraft.block.Block;
-import net.minecraft.command.argument.BlockPosArgumentType;
-import net.minecraft.command.argument.DimensionArgumentType;
-import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.DimensionArgument;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -63,222 +56,173 @@ public class GalacticraftCommand {
     private static final int GC_HOUSTON_TIMER_LENGTH = 12 * 20; // seconds * tps
 
     public static void register() {
-        CommandRegistrationCallback.EVENT.register((commandDispatcher, b) -> {
+        CommandRegistrationCallback.EVENT.register((commandDispatcher, registryAccess, environment) -> {
 
             commandDispatcher.register(
-                    CommandManager.literal("gchouston")
+                    Commands.literal("gchouston")
                     .executes(GalacticraftCommand::teleportToEarth));
 
-            /* This looks convoluted, but it works. Essentially, it registers three branches of the same command.
-             * One as the base, one to also teleport entities, and one to also teleport to a specific position.
-             * This is because the command I added, to teleport to a specific position, breaks when combined with
-             * teleporting multiple non-player entities for some reason. So, I made it where you can pick
-             * teleporting entities OR setting a custom position to go to, but not both :P
-             */
-            LiteralCommandNode<ServerCommandSource> dimtp_gui = commandDispatcher.register(
-                    CommandManager.literal("dimensiontp")
-                            .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
-                            .executes(context -> {
-                                context.getSource().getPlayer().networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer()).writeNbt(RocketData.empty().toNbt(new NbtCompound()))));
-                                ((ServerPlayerEntityAccessor) context.getSource().getPlayer()).setCelestialScreenState(RocketData.empty());
-                                return 1;
-                            })
-            );
-
-            LiteralCommandNode<ServerCommandSource> dimensiontp_root = commandDispatcher.register(
-                    CommandManager.literal("dimensiontp")
-                    .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
-                    .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-                    .executes(GalacticraftCommand::teleport)));
-            // TODO: either fix this or remove it
-             LiteralCommandNode<ServerCommandSource> dimensiontp_entities = commandDispatcher.register(
-                     CommandManager.literal("dimensiontp")
-                    .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
-                    .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-                    .then(CommandManager.argument("entities", EntityArgumentType.entities())
-                    .executes(((GalacticraftCommand::teleportMultiple))))));
-            LiteralCommandNode<ServerCommandSource> dimensiontp_pos = commandDispatcher.register(
-                    CommandManager.literal("dimensiontp")
-                    .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
-                    .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-                    .then(CommandManager.argument("pos", BlockPosArgumentType.blockPos())
-                    .executes(GalacticraftCommand::teleportToCoords))));
-
-            // Because I don't like to type
-            commandDispatcher.register(CommandManager.literal("dimtp")
-                    .redirect(dimtp_gui)
-                    .redirect(dimensiontp_root)
-                    .redirect(dimensiontp_entities)
-                    .redirect(dimensiontp_pos)
-            );
+            LiteralCommandNode<CommandSourceStack> node = commandDispatcher.register(
+                    Commands.literal("dimensiontp")
+                    .requires(stack -> stack.hasPermission(2))
+                    .then(Commands.argument("dimension", DimensionArgument.dimension())
+                    .executes(GalacticraftCommand::teleport)
+                            .then(Commands.argument("entities", EntityArgument.entities())
+                                    .executes(((GalacticraftCommand::teleportMultiple))))
+                            .then(Commands.argument("pos", BlockPosArgument.blockPos())
+                                    .executes(GalacticraftCommand::teleportToCoords))));
+            commandDispatcher.register(Commands.literal("dimtp").redirect(node));
         });
     }
 
-    private static int teleportToEarth(CommandContext<ServerCommandSource> context) {
+    private static int teleportToEarth(CommandContext<CommandSourceStack> context) {
         final int[] retval = new int[]{Command.SINGLE_SUCCESS};
         // Clear the expired timers
         for (UUID id : GC_HOUSTON_TIMERS.keySet()) {
-            if (GC_HOUSTON_TIMERS.getInt(id) + GC_HOUSTON_TIMER_LENGTH < context.getSource().getServer().getTicks()) {
+            if (GC_HOUSTON_TIMERS.getInt(id) + GC_HOUSTON_TIMER_LENGTH < context.getSource().getServer().getTickCount()) {
                 GC_HOUSTON_TIMERS.removeInt(id);
             }
         }
         context.getSource().getServer().execute(() -> {
-            try {
-                if (CelestialBody.getByDimension(context.getSource().getRegistryManager(), context.getSource().getWorld().getRegistryKey()).isEmpty()) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.gchouston.cannot_detect_signal").setStyle(Constant.Text.RED_STYLE));
-                    retval[0] = -1;
-                    return;
-                }
-                ServerPlayerEntity player = context.getSource().getPlayer();
-                ServerWorld serverWorld = context.getSource().getServer().getWorld(World.OVERWORLD);
-                if (serverWorld == null) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.RED_STYLE));
-                    retval[0] = -1;
-                    return;
-                } else if (context.getSource().getWorld().equals(serverWorld)) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.gchouston.on_earth_already").setStyle(Constant.Text.RED_STYLE));
-                    retval[0] = -1;
-                    return;
-                }
-                UUID playerID = context.getSource().getPlayer().getGameProfile().getId();
-                if (!GC_HOUSTON_TIMERS.containsKey(playerID)) {
-                    GC_HOUSTON_TIMERS.put(playerID, context.getSource().getServer().getTicks());
-                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.gchouston.confirm", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.RED_STYLE), false);
-                } else if (GC_HOUSTON_TIMERS.getInt(playerID) + GC_HOUSTON_TIMER_LENGTH > context.getSource().getServer().getTicks()) {
-                    GC_HOUSTON_TIMERS.removeInt(playerID);
-                    BlockPos pos = getValidTeleportPos(serverWorld, player);
-                    player.teleport(serverWorld,
-                            pos.getX(),
-                            pos.getY(),
-                            pos.getZ(),
-                            player.getYaw(),
-                            player.getPitch());
-                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.gchouston.success", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.GREEN_STYLE), true);
-                }
-            } catch (CommandSyntaxException e) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft.gchouston.error").setStyle(Constant.Text.RED_STYLE));
-                e.printStackTrace();
+            if (CelestialBody.getByDimension(context.getSource().registryAccess(), context.getSource().getLevel().dimension()).isEmpty()) {
+                context.getSource().sendFailure(Component.translatable("commands.galacticraft.gchouston.cannot_detect_signal").setStyle(Constant.Text.Color.RED_STYLE));
                 retval[0] = -1;
+                return;
+            }
+            ServerPlayer player = context.getSource().getPlayer();
+            ServerLevel serverWorld = context.getSource().getServer().getLevel(Level.OVERWORLD);
+            if (serverWorld == null) {
+                context.getSource().sendFailure(Component.translatable("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.Color.RED_STYLE));
+                retval[0] = -1;
+                return;
+            } else if (context.getSource().getLevel().equals(serverWorld)) {
+                context.getSource().sendFailure(Component.translatable("commands.galacticraft.gchouston.on_earth_already").setStyle(Constant.Text.Color.RED_STYLE));
+                retval[0] = -1;
+                return;
+            }
+            UUID playerID = context.getSource().getPlayer().getGameProfile().getId();
+            if (!GC_HOUSTON_TIMERS.containsKey(playerID)) {
+                GC_HOUSTON_TIMERS.put(playerID, context.getSource().getServer().getTickCount());
+                context.getSource().sendSuccess(Component.translatable("commands.galacticraft.gchouston.confirm", serverWorld.dimension().location()).setStyle(Constant.Text.Color.RED_STYLE), false);
+            } else if (GC_HOUSTON_TIMERS.getInt(playerID) + GC_HOUSTON_TIMER_LENGTH > context.getSource().getServer().getTickCount()) {
+                GC_HOUSTON_TIMERS.removeInt(playerID);
+                BlockPos pos = getValidTeleportPos(serverWorld, player);
+                player.teleportTo(serverWorld,
+                        pos.getX(),
+                        pos.getY(),
+                        pos.getZ(),
+                        player.getYRot(),
+                        player.getXRot());
+                context.getSource().sendSuccess(Component.translatable("commands.galacticraft.gchouston.success", serverWorld.dimension().location()).setStyle(Constant.Text.Color.GREEN_STYLE), true);
             }
         });
         return retval[0];
     }
 
-    private static int teleport(CommandContext<ServerCommandSource> context) {
+    private static int teleport(CommandContext<CommandSourceStack> context) {
         final int[] retval = new int[]{Command.SINGLE_SUCCESS};
         context.getSource().getServer().execute(() -> {
-            ServerPlayerEntity player;
+            ServerPlayer player;
+            player = context.getSource().getPlayer();
             try {
-                player = context.getSource().getPlayer();
-            } catch (CommandSyntaxException e) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constant.Text.RED_STYLE));
-                retval[0] = -1;
-                return;
-            }
-            try {
-                ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
+                ServerLevel serverWorld = DimensionArgument.getDimension(context, "dimension");
                 if (serverWorld == null) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.RED_STYLE));
+                    context.getSource().sendFailure(Component.translatable("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.Color.RED_STYLE));
                     retval[0] = -1;
                     return;
-                } else if (context.getSource().getWorld().equals(serverWorld)) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.already_in_dimension", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.RED_STYLE));
+                } else if (context.getSource().getLevel().equals(serverWorld)) {
+                    context.getSource().sendFailure(Component.translatable("commands.galacticraft.dimensiontp.failure.already_in_dimension", serverWorld.dimension().location()).setStyle(Constant.Text.Color.RED_STYLE));
                     retval[0] = -1;
                     return;
                 }
                 BlockPos pos = getValidTeleportPos(serverWorld, player);
-                player.teleport(serverWorld,
+                player.teleportTo(serverWorld,
                         pos.getX(),
                         pos.getY(),
                         pos.getZ(),
-                        player.getYaw(),
-                        player.getPitch());
-                context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.dimensiontp.success.single", serverWorld.getRegistryKey().getValue()), true);
+                        player.getYRot(),
+                        player.getXRot());
+                context.getSource().sendSuccess(Component.translatable("commands.galacticraft.dimensiontp.success.single", serverWorld.dimension().location()), true);
             } catch (CommandSyntaxException e) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.RED_STYLE));
+                context.getSource().sendFailure(Component.translatable("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.Color.RED_STYLE));
                 retval[0] = -1;
             }
         });
         return retval[0];
     }
 
-    private static int teleportMultiple(CommandContext<ServerCommandSource> context) {
+    private static int teleportMultiple(CommandContext<CommandSourceStack> context) {
         final int[] retval = new int[]{Command.SINGLE_SUCCESS};
         context.getSource().getServer().execute(() -> {
             try {
-                ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
+                ServerLevel serverWorld = DimensionArgument.getDimension(context, "dimension");
                 if (serverWorld == null) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.RED_STYLE));
+                    context.getSource().sendFailure(Component.translatable("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.Color.RED_STYLE));
                     retval[0] = -1;
                     return;
-                } else if (context.getSource().getWorld().equals(serverWorld)) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.already_in_dimension", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.RED_STYLE));
+                } else if (context.getSource().getLevel().equals(serverWorld)) {
+                    context.getSource().sendFailure(Component.translatable("commands.galacticraft.dimensiontp.failure.already_in_dimension", serverWorld.dimension().location()).setStyle(Constant.Text.Color.RED_STYLE));
                     retval[0] = -1;
                     return;
                 }
-                Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
+                Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
                 for (Entity entity : entities) {
                     BlockPos pos = getValidTeleportPos(serverWorld, entity);
-                    if (entity instanceof ServerPlayerEntity player) {
-                        player.teleport(serverWorld,
+                    if (entity instanceof ServerPlayer player) {
+                        player.teleportTo(serverWorld,
                                 pos.getX(),
                                 pos.getY(),
                                 pos.getZ(),
-                                player.getYaw(),
-                                player.getPitch());
+                                player.getYRot(),
+                                player.getXRot());
                     } else {
-                        entity = entity.moveToWorld(serverWorld); //Entities are recreated upon dim change, not moved.
+                        entity = entity.changeDimension(serverWorld); //Entities are recreated upon dim change, not moved.
                         if (entity != null) {
-                            entity.teleport(pos.getX(), pos.getY(), pos.getZ());
+                            entity.teleportToWithTicket(pos.getX(), pos.getY(), pos.getZ());
                         } else {
-                            context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constant.Text.RED_STYLE));
+                            context.getSource().sendFailure(Component.translatable("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constant.Text.Color.RED_STYLE));
                         }
                     }
                 }
-                context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.dimensiontp.success.multiple", entities.size(), serverWorld.getRegistryKey().getValue()), true);
+                context.getSource().sendSuccess(Component.translatable("commands.galacticraft.dimensiontp.success.multiple", entities.size(), serverWorld.dimension().location()), true);
             } catch (CommandSyntaxException e) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constant.Text.RED_STYLE));
+                context.getSource().sendFailure(Component.translatable("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constant.Text.Color.RED_STYLE));
                 retval[0] = -1;
             }
         });
         return retval[0];
     }
 
-    private static int teleportToCoords(CommandContext<ServerCommandSource> context) {
+    private static int teleportToCoords(CommandContext<CommandSourceStack> context) {
         final int[] retval = new int[]{Command.SINGLE_SUCCESS};
         context.getSource().getServer().execute(() -> {
-            ServerWorld serverWorld;
+            ServerLevel serverWorld;
             BlockPos pos;
             try {
-                serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
-                pos = BlockPosArgumentType.getBlockPos(context, "pos");
+                serverWorld = DimensionArgument.getDimension(context, "dimension");
+                pos = BlockPosArgument.getSpawnablePos(context, "pos");
                 if (serverWorld == null || pos == null) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.RED_STYLE));
+                    context.getSource().sendFailure(Component.translatable("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.Color.RED_STYLE));
                     retval[0] = -1;
                     return;
-                } else if (context.getSource().getWorld().equals(serverWorld)) {
-                    context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.already_in_dimension", serverWorld.getRegistryKey().getValue()).setStyle(Constant.Text.RED_STYLE));
+                } else if (context.getSource().getLevel().equals(serverWorld)) {
+                    context.getSource().sendFailure(Component.translatable("commands.galacticraft.dimensiontp.failure.already_in_dimension", serverWorld.dimension().location()).setStyle(Constant.Text.Color.RED_STYLE));
                     retval[0] = -1;
                     return;
                 }
             } catch (CommandSyntaxException e) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.RED_STYLE));
+                context.getSource().sendFailure(Component.translatable("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.Color.RED_STYLE));
                 retval[0] = -1;
                 return;
             }
-            try {
-                ServerPlayerEntity player = context.getSource().getPlayer();
-                player.teleport(serverWorld,
-                        MathHelper.clamp(pos.getX(), -30000000, 30000000),
-                        MathHelper.clamp(pos.getY(), 0, serverWorld.getHeight() - 1),
-                        MathHelper.clamp(pos.getZ(), -30000000, 30000000),
-                        player.getYaw(),
-                        player.getPitch());
-                context.getSource().sendFeedback(new TranslatableText("commands.galacticraft.dimensiontp.success.pos", serverWorld.getRegistryKey().getValue(), pos.getX(), pos.getY(), pos.getZ()), true);
-            } catch (CommandSyntaxException e) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constant.Text.RED_STYLE));
-                retval[0] = -1;
-            }
+            ServerPlayer player = context.getSource().getPlayer();
+            player.teleportTo(serverWorld,
+                    Mth.clamp(pos.getX(), -30000000, 30000000),
+                    Mth.clamp(pos.getY(), 0, serverWorld.getHeight() - 1),
+                    Mth.clamp(pos.getZ(), -30000000, 30000000),
+                    player.getYRot(),
+                    player.getXRot());
+            context.getSource().sendSuccess(Component.translatable("commands.galacticraft.dimensiontp.success.pos", serverWorld.dimension().location(), pos.getX(), pos.getY(), pos.getZ()), true);
         });
         return retval[0];
     }
@@ -289,19 +233,19 @@ public class GalacticraftCommand {
      * @param entity The entity to teleport.
      * @return A valid position (BlockPos) to teleport to.
      */
-    private static BlockPos getValidTeleportPos(ServerWorld world, Entity entity) {
+    private static BlockPos getValidTeleportPos(ServerLevel world, Entity entity) {
         int posX = (int) entity.getX();
         int posZ = (int) entity.getZ();
 
         for (int i = world.getHeight(); i > 0; i--) {
-            BlockPos.Mutable pos = new BlockPos.Mutable(posX, i, posZ);
+            BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(posX, i, posZ);
             Block currentBlock = world.getBlockState(pos).getBlock();
-            if (!currentBlock.getDefaultState().isAir()) {
+            if (!currentBlock.defaultBlockState().isAir()) {
                 pos.setY(pos.getY() + 1);
                 return pos;
             }
         }
         // SHOULD NOT happen! Entity gets teleported to where they were before.
-        return entity.getBlockPos();
+        return entity.blockPosition();
     }
 }

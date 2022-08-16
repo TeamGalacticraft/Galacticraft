@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,16 +24,15 @@ package dev.galacticraft.mod.fluid;
 
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.item.GalacticraftItem;
-import dev.galacticraft.mod.particle.GalacticraftParticle;
-import net.minecraft.block.FluidBlock;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.Item;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
-import java.util.Random;
+import dev.galacticraft.mod.particle.GalacticraftParticleType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -49,23 +48,23 @@ public abstract class CrudeOilFluid extends BasicFluid {
     }
 
     @Override
-    public Fluid getStill() {
+    public Fluid getSource() {
         return GalacticraftFluid.CRUDE_OIL;
     }
 
-    public ParticleEffect getParticle() {
-        return GalacticraftParticle.DRIPPING_CRUDE_OIL_PARTICLE;
+    public ParticleOptions getDripParticle() {
+        return GalacticraftParticleType.DRIPPING_CRUDE_OIL_PARTICLE;
     }
 
     @Override
-    public Item getBucketItem() {
+    public Item getBucket() {
         return GalacticraftItem.CRUDE_OIL_BUCKET;
     }
 
     @Override
-    public void randomDisplayTick(World world, BlockPos blockPos, FluidState fluidState, Random random) {
+    public void animateTick(Level world, BlockPos blockPos, FluidState fluidState, RandomSource random) {
         if (random.nextInt(10) == 0) {
-            world.addParticle(GalacticraftParticle.DRIPPING_CRUDE_OIL_PARTICLE,
+            world.addParticle(GalacticraftParticleType.DRIPPING_CRUDE_OIL_PARTICLE,
                     (double) blockPos.getX() + 0.5D - random.nextGaussian() + random.nextGaussian(),
                     (double) blockPos.getY() + 1.1F,
                     (double) blockPos.getZ() + 0.5D - random.nextGaussian() + random.nextGaussian(),
@@ -74,7 +73,7 @@ public abstract class CrudeOilFluid extends BasicFluid {
     }
 
     @Override
-    protected FluidBlock getBlock() {
+    protected LiquidBlock getBlock() {
         return GalacticraftBlock.CRUDE_OIL;
     }
 

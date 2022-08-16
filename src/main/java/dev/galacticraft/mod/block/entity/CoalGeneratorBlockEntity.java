@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,32 +22,38 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
 import com.google.common.annotations.VisibleForTesting;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.api.machine.MachineStatuses;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
+import dev.galacticraft.api.machine.storage.io.ResourceFlow;
+import dev.galacticraft.api.machine.storage.io.ResourceType;
+import dev.galacticraft.api.machine.storage.io.SlotType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
-import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,10 +71,11 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
 
     public static final int CHARGE_SLOT = 0;
     public static final int FUEL_SLOT = 1;
+    private static final SlotType<Item, ItemVariant> COAL_INPUT = SlotType.create(new ResourceLocation(Constant.MOD_ID, "coal_input"), TextColor.fromRgb(0x000000), Component.translatable("slot_type.galacticraft.coal_input"), v -> FUEL_MAP.containsKey(v.getItem()), ResourceFlow.INPUT, ResourceType.ITEM);
 
-    public Status status = Status.FULL;
-    public int fuelLength = 0;
-    public int fuelTime = 0;
+    private int fuelLength = 0;
+    private int inventoryModCount = -1;
+    private int fuelTime = 0;
     private double heat = 0.0d;
 
     /*
@@ -82,79 +89,88 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
-        builder.addSlot(FUEL_SLOT, SlotType.COAL, stack -> FUEL_MAP.containsKey(stack.getItem()), 71, 53);
-        return builder;
+    protected @NotNull MachineItemStorage createItemStorage() {
+        return MachineItemStorage.Builder.create()
+                .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
+                .addSlot(COAL_INPUT, new ItemSlotDisplay(71, 53))
+                .build();
     }
 
     @Override
-    public boolean canExtractEnergy() {
-        return true;
-    }
-
-    @Override
-    protected MachineStatus getStatusById(int index) {
-        return Status.values()[index];
-    }
-
-    @Override
-    protected void tickDisabled() {
-
-    }
-
-    @Override
-    public @NotNull MachineStatus updateStatus() {
-        if (this.fuelLength == 0 && this.itemInv().getInvStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
-        if (this.capacitor().getEnergy() >= this.capacitor().getMaxCapacity()) return Status.FULL;
-        if (this.heat < 1.0 && this.fuelLength > 0) return Status.WARMING;
-        if (this.heat > 0.0 && this.fuelLength == 0) return Status.COOLING;
-        return Status.ACTIVE;
-    }
-
-    @Override
-    public void updateComponents() {
-        super.updateComponents();
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        super.tickConstant(world, pos, state);
+        if (this.fuelLength == 0) {
+            if (this.heat > 0) {
+                this.setHeat(Math.max(0, this.heat - 0.02d));
+            }
+        }
+        world.getProfiler().push("charge");
         this.attemptDrainPowerToStack(CHARGE_SLOT);
+        world.getProfiler().pop();
     }
 
     @Override
-    public int getBaseEnergyGenerated() {
-        return Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate();
-    }
-
-    @Override
-    public int getEnergyGenerated() {
-        if (this.getStatus().getType().isActive()) return (int) (getBaseEnergyGenerated() * this.heat);
-        return 0;
-    }
-
-    @Override
-    public void tickWork() {
-        if (this.heat > 0 && this.fuelLength == 0) {
-            this.setHeat(Math.max(0, this.heat - 0.02d));
+    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        world.getProfiler().push("transaction");
+        try (Transaction transaction = Transaction.openOuter()) {
+            this.energyStorage().insert((long) (Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate() * this.heat), transaction);
         }
-        if (this.getStatus().getType().isActive()) {
-            if (this.fuelTime++ >= this.fuelLength) {
-                this.fuelTime = 0;
-                this.fuelLength = 0;
-            }
+        this.trySpreadEnergy(world);
+        world.getProfiler().popPush("fuel_reset");
+        if (this.fuelLength == 0) {
+            this.consumeFuel();
             if (this.fuelLength == 0) {
-                this.fuelTime = 0;
-                this.fuelLength = FUEL_MAP.getInt(itemInv().extractStack(FUEL_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem());
-                if (this.fuelLength == 0) return;
-            }
-
-            if (this.heat < 1) {
-                this.setHeat(Math.min(1, this.heat + 0.004));
+                if (this.heat > 0) {
+                    return GalacticraftMachineStatus.COOLING_DOWN;
+                } else {
+                    return GalacticraftMachineStatus.NO_FUEL;
+                }
             }
         }
+        world.getProfiler().popPush("fuel_tick");
+        if (this.fuelTime++ >= this.fuelLength) {
+            this.fuelLength = 0;
+            this.consumeFuel();
+        }
+        this.setHeat(Math.min(1, this.heat + 0.004));
+        world.getProfiler().pop();
+
+        if (this.energyStorage().isFull()) {
+            return MachineStatuses.CAPACITOR_FULL;
+        } else if (this.heat < 1.0) {
+            return GalacticraftMachineStatus.WARMING_UP;
+        } else {
+            return GalacticraftMachineStatus.GENERATING;
+        }
+    }
+
+    private void consumeFuel() {
+        this.fuelTime = 0;
+        this.fuelLength = 0;
+        if (this.itemStorage().getModCount() != this.inventoryModCount) {
+            this.inventoryModCount = this.itemStorage().getModCount();
+            SingleSlotStorage<ItemVariant> slot = this.itemStorage().getSlot(FUEL_SLOT);
+            if (slot.getResource().isBlank())
+                return;
+            try (Transaction transaction = Transaction.openOuter()) {
+                this.fuelLength = FUEL_MAP.getInt(slot.getResource().toStack((int) slot.extract(slot.getResource(), 1, transaction)));
+                transaction.commit();
+            }
+        }
+    }
+
+    public int getFuelLength() {
+        return this.fuelLength;
+    }
+
+    public void setFuelLength(int fuelLength) {
+        this.fuelLength = fuelLength;
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return new CoalGeneratorScreenHandler(syncId, player, this);
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+        if (this.getSecurity().hasAccess(player)) return new CoalGeneratorScreenHandler(syncId, player, this);
         return null;
     }
 
@@ -167,78 +183,27 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         this.heat = heat;
     }
 
-    @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
-        this.fuelLength = tag.getInt(Constant.Nbt.FUEL_LENGTH);
-        this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
-        this.setHeat(tag.getDouble(Constant.Nbt.HEAT));
+    public int getFuelTime() {
+        return fuelTime;
+    }
+
+    public void setFuelTime(int value) {
+        this.fuelTime = value;
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
+        this.fuelLength = nbt.getInt(Constant.Nbt.FUEL_LENGTH);
+        this.fuelTime = nbt.getInt(Constant.Nbt.FUEL_TIME);
+        this.heat = nbt.getDouble(Constant.Nbt.HEAT);
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt(Constant.Nbt.FUEL_LENGTH, this.fuelLength);
         tag.putInt(Constant.Nbt.FUEL_TIME, this.fuelTime);
         tag.putDouble(Constant.Nbt.HEAT, this.heat);
-        return super.writeNbt(tag);
-    }
-
-    /**
-     * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
-     */
-    @VisibleForTesting
-    public enum Status implements MachineStatus {
-        /**
-         * The generator is active and is generating energy.
-         */
-        ACTIVE(new TranslatableText("ui.galacticraft.machine.status.active"), Formatting.GREEN, StatusType.WORKING),
-
-        /**
-         * The generator is warming up.
-         */
-        WARMING(new TranslatableText("ui.galacticraft.machine.status.warming"), Formatting.GOLD, StatusType.PARTIALLY_WORKING),
-
-        /**
-         * The generator is cooling down.
-         */
-        COOLING(new TranslatableText("ui.galacticraft.machine.status.cooling"), Formatting.AQUA, StatusType.PARTIALLY_WORKING),
-
-        /**
-         * The generator is full.
-         */
-        FULL(new TranslatableText("ui.galacticraft.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-
-        /**
-         * The generator is out of fuel.
-         */
-        NOT_ENOUGH_FUEL(new TranslatableText("ui.galacticraft.machine.status.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS);
-
-        private final Text text;
-        private final StatusType type;
-
-        Status(TranslatableText text, Formatting color, StatusType type) {
-            this.type = type;
-            this.text = text.setStyle(Style.EMPTY.withColor(color));
-        }
-
-        public static Status get(int index) {
-            if (index < 0) return ACTIVE;
-            return Status.values()[index % Status.values().length];
-        }
-
-        @Override
-        public @NotNull Text getName() {
-            return text;
-        }
-
-        @Override
-        public @NotNull StatusType getType() {
-            return type;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
     }
 }

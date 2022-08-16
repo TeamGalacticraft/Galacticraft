@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,17 +22,20 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import alexiil.mc.lib.attributes.Simulation;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.ElectricFurnaceBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.test.GameTest;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -52,11 +55,11 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
     public void electricFurnaceCraftingTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var electricFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE);
-        final var inv = electricFurnace.itemInv();
-        electricFurnace.capacitor().setEnergy(electricFurnace.getEnergyCapacity());
+        final var inv = electricFurnace.itemStorage();
+        electricFurnace.energyStorage().setEnergyUnsafe(electricFurnace.getEnergyCapacity());
         fillElectricFurnaceSlots(inv);
         runFinalTaskAt(context, 200 + 1, () -> {
-            ItemStack output = inv.getInvStack(ElectricFurnaceBlockEntity.OUTPUT_SLOT);
+            ItemStack output = inv.getStack(ElectricFurnaceBlockEntity.OUTPUT_SLOT);
             if (output.getItem() != Items.COOKED_PORKCHOP) {
                 context.throwPositionedException(String.format("Expected electric furnace to have made a cooked porkchop but found %s instead!", formatItemStack(output)), pos);
             }
@@ -67,18 +70,19 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
     public void electricFurnaceCraftingFullTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var electricFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE);
-        final var inv = electricFurnace.itemInv();
-        electricFurnace.capacitor().setEnergy(electricFurnace.getEnergyCapacity());
-        inv.setInvStack(ElectricFurnaceBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), Simulation.ACTION);
+        final var inv = electricFurnace.itemStorage();
+        electricFurnace.energyStorage().setEnergyUnsafe(electricFurnace.getEnergyCapacity());
         fillElectricFurnaceSlots(inv);
+        inv.setSlot(ElectricFurnaceBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
+
         runFinalTaskNext(context, () -> {
-            if (electricFurnace.maxProgress() != 0) {
+            if (electricFurnace.getMaxProgress() != 0) {
                 context.throwPositionedException("Expected electric furnace to be unable to craft as the output was full!", pos);
             }
         });
     }
 
-    private static void fillElectricFurnaceSlots(MachineItemInv inv) {
-        inv.setInvStack(ElectricFurnaceBlockEntity.INPUT_SLOT, new ItemStack(Items.PORKCHOP), Simulation.ACTION);
+    private static void fillElectricFurnaceSlots(@NotNull MachineItemStorage inv) {
+        inv.setSlot(ElectricFurnaceBlockEntity.INPUT_SLOT, ItemVariant.of(Items.PORKCHOP), 1);
     }
 }

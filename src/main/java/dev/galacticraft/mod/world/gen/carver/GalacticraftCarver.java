@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,20 +24,20 @@ package dev.galacticraft.mod.world.gen.carver;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.carver.Carver;
-import net.minecraft.world.gen.carver.CaveCarverConfig;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.WorldCarver;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftCarver {
-    public static final Carver<CaveCarverConfig> LUNAR_CAVE = new LunarCaveCarver(CaveCarverConfig.CAVE_CODEC);
-    public static final Carver<CraterCarverConfig> CRATERS = new CraterCarver(CraterCarverConfig.CRATER_CODEC);
+    public static final WorldCarver<CaveCarverConfiguration> LUNAR_CAVE = new LunarCaveCarver(CaveCarverConfiguration.CODEC);
+    public static final WorldCarver<CraterCarverConfig> CRATERS = new CraterCarver(CraterCarverConfig.CRATER_CODEC);
 
     public static void register() {
-        Registry.register(Registry.CARVER, new Identifier(Constant.MOD_ID, "lunar_cave"), LUNAR_CAVE);
-        Registry.register(Registry.CARVER, new Identifier(Constant.MOD_ID, "craters"), CRATERS);
+        Registry.register(Registry.CARVER, new ResourceLocation(Constant.MOD_ID, "lunar_cave"), LUNAR_CAVE);
+        Registry.register(Registry.CARVER, new ResourceLocation(Constant.MOD_ID, "craters"), CRATERS);
     }
 }

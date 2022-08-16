@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,8 @@
 
 package dev.galacticraft.mod.compat.rei.client;
 
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.impl.MLConstant.TextureCoordinate;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;
@@ -44,9 +45,11 @@ import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
 import me.shedaniel.rei.api.client.registry.transfer.TransferHandlerRegistry;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import me.shedaniel.rei.plugin.common.BuiltinPlugin;
-import net.minecraft.item.ItemConvertible;
+import net.minecraft.world.level.ItemLike;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -76,7 +79,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
 
     @Override
     public void registerEntries(EntryRegistry registry) {
-        for (ItemConvertible item : GalacticraftItem.HIDDEN_ITEMS) {
+        for (ItemLike item : GalacticraftItem.HIDDEN_ITEMS) {
             registry.removeEntry(EntryStacks.of(item));
         }
     }
@@ -84,11 +87,13 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
     @Override
     public void registerExclusionZones(ExclusionZones zones) {
         zones.register(MachineHandledScreen.class, provider -> {
-            if (MachineHandledScreen.Tab.STATS.isOpen()) {
-                return Collections.singletonList(new Rectangle(provider.getX() + provider.width, provider.getY(), MachineHandledScreen.PANEL_WIDTH, MachineHandledScreen.PANEL_HEIGHT));
-            } else {
-                return Collections.singletonList(new Rectangle(provider.getX() + provider.width, provider.getY(), MachineHandledScreen.TAB_WIDTH, MachineHandledScreen.TAB_HEIGHT));
+            List<Rectangle> areas = new ArrayList<>();
+            if (MachineHandledScreen.Tab.STATS.isOpen() || MachineHandledScreen.Tab.SECURITY.isOpen()) {
+                areas.add(new Rectangle(provider.getX() + provider.getImageWidth(), provider.getY() + (MachineHandledScreen.Tab.STATS.isOpen() ? 0 : TextureCoordinate.TAB_HEIGHT), TextureCoordinate.PANEL_WIDTH, TextureCoordinate.PANEL_HEIGHT));
+                areas.add(new Rectangle(provider.getX() + provider.getImageWidth(), provider.getY() + TextureCoordinate.TAB_HEIGHT, TextureCoordinate.TAB_WIDTH, TextureCoordinate.PANEL_HEIGHT));
             }
+            areas.add(new Rectangle(provider.getX() + provider.getImageWidth(), provider.getY(), TextureCoordinate.TAB_WIDTH, TextureCoordinate.TAB_HEIGHT * 2));
+            return areas;
         });
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,43 +22,30 @@
 
 package dev.galacticraft.mod.block.machine;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.RefineryBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-
-import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RefineryBlock extends SimpleMachineBlock<RefineryBlockEntity> {
-    private static final Text TOOLTIP_TEXT = new TranslatableText("tooltip.galacticraft.refinery").setStyle(Constant.Text.DARK_GRAY_STYLE);
-
-    public RefineryBlock(Settings settings) {
-        super(settings, RefineryBlockEntity::new, TOOLTIP_TEXT);
+    public RefineryBlock(Properties settings) {
+        super(settings, RefineryBlockEntity::new);
     }
 
     @Override
-    public RefineryBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public RefineryBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new RefineryBlockEntity(pos, state);
     }
 
     @Override
-    public Text machineInfo(ItemStack stack, BlockView view, boolean advanced) {
-        return TOOLTIP_TEXT;
-    }
-
-    @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        super.randomDisplayTick(state, world, pos, random);
-        if (state.get(ACTIVE)) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
+        super.animateTick(state, world, pos, random);
+        if (state.getValue(ACTIVE)) {
             world.addParticle(ParticleTypes.SMOKE, pos.getX() + random.nextDouble(), pos.getY() + 1, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
         }
     }

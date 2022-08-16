@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,26 +22,24 @@
 
 package dev.galacticraft.mod.fluid;
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import alexiil.mc.lib.attributes.fluid.volume.SimpleFluidKey;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GalacticraftBlock;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftFluid {
-    public static final FlowableFluid CRUDE_OIL = new CrudeOilFluid.Still();
-    public static final FlowableFluid FLOWING_CRUDE_OIL = new CrudeOilFluid.Flowing();
-    public static final FlowableFluid FUEL = new FuelFluid.Still();
-    public static final FlowableFluid FLOWING_FUEL = new FuelFluid.Flowing();
+    public static final FlowingFluid CRUDE_OIL = new CrudeOilFluid.Still();
+    public static final FlowingFluid FLOWING_CRUDE_OIL = new CrudeOilFluid.Flowing();
+    public static final FlowingFluid FUEL = new FuelFluid.Still();
+    public static final FlowingFluid FLOWING_FUEL = new FuelFluid.Flowing();
     public static final Fluid LIQUID_OXYGEN = new OxygenFluid();
 
     public static void register() {
@@ -51,38 +49,27 @@ public class GalacticraftFluid {
         register(Constant.Fluid.FUEL_FLOWING, FLOWING_FUEL);
         register(Constant.Fluid.LIQUID_OXYGEN, LIQUID_OXYGEN);
 
-        FluidKeys.put(CRUDE_OIL, new SimpleFluidKey(
-                new FluidKey.FluidKeyBuilder(CRUDE_OIL)
-                        .setName(new TranslatableText(GalacticraftBlock.CRUDE_OIL.getTranslationKey())
-                                .setStyle(Constant.Text.DARK_GRAY_STYLE)
-                        )
-                        .setViscosity(FluidAmount.of(30, 5))
-                        .setCohesion(FluidAmount.ofWhole(2))
-                        .setSprites(Constant.Fluid.getId(Constant.Fluid.CRUDE_OIL_STILL), Constant.Fluid.getId(Constant.Fluid.CRUDE_OIL_FLOWING))
-                        .setDensity(FluidAmount.of(825, 1000)) // https://www.engineeringtoolbox.com/liquids-densities-d_743.html relative to water
+        FluidVariantAttributes.register(CRUDE_OIL, new GalacticraftFluidAttribute(
+                Component.translatable(GalacticraftBlock.CRUDE_OIL.getDescriptionId())
+                    .setStyle(Constant.Text.Color.DARK_GRAY_STYLE),
+                FluidConstants.LAVA_VISCOSITY,
+                false
         ));
-
-        FluidKeys.put(FUEL, new SimpleFluidKey(
-                new FluidKey.FluidKeyBuilder(FUEL)
-                        .setName(new TranslatableText(GalacticraftBlock.FUEL.getTranslationKey())
-                                .setStyle(Constant.Text.YELLOW_STYLE)
-                        )
-                        .setViscosity(FluidAmount.of(10, 5))
-                        .setCohesion(FluidAmount.ofWhole(3))
-                        .setSprites(Constant.Fluid.getId(Constant.Fluid.FUEL_STILL), Constant.Fluid.getId(Constant.Fluid.FUEL_FLOWING))
-                        .setDensity(FluidAmount.of(900, 1000))
+        FluidVariantAttributes.register(FUEL, new GalacticraftFluidAttribute(
+                Component.translatable(GalacticraftBlock.FUEL.getDescriptionId())
+                    .setStyle(Constant.Text.Color.YELLOW_STYLE),
+                2000,
+                false
         ));
-
-        FluidKeys.put(LIQUID_OXYGEN, new SimpleFluidKey(
-                new FluidKey.FluidKeyBuilder(LIQUID_OXYGEN)
-                        .setName(new TranslatableText("block.galacticraft.oxygen")
-                                .setStyle(Constant.Text.AQUA_STYLE)
-                        )
-                        .setGas()
+        FluidVariantAttributes.register(LIQUID_OXYGEN, new GalacticraftFluidAttribute(
+                Component.translatable("block.galacticraft.oxygen")
+                    .setStyle(Constant.Text.Color.AQUA_STYLE),
+                500,
+                true
         ));
     }
 
     private static void register(String id, Fluid fluid) {
-        Registry.register(Registry.FLUID, new Identifier(Constant.MOD_ID, id), fluid);
+        Registry.register(Registry.FLUID, new ResourceLocation(Constant.MOD_ID, id), fluid);
     }
 }

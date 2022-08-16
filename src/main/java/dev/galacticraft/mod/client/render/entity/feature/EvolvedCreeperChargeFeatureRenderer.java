@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,36 +25,36 @@ package dev.galacticraft.mod.client.render.entity.feature;
 import dev.galacticraft.mod.client.model.entity.EvolvedCreeperEntityModel;
 import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLayer;
 import dev.galacticraft.mod.entity.EvolvedCreeperEntity;
-import net.minecraft.client.render.entity.feature.EnergySwirlOverlayFeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.entity.model.EntityModelLoader;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.EnergySwirlLayer;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class EvolvedCreeperChargeFeatureRenderer extends EnergySwirlOverlayFeatureRenderer<EvolvedCreeperEntity, EvolvedCreeperEntityModel> {
-    private static final Identifier TEXTURE = new Identifier("textures/entity/creeper/creeper_armor.png");
+public class EvolvedCreeperChargeFeatureRenderer extends EnergySwirlLayer<EvolvedCreeperEntity, EvolvedCreeperEntityModel> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
     private final EvolvedCreeperEntityModel model;
 
-    public EvolvedCreeperChargeFeatureRenderer(FeatureRendererContext<EvolvedCreeperEntity, EvolvedCreeperEntityModel> context, EntityModelLoader loader) {
+    public EvolvedCreeperChargeFeatureRenderer(RenderLayerParent<EvolvedCreeperEntity, EvolvedCreeperEntityModel> context, EntityModelSet loader) {
         super(context);
-        this.model = new EvolvedCreeperEntityModel(loader.getModelPart(GalacticraftEntityModelLayer.EVOLVED_CREEPER_ARMOR), false);
+        this.model = new EvolvedCreeperEntityModel(loader.bakeLayer(GalacticraftEntityModelLayer.EVOLVED_CREEPER_ARMOR), false);
     }
 
     @Override
-    protected float getEnergySwirlX(float partialAge) {
+    protected float xOffset(float partialAge) {
         return partialAge * 0.1F;
     }
 
     @Override
-    protected Identifier getEnergySwirlTexture() {
+    protected ResourceLocation getTextureLocation() {
         return TEXTURE;
     }
 
     @Override
-    protected EntityModel<EvolvedCreeperEntity> getEnergySwirlModel() {
+    protected EntityModel<EvolvedCreeperEntity> model() {
         return model;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,21 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import alexiil.mc.lib.attributes.Simulation;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.CircuitFabricatorBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GalacticraftItem;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.test.GameTest;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -53,11 +56,11 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
     public void circuitFabricatorCraftingTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var circuitFabricator = this.createBlockEntity(context, pos, GalacticraftBlock.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
-        final var inv = circuitFabricator.itemInv();
-        circuitFabricator.capacitor().setEnergy(circuitFabricator.getEnergyCapacity());
+        final var inv = circuitFabricator.itemStorage();
+        circuitFabricator.energyStorage().setEnergyUnsafe(circuitFabricator.getEnergyCapacity());
         fillCircuitFabricatorSlots(inv);
         runFinalTaskAt(context, 300 + 1, () -> {
-            ItemStack output = inv.getInvStack(CircuitFabricatorBlockEntity.OUTPUT_SLOT);
+            ItemStack output = inv.getStack(CircuitFabricatorBlockEntity.OUTPUT_SLOT);
             if (output.getItem() != GalacticraftItem.BASIC_WAFER) {
                 context.throwPositionedException(String.format("Expected circuit fabricator to have made a wafer but found %s instead!", formatItemStack(output)), pos);
             }
@@ -68,22 +71,22 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
     public void circuitFabricatorCraftingFullTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var circuitFabricator = this.createBlockEntity(context, pos, GalacticraftBlock.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
-        final var inv = circuitFabricator.itemInv();
-        circuitFabricator.capacitor().setEnergy(circuitFabricator.getEnergyCapacity());
-        inv.setInvStack(CircuitFabricatorBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), Simulation.ACTION);
+        final var inv = circuitFabricator.itemStorage();
+        circuitFabricator.energyStorage().setEnergyUnsafe(circuitFabricator.getEnergyCapacity());
+        inv.setSlot(CircuitFabricatorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
         fillCircuitFabricatorSlots(inv);
         runFinalTaskNext(context, () -> {
-            if (circuitFabricator.maxProgress() != 0) {
+            if (circuitFabricator.getMaxProgress() != 0) {
                 context.throwPositionedException("Expected circuit fabricator to be unable to craft as the output was full!", pos);
             }
         });
     }
 
-    private static void fillCircuitFabricatorSlots(MachineItemInv inv) {
-        inv.setInvStack(CircuitFabricatorBlockEntity.INPUT_SLOT_DIAMOND, new ItemStack(Items.DIAMOND), Simulation.ACTION);
-        inv.setInvStack(CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON, new ItemStack(GalacticraftItem.RAW_SILICON), Simulation.ACTION);
-        inv.setInvStack(CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON_2, new ItemStack(GalacticraftItem.RAW_SILICON), Simulation.ACTION);
-        inv.setInvStack(CircuitFabricatorBlockEntity.INPUT_SLOT_REDSTONE, new ItemStack(Items.REDSTONE), Simulation.ACTION);
-        inv.setInvStack(CircuitFabricatorBlockEntity.INPUT_SLOT, new ItemStack(Items.REDSTONE_TORCH), Simulation.ACTION);
+    private static void fillCircuitFabricatorSlots(@NotNull MachineItemStorage inv) {
+        inv.setSlot(CircuitFabricatorBlockEntity.INPUT_SLOT_DIAMOND, ItemVariant.of(Items.DIAMOND), 1);
+        inv.setSlot(CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON, ItemVariant.of(GalacticraftItem.RAW_SILICON), 1);
+        inv.setSlot(CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON_2, ItemVariant.of(GalacticraftItem.RAW_SILICON), 1);
+        inv.setSlot(CircuitFabricatorBlockEntity.INPUT_SLOT_REDSTONE, ItemVariant.of(Items.REDSTONE), 1);
+        inv.setSlot(CircuitFabricatorBlockEntity.INPUT_SLOT, ItemVariant.of(Items.REDSTONE_TORCH), 1);
     }
 }

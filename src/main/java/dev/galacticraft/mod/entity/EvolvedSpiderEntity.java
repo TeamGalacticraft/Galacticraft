@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,15 @@
 
 package dev.galacticraft.mod.entity;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.SpiderEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class EvolvedSpiderEntity extends SpiderEntity {
-    public EvolvedSpiderEntity(EntityType<? extends SpiderEntity> entityType, World world) {
+public class EvolvedSpiderEntity extends Spider {
+    public EvolvedSpiderEntity(EntityType<? extends Spider> entityType, Level world) {
         super(entityType, world);
     }
 }

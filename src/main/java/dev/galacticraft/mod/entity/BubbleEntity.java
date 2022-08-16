@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,45 +25,45 @@ package dev.galacticraft.mod.entity;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
 import io.netty.buffer.Unpooled;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class BubbleEntity extends Entity {
-    public BubbleEntity(EntityType<?> type, World world) {
+    public BubbleEntity(EntityType<?> type, Level world) {
         super(type, world);
     }
 
     @Override
-    protected void initDataTracker() {
+    protected void defineSynchedData() {
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound tag) {
+    protected void readAdditionalSaveData(CompoundTag tag) {
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound tag) {
+    protected void addAdditionalSaveData(CompoundTag tag) {
     }
 
     @Override
-    protected void tickNetherPortal() {
+    protected void handleNetherPortal() {
     }
 
     @Override
@@ -73,22 +73,22 @@ public class BubbleEntity extends Entity {
 
     @Override
     public void baseTick() {
-        this.extinguish();
-        if (this.hasVehicle()) {
+        this.clearFire();
+        if (this.isPassenger()) {
             this.stopRiding();
         }
-        this.setYaw(0);
-        this.setPitch(0);
-        this.prevPitch = 0;
-        this.prevYaw = 0;
+        this.setYRot(0);
+        this.setXRot(0);
+        this.xRotO = 0;
+        this.yRotO = 0;
 
-        if (this.getY() < -64.0D) {
-            this.tickInVoid();
+        if (this.getY() < this.level.dimensionType().minY()) {
+            this.discard();
         }
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         if (source == DamageSource.OUT_OF_WORLD) {
             this.remove(RemovalReason.DISCARDED);
             return true;
@@ -98,11 +98,11 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    protected void tickNetherPortalCooldown() {
+    protected void processPortalCooldown() {
     }
 
     @Override
-    protected boolean canStartRiding(Entity entity) {
+    protected boolean canRide(Entity entity) {
         return false;
     }
 
@@ -112,27 +112,27 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public boolean canAvoidTraps() {
+    public boolean isIgnoringBlockTriggers() {
         return true;
     }
 
     @Override
-    public boolean canBeRiddenInWater() {
+    public boolean rideableUnderWater() {
         return false;
     }
 
     @Override
-    public boolean canBeSpectated(ServerPlayerEntity spectator) {
+    public boolean broadcastToPlayer(ServerPlayer spectator) {
         return false;
     }
 
     @Override
-    public boolean canUsePortals() {
+    public boolean canChangeDimensions() {
         return false;
     }
 
     @Override
-    public boolean isPushedByFluids() {
+    public boolean isPushedByFluid() {
         return false;
     }
 
@@ -142,34 +142,34 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public void setOnFireFromLava() {
+    public void lavaHurt() {
     }
 
     @Override
-    public void setOnFireFor(int seconds) {
+    public void setSecondsOnFire(int seconds) {
     }
 
     @Override
-    public int getFireTicks() {
+    public int getRemainingFireTicks() {
         return -1;
     }
 
     @Override
-    public void setFireTicks(int ticks) {
+    public void setRemainingFireTicks(int ticks) {
     }
 
     @Override
-    protected float getJumpVelocityMultiplier() {
+    protected float getBlockJumpFactor() {
         return 0;
     }
 
     @Override
-    protected float getVelocityMultiplier() {
+    protected float getBlockSpeedFactor() {
         return 0;
     }
 
     @Override
-    protected void onBlockCollision(BlockState state) {
+    protected void onInsideBlock(BlockState state) {
     }
 
     @Override
@@ -182,7 +182,7 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public boolean hasNoGravity() {
+    public boolean isNoGravity() {
         return true;
     }
 
@@ -191,7 +191,7 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    protected int getBurningDuration() {
+    protected int getFireImmuneTicks() {
         return 0;
     }
 
@@ -201,12 +201,12 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public boolean hasPassengers() {
+    public boolean isVehicle() {
         return false;
     }
 
     @Override
-    public boolean collides() {
+    public boolean isPickable() {
         return false;
     }
 
@@ -216,53 +216,53 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public boolean isGlowing() {
+    public boolean isCurrentlyGlowing() {
         return false;
     }
 
     @Override
-    public boolean doesRenderOnFire() {
+    public boolean displayFireAnimation() {
         return false;
     }
 
     @Override
-    public boolean shouldRender(double distance) {
-        BlockEntity entity = world.getBlockEntity(getBlockPos());
+    public boolean shouldRenderAtSqrDistance(double distance) {
+        BlockEntity entity = level.getBlockEntity(blockPosition());
         if (entity instanceof BubbleDistributorBlockEntity machine) {
             double d = Math.abs(machine.getSize() * 2D + 1D);
             if (Double.isNaN(d)) {
                 d = 1.0D;
             }
 
-            d *= 64.0D * getRenderDistanceMultiplier();
+            d *= 64.0D * getViewScale();
             return distance < d * d;
         }
         return false;
     }
 
     @Override
-    public boolean shouldRenderName() {
+    public boolean shouldShowName() {
         return false;
     }
 
     @Override
-    public Packet<ClientPlayPacketListener> createSpawnPacket() {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeVarInt(this.getId());
-        buf.writeUuid(this.getUuid());
-        buf.writeVarInt(Registry.ENTITY_TYPE.getRawId(this.getType()));
+        buf.writeUUID(this.getUUID());
+        buf.writeVarInt(Registry.ENTITY_TYPE.getId(this.getType()));
         buf.writeDouble(this.getX());
         buf.writeDouble(this.getY());
         buf.writeDouble(this.getZ());
-        buf.writeByte((byte) ((int) (this.getYaw() * 256.0F / 360.0F)));
-        buf.writeByte((byte) ((int) (this.getPitch() * 256.0F / 360.0F)));
-        Vec3d vec3d = this.getVelocity();
-        double e = MathHelper.clamp(vec3d.x, -3.9D, 3.9D);
-        double f = MathHelper.clamp(vec3d.y, -3.9D, 3.9D);
-        double g = MathHelper.clamp(vec3d.z, -3.9D, 3.9D);
+        buf.writeByte((byte) ((int) (this.getYRot() * 256.0F / 360.0F)));
+        buf.writeByte((byte) ((int) (this.getXRot() * 256.0F / 360.0F)));
+        Vec3 vec3d = this.getDeltaMovement();
+        double e = Mth.clamp(vec3d.x, -3.9D, 3.9D);
+        double f = Mth.clamp(vec3d.y, -3.9D, 3.9D);
+        double g = Mth.clamp(vec3d.z, -3.9D, 3.9D);
         buf.writeShort((int) (e * 8000.0D));
         buf.writeShort((int) (f * 8000.0D));
         buf.writeShort((int) (g * 8000.0D));
-        return new CustomPayloadS2CPacket(new Identifier(Constant.MOD_ID, "entity_spawn"), buf);
+        return new ClientboundCustomPayloadPacket(new ResourceLocation(Constant.MOD_ID, "entity_spawn"), buf);
     }
 }

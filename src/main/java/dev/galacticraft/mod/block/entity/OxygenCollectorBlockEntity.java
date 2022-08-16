@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,33 +22,33 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.api.machine.MachineStatuses;
+import dev.galacticraft.api.machine.storage.MachineFluidStorage;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
+import dev.galacticraft.api.machine.storage.display.TankDisplay;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.fluid.GalacticraftFluid;
+import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.OxygenCollectorScreenHandler;
-import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CropBlock;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import dev.galacticraft.mod.util.FluidUtil;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +56,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenCollectorBlockEntity extends MachineBlockEntity {
-    public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
+    public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
     public static final int CHARGE_SLOT = 0;
     public static final int OXYGEN_TANK = 0;
 
@@ -68,61 +68,41 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void setWorld(World world) {
-        super.setWorld(world);
+    public void setLevel(Level world) {
+        super.setLevel(world);
         CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(world).orElse(null);
         this.oxygenWorld = body == null || body.atmosphere().breathable();
     }
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 62);
-        return builder;
+    protected @NotNull MachineItemStorage createItemStorage() {
+        return MachineItemStorage.Builder.create().addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62)).build();
     }
 
     @Override
-    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
-        builder.addLOXTank(OXYGEN_TANK, SlotType.OXYGEN_OUT, 31, 8);
-        return builder;
+    protected @NotNull MachineFluidStorage createFluidStorage() {
+        return MachineFluidStorage.Builder.create()
+                .addTank(GalacticraftSlotTypes.OXYGEN_OUTPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48), true)
+                .build();
     }
 
-    @Override
-    public FluidAmount fluidInvCapacity() {
-        return MAX_OXYGEN;
-    }
-
-    @Override
-    protected MachineStatus getStatusById(int index) {
-        return Status.values()[index];
-    }
-
-    @Override
-    protected void tickDisabled() {
-
-    }
-
-    @Override
-    public boolean canInsertEnergy() {
-        return true;
-    }
-
-    private int collectOxygen() {
+    private int collectOxygen(@NotNull ServerLevel world, @NotNull BlockPos pos) {
         if (!this.oxygenWorld) {
-            int minX = this.pos.getX() - 5;
-            int minY = this.pos.getY() - 5;
-            int minZ = this.pos.getZ() - 5;
-            int maxX = this.pos.getX() + 5;
-            int maxY = this.pos.getY() + 5;
-            int maxZ = this.pos.getZ() + 5;
+            int minX = pos.getX() - 5;
+            int minY = pos.getY() - 5;
+            int minZ = pos.getZ() - 5;
+            int maxX = pos.getX() + 5;
+            int maxY = pos.getY() + 5;
+            int maxZ = pos.getZ() + 5;
 
             float leafBlocks = 0;
 
-            for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
-                BlockState state = world.getBlockState(pos);
+            for (BlockPos pos1 : BlockPos.betweenClosed(minX, minY, minZ, maxX, maxY, maxZ)) {
+                BlockState state = world.getBlockState(pos1);
                 if (state.isAir()) {
                     continue;
                 }
-                if (state.getBlock() instanceof LeavesBlock && !state.get(LeavesBlock.PERSISTENT)) {
+                if (state.getBlock() instanceof LeavesBlock && !state.getValue(LeavesBlock.PERSISTENT)) {
                     leafBlocks++;
                 } else if (state.getBlock() instanceof CropBlock) {
                     leafBlocks += 0.75F;
@@ -137,99 +117,44 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         return 183 / 20;
     }
 
-    private boolean canCollectOxygen() {
-        if (!oxygenWorld) {
-            int minX = this.pos.getX() - 5;
-            int minY = this.pos.getY() - 5;
-            int minZ = this.pos.getZ() - 5;
-            int maxX = this.pos.getX() + 5;
-            int maxY = this.pos.getY() + 5;
-            int maxZ = this.pos.getZ() + 5;
-
-            float leafBlocks = 0;
-
-            for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
-                BlockState state = world.getBlockState(pos);
-                if (state.isAir()) {
-                    continue;
-                }
-                if (state.getBlock() instanceof LeavesBlock && !state.get(LeavesBlock.PERSISTENT)) {
-                    if (++leafBlocks >= 2) break;
-                } else if (state.getBlock() instanceof CropBlock) {
-                    if ((leafBlocks += 0.75f) >= 2) break;
-                }
-            }
-            return leafBlocks >= 2;
-        }
-        return true;
-    }
-
     @Override
-    public void updateComponents() {
-        super.updateComponents();
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        super.tickConstant(world, pos, state);
         this.attemptChargeFromStack(CHARGE_SLOT);
-        this.trySpreadFluids(0);
     }
 
     @Override
-    public @NotNull MachineStatus updateStatus() {
-        if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.isTankFull(OXYGEN_TANK)) return Status.FULL;
-        if (!canCollectOxygen()) return Status.NOT_ENOUGH_LEAVES;
-        return Status.COLLECTING;
-    }
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        world.getProfiler().push("transfer");
+        this.trySpreadFluids(world);
 
-    @Override
-    public void tickWork() {
-        this.collectionAmount = 0;
-        if (this.getStatus().getType().isActive()) {
-            this.collectionAmount = collectOxygen();
-            this.fluidInv().insertFluid(OXYGEN_TANK, FluidKeys.get(GalacticraftFluid.LIQUID_OXYGEN).withAmount(FluidAmount.of(collectionAmount, 100)), Simulation.ACTION);
+        if (this.fluidStorage().isFull(OXYGEN_TANK)) return GalacticraftMachineStatus.OXYGEN_TANK_FULL;
+        world.getProfiler().popPush("transaction");
+        try (Transaction transaction = Transaction.openOuter()) {
+            if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate()) {
+                world.getProfiler().push("collect");
+                this.collectionAmount = collectOxygen(world, pos);
+                world.getProfiler().pop();
+                if (this.collectionAmount > 0) {
+                    this.fluidStorage().insert(OXYGEN_TANK, FluidVariant.of(Gases.OXYGEN), FluidUtil.bucketsToDroplets(this.collectionAmount), transaction);
+                    transaction.commit();
+                    return GalacticraftMachineStatus.COLLECTING;
+                } else {
+                    return GalacticraftMachineStatus.NOT_ENOUGH_OXYGEN;
+                }
+            } else {
+                this.collectionAmount = 0;
+                return MachineStatuses.NOT_ENOUGH_ENERGY;
+            }
+        } finally {
+            world.getProfiler().pop();
         }
-    }
-
-    @Override
-    public int getBaseEnergyConsumption() {
-        return Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate();
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return new OxygenCollectorScreenHandler(syncId, player, this);
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+        if (this.getSecurity().hasAccess(player)) return new OxygenCollectorScreenHandler(syncId, player, this);
         return null;
-    }
-
-    /**
-     * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
-     */
-    private enum Status implements MachineStatus {
-        COLLECTING(new TranslatableText("ui.galacticraft.machine.status.collecting"), Formatting.GREEN, StatusType.WORKING),
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        NOT_ENOUGH_LEAVES(new TranslatableText("ui.galacticraft.machine.status.not_enough_leaves"), Formatting.RED, StatusType.MISSING_RESOURCE),
-        FULL(new TranslatableText("ui.galacticraft.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL);
-
-        private final Text text;
-        private final StatusType type;
-
-        Status(TranslatableText text, Formatting color, StatusType type) {
-            this.type = type;
-            this.text = text.setStyle(Style.EMPTY.withColor(color));
-        }
-
-        @Override
-        public @NotNull Text getName() {
-            return text;
-        }
-
-        @Override
-        public @NotNull StatusType getType() {
-            return type;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
     }
 }

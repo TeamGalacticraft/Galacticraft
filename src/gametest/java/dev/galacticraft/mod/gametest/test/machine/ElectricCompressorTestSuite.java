@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,21 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import alexiil.mc.lib.attributes.Simulation;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GalacticraftItem;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.test.GameTest;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -53,11 +56,11 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
     public void electricCompressorCraftingTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var electricCompressor = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR);
-        final var inv = electricCompressor.itemInv();
+        final var inv = electricCompressor.itemStorage();
         fillElectricCompressorSlots(inv);
-        electricCompressor.capacitor().setEnergy(electricCompressor.getEnergyCapacity());
+        electricCompressor.energyStorage().setEnergyUnsafe(electricCompressor.getEnergyCapacity());
         runFinalTaskAt(context, 200 + 1, () -> {
-            ItemStack output = inv.getInvStack(ElectricCompressorBlockEntity.OUTPUT_SLOT);
+            ItemStack output = inv.getStack(ElectricCompressorBlockEntity.OUTPUT_SLOT);
             if (output.getItem() != GalacticraftItem.COMPRESSED_IRON) {
                 context.throwPositionedException(String.format("Expected electric compressor to have made compressed iron but found %s instead!", formatItemStack(output)), pos);
             }
@@ -68,20 +71,20 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
     public void electricCompressorCraftingFullTest(TestContext context) {
         final var pos = new BlockPos(0, 0, 0);
         final var electricCompressor = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR);
-        final var inv = electricCompressor.itemInv();
-        electricCompressor.capacitor().setEnergy(electricCompressor.getEnergyCapacity());
-        inv.setInvStack(ElectricCompressorBlockEntity.OUTPUT_SLOT, new ItemStack(Items.BARRIER), Simulation.ACTION);
-        inv.setInvStack(ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, new ItemStack(Items.BARRIER), Simulation.ACTION);
+        final var inv = electricCompressor.itemStorage();
+        electricCompressor.energyStorage().setEnergyUnsafe(electricCompressor.getEnergyCapacity());
+        inv.setSlot(ElectricCompressorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
+        inv.setSlot(ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
         fillElectricCompressorSlots(inv);
         runFinalTaskNext(context, () -> {
-            if (electricCompressor.maxProgress() != 0) {
+            if (electricCompressor.getMaxProgress() != 0) {
                 context.throwPositionedException("Expected electric compressor to be unable to craft as the output was full!", pos);
             }
         });
     }
 
-    private static void fillElectricCompressorSlots(MachineItemInv inv) {
-        inv.setInvStack(0, new ItemStack(Items.IRON_INGOT), Simulation.ACTION);
-        inv.setInvStack(1, new ItemStack(Items.IRON_INGOT), Simulation.ACTION);
+    private static void fillElectricCompressorSlots(@NotNull MachineItemStorage inv) {
+        inv.setSlot(0, ItemVariant.of(Items.IRON_INGOT), 1);
+        inv.setSlot(1, ItemVariant.of(Items.IRON_INGOT), 1);
     }
 }

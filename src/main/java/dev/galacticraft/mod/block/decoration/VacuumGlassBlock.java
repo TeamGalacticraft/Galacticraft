@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ import dev.galacticraft.mod.api.block.AbstractHorizontalDirectionalBlock;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class VacuumGlassBlock extends AbstractHorizontalDirectionalBlock {
-    public VacuumGlassBlock(Settings settings) {
+    public VacuumGlassBlock(Properties settings) {
         super(settings);
     }
 }

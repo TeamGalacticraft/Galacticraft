@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,168 +22,128 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.api.machine.MachineStatuses;
+import dev.galacticraft.api.machine.storage.MachineFluidStorage;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
+import dev.galacticraft.api.machine.storage.display.TankDisplay;
+import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.api.transfer.StateCachingStorageProvider;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
 import dev.galacticraft.mod.fluid.GalacticraftFluid;
+import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
-import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.tag.GalacticraftTag;
-import dev.galacticraft.mod.util.EnergyUtil;
 import dev.galacticraft.mod.util.FluidUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RefineryBlockEntity extends MachineBlockEntity {
-    private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(8);
+    private static final long MAX_CAPACITY = FluidUtil.bucketsToDroplets(8);
     public static final int OIL_TANK = 0;
     public static final int FUEL_TANK = 1;
     public static final int CHARGE_SLOT = 0;
     public static final int FLUID_INPUT_SLOT = 1;
     public static final int FLUID_OUTPUT_SLOT = 2;
 
+    private final StateCachingStorageProvider<EnergyStorage> chargeSlot = StateCachingStorageProvider.create(this.itemStorage().getSlot(CHARGE_SLOT), EnergyStorage.ITEM);
+    private final StateCachingStorageProvider<Storage<FluidVariant>> fluidInputSlot = StateCachingStorageProvider.create(this.itemStorage().getSlot(FLUID_INPUT_SLOT), FluidStorage.ITEM);
+    private final StateCachingStorageProvider<Storage<FluidVariant>> fluidOutputSlot = StateCachingStorageProvider.create(this.itemStorage().getSlot(FLUID_OUTPUT_SLOT), FluidStorage.ITEM);
+
+
     public RefineryBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.REFINERY, pos, state);
     }
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 7);
-        builder.addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtil.canExtractFluids(stack, GalacticraftTag.OIL) || FluidUtil.isEmpty(stack), 123, 7);
-        builder.addSlot(FLUID_OUTPUT_SLOT, SlotType.FLUID_TANK_IO, stack -> FluidUtil.canInsertFluids(stack, GalacticraftFluid.FUEL), 153, 7);
-        return builder;
+    protected @NotNull MachineItemStorage createItemStorage() {
+        return MachineItemStorage.Builder.create()
+                .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 7))
+                .addSlot(GalacticraftSlotTypes.OIL_FILL, new ItemSlotDisplay(123, 7))
+                .addSlot(GalacticraftSlotTypes.FUEL_DRAIN, new ItemSlotDisplay(153, 7))
+                .build();
     }
 
     @Override
-    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
-        builder.addTank(OIL_TANK, SlotType.OIL_IN, Constant.Filter.OIL, 122, 28, 1);
-        builder.addTank(FUEL_TANK, SlotType.FUEL_OUT, Constant.Filter.FUEL, 152, 28, 1);
-        return builder;
+    protected @NotNull MachineFluidStorage createFluidStorage() {
+        return MachineFluidStorage.Builder.create()
+                .addTank(GalacticraftSlotTypes.OIL_INPUT, MAX_CAPACITY, new TankDisplay(122, 28, 48))
+                .addTank(GalacticraftSlotTypes.FUEL_OUTPUT, MAX_CAPACITY, new TankDisplay(152, 28, 48))
+                .build();
     }
 
     @Override
-    public FluidAmount fluidInvCapacity() {
-        return MAX_CAPACITY;
-    }
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        super.tickConstant(world, pos, state);
+        this.attemptChargeFromStack(chargeSlot);
 
-    @Override
-    public boolean canInsertEnergy() {
-        return true;
-    }
-
-    @Override
-    protected MachineStatus getStatusById(int index) {
-        return Status.values()[index];
-    }
-
-    @Override
-    protected void tickDisabled() {
-
-    }
-
-    @Override
-    public void updateComponents() {
-        super.updateComponents();
-        this.attemptChargeFromStack(CHARGE_SLOT);
-
-        FluidVolumeUtil.move(FluidAttributes.EXTRACTABLE.getFirst(this.itemInv().getSlot(FLUID_INPUT_SLOT)), this.fluidInv().getTank(OIL_TANK));
-        FluidVolumeUtil.move(this.fluidInv().getTank(FUEL_TANK), FluidAttributes.INSERTABLE.getFirst(this.itemInv().getSlot(FLUID_OUTPUT_SLOT)));
-    }
-
-    @Override
-    public @NotNull MachineStatus updateStatus() {
-        if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.fluidInv().getInvFluid(OIL_TANK).amount().compareTo(FluidAmount.ZERO) <= 0) return Status.NOT_ENOUGH_FLUID;
-        if (this.isTankFull(FUEL_TANK)) return Status.FULL;
-        return Status.ACTIVE;
-    }
-
-    @Override
-    public void tickWork() {
-        if (this.getStatus().getType().isActive()) {
-            FluidAmount amount = this.fluidInv().extractFluid(OIL_TANK, key -> GalacticraftTag.OIL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 200), Simulation.ACTION).amount();
-            amount = this.fluidInv().insertFluid(FUEL_TANK, FluidKeys.get(GalacticraftFluid.FUEL).withAmount(amount), Simulation.ACTION).amount();
-            this.fluidInv().insertFluid(OIL_TANK, this.fluidInv().getInvFluid(OIL_TANK).getFluidKey().withAmount(amount), Simulation.ACTION);
+        Storage<FluidVariant> storage = this.fluidInputSlot.getStorage();
+        if (storage != null) {
+            FluidUtil.move(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), storage, this.fluidStorage().getSlot(OIL_TANK), Long.MAX_VALUE, null);
+        }
+        storage = this.fluidOutputSlot.getStorage();
+        if (storage != null) {
+            FluidUtil.move(FluidVariant.of(GalacticraftFluid.FUEL), this.fluidStorage().getSlot(FUEL_TANK), storage, Long.MAX_VALUE, null);
         }
     }
 
     @Override
-    public int getBaseEnergyConsumption() {
-        return Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate();
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        if (this.fluidStorage().isEmpty(OIL_TANK)) return GalacticraftMachineStatus.MISSING_OIL;
+        if (this.fluidStorage().isFull(FUEL_TANK)) return GalacticraftMachineStatus.FUEL_TANK_FULL;
+        world.getProfiler().push("transaction");
+        try (Transaction transaction = Transaction.openOuter()) {
+            if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate()) {
+                long extracted;
+                try (Transaction inner = Transaction.openNested(transaction)) {
+                    extracted = this.fluidStorage().extract(OIL_TANK, FluidConstants.BUCKET / 20 / 5, inner).getAmount();
+                }
+
+                try (Transaction inner = Transaction.openNested(transaction)) {
+                    long accepted = this.fluidStorage().insert(FUEL_TANK, FluidVariant.of(GalacticraftFluid.FUEL), extracted, inner);
+
+                    if (this.fluidStorage().extract(OIL_TANK, accepted, inner).getAmount() == accepted) {
+                        inner.commit();
+                    }
+                }
+                transaction.commit();
+                return GalacticraftMachineStatus.ACTIVE;
+            } else {
+                return MachineStatuses.NOT_ENOUGH_ENERGY;
+            }
+        } finally {
+            world.getProfiler().pop();
+        }
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.REFINERY_HANDLER, syncId, inv, this);
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+        if (this.getSecurity().hasAccess(player)) {
+            return SimpleMachineScreenHandler.create(
+                    syncId,
+                    player,
+                    this,
+                    GalacticraftScreenHandlerType.REFINERY_HANDLER
+            );
+        }
         return null;
-    }
-
-    /**
-     * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
-     */
-    private enum Status implements MachineStatus {
-        /**
-         * Refinery is active and is refining oil into fuel.
-         */
-        ACTIVE(new TranslatableText("ui.galacticraft.machine.status.refining"), Formatting.GREEN, StatusType.WORKING),
-
-        /**
-         * Refinery has oil but the fuel tank is full.
-         */
-        FULL(new TranslatableText("ui.galacticraft.machine.status.idle"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-
-        /**
-         * The refinery is out of oil.
-         */
-        NOT_ENOUGH_FLUID(new TranslatableText("ui.galacticraft.machine.status.not_enough_fluid"), Formatting.BLACK, StatusType.MISSING_FLUIDS),
-
-        /**
-         * The refinery is out of energy.
-         */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
-
-        private final Text text;
-        private final StatusType type;
-
-        Status(TranslatableText text, Formatting color, StatusType type) {
-            this.type = type;
-            this.text = text.setStyle(Style.EMPTY.withColor(color));
-        }
-
-        @Override
-        public @NotNull Text getName() {
-            return text;
-        }
-
-        @Override
-        public @NotNull StatusType getType() {
-            return type;
-        }
-
-        @Override
-        public int getIndex() {
-            return this.ordinal();
-        }
     }
 }

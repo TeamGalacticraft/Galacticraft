@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,18 +23,18 @@
 package dev.galacticraft.mod.misc.banner;
 
 import dev.galacticraft.mod.Constant;
-import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPattern;
-import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPatterns;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+//import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPattern;
+//import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPatterns;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftBannerPattern {
-    public static final LoomPattern ROCKET = new LoomPattern(false);
-
+//    public static final LoomPattern ROCKET = new LoomPattern(false);
+//
     public static void register() {
-        Registry.register(LoomPatterns.REGISTRY, new Identifier(Constant.MOD_ID, "rocket"), ROCKET);
+//        Registry.register(LoomPatterns.REGISTRY, new ResourceLocation(Constant.MOD_ID, "rocket"), ROCKET);
     }
 }

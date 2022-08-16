@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,7 @@ package dev.galacticraft.mod.compat.rei.common.display;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.item.ItemStack;
-
+import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,11 +45,11 @@ public class DefaultShapedCompressingDisplay implements DefaultCompressingDispla
     public DefaultShapedCompressingDisplay(ShapedCompressingRecipe recipe) {
         this.input = new ArrayList<>();
         recipe.getIngredients().forEach((ingredient) -> {
-            for (ItemStack stack : ingredient.getMatchingStacks()) {
+            for (ItemStack stack : ingredient.getItems()) {
                 input.add(EntryIngredients.of(stack));
             }
         });
-        this.output = Collections.singletonList(EntryIngredients.of(recipe.getOutput()));
+        this.output = Collections.singletonList(EntryIngredients.of(recipe.getResultItem()));
     }
 
     @Override

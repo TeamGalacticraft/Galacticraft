@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,25 +26,25 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.entity.EvolvedSpiderEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.entity.feature.EyesFeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.SpiderEntityModel;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.model.SpiderModel;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.EyesLayer;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class EvolvedSpiderEyesFeatureRenderer<T extends EvolvedSpiderEntity, M extends SpiderEntityModel<T>> extends EyesFeatureRenderer<T, M> {
-    private static final RenderLayer LAYER = RenderLayer.getEyes(new Identifier(Constant.MOD_ID, "textures/entity/evolved/spider_eyes.png"));
+public class EvolvedSpiderEyesFeatureRenderer<T extends EvolvedSpiderEntity, M extends SpiderModel<T>> extends EyesLayer<T, M> {
+    private static final RenderType LAYER = RenderType.eyes(new ResourceLocation(Constant.MOD_ID, "textures/entity/evolved/spider_eyes.png"));
 
-    public EvolvedSpiderEyesFeatureRenderer(FeatureRendererContext<T, M> featureRendererContext) {
+    public EvolvedSpiderEyesFeatureRenderer(RenderLayerParent<T, M> featureRendererContext) {
         super(featureRendererContext);
     }
 
     @Override
-    public RenderLayer getEyesTexture() {
+    public RenderType renderType() {
         return LAYER;
     }
 }

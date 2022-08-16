@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,13 +20,16 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.accessor;
+package dev.galacticraft.mod.item;
 
-import dev.galacticraft.api.rocket.RocketData;
-import org.jetbrains.annotations.Nullable;
+import dev.galacticraft.api.item.Schematic;
+import net.minecraft.world.item.Item;
 
-public interface ServerPlayerEntityAccessor {
-    @Nullable RocketData getCelestialScreenState();
-
-    void setCelestialScreenState(@Nullable RocketData data);
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
+public class SchematicItem extends Item implements Schematic {
+    public SchematicItem(Properties settings) {
+        super(settings);
+    }
 }

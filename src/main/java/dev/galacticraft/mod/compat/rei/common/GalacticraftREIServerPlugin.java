@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,17 +22,18 @@
 
 package dev.galacticraft.mod.compat.rei.common;
 
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.compat.rei.common.transfer.info.FabricationMenuInfo;
 import dev.galacticraft.mod.compat.rei.common.transfer.info.SimpleMachineMenuInfo;
-import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.DisplaySerializerRegistry;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoRegistry;
+import me.shedaniel.rei.api.common.transfer.info.simple.SimpleMenuInfoProvider;
 
 public class GalacticraftREIServerPlugin implements REIServerPlugin {
     public static final CategoryIdentifier<DefaultFabricationDisplay> CIRCUIT_FABRICATION = CategoryIdentifier.of(Constant.MOD_ID, "plugins/circuit_fabricator");
@@ -41,8 +42,8 @@ public class GalacticraftREIServerPlugin implements REIServerPlugin {
 
     @Override
     public void registerMenuInfo(MenuInfoRegistry registry) {
-        registry.register(COMPRESSING, RecipeMachineScreenHandler.class, new SimpleMachineMenuInfo<>(3, 3, 10, 0));
-        registry.register(CIRCUIT_FABRICATION, RecipeMachineScreenHandler.class, new FabricationMenuInfo<>());
+        registry.register(COMPRESSING, RecipeMachineScreenHandler.class, SimpleMenuInfoProvider.of(d -> new SimpleMachineMenuInfo<>(3, 3, 10, 0, d)));
+        registry.register(CIRCUIT_FABRICATION, RecipeMachineScreenHandler.class, SimpleMenuInfoProvider.of(FabricationMenuInfo::new));
     }
 
     @Override

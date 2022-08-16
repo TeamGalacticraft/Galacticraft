@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,12 @@
 package dev.galacticraft.mod.item;
 
 import com.google.common.base.Suppliers;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-
 import java.util.function.Supplier;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.crafting.Ingredient;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -39,9 +38,9 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
             0,
             new int[]{0, 0, 0, 0},
             0,
-            SoundEvents.ITEM_ARMOR_EQUIP_IRON,
+            SoundEvents.ARMOR_EQUIP_IRON,
             0.0f,
-            () -> Ingredient.ofItems(GalacticraftItem.METEORIC_IRON[1]),
+            () -> Ingredient.of(GalacticraftItem.METEORIC_IRON_INGOT),
             0.0f
     ), // TODO: add actual functionality
     HEAVY_DUTY(
@@ -49,26 +48,26 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
             30,
             new int[]{3, 6, 8, 3},
             9,
-            SoundEvents.ITEM_ARMOR_EQUIP_IRON,
+            SoundEvents.ARMOR_EQUIP_IRON,
             1.0f,
-            () -> Ingredient.ofItems(GalacticraftItem.COMPRESSED_STEEL),
+            () -> Ingredient.of(GalacticraftItem.COMPRESSED_STEEL),
             1.0f
     ),
     DESH("desh", 42,
             new int[]{4, 7, 9, 4},
             12,
-            SoundEvents.ITEM_ARMOR_EQUIP_IRON,
+            SoundEvents.ARMOR_EQUIP_IRON,
             3.0f,
-            () -> Ingredient.ofItems(GalacticraftItem.DESH[1]),
+            () -> Ingredient.of(GalacticraftItem.DESH_INGOT),
             2.0f
     ),
     TITANIUM(
             "titanium",
             26, new int[]{5, 7, 10, 5},
             20,
-            SoundEvents.ITEM_ARMOR_EQUIP_IRON,
+            SoundEvents.ARMOR_EQUIP_IRON,
             1.0f,
-            () -> Ingredient.ofItems(GalacticraftItem.COMPRESSED_TITANIUM),
+            () -> Ingredient.of(GalacticraftItem.COMPRESSED_TITANIUM),
             0.0f
     );
 
@@ -94,17 +93,17 @@ public enum GalacticraftArmorMaterial implements ArmorMaterial {
     }
 
     @Override
-    public int getDurability(EquipmentSlot slot) {
-        return BASE_DURABILITY[slot.getEntitySlotId()] * this.durabilityMultiplier;
+    public int getDurabilityForSlot(EquipmentSlot slot) {
+        return BASE_DURABILITY[slot.getIndex()] * this.durabilityMultiplier;
     }
 
     @Override
-    public int getProtectionAmount(EquipmentSlot slot) {
-        return this.protectionValues[slot.getEntitySlotId()];
+    public int getDefenseForSlot(EquipmentSlot slot) {
+        return this.protectionValues[slot.getIndex()];
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return this.enchantability;
     }
 

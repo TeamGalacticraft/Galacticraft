@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,62 +22,48 @@
 
 package dev.galacticraft.mod.block.machine;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.CoalGeneratorBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-
-import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CoalGeneratorBlock extends SimpleMachineBlock<CoalGeneratorBlockEntity> {
-    private static final Text TOOLTIP_INFO = new TranslatableText("tooltip.galacticraft.coal_generator")
-            .setStyle(Constant.Text.DARK_GRAY_STYLE);
-
-    public CoalGeneratorBlock(Settings settings) {
-        super(settings, CoalGeneratorBlockEntity::new, TOOLTIP_INFO);
+    public CoalGeneratorBlock(Properties settings) {
+        super(settings, CoalGeneratorBlockEntity::new);
     }
 
     @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random rand) {
-        if (state.get(ACTIVE) && world.getBlockEntity(pos) instanceof CoalGeneratorBlockEntity machine && machine.getHeat() > 0) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource rand) {
+        if (state.getValue(ACTIVE) && world.getBlockEntity(pos) instanceof CoalGeneratorBlockEntity machine && machine.getHeat() > 0) {
             double x = (double) pos.getX() + 0.5D;
             double y = pos.getY();
             double z = (double) pos.getZ() + 0.5D;
             if (rand.nextDouble() < 0.1D) {
-                world.playSound(x, y, z, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+                world.playLocalSound(x, y, z, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
             }
 
-            Direction direction = state.get(Properties.HORIZONTAL_FACING);
+            Direction direction = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
             Direction.Axis axis = direction.getAxis();
             double d = rand.nextDouble() * 0.6D - 0.3D;
-            double xo = axis == Direction.Axis.X ? (double) direction.getOffsetX() * 0.52D : d;
+            double xo = axis == Direction.Axis.X ? (double) direction.getStepX() * 0.52D : d;
             double yo = rand.nextDouble() * 6.0D / 16.0D;
-            double zo = axis == Direction.Axis.Z ? (double) direction.getOffsetZ() * 0.52D : d;
+            double zo = axis == Direction.Axis.Z ? (double) direction.getStepZ() * 0.52D : d;
             world.addParticle(ParticleTypes.SMOKE, x + xo, y + yo, z + zo, 0.0D, 0.0D, 0.0D);
             world.addParticle(ParticleTypes.FLAME, x + xo, y + yo, z + zo, 0.0D, 0.0D, 0.0D);
         }
     }
 
     @Override
-    public CoalGeneratorBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public CoalGeneratorBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new CoalGeneratorBlockEntity(pos, state);
-    }
-
-    @Override
-    public Text machineInfo(ItemStack stack, BlockView view, boolean advanced) {
-        return TOOLTIP_INFO;
     }
 }

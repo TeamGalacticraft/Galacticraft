@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.api.solarpanel;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
-public record WorldLightSources(Identifier texture, LightSource day, LightSource night, LightSource overcast, LightSource missing) {
+public record WorldLightSources(ResourceLocation texture, LightSource day, LightSource night, LightSource overcast, LightSource missing) {
 }
