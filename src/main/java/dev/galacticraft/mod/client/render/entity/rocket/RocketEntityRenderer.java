@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,97 +22,97 @@
 
 package dev.galacticraft.mod.client.render.entity.rocket;
 
-import dev.galacticraft.api.client.rocket.render.RocketPartRendererRegistry;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
+import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.entity.RocketEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.inventory.InventoryMenu;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
-    public RocketEntityRenderer(EntityRendererFactory.Context context) {
+    public RocketEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    public void render(RocketEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(RocketEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
-        matrices.push();
-        MinecraftClient client = MinecraftClient.getInstance();
+        matrices.pushPose();
+        Minecraft client = Minecraft.getInstance();
         matrices.translate(0.0D, 1.75, 0.0D);
         if (entity.getStage() == LaunchStage.IGNITED) {
-            matrices.translate((entity.world.random.nextDouble() - 0.5D) * 0.1D, 0, (entity.world.random.nextDouble() - 0.5D) * 0.1D);
+            matrices.translate((entity.level.random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level.random.nextDouble() - 0.5D) * 0.1D);
         }
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(entity.getYaw(tickDelta)));
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entity.getPitch(tickDelta)));
+        matrices.mulPose(Vector3f.YP.rotationDegrees(entity.getViewYRot(tickDelta)));
+        matrices.mulPose(Vector3f.XP.rotationDegrees(entity.getViewXRot(tickDelta)));
 
-        float wobbleTicks = (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - tickDelta;
-        float wobbleStrength = entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_STRENGTH) - tickDelta;
+        float wobbleTicks = (float) entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - tickDelta;
+        float wobbleStrength = entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_STRENGTH) - tickDelta;
 
         if (wobbleStrength < 0.0F) {
             wobbleStrength = 0.0F;
         }
 
         if (wobbleTicks > 0.0F) {
-            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(MathHelper.sin(wobbleTicks) * wobbleTicks * wobbleStrength / 10.0F * (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_SIDE)));
+            matrices.mulPose(Vector3f.XP.rotationDegrees(Mth.sin(wobbleTicks) * wobbleTicks * wobbleStrength / 10.0F * (float) entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_SIDE)));
         }
 
-        client.getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+        client.getTextureManager().bindForSetup(getTextureLocation(entity));
         matrices.translate(0.0D, -1.75D, 0.0D);
 
-        Identifier part = entity.getPartForType(RocketPartType.BOTTOM);
+        ResourceLocation part = entity.getPartForType(RocketPartType.BOTTOM);
         if (part != null) {
-            matrices.push();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
-            matrices.pop();
+            matrices.pushPose();
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            matrices.popPose();
         }
 
         matrices.translate(0.0D, 0.5, 0.0D);
 
         part = entity.getPartForType(RocketPartType.BOOSTER);
         if (part != null) {
-            matrices.push();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
-            matrices.pop();
+            matrices.pushPose();
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            matrices.popPose();
         }
 
         part = entity.getPartForType(RocketPartType.FIN);
         if (part != null) {
-            matrices.push();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
-            matrices.pop();
+            matrices.pushPose();
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            matrices.popPose();
         }
 
         matrices.translate(0.0D, 1.0D, 0.0D);
 
         part = entity.getPartForType(RocketPartType.BODY);
         if (part != null) {
-            matrices.push();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
-            matrices.pop();
+            matrices.pushPose();
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            matrices.popPose();
         }
 
         matrices.translate(0.0D, 1.75, 0.0D);
 
         part = entity.getPartForType(RocketPartType.CONE);
         if (part != null) {
-            matrices.push();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.world, matrices, entity, vertexConsumers, tickDelta, light);
-            matrices.pop();
+            matrices.pushPose();
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            matrices.popPose();
         }
 
-        matrices.pop();
+        matrices.popPose();
     }
 
     @Override
@@ -121,7 +121,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
     }
 
     @Override
-    public Identifier getTexture(RocketEntity var1) {
-        return PlayerScreenHandler.BLOCK_ATLAS_TEXTURE;
+    public ResourceLocation getTextureLocation(RocketEntity var1) {
+        return InventoryMenu.BLOCK_ATLAS;
     }
 }

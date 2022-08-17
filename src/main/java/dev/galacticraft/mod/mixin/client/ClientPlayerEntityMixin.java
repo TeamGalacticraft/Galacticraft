@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,12 +28,13 @@ import dev.galacticraft.mod.Constant;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.input.Input;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.util.Identifier;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.Input;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -45,37 +46,37 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-@Mixin(ClientPlayerEntity.class)
+@Mixin(LocalPlayer.class)
 public abstract class ClientPlayerEntityMixin {
-    @Shadow @Final protected MinecraftClient client;
+    @Shadow @Final protected Minecraft minecraft;
     @Shadow public Input input;
 
-    @Inject(at=@At("RETURN"), method = "tickMovement")
+    @Inject(at=@At("RETURN"), method = "aiStep")
     private void gcRocketJumpCheck(CallbackInfo ci) {
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
-        if (player.hasVehicle()) {
+        LocalPlayer player = (LocalPlayer) (Object) this;
+        if (player.isPassenger()) {
             if (player.getVehicle() instanceof Rocket) {
 
                 if (this.input.jumping && ((Rocket) player.getVehicle()).getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
                     ((Rocket) player.getVehicle()).onJump();
-                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_jump"), new PacketByteBuf(Unpooled.buffer())));
+                    ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "rocket_jump"), PacketByteBufs.create());
                 }
 
                 if (((Rocket) player.getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
-                    if (this.input.pressingForward) {
-                        player.getVehicle().setPitch((player.getVehicle().getPitch() - 2.0F) % 360.0f);
-                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_pitch"), new PacketByteBuf(Unpooled.buffer().writeBoolean(false))));
-                    } else if (this.input.pressingBack) {
-                        player.getVehicle().setPitch((player.getVehicle().getPitch() + 2.0F) % 360.0f);
-                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_pitch"), new PacketByteBuf(Unpooled.buffer().writeBoolean(true))));
+                    if (this.input.up) {
+                        player.getVehicle().setXRot((player.getVehicle().getXRot() - 2.0F) % 360.0f);
+                        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "rocket_pitch"), new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
+                    } else if (this.input.down) {
+                        player.getVehicle().setXRot((player.getVehicle().getXRot() + 2.0F) % 360.0f);
+                        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "rocket_pitch"), new FriendlyByteBuf(Unpooled.buffer().writeBoolean(true)));
                     }
 
-                    if (this.input.pressingLeft) {
-                        player.getVehicle().setYaw((player.getVehicle().getYaw() - 2.0F) % 360.0f);
-                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_yaw"), new PacketByteBuf(Unpooled.buffer().writeBoolean(false))));
-                    } else if (this.input.pressingRight) {
-                        player.getVehicle().setYaw((player.getVehicle().getYaw() + 2.0F) % 360.0f);
-                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "rocket_yaw"), new PacketByteBuf(Unpooled.buffer().writeBoolean(true))));
+                    if (this.input.left) {
+                        player.getVehicle().setYRot((player.getVehicle().getYRot() - 2.0F) % 360.0f);
+                        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "rocket_yaw"), new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
+                    } else if (this.input.right) {
+                        player.getVehicle().setYRot((player.getVehicle().getYRot() + 2.0F) % 360.0f);
+                        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "rocket_yaw"), new FriendlyByteBuf(Unpooled.buffer().writeBoolean(true)));
                     }
                 }
             }

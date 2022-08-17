@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,9 @@
 package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.mod.accessor.ServerPlayerEntityAccessor;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
+import dev.galacticraft.mod.accessor.ServerPlayerAccessor;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -36,8 +36,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(ServerPlayerEntity.class)
-public abstract class ServerPlayerEntityMixin implements ServerPlayerEntityAccessor {
+@Mixin(ServerPlayer.class)
+public abstract class ServerPlayerEntityMixin implements ServerPlayerAccessor {
     private @Unique @Nullable RocketData rocketData = null;
 
     @Override
@@ -50,13 +50,13 @@ public abstract class ServerPlayerEntityMixin implements ServerPlayerEntityAcces
         this.rocketData = data;
     }
 
-    @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
-    private void writeCustomDataToNbt_gc(NbtCompound nbt, CallbackInfo ci) {
-        if (this.rocketData != null) nbt.put("CelestialState", this.rocketData.toNbt(new NbtCompound()));
+    @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
+    private void writeCustomDataToNbt_gc(CompoundTag nbt, CallbackInfo ci) {
+        if (this.rocketData != null) nbt.put("CelestialState", this.rocketData.toNbt(new CompoundTag()));
     }
 
-    @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
-    private void readCustomDataFromNbt_gc(NbtCompound nbt, CallbackInfo ci) {
+    @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
+    private void readCustomDataFromNbt_gc(CompoundTag nbt, CallbackInfo ci) {
         if (nbt.contains("CelestialState")) {
             this.rocketData = RocketData.fromNbt(nbt.getCompound("CelestialState"));
         }

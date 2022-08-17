@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,40 +23,91 @@
 package dev.galacticraft.mod.client.render.rocket;
 
 import com.google.common.base.Suppliers;
-import dev.galacticraft.api.client.rocket.render.RocketPartRendererRegistry;
+import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.impl.client.rocket.render.BakedModelRocketPartRenderer;
 import dev.galacticraft.mod.Constant;
-import dev.monarkhes.myron.api.Myron;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class GalacticraftRocketPartRenderers {
-    private static final Identifier DEFAULT_CONE = new Identifier(Constant.MOD_ID, "models/misc/rocket_cone_basic.obj");
-    private static final Identifier ADVANCED_CONE = new Identifier(Constant.MOD_ID, "models/misc/rocket_cone_advanced.obj");
-    private static final Identifier SLOPED_CONE = new Identifier(Constant.MOD_ID, "models/misc/rocket_cone_sloped.obj");
-    private static final Identifier DEFAULT_BODY = new Identifier(Constant.MOD_ID, "models/misc/rocket_body.obj");
-    private static final Identifier DEFAULT_FIN = new Identifier(Constant.MOD_ID, "models/misc/rocket_fins.obj");
-    private static final Identifier DEFAULT_BOTTOM = new Identifier(Constant.MOD_ID, "models/misc/rocket_bottom.obj");
-    private static final Identifier BOOSTER_TIER_1 = new Identifier(Constant.MOD_ID, "models/misc/rocket_thruster_tier_1.obj");
-    private static final Identifier BOOSTER_TIER_2 = new Identifier(Constant.MOD_ID, "models/misc/rocket_thruster_tier_2.obj");
+    private static final ResourceLocation DEFAULT_CONE = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_cone_basic.obj");
+    private static final ResourceLocation ADVANCED_CONE = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_cone_advanced.obj");
+    private static final ResourceLocation SLOPED_CONE = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_cone_sloped.obj");
+    private static final ResourceLocation DEFAULT_BODY = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_body.obj");
+    private static final ResourceLocation DEFAULT_FIN = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_fins.obj");
+    private static final ResourceLocation DEFAULT_BOTTOM = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_bottom.obj");
+    private static final ResourceLocation BOOSTER_TIER_1 = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_thruster_tier_1.obj");
+    private static final ResourceLocation BOOSTER_TIER_2 = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_thruster_tier_2.obj");
+
+    private static BakedModel EMPTY_MODEL = new BakedModel() {
+        @Override
+        public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction, RandomSource randomSource) {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public boolean useAmbientOcclusion() {
+            return false;
+        }
+
+        @Override
+        public boolean isGui3d() {
+            return false;
+        }
+
+        @Override
+        public boolean usesBlockLight() {
+            return false;
+        }
+
+        @Override
+        public boolean isCustomRenderer() {
+            return false;
+        }
+
+        @Override
+        public TextureAtlasSprite getParticleIcon() {
+            return null;
+        }
+
+        @Override
+        public ItemTransforms getTransforms() {
+            return ItemTransforms.NO_TRANSFORMS;
+        }
+
+        @Override
+        public ItemOverrides getOverrides() {
+            return ItemOverrides.EMPTY;
+        }
+    };
 
     public static void register() {
-        RocketPartRendererRegistry.INSTANCE.register(new Identifier(Constant.MOD_ID, "default_cone"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Myron.getModel(DEFAULT_CONE))), RenderLayer::getCutout));
-        RocketPartRendererRegistry.INSTANCE.register(new Identifier(Constant.MOD_ID, "advanced_cone"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Myron.getModel(ADVANCED_CONE))), RenderLayer::getCutout));
-        RocketPartRendererRegistry.INSTANCE.register(new Identifier(Constant.MOD_ID, "sloped_cone"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Myron.getModel(SLOPED_CONE))), RenderLayer::getCutout));
-        RocketPartRendererRegistry.INSTANCE.register(new Identifier(Constant.MOD_ID, "default_body"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Myron.getModel(DEFAULT_BODY))), RenderLayer::getCutout));
-        RocketPartRendererRegistry.INSTANCE.register(new Identifier(Constant.MOD_ID, "default_fin"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Myron.getModel(DEFAULT_FIN))), RenderLayer::getCutout));
-        RocketPartRendererRegistry.INSTANCE.register(new Identifier(Constant.MOD_ID, "default_upgrade"), new BakedModelItemRocketPartRenderer(new ItemStack(Items.BARRIER), null));
-        RocketPartRendererRegistry.INSTANCE.register(new Identifier(Constant.MOD_ID, "default_bottom"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Myron.getModel(DEFAULT_BOTTOM))), RenderLayer::getCutout));
-        RocketPartRendererRegistry.INSTANCE.register(new Identifier(Constant.MOD_ID, "default_booster"), new BakedModelItemRocketPartRenderer(new ItemStack(Items.BARRIER), null));
-        RocketPartRendererRegistry.INSTANCE.register(new Identifier(Constant.MOD_ID, "storage_upgrade"), new BakedModelItemRocketPartRenderer(new ItemStack(Items.CHEST), null));
-        RocketPartRendererRegistry.INSTANCE.register(new Identifier(Constant.MOD_ID, "booster_1"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Myron.getModel(BOOSTER_TIER_1))), RenderLayer::getCutout));
-        RocketPartRendererRegistry.INSTANCE.register(new Identifier(Constant.MOD_ID, "booster_2"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Myron.getModel(BOOSTER_TIER_2))), RenderLayer::getCutout));
+        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "default_cone"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(/*Myron.getModel(DEFAULT_CONE)*/EMPTY_MODEL)), RenderType::cutout));
+        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "advanced_cone"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(/*Myron.getModel(ADVANCED_CONE)*/EMPTY_MODEL)), RenderType::cutout));
+        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "sloped_cone"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(/*Myron.getModel(SLOPED_CONE)*/EMPTY_MODEL)), RenderType::cutout));
+        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "default_body"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(/*Myron.getModel(DEFAULT_BODY)*/EMPTY_MODEL)), RenderType::cutout));
+        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "default_fin"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(/*Myron.getModel(DEFAULT_FIN)*/EMPTY_MODEL)), RenderType::cutout));
+        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "default_upgrade"), new BakedModelItemRocketPartRenderer(Items.BARRIER.getDefaultInstance(), null));
+        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "default_bottom"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(/*Myron.getModel(DEFAULT_BOTTOM)*/EMPTY_MODEL)), RenderType::cutout));
+        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "default_booster"), new BakedModelItemRocketPartRenderer(Items.BARRIER.getDefaultInstance(), null));
+        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "storage_upgrade"), new BakedModelItemRocketPartRenderer(Items.CHEST.getDefaultInstance(), null));
+        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "booster_1"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(/*Myron.getModel(BOOSTER_TIER_1)*/EMPTY_MODEL)), RenderType::cutout));
+        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "booster_2"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(/*Myron.getModel(BOOSTER_TIER_2)*/EMPTY_MODEL)), RenderType::cutout));
     }
 
     public static void registerModelLoader() {

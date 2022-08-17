@@ -41,12 +41,12 @@ public class GalacticraftRecipe {
     public static final RocketAssemblerRecipe.Serializer ROCKET_ASSEMBLER_SERIALIZER = RocketAssemblerRecipe.Serializer.INSTANCE;
 
     public static void register() {
-        Registry.register(Registry.RECIPE_TYPE, new Identifier(Constant.MOD_ID, Constant.Recipe.ASSEMBLING), ROCKET_ASSEMBLER_TYPE);
+        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.ASSEMBLING), ROCKET_ASSEMBLER_TYPE);
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.FABRICATION), FABRICATION_TYPE);
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.COMPRESSING), COMPRESSING_TYPE);
         Registry.register(Registry.RECIPE_SERIALIZER, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.Serializer.FABRICATION), FABRICATION_SERIALIZER);
         Registry.register(Registry.RECIPE_SERIALIZER, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPELESS), SHAPELESS_COMPRESSING_SERIALIZER);
         Registry.register(Registry.RECIPE_SERIALIZER, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPED), SHAPED_COMPRESSING_SERIALIZER);
-        Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(Constant.MOD_ID, Constant.Recipe.ASSEMBLING), ROCKET_ASSEMBLER_SERIALIZER);
+        Registry.register(Registry.RECIPE_SERIALIZER, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.ASSEMBLING), ROCKET_ASSEMBLER_SERIALIZER);
     }
 }

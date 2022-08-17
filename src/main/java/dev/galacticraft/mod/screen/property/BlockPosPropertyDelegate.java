@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,14 @@
 
 package dev.galacticraft.mod.screen.property;
 
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.inventory.ContainerData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public record BlockPosPropertyDelegate(Supplier<@NotNull BlockPos> supplier, Consumer<@NotNull BlockPos> consumer) implements PropertyDelegate {
+public record BlockPosPropertyDelegate(Supplier<@NotNull BlockPos> supplier, Consumer<@NotNull BlockPos> consumer) implements ContainerData {
 
     @Override
     public int get(int index) {
@@ -45,14 +45,14 @@ public record BlockPosPropertyDelegate(Supplier<@NotNull BlockPos> supplier, Con
         if (index == 0) {
             consumer.accept(new BlockPos(value, pos.getY(), pos.getZ()));
         } else if (index == 1) {
-            consumer.accept(pos.withY(value));
+            consumer.accept(pos.atY(value));
         } else {
             consumer.accept(new BlockPos(pos.getX(), pos.getY(), value));
         }
     }
 
     @Override
-    public int size() {
+    public int getCount() {
         return 3;
     }
 }

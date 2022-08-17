@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,34 +23,32 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import dev.galacticraft.mod.Constant;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.*;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.NarratorManager;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 public class SpaceTravelScreen extends Screen {
-    private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/block/tin_decoration.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/block/tin_decoration.png");
     private static final String[] POSSIBLE_TEXTS = new String[]{
-            I18n.translate("ui.galacticraft.small_step"),
-            I18n.translate("ui.galacticraft.giant_leap"),
-            I18n.translate("ui.galacticraft.prepare_for_entry")
+            I18n.get("ui.galacticraft.small_step"),
+            I18n.get("ui.galacticraft.giant_leap"),
+            I18n.get("ui.galacticraft.prepare_for_entry")
     };
-    private static final TranslatableText TRAVELLING_TO = new TranslatableText("ui.galacticraft.travelling_to");
+    private static final Component TRAVELLING_TO = Component.translatable("ui.galacticraft.travelling_to");
     private final int text;
     private String dots = ".";
     private final String planet;
-    private final RegistryKey<World> target;
+    private final ResourceKey<Level> target;
 
-    protected SpaceTravelScreen(String planetKey, RegistryKey<World> target) {
+    protected SpaceTravelScreen(String planetKey, ResourceKey<Level> target) {
         super(NarratorManager.EMPTY);
-        this.planet = I18n.translate(planetKey);
+        this.planet = I18n.get(planetKey);
         this.target = target;
         this.text = (int) (System.currentTimeMillis() % 3);
     }
@@ -61,29 +59,29 @@ public class SpaceTravelScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuilder();
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
-        this.client.getTextureManager().bindTexture(TEXTURE);
+        this.minecraft.getTextureManager().bindForSetup(TEXTURE);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
-        bufferBuilder.vertex(0.0D, this.height, 0.0D).color(200, 200, 200, 255).texture(0.0F, (float)this.height / 32.0F).next();
-        bufferBuilder.vertex(this.width, this.height, 0.0D).color(200, 200, 200, 255).texture((float)this.width / 32.0F, (float)this.height / 32.0F).next();
-        bufferBuilder.vertex(this.width, 0.0D, 0.0D).color(200, 200, 200, 255).texture((float)this.width / 32.0F, 0.0F).next();
-        bufferBuilder.vertex(0.0D, 0.0D, 0.0D).color(200, 200, 200, 255).texture(0.0F, 0.0F).next();
-        tessellator.draw();
-        if (client.world.random.nextInt(30) == 1) {
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+        bufferBuilder.vertex(0.0D, this.height, 0.0D).color(200, 200, 200, 255).uv(0.0F, (float)this.height / 32.0F).endVertex();
+        bufferBuilder.vertex(this.width, this.height, 0.0D).color(200, 200, 200, 255).uv((float)this.width / 32.0F, (float)this.height / 32.0F).endVertex();
+        bufferBuilder.vertex(this.width, 0.0D, 0.0D).color(200, 200, 200, 255).uv((float)this.width / 32.0F, 0.0F).endVertex();
+        bufferBuilder.vertex(0.0D, 0.0D, 0.0D).color(200, 200, 200, 255).uv(0.0F, 0.0F).endVertex();
+        tessellator.end();
+        if (minecraft.level.random.nextInt(30) == 1) {
             if (dots.equals("...")) {
                 dots = ".";
             } else {
                 dots += '.';
             }
         }
-        drawCenteredText(matrices, this.textRenderer, TRAVELLING_TO.append(this.planet), this.width / 2, this.height / 2 - 40, 16777215);
-        drawCenteredText(matrices, this.textRenderer, new LiteralText(POSSIBLE_TEXTS[this.text] + dots), this.width / 2, this.height / 2 - 50, 16777215);
+        drawCenteredString(matrices, this.font, TRAVELLING_TO.append(this.planet), this.width / 2, this.height / 2 - 40, 16777215);
+        drawCenteredString(matrices, this.font, Component.literal(POSSIBLE_TEXTS[this.text] + dots), this.width / 2, this.height / 2 - 50, 16777215);
         super.render(matrices, mouseX, mouseY, delta);
-        if (client.world.getRegistryKey().equals(this.target)) this.client.setScreen(null);
+        if (minecraft.level.dimension().equals(this.target)) this.minecraft.setScreen(null);
     }
 
     @Override

@@ -191,8 +191,8 @@ public class ConfigManagerImpl implements ConfigManager {
         );
 
         machines.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.ROCKET_ASSEMBLER_ENERGY_CONSUMPTION_RATE),
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.ROCKET_ASSEMBLER_ENERGY_CONSUMPTION_RATE),
                 this.config.rocketAssemblerEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setRocketAssemblerEnergyConsumptionRate)
                 .setDefaultValue(20)
@@ -247,11 +247,11 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        SubCategoryBuilder misc_machines = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constant.Config.MISC_MACHINES));
+        SubCategoryBuilder misc_machines = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Constant.Config.MISC_MACHINES));
 
         misc_machines.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.ROCKET_ASSEMBLER_PROCESS_TIME),
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.ROCKET_ASSEMBLER_PROCESS_TIME),
                 this.config.rocketAssemblerProcessTime())
                 .setSaveConsumer(this.config::setRocketAssemblerProcessTime)
                 .setDefaultValue(24000)

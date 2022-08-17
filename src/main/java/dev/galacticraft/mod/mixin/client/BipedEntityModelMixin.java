@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,9 @@ package dev.galacticraft.mod.mixin.client;
 import dev.galacticraft.mod.entity.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(BipedEntityModel.class)
+@Mixin(HumanoidModel.class)
 @Environment(EnvType.CLIENT)
 public abstract class BipedEntityModelMixin<T extends LivingEntity> {
     @Final @Shadow public ModelPart head;
@@ -54,11 +54,11 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
 
     @Shadow @Final public ModelPart body;
 
-    @Inject(at = @At("HEAD"), method = "setAngles")
+    @Inject(at = @At("HEAD"), method = "setupAnim")
     private void standInRocketGC(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo ci) {
-        if (((BipedEntityModel<T>) (Object) this).riding) {
+        if (((HumanoidModel<T>) (Object) this).riding) {
             if (livingEntity.getVehicle() instanceof RocketEntity) {
-                ((BipedEntityModel<T>) (Object) this).riding = false;
+                ((HumanoidModel<T>) (Object) this).riding = false;
             }
         }
     }
@@ -73,23 +73,23 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
 //        }
 //    }
 
-    @Inject(method = "setAngles", at = @At(value = "RETURN"))
+    @Inject(method = "setupAnim", at = @At(value = "RETURN"))
     private void rotateToMatchRocketHeadRender(T entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
-        if (entity.hasVehicle()) {
+        if (entity.isPassenger()) {
             if (entity.getVehicle() instanceof RocketEntity) {
-                this.head.pitch = 0.0F;
-                this.leftArm.pitch = 0.0F;
-                this.leftArm.yaw = entity.getVehicle().getPitch() * -1.0F;
-                this.rightArm.pitch = 0.0F;
-                this.rightArm.yaw = entity.getVehicle().getPitch() * -1.0F;
-                this.leftLeg.pitch = 0.0F;
-                this.leftLeg.yaw = entity.getVehicle().getPitch() * -1.0F;
-                this.rightLeg.pitch = 0.0F;
-                this.rightLeg.yaw = entity.getVehicle().getPitch() * -1.0F;
-                this.hat.pitch = 0.0F;
-                this.hat.yaw = entity.getVehicle().getPitch() * -1.0F;
-                this.body.pitch = 0.0F;
-                this.body.yaw = entity.getVehicle().getPitch() * -1.0F;
+                this.head.xRot = 0.0F;
+                this.leftArm.xRot = 0.0F;
+                this.leftArm.yRot = entity.getVehicle().getXRot() * -1.0F;
+                this.rightArm.xRot = 0.0F;
+                this.rightArm.yRot = entity.getVehicle().getXRot() * -1.0F;
+                this.leftLeg.xRot = 0.0F;
+                this.leftLeg.yRot = entity.getVehicle().getXRot() * -1.0F;
+                this.rightLeg.xRot = 0.0F;
+                this.rightLeg.yRot = entity.getVehicle().getXRot() * -1.0F;
+                this.hat.xRot = 0.0F;
+                this.hat.yRot = entity.getVehicle().getXRot() * -1.0F;
+                this.body.xRot = 0.0F;
+                this.body.yRot = entity.getVehicle().getXRot() * -1.0F;
             }
         }
     }

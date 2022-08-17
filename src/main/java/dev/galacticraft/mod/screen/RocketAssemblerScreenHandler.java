@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,37 +22,35 @@
 
 package dev.galacticraft.mod.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.block.entity.RocketAssemblerBlockEntity;
 import dev.galacticraft.mod.item.GalacticraftItem;
-import dev.galacticraft.mod.util.EnergyUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketAssemblerScreenHandler extends ScreenHandler {
+public class RocketAssemblerScreenHandler extends AbstractContainerMenu {
 
-    protected Inventory inventory;
-    public final PlayerEntity player;
+    protected Container inventory;
+    public final Player player;
     public final RocketAssemblerBlockEntity assembler;
 
-    public RocketAssemblerScreenHandler(int syncId, PlayerEntity player, RocketAssemblerBlockEntity assembler) {
+    public RocketAssemblerScreenHandler(int syncId, Player player, RocketAssemblerBlockEntity assembler) {
         super(GalacticraftScreenHandlerType.ROCKET_ASSEMBLER_HANDLER, syncId);
         this.player = player;
         this.assembler = assembler;
         this.inventory = new InventoryFixedWrapper(assembler.getInventory()) {
             @Override
-            public boolean canPlayerUse(PlayerEntity player) {
+            public boolean canPlayerUse(Player player) {
                 return player == RocketAssemblerScreenHandler.this.player;
             }
         };
@@ -60,13 +58,13 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         final int playerInvYOffset = 94;
         final int playerInvXOffset = 148;
 
-        Registry<RocketPart> registry = RocketPart.getRegistry(player.getEntityWorld().getRegistryManager());
+        Registry<RocketPart> registry = RocketPart.getRegistry(player.getCommandSenderWorld().registryAccess());
 
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.SCHEMATIC_INPUT_SLOT, 235, 19) {
             @Override
-            public boolean canInsert(ItemStack stack) {
-                RocketData data = RocketData.fromNbt(stack.getNbt());
-                return this.getStack().isEmpty() || (stack.getItem() == GalacticraftItem.ROCKET_SCHEMATIC
+            public boolean mayPlace(ItemStack stack) {
+                RocketData data = RocketData.fromNbt(stack.getTag());
+                return this.getItem().isEmpty() || (stack.getItem() == GalacticraftItem.ROCKET_SCHEMATIC
                         && RocketPart.getById(registry, data.cone()).isUnlocked(player)
                         && RocketPart.getById(registry, data.body()).isUnlocked(player)
                         && RocketPart.getById(registry, data.booster()).isUnlocked(player)
@@ -77,7 +75,7 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
             }
 
             @Override
-            public boolean canTakeItems(PlayerEntity playerEntity) {
+            public boolean canTakeItems(Player playerEntity) {
                 return true;
             }
         });
@@ -90,7 +88,7 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
             }
 
             @Override
-            public boolean canTakeItems(PlayerEntity playerEntity_1) {
+            public boolean canTakeItems(Player playerEntity_1) {
                 return true;
             }
         });
@@ -98,11 +96,11 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.ENERGY_INPUT_SLOT, 156, 72) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
-                return EnergyUtil.isEnergyExtractable(itemStack_1) && this.getStack().isEmpty();
+                return EnergyUtil.isEnergyExtractable(itemStack_1) && this.getItem().isEmpty();
             }
 
             @Override
-            public boolean canTakeItems(PlayerEntity playerEntity_1) {
+            public boolean canTakeItems(Player playerEntity_1) {
                 return true;
             }
         });
@@ -120,12 +118,12 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         }
     }
 
-    public RocketAssemblerScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (RocketAssemblerBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public RocketAssemblerScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (RocketAssemblerBlockEntity) inv.player.getLevel().getBlockEntity(buf.readBlockPos()));
     }
 
 //    @Override
-//    public void onSlotClick(int i, int j, SlotActionType actionType, PlayerEntity playerEntity) {
+//    public void onSlotClick(int i, int j, SlotActionType actionType, Player playerEntity) {
 //        if (actionType == SlotActionType.QUICK_MOVE) {
 //            if (slots.get(i).getStack().getItem() != GalacticraftItem.ROCKET_SCHEMATIC) {
 //                return ItemStack.EMPTY;
@@ -143,7 +141,7 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
 //    }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
+    public boolean canUse(Player player) {
         return true;
     }
 }

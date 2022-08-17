@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,35 +22,33 @@
 
 package dev.galacticraft.mod.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import dev.galacticraft.mod.block.entity.RocketDesignerBlockEntity;
 import dev.galacticraft.mod.item.GalacticraftItem;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class RocketDesignerScreenHandler extends ScreenHandler {
+public class RocketDesignerScreenHandler extends AbstractContainerMenu {
 
-    public final PlayerEntity player;
+    public final Player player;
     protected Inventory inventory;
     public RocketDesignerBlockEntity designer;
 
-    public RocketDesignerScreenHandler(int syncId, PlayerEntity player, RocketDesignerBlockEntity machine) {
+    public RocketDesignerScreenHandler(int syncId, Player player, RocketDesignerBlockEntity machine) {
         super(GalacticraftScreenHandlerType.ROCKET_DESIGNER_HANDLER, syncId);
         this.designer = machine;
-        this.inventory = new InventoryFixedWrapper(machine.getInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity invPlayer) {
-                return invPlayer == RocketDesignerScreenHandler.this.player;
-            }
-        };
+//        this.inventory = new InventoryFixedWrapper(machine.getInventory()) {
+//            @Override
+//            public boolean canPlayerUse(Player invPlayer) {
+//                return invPlayer == RocketDesignerScreenHandler.this.player;
+//            }
+//        };
 
         int playerInvYOffset = 84;
         int playerInvXOffset = 148;
@@ -58,12 +56,12 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
         // Output slot
         this.addSlot(new Slot(this.inventory, RocketDesignerBlockEntity.SCHEMATIC_OUTPUT_SLOT, 8 + (8 * 18) + playerInvXOffset + 3 - 1, (playerInvYOffset - 21) - 6) {
             @Override
-            public boolean canInsert(ItemStack itemStack_1) {
-                return itemStack_1.getItem() == GalacticraftItem.ROCKET_SCHEMATIC;
+            public boolean mayPlace(ItemStack itemStack_1) {
+                return true;//itemStack_1.getItem() == GalacticraftItem.ROCKET_SCHEMATIC;
             }
 
             @Override
-            public boolean canTakeItems(PlayerEntity playerEntity_1) {
+            public boolean mayPickup(Player playerEntity_1) {
                 return true;
             }
         });
@@ -82,42 +80,42 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
         this.player = player;
     }
 
-    public RocketDesignerScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (RocketDesignerBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public RocketDesignerScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (RocketDesignerBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 
     @Override
-    public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
+    public ItemStack quickMoveStack(Player playerEntity, int slotId) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotId);
 
-        if (slot != null && slot.hasStack()) {
-            ItemStack itemStack1 = slot.getStack();
-            itemStack = itemStack1.copy();
-
-            if (itemStack.isEmpty()) {
-                return itemStack;
-            }
-
-            if (slotId < this.designer.getInventory().getSlotCount()) {
-
-                if (!this.insertItem(itemStack1, this.inventory.size(), this.slots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!this.insertItem(itemStack1, 0, this.inventory.size(), false)) {
-                return ItemStack.EMPTY;
-            }
-            if (itemStack1.getCount() == 0) {
-                slot.setStack(ItemStack.EMPTY);
-            } else {
-                slot.markDirty();
-            }
-        }
+//        if (slot != null && slot.hasStack()) {
+//            ItemStack itemStack1 = slot.getStack();
+//            itemStack = itemStack1.copy();
+//
+//            if (itemStack.isEmpty()) {
+//                return itemStack;
+//            }
+//
+//            if (slotId < this.designer.getInventory().getSlotCount()) {
+//
+//                if (!this.insertItem(itemStack1, this.inventory.size(), this.slots.size(), true)) {
+//                    return ItemStack.EMPTY;
+//                }
+//            } else if (!this.insertItem(itemStack1, 0, this.inventory.size(), false)) {
+//                return ItemStack.EMPTY;
+//            }
+//            if (itemStack1.getCount() == 0) {
+//                slot.setStack(ItemStack.EMPTY);
+//            } else {
+//                slot.markDirty();
+//            }
+//        }
         return itemStack;
     }
 
 //    @Override
-//    public void onSlotClick(int i, int j, SlotActionType actionType, PlayerEntity playerEntity) {
+//    public void onSlotClick(int i, int j, SlotActionType actionType, Player playerEntity) {
 //        if (actionType == SlotActionType.QUICK_MOVE) {
 //            if (slots.get(i).getStack().getItem() != GalacticraftItem.ROCKET_SCHEMATIC) {
 //                return ItemStack.EMPTY;
@@ -135,7 +133,7 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
 //    }
 
     @Override
-    public boolean canUse(PlayerEntity playerEntity) {
+    public boolean stillValid(Player playerEntity) {
         return true;
     }
 }

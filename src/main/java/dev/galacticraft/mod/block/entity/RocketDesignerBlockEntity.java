@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +22,21 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -48,7 +44,7 @@ import java.util.Objects;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+public class RocketDesignerBlockEntity extends BlockEntity/* implements BlockEntityClientSerializable*/ {
 
     public static final int SCHEMATIC_OUTPUT_SLOT = 0;
 
@@ -57,45 +53,45 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     private int blue = 255;
     private int alpha = 255;
 
-    private Identifier cone = null;
-    private Identifier body = null;
-    private Identifier fin = null;
-    private Identifier booster = null;
-    private Identifier bottom = null;
-    private Identifier upgrade = null;
+    private ResourceLocation cone = null;
+    private ResourceLocation body = null;
+    private ResourceLocation fin = null;
+    private ResourceLocation booster = null;
+    private ResourceLocation bottom = null;
+    private ResourceLocation upgrade = null;
 
-    private final FullFixedItemInv inventory = new FullFixedItemInv(1) {
-        @Override
-        public boolean isItemValidForSlot(int slot, ItemStack item) {
-            return this.getFilterForSlot(slot).matches(item);
-        }
-
-        @Override
-        public ItemFilter getFilterForSlot(int slot) {
-            return stack -> stack.getItem() == GalacticraftItem.ROCKET_SCHEMATIC;
-        }
-    };
+//    private final FullFixedItemInv inventory = new FullFixedItemInv(1) {
+//        @Override
+//        public boolean isItemValidForSlot(int slot, ItemStack item) {
+//            return this.getFilterForSlot(slot).matches(item);
+//        }
+//
+//        @Override
+//        public ItemFilter getFilterForSlot(int slot) {
+//            return stack -> stack.getItem() == GalacticraftItem.ROCKET_SCHEMATIC;
+//        }
+//    };
 
     private ItemStack previous = ItemStack.EMPTY;
 
     public RocketDesignerBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.ROCKET_DESIGNER_TYPE, pos, state);
 
-        this.inventory.addListener((view, slot, prev, cur) -> {
-            if (!previous.getOrCreateNbt().equals(inventory.getInvStack(0).getNbt())) {
-                this.updateSchematic();
-            }
-            previous = inventory.getInvStack(0).copy();
-        }, () -> {});
+//        this.inventory.addListener((view, slot, prev, cur) -> {
+//            if (!previous.getOrCreateNbt().equals(inventory.getInvStack(0).getNbt())) {
+//                this.updateSchematic();
+//            }
+//            previous = inventory.getInvStack(0).copy();
+//        }, () -> {});
     }
 
-    public FullFixedItemInv getInventory() {
-        return inventory;
-    }
+//    public FullFixedItemInv getInventory() {
+//        return inventory;
+//    }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
 
         tag.putInt("red", red);
         tag.putInt("green", green);
@@ -108,39 +104,37 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
         if (booster != null) tag.putString("booster", booster.toString());
         if (bottom != null) tag.putString("bottom", bottom.toString());
         if (upgrade != null) tag.putString("upgrade", upgrade.toString());
-
-        return tag;
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
 
         if (tag.contains("red")) red = tag.getInt("red");
         if (tag.contains("green")) green = tag.getInt("green");
         if (tag.contains("blue")) tag.getInt("blue");
         if (tag.contains("alpha")) alpha = tag.getInt("alpha");
 
-        if (tag.contains("cone")) cone = new Identifier(tag.getString("cone"));
-        if (tag.contains("body")) body = new Identifier(tag.getString("body"));
-        if (tag.contains("fin")) fin = new Identifier(tag.getString("fin"));
-        if (tag.contains("booster")) booster = new Identifier(tag.getString("booster"));
-        if (tag.contains("bottom")) bottom = new Identifier(tag.getString("bottom"));
-        if (tag.contains("upgrade")) upgrade = new Identifier(tag.getString("upgrade"));
+        if (tag.contains("cone")) cone = new ResourceLocation(tag.getString("cone"));
+        if (tag.contains("body")) body = new ResourceLocation(tag.getString("body"));
+        if (tag.contains("fin")) fin = new ResourceLocation(tag.getString("fin"));
+        if (tag.contains("booster")) booster = new ResourceLocation(tag.getString("booster"));
+        if (tag.contains("bottom")) bottom = new ResourceLocation(tag.getString("bottom"));
+        if (tag.contains("upgrade")) upgrade = new ResourceLocation(tag.getString("upgrade"));
     }
 
-    @Override
-    public void fromClientTag(NbtCompound nbtCompound) {
-        this.readNbt(nbtCompound);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound nbtCompound) {
-        return this.writeNbt(nbtCompound);
-    }
+//    @Override
+//    public void fromClientTag(NbtCompound nbtCompound) {
+//        this.readNbt(nbtCompound);
+//    }
+//
+//    @Override
+//    public NbtCompound toClientTag(NbtCompound nbtCompound) {
+//        return this.writeNbt(nbtCompound);
+//    }
 
     @Nullable
-    public Identifier getPart(RocketPartType type) {
+    public ResourceLocation getPart(RocketPartType type) {
         return switch (type) {
             case BOOSTER -> booster;
             case BOTTOM -> bottom;
@@ -151,7 +145,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
         };
     }
 
-    public void setPart(Identifier part, RocketPartType type) {
+    public void setPart(ResourceLocation part, RocketPartType type) {
         switch (type) {
             case BOOSTER -> booster = part;
             case BOTTOM -> bottom = part;
@@ -163,15 +157,15 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     }
 
     @Environment(EnvType.CLIENT)
-    public void setPartClient(Identifier part, RocketPartType type) {
-        assert world.isClient;
+    public void setPartClient(ResourceLocation part, RocketPartType type) {
+        assert level.isClientSide;
         this.setPart(part, type);
         this.sendDesignerPartUpdate(part);
     }
 
     @Environment(EnvType.CLIENT)
-    private void sendDesignerPartUpdate(Identifier part) {
-        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "designer_part"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeIdentifier(part)));
+    private void sendDesignerPartUpdate(ResourceLocation part) {
+        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "designer_part"), PacketByteBufs.create().writeBlockPos(worldPosition).writeResourceLocation(part));
     }
 
     public int getRed() {
@@ -208,48 +202,48 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
     @Environment(EnvType.CLIENT)
     public void setRedClient(int red) {
-        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "designer_red"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(red - 128))));
+        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "designer_red"), new FriendlyByteBuf(PacketByteBufs.create().writeBlockPos(worldPosition).writeByte(red - 128)));
         this.red = red;
     }
 
     @Environment(EnvType.CLIENT)
     public void setGreenClient(int green) {
-        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "designer_green"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(green - 128))));
+       ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "designer_green"), new FriendlyByteBuf(PacketByteBufs.create().writeBlockPos(worldPosition).writeByte(green - 128)));
         this.green = green;
     }
 
     @Environment(EnvType.CLIENT)
     public void setBlueClient(int blue) {
-        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "designer_blue"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(blue - 128))));
+        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "designer_blue"), new FriendlyByteBuf(PacketByteBufs.create().writeBlockPos(worldPosition).writeByte(blue - 128)));
         this.blue = blue;
     }
 
     @Environment(EnvType.CLIENT)
     public void setAlphaClient(int alpha) {
-        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "designer_alpha"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(alpha - 128))));
+        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "designer_alpha"), new FriendlyByteBuf(PacketByteBufs.create().writeBlockPos(worldPosition).writeByte(alpha - 128)));
         this.alpha = alpha;
     }
 
     public void updateSchematic() {
-        if (this.world != null && !this.world.isClient) {
-            if (this.inventory.getInvStack(0).getItem() == GalacticraftItem.ROCKET_SCHEMATIC) {
-                ItemStack stack = this.inventory.getInvStack(0).copy();
-                NbtCompound tag = new NbtCompound();
-                tag.putInt("red", red);
-                tag.putInt("green", green);
-                tag.putInt("blue", blue);
-                tag.putInt("alpha", alpha);
-
-                tag.putString("cone", cone.toString());
-                tag.putString("body", body.toString());
-                tag.putString("fin", fin.toString());
-                tag.putString("booster", booster.toString());
-                tag.putString("bottom", bottom.toString());
-                tag.putString("upgrade", upgrade.toString());
-
-                stack.setNbt(tag);
-                if (!this.inventory.getInvStack(0).getOrCreateNbt().equals(tag)) this.inventory.setInvStack(0, stack, Simulation.ACTION);
-            }
+        if (this.level != null && !this.level.isClientSide) {
+//            if (this.inventory.getInvStack(0).getItem() == GalacticraftItem.ROCKET_SCHEMATIC) {
+//                ItemStack stack = this.inventory.getInvStack(0).copy();
+//                CompoundTag tag = new CompoundTag();
+//                tag.putInt("red", red);
+//                tag.putInt("green", green);
+//                tag.putInt("blue", blue);
+//                tag.putInt("alpha", alpha);
+//
+//                tag.putString("cone", cone.toString());
+//                tag.putString("body", body.toString());
+//                tag.putString("fin", fin.toString());
+//                tag.putString("booster", booster.toString());
+//                tag.putString("bottom", bottom.toString());
+//                tag.putString("upgrade", upgrade.toString());
+//
+//                stack.setTag(tag);
+//                if (!this.inventory.getInvStack(0).getOrCreateNbt().equals(tag)) this.inventory.setInvStack(0, stack, Simulation.ACTION);
+//            }
         }
     }
 }

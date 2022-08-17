@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.api.math;
 
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.math.Vector4f;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
+import com.mojang.math.Vector4f;
 
 import java.nio.FloatBuffer;
 
@@ -42,22 +42,22 @@ public class Matrix4
     public float m30, m31, m32, m33;
 
     public Matrix4(Matrix4f matrix4f) {
-        this.m00 = matrix4f.a00;
-        this.m01 = matrix4f.a01;
-        this.m02 = matrix4f.a02;
-        this.m03 = matrix4f.a03;
-        this.m10 = matrix4f.a10;
-        this.m11 = matrix4f.a11;
-        this.m12 = matrix4f.a12;
-        this.m13 = matrix4f.a13;
-        this.m20 = matrix4f.a20;
-        this.m21 = matrix4f.a21;
-        this.m22 = matrix4f.a22;
-        this.m23 = matrix4f.a23;
-        this.m30 = matrix4f.a30;
-        this.m31 = matrix4f.a31;
-        this.m32 = matrix4f.a32;
-        this.m33 = matrix4f.a33;
+        this.m00 = matrix4f.m00;
+        this.m01 = matrix4f.m01;
+        this.m02 = matrix4f.m02;
+        this.m03 = matrix4f.m03;
+        this.m10 = matrix4f.m10;
+        this.m11 = matrix4f.m11;
+        this.m12 = matrix4f.m12;
+        this.m13 = matrix4f.m13;
+        this.m20 = matrix4f.m20;
+        this.m21 = matrix4f.m21;
+        this.m22 = matrix4f.m22;
+        this.m23 = matrix4f.m23;
+        this.m30 = matrix4f.m30;
+        this.m31 = matrix4f.m31;
+        this.m32 = matrix4f.m32;
+        this.m33 = matrix4f.m33;
     }
     /**
      * Creates a 4x4 identity matrix.
@@ -480,17 +480,17 @@ public class Matrix4
         return translation;
     }
 
-    public static Matrix4 translate(Vec3f vec, Matrix4 src, Matrix4 dest)
+    public static Matrix4 translate(Vector3f vec, Matrix4 src, Matrix4 dest)
     {
         if (dest == null)
         {
             dest = new Matrix4();
         }
 
-        dest.m30 += src.m00 * vec.getX() + src.m10 * vec.getY() + src.m20 * vec.getZ();
-        dest.m31 += src.m01 * vec.getX() + src.m11 * vec.getY() + src.m21 * vec.getZ();
-        dest.m32 += src.m02 * vec.getX() + src.m12 * vec.getY() + src.m22 * vec.getZ();
-        dest.m33 += src.m03 * vec.getX() + src.m13 * vec.getY() + src.m23 * vec.getZ();
+        dest.m30 += src.m00 * vec.x() + src.m10 * vec.y() + src.m20 * vec.z();
+        dest.m31 += src.m01 * vec.x() + src.m11 * vec.y() + src.m21 * vec.z();
+        dest.m32 += src.m02 * vec.x() + src.m12 * vec.y() + src.m22 * vec.z();
+        dest.m33 += src.m03 * vec.x() + src.m13 * vec.y() + src.m23 * vec.z();
 
         return dest;
     }
@@ -503,12 +503,12 @@ public class Matrix4
      * @param axis  axis of rotation
      * @return Rotation matrix
      */
-    public static Matrix4 rotate(float angle, Vec3f axis)
+    public static Matrix4 rotate(float angle, Vector3f axis)
     {
         return rotate(angle, axis, new Matrix4(), new Matrix4());
     }
 
-    public static Matrix4 rotate(float angle, Vec3f axis, Matrix4 src, Matrix4 dest)
+    public static Matrix4 rotate(float angle, Vector3f axis, Matrix4 src, Matrix4 dest)
     {
         if (dest == null)
         {
@@ -518,24 +518,24 @@ public class Matrix4
         float c = (float) Math.cos(angle);
         float s = (float) Math.sin(angle);
         float oneminusc = 1.0f - c;
-        float xy = axis.getX() * axis.getY();
-        float yz = axis.getY() * axis.getZ();
-        float xz = axis.getX() * axis.getZ();
-        float xs = axis.getX() * s;
-        float ys = axis.getY() * s;
-        float zs = axis.getZ() * s;
+        float xy = axis.x() * axis.y();
+        float yz = axis.y() * axis.z();
+        float xz = axis.x() * axis.z();
+        float xs = axis.x() * s;
+        float ys = axis.y() * s;
+        float zs = axis.z() * s;
 
-        float f00 = axis.getX() * axis.getX() * oneminusc + c;
+        float f00 = axis.x() * axis.x() * oneminusc + c;
         float f01 = xy * oneminusc + zs;
         float f02 = xz * oneminusc - ys;
         // n[3] not used
         float f10 = xy * oneminusc - zs;
-        float f11 = axis.getY() * axis.getY() * oneminusc + c;
+        float f11 = axis.y() * axis.y() * oneminusc + c;
         float f12 = yz * oneminusc + xs;
         // n[7] not used
         float f20 = xz * oneminusc + ys;
         float f21 = yz * oneminusc - xs;
-        float f22 = axis.getZ() * axis.getZ() * oneminusc + c;
+        float f22 = axis.z() * axis.z() * oneminusc + c;
 
         float t00 = src.m00 * f00 + src.m10 * f01 + src.m20 * f02;
         float t01 = src.m01 * f00 + src.m11 * f01 + src.m21 * f02;
@@ -579,24 +579,24 @@ public class Matrix4
         return scaling;
     }
 
-    public static Matrix4 scale(Vec3f vec, Matrix4 src, Matrix4 dest)
+    public static Matrix4 scale(Vector3f vec, Matrix4 src, Matrix4 dest)
     {
         if (dest == null)
         {
             dest = new Matrix4();
         }
-        dest.m00 = src.m00 * vec.getX();
-        dest.m01 = src.m01 * vec.getX();
-        dest.m02 = src.m02 * vec.getX();
-        dest.m03 = src.m03 * vec.getX();
-        dest.m10 = src.m10 * vec.getY();
-        dest.m11 = src.m11 * vec.getY();
-        dest.m12 = src.m12 * vec.getY();
-        dest.m13 = src.m13 * vec.getY();
-        dest.m20 = src.m20 * vec.getZ();
-        dest.m21 = src.m21 * vec.getZ();
-        dest.m22 = src.m22 * vec.getZ();
-        dest.m23 = src.m23 * vec.getZ();
+        dest.m00 = src.m00 * vec.x();
+        dest.m01 = src.m01 * vec.x();
+        dest.m02 = src.m02 * vec.x();
+        dest.m03 = src.m03 * vec.x();
+        dest.m10 = src.m10 * vec.y();
+        dest.m11 = src.m11 * vec.y();
+        dest.m12 = src.m12 * vec.y();
+        dest.m13 = src.m13 * vec.y();
+        dest.m20 = src.m20 * vec.z();
+        dest.m21 = src.m21 * vec.z();
+        dest.m22 = src.m22 * vec.z();
+        dest.m23 = src.m23 * vec.z();
         return dest;
     }
 
@@ -623,10 +623,10 @@ public class Matrix4
 
     public static Vector4f transform(Matrix4 left, Vector4f right)
     {
-        float x = left.m00 * right.getX() + left.m10 * right.getY() + left.m20 * right.getZ() + left.m30 * right.getW();
-        float y = left.m01 * right.getX() + left.m11 * right.getY() + left.m21 * right.getZ() + left.m31 * right.getW();
-        float z = left.m02 * right.getX() + left.m12 * right.getY() + left.m22 * right.getZ() + left.m32 * right.getW();
-        float w = left.m03 * right.getX() + left.m13 * right.getY() + left.m23 * right.getZ() + left.m33 * right.getW();
+        float x = left.m00 * right.x() + left.m10 * right.y() + left.m20 * right.z() + left.m30 * right.w();
+        float y = left.m01 * right.x() + left.m11 * right.y() + left.m21 * right.z() + left.m31 * right.w();
+        float z = left.m02 * right.x() + left.m12 * right.y() + left.m22 * right.z() + left.m32 * right.w();
+        float w = left.m03 * right.x() + left.m13 * right.y() + left.m23 * right.z() + left.m33 * right.w();
 
         return new Vector4f(x, y, z, w);
     }

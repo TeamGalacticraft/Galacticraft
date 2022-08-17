@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,53 +22,52 @@
 
 package dev.galacticraft.mod.block.machine;
 
-import dev.galacticraft.mod.api.block.MachineBlock;
+import dev.galacticraft.api.block.MachineBlock;
 import dev.galacticraft.mod.block.entity.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class FuelLoaderBlock extends MachineBlock<FuelLoaderBlockEntity> {
-    public static final BooleanProperty CONNECTED = BooleanProperty.of("connected");
+    public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 
-    public FuelLoaderBlock(Settings settings) {
+    public FuelLoaderBlock(Properties settings) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(CONNECTED, false));
+        registerDefaultState(getStateDefinition().any().setValue(CONNECTED, false));
     }
 
     @Override
-    public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
-        super.appendProperties(stateBuilder);
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
+        super.createBlockStateDefinition(stateBuilder);
         stateBuilder.add(CONNECTED);
     }
 
     @Override
-    public FuelLoaderBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public FuelLoaderBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new FuelLoaderBlockEntity(pos, state);
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
+    public BlockState updateShape(BlockState state, Direction direction, BlockState newState, LevelAccessor world, BlockPos pos, BlockPos posFrom) {
         if (direction != Direction.UP && direction != Direction.DOWN && newState.getBlock() instanceof RocketLaunchPadBlock) {
             ((FuelLoaderBlockEntity) world.getBlockEntity(pos)).updateConnections(direction);
         }
-        return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+        return super.updateShape(state, direction, newState, world, pos, posFrom);
     }
 
     @Override
-    public Text machineInfo(ItemStack stack, BlockView view, boolean context) {
-        return new TranslatableText("tooltip.galacticraft.fuel_loader");
+    public Component machineDescription(ItemStack stack, BlockGetter view, boolean context) {
+        return Component.translatable("tooltip.galacticraft.fuel_loader");
     }
 }

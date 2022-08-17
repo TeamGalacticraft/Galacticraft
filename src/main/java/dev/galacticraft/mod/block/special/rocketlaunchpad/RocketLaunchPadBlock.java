@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,51 +25,56 @@ package dev.galacticraft.mod.block.special.rocketlaunchpad;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.entity.RocketEntity;
 import io.netty.buffer.Unpooled;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.Mth;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class RocketLaunchPadBlock extends BlockWithEntity {
-    public static final EnumProperty<Part> PART = EnumProperty.of("part", Part.class);
+public class RocketLaunchPadBlock extends BaseEntityBlock {
+    public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
     private static final Direction[] CARDINAL = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
 
-    public VoxelShape CENTER_SHAPE = VoxelShapes.cuboid(0.0D, 0.0D, 0.0D, 1.0D, 0.1875D, 1.0D);
-    public VoxelShape NORMAL_SHAPE = VoxelShapes.cuboid(0.0D, 0.0D, 0.0D, 1.0D, 1D / 8D, 1.0D);
+    public VoxelShape CENTER_SHAPE = Shapes.create(0.0D, 0.0D, 0.0D, 1.0D, 0.1875D, 1.0D);
+    public VoxelShape NORMAL_SHAPE = Shapes.create(0.0D, 0.0D, 0.0D, 1.0D, 1D / 8D, 1.0D);
 
-    public RocketLaunchPadBlock(Settings settings) {
+    public RocketLaunchPadBlock(Properties settings) {
         super(settings);
-        setDefaultState(getDefaultState().with(PART, Part.NONE));
+        registerDefaultState(defaultBlockState().setValue(PART, Part.NONE));
     }
 
     public static BlockPos partToCenterPos(Part part) {
-        if (part == null) return BlockPos.ORIGIN;
+        if (part == null) return BlockPos.ZERO;
         switch (part) {
             case NORTH:
             case SOUTH:
             case EAST:
             case WEST:
-                return new BlockPos(Direction.valueOf(part.asString().toUpperCase()).getOpposite().getOffsetX(), 0, Direction.valueOf(part.asString().toUpperCase()).getOpposite().getOffsetZ());
+                return new BlockPos(Direction.valueOf(part.getSerializedName().toUpperCase()).getOpposite().getStepX(), 0, Direction.valueOf(part.getSerializedName().toUpperCase()).getOpposite().getStepZ());
             case NONE:
             case CENTER:
-                return BlockPos.ORIGIN;
+                return BlockPos.ZERO;
             default:
-                return new BlockPos(Direction.valueOf(part.asString().split("_")[1].toUpperCase()).getOpposite().getOffsetX(), 0, Direction.valueOf(part.asString().split("_")[0].toUpperCase()).getOpposite().getOffsetZ());
+                return new BlockPos(Direction.valueOf(part.getSerializedName().split("_")[1].toUpperCase()).getOpposite().getStepX(), 0, Direction.valueOf(part.getSerializedName().split("_")[0].toUpperCase()).getOpposite().getStepZ());
         }
     }
     /*switch (part) {
@@ -94,44 +99,44 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
         }*/
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
-        super.appendProperties(stateBuilder);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
+        super.createBlockStateDefinition(stateBuilder);
         stateBuilder.add(PART);
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState blockState_1) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState blockState) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        return state.get(PART) == Part.CENTER ? CENTER_SHAPE : NORMAL_SHAPE;
+    public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+        return state.getValue(PART) == Part.CENTER ? CENTER_SHAPE : NORMAL_SHAPE;
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        super.onStateReplaced(state, world, pos, newState, moved);
-        switch (state.get(PART)) {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+        super.onRemove(state, world, pos, newState, moved);
+        switch (state.getValue(PART)) {
             case NORTH:
             case SOUTH:
             case EAST:
             case WEST: {
-                BlockPos center = pos.offset(Direction.valueOf(state.get(PART).asString().toUpperCase()).getOpposite());
+                BlockPos center = pos.relative(Direction.valueOf(state.getValue(PART).getSerializedName().toUpperCase()).getOpposite());
                 for (int x = -1; x <= 1; x++) {
                     for (int z = -1; z <= 1; z++) {
-                        if (world.getBlockState(center.add(x, 0, z)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
-                                && world.getBlockState(center.add(x, 0, z)).get(PART) != Part.NONE) {
+                        if (world.getBlockState(center.offset(x, 0, z)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
+                                && world.getBlockState(center.offset(x, 0, z)).getValue(PART) != Part.NONE) {
                             if (world.getBlockEntity(pos) instanceof RocketLaunchPadBlockEntity) {
                                 if (((RocketLaunchPadBlockEntity) world.getBlockEntity(pos)).hasRocket()) {
-                                    Entity entity = world.getEntityById(((RocketLaunchPadBlockEntity) world.getBlockEntity(pos)).getRocketEntityId());
+                                    Entity entity = world.getEntity(((RocketLaunchPadBlockEntity) world.getBlockEntity(pos)).getRocketEntityId());
                                     if (entity instanceof RocketEntity) {
                                         ((RocketEntity) entity).onBaseDestroyed();
                                     }
                                 }
                             }
-                            world.setBlockState(center.add(x, 0, z), Blocks.AIR.getDefaultState(), 3);
-                            createBlockBreakParticles(world, center.add(x, 0, z));
+                            world.setBlock(center.offset(x, 0, z), Blocks.AIR.defaultBlockState(), 3);
+                            createBlockBreakParticles(world, center.offset(x, 0, z));
                         }
                     }
                 }
@@ -141,22 +146,22 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
             case NORTH_WEST:
             case SOUTH_EAST:
             case SOUTH_WEST: {
-                String[] parts = state.get(PART).asString().split("_");
-                BlockPos center = pos.offset(Direction.valueOf(parts[0].toUpperCase()).getOpposite()).offset(Direction.valueOf(parts[1].toUpperCase()).getOpposite());
+                String[] parts = state.getValue(PART).getSerializedName().split("_");
+                BlockPos center = pos.relative(Direction.valueOf(parts[0].toUpperCase()).getOpposite()).relative(Direction.valueOf(parts[1].toUpperCase()).getOpposite());
                 for (int x = -1; x <= 1; x++) {
                     for (int z = -1; z <= 1; z++) {
-                        if (world.getBlockState(center.add(x, 0, z)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
-                                && world.getBlockState(center.add(x, 0, z)).get(PART) != Part.NONE) {
+                        if (world.getBlockState(center.offset(x, 0, z)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
+                                && world.getBlockState(center.offset(x, 0, z)).getValue(PART) != Part.NONE) {
                             if (world.getBlockEntity(pos) instanceof RocketLaunchPadBlockEntity) {
                                 if (((RocketLaunchPadBlockEntity) world.getBlockEntity(pos)).hasRocket()) {
-                                    Entity entity = world.getEntityById(((RocketLaunchPadBlockEntity) world.getBlockEntity(pos)).getRocketEntityId());
+                                    Entity entity = world.getEntity(((RocketLaunchPadBlockEntity) world.getBlockEntity(pos)).getRocketEntityId());
                                     if (entity instanceof RocketEntity) {
                                         ((RocketEntity) entity).onBaseDestroyed();
                                     }
                                 }
                             }
-                            world.setBlockState(center.add(x, 0, z), Blocks.AIR.getDefaultState(), 3);
-                            createBlockBreakParticles(world, center.add(x, 0, z));
+                            world.setBlock(center.offset(x, 0, z), Blocks.AIR.defaultBlockState(), 3);
+                            createBlockBreakParticles(world, center.offset(x, 0, z));
                         }
                     }
                 }
@@ -165,18 +170,18 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
             case CENTER: {
                 for (int x = -1; x <= 1; x++) {
                     for (int z = -1; z <= 1; z++) {
-                        if (world.getBlockState(pos.add(x, 0, z)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
-                                && world.getBlockState(pos.add(x, 0, z)).get(PART) != Part.NONE) {
+                        if (world.getBlockState(pos.offset(x, 0, z)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
+                                && world.getBlockState(pos.offset(x, 0, z)).getValue(PART) != Part.NONE) {
                             if (world.getBlockEntity(pos) instanceof RocketLaunchPadBlockEntity) {
                                 if (((RocketLaunchPadBlockEntity) world.getBlockEntity(pos)).hasRocket()) {
-                                    Entity entity = world.getEntityById(((RocketLaunchPadBlockEntity) world.getBlockEntity(pos)).getRocketEntityId());
+                                    Entity entity = world.getEntity(((RocketLaunchPadBlockEntity) world.getBlockEntity(pos)).getRocketEntityId());
                                     if (entity instanceof RocketEntity) {
                                         ((RocketEntity) entity).onBaseDestroyed();
                                     }
                                 }
                             }
-                            world.setBlockState(pos.add(x, 0, z), Blocks.AIR.getDefaultState(), 3);
-                            createBlockBreakParticles(world, pos.add(x, 0, z));
+                            world.setBlock(pos.offset(x, 0, z), Blocks.AIR.defaultBlockState(), 3);
+                            createBlockBreakParticles(world, pos.offset(x, 0, z));
                         }
                     }
                 }
@@ -186,12 +191,12 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
-        super.onBlockAdded(state, world, pos, oldState, moved);
-        if (state.get(PART) == Part.NONE) {
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean moved) {
+        super.onPlace(state, world, pos, oldState, moved);
+        if (state.getValue(PART) == Part.NONE) {
             int connections = 0;
             for (Direction direction : CARDINAL) {
-                if (world.getBlockState(pos.offset(direction)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                if (world.getBlockState(pos.relative(direction)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
                     connections++;
                 }
             }
@@ -200,10 +205,10 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
                 boolean allValid = true;
                 for (int x = -1; x <= 1; x++) {
                     for (int z = -1; z <= 1; z++) {
-                        if (world.getBlockState(pos.add(x, 0, z)).getBlock() != GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                        if (world.getBlockState(pos.offset(x, 0, z)).getBlock() != GalacticraftBlock.ROCKET_LAUNCH_PAD) {
                             allValid = false;
                             break;
-                        } else if (world.getBlockState(pos.add(x, 0, z)).get(PART) != Part.NONE) {
+                        } else if (world.getBlockState(pos.offset(x, 0, z)).getValue(PART) != Part.NONE) {
                             allValid = false;
                             break;
                         }
@@ -213,7 +218,7 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
                     for (int x = -1; x <= 1; x++) {
                         for (int z = -1; z <= 1; z++) {
                             createBlockBreakParticles(world, pos);
-                            world.setBlockState(pos.add(x, 0, z), world.getBlockState(pos.add(x, 0, z)).with(PART, getPartForOffset(x, z)));
+                            world.setBlockAndUpdate(pos.offset(x, 0, z), world.getBlockState(pos.offset(x, 0, z)).setValue(PART, getPartForOffset(x, z)));
                         }
                     }
                     return;
@@ -224,17 +229,17 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
 
             if (connections == 3) {
                 for (Direction direction : CARDINAL) {
-                    if (world.getBlockState(pos.offset(direction)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
-                        if (world.getBlockState(pos.offset(direction.getOpposite())).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                    if (world.getBlockState(pos.relative(direction)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                        if (world.getBlockState(pos.relative(direction.getOpposite())).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
                             for (Direction dir : CARDINAL) {
                                 if (dir.getAxis() != direction.getAxis()) {
                                     boolean allValid = true;
                                     for (int x = -1; x <= 1; x++) {
                                         for (int z = -1; z <= 1; z++) {
-                                            if (world.getBlockState(pos.offset(dir).add(x, 0, z)).getBlock() != GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                                            if (world.getBlockState(pos.relative(dir).offset(x, 0, z)).getBlock() != GalacticraftBlock.ROCKET_LAUNCH_PAD) {
                                                 allValid = false;
                                                 break;
-                                            } else if (world.getBlockState(pos.offset(dir).add(x, 0, z)).get(PART) != Part.NONE) {
+                                            } else if (world.getBlockState(pos.relative(dir).offset(x, 0, z)).getValue(PART) != Part.NONE) {
                                                 allValid = false;
                                                 break;
                                             }
@@ -244,8 +249,8 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
                                     if (allValid) {
                                         for (int x = -1; x <= 1; x++) {
                                             for (int z = -1; z <= 1; z++) {
-                                                createBlockBreakParticles(world, pos.offset(dir));
-                                                world.setBlockState(pos.offset(dir).add(x, 0, z), world.getBlockState(pos.offset(dir).add(x, 0, z)).with(PART, getPartForOffset(x, z)));
+                                                createBlockBreakParticles(world, pos.relative(dir));
+                                                world.setBlockAndUpdate(pos.relative(dir).offset(x, 0, z), world.getBlockState(pos.relative(dir).offset(x, 0, z)).setValue(PART, getPartForOffset(x, z)));
                                             }
                                         }
                                         return;
@@ -260,21 +265,21 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
 
             if (connections == 2) {
                 for (Direction direction : CARDINAL) {
-                    if (world.getBlockState(pos.offset(direction)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                    if (world.getBlockState(pos.relative(direction)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
                         Direction[] dirs = new Direction[]{Direction.NORTH, Direction.SOUTH};
                         if (direction.getAxis() == Direction.Axis.Z)
                             dirs = new Direction[]{Direction.EAST, Direction.WEST};
 
                         for (Direction dir : dirs) {
-                            if (world.getBlockState(pos.offset(dir)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
-                                if (world.getBlockState(pos.offset(dir).offset(direction)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                            if (world.getBlockState(pos.relative(dir)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                                if (world.getBlockState(pos.relative(dir).relative(direction)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
                                     boolean allValid = true;
                                     for (int x = -1; x <= 1; x++) {
                                         for (int z = -1; z <= 1; z++) {
-                                            if (world.getBlockState(pos.offset(dir).offset(direction).add(x, 0, z)).getBlock() != GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                                            if (world.getBlockState(pos.relative(dir).relative(direction).offset(x, 0, z)).getBlock() != GalacticraftBlock.ROCKET_LAUNCH_PAD) {
                                                 allValid = false;
                                                 break;
-                                            } else if (world.getBlockState(pos.offset(dir).offset(direction).add(x, 0, z)).get(PART) != Part.NONE) {
+                                            } else if (world.getBlockState(pos.relative(dir).relative(direction).offset(x, 0, z)).getValue(PART) != Part.NONE) {
                                                 allValid = false;
                                                 break;
                                             }
@@ -284,8 +289,8 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
                                     if (allValid) {
                                         for (int x = -1; x <= 1; x++) {
                                             for (int z = -1; z <= 1; z++) {
-                                                createBlockBreakParticles(world, pos.offset(dir).offset(direction));
-                                                world.setBlockState(pos.offset(dir).offset(direction).add(x, 0, z), world.getBlockState(pos.offset(dir).offset(direction).add(x, 0, z)).with(PART, getPartForOffset(x, z)));
+                                                createBlockBreakParticles(world, pos.relative(dir).relative(direction));
+                                                world.setBlockAndUpdate(pos.relative(dir).relative(direction).offset(x, 0, z), world.getBlockState(pos.relative(dir).relative(direction).offset(x, 0, z)).setValue(PART, getPartForOffset(x, z)));
                                             }
                                         }
                                         return;
@@ -333,17 +338,17 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
         return Part.NONE;
     }
 
-    public void createBlockBreakParticles(WorldAccess world, BlockPos pos) {
+    public void createBlockBreakParticles(LevelAccessor world, BlockPos pos) {
         if (!world.getBlockState(pos).isAir()) {
-            VoxelShape voxelShape = world.getBlockState(pos).getOutlineShape(world, pos, ShapeContext.absent());
+            VoxelShape voxelShape = world.getBlockState(pos).getShape(world, pos, CollisionContext.empty());
             double d = 0.25D;
-            voxelShape.forEachBox((dx, e, f, g, h, i) -> {
+            voxelShape.forAllBoxes((dx, e, f, g, h, i) -> {
                 double j = Math.min(1.0D, g - dx);
                 double k = Math.min(1.0D, h - e);
                 double l = Math.min(1.0D, i - f);
-                int m = Math.max(2, MathHelper.ceil(j / 0.25D));
-                int n = Math.max(2, MathHelper.ceil(k / 0.25D));
-                int o = Math.max(2, MathHelper.ceil(l / 0.25D));
+                int m = Math.max(2, Mth.ceil(j / 0.25D));
+                int n = Math.max(2, Mth.ceil(k / 0.25D));
+                int o = Math.max(2, Mth.ceil(l / 0.25D));
 
                 for (int p = 0; p < m; ++p) {
                     for (int q = 0; q < n; ++q) {
@@ -354,8 +359,8 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
                             double v = s * j + dx;
                             double w = t * k + e;
                             double x = u * l + f;
-                            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer()).writeVarInt(Block.STATE_IDS.getRawId(this.getDefaultState()));
-                            world.addParticle(BlockStateParticleEffect.PARAMETERS_FACTORY.read(ParticleTypes.BLOCK, buf), (double) pos.getX() + v, (double) pos.getY() + w, (double) pos.getZ() + x, s - 0.5D, t - 0.5D, u - 0.5D);
+                            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer()).writeVarInt(Block.BLOCK_STATE_REGISTRY.getId(this.defaultBlockState()));
+                            world.addParticle(BlockParticleOption.DESERIALIZER.fromNetwork(ParticleTypes.BLOCK, buf), (double) pos.getX() + v, (double) pos.getY() + w, (double) pos.getZ() + x, s - 0.5D, t - 0.5D, u - 0.5D);
                         }
                     }
                 }
@@ -365,17 +370,17 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
     }
 
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return !world.getBlockState(pos.offset(Direction.DOWN)).getMaterial().isReplaceable();
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        return !world.getBlockState(pos.relative(Direction.DOWN)).getMaterial().isReplaceable();
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new RocketLaunchPadBlockEntity(pos, state); //i give up on lazily creating the BE
     }
 
-    public enum Part implements StringIdentifiable {
+    public enum Part implements StringRepresentable {
         NONE,
         NORTH_WEST,
         NORTH,
@@ -388,7 +393,7 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
         SOUTH_EAST;
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return this.name().toLowerCase();
         }
     }

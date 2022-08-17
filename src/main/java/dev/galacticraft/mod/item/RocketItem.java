@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,24 +33,22 @@ import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.entity.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -60,89 +58,89 @@ import java.util.List;
  */
 public class RocketItem extends Item {
 
-    public RocketItem(Settings settings) {
+    public RocketItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return 0;
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        if (!context.getWorld().isClient && context.getWorld().getBlockState(context.getBlockPos()).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
-                && context.getWorld().getBlockState(context.getBlockPos()).get(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
-            BlockPos pos = new BlockPos(context.getBlockPos()).add(RocketLaunchPadBlock.partToCenterPos(context.getWorld().getBlockState(context.getBlockPos()).get(RocketLaunchPadBlock.PART)));
-            assert context.getWorld().getBlockState(pos).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD;
-            RocketLaunchPadBlockEntity blockEntity = (RocketLaunchPadBlockEntity) context.getWorld().getBlockEntity(pos);
-            if (blockEntity.hasRocket()) return ActionResult.FAIL;
+    public InteractionResult useOn(UseOnContext context) {
+        if (!context.getLevel().isClientSide && context.getLevel().getBlockState(context.getClickedPos()).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
+                && context.getLevel().getBlockState(context.getClickedPos()).getValue(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
+            BlockPos pos = new BlockPos(context.getClickedPos()).offset(RocketLaunchPadBlock.partToCenterPos(context.getLevel().getBlockState(context.getClickedPos()).getValue(RocketLaunchPadBlock.PART)));
+            assert context.getLevel().getBlockState(pos).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD;
+            RocketLaunchPadBlockEntity blockEntity = (RocketLaunchPadBlockEntity) context.getLevel().getBlockEntity(pos);
+            if (blockEntity.hasRocket()) return InteractionResult.FAIL;
 
-            if (context.getWorld() instanceof ServerWorld) {
-                RocketEntity rocket = new RocketEntity(GalacticraftEntityType.ROCKET, context.getWorld());
-                RocketData data = RocketData.fromNbt(context.getPlayer().getStackInHand(context.getHand()).getNbt());
+            if (context.getLevel() instanceof ServerLevel) {
+                RocketEntity rocket = new RocketEntity(GalacticraftEntityType.ROCKET, context.getLevel());
+                RocketData data = RocketData.fromNbt(context.getPlayer().getItemInHand(context.getHand()).getTag());
                 rocket.setParts(data.parts());
                 rocket.setColor(data.color());
                 rocket.setLinkedPad(pos);
-                rocket.resetPosition();
-                rocket.updatePosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
-                context.getWorld().spawnEntity(rocket);
+                rocket.setOldPosAndRot();
+                rocket.absMoveTo(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+                context.getLevel().addFreshEntity(rocket);
 
                 if (!context.getPlayer().isCreative()) {
-                    ItemStack stack = context.getPlayer().getStackInHand(context.getHand()).copy();
-                    stack.decrement(1);
-                    context.getPlayer().setStackInHand(context.getHand(), stack);
+                    ItemStack stack = context.getPlayer().getItemInHand(context.getHand()).copy();
+                    stack.shrink(1);
+                    context.getPlayer().setItemInHand(context.getHand(), stack);
                 }
-                blockEntity.setRocketEntityUUID(rocket.getUuid());
+                blockEntity.setRocketEntityUUID(rocket.getUUID());
                 blockEntity.setRocketEntityId(rocket.getId());
             }
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResult.FAIL;
+        return InteractionResult.FAIL;
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-        if (isIn(group)) {
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {
+        if (allowedIn(group)) {
             ItemStack stack = new ItemStack(this);
-            NbtCompound tag = new NbtCompound();
+            CompoundTag tag = new CompoundTag();
 //            tag.putInt("tier", 1);
             tag.putInt("color", 0xFFFFFFFF);
             for (RocketPartType type : RocketPartType.values()) {
-                tag.putString(type.asString(), AddonRegistry.ROCKET_PART.getId(GalacticraftRocketParts.getDefaultPartForType(type)).toString());
+                tag.putString(type.getSerializedName(), AddonRegistry.ROCKET_PART.getKey(GalacticraftRocketParts.getDefaultPartForType(type)).toString());
             }
-            stack.setNbt(tag);
+            stack.setTag(tag);
             stacks.add(stack);
         }
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+        super.appendHoverText(stack, world, tooltip, context);
 
-        NbtCompound tag = stack.getOrCreateNbt();
+        CompoundTag tag = stack.getOrCreateTag();
         if (Screen.hasShiftDown()) {
             if (tag.contains("color") && tag.contains("cone")) {
-//                tooltip.add(new TranslatableText("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.color"));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.red", tag.getInt("color") >> 16 & 0xFF).setStyle(Style.EMPTY.withColor(Formatting.RED)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.green", tag.getInt("color") >> 8 & 0xFF).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.blue", tag.getInt("color") & 0xFF).setStyle(Style.EMPTY.withColor(Formatting.BLUE)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.alpha", tag.getInt("color") >> 24 & 0xFF).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
-                tooltip.add(new LiteralText("-----").setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
+//                tooltip.add(Component.translatable("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)));
+                tooltip.add(Component.translatable("tooltip.galacticraft.color"));
+                tooltip.add(Component.translatable("tooltip.galacticraft.red", tag.getInt("color") >> 16 & 0xFF).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                tooltip.add(Component.translatable("tooltip.galacticraft.green", tag.getInt("color") >> 8 & 0xFF).setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)));
+                tooltip.add(Component.translatable("tooltip.galacticraft.blue", tag.getInt("color") & 0xFF).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+                tooltip.add(Component.translatable("tooltip.galacticraft.alpha", tag.getInt("color") >> 24 & 0xFF).setStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
+                tooltip.add(Component.literal("-----").setStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
                 for (RocketPartType type : RocketPartType.values()) {
-                    String s = new Identifier(tag.getString(type.asString())).getPath();
-                    if (!(new TranslatableText("tooltip." + new Identifier(tag.getString(type.asString())).getNamespace() + "." + new Identifier(tag.getString(type.asString())).getPath() + ".name").asString()
-                            .equals("tooltip." + new Identifier(tag.getString(type.asString())).getNamespace() + "." + new Identifier(tag.getString(type.asString())).getPath() + ".name"))) {
-                        s = new TranslatableText("tooltip." + new Identifier(tag.getString(type.asString())).getNamespace() +
-                                "." + new Identifier(tag.getString(type.asString())).getPath() + ".name").asString();
+                    String s = new ResourceLocation(tag.getString(type.getSerializedName())).getPath();
+                    if (!(Component.translatable("tooltip." + new ResourceLocation(tag.getString(type.getSerializedName())).getNamespace() + "." + new ResourceLocation(tag.getString(type.getSerializedName())).getPath() + ".name").getString()
+                            .equals("tooltip." + new ResourceLocation(tag.getString(type.getSerializedName())).getNamespace() + "." + new ResourceLocation(tag.getString(type.getSerializedName())).getPath() + ".name"))) {
+                        s = Component.translatable("tooltip." + new ResourceLocation(tag.getString(type.getSerializedName())).getNamespace() +
+                                "." + new ResourceLocation(tag.getString(type.getSerializedName())).getPath() + ".name").getString();
                     }
-                    tooltip.add(new TranslatableText("tooltip.galacticraft.part_type." + type.asString(), s).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+                    tooltip.add(Component.translatable("tooltip.galacticraft.part_type." + type.getSerializedName(), s).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
                 }
             }
         } else {
-            tooltip.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            tooltip.add(Component.translatable("tooltip.galacticraft.press_shift").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
     }
 }

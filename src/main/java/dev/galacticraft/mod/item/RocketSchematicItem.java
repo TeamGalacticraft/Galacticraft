@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,19 +27,16 @@ import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Rarity;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -48,39 +45,39 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RocketSchematicItem extends Item implements Schematic {
-    public RocketSchematicItem(Settings settings) {
-        super(settings.maxCount(1).rarity(Rarity.EPIC));
+    public RocketSchematicItem(Properties settings) {
+        super(settings.stacksTo(1).rarity(Rarity.EPIC));
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return 0;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+        super.appendHoverText(stack, world, tooltip, context);
 
-        NbtCompound tag = stack.getOrCreateNbt();
+        CompoundTag tag = stack.getOrCreateTag();
         if (Screen.hasShiftDown()) {
             if (tag.contains("red") && tag.contains("cone")) {
-//                tooltip.add(new TranslatableText("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.color"));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.red", tag.getInt("red")).setStyle(Style.EMPTY.withColor(Formatting.RED)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.green", tag.getInt("green")).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.blue", tag.getInt("blue")).setStyle(Style.EMPTY.withColor(Formatting.BLUE)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.alpha", tag.getInt("alpha")).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
-                tooltip.add(new LiteralText("-----").setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
+//                tooltip.add(Component.translatable("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));
+                tooltip.add(Component.translatable("tooltip.galacticraft.color"));
+                tooltip.add(Component.translatable("tooltip.galacticraft.red", tag.getInt("red")).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                tooltip.add(Component.translatable("tooltip.galacticraft.green", tag.getInt("green")).setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)));
+                tooltip.add(Component.translatable("tooltip.galacticraft.blue", tag.getInt("blue")).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+                tooltip.add(Component.translatable("tooltip.galacticraft.alpha", tag.getInt("alpha")).setStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
+                tooltip.add(Component.literal("-----").setStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
                 for (RocketPartType type : RocketPartType.values()) {
-                    tooltip.add(new TranslatableText("tooltip.galacticraft.part_type." + type.asString()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(RocketPart.getById(world.getRegistryManager(), new Identifier(tag.getString(type.asString()))).name()));
+                    tooltip.add(Component.translatable("tooltip.galacticraft.part_type." + type.asString()).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)).append(RocketPart.getById(world.getRegistryManager(), new ResourceLocation(tag.getString(type.asString()))).name()));
                 }
             } else {
-                tooltip.add(new TranslatableText("tooltip.galacticraft.blank").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft.blank_2").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+                tooltip.add(Component.translatable("tooltip.galacticraft.blank").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+                tooltip.add(Component.translatable("tooltip.galacticraft.blank_2").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
             }
         } else {
-            tooltip.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            tooltip.add(Component.translatable("tooltip.galacticraft.press_shift").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
     }
 }

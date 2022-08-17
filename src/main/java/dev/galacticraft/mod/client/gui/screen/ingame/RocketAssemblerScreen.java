@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,11 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import alexiil.mc.lib.attributes.Simulation;
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.galacticraft.api.client.rocket.render.RocketPartRendererRegistry;
+import com.mojang.blaze3d.vertex.PoseStack;
+import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartType;
@@ -39,26 +41,23 @@ import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.Registry;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
-public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHandler> {
+public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssemblerScreenHandler> {
 
     public static final int SELECTED_TAB_X = 324;
     public static final int SELECTED_TAB_Y = 4;
@@ -125,19 +124,19 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
     private Registry<RocketPart> registry;
     private Tab tab = Tab.ROCKET;
 
-    public RocketAssemblerScreen(RocketAssemblerScreenHandler handler, PlayerInventory inv, Text title) {
+    public RocketAssemblerScreen(RocketAssemblerScreenHandler handler, Inventory inv, Component title) {
         super(handler, inv, title);
-        this.backgroundWidth = 323;
-        this.backgroundHeight = 175;
+        this.imageWidth = 323;
+        this.imageHeight = 175;
         this.assembler = handler.assembler;
     }
 
     @Override
     protected void init() {
         super.init();
-        assert this.client != null;
-        assert this.client.world != null;
-        this.registry = RocketPart.getRegistry(this.client.world.getRegistryManager());
+        assert this.minecraft != null;
+        assert this.minecraft.level != null;
+        this.registry = RocketPart.getRegistry(this.minecraft.level.registryAccess());
     }
 
     @Override
@@ -146,34 +145,34 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        DiffuseLighting.enableGuiDepthLighting();
+        Lighting.setupFor3DItems();
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
-        drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        blit(matrices, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
-        drawTexture(matrices, this.x + ENERGY_OVERLAY_RENDER_X, this.y + ENERGY_OVERLAY_RENDER_Y, ENERGY_OVERLAY_X, ENERGY_OVERLAY_Y, ENERGY_OVERLAY_WIDTH, (int) (((float) ENERGY_OVERLAY_HEIGHT) * (((float) this.assembler.getEnergyAttribute().getEnergy() / (float) this.assembler.getEnergyAttribute().getMaxCapacity()))));
+        blit(matrices, this.leftPos + ENERGY_OVERLAY_RENDER_X, this.topPos + ENERGY_OVERLAY_RENDER_Y, ENERGY_OVERLAY_X, ENERGY_OVERLAY_Y, ENERGY_OVERLAY_WIDTH, (int) (((float) ENERGY_OVERLAY_HEIGHT) * (((float) this.assembler.getEnergyAttribute().getEnergy() / (float) this.assembler.getEnergyAttribute().getMaxCapacity()))));
 
         if (assembler.ready() && !assembler.building()) {
-            drawTexture(matrices, this.x + 257, this.y + 18, BUILD_X, BUILD_Y, BUILD_WIDTH, BUILD_HEIGHT);
+            blit(matrices, this.leftPos + 257, this.topPos + 18, BUILD_X, BUILD_Y, BUILD_WIDTH, BUILD_HEIGHT);
         }
 
         if (tab == Tab.ROCKET) {
-            drawTexture(matrices, this.x - 29, this.y + 3, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
-            drawTexture(matrices, this.x - 27, this.y + 30, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
+            blit(matrices, this.leftPos - 29, this.topPos + 3, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
+            blit(matrices, this.leftPos - 27, this.topPos + 30, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
 
-            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftItem.ROCKET_SCHEMATIC), this.x - 20, this.y + 8);
-            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlock.MOON_TURF), this.x - 20, this.y + 35);
+            itemRenderer.renderGuiItem(new ItemStack(GalacticraftItem.ROCKET_SCHEMATIC), this.leftPos - 20, this.topPos + 8);
+            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlock.MOON_TURF), this.leftPos - 20, this.topPos + 35);
 
             if (!this.assembler.data.isEmpty()) {
-                RocketDesignerScreen.drawRocket(this.x + 186 + 17, this.y + 73, 1, mouseX, mouseY, this.assembler.fakeEntity);
+                RocketDesignerScreen.drawRocket(this.leftPos + 186 + 17, this.topPos + 73, 1, mouseX, mouseY, this.assembler.fakeEntity);
             }
         } else if (tab == Tab.LANDER) {
-            drawTexture(matrices, this.x - 27, this.y + 3, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
-            drawTexture(matrices, this.x - 29, this.y + 30, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
+            blit(matrices, this.leftPos - 27, this.topPos + 3, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
+            blit(matrices, this.leftPos - 29, this.topPos + 30, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
 
-            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftItem.ROCKET_SCHEMATIC), this.x - 20, this.y + 8);
-            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlock.MOON_TURF), this.x - 20, this.y + 35);
+            itemRenderer.renderGuiItem(new ItemStack(GalacticraftItem.ROCKET_SCHEMATIC), this.leftPos - 20, this.topPos + 8);
+            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlock.MOON_TURF), this.leftPos - 20, this.topPos + 35);
         }
 
         if (assembler.building()) {
@@ -181,9 +180,9 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
             final float maxProgress = Galacticraft.CONFIG_MANAGER.get().rocketAssemblerProcessTime();
             if (progress < ((maxProgress / 140F) * 133F)) {
-                drawTexture(matrices, this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, (int) (((float) PROGRESS_ARROW_WIDTH) * (progress / ((maxProgress / 140F) * 133F))), PROGRESS_ARROW_HEIGHT);
+                blit(matrices, this.leftPos + 176, this.topPos + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, (int) (((float) PROGRESS_ARROW_WIDTH) * (progress / ((maxProgress / 140F) * 133F))), PROGRESS_ARROW_HEIGHT);
             } else {
-                drawTexture(matrices, this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, PROGRESS_ARROW_WIDTH_MAX, (int) ((PROGRESS_ARROW_HEIGHT) + (7 * ((progress - ((maxProgress / 140F) * 133F)) / (maxProgress - ((maxProgress / 140F) * 133F))))));
+                blit(matrices, this.leftPos + 176, this.topPos + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, PROGRESS_ARROW_WIDTH_MAX, (int) ((PROGRESS_ARROW_HEIGHT) + (7 * ((progress - ((maxProgress / 140F) * 133F)) / (maxProgress - ((maxProgress / 140F) * 133F))))));
             }
         }
 
@@ -207,21 +206,21 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                         for (Object2IntMap.Entry<Ingredient> stack : recipe.getInput().object2IntEntrySet()) {
                             RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
 
-                            if (this.assembler.getExtendedInv().getInvStack(slot).getCount() == stack.getIntValue()) {
-                                drawTexture(matrices, this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
-                            } else {
-                                drawTexture(matrices, this.x + 9 + ((RED_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((RED_BOX_HEIGHT + 2) * offsetY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
-                                aG = false;
-                            }
+//                            if (this.assembler.getExtendedInv().getInvStack(slot).getCount() == stack.getIntValue()) {
+//                                blit(matrices, this.leftPos + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.topPos + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
+//                            } else {
+//                                blit(matrices, this.leftPos + 9 + ((RED_BOX_WIDTH + 2) * offsetX), this.topPos + 9 + ((RED_BOX_HEIGHT + 2) * offsetY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
+//                                aG = false;
+//                            }
                             int time = (int) (System.currentTimeMillis() % 50000) / 1000;
-                            ItemStack[] msc = stack.getKey().getMatchingStacks();
-                            itemRenderer.renderGuiItemIcon(msc[time % msc.length], this.x + 13 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * offsetY));
-                            itemRenderer.renderGuiItemOverlay(client.textRenderer, msc[time % msc.length], this.x + 13 + (GREEN_BOX_WIDTH + 2) * offsetX, this.y + 13 + (GREEN_BOX_HEIGHT + 2) * offsetY, this.assembler.getExtendedInv().getInvStack(slot).getCount() + "/" + stack.getIntValue());
+                            ItemStack[] msc = stack.getKey().getItems();
+                            itemRenderer.renderGuiItem(msc[time % msc.length], this.leftPos + 13 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.topPos + 13 + ((GREEN_BOX_HEIGHT + 2) * offsetY));
+//                            itemRenderer.renderGuiItemDecorations(minecraft.font, msc[time % msc.length], this.leftPos + 13 + (GREEN_BOX_WIDTH + 2) * offsetX, this.topPos + 13 + (GREEN_BOX_HEIGHT + 2) * offsetY, this.assembler.getExtendedInv().getInvStack(slot).getCount() + "/" + stack.getIntValue());
 
-                            if (check(mouseX, mouseY, (this.x + 9 + ((GREEN_BOX_WIDTH) + 2) * offsetX) + 2, (this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY)) + 2, GREEN_BOX_WIDTH - 4, GREEN_BOX_HEIGHT - 4)) {
+                            if (check(mouseX, mouseY, (this.leftPos + 9 + ((GREEN_BOX_WIDTH) + 2) * offsetX) + 2, (this.topPos + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY)) + 2, GREEN_BOX_WIDTH - 4, GREEN_BOX_HEIGHT - 4)) {
                                 RenderSystem.disableDepthTest();
-                                int n = (this.x + 9 + ((GREEN_BOX_WIDTH) + 2) * offsetX) + 2;
-                                int r = (this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY)) + 2;
+                                int n = (this.leftPos + 9 + ((GREEN_BOX_WIDTH) + 2) * offsetX) + 2;
+                                int r = (this.topPos + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY)) + 2;
                                 RenderSystem.colorMask(true, true, true, false);
                                 this.fillGradient(matrices, n, r, n + GREEN_BOX_WIDTH - 4, r + GREEN_BOX_HEIGHT - 4, -2130706433, -2130706433);
                                 RenderSystem.colorMask(true, true, true, true);
@@ -236,38 +235,38 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
 
                         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ROCKET_ASSEMBLER_SCREEN);
                         if (aG) {
-                            drawTexture(matrices, this.x + 9, this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * baOY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
+                            blit(matrices, this.leftPos + 9, this.topPos + 9 + ((GREEN_BOX_HEIGHT + 2) * baOY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
                         } else {
-                            drawTexture(matrices, this.x + 9, this.y + 9 + ((RED_BOX_HEIGHT + 2) * baOY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
+                            blit(matrices, this.leftPos + 9, this.topPos + 9 + ((RED_BOX_HEIGHT + 2) * baOY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
                         }
-                        matrices.push();
-                        matrices.translate(this.x + 13, this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * baOY), 0);
-                        RocketPartRendererRegistry.INSTANCE.getRenderer(assembler.data.getPartForType(RocketPartType.values()[i])).renderGUI(client.world, matrices, mouseX, mouseY, delta);
-                        matrices.pop();
+                        matrices.pushPose();
+                        matrices.translate(this.leftPos + 13, this.topPos + 13 + ((GREEN_BOX_HEIGHT + 2) * baOY), 0);
+                        RocketPartRendererRegistry.INSTANCE.getRenderer(assembler.data.getPartForType(RocketPartType.values()[i])).renderGUI(minecraft.level, matrices, mouseX, mouseY, delta);
+                        matrices.popPose();
                     }
                 }
             }
         } else if (tab == Tab.LANDER) {
-            drawCenteredText(matrices, client.textRenderer, "WIP - TO BE DESIGNED", this.x / 2, this.y + (height) / 2, Integer.MAX_VALUE);
+            drawCenteredString(matrices, minecraft.font, "WIP - TO BE DESIGNED", this.leftPos / 2, this.topPos + (height) / 2, Integer.MAX_VALUE);
         }
     }
 
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float delta) {
         super.render(stack, mouseX, mouseY, delta);
-        DiffuseLighting.enableGuiDepthLighting();
+        Lighting.setupFor3DItems();
 
         if (assembler.data != null && assembler.data != RocketData.empty()) {
-            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.rocket_info").asString(), this.x + 234, this.y + 41, 11184810);
-//            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.tier", blockEntity.data.getTier()).asString(), this.x + 234, this.y + 41 + 11, 11184810);
-            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.assembler_status").asString(), this.x + 234, this.y + 41 + 22, 11184810);
-            client.textRenderer.draw(stack, getStatus(), this.x + 234, this.y + 41 + 33, 11184810);
+            minecraft.font.draw(stack, Component.translatable("tooltip.galacticraft.rocket_info").asString(), this.leftPos + 234, this.topPos + 41, 11184810);
+//            minecraft.font.draw(stack, Component.translatable("tooltip.galacticraft.tier", blockEntity.data.getTier()).asString(), this.x + 234, this.y + 41 + 11, 11184810);
+            minecraft.font.draw(stack, Component.translatable("tooltip.galacticraft.assembler_status").asString(), this.leftPos + 234, this.topPos + 41 + 22, 11184810);
+            minecraft.font.draw(stack, getStatus(), this.leftPos + 234, this.topPos + 41 + 33, 11184810);
         } else {
-            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.put_schematic").asString(), this.x + 234, this.y + 41, 11184810);
-            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.put_schematic_2").asString(), this.x + 234, this.y + 41 + 11, 11184810);
-            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft.assembler_status").asString(), this.x + 234, this.y + 41 + 22, 11184810);
-            client.textRenderer.draw(stack, getStatus(), this.x + 234, this.y + 41 + 33, 11184810);
+            minecraft.font.draw(stack, Component.translatable("tooltip.galacticraft.put_schematic").asString(), this.x + 234, this.topPos + 41, 11184810);
+            minecraft.font.draw(stack, Component.translatable("tooltip.galacticraft.put_schematic_2").asString(), this.x + 234, this.topPos + 41 + 11, 11184810);
+            minecraft.font.draw(stack, Component.translatable("tooltip.galacticraft.assembler_status").asString(), this.x + 234, this.topPos + 41 + 22, 11184810);
+            minecraft.font.draw(stack, getStatus(), this.leftPos + 234, this.topPos + 41 + 33, 11184810);
         }
 
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
@@ -275,23 +274,23 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
 
     private String getStatus() {
         if (assembler.building()) {
-            return new TranslatableText("tooltip.galacticraft.building").asString();
+            return Component.translatable("tooltip.galacticraft.building").asString();
         } else if (assembler.ready()) {
             if (assembler.getEnergyAttribute().getEnergy() > 20) {
-                return new TranslatableText("tooltip.galacticraft.ready").asString();
+                return Component.translatable("tooltip.galacticraft.ready").asString();
             } else {
-                return new TranslatableText("tooltip.galacticraft.no_energy").asString();
+                return Component.translatable("tooltip.galacticraft.no_energy").asString();
             }
         } else if (this.assembler.data == null || this.assembler.data.isEmpty()) {
-            return new TranslatableText("tooltip.galacticraft.no_schematic").asString();
+            return Component.translatable("tooltip.galacticraft.no_schematic").asString();
         } else {
-            return new TranslatableText("tooltip.galacticraft.missing_resources").asString();
+            return Component.translatable("tooltip.galacticraft.missing_resources").asString();
         }
     }
 
     @Override
-    protected void drawMouseoverTooltip(MatrixStack matrixStack, int i, int j) {
-        super.drawMouseoverTooltip(matrixStack, i, j);
+    protected void renderTooltip(PoseStack matrixStack, int i, int j) {
+        super.renderTooltip(matrixStack, i, j);
     }
 
     @Override
@@ -314,50 +313,50 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                         RocketAssemblerRecipe recipe = assembler.recipes.get(assembler.data.getPartForType(RocketPartType.values()[i]));
                         Object2IntMap<Ingredient> input = recipe.getInput();
                         for (int i1 = 0; i1 < input.size(); i1++) {
-                            if (check(mouseX, mouseY, this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT)) {
+                            if (check(mouseX, mouseY, this.leftPos + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.topPos + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT)) {
                                 boolean success = false;
-                                if (slot < assembler.getExtendedInv().getSlotCount()) {
-                                    if (this.handler.getCursorStack().isEmpty()) {
-                                        success = true;
-                                        this.handler.setCursorStack(assembler.getExtendedInv().getInvStack(slot));
-                                        assembler.getExtendedInv().setInvStack(slot, ItemStack.EMPTY, Simulation.ACTION);
-                                    } else {
-                                        if (assembler.getExtendedInv().getFilterForSlot(slot).matches(this.handler.getCursorStack())) {
-                                            if (assembler.getExtendedInv().getInvStack(slot).isEmpty()) {
-                                                if (assembler.getExtendedInv().getMaxAmount(slot, this.handler.getCursorStack()) >= this.handler.getCursorStack().getCount()) {
-                                                    assembler.getExtendedInv().setInvStack(slot, this.handler.getCursorStack().copy(), Simulation.ACTION);
-                                                    this.handler.setCursorStack(ItemStack.EMPTY);
-                                                } else {
-                                                    ItemStack stack = this.handler.getCursorStack().copy();
-                                                    ItemStack stack1 = this.handler.getCursorStack().copy();
-                                                    stack.setCount(assembler.getExtendedInv().getMaxAmount(slot, assembler.getExtendedInv().getInvStack(slot)));
-                                                    stack1.setCount(stack1.getCount() - assembler.getExtendedInv().getMaxAmount(slot, assembler.getExtendedInv().getInvStack(slot)));
-                                                    assembler.getExtendedInv().setInvStack(slot, stack, Simulation.ACTION);
-                                                    this.handler.setCursorStack(stack1);
-                                                }
-                                            } else { // IMPOSSIBLE FOR THE 2 STACKS TO BE DIFFERENT AS OF RIGHT NOW. THIS MAY CHANGE.
-                                                // SO... IF IT DOES, YOU NEED TO UPDATE THIS.
-                                                ItemStack stack = this.handler.getCursorStack().copy();
-                                                int max = assembler.getExtendedInv().getMaxAmount(slot, assembler.getExtendedInv().getInvStack(slot));
-                                                stack.setCount(stack.getCount() + assembler.getExtendedInv().getInvStack(slot).getCount());
-                                                if (stack.getCount() <= max) {
-                                                    this.handler.setCursorStack(ItemStack.EMPTY);
-                                                } else {
-                                                    ItemStack stack1 = stack.copy();
-                                                    stack.setCount(max);
-                                                    stack1.setCount(stack1.getCount() - max);
-                                                    this.handler.setCursorStack(stack1);
-                                                }
-                                                assembler.getExtendedInv().setInvStack(slot, stack, Simulation.ACTION);
-                                            }
-                                            success = true;
-                                        }
-                                    }
-                                }
+//                                if (slot < assembler.getExtendedInv().getSlotCount()) {
+//                                    if (this.menu.getCursorStack().isEmpty()) {
+//                                        success = true;
+//                                        this.menu.setCursorStack(assembler.getExtendedInv().getInvStack(slot));
+//                                        assembler.getExtendedInv().setInvStack(slot, ItemStack.EMPTY, Simulation.ACTION);
+//                                    } else {
+//                                        if (assembler.getExtendedInv().getFilterForSlot(slot).matches(this.handler.getCursorStack())) {
+//                                            if (assembler.getExtendedInv().getInvStack(slot).isEmpty()) {
+//                                                if (assembler.getExtendedInv().getMaxAmount(slot, this.handler.getCursorStack()) >= this.handler.getCursorStack().getCount()) {
+//                                                    assembler.getExtendedInv().setInvStack(slot, this.handler.getCursorStack().copy(), Simulation.ACTION);
+//                                                    this.handler.setCursorStack(ItemStack.EMPTY);
+//                                                } else {
+//                                                    ItemStack stack = this.handler.getCursorStack().copy();
+//                                                    ItemStack stack1 = this.handler.getCursorStack().copy();
+//                                                    stack.setCount(assembler.getExtendedInv().getMaxAmount(slot, assembler.getExtendedInv().getInvStack(slot)));
+//                                                    stack1.setCount(stack1.getCount() - assembler.getExtendedInv().getMaxAmount(slot, assembler.getExtendedInv().getInvStack(slot)));
+//                                                    assembler.getExtendedInv().setInvStack(slot, stack, Simulation.ACTION);
+//                                                    this.handler.setCursorStack(stack1);
+//                                                }
+//                                            } else { // IMPOSSIBLE FOR THE 2 STACKS TO BE DIFFERENT AS OF RIGHT NOW. THIS MAY CHANGE.
+//                                                // SO... IF IT DOES, YOU NEED TO UPDATE THIS.
+//                                                ItemStack stack = this.handler.getCursorStack().copy();
+//                                                int max = assembler.getExtendedInv().getMaxAmount(slot, assembler.getExtendedInv().getInvStack(slot));
+//                                                stack.setCount(stack.getCount() + assembler.getExtendedInv().getInvStack(slot).getCount());
+//                                                if (stack.getCount() <= max) {
+//                                                    this.handler.setCursorStack(ItemStack.EMPTY);
+//                                                } else {
+//                                                    ItemStack stack1 = stack.copy();
+//                                                    stack.setCount(max);
+//                                                    stack1.setCount(stack1.getCount() - max);
+//                                                    this.handler.setCursorStack(stack1);
+//                                                }
+//                                                assembler.getExtendedInv().setInvStack(slot, stack, Simulation.ACTION);
+//                                            }
+//                                            success = true;
+//                                        }
+//                                    }
+//                                }
 
                                 if (success) {
-                                    PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer().writeInt(slot)).writeBlockPos(this.assembler.getPos());
-                                    this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "assembler_wc"), buf));
+                                    FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer().writeInt(slot)).writeBlockPos(this.assembler.getBlockPos());
+                                    ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "assembler_wc"), buf);
                                     return true;
                                 }
                             }
@@ -374,29 +373,29 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
         }
 
         if (button == 0) {
-            if (check(mouseX, mouseY, this.x + 257, this.y + 18, BUILD_WIDTH, BUILD_HEIGHT)) {
+            if (check(mouseX, mouseY, this.leftPos + 257, this.topPos + 18, BUILD_WIDTH, BUILD_HEIGHT)) {
                 assembler.startBuilding();
-                client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constant.MOD_ID, "assembler_build"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(assembler.getPos())));
+                ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "assembler_build"), PacketByteBufs.create().writeBlockPos(assembler.getBlockPos()));
             }
         }
         return false;
     }
 
-    public SlotActionType getType(int button, int slot) {
-        if (this.handler.getCursorStack().isEmpty()) {
-            if (this.client.options.keyPickItem.matchesMouse(button)) {
-                return SlotActionType.CLONE;
+    public ClickType getType(int button, int slot) {
+        if (this.menu.getCarried().isEmpty()) {
+            if (this.minecraft.options.keyPickItem.matchesMouse(button)) {
+                return ClickType.CLONE;
             } else {
-                boolean ok = slot != -999 && (InputUtil.isKeyPressed(client.getWindow().getHandle(), 340) || InputUtil.isKeyPressed(client.getWindow().getHandle(), 344));
+                boolean ok = slot != -999 && (InputConstants.isKeyDown(minecraft.getWindow().getWindow(), 340) || InputConstants.isKeyDown(minecraft.getWindow().getWindow(), 344));
                 if (ok) {
-                    return SlotActionType.QUICK_MOVE;
+                    return ClickType.QUICK_MOVE;
                 } else if (slot == -999) {
-                    return SlotActionType.THROW;
+                    return ClickType.THROW;
                 }
-                return SlotActionType.PICKUP;
+                return ClickType.PICKUP;
             }
         } else {
-            return SlotActionType.SWAP;
+            return ClickType.SWAP;
         }
     }
 
@@ -404,17 +403,17 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
     private boolean tabClicked(double mouseX, double mouseY, int button) {
         if (button == 0) {
             if (tab == Tab.ROCKET) {
-                if (check(mouseX, mouseY, this.x - 27, this.y + 30, TAB_WIDTH, TAB_HEIGHT)) {
+                if (check(mouseX, mouseY, this.leftPos - 27, this.topPos + 30, TAB_WIDTH, TAB_HEIGHT)) {
                     tab = Tab.LANDER;
                 }
             } else if (tab == Tab.LANDER) {
-                if (check(mouseX, mouseY, this.x - 27, this.y + 3, TAB_WIDTH, TAB_HEIGHT)) {
+                if (check(mouseX, mouseY, this.leftPos - 27, this.topPos + 3, TAB_WIDTH, TAB_HEIGHT)) {
                     tab = Tab.ROCKET;
                 }
             } else {
-                if (check(mouseX, mouseY, this.x - 27, this.y + 30, TAB_WIDTH, TAB_HEIGHT)) {
+                if (check(mouseX, mouseY, this.leftPos - 27, this.topPos + 30, TAB_WIDTH, TAB_HEIGHT)) {
                     tab = Tab.LANDER;
-                } else if (check(mouseX, mouseY, this.x - 27, this.y + 3, TAB_WIDTH, TAB_HEIGHT)) {
+                } else if (check(mouseX, mouseY, this.leftPos - 27, this.topPos + 3, TAB_WIDTH, TAB_HEIGHT)) {
                     tab = Tab.ROCKET;
                 }
             }
@@ -423,8 +422,8 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
     }
 
     @Override
-    public void drawTexture(MatrixStack stack, int x, int y, int u, int v, int width, int height) {
-        drawTexture(stack, x, y, u, v, width, height, 512, 256);
+    public void blit(PoseStack stack, int x, int y, int u, int v, int width, int height) {
+        blit(stack, x, y, u, v, width, height, 512, 256);
     }
 
     private boolean check(double mouseX, double mouseY, int buttonX, int buttonY, int buttonWidth, int buttonHeight) {

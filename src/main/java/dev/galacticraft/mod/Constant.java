@@ -601,10 +601,10 @@ public interface Constant {
         ResourceLocation DEFAULT_SOLAR_PANELS = id("textures/solar_panel/default_solar_panels.png");
         ResourceLocation DEFAULT_LIGHT_SOURCES = id("textures/solar_panel/default_light_sources.png");
         ResourceLocation MOON_LIGHT_SOURCES = id("textures/solar_panel/moon_light_sources.png");
-        Identifier ROCKET_DESIGNER_SCREEN = id("textures/gui/rocket_designer_screen.png");
-        Identifier ROCKET_ASSEMBLER_SCREEN = id("textures/gui/rocket_assembler_screen.png");
-        Identifier RESEARCH_PANELS = id("textures/gui/research_panels.png");
-        Identifier FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
+        ResourceLocation ROCKET_DESIGNER_SCREEN = id("textures/gui/rocket_designer_screen.png");
+        ResourceLocation ROCKET_ASSEMBLER_SCREEN = id("textures/gui/rocket_assembler_screen.png");
+        ResourceLocation RESEARCH_PANELS = id("textures/gui/research_panels.png");
+        ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
 
         ResourceLocation REI_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
     }

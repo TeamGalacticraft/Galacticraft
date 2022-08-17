@@ -20,26 +20,13 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen;
+package dev.galacticraft.mod.accessor;
 
-import dev.galacticraft.api.screen.MachineScreenHandler;
-import dev.galacticraft.mod.block.entity.FuelLoaderBlockEntity;
-import dev.galacticraft.mod.screen.property.BlockPosPropertyDelegate;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
+import dev.galacticraft.api.rocket.RocketData;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-public class FuelLoaderScreenHandler extends MachineScreenHandler<FuelLoaderBlockEntity> {
-    public FuelLoaderScreenHandler(int syncId, Player player, FuelLoaderBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerType.FUEL_LOADER_HANDLER);
-        this.addDataSlots(new BlockPosPropertyDelegate(machine::getConnectionPos, machine::setConnectionPos));
-        this.addPlayerInventorySlots(8, 84);
-    }
+public interface ServerPlayerAccessor {
+    @Nullable RocketData getCelestialScreenState();
 
-    public FuelLoaderScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
-        this(syncId, inv.player, (FuelLoaderBlockEntity) inv.player.getLevel().getBlockEntity(buf.readBlockPos()));
-    }
+    void setCelestialScreenState(@Nullable RocketData data);
 }

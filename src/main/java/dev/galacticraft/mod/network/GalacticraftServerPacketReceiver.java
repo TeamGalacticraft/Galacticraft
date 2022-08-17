@@ -67,13 +67,13 @@ public class GalacticraftServerPacketReceiver {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "dimension_teleport"), ((server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "dimension_teleport"), ((server, player, handler, buf, responseSender) -> {
             RegistryKey<World> dimension = RegistryKey.of(Registry.WORLD_KEY, buf.readIdentifier());
             server.execute(() -> {
                 player.setWorld(player.getServer().getWorld(dimension));
             });
         }));
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "designer_red"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "designer_red"), (server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             BlockPos pos = buffer.readBlockPos();
             server.execute(() -> {
@@ -88,7 +88,7 @@ public class GalacticraftServerPacketReceiver {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "designer_green"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "designer_green"), (server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             BlockPos pos = buffer.readBlockPos();
             server.execute(() -> {
@@ -102,7 +102,7 @@ public class GalacticraftServerPacketReceiver {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "designer_blue"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "designer_blue"), (server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             BlockPos pos = buffer.readBlockPos();
             server.execute(() -> {
@@ -116,7 +116,7 @@ public class GalacticraftServerPacketReceiver {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "designer_alpha"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "designer_alpha"), (server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             BlockPos pos = buffer.readBlockPos();
             server.execute(() -> {
@@ -130,7 +130,7 @@ public class GalacticraftServerPacketReceiver {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "designer_part"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "designer_part"), (server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             BlockPos pos = buffer.readBlockPos();
             server.execute(() -> {
@@ -148,7 +148,7 @@ public class GalacticraftServerPacketReceiver {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "rocket_jump"), ((server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "rocket_jump"), ((server, player, handler, buf, responseSender) -> {
             server.execute(() -> {
                 if (player.hasVehicle()) {
                     if (player.getVehicle() instanceof Rocket && ((Rocket) player.getVehicle()).getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
@@ -158,7 +158,7 @@ public class GalacticraftServerPacketReceiver {
             });
         }));
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "rocket_yaw_press"), ((server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "rocket_yaw_press"), ((server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             server.execute(() -> {
                 if (player.getVehicle() instanceof Rocket && ((Rocket) player.getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
@@ -167,7 +167,7 @@ public class GalacticraftServerPacketReceiver {
             });
         }));
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "rocket_pitch_press"), ((server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "rocket_pitch_press"), ((server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             server.execute(() -> {
                 if (player.getVehicle() instanceof Rocket && ((Rocket) player.getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
@@ -176,7 +176,7 @@ public class GalacticraftServerPacketReceiver {
             });
         }));
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "assembler_wc"), ((server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "assembler_wc"), ((server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             server.execute(() -> {
                 int slot = buffer.readInt();
@@ -233,7 +233,7 @@ public class GalacticraftServerPacketReceiver {
             });
         }));
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "assembler_build"), ((server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "assembler_build"), ((server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             server.execute(() -> {
                 BlockPos pos = buffer.readBlockPos();
@@ -244,7 +244,7 @@ public class GalacticraftServerPacketReceiver {
                 }
             });
         }));
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "create_satellite"), ((server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "create_satellite"), ((server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() != null) {
                 server.execute(() -> {
@@ -262,7 +262,7 @@ public class GalacticraftServerPacketReceiver {
                                                     throw new IllegalStateException("Inventory had enough items, but cannot extract said items?!? Player: " + player.getGameProfile().getName());
                                             }
                                         }
-                                        Optional<Structure> structure = server.getStructureManager().getStructure(new Identifier(Constant.MOD_ID, "satellite"));
+                                        Optional<Structure> structure = server.getStructureManager().getStructure(new ResourceLocation(Constant.MOD_ID, "satellite"));
                                         SatelliteType.registerSatellite(server, player, parent, structure.orElse(new Structure()));
                                     }
                                 }
@@ -274,7 +274,7 @@ public class GalacticraftServerPacketReceiver {
                 });
             }
         }));
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "planet_tp"), ((server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "planet_tp"), ((server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() != null) {
                 server.execute(() -> {

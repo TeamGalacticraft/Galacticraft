@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,50 +22,50 @@
 
 package dev.galacticraft.mod.client.render.rocket;
 
-import dev.galacticraft.api.client.rocket.render.RocketPartRenderer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.api.entity.Rocket;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.ItemStack;
+import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
     private final ItemStack stack;
     private final @Nullable BakedModel model;
-    private final RenderLayer layer;
+    private final RenderType layer;
 
     public BakedModelItemRocketPartRenderer(ItemStack stack, @Nullable BakedModel model) {
         this.stack = stack;
         this.model = model;
         if (model != null) {
-            this.layer = RenderLayer.getEntityTranslucent(model.getParticleSprite().getId());
+            this.layer = RenderType.entityTranslucent(model.getParticleIcon().getName());
         } else {
             this.layer = null;
         }
     }
 
     @Override
-    public void renderGUI(ClientWorld world, MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        MinecraftClient.getInstance().getItemRenderer().renderInGuiWithOverrides(stack, (int)matrices.peek().getModel().a03, (int)matrices.peek().getModel().a13);
+    public void renderGUI(ClientLevel world, PoseStack matrices, int mouseX, int mouseY, float delta) {
+        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, (int)matrices.last().pose().m03, (int)matrices.last().pose().m13);
     }
 
     @Override
-    public void render(ClientWorld world, MatrixStack matrices, Rocket rocket, VertexConsumerProvider vertices, float delta, int light) {
+    public void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float delta, int light) {
         if (this.model != null) {
-            MatrixStack.Entry entry = matrices.peek();
+            PoseStack.Pose entry = matrices.last();
             VertexConsumer consumer = vertices.getBuffer(layer);
             for (BakedQuad quad : model.getQuads(null, null, world.random)) {
-                consumer.quad(entry, quad, (((rocket.getColor() << 16) & 0xFF) / 255f) * (((rocket.getColor() << 24) & 0xFF) / 255f),
+                consumer.putBulkData(entry, quad, (((rocket.getColor() << 16) & 0xFF) / 255f) * (((rocket.getColor() << 24) & 0xFF) / 255f),
                         (((rocket.getColor() << 8) & 0xFF) / 255f) * (((rocket.getColor() << 24) & 0xFF) / 255f),
                         ((rocket.getColor() & 0xFF) / 255f) * (((rocket.getColor() << 24) & 0xFF) / 255f),
-                        light, OverlayTexture.DEFAULT_UV);
+                        light, OverlayTexture.NO_OVERLAY);
             }
         }
     }

@@ -26,6 +26,7 @@ import dev.galacticraft.api.machine.storage.io.ResourceFlow;
 import dev.galacticraft.api.machine.storage.io.ResourceType;
 import dev.galacticraft.api.machine.storage.io.SlotType;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.ColorUtil;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -45,6 +46,8 @@ public class GalacticraftSlotTypes {
 
     public static final SlotType<Item, ItemVariant> OIL_FILL = SlotType.create(new ResourceLocation(Constant.MOD_ID, "oil_fill"), TextColor.fromRgb(0x41dcd7), Component.translatable("slot_type.galacticraft.oil_fill"), Constant.Filter.Item.CAN_EXTRACT_OIL, ResourceFlow.BOTH, ResourceType.ITEM);
     public static final SlotType<Item, ItemVariant> FUEL_DRAIN = SlotType.create(new ResourceLocation(Constant.MOD_ID, "fuel_drain"), TextColor.fromRgb(0x41aadc), Component.translatable("slot_type.galacticraft.fuel_drain"), Constant.Filter.Item.CAN_INSERT_FUEL, ResourceFlow.BOTH, ResourceType.ITEM);
+    public static final SlotType FUEL_OUT = SlotType.create(new ResourceLocation(Constant.MOD_ID, "fuel_out"), TextColor.fromRgb(ColorUtil.rgb(70, 65, 11)), Component.translatable("ui.galacticraft.io_config.fuel_out"), ResourceFlow.OUTPUT, ResourceType.FLUID);
+    public static final SlotType FUEL_IN = SlotType.create(new ResourceLocation(Constant.MOD_ID, "fuel_in"), TextColor.fromRgb(ColorUtil.rgb(70, 65, 11)), Component.translatable("ui.galacticraft.io_config.fuel_in"), ResourceFlow.INPUT, ResourceType.FLUID);
 
     public static final SlotType<Item, ItemVariant> ITEM_INPUT = SlotType.create(new ResourceLocation(Constant.MOD_ID, "item_input"), TextColor.fromRgb(0x44d844), Component.translatable("slot_type.galacticraft.item_input"), Constant.Filter.any(), ResourceFlow.INPUT, ResourceType.ITEM);
     public static final SlotType<Item, ItemVariant> ITEM_OUTPUT = SlotType.create(new ResourceLocation(Constant.MOD_ID, "item_output"), TextColor.fromRgb(0xc32727), Component.translatable("slot_type.galacticraft.item_output"), Constant.Filter.any(), ResourceFlow.OUTPUT, ResourceType.ITEM);

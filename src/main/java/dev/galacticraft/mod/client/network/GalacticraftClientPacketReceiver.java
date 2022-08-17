@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.network;
 
+import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
 import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
@@ -31,11 +32,11 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.entity.EntityType;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.UUID;
 
@@ -79,16 +80,16 @@ public class GalacticraftClientPacketReceiver {
 
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "planet_menu_open"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "planet_menu_open"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
             RocketData rocketData = RocketData.fromNbt(packetByteBuf.readNbt());
             minecraftClient.execute(() -> minecraftClient.setScreen(new CelestialSelectionScreen(false, rocketData, true)));
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constant.MOD_ID, "rocket_spawn"), ((client, handler, buf, responseSender) -> {
-            EntityType<? extends RocketEntity> type = (EntityType<? extends RocketEntity>) Registry.ENTITY_TYPE.get(buf.readVarInt());
+        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "rocket_spawn"), ((client, handler, buf, responseSender) -> {
+            EntityType<? extends RocketEntity> type = (EntityType<? extends RocketEntity>) Registry.ENTITY_TYPE.byId(buf.readVarInt());
 
             int entityID = buf.readVarInt();
-            UUID entityUUID = buf.readUuid();
+            UUID entityUUID = buf.readUUID();
 
             double x = buf.readDouble();
             double y = buf.readDouble();
@@ -100,7 +101,7 @@ public class GalacticraftClientPacketReceiver {
             RocketData data = RocketData.fromNbt(buf.readNbt());
 
             client.execute(() -> {
-                RocketEntity entity = type.create(client.world);
+                RocketEntity entity = type.create(client.level);
                 assert entity != null;
                 entity.updateTrackedPosition(x, y, z);
                 entity.setPos(x, y, z);
@@ -112,7 +113,7 @@ public class GalacticraftClientPacketReceiver {
                 entity.setColor(data.color());
                 entity.setParts(data.parts());
 
-                MinecraftClient.getInstance().world.addEntity(entityID, entity);
+                Minecraft.getInstance().level.addEntity(entityID, entity);
             });
         }));
     }

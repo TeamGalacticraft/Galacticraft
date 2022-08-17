@@ -29,6 +29,7 @@ import dev.galacticraft.mod.block.entity.*;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -99,22 +100,23 @@ public class GalacticraftScreenHandlerType {
 
     public static final MenuType<GalacticraftPlayerInventoryScreenHandler> PLAYER_INV_GC_HANDLER = new MenuType<>(GalacticraftPlayerInventoryScreenHandler::new);
 
-    public static final Identifier ROCKET_DESIGNER_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ROCKET_DESIGNER_SCREEN_HANDLER);
-    public static final ScreenHandlerType<RocketDesignerScreenHandler> ROCKET_DESIGNER_HANDLER =
-            ScreenHandlerRegistry.registerExtended(
+    public static final ResourceLocation ROCKET_DESIGNER_HANDLER_ID = new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.ROCKET_DESIGNER_SCREEN_HANDLER);
+    public static final ExtendedScreenHandlerType<RocketDesignerScreenHandler> ROCKET_DESIGNER_HANDLER =
+            Registry.register(
+                    Registry.MENU,
                     ROCKET_DESIGNER_HANDLER_ID,
-                    RocketDesignerScreenHandler::new
+                    new ExtendedScreenHandlerType<>(RocketDesignerScreenHandler::new)
             );
 
-    public static final Identifier ROCKET_ASSEMBLER_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.ROCKET_ASSEMBLER_SCREEN_HANDLER);
-    public static final ScreenHandlerType<RocketAssemblerScreenHandler> ROCKET_ASSEMBLER_HANDLER =
+    public static final ResourceLocation ROCKET_ASSEMBLER_HANDLER_ID = new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.ROCKET_ASSEMBLER_SCREEN_HANDLER);
+    public static final ExtendedScreenHandlerType<RocketAssemblerScreenHandler> ROCKET_ASSEMBLER_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     ROCKET_ASSEMBLER_HANDLER_ID,
                     RocketAssemblerScreenHandler::new
             );
 
-    public static final Identifier FUEL_LOADER_HANDLER_ID = new Identifier(Constant.MOD_ID, Constant.ScreenHandler.FUEL_LOADER_SCREEN_HANDLER);
-    public static final ScreenHandlerType<FuelLoaderScreenHandler> FUEL_LOADER_HANDLER =
+    public static final ResourceLocation FUEL_LOADER_HANDLER_ID = new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.FUEL_LOADER_SCREEN_HANDLER);
+    public static final ExtendedScreenHandlerType<FuelLoaderScreenHandler> FUEL_LOADER_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     FUEL_LOADER_HANDLER_ID,
                     FuelLoaderScreenHandler::new
