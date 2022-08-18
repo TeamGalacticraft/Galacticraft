@@ -23,7 +23,9 @@
 package dev.galacticraft.mod.client.network;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
+import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -73,7 +75,11 @@ public class GalacticraftClientPacketReceiver {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "open_screen"), (client, handler, buf, responseSender) -> {
-
+            String screen = buf.readUtf();
+            switch (screen) {
+                case "celestial" -> client.setScreen(new CelestialSelectionScreen(true, null, true));
+                default -> Galacticraft.LOGGER.error("No screen found!");
+            }
         });
     }
 }

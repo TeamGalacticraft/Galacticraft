@@ -36,8 +36,10 @@ import dev.galacticraft.mod.client.render.dimension.MoonDimensionEffects;
 import dev.galacticraft.mod.client.render.dimension.MoonSkyRenderer;
 import dev.galacticraft.mod.client.render.entity.*;
 import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLayer;
+import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
 import dev.galacticraft.mod.client.resource.GalacticraftResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.particle.GalacticraftParticleType;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
@@ -49,6 +51,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
@@ -168,6 +171,8 @@ public class GalacticraftClient implements ClientModInitializer {
         DimensionRenderingRegistry.registerSkyRenderer(GalacticraftDimensionType.MOON_KEY, MoonSkyRenderer.INSTANCE);
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
+
+        BuiltinItemRendererRegistry.INSTANCE.register(GalacticraftItem.ROCKET, new RocketItemRenderer());
 
         Galacticraft.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

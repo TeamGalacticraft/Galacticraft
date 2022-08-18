@@ -451,6 +451,8 @@ public class GalacticraftItem {
     public static final Item THERMAL_PADDING_CHESTPIECE = new ThermalArmorItem(new Item.Properties().tab(GalacticraftItemGroup.ITEMS_GROUP), EquipmentSlot.CHEST);
     public static final Item THERMAL_PADDING_LEGGINGS = new ThermalArmorItem(new Item.Properties().tab(GalacticraftItemGroup.ITEMS_GROUP), EquipmentSlot.LEGS);
     public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem(new Item.Properties().tab(GalacticraftItemGroup.ITEMS_GROUP), EquipmentSlot.FEET);
+    // ROCKETS
+    public static final Item ROCKET = new RocketItem(new Item.Properties().tab(GalacticraftItemGroup.ITEMS_GROUP));
 
     // SCHEMATICS
     public static final Item TIER_2_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties().tab(GalacticraftItemGroup.ITEMS_GROUP));
@@ -862,6 +864,9 @@ public class GalacticraftItem {
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.THERMAL_PADDING_CHESTPIECE), THERMAL_PADDING_CHESTPIECE);
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.THERMAL_PADDING_LEGGINGS), THERMAL_PADDING_LEGGINGS);
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.THERMAL_PADDING_BOOTS), THERMAL_PADDING_BOOTS);
+
+        // ROCKETS
+        Registry.register(Registry.ITEM, Constant.id(Constant.Item.ROCKET), ROCKET);
 
         // SCHEMATICS
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.TIER_2_ROCKET_SCHEMATIC), TIER_2_ROCKET_SCHEMATIC);

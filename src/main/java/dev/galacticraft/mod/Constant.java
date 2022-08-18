@@ -507,6 +507,8 @@ public interface Constant {
         String ISOTHERMAL_PADDING_LEGGINGS = "isothermal_padding_leggings";
         String ISOTHERMAL_PADDING_BOOTS = "isothermal_padding_boots";
 
+        String ROCKET = "rocket";
+
         String TIER_2_ROCKET_SCHEMATIC = "tier_2_rocket_schematic";
         String TIER_3_ROCKET_SCHEMATIC = "tier_3_rocket_schematic";
         String CARGO_ROCKET_SCHEMATIC = "cargo_rocket_schematic";

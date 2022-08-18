@@ -20,25 +20,17 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.util;
+package dev.galacticraft.mod.client.render.item;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class ColorUtil {
-    private ColorUtil() {}
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.ItemStack;
 
-    public static final int WHITE = 0xffffff;
+public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
+    @Override
+    public void render(ItemStack stack, ItemTransforms.TransformType mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
 
-    public static int rgb(int red, int green, int blue) {
-        return (red << 16) + (green << 8) + blue;
-    }
-
-    public static int to32BitColor(int a, int r, int g, int b) {
-        r = r << 24;
-        g = g << 16;
-        b = b << 8;
-
-        return  r | g | b | a;
     }
 }
