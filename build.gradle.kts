@@ -26,7 +26,6 @@ import java.time.format.DateTimeFormatter
 
 // Minecraft, Mappings, Loader Versions
 val minecraftVersion       = project.property("minecraft.version").toString()
-val yarnBuild              = project.property("yarn.build").toString()
 val loaderVersion          = project.property("loader.version").toString()
 
 // Mod Info
@@ -223,6 +222,8 @@ tasks.processResources {
         expand("version" to project.version)
     }
 
+    duplicatesStrategy = DuplicatesStrategy.WARN
+    
     // Minify json resources
     // https://stackoverflow.com/questions/41028030/gradle-minimize-json-resources-in-processresources#41029113
     doLast {
@@ -236,6 +237,10 @@ tasks.create<Jar>("javadocJar") {
     from(tasks.javadoc)
     archiveClassifier.set("javadoc")
     tasks.build.get().dependsOn(this)
+}
+
+tasks.named<ProcessResources>("processGametestResources") {
+    duplicatesStrategy = DuplicatesStrategy.WARN
 }
 
 tasks.jar {
