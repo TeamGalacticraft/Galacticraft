@@ -1,6 +1,7 @@
 {
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "galacticraft:block/oxygen_bubble_distributor"
+  "machine": "galacticraft:oxygen_bubble_distributor",
+  "sprite_provider": "machinelib:single",
+  "sprite_info": {
+    "sprite": "galacticraft:block/oxygen_bubble_distributor"
   }
 }

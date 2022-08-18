@@ -71,6 +71,6 @@ public class GalacticraftResourceReloadListener implements SimpleSynchronousReso
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.FUEL, fuel);
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.FLOWING_FUEL, fuel);
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluid.LIQUID_OXYGEN, oxygen);
-        BubbleEntityRenderer.bubbleModel = null;
+//        BubbleEntityRenderer.bubbleModel = null;
     }
 }

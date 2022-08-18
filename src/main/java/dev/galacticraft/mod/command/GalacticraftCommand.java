@@ -44,6 +44,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+
 import java.util.Collection;
 import java.util.UUID;
 
@@ -61,37 +62,16 @@ public class GalacticraftCommand {
                     Commands.literal("gchouston")
                     .executes(GalacticraftCommand::teleportToEarth));
 
-            /* This looks convoluted, but it works. Essentially, it registers three branches of the same command.
-             * One as the base, one to also teleport entities, and one to also teleport to a specific position.
-             * This is because the command I added, to teleport to a specific position, breaks when combined with
-             * teleporting multiple non-player entities for some reason. So, I made it where you can pick
-             * teleporting entities OR setting a custom position to go to, but not both :P
-             */
-            LiteralCommandNode<CommandSourceStack> dimensiontp_root = commandDispatcher.register(
+            LiteralCommandNode<CommandSourceStack> node = commandDispatcher.register(
                     Commands.literal("dimensiontp")
-                    .requires(serverCommandSource -> serverCommandSource.hasPermission(2))
+                    .requires(stack -> stack.hasPermission(2))
                     .then(Commands.argument("dimension", DimensionArgument.dimension())
-                    .executes(GalacticraftCommand::teleport)));
-            // TODO: either fix this or remove it
-             LiteralCommandNode<CommandSourceStack> dimensiontp_entities = commandDispatcher.register(
-                     Commands.literal("dimensiontp")
-                    .requires(serverCommandSource -> serverCommandSource.hasPermission(2))
-                    .then(Commands.argument("dimension", DimensionArgument.dimension())
-                    .then(Commands.argument("entities", EntityArgument.entities())
-                    .executes(((GalacticraftCommand::teleportMultiple))))));
-            LiteralCommandNode<CommandSourceStack> dimensiontp_pos = commandDispatcher.register(
-                    Commands.literal("dimensiontp")
-                    .requires(serverCommandSource -> serverCommandSource.hasPermission(2))
-                    .then(Commands.argument("dimension", DimensionArgument.dimension())
-                    .then(Commands.argument("pos", BlockPosArgument.blockPos())
-                    .executes(GalacticraftCommand::teleportToCoords))));
-
-            // Because I don't like to type
-            commandDispatcher.register(Commands.literal("dimtp")
-                    .redirect(dimensiontp_root)
-                    .redirect(dimensiontp_entities)
-                    .redirect(dimensiontp_pos)
-            );
+                    .executes(GalacticraftCommand::teleport)
+                            .then(Commands.argument("entities", EntityArgument.entities())
+                                    .executes(((GalacticraftCommand::teleportMultiple))))
+                            .then(Commands.argument("pos", BlockPosArgument.blockPos())
+                                    .executes(GalacticraftCommand::teleportToCoords))));
+            commandDispatcher.register(Commands.literal("dimtp").redirect(node));
         });
     }
 

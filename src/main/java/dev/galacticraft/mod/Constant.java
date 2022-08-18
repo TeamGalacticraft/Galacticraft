@@ -23,14 +23,12 @@
 package dev.galacticraft.mod;
 
 import com.google.common.base.Predicates;
-import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagExtractPredicate;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagInsertPredicate;
 import dev.galacticraft.mod.lookup.predicate.TagPredicate;
 import dev.galacticraft.mod.tag.GalacticraftTag;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -38,6 +36,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
@@ -734,12 +733,12 @@ public interface Constant {
                 }
             };
 
-            Predicate<ItemVariant> CAN_EXTRACT_OXYGEN = new ItemResourceTagExtractPredicate(FluidStorage.ITEM, GalacticraftTag.OXYGEN);
-            Predicate<ItemVariant> CAN_INSERT_OXYGEN = new ItemResourceTagInsertPredicate(FluidStorage.ITEM, GalacticraftTag.OXYGEN);
+            Predicate<ItemVariant> CAN_EXTRACT_OXYGEN = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.OXYGEN);
+            Predicate<ItemVariant> CAN_INSERT_OXYGEN = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.OXYGEN);
 
-            Predicate<ItemVariant> CAN_EXTRACT_OIL = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, GalacticraftTag.OIL);
-            Predicate<ItemVariant> CAN_INSERT_FUEL = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, GalacticraftFluid.FUEL);
-            Predicate<ItemVariant> CAN_EXTRACT_LOX = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, GalacticraftTag.LIQUID_OXYGEN);
+            Predicate<ItemVariant> CAN_EXTRACT_OIL = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.OIL);
+            Predicate<ItemVariant> CAN_INSERT_FUEL = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.FUEL);
+            Predicate<ItemVariant> CAN_EXTRACT_LOX = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.LIQUID_OXYGEN);
         }
 
         interface Gas {
@@ -853,7 +852,6 @@ public interface Constant {
     @ApiStatus.Internal
     interface Mixin {
         String STRUCTURE_POOL_DEBUG = "StructurePoolGeneratorMixin";
-        String OVERWORLD_SKY_OVERRIDE = "client.WorldRendererOverworldMixin";
     }
 
     interface Recipe {
@@ -881,5 +879,12 @@ public interface Constant {
         String SOLAR_PANEL_PANEL_VERTICAL_1 = "solar_panel_panel_vertical_1";
         String SOLAR_PANEL_PANEL_VERTICAL_2 = "solar_panel_panel_vertical_2";
         String SOLAR_PANEL_PANEL_VERTICAL_3 = "solar_panel_panel_vertical_3";
+    }
+
+    interface Carver {
+        String MOON_CANYON_CARVER = "moon_canyon_carver";
+        String MOON_CRATER_CARVER = "moon_crater_carver";
+        String MOON_HIGHLANDS_CAVE_CARVER = "moon_highlands_cave_carver";
+        String MOON_MARE_CAVE_CARVER = "moon_mare_cave_carver";
     }
 }

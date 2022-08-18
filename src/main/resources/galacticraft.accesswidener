@@ -12,6 +12,7 @@ accessible method net/minecraft/world/level/levelgen/structure/pools/LegacySingl
 accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Condition
 accessible class  net/minecraft/world/level/levelgen/SurfaceRules$LazyYCondition
 accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Context
+accessible class  net/minecraft/data/models/BlockModelGenerators$BlockStateGeneratorSupplier
 
 # fields in final classes
 accessible field  net/minecraft/world/level/levelgen/SurfaceRules$Context   biome    Ljava/util/function/Supplier;
@@ -19,5 +20,4 @@ accessible field  net/minecraft/world/level/levelgen/SurfaceRules$Context   biom
 # final classes
 
 # static methods
-accessible method net/minecraft/world/level/levelgen/NoiseRouterData caves (Lnet/minecraft/core/Registry;)Lnet/minecraft/world/level/levelgen/NoiseRouter;
 accessible method net/minecraft/data/worldgen/Structures structure (Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/level/levelgen/structure/TerrainAdjustment;)Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;

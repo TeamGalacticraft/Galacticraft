@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.compat.waila;
 
 import dev.galacticraft.api.block.MachineBlock;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.api.machine.MachineConfiguration;
 import dev.galacticraft.mod.Constant;
 import mcp.mobius.waila.api.*;
@@ -48,7 +49,7 @@ public class GalacticraftWailaPlugin implements IWailaPlugin {
 
     @Override
     public void register(IRegistrar registrar) {
-//        registrar.registerBlockDataProvider((data, player, world, blockEntity) -> ((MachineBlockEntity) blockEntity).getConfiguration().writeNbt(data), MachineBlock.class); TODO: WAILA
+        registrar.addBlockData((data, accessor, config) -> ((MachineBlockEntity) accessor.getTarget()).getConfiguration().writeNbt(data), MachineBlock.class);
         registrar.addComponent(COMPONENT_PROVIDER, TooltipPosition.TAIL, MachineBlock.class);
     }
 }

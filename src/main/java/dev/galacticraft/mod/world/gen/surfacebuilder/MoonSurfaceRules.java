@@ -22,9 +22,13 @@
 
 package dev.galacticraft.mod.world.gen.surfacebuilder;
 
+import com.mojang.serialization.Codec;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.world.biome.GalacticraftBiomeKey;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -62,10 +66,7 @@ public class MoonSurfaceRules {
             SurfaceRules.ifTrue(SurfaceRules.UNDER_FLOOR, SECONDARY_MATERIAL)
     );
 
-    @Contract("_ -> new")
-    private static @NotNull RuleSource block(@NotNull Block block) {
-        return SurfaceRules.state(block.defaultBlockState());
-    }
+    public static final RuleSource MOON = createDefaultRule();
 
     public static @NotNull RuleSource createDefaultRule() {
         return SurfaceRules.sequence(
@@ -73,6 +74,11 @@ public class MoonSurfaceRules {
                 SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), SURFACE_GENERATION),
                 SurfaceRules.ifTrue(SurfaceRules.verticalGradient("lunaslate", VerticalAnchor.absolute(-4), VerticalAnchor.absolute(4)), LUNASLATE)
         );
+    }
+
+    @Contract("_ -> new")
+    private static @NotNull RuleSource block(@NotNull Block block) {
+        return SurfaceRules.state(block.defaultBlockState());
     }
 
     @Contract("_ -> new")
@@ -84,5 +90,9 @@ public class MoonSurfaceRules {
     @Contract("_ -> new")
     public static SurfaceRules.@NotNull ConditionSource biome(@NotNull ResourceKey<Biome> @NotNull... keys) {
         return SurfaceRules.isBiome(keys);
+    }
+
+    public static void register() {
+        Registry.register(Registry.RULE, new ResourceLocation(Constant.MOD_ID, "moon"), Codec.unit(MOON));
     }
 }

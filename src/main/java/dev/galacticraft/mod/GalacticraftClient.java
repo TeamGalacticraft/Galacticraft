@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod;
 
+import dev.galacticraft.api.client.model.MachineModelRegistry;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.*;
@@ -50,7 +51,6 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -59,7 +59,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluids;
-import java.util.Collections;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -144,6 +143,9 @@ public class GalacticraftClient implements ClientModInitializer {
 
         ParticleFactoryRegistry.getInstance().register(GalacticraftParticleType.DRIPPING_FUEL_PARTICLE, DrippingFuelFactory::new);
         ParticleFactoryRegistry.getInstance().register(GalacticraftParticleType.DRIPPING_CRUDE_OIL_PARTICLE, DrippingOilFactory::new);
+
+        MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "solar_panel"), SolarPanelSpriteProvider::new);
+        MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "oxygen_sealer"), OxygenSealerSpriteProvider::new);
 
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(resourceManager -> (resourceId, context) -> {
             if (WireBakedModel.WIRE_MARKER.equals(resourceId)) {

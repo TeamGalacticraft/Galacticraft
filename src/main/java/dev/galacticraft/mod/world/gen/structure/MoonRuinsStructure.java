@@ -20,12 +20,11 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.feature;
+package dev.galacticraft.mod.world.gen.structure;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.structure.MoonRuinsGenerator;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -33,16 +32,17 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 
+import java.util.Optional;
+
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class MoonRuinsFeature extends Structure {
-//   private static final Structure.Config CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-//           StructurePool.REGISTRY_CODEC.fieldOf("start_pool").forGetter(StructurePoolFeatureConfig::getStartPool),
-//           Codec.INT.fieldOf("size").forGetter(StructurePoolFeatureConfig::getSize)
-//   ).apply(instance, MoonRuinsFeature::new));
+public class MoonRuinsStructure extends Structure {
+   public static final Codec<MoonRuinsStructure> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+           StructureSettings.CODEC.fieldOf("config").forGetter((moonRuinsStructure) -> moonRuinsStructure.settings)
+   ).apply(instance, MoonRuinsStructure::new));
 
-   public MoonRuinsFeature(Structure.StructureSettings codec) {
+   public MoonRuinsStructure(Structure.StructureSettings codec) {
       super(codec);
    }
 
@@ -54,11 +54,11 @@ public class MoonRuinsFeature extends Structure {
 
    @Override
    public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
-      return onTopOfChunkCenter(context, Heightmap.Types.WORLD_SURFACE_WG, collector -> this.addPieces(collector, context));
+      return onTopOfChunkCenter(context, Heightmap.Types.WORLD_SURFACE_WG, collector -> addPieces(collector, context));
    }
 
    @Override
    public StructureType<?> type() {
-      return null;//GalacticraftStructureFeature.MOON_RUINS;
+      return GalacticraftStructureType.MOON_RUINS;
    }
 }

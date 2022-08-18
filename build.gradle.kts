@@ -41,6 +41,7 @@ val modMenuVersion         = project.property("modmenu.version").toString()
 val energyVersion          = project.property("energy.version").toString()
 val galacticraftApiVersion = project.property("galacticraft.api.version").toString()
 val machineLibVersion      = project.property("machinelib.version").toString()
+val architecturyVersion    = project.property("architectury.version").toString()
 val reiVersion             = project.property("rei.version").toString()
 val myronVersion           = project.property("myron.version").toString()
 val badpacketsVersion      = project.property("badpackets.version").toString()
@@ -50,9 +51,9 @@ val runtimeOptional        = project.property("optional_dependencies.enabled").t
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("0.11-SNAPSHOT")
+    id("fabric-loom") version("0.12-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
-    id("io.github.juuxel.loom-quiltflower") version("1.7.0")
+    id("io.github.juuxel.loom-quiltflower") version("1.7.3")
 }
 
 java {
@@ -63,13 +64,7 @@ java {
 
 sourceSets {
     main {
-        java {
-            srcDir("src/main/java")
-        }
-        resources {
-            srcDir("src/main/resources")
-            srcDir("src/main/generated")
-        }
+        resources.srcDir("src/main/generated")
     }
     register("gametest") {
         java {
@@ -92,18 +87,27 @@ loom {
     accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
     mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
 
+    sourceSets {
+        main {
+            resources {
+                srcDir("src/generated/resources")
+                exclude("src/generated/resources/.cache")
+            }
+        }
+    }
+
     runs {
         register("datagen") {
             server()
             name("Data Generation")
             runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/testmod/generated")}", "-Dfabric-api.datagen.strict-validation")
+            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/generated/resources")}", "-Dfabric-api.datagen.strict-validation")
         }
         register("datagenClient") {
             client()
             name("Data Generation Client")
             runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/testmod/generated")}", "-Dfabric-api.datagen.strict-validation")
+            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/generated/resources")}", "-Dfabric-api.datagen.strict-validation")
         }
         register("gametest") {
             server()
@@ -124,7 +128,7 @@ loom {
 
 repositories {
     mavenLocal()
-    maven("https://maven.galacticraft.dev") {
+    maven("https://maven.galacticraft.net/repository/maven-releases/") {
         content {
             includeGroup("dev.galacticraft")
         }
@@ -171,41 +175,7 @@ dependencies {
     mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
 
-    // Fabric Api Modules
-    listOf(
-        "fabric-api-base",
-        "fabric-api-lookup-api-v1",
-        "fabric-biome-api-v1",
-        "fabric-blockrenderlayer-v1",
-        "fabric-command-api-v2",
-        "fabric-content-registries-v0",
-        "fabric-convention-tags-v1",
-        "fabric-data-generation-api-v1",
-        "fabric-gametest-api-v1",
-        "fabric-item-groups-v0",
-        "fabric-mining-level-api-v1",
-        "fabric-models-v0",
-        "fabric-networking-api-v1",
-        "fabric-object-builder-api-v1",
-        "fabric-particles-v1",
-        "fabric-registry-sync-v0",
-        "fabric-renderer-api-v1",
-        "fabric-renderer-indigo",
-//        "fabric-renderer-registries-v1",
-        "fabric-rendering-fluids-v1",
-        "fabric-rendering-v1",
-        "fabric-resource-conditions-api-v1",
-        "fabric-resource-loader-v0",
-        "fabric-screen-handler-api-v1",
-//        "fabric-structure-api-v1",
-//        "fabric-tag-extensions-v0",
-        "fabric-textures-v0",
-//        "fabric-tool-attribute-api-v1",
-        "fabric-transfer-api-v1",
-        "fabric-transitive-access-wideners-v1"
-    ).forEach { module ->
-        modImplementation(getFabricApiModule(module)) { isTransitive = false }
-    }
+    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 
     // Mandatory Dependencies (Included with Jar-In-Jar)
 //    includedDependency("dev.monarkhes:myron:$myronVersion") {
@@ -234,6 +204,7 @@ dependencies {
     optionalDependency("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
     optionalDependency("lol.bai:badpackets:fabric-$badpacketsVersion") { isTransitive = false }
     optionalDependency("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
+    optionalDependency("dev.architectury:architectury-fabric:${architecturyVersion}") { isTransitive = false }
     optionalDependency("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
         exclude(group = "net.fabricmc")
@@ -252,8 +223,6 @@ tasks.processResources {
         expand("version" to project.version)
     }
 
-    duplicatesStrategy = DuplicatesStrategy.WARN
-
     // Minify json resources
     // https://stackoverflow.com/questions/41028030/gradle-minimize-json-resources-in-processresources#41029113
     doLast {
@@ -267,10 +236,6 @@ tasks.create<Jar>("javadocJar") {
     from(tasks.javadoc)
     archiveClassifier.set("javadoc")
     tasks.build.get().dependsOn(this)
-}
-
-tasks.named<ProcessResources>("processGametestResources") {
-    duplicatesStrategy = DuplicatesStrategy.WARN
 }
 
 tasks.jar {
@@ -340,8 +305,6 @@ fun getFabricApiModule(moduleName: String): String {
 fun DependencyHandler.optionalDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
     modCompileOnly(dependencyNotation, dependencyConfiguration)
     if (!net.fabricmc.loom.util.OperatingSystem.isCIBuild() && runtimeOptional) {
-        if (dependencyNotation.contains("shedaniel"))
-            return
         modRuntimeOnly(dependencyNotation, dependencyConfiguration)
     }
 }

@@ -190,5 +190,7 @@ public class GalacticraftBiomeParameters {
                 )
         );
     }
+
+    public static void register() {}
 }
 

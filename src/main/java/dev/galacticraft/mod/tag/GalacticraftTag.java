@@ -29,6 +29,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.material.Fluid;
 
 /**
@@ -41,22 +42,25 @@ public class GalacticraftTag {
 
     public static final TagKey<Block> INFINIBURN_MOON = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(Constant.MOD_ID, "infiniburn_moon"));
     public static final TagKey<Block> BASE_STONE_MOON = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(Constant.MOD_ID, "base_stone_moon"));
+    public static final TagKey<Block> MOON_CARVER_REPLACEABLES = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_carver_replaceables"));
+    public static final TagKey<Block> MOON_CRATER_CARVER_REPLACEABLES = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_crater_carver_replaceables"));
     public static final TagKey<Block> MOON_STONE_ORE_REPLACABLES = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_stone_ore_replaceables"));
     public static final TagKey<Block> LUNASLATE_ORE_REPLACABLES = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(Constant.MOD_ID, "lunaslate_ore_replaceables"));
 
+    public static final TagKey<Biome> MOON = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon"));
     public static final TagKey<Biome> MOON_HIGHLANDS = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_highlands"));
-
     public static final TagKey<Biome> MOON_MARE = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_mare"));
+
+    public static final TagKey<Biome> MOON_PILLAGER_BASE_HAS_STRUCTURE = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Constant.MOD_ID, "has_structure/moon_pillager_base"));
+    public static final TagKey<Biome> MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Constant.MOD_ID, "has_structure/moon_village_highlands"));
+    public static final TagKey<Biome> MOON_RUINS_HAS_STRUCTURE = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Constant.MOD_ID, "has_structure/moon_ruins"));
 
     public static final TagKey<Fluid> OXYGEN = TagKey.create(Registry.FLUID_REGISTRY, new ResourceLocation(Constant.MOD_ID, "oxygen"));
 
-    public static final TagKey<Item> SILICONS = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(Constant.COMMON_NAMESPACE, "silicons"));
-    public static final TagKey<Item> REDSTONES = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(Constant.COMMON_NAMESPACE, "redstones"));
+    public static final TagKey<Item> SILICON = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(Constant.COMMON_NAMESPACE, "silicon"));
+
+    public static final TagKey<Structure> MOON_RUINS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_ruins"));
 
     public static void register() {
-//        BlockTagsAccessor.getRequiredTags().add(MOON_STONE_ORE_REPLACABLES.getId().toString());
-//        BlockTagsAccessor.getRequiredTags().add(LUNASLATE_ORE_REPLACABLES.getId().toString());
-//        BlockTagsAccessor.getRequiredTags().add(BASE_STONE_MOON.getId().toString());
-//        BlockTagsAccessor.getRequiredTags().add(INFINIBURN_MOON.getId().toString());
     }
 }

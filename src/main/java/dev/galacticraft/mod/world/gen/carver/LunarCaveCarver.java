@@ -53,13 +53,6 @@ import java.util.function.Function;
 public class LunarCaveCarver extends CaveWorldCarver {
     public LunarCaveCarver(Codec<CaveCarverConfiguration> codec) {
         super(codec);
-//        this.alwaysCarvableBlocks = ImmutableSet.<Block>builder().addAll(this.alwaysCarvableBlocks) TODO: PORT: replacebles?
-//                .add(GalacticraftBlock.MOON_ROCK)
-//                .add(GalacticraftBlock.MOON_SURFACE_ROCK)
-//                .add(GalacticraftBlock.MOON_TURF)
-//                .add(GalacticraftBlock.MOON_BASALT)
-//                .add(GalacticraftBlock.MOON_DIRT)
-//                .build();
     }
 
     @Override

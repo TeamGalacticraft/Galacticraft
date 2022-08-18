@@ -1,5 +1,11 @@
 {
-  "parent": "block/cube",
+  "machine": "galacticraft:oxygen_sealer",
+  "sprite_provider": "galacticraft:oxygen_sealer",
+  "sprite_info": {
+    "right": "galacticraft:block/machine_power_input",
+    "left": "galacticraft:block/machine_fluid_input",
+    "top": "galacticraft:block/oxygen_sealer_top"
+  },
   "textures": {
     "up": "galacticraft:block/oxygen_sealer_top",
     "down": "galacticraft:block/machine",

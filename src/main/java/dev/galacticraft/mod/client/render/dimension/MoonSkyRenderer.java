@@ -23,23 +23,19 @@
 package dev.galacticraft.mod.client.render.dimension;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexBuffer;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
+
 import java.util.Random;
 
 public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
@@ -97,7 +93,9 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
                     }
                 }
             }
+            this.starBuffer.bind();
             this.starBuffer.upload(buffer.end());
+            VertexBuffer.unbind();
         }
         context.profiler().push("moon_sky_render");
         RenderSystem.disableTexture();
@@ -115,9 +113,10 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         matrices.mulPose(Vector3f.YP.rotationDegrees(-19.0F));
         RenderSystem.setShaderColor(1.0F, 0.95F, 0.9F, starBrightness);
         RenderSystem.disableTexture();
-        this.starBuffer.drawWithShader(matrices.last().pose(), context.projectionMatrix(), GameRenderer.getPositionShader());
+
+        FogRenderer.setupNoFog();
         this.starBuffer.bind();
-        this.starBuffer.draw();
+        this.starBuffer.drawWithShader(matrices.last().pose(), context.projectionMatrix(), GameRenderer.getPositionShader());
         VertexBuffer.unbind();
 
         matrices.popPose();
