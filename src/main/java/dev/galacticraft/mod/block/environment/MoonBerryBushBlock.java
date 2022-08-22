@@ -112,7 +112,7 @@ public class MoonBerryBushBlock extends BushBlock {
     }
 
     @Override
-    protected boolean mayPlaceOn(BlockState blockState, BlockGetter blockView, BlockPos blockPos) {
+    public boolean mayPlaceOn(BlockState blockState, BlockGetter blockView, BlockPos blockPos) {
         return blockState.getBlock() == GalacticraftBlock.MOON_DIRT;
     }
 

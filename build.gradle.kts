@@ -45,6 +45,7 @@ val reiVersion             = project.property("rei.version").toString()
 val myronVersion           = project.property("myron.version").toString()
 val badpacketsVersion      = project.property("badpackets.version").toString()
 val wthitVersion           = project.property("wthit.version").toString()
+val portingLibVersion      = project.property("porting.lib.version").toString()
 val runtimeOptional        = project.property("optional_dependencies.enabled").toString().toBoolean()
 
 plugins {
@@ -72,6 +73,8 @@ sourceSets {
         resources {
             srcDir("src/gametest/resources")
         }
+        compileClasspath += main.get().compileClasspath
+        runtimeClasspath += main.get().runtimeClasspath
     }
 }
 
@@ -130,6 +133,7 @@ repositories {
             includeGroup("dev.galacticraft")
         }
     }
+    maven("https://mvn.devos.one/snapshots/")
     maven("https://maven.shedaniel.me/") {
         content {
             includeGroup("me.shedaniel.cloth.api")
@@ -179,6 +183,16 @@ dependencies {
 //        exclude(group = "net.fabricmc")
 //        exclude(group = "net.fabricmc.fabric-api")
 //    }
+    listOf(
+        "model-loader",
+        "extensions",
+        "obj-loader",
+        "accessors",
+        "constants",
+        "common"
+    ).forEach({
+        includedDependency("io.github.fabricators_of_create.Porting-Lib:$it:${portingLibVersion}+${minecraftVersion}") { isTransitive = false }
+    })
     includedDependency("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")

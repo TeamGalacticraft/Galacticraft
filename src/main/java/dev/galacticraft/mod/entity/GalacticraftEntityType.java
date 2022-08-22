@@ -44,7 +44,7 @@ public class GalacticraftEntityType {
     public static final EntityType<EvolvedPillagerEntity> EVOLVED_PILLAGER = FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedPillagerEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.95F)).build();
     public static final EntityType<EvolvedEvokerEntity> EVOLVED_EVOKER = FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedEvokerEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.95F)).build();
     public static final EntityType<EvolvedVindicatorEntity> EVOLVED_VINDICATOR = FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedVindicatorEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.95F)).build();
-    public static final EntityType<BubbleEntity> BUBBLE = FabricEntityTypeBuilder.create(MobCategory.MISC, BubbleEntity::new).fireImmune().dimensions(EntityDimensions.fixed(0, 0)).disableSaving().disableSummon().build();
+    public static final EntityType<BubbleEntity> BUBBLE = FabricEntityTypeBuilder.create(MobCategory.MISC, BubbleEntity::new).fireImmune().dimensions(EntityDimensions.fixed(0, 0)).disableSaving()/*.disableSummon()*/.build();
 
     public static void register() {
         Registry.register(Registry.ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Entity.EVOLVED_ZOMBIE), EVOLVED_ZOMBIE);

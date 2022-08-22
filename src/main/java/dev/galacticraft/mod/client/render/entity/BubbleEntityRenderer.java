@@ -22,83 +22,53 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Transformation;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
 import dev.galacticraft.mod.entity.BubbleEntity;
+import io.github.fabricators_of_create.porting_lib.model.PortingLibRenderTypes;
+import io.github.fabricators_of_create.porting_lib.model.geometry.IGeometryBakingContext;
+import io.github.fabricators_of_create.porting_lib.model.obj.ObjLoader;
+import io.github.fabricators_of_create.porting_lib.model.obj.ObjModel;
+import io.github.fabricators_of_create.porting_lib.renderable.CompositeRenderable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.Direction;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
-    private static final ResourceLocation MODEL = new ResourceLocation(Constant.MOD_ID, "models/misc/sphere");
-    public static BakedModel bubbleModel = new BakedModel() {
-        @Override
-        public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction, RandomSource randomSource) {
-            return Collections.emptyList();
-        }
-
-        @Override
-        public boolean useAmbientOcclusion() {
-            return false;
-        }
-
-        @Override
-        public boolean isGui3d() {
-            return false;
-        }
-
-        @Override
-        public boolean usesBlockLight() {
-            return false;
-        }
-
-        @Override
-        public boolean isCustomRenderer() {
-            return false;
-        }
-
-        @Override
-        public TextureAtlasSprite getParticleIcon() {
-            return null;
-        }
-
-        @Override
-        public ItemTransforms getTransforms() {
-            return ItemTransforms.NO_TRANSFORMS;
-        }
-
-        @Override
-        public ItemOverrides getOverrides() {
-            return ItemOverrides.EMPTY;
-        }
-    };
+    private static final ResourceLocation MODEL = new ResourceLocation(Constant.MOD_ID, "models/misc/sphere.json");
+    public static BakedModel bubbleModel;
 
     public BubbleEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -106,10 +76,10 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
 
     @Override
     public void render(BubbleEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
-//        if (bubbleModel == null) { TODO: PORT new obj system
-//            bubbleModel = Myron.getModel(MODEL);
-//            assert bubbleModel != null;
-//        }
+        if (bubbleModel == null) {
+            bubbleModel = Minecraft.getInstance().getModelManager().bakedRegistry.get(MODEL);
+            assert bubbleModel != null;
+        }
         BlockEntity blockEntity = entity.level.getBlockEntity(entity.blockPosition());
         if (!(blockEntity instanceof BubbleDistributorBlockEntity machine) || entity.isRemoved()) {
             ((ClientLevel) entity.level).removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
@@ -123,7 +93,7 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
         matrices.scale((float) size, (float) size, (float) size);
-        VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.entityTranslucent(getTextureLocation(entity)));
+        VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.entityTranslucentEmissive(new ResourceLocation(Constant.MOD_ID, "textures/model/sphere.png")));
         for (BakedQuad quad : bubbleModel.getQuads(null, null, entity.level.random)) {
             consumer.putBulkData(matrices.last(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.NO_OVERLAY);
         }
@@ -137,6 +107,6 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(BubbleEntity entity) {
-        return new ResourceLocation("missingno");//bubbleModel.getParticleIcon().getName();
+        return bubbleModel.getParticleIcon().getName();
     }
 }

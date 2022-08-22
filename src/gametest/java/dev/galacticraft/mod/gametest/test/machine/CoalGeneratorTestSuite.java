@@ -27,76 +27,76 @@ import dev.galacticraft.mod.block.entity.CoalGeneratorBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.test.GameTest;
-import net.minecraft.test.TestContext;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CoalGeneratorTestSuite implements MachineGameTest {
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void coalGeneratorPlacementTest(TestContext context) {
-        context.addInstantFinalTask(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR));
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void coalGeneratorPlacementTest(GameTestHelper context) {
+        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR));
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 322)
-    public void coalGeneratorFuelingTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 322)
+    public void coalGeneratorFuelingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);
         coalGenerator.itemStorage().setSlot(CoalGeneratorBlockEntity.FUEL_SLOT, ItemVariant.of(Items.COAL), 2);
         runNext(context, () -> {
             ItemStack stack = coalGenerator.itemStorage().getStack(CoalGeneratorBlockEntity.FUEL_SLOT);
             if (stack.isEmpty() || stack.getItem() != Items.COAL || stack.getCount() != 1) {
-                context.throwPositionedException(String.format("Expected coal generator inventory to be have 1 coal but found %s!", formatItemStack(stack)), pos);
+                context.fail(String.format("Expected coal generator inventory to be have 1 coal but found %s!", formatItemStack(stack)), pos);
             }
             if (coalGenerator.getFuelLength() == 0) {
-                context.throwPositionedException("Expected coal generator inventory to be burning fuel!", pos);
+                context.fail("Expected coal generator inventory to be burning fuel!", pos);
             }
             runFinalTaskAt(context, 320 + 1, () -> {
                 ItemStack stack1 = coalGenerator.itemStorage().getStack(CoalGeneratorBlockEntity.FUEL_SLOT);
 
                 if (!stack1.isEmpty()) {
-                    context.throwPositionedException(String.format("Expected coal generator inventory to be empty but found %s!", formatItemStack(stack1)), pos);
+                    context.fail(String.format("Expected coal generator inventory to be empty but found %s!", formatItemStack(stack1)), pos);
                 }
             });
         });
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 371)
-    public void coalGeneratorGenerationTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 371)
+    public void coalGeneratorGenerationTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);
         coalGenerator.setFuelLength(CoalGeneratorBlockEntity.FUEL_MAP.getInt(Items.COAL));
         runFinalTaskAt(context, 370 + 1, () -> {
             if (coalGenerator.energyStorage().getAmount() != 26371) {
-                context.throwPositionedException(String.format("Expected coal generator to have 26371 energy! Found: %s", coalGenerator.energyStorage().getAmount()), pos);
+                context.fail(String.format("Expected coal generator to have 26371 energy! Found: %s", coalGenerator.energyStorage().getAmount()), pos);
             }
         });
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 250)
-    public void coalGeneratorHeatTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 250)
+    public void coalGeneratorHeatTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);
         coalGenerator.setFuelLength(250);
         runFinalTaskAt(context, 250, () -> {
             if (coalGenerator.getHeat() != 1) {
-                context.throwPositionedException(String.format("Expected coal generator to be 100 percent heated but it only was %s percent!", (int)(coalGenerator.getHeat() * 100)), pos);
+                context.fail(String.format("Expected coal generator to be 100 percent heated but it only was %s percent!", (int)(coalGenerator.getHeat() * 100)), pos);
             }
         });
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 50)
-    public void coalGeneratorCoolingTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 50)
+    public void coalGeneratorCoolingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);
         coalGenerator.setHeat(1.0);
         runFinalTaskAt(context, 50, () -> {
             if (coalGenerator.getHeat() != 0) {
-                context.throwPositionedException(String.format("Expected coal generator to be 0 percent heated but it was %s percent!", (int)(coalGenerator.getHeat() * 100)), pos);
+                context.fail(String.format("Expected coal generator to be 0 percent heated but it was %s percent!", (int)(coalGenerator.getHeat() * 100)), pos);
             }
         });
     }

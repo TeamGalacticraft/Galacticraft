@@ -29,26 +29,24 @@ import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.test.GameTest;
-import net.minecraft.test.TestContext;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CompressorTestSuite implements MachineGameTest {
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void compressorPlacementTest(TestContext context) {
-        context.addInstantFinalTask(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GalacticraftBlock.COMPRESSOR, GalacticraftBlockEntityType.COMPRESSOR));
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void compressorPlacementTest(GameTestHelper context) {
+        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GalacticraftBlock.COMPRESSOR, GalacticraftBlockEntityType.COMPRESSOR));
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 2)
-    public void compressorFuelingTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 2)
+    public void compressorFuelingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var compressor = this.createBlockEntity(context, pos, GalacticraftBlock.COMPRESSOR, GalacticraftBlockEntityType.COMPRESSOR);
         final var inv = compressor.itemStorage();
@@ -56,19 +54,19 @@ public class CompressorTestSuite implements MachineGameTest {
         runNext(context, () -> {
             ItemStack stack = inv.getStack(CompressorBlockEntity.FUEL_INPUT_SLOT);
             if (stack.isEmpty() || stack.getItem() != Items.COAL || stack.getCount() != 1) {
-                context.throwPositionedException(String.format("Expected compressor inventory to be have 1 coal but found %s!", formatItemStack(stack)), pos);
+                context.fail(String.format("Expected compressor inventory to be have 1 coal but found %s!", formatItemStack(stack)), pos);
             }
             fillCompressorSlots(inv);
             runFinalTaskNext(context, () -> {
                 if (compressor.fuelLength == 0) {
-                    context.throwPositionedException("Expected compressor inventory to be burning fuel!", pos);
+                    context.fail("Expected compressor inventory to be burning fuel!", pos);
                 }
             });
         });
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 201)
-    public void compressorCraftingTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 201)
+    public void compressorCraftingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var compressor = this.createBlockEntity(context, pos, GalacticraftBlock.COMPRESSOR, GalacticraftBlockEntityType.COMPRESSOR);
         final var inv = compressor.itemStorage();
@@ -77,13 +75,13 @@ public class CompressorTestSuite implements MachineGameTest {
         runFinalTaskAt(context, 200 + 1, () -> {
             ItemStack output = inv.getStack(CompressorBlockEntity.OUTPUT_SLOT);
             if (output.getItem() != GalacticraftItem.COMPRESSED_IRON) {
-                context.throwPositionedException(String.format("Expected compressor to have made compressed iron but found %s instead!", formatItemStack(output)), pos);
+                context.fail(String.format("Expected compressor to have made compressed iron but found %s instead!", formatItemStack(output)), pos);
             }
         });
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void compressorCraftingFullTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void compressorCraftingFullTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var compressor = this.createBlockEntity(context, pos, GalacticraftBlock.COMPRESSOR, GalacticraftBlockEntityType.COMPRESSOR);
         final var inv = compressor.itemStorage();
@@ -92,7 +90,7 @@ public class CompressorTestSuite implements MachineGameTest {
         fillCompressorSlots(inv);
         runFinalTaskNext(context, () -> {
             if (compressor.getMaxProgress() != 0) {
-                context.throwPositionedException("Expected compressor to be unable to craft as the output was full!", pos);
+                context.fail("Expected compressor to be unable to craft as the output was full!", pos);
             }
         });
     }

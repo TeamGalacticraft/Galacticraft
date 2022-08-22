@@ -28,29 +28,28 @@ import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.test.TestContext;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface MachineGameTest extends GalacticraftGameTest {
-    default <T extends MachineBlockEntity, B extends MachineBlock<T>> @NotNull T createBlockEntity(@NotNull TestContext context, BlockPos pos, B block, BlockEntityType<T> type) {
-        context.setBlockState(pos, block);
+    default <T extends MachineBlockEntity, B extends MachineBlock<T>> @NotNull T createBlockEntity(@NotNull GameTestHelper context, BlockPos pos, B block, BlockEntityType<T> type) {
+        context.setBlock(pos, block);
         final var blockEntity = context.getBlockEntity(pos);
         if (blockEntity == null) {
-            context.throwPositionedException(String.format("Expected a '%s' block entity, but found 'null'!", Registry.BLOCK_ENTITY_TYPE.getId(type)), pos);
+            context.fail(String.format("Expected a '%s' block entity, but found 'null'!", Registry.BLOCK_ENTITY_TYPE.getKey(type)), pos);
         } else if (blockEntity.getType() != type) {
-            context.throwPositionedException(String.format("Expected a '%s' block entity, but found '%s'!", Registry.BLOCK_ENTITY_TYPE.getId(type), Registry.BLOCK_ENTITY_TYPE.getId(blockEntity.getType())), pos);
+            context.fail(String.format("Expected a '%s' block entity, but found '%s'!", Registry.BLOCK_ENTITY_TYPE.getKey(type), Registry.BLOCK_ENTITY_TYPE.getKey(blockEntity.getType())), pos);
         }
         return (T) blockEntity;
     }
 
-    default <T extends MachineBlockEntity, B extends MachineBlock<T>> void testItemCharging(TestContext context, BlockPos pos, B block, BlockEntityType<T> type, int slot) {
+    default <T extends MachineBlockEntity, B extends MachineBlock<T>> void testItemCharging(GameTestHelper context, BlockPos pos, B block, BlockEntityType<T> type, int slot) {
         T machine = this.createBlockEntity(context, pos, block, type);
         try (Transaction transaction = Transaction.openOuter()) {
             machine.itemStorage().setSlot(slot, ItemVariant.of(GalacticraftItem.INFINITE_BATTERY), 1);
@@ -58,12 +57,12 @@ public interface MachineGameTest extends GalacticraftGameTest {
         }
         runFinalTaskNext(context, () -> {
             if (machine.energyStorage().getAmount() <= 0) {
-                context.throwPositionedException(String.format("Expected %s to charge from an item, but found %s energy!", Registry.BLOCK_ENTITY_TYPE.getId(type), machine.energyStorage().getAmount()), pos);
+                context.fail(String.format("Expected %s to charge from an item, but found %s energy!", Registry.BLOCK_ENTITY_TYPE.getKey(type), machine.energyStorage().getAmount()), pos);
             }
         });
     }
 
-    default <T extends MachineBlockEntity, B extends MachineBlock<T>> void testItemDraining(TestContext context, BlockPos pos, B block, BlockEntityType<T> type, int slot) {
+    default <T extends MachineBlockEntity, B extends MachineBlock<T>> void testItemDraining(GameTestHelper context, BlockPos pos, B block, BlockEntityType<T> type, int slot) {
         T machine = this.createBlockEntity(context, pos, block, type);
         machine.energyStorage().setEnergyUnsafe(machine.energyStorage().getCapacity());
         try (Transaction transaction = Transaction.openOuter()) {
@@ -72,7 +71,7 @@ public interface MachineGameTest extends GalacticraftGameTest {
         }
         runFinalTaskNext(context, () -> {
             if (machine.energyStorage().getAmount() >= machine.energyStorage().getCapacity()) {
-                context.throwPositionedException(String.format("Expected %s to drain power to an item, but it was still at max energy!", Registry.BLOCK_ENTITY_TYPE.getId(type)), pos);
+                context.fail(String.format("Expected %s to drain power to an item, but it was still at max energy!", Registry.BLOCK_ENTITY_TYPE.getKey(type)), pos);
             }
         });
     }
