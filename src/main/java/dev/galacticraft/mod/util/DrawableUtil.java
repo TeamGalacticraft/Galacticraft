@@ -95,7 +95,7 @@ public class DrawableUtil {
         bufferBuilder.vertex(matrices, x1, y1, z).uv(u1, v1).endVertex();
         bufferBuilder.vertex(matrices, x1, y0, z).uv(u1, v0).endVertex();
         bufferBuilder.vertex(matrices, x0, y0, z).uv(u0, v0).endVertex();
-        BufferUploader.draw(bufferBuilder.end());
+        BufferUploader.drawWithShader(bufferBuilder.end());
     }
 
     public static void drawTextureColor(PoseStack matrices, int x, int y, int z, float u, float v, int width, int height, int textureHeight, int textureWidth, int red, int green, int blue, int alpha) {

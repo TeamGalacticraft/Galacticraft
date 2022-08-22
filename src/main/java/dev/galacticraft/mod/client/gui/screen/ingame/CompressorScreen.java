@@ -41,8 +41,8 @@ import net.minecraft.world.entity.player.Inventory;
 public class CompressorScreen extends MachineHandledScreen<CompressorBlockEntity, CompressorScreenHandler> {
     private static final int PROGRESS_U = 204;
     private static final int PROGRESS_V = 0;
-    private static final int PROGRESS_X = 77;
-    private static final int PROGRESS_Y = 28;
+    private static final int PROGRESS_X = 82;
+    private static final int PROGRESS_Y = 26;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
@@ -67,6 +67,7 @@ public class CompressorScreen extends MachineHandledScreen<CompressorBlockEntity
     protected void drawFuelProgressBar(PoseStack matrices) {
         if (this.menu.machine.fuelLength > 0) {
             float fuelUsageScale = (float)((double)(this.menu.machine.fuelLength - this.menu.machine.fuelTime) / (double)this.menu.machine.fuelLength);
+            RenderSystem.setShaderTexture(0, Constant.ScreenTexture.COMPRESSOR_SCREEN);
             DrawableUtil.drawProgressTexture(matrices, this.leftPos + FIRE_X, (this.topPos + FIRE_Y + (FIRE_HEIGHT - (fuelUsageScale * FIRE_HEIGHT))), FIRE_U, FIRE_V - (FIRE_HEIGHT - (fuelUsageScale * FIRE_HEIGHT)), FIRE_WIDTH, (fuelUsageScale * FIRE_HEIGHT));
         }
     }
