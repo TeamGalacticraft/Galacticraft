@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.gametest.mixin;
 
 import dev.galacticraft.mod.gametest.JUnit5XMLTestCompletionListener;
-import net.minecraft.test.TestFailureLogger;
-import net.minecraft.test.TestServer;
+import net.minecraft.gametest.framework.GameTestServer;
+import net.minecraft.gametest.framework.GlobalTestReporter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -33,13 +33,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 
-@Mixin(TestServer.class)
+@Mixin(GameTestServer.class)
 public class TestServerMixin {
 
-    @Inject(method = "setupServer", at = @At("HEAD"))
+    @Inject(method = "initServer", at = @At("HEAD"))
     private void setupServer(CallbackInfoReturnable<Boolean> cir) {
         try {
-            TestFailureLogger.setCompletionListener(new JUnit5XMLTestCompletionListener(new File("TEST-gametest.xml")));
+            GlobalTestReporter.replaceWith(new JUnit5XMLTestCompletionListener(new File("TEST-gametest.xml")));
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }

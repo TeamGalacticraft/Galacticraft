@@ -29,31 +29,29 @@ import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.test.GameTest;
-import net.minecraft.test.TestContext;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CircuitFabricatorTestSuite implements MachineGameTest {
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void circuitFabricatorPlacementTest(TestContext context) {
-        context.addInstantFinalTask(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GalacticraftBlock.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR));
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void circuitFabricatorPlacementTest(GameTestHelper context) {
+        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GalacticraftBlock.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR));
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void circuitFabricatorChargeTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void circuitFabricatorChargeTest(GameTestHelper context) {
         this.testItemCharging(context, new BlockPos(0, 0, 0), GalacticraftBlock.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR, CircuitFabricatorBlockEntity.CHARGE_SLOT);
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 301)
-    public void circuitFabricatorCraftingTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 301)
+    public void circuitFabricatorCraftingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var circuitFabricator = this.createBlockEntity(context, pos, GalacticraftBlock.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
         final var inv = circuitFabricator.itemStorage();
@@ -62,13 +60,13 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
         runFinalTaskAt(context, 300 + 1, () -> {
             ItemStack output = inv.getStack(CircuitFabricatorBlockEntity.OUTPUT_SLOT);
             if (output.getItem() != GalacticraftItem.BASIC_WAFER) {
-                context.throwPositionedException(String.format("Expected circuit fabricator to have made a wafer but found %s instead!", formatItemStack(output)), pos);
+                context.fail(String.format("Expected circuit fabricator to have made a wafer but found %s instead!", formatItemStack(output)), pos);
             }
         });
     }
 
-    @GameTest(structureName = GalacticraftGameTest.SINGLE_BLOCK, tickLimit = 1)
-    public void circuitFabricatorCraftingFullTest(TestContext context) {
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
+    public void circuitFabricatorCraftingFullTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var circuitFabricator = this.createBlockEntity(context, pos, GalacticraftBlock.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
         final var inv = circuitFabricator.itemStorage();
@@ -77,7 +75,7 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
         fillCircuitFabricatorSlots(inv);
         runFinalTaskNext(context, () -> {
             if (circuitFabricator.getMaxProgress() != 0) {
-                context.throwPositionedException("Expected circuit fabricator to be unable to craft as the output was full!", pos);
+                context.fail("Expected circuit fabricator to be unable to craft as the output was full!", pos);
             }
         });
     }
