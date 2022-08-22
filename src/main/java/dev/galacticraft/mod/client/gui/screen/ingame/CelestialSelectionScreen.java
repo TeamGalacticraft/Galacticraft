@@ -38,7 +38,7 @@ import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
 import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.satellite.Satellite;
-import dev.galacticraft.api.satellite.SpaceStationRecipe;
+//import dev.galacticraft.api.satellite.SpaceStationRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
@@ -385,7 +385,7 @@ public class CelestialSelectionScreen extends Screen {
     }
 
     protected boolean canCreateSpaceStation(CelestialBody<?, ?> atBody) {
-        if (!(atBody.type() instanceof Orbitable orbitable) || orbitable.getSpaceStationRecipe(atBody.config()) == null) return false;
+//        if (!(atBody.type() instanceof Orbitable orbitable) || orbitable.getSpaceStationRecipe(atBody.config()) == null) return false;
         if (this.mapMode/* || ConfigManagerCore.disableSpaceStationCreation.get()*/ || !this.canCreateStations) //todo SSconfig
         {
             return false;
@@ -525,29 +525,29 @@ public class CelestialSelectionScreen extends Screen {
             if (x >= RHS - 95 && x < RHS && y > LHS + 181 + canCreateOffset && y < LHS + 182 + 12 + canCreateOffset) {
                 if (this.selectedBody != null && this.selectedBody.type() instanceof Orbitable orbitable/* && this.selectedBody.getWorld() != null*/)
                 {
-                    SpaceStationRecipe recipe = orbitable.getSpaceStationRecipe(this.selectedBody.config());
-                    if (recipe != null && this.canCreateSpaceStation(this.selectedBody))
-                    {
-                        assert this.minecraft != null;
-                        assert this.minecraft.player != null;
-                        if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.getAbilities().instabuild)
-                        {
-//                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BIND_SPACE_STATION_ID, GCCoreUtil.getWorld(this.minecraft.level), new Object[]{this.selectedBody.getWorld()}));
-                            ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "create_satellite"), PacketByteBufs.create().writeResourceLocation(celestialBodyRegistry.getKey(this.selectedBody)));
-                            //Zoom in on planet to show the new SpaceStation if not already zoomed
-                            if (!this.isZoomed())
-                            {
-                                this.selectionState = EnumSelection.ZOOMED;
-                                this.preSelectZoom = this.zoom;
-                                this.preSelectPosition = this.position;
-                                this.ticksSinceSelectionF = 0;
-                                this.doneZooming = false;
-                            }
-                            return true;
-                        }
-
-                        clickHandled = true;
-                    }
+//                    SpaceStationRecipe recipe = orbitable.getSpaceStationRecipe(this.selectedBody.config());
+//                    if (recipe != null && this.canCreateSpaceStation(this.selectedBody))
+//                    {
+//                        assert this.minecraft != null;
+//                        assert this.minecraft.player != null;
+//                        if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.getAbilities().instabuild)
+//                        {
+////                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BIND_SPACE_STATION_ID, GCCoreUtil.getWorld(this.minecraft.level), new Object[]{this.selectedBody.getWorld()}));
+//                            ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "create_satellite"), PacketByteBufs.create().writeResourceLocation(celestialBodyRegistry.getKey(this.selectedBody)));
+//                            //Zoom in on planet to show the new SpaceStation if not already zoomed
+//                            if (!this.isZoomed())
+//                            {
+//                                this.selectionState = EnumSelection.ZOOMED;
+//                                this.preSelectZoom = this.zoom;
+//                                this.preSelectPosition = this.position;
+//                                this.ticksSinceSelectionF = 0;
+//                                this.doneZooming = false;
+//                            }
+//                            return true;
+//                        }
+//
+//                        clickHandled = true;
+//                    }
                 }
             }
         }
@@ -1408,111 +1408,111 @@ public class CelestialSelectionScreen extends Screen {
                     this.blit(RHS - 79, LHS + 129, 61, 4, 0, 170, 61, 4, false, false);
 
 
-                    SpaceStationRecipe recipe = ((Orbitable) this.selectedBody.type()).getSpaceStationRecipe(this.selectedBody.config());
-                    if (recipe != null)
-                    {
-                        RenderSystem.setShaderColor(0.0F, 1.0F, 0.1F, 1);
-                        boolean validInputMaterials = true;
-
-                        int i = 0;
-                        for (Object2IntMap.Entry<Ingredient> entry : recipe.ingredients().object2IntEntrySet())
-                        {
-                            Ingredient ingredient = entry.getKey();
-                            int xPos = (int) (RHS - 95 + i * 93 / (double) recipe.ingredients().size() + 5);
-                            int yPos = LHS + 154 + canCreateOffset;
-
-                            boolean b = mousePosX >= xPos && mousePosX <= xPos + 16 && mousePosY >= yPos && mousePosY <= yPos + 16;
-                            int amount = getAmountInInventory(ingredient);
-                            Lighting.setupFor3DItems();
-                            ItemStack stack = ingredient.getItems()[(int) (minecraft.level.getGameTime() % (20 * ingredient.getItems().length) / 20)];
-                            this.itemRenderer.renderGuiItem(stack, xPos, yPos);
-                            this.itemRenderer.renderGuiItemDecorations(font, stack, xPos, yPos, null);
-                            Lighting.setupForFlatItems();
-                            RenderSystem.enableBlend();
-
-                            if (b) {
-                                RenderSystem.depthMask(true);
-                                RenderSystem.enableDepthTest();
-                                matrices.pushPose();
-                                matrices.translate(0, 0, 300);
-                                int k = this.font.width(stack.getHoverName());
-                                int j2 = mousePosX - k / 2;
-                                int k2 = mousePosY - 12;
-                                int i1 = 8;
-
-                                if (j2 + k > this.width)
-                                {
-                                    j2 -= (j2 - this.width + k);
-                                }
-
-                                if (k2 + i1 + 6 > this.height)
-                                {
-                                    k2 = this.height - i1 - 6;
-                                }
-
-                                int j1 = ColorUtil.to32BitColor(190, 0, 153, 255);
-                                this.fillGradient(matrices, j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j1, j1);
-                                this.fillGradient(matrices, j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j1, j1);
-                                this.fillGradient(matrices, j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j1, j1);
-                                this.fillGradient(matrices, j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j1, j1);
-                                this.fillGradient(matrices, j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j1, j1);
-                                int k1 = ColorUtil.to32BitColor(170, 0, 153, 255);
-                                int l1 = (k1 & 16711422) >> 1 | k1 & -16777216;
-                                this.fillGradient(matrices, j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + i1 + 3 - 1, k1, l1);
-                                this.fillGradient(matrices, j2 + k + 2, k2 - 3 + 1, j2 + k + 3, k2 + i1 + 3 - 1, k1, l1);
-                                this.fillGradient(matrices, j2 - 3, k2 - 3, j2 + k + 3, k2 - 3 + 1, k1, k1);
-                                this.fillGradient(matrices, j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
-
-                                this.font.draw(matrices, stack.getHoverName(), j2, k2, WHITE);
-
-                                matrices.popPose();
-                            }
-
-                            str = "" + entry.getIntValue();
-                            boolean valid = amount >= entry.getIntValue();
-                            if (!valid && validInputMaterials) {
-                                validInputMaterials = false;
-                            }
-                            int color = valid | this.minecraft.player.getAbilities().instabuild ? GREEN : RED;
-                            this.font.draw(matrices, str, xPos + 8 - this.font.width(str) / 2f, LHS + 170 + canCreateOffset, color);
-
-                            i++;
-                        }
-
-                        resetShader(GameRenderer::getPositionTexColorShader);
-                        if (validInputMaterials || this.minecraft.player.getAbilities().instabuild)
-                        {
-                            RenderSystem.setShaderColor(0.0F, 1.0F, 0.1F, 1);
-                        }
-                        else
-                        {
-                            RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
-                        }
-
-                        RenderSystem.setShaderTexture(0, TEXTURE_1);
-
-                        if (!this.mapMode)
-                        {
-                            if (mousePosX >= RHS - 95 && mousePosX <= RHS && mousePosY >= LHS + 182 + canCreateOffset && mousePosY <= LHS + 182 + 12 + canCreateOffset)
-                            {
-                                this.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
-                            }
-                        }
-
-                        this.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
-
-                        int color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
-                        this.drawSplitString(matrices, I18n.get("ui.galacticraft.celestialselection.can_create_space_station"), RHS - 48, LHS + 137, 91, ColorUtil.to32BitColor(255, color, 255, color), true, false);
-
-                        if (!mapMode)
-                        {
-                            this.drawSplitString(matrices, I18n.get("ui.galacticraft.celestialselection.create_ss").toUpperCase(), RHS - 48, LHS + 185 + canCreateOffset, 91, WHITE, false, false);
-                        }
-                    }
-                    else
-                    {
-                        this.drawSplitString(matrices, I18n.get("ui.galacticraft.celestialselection.cannot_create_space_station"), RHS - 48, LHS + 138, 91, WHITE, true, false);
-                    }
+//                    SpaceStationRecipe recipe = ((Orbitable) this.selectedBody.type()).getSpaceStationRecipe(this.selectedBody.config());
+//                    if (recipe != null)
+//                    {
+//                        RenderSystem.setShaderColor(0.0F, 1.0F, 0.1F, 1);
+//                        boolean validInputMaterials = true;
+//
+//                        int i = 0;
+//                        for (Object2IntMap.Entry<Ingredient> entry : recipe.ingredients().object2IntEntrySet())
+//                        {
+//                            Ingredient ingredient = entry.getKey();
+//                            int xPos = (int) (RHS - 95 + i * 93 / (double) recipe.ingredients().size() + 5);
+//                            int yPos = LHS + 154 + canCreateOffset;
+//
+//                            boolean b = mousePosX >= xPos && mousePosX <= xPos + 16 && mousePosY >= yPos && mousePosY <= yPos + 16;
+//                            int amount = getAmountInInventory(ingredient);
+//                            Lighting.setupFor3DItems();
+//                            ItemStack stack = ingredient.getItems()[(int) (minecraft.level.getGameTime() % (20 * ingredient.getItems().length) / 20)];
+//                            this.itemRenderer.renderGuiItem(stack, xPos, yPos);
+//                            this.itemRenderer.renderGuiItemDecorations(font, stack, xPos, yPos, null);
+//                            Lighting.setupForFlatItems();
+//                            RenderSystem.enableBlend();
+//
+//                            if (b) {
+//                                RenderSystem.depthMask(true);
+//                                RenderSystem.enableDepthTest();
+//                                matrices.pushPose();
+//                                matrices.translate(0, 0, 300);
+//                                int k = this.font.width(stack.getHoverName());
+//                                int j2 = mousePosX - k / 2;
+//                                int k2 = mousePosY - 12;
+//                                int i1 = 8;
+//
+//                                if (j2 + k > this.width)
+//                                {
+//                                    j2 -= (j2 - this.width + k);
+//                                }
+//
+//                                if (k2 + i1 + 6 > this.height)
+//                                {
+//                                    k2 = this.height - i1 - 6;
+//                                }
+//
+//                                int j1 = ColorUtil.to32BitColor(190, 0, 153, 255);
+//                                this.fillGradient(matrices, j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j1, j1);
+//                                this.fillGradient(matrices, j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j1, j1);
+//                                this.fillGradient(matrices, j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j1, j1);
+//                                this.fillGradient(matrices, j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j1, j1);
+//                                this.fillGradient(matrices, j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j1, j1);
+//                                int k1 = ColorUtil.to32BitColor(170, 0, 153, 255);
+//                                int l1 = (k1 & 16711422) >> 1 | k1 & -16777216;
+//                                this.fillGradient(matrices, j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + i1 + 3 - 1, k1, l1);
+//                                this.fillGradient(matrices, j2 + k + 2, k2 - 3 + 1, j2 + k + 3, k2 + i1 + 3 - 1, k1, l1);
+//                                this.fillGradient(matrices, j2 - 3, k2 - 3, j2 + k + 3, k2 - 3 + 1, k1, k1);
+//                                this.fillGradient(matrices, j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
+//
+//                                this.font.draw(matrices, stack.getHoverName(), j2, k2, WHITE);
+//
+//                                matrices.popPose();
+//                            }
+//
+//                            str = "" + entry.getIntValue();
+//                            boolean valid = amount >= entry.getIntValue();
+//                            if (!valid && validInputMaterials) {
+//                                validInputMaterials = false;
+//                            }
+//                            int color = valid | this.minecraft.player.getAbilities().instabuild ? GREEN : RED;
+//                            this.font.draw(matrices, str, xPos + 8 - this.font.width(str) / 2f, LHS + 170 + canCreateOffset, color);
+//
+//                            i++;
+//                        }
+//
+//                        resetShader(GameRenderer::getPositionTexColorShader);
+//                        if (validInputMaterials || this.minecraft.player.getAbilities().instabuild)
+//                        {
+//                            RenderSystem.setShaderColor(0.0F, 1.0F, 0.1F, 1);
+//                        }
+//                        else
+//                        {
+//                            RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
+//                        }
+//
+//                        RenderSystem.setShaderTexture(0, TEXTURE_1);
+//
+//                        if (!this.mapMode)
+//                        {
+//                            if (mousePosX >= RHS - 95 && mousePosX <= RHS && mousePosY >= LHS + 182 + canCreateOffset && mousePosY <= LHS + 182 + 12 + canCreateOffset)
+//                            {
+//                                this.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
+//                            }
+//                        }
+//
+//                        this.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
+//
+//                        int color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
+//                        this.drawSplitString(matrices, I18n.get("ui.galacticraft.celestialselection.can_create_space_station"), RHS - 48, LHS + 137, 91, ColorUtil.to32BitColor(255, color, 255, color), true, false);
+//
+//                        if (!mapMode)
+//                        {
+//                            this.drawSplitString(matrices, I18n.get("ui.galacticraft.celestialselection.create_ss").toUpperCase(), RHS - 48, LHS + 185 + canCreateOffset, 91, WHITE, false, false);
+//                        }
+//                    }
+//                    else
+//                    {
+//                        this.drawSplitString(matrices, I18n.get("ui.galacticraft.celestialselection.cannot_create_space_station"), RHS - 48, LHS + 138, 91, WHITE, true, false);
+//                    }
                 }
 
                 // Catalog overlay

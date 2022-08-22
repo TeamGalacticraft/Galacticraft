@@ -22,6 +22,8 @@ accessible field  net/minecraft/world/level/levelgen/SurfaceRules$Context   biom
 # static methods
 accessible method net/minecraft/data/worldgen/Structures structure (Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/level/levelgen/structure/TerrainAdjustment;)Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;
 
+accessible field net/minecraft/client/resources/model/ModelManager bakedRegistry Ljava/util/Map;
+
 accessible field com/mojang/math/Matrix4f m00 F
 accessible field com/mojang/math/Matrix4f m01 F
 accessible field com/mojang/math/Matrix4f m02 F

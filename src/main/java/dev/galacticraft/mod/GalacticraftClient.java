@@ -36,7 +36,9 @@ import dev.galacticraft.mod.client.render.dimension.MoonDimensionEffects;
 import dev.galacticraft.mod.client.render.dimension.MoonSkyRenderer;
 import dev.galacticraft.mod.client.render.entity.*;
 import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLayer;
+import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
 import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
+import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resource.GalacticraftResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.item.GalacticraftItem;
@@ -122,10 +124,13 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(GalacticraftEntityType.EVOLVED_PILLAGER, EvolvedPillagerEntityRenderer::new);
         EntityRendererRegistry.register(GalacticraftEntityType.EVOLVED_VINDICATOR, EvolvedVindicatorEntityRenderer::new);
         EntityRendererRegistry.register(GalacticraftEntityType.BUBBLE, BubbleEntityRenderer::new);
+        EntityRendererRegistry.register(GalacticraftEntityType.ROCKET, RocketEntityRenderer::new);
 
         GalacticraftBlockEntityRenderer.register();
         GalacticraftClientPacketReceiver.register();
         GalacticraftEntityModelLayer.register();
+        GalacticraftRocketPartRenderers.register();
+        GalacticraftRocketPartRenderers.registerModelLoader();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.TIN_LADDER, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlock.GLASS_FLUID_PIPE, RenderType.cutout());

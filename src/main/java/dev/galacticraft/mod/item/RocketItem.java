@@ -23,21 +23,31 @@
 package dev.galacticraft.mod.item;
 
 import dev.galacticraft.api.registry.AddonRegistry;
+import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
+import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
+import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
+import dev.galacticraft.mod.entity.GalacticraftEntityType;
+import dev.galacticraft.mod.entity.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,6 +58,39 @@ public class RocketItem extends Item {
         super(properties);
 
     }
+
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        if (!context.getLevel().isClientSide && context.getLevel().getBlockState(context.getClickedPos()).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
+                && context.getLevel().getBlockState(context.getClickedPos()).getValue(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
+            BlockPos pos = new BlockPos(context.getClickedPos()).offset(RocketLaunchPadBlock.partToCenterPos(context.getLevel().getBlockState(context.getClickedPos()).getValue(RocketLaunchPadBlock.PART)));
+            assert context.getLevel().getBlockState(pos).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD;
+            RocketLaunchPadBlockEntity blockEntity = (RocketLaunchPadBlockEntity) context.getLevel().getBlockEntity(pos);
+            if (blockEntity.hasRocket()) return InteractionResult.FAIL;
+
+            if (context.getLevel() instanceof ServerLevel) {
+                RocketEntity rocket = new RocketEntity(GalacticraftEntityType.ROCKET, context.getLevel());
+                RocketData data = RocketData.fromNbt(context.getPlayer().getItemInHand(context.getHand()).getTag());
+                rocket.setParts(data.parts());
+                rocket.setColor(data.color());
+                rocket.setLinkedPad(pos);
+                rocket.setOldPosAndRot();
+                rocket.absMoveTo(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+                context.getLevel().addFreshEntity(rocket);
+
+                if (!context.getPlayer().isCreative()) {
+                    ItemStack stack = context.getPlayer().getItemInHand(context.getHand()).copy();
+                    stack.shrink(1);
+                    context.getPlayer().setItemInHand(context.getHand(), stack);
+                }
+                blockEntity.setRocketEntityUUID(rocket.getUUID());
+                blockEntity.setRocketEntityId(rocket.getId());
+            }
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.FAIL;
+    }
+
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {

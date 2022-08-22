@@ -50,18 +50,21 @@ public class GalacticraftRocketParts {
             .name(Component.translatable("rocket_part.galacticraft.default_cone"))
             .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.CONE)
+            .research(Constant.id(Constant.MOD_ID))
             .build();
 
     public static final RocketPart DEFAULT_BODY = RocketPart.Builder.create()
             .name(Component.translatable("rocket_part.galacticraft.default_body"))
             .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.BODY)
+            .research(Constant.id(Constant.MOD_ID))
             .build();
 
     public static final RocketPart DEFAULT_FIN = RocketPart.Builder.create()
             .name(Component.translatable("rocket_part.galacticraft.default_fin"))
             .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.FIN)
+            .research(Constant.id(Constant.MOD_ID))
             .build();
 
     public static final RocketPart NO_BOOSTER = RocketPart.Builder.create()
@@ -69,48 +72,56 @@ public class GalacticraftRocketParts {
             .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.BOOSTER)
             .recipe(false)
+            .research(Constant.id(Constant.MOD_ID))
             .build();
 
     public static final RocketPart DEFAULT_BOTTOM = RocketPart.Builder.create()
             .name(Component.translatable("rocket_part.galacticraft.default_bottom"))
             .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.BOTTOM)
+            .research(Constant.id(Constant.MOD_ID))
             .build();
 
     public static final RocketPart ADVANCED_CONE = RocketPart.Builder.create()
             .name(Component.translatable("rocket_part.galacticraft.advanced_cone"))
             .travelPredicate(ConstantTravelPredicateType.INSTANCE.configure(new AccessTypeTravelPredicateConfig(TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.CONE)
+            .research(Constant.id(Constant.MOD_ID))
             .build();
 
     public static final RocketPart SLOPED_CONE = RocketPart.Builder.create()
             .name(Component.translatable("rocket_part.galacticraft.cone_sloped"))
             .travelPredicate(ConstantTravelPredicateType.INSTANCE.configure(new AccessTypeTravelPredicateConfig(TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.CONE)
+            .research(Constant.id(Constant.MOD_ID))
             .build();
 
     public static final RocketPart BOOSTER_TIER_1 = RocketPart.Builder.create()
             .name(Component.translatable("rocket_part.galacticraft.booster_1"))
             .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(2, TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.BOOSTER)
+            .research(Constant.id(Constant.MOD_ID))
             .build();
 
     public static final RocketPart BOOSTER_TIER_2 = RocketPart.Builder.create()
             .name(Component.translatable("rocket_part.galacticraft.booster_2"))
             .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(3, TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.BOOSTER)
+            .research(Constant.id(Constant.MOD_ID))
             .build();
 
     public static final RocketPart NO_UPGRADE = RocketPart.Builder.create()
             .name(Component.translatable("rocket_part.galacticraft.default_upgrade"))
             .travelPredicate(ConstantTravelPredicateType.INSTANCE.configure(new AccessTypeTravelPredicateConfig(TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.UPGRADE)
+            .research(Constant.id(Constant.MOD_ID))
             .build();
 
     public static final RocketPart STORAGE_UPGRADE = RocketPart.Builder.create()
             .name(Component.translatable("rocket_part.galacticraft.storage_upgrade"))
             .travelPredicate(ConstantTravelPredicateType.INSTANCE.configure(new AccessTypeTravelPredicateConfig(TravelPredicateType.AccessType.PASS)))
             .type(RocketPartType.UPGRADE)
+            .research(Constant.id(Constant.MOD_ID))
             .build();
 
     public static void register() {

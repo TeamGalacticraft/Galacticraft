@@ -215,6 +215,7 @@ public class GalacticraftItem {
     public static final Item SEALABLE_ALUMINUM_WIRE = new BlockItem(GalacticraftBlock.SEALABLE_ALUMINUM_WIRE, new Item.Properties().tab(GalacticraftItemGroup.BLOCKS_GROUP));
     public static final Item HEAVY_SEALABLE_ALUMINUM_WIRE = new BlockItem(GalacticraftBlock.HEAVY_SEALABLE_ALUMINUM_WIRE, new Item.Properties().tab(GalacticraftItemGroup.BLOCKS_GROUP));
     public static final Item GLASS_FLUID_PIPE = new BlockItem(GalacticraftBlock.GLASS_FLUID_PIPE, new Item.Properties().tab(GalacticraftItemGroup.BLOCKS_GROUP));
+    public static final Item ROCKET_LAUNCH_PAD = new BlockItem(GalacticraftBlock.ROCKET_LAUNCH_PAD, new Item.Properties().tab(GalacticraftItemGroup.BLOCKS_GROUP));
 
     // LIGHT PANELS
     public static final Item SQUARE_LIGHT_PANEL = new BlockItem(GalacticraftBlock.SQUARE_LIGHT_PANEL, new Item.Properties().tab(GalacticraftItemGroup.BLOCKS_GROUP));
@@ -628,6 +629,7 @@ public class GalacticraftItem {
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.SEALABLE_ALUMINUM_WIRE), SEALABLE_ALUMINUM_WIRE);
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE), HEAVY_SEALABLE_ALUMINUM_WIRE);
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.GLASS_FLUID_PIPE), GLASS_FLUID_PIPE);
+        Registry.register(Registry.ITEM, Constant.id(Constant.Block.ROCKET_LAUNCH_PAD), ROCKET_LAUNCH_PAD);
 
         // LIGHT PANELS
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.SQUARE_LIGHT_PANEL), SQUARE_LIGHT_PANEL);

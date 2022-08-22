@@ -610,6 +610,7 @@ public interface Constant {
         String EVOLVED_ZOMBIE = "evolved_zombie";
         String EVOLVED_CREEPER = "evolved_creeper";
         String T1_ROCKET = "t1_rocket";
+        String ROCKET = "rocket";
         String BUBBLE = "bubble";
         String EVOLVED_SKELETON = "evolved_skeleton";
         String EVOLVED_SPIDER = "evolved_spider";

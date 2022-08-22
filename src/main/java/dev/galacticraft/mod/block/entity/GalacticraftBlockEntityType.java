@@ -25,6 +25,7 @@ package dev.galacticraft.mod.block.entity;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -67,6 +68,7 @@ public class GalacticraftBlockEntityType {
     public static final BlockEntityType<OxygenStorageModuleBlockEntity> OXYGEN_STORAGE_MODULE = FabricBlockEntityTypeBuilder.create(OxygenStorageModuleBlockEntity::new, GalacticraftBlock.OXYGEN_STORAGE_MODULE).build();
 
     // ROCKETS
+    public static final BlockEntityType<RocketLaunchPadBlockEntity> LAUNCH_PAD_TYPE = FabricBlockEntityTypeBuilder.create(RocketLaunchPadBlockEntity::new, GalacticraftBlock.ROCKET_LAUNCH_PAD).build(null);
 
     // MISC
     public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = FabricBlockEntityTypeBuilder.create(SolarPanelPartBlockEntity::new, GalacticraftBlock.SOLAR_PANEL_PART).build();
@@ -98,6 +100,7 @@ public class GalacticraftBlockEntityType {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR), OXYGEN_BUBBLE_DISTRIBUTOR);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
 
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.ROCKET_LAUNCH_PAD), LAUNCH_PAD_TYPE);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.SOLAR_PANEL_PART), SOLAR_PANEL_PART);
     }
 

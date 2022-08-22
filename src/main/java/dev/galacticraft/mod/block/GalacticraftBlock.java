@@ -37,6 +37,7 @@ import dev.galacticraft.mod.block.special.aluminumwire.tier1.AluminumWireBlock;
 import dev.galacticraft.mod.block.special.aluminumwire.tier1.SealableAluminumWireBlock;
 import dev.galacticraft.mod.block.special.aluminumwire.tier2.HeavySealableAluminumWireBlock;
 import dev.galacticraft.mod.block.special.fluidpipe.GlassFluidPipeBlock;
+import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.walkway.PipeWalkway;
 import dev.galacticraft.mod.block.special.walkway.WalkwayBlock;
 import dev.galacticraft.mod.block.special.walkway.WireWalkway;
@@ -232,6 +233,7 @@ public class GalacticraftBlock {
     public static final Block SEALABLE_ALUMINUM_WIRE = new SealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATION));
     public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = new HeavySealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATION));
     public static final Block GLASS_FLUID_PIPE = new GlassFluidPipeBlock(FabricBlockSettings.of(Material.GLASS).sound(SoundType.GLASS));
+    public static final Block ROCKET_LAUNCH_PAD = new RocketLaunchPadBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_GRAY).strength(1.5F, 6.0F));
 
     // LIGHT PANELS
     public static final Block SQUARE_LIGHT_PANEL = new LightPanelBlock(FabricBlockSettings.of(Material.METAL));
@@ -478,6 +480,7 @@ public class GalacticraftBlock {
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.SEALABLE_ALUMINUM_WIRE), SEALABLE_ALUMINUM_WIRE);
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE), HEAVY_SEALABLE_ALUMINUM_WIRE);
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.GLASS_FLUID_PIPE), GLASS_FLUID_PIPE);
+        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ROCKET_LAUNCH_PAD), ROCKET_LAUNCH_PAD);
 
         // LIGHT PANELS
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.SQUARE_LIGHT_PANEL), SQUARE_LIGHT_PANEL);
