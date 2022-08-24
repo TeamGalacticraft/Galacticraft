@@ -137,11 +137,16 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
     @Override
     protected @Nullable MachineStatus extractResourcesToWork(@NotNull TransactionContext context) {
         if (this.fuelLength == 0) {
+            ItemStack remainingItem = null;
+            if (this.itemStorage().getStack(FUEL_INPUT_SLOT).getItem().hasCraftingRemainingItem())
+                remainingItem = this.itemStorage().getStack(FUEL_INPUT_SLOT).getItem().getCraftingRemainingItem().getDefaultInstance();
             ItemStack stack = this.itemStorage().extract(FUEL_INPUT_SLOT, 1, context);
             Integer integer = FuelRegistry.INSTANCE.get(stack.getItem());
             if (integer != null && integer > 0) {
                 this.fuelTime = this.fuelLength = integer;
             }
+            if (remainingItem != null)
+                this.itemStorage().setSlot(FUEL_INPUT_SLOT, ItemVariant.of(remainingItem), 1);
         }
         return this.fuelLength == 0 ? GalacticraftMachineStatus.NO_FUEL : super.extractResourcesToWork(context);
     }

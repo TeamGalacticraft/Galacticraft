@@ -80,5 +80,6 @@ public class GalacticraftApiLookupProviders {
                 }
             };
         }, GalacticraftItem.SMALL_OXYGEN_TANK, GalacticraftItem.MEDIUM_OXYGEN_TANK, GalacticraftItem.LARGE_OXYGEN_TANK);
+        FluidStorage.ITEM.registerSelf(GalacticraftItem.INFINITE_OXYGEN_TANK);
     }
 }

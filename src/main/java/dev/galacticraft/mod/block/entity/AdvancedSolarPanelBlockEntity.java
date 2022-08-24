@@ -102,11 +102,11 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
         world.getProfiler().push("push_energy");
         this.trySpreadEnergy(world);
         world.getProfiler().pop();
-        if (this.blocked == 9) return GalacticraftMachineStatus.BLOCKED;
+        if (this.blocked >= 9) return GalacticraftMachineStatus.BLOCKED;
         if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
         MachineStatus status = null;
-        double multiplier = this.blocked / 9.0;
-        if (this.blocked > 0) status = GalacticraftMachineStatus.PARTIALLY_BLOCKED;
+        double multiplier = blocked == 0 ? 1 : this.blocked / 9.0;
+        if (this.blocked > 1) status = GalacticraftMachineStatus.PARTIALLY_BLOCKED;
         if (world.isRaining() || world.isThundering()) {
             if (status == null) status = GalacticraftMachineStatus.RAIN;
             multiplier *= 0.5;
@@ -141,6 +141,11 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
             );
         }
         return null;
+    }
+
+    @Override
+    public long getEnergyCapacity() {
+        return 30000L;
     }
 
     @Override

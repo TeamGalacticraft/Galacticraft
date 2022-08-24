@@ -31,7 +31,7 @@ import net.minecraft.resources.ResourceLocation;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftBannerPattern {
+public class GalacticraftBannerPattern { // todo: banners are a registry in 1.19
 //    public static final LoomPattern ROCKET = new LoomPattern(false);
 //
     public static void register() {

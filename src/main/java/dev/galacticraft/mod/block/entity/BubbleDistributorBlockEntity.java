@@ -52,6 +52,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -109,6 +110,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
         MachineStatus status;
         this.players = world.players().size();
         this.prevSize = this.size;
+        distributeOxygenToArea(this.prevSize, false);
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate()) {
                 world.getProfiler().push("bubble");
@@ -143,6 +145,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
                     }
                     transaction.commit();
                     world.getProfiler().pop();
+                    distributeOxygenToArea(this.size, true);
                     return GalacticraftMachineStatus.DISTRIBUTING;
                 } else {
                     status = GalacticraftMachineStatus.NOT_ENOUGH_OXYGEN;
@@ -170,6 +173,28 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
         }
         world.getProfiler().pop();
         return status;
+    }
+
+    public int getDistanceFromServer(int par1, int par3, int par5) {
+        final int d3 = this.getBlockPos().getX() - par1;
+        final int d4 = this.getBlockPos().getY() - par3;
+        final int d5 = this.getBlockPos().getZ() - par5;
+        return d3 * d3 + d4 * d4 + d5 * d5;
+    }
+
+    public void distributeOxygenToArea(double size, boolean oxygenated) {
+        int radius = Mth.floor(size) + 4;
+        int bubbleR2 = (int) (size * size);
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        for (int x = this.getBlockPos().getX() - radius; x <= this.getBlockPos().getX() + radius; x++) {
+            for (int y = this.getBlockPos().getY() - radius; y <= this.getBlockPos().getY() + radius; y++) {
+                for (int z = this.getBlockPos().getZ() - radius; z <= this.getBlockPos().getZ() + radius; z++) {
+                    if (getDistanceFromServer(x, y, z) <= bubbleR2) {
+                        getLevel().setBreathable(pos.set(x, y, z), oxygenated);
+                    }
+                }
+            }
+        }
     }
 
     public byte getTargetSize() {
