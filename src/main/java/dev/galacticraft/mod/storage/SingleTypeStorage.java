@@ -72,12 +72,12 @@ public class SingleTypeStorage<T, V extends TransferVariant<T>> extends Snapshot
 
     @Override
     public boolean isResourceBlank() {
-        return this.amount == 0;
+        return resource.isBlank();
     }
 
     @Override
     public V getResource() {
-        return this.amount > 0 ? this.resource : blankResource;
+        return this.resource;
     }
 
     @Override

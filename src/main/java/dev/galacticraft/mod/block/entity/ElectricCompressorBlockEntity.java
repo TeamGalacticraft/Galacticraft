@@ -128,11 +128,11 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
         NonNullList<ItemStack> remainder = recipe.getRemainingItems(this.craftingInv);
         for (int i = 0; i < 9; i++) {
             ItemStack stack = remainder.get(i);
-            this.itemStorage().extract(i, 1);
+            this.itemStorage().extract(i, 1, transaction);
 
             if (!stack.isEmpty()) {
                 if (this.itemStorage().getAmount(i) == 0) {
-                    if (stack.getCount() == this.itemStorage().insert(i, ItemVariant.of(stack), stack.getCount())) {
+                    if (stack.getCount() == this.itemStorage().insert(i, ItemVariant.of(stack), stack.getCount(), transaction)) {
                         return false;
                     }
                 } else {

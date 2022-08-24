@@ -723,7 +723,7 @@ public interface Constant {
             Predicate<ItemVariant> CAN_EXTRACT_ENERGY = stack -> {
                 EnergyStorage energyStorage = ContainerItemContext.withInitial(stack.toStack()).find(EnergyStorage.ITEM);
                 try (Transaction transaction = Transaction.openOuter()) {
-                    return energyStorage != null && energyStorage.supportsExtraction() && energyStorage.extract(Long.MAX_VALUE, transaction) > 0;
+                    return energyStorage != null && energyStorage.supportsExtraction();
                 }
             };
             Predicate<ItemVariant> CAN_INSERT_ENERGY = stack -> {

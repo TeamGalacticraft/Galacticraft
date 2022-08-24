@@ -42,7 +42,7 @@ public record ItemResourceTagExtractPredicate<R, V extends TransferVariant<R>>(
         Storage<V> storage = ContainerItemContext.withInitial(variant.toStack()).find(this.lookup);
         if (storage != null && storage.supportsExtraction()) {
             //noinspection OptionalGetWithoutIsPresent: We can call get as both items and fluids have intrusive holders
-            V extractableContent = StorageUtil.findExtractableResource(storage, v -> this.registry.getHolder(this.registry.getId(v.getObject())).get().is(this.tag), null);
+            V extractableContent = StorageUtil.findStoredResource(storage, v -> this.registry.getHolder(this.registry.getId(v.getObject())).get().is(this.tag));
             if (extractableContent != null && !extractableContent.isBlank()) {
                 return storage.simulateExtract(extractableContent, Long.MAX_VALUE, null) >= 0;
             }
