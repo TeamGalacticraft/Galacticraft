@@ -22,11 +22,19 @@
 
 package dev.galacticraft.mod.network;
 
+import dev.galacticraft.api.accessor.SatelliteAccessor;
+import dev.galacticraft.api.entity.Rocket;
+import dev.galacticraft.api.registry.AddonRegistry;
+import dev.galacticraft.api.rocket.LaunchStage;
+import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleMenuProvider;
@@ -64,5 +72,34 @@ public class GalacticraftServerPacketReceiver {
                 }
             });
         });
+
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "rocket_jump"), ((server, player, handler, buf, responseSender) -> {
+            server.execute(() -> {
+                if (player.isPassenger()) {
+                    if (player.getVehicle() instanceof Rocket && ((Rocket) player.getVehicle()).getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
+                        ((Rocket) player.getVehicle()).onJump();
+                    }
+                }
+            });
+        }));
+
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "planet_tp"), ((server, player, handler, buf, responseSender) -> {
+            FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
+            if (player.getCelestialScreenState() != null) {
+                server.execute(() -> {
+                    ResourceLocation id = buffer.readResourceLocation();
+                    CelestialBody<?, ?> body = ((SatelliteAccessor) server).getSatellites().get(id);
+                    if (body == null) body = server.registryAccess().registryOrThrow(AddonRegistry.CELESTIAL_BODY_KEY).get(id);
+                    if (body.type() instanceof Landable landable && (player.getCelestialScreenState().canTravelTo(server.registryAccess(), body) || player.getCelestialScreenState() == RocketData.empty())) {
+                        player.setCelestialScreenState(null);
+                        player.teleportTo(server.getLevel(landable.world(body.config())), player.getX(), 500, player.getZ(), player.getYRot(), player.getXRot());
+                    } else {
+                        player.connection.disconnect(Component.literal("Invalid planet teleport packet received."));
+                    }
+                });
+            } else {
+                player.connection.disconnect(Component.literal("Invalid planet teleport packet received."));
+            }
+        }));
     }
 }

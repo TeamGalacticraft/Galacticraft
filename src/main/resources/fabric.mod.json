@@ -135,6 +135,9 @@
   ],
   "accessWidener": "galacticraft.accesswidener",
   "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/class_3222": ["dev/galacticraft/mod/accessor/ServerPlayerAccessor"]
+    },
     "waila:plugins": {
       "id": "galacticraft:plugin",
       "initializer": "dev.galacticraft.mod.compat.waila.GalacticraftWailaPlugin"

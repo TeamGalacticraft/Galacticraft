@@ -27,7 +27,7 @@
     "display": {
       "type": "galacticraft-api:icon",
       "config": {
-        "texture": "galacticraft:textures/gui/celestialbody/moon.png",
+        "texture": "galacticraft:textures/gui/celestialbodies/moon.png",
         "u": 0,
         "v": 0,
         "width": 8,

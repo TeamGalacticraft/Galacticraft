@@ -14,6 +14,7 @@
     "ItemStackMixin",
     "LanternBlockMixin",
     "LootTablesAccessor",
+    "ServerPlayerMixin",
     "ServerWorldMixin",
     "TorchBlockMixin"
   ],
@@ -22,7 +23,9 @@
     "client.AlphaWarningTitleScreenMixin",
     "client.AnimalModelInvoker",
     "client.ClientWorldMixin",
+    "client.HumanoidModelMixin",
     "client.InGameHudMixin",
+    "client.LocalPlayerMixin",
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",
     "client.VillagerEntityRendererMixin",

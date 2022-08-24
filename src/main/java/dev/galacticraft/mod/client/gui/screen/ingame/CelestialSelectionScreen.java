@@ -38,7 +38,7 @@ import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
 import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.satellite.Satellite;
-//import dev.galacticraft.api.satellite.SpaceStationRecipe;
+import dev.galacticraft.api.satellite.SatelliteRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
@@ -122,7 +122,6 @@ public class CelestialSelectionScreen extends Screen {
     protected final EnumView viewState = EnumView.PREVIEW;
     protected EnumSelection selectionState = EnumSelection.UNSELECTED;
     protected int zoomTooltipPos = 0;
-    protected @Nullable CelestialBody<?, ?> selectedParent = BuiltinObjects.SOL;
     protected String selectedStationOwner = "";
     protected int spaceStationListOffset = 0;
     protected boolean renamingSpaceStation;
@@ -135,6 +134,7 @@ public class CelestialSelectionScreen extends Screen {
     protected final RegistryAccess manager = Minecraft.getInstance().level.registryAccess();
     protected final Registry<Galaxy> galaxyRegistry = manager.registryOrThrow(AddonRegistry.GALAXY_KEY);
     protected final Registry<CelestialBody<?, ?>> celestialBodyRegistry = manager.registryOrThrow(AddonRegistry.CELESTIAL_BODY_KEY);
+    protected @Nullable CelestialBody<?, ?> selectedParent = celestialBodyRegistry.get(new ResourceLocation("galacticraft-api", "sol"));
     protected final List<CelestialBody<?, ?>> bodiesToRender = new ArrayList<>();
     private final ClientSatelliteAccessor.SatelliteListener listener = (satellite, added) -> {
         if (!added) {
@@ -385,7 +385,7 @@ public class CelestialSelectionScreen extends Screen {
     }
 
     protected boolean canCreateSpaceStation(CelestialBody<?, ?> atBody) {
-//        if (!(atBody.type() instanceof Orbitable orbitable) || orbitable.getSpaceStationRecipe(atBody.config()) == null) return false;
+        if (!(atBody.type() instanceof Orbitable orbitable) || orbitable.satelliteRecipe(atBody.config()) == null) return false;
         if (this.mapMode/* || ConfigManagerCore.disableSpaceStationCreation.get()*/ || !this.canCreateStations) //todo SSconfig
         {
             return false;
@@ -455,7 +455,7 @@ public class CelestialSelectionScreen extends Screen {
                 try {
                     assert this.minecraft != null;
                     ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "planet_tp"), PacketByteBufs.create().writeResourceLocation(celestialBodyRegistry.getKey(this.selectedBody)));
-//                    this.minecraft.setScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite) this.selectedBody.type()).getCustomName(this.selectedBody.config()).getString() : ((TranslatableContents)this.selectedBody.name().getContents()).getKey(), ((Landable) this.selectedBody.type()).world(this.selectedBody.config()))); TODO: add
+                    this.minecraft.setScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite) this.selectedBody.type()).getCustomName(this.selectedBody.config()).getString() : ((TranslatableContents)this.selectedBody.name().getContents()).getKey(), ((Landable) this.selectedBody.type()).world(this.selectedBody.config())));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -525,29 +525,29 @@ public class CelestialSelectionScreen extends Screen {
             if (x >= RHS - 95 && x < RHS && y > LHS + 181 + canCreateOffset && y < LHS + 182 + 12 + canCreateOffset) {
                 if (this.selectedBody != null && this.selectedBody.type() instanceof Orbitable orbitable/* && this.selectedBody.getWorld() != null*/)
                 {
-//                    SpaceStationRecipe recipe = orbitable.getSpaceStationRecipe(this.selectedBody.config());
-//                    if (recipe != null && this.canCreateSpaceStation(this.selectedBody))
-//                    {
-//                        assert this.minecraft != null;
-//                        assert this.minecraft.player != null;
-//                        if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.getAbilities().instabuild)
-//                        {
-////                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BIND_SPACE_STATION_ID, GCCoreUtil.getWorld(this.minecraft.level), new Object[]{this.selectedBody.getWorld()}));
-//                            ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "create_satellite"), PacketByteBufs.create().writeResourceLocation(celestialBodyRegistry.getKey(this.selectedBody)));
-//                            //Zoom in on planet to show the new SpaceStation if not already zoomed
-//                            if (!this.isZoomed())
-//                            {
-//                                this.selectionState = EnumSelection.ZOOMED;
-//                                this.preSelectZoom = this.zoom;
-//                                this.preSelectPosition = this.position;
-//                                this.ticksSinceSelectionF = 0;
-//                                this.doneZooming = false;
-//                            }
-//                            return true;
-//                        }
-//
-//                        clickHandled = true;
-//                    }
+                    SatelliteRecipe recipe = orbitable.satelliteRecipe(this.selectedBody.config());
+                    if (recipe != null && this.canCreateSpaceStation(this.selectedBody))
+                    {
+                        assert this.minecraft != null;
+                        assert this.minecraft.player != null;
+                        if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.getAbilities().instabuild)
+                        {
+//                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BIND_SPACE_STATION_ID, GCCoreUtil.getWorld(this.minecraft.level), new Object[]{this.selectedBody.getWorld()}));
+                            ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "create_satellite"), PacketByteBufs.create().writeResourceLocation(celestialBodyRegistry.getKey(this.selectedBody)));
+                            //Zoom in on planet to show the new SpaceStation if not already zoomed
+                            if (!this.isZoomed())
+                            {
+                                this.selectionState = EnumSelection.ZOOMED;
+                                this.preSelectZoom = this.zoom;
+                                this.preSelectPosition = this.position;
+                                this.ticksSinceSelectionF = 0;
+                                this.doneZooming = false;
+                            }
+                            return true;
+                        }
+
+                        clickHandled = true;
+                    }
                 }
             }
         }
@@ -837,7 +837,7 @@ public class CelestialSelectionScreen extends Screen {
             selectedParent = this.selectedBody.parent(manager);
         }
         if (this.selectedBody == null) {
-            selectedParent = BuiltinObjects.SOL;
+            selectedParent = celestialBodyRegistry.get(new ResourceLocation("galacticraft-api", "sol"));
         }
 
         if (this.selectedParent != selectedParent) {
@@ -1001,17 +1001,17 @@ public class CelestialSelectionScreen extends Screen {
 //                    Matrix4f planetMatrix = e.getValue();
 //                    planetMatrix.multiply(projectionMatrix);
 //                    assert this.minecraft != null;
-//                    int x = (int) Math.floor((planetMatrix.a03 * 0.5 + 0.5) * this.minecraft.getWindow().getWidth());
-//                    int y = (int) Math.floor(this.minecraft.getWindow().getHeight() - (planetMatrix.a13 * 0.5 + 0.5) * this.minecraft.getWindow().getHeight());
-//                    double mx = (x * (this.minecraft.getWindow().getScaledWidth() / (double) this.minecraft.getWindow().getWidth()));
-//                    double my = (y * (this.minecraft.getWindow().getScaledHeight() / (double) this.minecraft.getWindow().getHeight()));
+//                    int x = (int) Math.floor((planetMatrix.m03 * 0.5 + 0.5) * this.minecraft.getWindow().getWidth());
+//                    int y = (int) Math.floor(this.minecraft.getWindow().getHeight() - (planetMatrix.m13 * 0.5 + 0.5) * this.minecraft.getWindow().getHeight());
+//                    double mx = (x * (this.minecraft.getWindow().getGuiScaledWidth() / (double) this.minecraft.getWindow().getWidth()));
+//                    double my = (y * (this.minecraft.getWindow().getGuiScaledHeight() / (double) this.minecraft.getWindow().getHeight()));
 //                    Vec2 vec = new Vec2((float) mx, (float) my);
 //
 //                    Vector4f newVec = new Vector4f(2, -2, 0, 0);
-//                    newVec.transform(Matrix4f.scale(planetMatrix.a00, planetMatrix.a11, planetMatrix.a22));
-//                    float iconSize = (newVec.getY() * (this.minecraft.getWindow().getHeight() / 2.0F)) * (isStar(e.getKey()) ? 2 : 1) * (e.getKey() == this.selectedBody ? 1.5F : 1.0F);
+//                    newVec.transform(Matrix4f.createScaleMatrix(planetMatrix.m00, planetMatrix.m11, planetMatrix.m22));
+//                    float iconSize = (newVec.y() * (this.minecraft.getWindow().getHeight() / 2.0F)) * (isStar(e.getKey()) ? 2 : 1) * (e.getKey() == this.selectedBody ? 1.5F : 1.0F);
 //
-//                    this.planetPosMap.put(e.getKey(), new Vector3d(vec.x, vec.y, iconSize)); // Store size on-screen in Z-value for ease
+//                    this.planetPosMap.put(e.getKey(), new Vec3(vec.x, vec.y, iconSize)); // Store size on-screen in Z-value for ease
 //                }
 
                 this.drawSelectionCursor(matrices, delta);
@@ -1085,7 +1085,7 @@ public class CelestialSelectionScreen extends Screen {
         buffer.vertex(model, x + width, y + height, this.getBlitOffset()).uv((u + width1) * texModX, (v + height0) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
         buffer.vertex(model, x + width, y, this.getBlitOffset()).uv((u + width1) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
         buffer.vertex(model, x, y, this.getBlitOffset()).uv((u + width0) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        BufferUploader.draw(buffer.end());
+        BufferUploader.drawWithShader(buffer.end());
     }
 
     protected Vector3f getCelestialBodyPosition(CelestialBody<?, ?> cBody, float delta) {
@@ -1301,7 +1301,7 @@ public class CelestialSelectionScreen extends Screen {
             this.font.draw(matrices, str, LHS + 7 - 95 + scale, LHS + 16, GREY3);
             RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
 
-            List<CelestialBody<?, ?>> children = this.getChildren(/*planetZoomedNotMoon*/this.isZoomed() ? this.selectedBody : this.selectedParent);
+            List<CelestialBody<?, ?>> children = this.getChildren(/*planetZoomedNotMoon*/this.isZoomed() ? this.selectedBody : celestialBodyRegistry.get(new ResourceLocation("galacticraft-api", "sol")));
             drawChildren(matrices, children, 0, 0, true);
 
             if (this.mapMode) {
@@ -1408,111 +1408,111 @@ public class CelestialSelectionScreen extends Screen {
                     this.blit(RHS - 79, LHS + 129, 61, 4, 0, 170, 61, 4, false, false);
 
 
-//                    SpaceStationRecipe recipe = ((Orbitable) this.selectedBody.type()).getSpaceStationRecipe(this.selectedBody.config());
-//                    if (recipe != null)
-//                    {
-//                        RenderSystem.setShaderColor(0.0F, 1.0F, 0.1F, 1);
-//                        boolean validInputMaterials = true;
-//
-//                        int i = 0;
-//                        for (Object2IntMap.Entry<Ingredient> entry : recipe.ingredients().object2IntEntrySet())
-//                        {
-//                            Ingredient ingredient = entry.getKey();
-//                            int xPos = (int) (RHS - 95 + i * 93 / (double) recipe.ingredients().size() + 5);
-//                            int yPos = LHS + 154 + canCreateOffset;
-//
-//                            boolean b = mousePosX >= xPos && mousePosX <= xPos + 16 && mousePosY >= yPos && mousePosY <= yPos + 16;
-//                            int amount = getAmountInInventory(ingredient);
-//                            Lighting.setupFor3DItems();
-//                            ItemStack stack = ingredient.getItems()[(int) (minecraft.level.getGameTime() % (20 * ingredient.getItems().length) / 20)];
-//                            this.itemRenderer.renderGuiItem(stack, xPos, yPos);
-//                            this.itemRenderer.renderGuiItemDecorations(font, stack, xPos, yPos, null);
-//                            Lighting.setupForFlatItems();
-//                            RenderSystem.enableBlend();
-//
-//                            if (b) {
-//                                RenderSystem.depthMask(true);
-//                                RenderSystem.enableDepthTest();
-//                                matrices.pushPose();
-//                                matrices.translate(0, 0, 300);
-//                                int k = this.font.width(stack.getHoverName());
-//                                int j2 = mousePosX - k / 2;
-//                                int k2 = mousePosY - 12;
-//                                int i1 = 8;
-//
-//                                if (j2 + k > this.width)
-//                                {
-//                                    j2 -= (j2 - this.width + k);
-//                                }
-//
-//                                if (k2 + i1 + 6 > this.height)
-//                                {
-//                                    k2 = this.height - i1 - 6;
-//                                }
-//
-//                                int j1 = ColorUtil.to32BitColor(190, 0, 153, 255);
-//                                this.fillGradient(matrices, j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j1, j1);
-//                                this.fillGradient(matrices, j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j1, j1);
-//                                this.fillGradient(matrices, j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j1, j1);
-//                                this.fillGradient(matrices, j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j1, j1);
-//                                this.fillGradient(matrices, j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j1, j1);
-//                                int k1 = ColorUtil.to32BitColor(170, 0, 153, 255);
-//                                int l1 = (k1 & 16711422) >> 1 | k1 & -16777216;
-//                                this.fillGradient(matrices, j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + i1 + 3 - 1, k1, l1);
-//                                this.fillGradient(matrices, j2 + k + 2, k2 - 3 + 1, j2 + k + 3, k2 + i1 + 3 - 1, k1, l1);
-//                                this.fillGradient(matrices, j2 - 3, k2 - 3, j2 + k + 3, k2 - 3 + 1, k1, k1);
-//                                this.fillGradient(matrices, j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
-//
-//                                this.font.draw(matrices, stack.getHoverName(), j2, k2, WHITE);
-//
-//                                matrices.popPose();
-//                            }
-//
-//                            str = "" + entry.getIntValue();
-//                            boolean valid = amount >= entry.getIntValue();
-//                            if (!valid && validInputMaterials) {
-//                                validInputMaterials = false;
-//                            }
-//                            int color = valid | this.minecraft.player.getAbilities().instabuild ? GREEN : RED;
-//                            this.font.draw(matrices, str, xPos + 8 - this.font.width(str) / 2f, LHS + 170 + canCreateOffset, color);
-//
-//                            i++;
-//                        }
-//
-//                        resetShader(GameRenderer::getPositionTexColorShader);
-//                        if (validInputMaterials || this.minecraft.player.getAbilities().instabuild)
-//                        {
-//                            RenderSystem.setShaderColor(0.0F, 1.0F, 0.1F, 1);
-//                        }
-//                        else
-//                        {
-//                            RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
-//                        }
-//
-//                        RenderSystem.setShaderTexture(0, TEXTURE_1);
-//
-//                        if (!this.mapMode)
-//                        {
-//                            if (mousePosX >= RHS - 95 && mousePosX <= RHS && mousePosY >= LHS + 182 + canCreateOffset && mousePosY <= LHS + 182 + 12 + canCreateOffset)
-//                            {
-//                                this.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
-//                            }
-//                        }
-//
-//                        this.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
-//
-//                        int color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
-//                        this.drawSplitString(matrices, I18n.get("ui.galacticraft.celestialselection.can_create_space_station"), RHS - 48, LHS + 137, 91, ColorUtil.to32BitColor(255, color, 255, color), true, false);
-//
-//                        if (!mapMode)
-//                        {
-//                            this.drawSplitString(matrices, I18n.get("ui.galacticraft.celestialselection.create_ss").toUpperCase(), RHS - 48, LHS + 185 + canCreateOffset, 91, WHITE, false, false);
-//                        }
-//                    }
-//                    else
-//                    {
-//                        this.drawSplitString(matrices, I18n.get("ui.galacticraft.celestialselection.cannot_create_space_station"), RHS - 48, LHS + 138, 91, WHITE, true, false);
-//                    }
+                    SatelliteRecipe recipe = ((Orbitable) this.selectedBody.type()).satelliteRecipe(this.selectedBody.config());
+                    if (recipe != null)
+                    {
+                        RenderSystem.setShaderColor(0.0F, 1.0F, 0.1F, 1);
+                        boolean validInputMaterials = true;
+
+                        int i = 0;
+                        for (Object2IntMap.Entry<Ingredient> entry : recipe.ingredients().object2IntEntrySet())
+                        {
+                            Ingredient ingredient = entry.getKey();
+                            int xPos = (int) (RHS - 95 + i * 93 / (double) recipe.ingredients().size() + 5);
+                            int yPos = LHS + 154 + canCreateOffset;
+
+                            boolean b = mousePosX >= xPos && mousePosX <= xPos + 16 && mousePosY >= yPos && mousePosY <= yPos + 16;
+                            int amount = getAmountInInventory(ingredient);
+                            Lighting.setupFor3DItems();
+                            ItemStack stack = ingredient.getItems()[(int) (minecraft.level.getGameTime() % (20 * ingredient.getItems().length) / 20)];
+                            this.itemRenderer.renderGuiItem(stack, xPos, yPos);
+                            this.itemRenderer.renderGuiItemDecorations(font, stack, xPos, yPos, null);
+                            Lighting.setupForFlatItems();
+                            RenderSystem.enableBlend();
+
+                            if (b) {
+                                RenderSystem.depthMask(true);
+                                RenderSystem.enableDepthTest();
+                                matrices.pushPose();
+                                matrices.translate(0, 0, 300);
+                                int k = this.font.width(stack.getHoverName());
+                                int j2 = mousePosX - k / 2;
+                                int k2 = mousePosY - 12;
+                                int i1 = 8;
+
+                                if (j2 + k > this.width)
+                                {
+                                    j2 -= (j2 - this.width + k);
+                                }
+
+                                if (k2 + i1 + 6 > this.height)
+                                {
+                                    k2 = this.height - i1 - 6;
+                                }
+
+                                int j1 = ColorUtil.to32BitColor(190, 0, 153, 255);
+                                this.fillGradient(matrices, j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j1, j1);
+                                this.fillGradient(matrices, j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j1, j1);
+                                this.fillGradient(matrices, j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j1, j1);
+                                this.fillGradient(matrices, j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j1, j1);
+                                this.fillGradient(matrices, j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j1, j1);
+                                int k1 = ColorUtil.to32BitColor(170, 0, 153, 255);
+                                int l1 = (k1 & 16711422) >> 1 | k1 & -16777216;
+                                this.fillGradient(matrices, j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + i1 + 3 - 1, k1, l1);
+                                this.fillGradient(matrices, j2 + k + 2, k2 - 3 + 1, j2 + k + 3, k2 + i1 + 3 - 1, k1, l1);
+                                this.fillGradient(matrices, j2 - 3, k2 - 3, j2 + k + 3, k2 - 3 + 1, k1, k1);
+                                this.fillGradient(matrices, j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
+
+                                this.font.draw(matrices, stack.getHoverName(), j2, k2, WHITE);
+
+                                matrices.popPose();
+                            }
+
+                            str = "" + entry.getIntValue();
+                            boolean valid = amount >= entry.getIntValue();
+                            if (!valid && validInputMaterials) {
+                                validInputMaterials = false;
+                            }
+                            int color = valid | this.minecraft.player.getAbilities().instabuild ? GREEN : RED;
+                            this.font.draw(matrices, str, xPos + 8 - this.font.width(str) / 2f, LHS + 170 + canCreateOffset, color);
+
+                            i++;
+                        }
+
+                        resetShader(GameRenderer::getPositionTexColorShader);
+                        if (validInputMaterials || this.minecraft.player.getAbilities().instabuild)
+                        {
+                            RenderSystem.setShaderColor(0.0F, 1.0F, 0.1F, 1);
+                        }
+                        else
+                        {
+                            RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
+                        }
+
+                        RenderSystem.setShaderTexture(0, TEXTURE_1);
+
+                        if (!this.mapMode)
+                        {
+                            if (mousePosX >= RHS - 95 && mousePosX <= RHS && mousePosY >= LHS + 182 + canCreateOffset && mousePosY <= LHS + 182 + 12 + canCreateOffset)
+                            {
+                                this.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
+                            }
+                        }
+
+                        this.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
+
+                        int color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
+                        this.drawSplitString(matrices, I18n.get("ui.galacticraft.celestialselection.can_create_space_station"), RHS - 48, LHS + 137, 91, ColorUtil.to32BitColor(255, color, 255, color), true, false);
+
+                        if (!mapMode)
+                        {
+                            this.drawSplitString(matrices, I18n.get("ui.galacticraft.celestialselection.create_ss").toUpperCase(), RHS - 48, LHS + 185 + canCreateOffset, 91, WHITE, false, false);
+                        }
+                    }
+                    else
+                    {
+                        this.drawSplitString(matrices, I18n.get("ui.galacticraft.celestialselection.cannot_create_space_station"), RHS - 48, LHS + 138, 91, WHITE, true, false);
+                    }
                 }
 
                 // Catalog overlay
@@ -1794,7 +1794,7 @@ public class CelestialSelectionScreen extends Screen {
         buffer.vertex(x + width, y + height, this.getBlitOffset()).uv((u + width1) * texModX, (v + height0) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
         buffer.vertex(x + width, y, this.getBlitOffset()).uv((u + width1) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
         buffer.vertex(x, y, this.getBlitOffset()).uv((u + width0) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        BufferUploader.draw(buffer.end());
+        BufferUploader.drawWithShader(buffer.end());
     }
 
     public void setBlackBackground() {
@@ -1855,7 +1855,7 @@ public class CelestialSelectionScreen extends Screen {
             buffer.vertex(model, gridSize, v, 0).color(0.0F, 0.2F, 0.5F, 0.55F).normal(1, 0, 1).endVertex();
         }
 
-        BufferUploader.draw(buffer.end());
+        BufferUploader.drawWithShader(buffer.end());
     }
 
     /**
@@ -1937,7 +1937,7 @@ public class CelestialSelectionScreen extends Screen {
                 }
                 buffer.vertex(model, x1, y1, 0).color(color[0], color[1], color[2], color[3]).normal(1, 1, 1).endVertex(); //LINE_LOOP is gone
 
-                BufferUploader.draw(buffer.end());
+                BufferUploader.drawWithShader(buffer.end());
                 count++;
                 matrices.popPose();
             }

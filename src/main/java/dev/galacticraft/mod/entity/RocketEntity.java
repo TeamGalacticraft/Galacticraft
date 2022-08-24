@@ -400,8 +400,9 @@ public class RocketEntity extends Entity implements Rocket {
                     for (Entity entity : getPassengers()) {
                         if (entity instanceof ServerPlayer serverPlayer) {
                             ResourceLocation[] partIds = this.getPartIds();
-//                            serverPlayer.setCelestialScreenState(RocketData.create(this.getColor(), partIds[0], partIds[1], partIds[2], partIds[3], partIds[4], partIds[5]));
+                            serverPlayer.setCelestialScreenState(RocketData.create(this.getColor(), partIds[0], partIds[1], partIds[2], partIds[3], partIds[4], partIds[5]));
                             ServerPlayNetworking.send(serverPlayer, new ResourceLocation(Constant.MOD_ID, "planet_menu_open"), PacketByteBufs.create().writeNbt(RocketData.create(this.getColor(), partIds[0], partIds[1], partIds[2], partIds[3], partIds[4], partIds[5]).toNbt(new CompoundTag())));
+                            remove(RemovalReason.UNLOADED_WITH_PLAYER);
                             break;
                         }
                     }
