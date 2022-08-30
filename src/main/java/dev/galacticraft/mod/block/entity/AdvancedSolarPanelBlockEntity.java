@@ -37,6 +37,7 @@ import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -81,10 +82,10 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
     }
 
     @Override
-    public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        world.getProfiler().push("charge");
+    public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        profiler.push("charge");
         this.attemptDrainPowerToStack(CHARGE_SLOT);
-        world.getProfiler().popPush("blockage");
+        profiler.popPush("blockage");
         this.blocked = 0;
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
@@ -94,14 +95,14 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
                 }
             }
         }
-        world.getProfiler().pop();
+        profiler.pop();
     }
 
     @Override
-    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        world.getProfiler().push("push_energy");
+    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        profiler.push("push_energy");
         this.trySpreadEnergy(world);
-        world.getProfiler().pop();
+        profiler.pop();
         if (this.blocked >= 9) return GalacticraftMachineStatus.BLOCKED;
         if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
         MachineStatus status = null;
@@ -115,12 +116,12 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
         double time = world.getDayTime() % 24000;
         if (time > 6000) time = 12000L - time;
 
-        world.getProfiler().push("transaction");
+        profiler.push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             this.energyStorage().insert((long)(Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * (time / 6000.0) * multiplier) * 4L, transaction);
             transaction.commit();
         }
-        world.getProfiler().pop();
+        profiler.pop();
         return status == null ? GalacticraftMachineStatus.COLLECTING : status;
     }
 

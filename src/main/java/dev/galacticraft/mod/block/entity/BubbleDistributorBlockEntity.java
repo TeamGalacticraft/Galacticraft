@@ -53,6 +53,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -101,22 +102,22 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        super.tickConstant(world, pos, state);
-        world.getProfiler().push("extract_resources");
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(world, pos, state, profiler);
+        profiler.push("extract_resources");
         this.attemptChargeFromStack(BATTERY_SLOT);
         this.drainOxygenFromStack(OXYGEN_TANK_SLOT);
-        world.getProfiler().pop();
+        profiler.pop();
     }
 
     @Override
-    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        world.getProfiler().push("transaction");
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        profiler.push("transaction");
         MachineStatus status;
         distributeOxygenToArea(this.prevSize, false);
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate()) {
-                world.getProfiler().push("bubble");
+                profiler.push("bubble");
                 if (this.size > this.targetSize) {
                     this.setSize(Math.max(this.size - 0.1F, this.targetSize));
                 }
@@ -132,37 +133,37 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
                         player.connection.send(entity.getAddEntityPacket());
                     }
                 }
-                world.getProfiler().pop();
+                profiler.pop();
                 if (this.prevSize != this.size || this.players != world.players().size()) {
                     this.players = world.players().size();
                     this.prevSize = this.size;
-                    world.getProfiler().push("network");
+                    profiler.push("network");
                     for (ServerPlayer player : world.players()) {
                         ServerPlayNetworking.send(player, new ResourceLocation(Constant.MOD_ID, "bubble_size"), new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
                     }
-                    world.getProfiler().pop();
+                    profiler.pop();
                 }
-                world.getProfiler().push("bubbler_distributor_transfer");
+                profiler.push("bubbler_distributor_transfer");
                 long oxygenRequired = ((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size));
                 if (this.fluidStorage().extract(OXYGEN_TANK, oxygenRequired, transaction).getAmount() == oxygenRequired) {
                     if (this.size < this.targetSize) {
                         setSize(this.size + 0.05D);
                     }
                     transaction.commit();
-                    world.getProfiler().pop();
+                    profiler.pop();
                     distributeOxygenToArea(this.size, true);
                     return GalacticraftMachineStatus.DISTRIBUTING;
                 } else {
                     status = GalacticraftMachineStatus.NOT_ENOUGH_OXYGEN;
-                    world.getProfiler().pop();
+                    profiler.pop();
                 }
             } else {
                 status = MachineStatuses.NOT_ENOUGH_ENERGY;
             }
         } finally {
-            world.getProfiler().pop();
+            profiler.pop();
         }
-        world.getProfiler().push("size");
+        profiler.push("size");
         if (this.bubbleId != -1 && this.size <= 0) {
             world.getEntity(bubbleId).remove(Entity.RemovalReason.DISCARDED);
             world.getEntity(bubbleId).onClientRemoval();
@@ -176,7 +177,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
         if (this.size < 0) {
             this.setSize(0);
         }
-        world.getProfiler().pop();
+        profiler.pop();
         return status;
     }
 

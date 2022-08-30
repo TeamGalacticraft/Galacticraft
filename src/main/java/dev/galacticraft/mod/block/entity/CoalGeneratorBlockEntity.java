@@ -48,6 +48,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -103,27 +104,27 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        super.tickConstant(world, pos, state);
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(world, pos, state, profiler);
         if (this.fuelLength == 0) {
             if (this.heat > 0) {
                 this.setHeat(Math.max(0, this.heat - 0.02d));
             }
         }
-        world.getProfiler().push("charge");
+        profiler.push("charge");
         this.attemptDrainPowerToStack(CHARGE_SLOT);
-        world.getProfiler().pop();
+        profiler.pop();
     }
 
     @Override
-    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        world.getProfiler().push("transaction");
+    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        profiler.push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             this.energyStorage().insert((long) (Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate() * this.heat), transaction);
             transaction.commit();
         }
         this.trySpreadEnergy(world);
-        world.getProfiler().popPush("fuel_reset");
+        profiler.popPush("fuel_reset");
         if (this.fuelLength == 0) {
             if (!this.consumeFuel()) {
                 if (this.heat > 0) {
@@ -133,12 +134,12 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
                 }
             }
         }
-        world.getProfiler().popPush("fuel_tick");
+        profiler.popPush("fuel_tick");
         if (this.fuelTime++ >= this.fuelLength) {
             this.consumeFuel();
         }
         this.setHeat(Math.min(1, this.heat + 0.004));
-        world.getProfiler().pop();
+        profiler.pop();
 
         if (this.energyStorage().isFull()) {
             return MachineStatuses.CAPACITOR_FULL;
