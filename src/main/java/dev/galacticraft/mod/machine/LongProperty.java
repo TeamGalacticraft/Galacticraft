@@ -20,30 +20,46 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.mod.machine;
 
-import net.minecraft.data.models.BlockModelGenerators;
-import net.minecraft.data.models.model.TexturedModel;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
+public final class LongProperty extends SnapshotParticipant<Long> {
+    private long value;
 
-@Mixin(BlockModelGenerators.class)
-public interface BlockModelGeneratorsAccessor {
-    @Accessor
-    Consumer<Item> getSkippedAutoModelsOutput();
+    @Contract("_ -> new")
+    public static @NotNull LongProperty create(long value) {
+        return new LongProperty(value);
+    }
 
-    @Accessor
-    Map<Block, TexturedModel> getTexturedModels();
+    private LongProperty(long value) {
+        this.value = value;
+    }
 
-    @Accessor
-    Map<Block, BlockModelGenerators.BlockStateGeneratorSupplier> getFullBlockModelCustomGenerators();
+    @Contract(pure = true)
+    public long getValue() {
+        return value;
+    }
 
-    @Accessor
-    List<Block> getNonOrientableTrapdoor();
+    public void setValue(long value, TransactionContext context) {
+        updateSnapshots(context);
+        this.value = value;
+    }
+
+    public void setValueUnsafe(long value) {
+        this.value = value;
+    }
+
+    @Override
+    protected Long createSnapshot() {
+        return this.value;
+    }
+
+    @Override
+    protected void readSnapshot(Long snapshot) {
+        this.value = snapshot;
+    }
 }

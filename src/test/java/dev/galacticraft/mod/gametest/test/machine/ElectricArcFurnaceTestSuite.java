@@ -70,8 +70,8 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         final var electricArcFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_ARC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE);
         final var inv = electricArcFurnace.itemStorage();
         electricArcFurnace.energyStorage().setEnergyUnsafe(electricArcFurnace.getEnergyCapacity());
-        inv.setSlot(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1, ItemVariant.of(Items.BARRIER), 1);
-        inv.setSlot(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_2, ItemVariant.of(Items.BARRIER), 1);
+        inv.setSlotUnsafe(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1, ItemVariant.of(Items.BARRIER), 1);
+        inv.setSlotUnsafe(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_2, ItemVariant.of(Items.BARRIER), 1);
         fillElectricArcFurnaceSlots(inv);
         runFinalTaskNext(context, () -> {
             if (electricArcFurnace.getMaxProgress() != 0) {
@@ -81,6 +81,6 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
     }
 
     private static void fillElectricArcFurnaceSlots(@NotNull MachineItemStorage inv) {
-        inv.setSlot(ElectricArcFurnaceBlockEntity.INPUT_SLOT, ItemVariant.of(Items.RAW_IRON), 1, true);
+        inv.setSlotUnsafe(ElectricArcFurnaceBlockEntity.INPUT_SLOT, ItemVariant.of(Items.RAW_IRON), 1, true);
     }
 }

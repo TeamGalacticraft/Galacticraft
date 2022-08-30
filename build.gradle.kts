@@ -66,7 +66,7 @@ sourceSets {
     main {
         resources {
             srcDir("src/main/generated")
-            exclude("src/main/generated/.cache")
+            exclude(".cache/**")
         }
     }
 }
@@ -85,13 +85,13 @@ loom {
             server()
             name("Data Generation")
             runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/main/generated/resources")}", "-Dfabric-api.datagen.strict-validation")
+            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation")
         }
         register("datagenClient") {
             client()
             name("Data Generation Client")
             runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/main/generated/resources")}", "-Dfabric-api.datagen.strict-validation")
+            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation")
         }
         register("gametest") {
             server()

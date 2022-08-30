@@ -23,6 +23,7 @@
 package dev.galacticraft.mod;
 
 import com.google.common.base.Predicates;
+import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagExtractPredicate;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagInsertPredicate;
 import dev.galacticraft.mod.lookup.predicate.TagPredicate;

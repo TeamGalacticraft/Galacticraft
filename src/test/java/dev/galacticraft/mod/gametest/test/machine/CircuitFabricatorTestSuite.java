@@ -71,7 +71,7 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
         final var circuitFabricator = this.createBlockEntity(context, pos, GalacticraftBlock.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
         final var inv = circuitFabricator.itemStorage();
         circuitFabricator.energyStorage().setEnergyUnsafe(circuitFabricator.getEnergyCapacity());
-        inv.setSlot(CircuitFabricatorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
+        inv.setSlotUnsafe(CircuitFabricatorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
         fillCircuitFabricatorSlots(inv);
         runFinalTaskNext(context, () -> {
             if (circuitFabricator.getMaxProgress() != 0) {
@@ -81,10 +81,10 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
     }
 
     private static void fillCircuitFabricatorSlots(@NotNull MachineItemStorage inv) {
-        inv.setSlot(CircuitFabricatorBlockEntity.INPUT_SLOT_DIAMOND, ItemVariant.of(Items.DIAMOND), 1);
-        inv.setSlot(CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON, ItemVariant.of(GalacticraftItem.RAW_SILICON), 1);
-        inv.setSlot(CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON_2, ItemVariant.of(GalacticraftItem.RAW_SILICON), 1);
-        inv.setSlot(CircuitFabricatorBlockEntity.INPUT_SLOT_REDSTONE, ItemVariant.of(Items.REDSTONE), 1);
-        inv.setSlot(CircuitFabricatorBlockEntity.INPUT_SLOT, ItemVariant.of(Items.REDSTONE_TORCH), 1);
+        inv.setSlotUnsafe(CircuitFabricatorBlockEntity.INPUT_SLOT_DIAMOND, ItemVariant.of(Items.DIAMOND), 1);
+        inv.setSlotUnsafe(CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON, ItemVariant.of(GalacticraftItem.RAW_SILICON), 1);
+        inv.setSlotUnsafe(CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON_2, ItemVariant.of(GalacticraftItem.RAW_SILICON), 1);
+        inv.setSlotUnsafe(CircuitFabricatorBlockEntity.INPUT_SLOT_REDSTONE, ItemVariant.of(Items.REDSTONE), 1);
+        inv.setSlotUnsafe(CircuitFabricatorBlockEntity.INPUT_SLOT, ItemVariant.of(Items.REDSTONE_TORCH), 1);
     }
 }

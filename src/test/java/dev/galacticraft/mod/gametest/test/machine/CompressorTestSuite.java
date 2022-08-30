@@ -50,7 +50,7 @@ public class CompressorTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var compressor = this.createBlockEntity(context, pos, GalacticraftBlock.COMPRESSOR, GalacticraftBlockEntityType.COMPRESSOR);
         final var inv = compressor.itemStorage();
-        inv.setSlot(CompressorBlockEntity.FUEL_INPUT_SLOT, ItemVariant.of(Items.COAL), 1, true);
+        inv.setSlotUnsafe(CompressorBlockEntity.FUEL_INPUT_SLOT, ItemVariant.of(Items.COAL), 1, true);
         runNext(context, () -> {
             ItemStack stack = inv.getStack(CompressorBlockEntity.FUEL_INPUT_SLOT);
             if (stack.isEmpty() || stack.getItem() != Items.COAL || stack.getCount() != 1) {
@@ -86,7 +86,7 @@ public class CompressorTestSuite implements MachineGameTest {
         final var compressor = this.createBlockEntity(context, pos, GalacticraftBlock.COMPRESSOR, GalacticraftBlockEntityType.COMPRESSOR);
         final var inv = compressor.itemStorage();
         compressor.fuelTime = compressor.fuelLength = 1000;
-        inv.setSlot(CompressorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
+        inv.setSlotUnsafe(CompressorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
         fillCompressorSlots(inv);
         runFinalTaskNext(context, () -> {
             if (compressor.getMaxProgress() != 0) {
@@ -96,7 +96,7 @@ public class CompressorTestSuite implements MachineGameTest {
     }
 
     private static void fillCompressorSlots(@NotNull MachineItemStorage inv) {
-        inv.setSlot(0, ItemVariant.of(Items.IRON_INGOT), 1, true);
-        inv.setSlot(1, ItemVariant.of(Items.IRON_INGOT), 1, true);
+        inv.setSlotUnsafe(0, ItemVariant.of(Items.IRON_INGOT), 1, true);
+        inv.setSlotUnsafe(1, ItemVariant.of(Items.IRON_INGOT), 1, true);
     }
 }

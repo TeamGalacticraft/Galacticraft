@@ -113,8 +113,6 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         world.getProfiler().push("transaction");
         MachineStatus status;
-        this.players = world.players().size();
-        this.prevSize = this.size;
         distributeOxygenToArea(this.prevSize, false);
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate()) {
@@ -136,6 +134,8 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
                 }
                 world.getProfiler().pop();
                 if (this.prevSize != this.size || this.players != world.players().size()) {
+                    this.players = world.players().size();
+                    this.prevSize = this.size;
                     world.getProfiler().push("network");
                     for (ServerPlayer player : world.players()) {
                         ServerPlayNetworking.send(player, new ResourceLocation(Constant.MOD_ID, "bubble_size"), new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
