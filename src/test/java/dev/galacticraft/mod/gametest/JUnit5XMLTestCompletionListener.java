@@ -63,6 +63,7 @@ public class JUnit5XMLTestCompletionListener implements TestReporter {
 
     @Override
     public void onTestFailed(GameTestInfo test) {
+        if (test.getError() != null) test.getError().printStackTrace();
         Element failedStateElement;
         if(test.isRequired()) {
             failedStateElement = this.document.createElement("failure");

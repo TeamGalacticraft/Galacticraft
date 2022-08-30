@@ -31,6 +31,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,6 +46,7 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     private @NotNull WireEnergyStorage @Nullable[] insertables = null;
     private final int maxTransferRate;
     private final boolean[] connections = new boolean[6];
+    private boolean awaitDirty = false;
 
     public WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state, int maxTransferRate) {
         super(type, pos, state);
@@ -132,10 +134,18 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     }
 
     @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        if (this.awaitDirty && level != null && level.isClientSide) {
+            this.awaitDirty = false;
+            Minecraft.getInstance().levelRenderer.setSectionDirty(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ());
+        }
+    }
+
+    @Override
     public void load(CompoundTag nbt) {
         super.load(nbt);
         this.readConnectionNbt(nbt);
-        assert this.level != null;
-        if (this.level.isClientSide) Minecraft.getInstance().levelRenderer.setSectionDirty(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
+        this.awaitDirty = true;
     }
 }

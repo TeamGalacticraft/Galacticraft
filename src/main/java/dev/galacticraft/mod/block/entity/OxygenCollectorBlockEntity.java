@@ -86,6 +86,11 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 .build();
     }
 
+    @Override
+    public long getEnergyCapacity() {
+        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
+    }
+
     private int collectOxygen(@NotNull ServerLevel world, @NotNull BlockPos pos) {
         if (!this.oxygenWorld) {
             int minX = pos.getX() - 5;

@@ -79,6 +79,11 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
     }
 
     @Override
+    public long getEnergyCapacity() {
+        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
+    }
+
+    @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
         super.tickConstant(world, pos, state);
         this.attemptChargeFromStack(CHARGE_SLOT);

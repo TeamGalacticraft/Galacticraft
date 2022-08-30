@@ -30,9 +30,11 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colored, Connected, Pullable {
+    private boolean awaitDirty = false;
     private boolean pull = false;
 
     public GlassFluidPipeBlockEntity(BlockPos pos, BlockState state) {
@@ -44,8 +46,16 @@ public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colore
         super.load(nbt);
         this.readPullNbt(nbt);
 
-        assert this.level != null;
-        if (this.level.isClientSide) Minecraft.getInstance().levelRenderer.setSectionDirty(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ());
+        this.awaitDirty = true;
+    }
+
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        if (this.awaitDirty && level != null && level.isClientSide) {
+            this.awaitDirty = false;
+            Minecraft.getInstance().levelRenderer.setSectionDirty(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ());
+        }
     }
 
     @Override

@@ -51,10 +51,7 @@ public interface MachineGameTest extends GalacticraftGameTest {
 
     default <T extends MachineBlockEntity, B extends MachineBlock<T>> void testItemCharging(GameTestHelper context, BlockPos pos, B block, BlockEntityType<T> type, int slot) {
         T machine = this.createBlockEntity(context, pos, block, type);
-        try (Transaction transaction = Transaction.openOuter()) {
-            machine.itemStorage().setSlot(slot, ItemVariant.of(GalacticraftItem.INFINITE_BATTERY), 1);
-            transaction.commit();
-        }
+        machine.itemStorage().setSlot(slot, ItemVariant.of(GalacticraftItem.INFINITE_BATTERY), 1, true);
         runFinalTaskNext(context, () -> {
             if (machine.energyStorage().getAmount() <= 0) {
                 context.fail(String.format("Expected %s to charge from an item, but found %s energy!", Registry.BLOCK_ENTITY_TYPE.getKey(type), machine.energyStorage().getAmount()), pos);
@@ -65,10 +62,7 @@ public interface MachineGameTest extends GalacticraftGameTest {
     default <T extends MachineBlockEntity, B extends MachineBlock<T>> void testItemDraining(GameTestHelper context, BlockPos pos, B block, BlockEntityType<T> type, int slot) {
         T machine = this.createBlockEntity(context, pos, block, type);
         machine.energyStorage().setEnergyUnsafe(machine.energyStorage().getCapacity());
-        try (Transaction transaction = Transaction.openOuter()) {
-            machine.itemStorage().setSlot(slot, ItemVariant.of(GalacticraftItem.BATTERY), 1);
-            transaction.commit();
-        }
+        machine.itemStorage().setSlot(slot, ItemVariant.of(GalacticraftItem.BATTERY), 1, true);
         runFinalTaskNext(context, () -> {
             if (machine.energyStorage().getAmount() >= machine.energyStorage().getCapacity()) {
                 context.fail(String.format("Expected %s to drain power to an item, but it was still at max energy!", Registry.BLOCK_ENTITY_TYPE.getKey(type)), pos);

@@ -87,6 +87,11 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Cont
     }
 
     @Override
+    public long getEnergyCapacity() {
+        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
+    }
+
+    @Override
     public @NotNull Container craftingInv() {
         return this.craftingInv;
     }

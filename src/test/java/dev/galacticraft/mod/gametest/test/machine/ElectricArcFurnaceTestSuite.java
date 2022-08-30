@@ -49,14 +49,14 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         this.testItemCharging(context, new BlockPos(0, 0, 0), GalacticraftBlock.ELECTRIC_ARC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE, ElectricArcFurnaceBlockEntity.CHARGE_SLOT);
     }
 
-    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 81)
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 90 + 1)
     public void electricArcFurnaceBlastingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var electricArcFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_ARC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE);
         final var inv = electricArcFurnace.itemStorage();
         electricArcFurnace.energyStorage().setEnergyUnsafe(electricArcFurnace.getEnergyCapacity());
         fillElectricArcFurnaceSlots(inv);
-        runFinalTaskAt(context, 80 + 1, () -> {
+        runFinalTaskAt(context, 90 + 1, () -> {
             ItemStack output = inv.getStack(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1);
             if (output.getItem() != Items.IRON_INGOT && output.getCount() != 2) {
                 context.fail(String.format("Expected electric arc furnace to have made two iron ingots but found %s instead!", formatItemStack(output)), pos);
@@ -81,6 +81,6 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
     }
 
     private static void fillElectricArcFurnaceSlots(@NotNull MachineItemStorage inv) {
-        inv.setSlot(ElectricArcFurnaceBlockEntity.INPUT_SLOT, ItemVariant.of(Items.RAW_IRON), 1);
+        inv.setSlot(ElectricArcFurnaceBlockEntity.INPUT_SLOT, ItemVariant.of(Items.RAW_IRON), 1, true);
     }
 }

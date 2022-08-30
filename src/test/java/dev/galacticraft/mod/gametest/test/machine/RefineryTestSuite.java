@@ -59,10 +59,7 @@ public class RefineryTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY);
         final var inv = refinery.itemStorage();
-        try (Transaction transaction = Transaction.openOuter()) {
-            inv.setSlot(RefineryBlockEntity.FLUID_INPUT_SLOT, ItemVariant.of(GalacticraftItem.CRUDE_OIL_BUCKET), 1);
-            transaction.commit();
-        }
+        inv.setSlot(RefineryBlockEntity.FLUID_INPUT_SLOT, ItemVariant.of(GalacticraftItem.CRUDE_OIL_BUCKET), 1, true);
         refinery.energyStorage().setEnergyUnsafe(refinery.getEnergyCapacity());
         runFinalTaskNext(context, () -> {
             ItemStack inputStack = inv.getStack(RefineryBlockEntity.FLUID_INPUT_SLOT);
@@ -76,16 +73,8 @@ public class RefineryTestSuite implements MachineGameTest {
     public void refineryCraftingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY);
-        final var inv = refinery.itemStorage();
-        try (Transaction transaction = Transaction.openOuter()) {
-            fillRefinerySlots(inv, transaction);
-            transaction.commit();
-        }
         refinery.energyStorage().setEnergyUnsafe(refinery.getEnergyCapacity());
-        try (Transaction transaction = Transaction.openOuter()) {
-            refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, FluidVariant.of(GalacticraftFluid.CRUDE_OIL), FluidConstants.BUCKET);
-            transaction.commit();
-        }
+        refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, FluidVariant.of(GalacticraftFluid.CRUDE_OIL), FluidConstants.BUCKET);
         runFinalTaskAt(context, 200 + 1, () -> {
             long oil = refinery.fluidStorage().getAmount(RefineryBlockEntity.OIL_TANK);
             long fuel = refinery.fluidStorage().getAmount(RefineryBlockEntity.FUEL_TANK);
@@ -102,26 +91,13 @@ public class RefineryTestSuite implements MachineGameTest {
     public void refineryRefiningFullTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GalacticraftBlock.REFINERY, GalacticraftBlockEntityType.REFINERY);
-        final var inv = refinery.itemStorage();
-        try (Transaction transaction = Transaction.openOuter()) {
-            fillRefinerySlots(inv, transaction);
-            transaction.commit();
-        }
         refinery.energyStorage().setEnergyUnsafe(refinery.getEnergyCapacity());
-        try (Transaction transaction = Transaction.openOuter()) {
-            refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, FluidVariant.of(GalacticraftFluid.CRUDE_OIL), FluidConstants.BUCKET);
-            refinery.fluidStorage().setSlot(RefineryBlockEntity.FUEL_TANK, FluidVariant.of(GalacticraftFluid.FUEL), FluidConstants.BUCKET);
-            transaction.commit();
-        }
+        refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, FluidVariant.of(GalacticraftFluid.CRUDE_OIL), FluidConstants.BUCKET, true);
+        refinery.fluidStorage().setSlot(RefineryBlockEntity.FUEL_TANK, FluidVariant.of(GalacticraftFluid.FUEL), RefineryBlockEntity.MAX_CAPACITY, true);
         runFinalTaskNext(context, () -> {
             if (refinery.fluidStorage().getAmount(RefineryBlockEntity.OIL_TANK) != FluidConstants.BUCKET) {
-                context.fail(String.format("Expected refinery to be unable to refine oil as the fuel tank was full!"), pos);
+                context.fail("Expected refinery to be unable to refine oil as the fuel tank was full!", pos);
             }
         });
-    }
-
-    private static void fillRefinerySlots(MachineItemStorage inv, TransactionContext transaction) {
-        inv.setSlot(0, ItemVariant.of(Items.IRON_INGOT), 1);
-        inv.setSlot(1, ItemVariant.of(Items.IRON_INGOT), 1);
     }
 }

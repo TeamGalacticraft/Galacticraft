@@ -46,7 +46,7 @@ public class CoalGeneratorTestSuite implements MachineGameTest {
     public void coalGeneratorFuelingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);
-        coalGenerator.itemStorage().setSlot(CoalGeneratorBlockEntity.FUEL_SLOT, ItemVariant.of(Items.COAL), 2);
+        coalGenerator.itemStorage().setSlot(CoalGeneratorBlockEntity.FUEL_SLOT, ItemVariant.of(Items.COAL), 2, true);
         runNext(context, () -> {
             ItemStack stack = coalGenerator.itemStorage().getStack(CoalGeneratorBlockEntity.FUEL_SLOT);
             if (stack.isEmpty() || stack.getItem() != Items.COAL || stack.getCount() != 1) {
@@ -65,19 +65,19 @@ public class CoalGeneratorTestSuite implements MachineGameTest {
         });
     }
 
-    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 371)
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 372)
     public void coalGeneratorGenerationTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);
         coalGenerator.setFuelLength(CoalGeneratorBlockEntity.FUEL_MAP.getInt(Items.COAL));
         runFinalTaskAt(context, 370 + 1, () -> {
-            if (coalGenerator.energyStorage().getAmount() != 26371) {
-                context.fail(String.format("Expected coal generator to have 26371 energy! Found: %s", coalGenerator.energyStorage().getAmount()), pos);
+            if (coalGenerator.energyStorage().getAmount() != 26251) {
+                context.fail(String.format("Expected coal generator to have 26251 energy! Found: %s", coalGenerator.energyStorage().getAmount()), pos);
             }
         });
     }
 
-    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 250)
+    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 251)
     public void coalGeneratorHeatTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);

@@ -103,14 +103,12 @@ loom {
             server()
             name("Game Test")
             source(sourceSets.test.get())
-            property("fabric.log.level", "debug")
             vmArg("-Dfabric-api.gametest")
         }
         register("gametestClient") {
             client()
             name("Game Test Client")
             source(sourceSets.test.get())
-            property("fabric.log.level", "debug")
             vmArg("-Dfabric-api.gametest")
         }
     }
@@ -191,11 +189,12 @@ dependencies {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     }
-    includedDependency("dev.galacticraft:MachineLib:$machineLibVersion") {
+    includedDependency("dev.galacticraft:GalacticraftAPI:$galacticraftApiVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
+        exclude(group = "dev.galacticraft", module = "MachineLib")
     }
-    includedDependency("dev.galacticraft:GalacticraftAPI:$galacticraftApiVersion") {
+    includedDependency("dev.galacticraft:MachineLib:$machineLibVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     }

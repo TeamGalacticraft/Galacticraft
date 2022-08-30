@@ -42,6 +42,7 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import team.reborn.energy.api.EnergyStorage;
@@ -746,9 +747,9 @@ public interface Constant {
         }
 
         interface Fluid {
-            Predicate<FluidVariant> LOX_ONLY = new TagPredicate<>(GalacticraftTag.LIQUID_OXYGEN);
-            Predicate<FluidVariant> OIL = new TagPredicate<>(GalacticraftTag.OIL);
-            Predicate<FluidVariant> FUEL = new TagPredicate<>(GalacticraftTag.FUEL);
+            Predicate<FluidVariant> LOX_ONLY = new TagPredicate<>(GalacticraftTag.LIQUID_OXYGEN, net.minecraft.world.level.material.Fluid::is);
+            Predicate<FluidVariant> OIL = new TagPredicate<>(GalacticraftTag.OIL, net.minecraft.world.level.material.Fluid::is);
+            Predicate<FluidVariant> FUEL = new TagPredicate<>(GalacticraftTag.FUEL, net.minecraft.world.level.material.Fluid::is);
         }
     }
 

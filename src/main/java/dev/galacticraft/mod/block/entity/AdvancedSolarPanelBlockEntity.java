@@ -145,7 +145,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
 
     @Override
     public long getEnergyCapacity() {
-        return 30000L;
+        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
     }
 
     @Override

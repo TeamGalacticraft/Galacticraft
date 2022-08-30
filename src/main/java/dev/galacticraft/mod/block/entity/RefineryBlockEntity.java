@@ -50,13 +50,15 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
 import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RefineryBlockEntity extends MachineBlockEntity {
-    private static final long MAX_CAPACITY = FluidUtil.bucketsToDroplets(8);
+    @VisibleForTesting
+    public static final long MAX_CAPACITY = FluidUtil.bucketsToDroplets(8);
     public static final int OIL_TANK = 0;
     public static final int FUEL_TANK = 1;
     public static final int CHARGE_SLOT = 0;
@@ -67,9 +69,13 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     private final StateCachingStorageProvider<Storage<FluidVariant>> fluidInputSlot = StateCachingStorageProvider.create(this.itemStorage().getSlot(FLUID_INPUT_SLOT), FluidStorage.ITEM);
     private final StateCachingStorageProvider<Storage<FluidVariant>> fluidOutputSlot = StateCachingStorageProvider.create(this.itemStorage().getSlot(FLUID_OUTPUT_SLOT), FluidStorage.ITEM);
 
-
     public RefineryBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.REFINERY, pos, state);
+    }
+
+    @Override
+    public long getEnergyCapacity() {
+        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
     }
 
     @Override
