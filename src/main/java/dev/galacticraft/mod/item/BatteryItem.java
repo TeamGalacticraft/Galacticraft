@@ -24,8 +24,6 @@ package dev.galacticraft.mod.item;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.DrawableUtil;
-import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -53,32 +51,25 @@ public class BatteryItem extends Item implements SimpleBatteryItem {
         this.capacity = capacity;
         this.transfer = transfer;
 
-        EnergyStorage.ITEM.registerForItems((itemStack, context) -> SimpleBatteryItem.createStorage(ContainerItemContext.withInitial(itemStack), this.getEnergyCapacity(), this.getEnergyMaxInput(), this.getEnergyMaxOutput()), this);
+        EnergyStorage.ITEM.registerForItems((itemStack, context) -> SimpleBatteryItem.createStorage(context, this.getEnergyCapacity(), this.getEnergyMaxInput(), this.getEnergyMaxOutput()), this);
     }
 
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
-        EnergyStorage energyStorage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
-        lines.add(Component.translatable("tooltip.galacticraft.energy_remaining", DrawableUtil.getEnergyDisplay(energyStorage.getAmount())).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double)energyStorage.getAmount()) / ((double)energyStorage.getCapacity()))));
+        lines.add(Component.translatable("tooltip.galacticraft.energy_remaining", DrawableUtil.getEnergyDisplay(getStoredEnergy(stack))).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double)getStoredEnergy(stack)) / ((double)this.getEnergyCapacity()))));
         super.appendHoverText(stack, world, lines, context);
     }
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {
         if (this.allowedIn(group)) {
-            ItemStack charged = new ItemStack(this);
-            try (Transaction transaction = Transaction.openOuter()) {
-                ContainerItemContext.withInitial(charged).find(EnergyStorage.ITEM).insert(Long.MAX_VALUE, transaction);
-                transaction.commit();
-            }
-            stacks.add(charged);
+            ItemStack stack = new ItemStack(this);
+            setStoredEnergy(stack, this.getEnergyCapacity());
+            stacks.add(stack);
 
-            ItemStack depleted = new ItemStack(this);
-            try (Transaction transaction = Transaction.openOuter()) {
-                ContainerItemContext.withInitial(charged).find(EnergyStorage.ITEM).extract(Long.MAX_VALUE, transaction);
-                transaction.commit();
-            }
-            stacks.add(depleted);
+            stack = new ItemStack(this);
+            setStoredEnergy(stack, 0);
+            stacks.add(stack);
         }
     }
 
@@ -89,24 +80,18 @@ public class BatteryItem extends Item implements SimpleBatteryItem {
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        EnergyStorage storage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
-        assert storage != null;
-
-        return (int) Math.round(13.0 - (((double)storage.getAmount() / (double)storage.getCapacity()) * 13.0));
+        return (int) Math.round(((double)getStoredEnergy(stack) / (double)this.getEnergyCapacity()) * 13.0);
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
-        EnergyStorage storage = ContainerItemContext.withInitial(stack).find(EnergyStorage.ITEM);
-        assert storage != null;
-        double scale = 1.0 - Math.max(0.0, (double) storage.getAmount() / (double)storage.getCapacity());
+        double scale = 1.0 - Math.max(0.0, (double) getStoredEnergy(stack) / (double)this.getEnergyCapacity());
         return ((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8);
     }
 
     @Override
     public void onCraftedBy(@NotNull ItemStack battery, Level world, Player player) {
         CompoundTag batteryTag = battery.getOrCreateTag();
-        battery.setDamageValue(this.getMaxDamage());
         battery.setTag(batteryTag);
     }
 

@@ -39,5 +39,7 @@ public class RefineryScreen extends MachineHandledScreen<RefineryBlockEntity, Si
     public RefineryScreen(SimpleMachineScreenHandler<RefineryBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.REFINERY_SCREEN);
         this.imageHeight = 192;
+        this.capacitorX = 8;
+        this.capacitorY = 29;
     }
 }
