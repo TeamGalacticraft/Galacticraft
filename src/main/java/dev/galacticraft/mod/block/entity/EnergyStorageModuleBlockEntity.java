@@ -33,6 +33,7 @@ import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -79,14 +80,14 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        super.tickConstant(world, pos, state);
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(world, pos, state, profiler);
         this.attemptChargeFromStack(this.batteryDrainSlot);
         this.attemptDrainPowerToStack(this.batteryChargeSlot);
     }
 
     @Override
-    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         this.trySpreadEnergy(world);
         return MachineStatus.INVALID;
     }

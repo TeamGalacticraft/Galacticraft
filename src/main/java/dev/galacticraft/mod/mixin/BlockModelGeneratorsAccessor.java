@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-
 package dev.galacticraft.mod.mixin;
 
 import net.minecraft.data.models.BlockModelGenerators;

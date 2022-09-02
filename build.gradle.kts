@@ -51,7 +51,7 @@ val runtimeOptional        = project.property("optional_dependencies.enabled").t
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("0.12-SNAPSHOT")
+    id("fabric-loom") version("1.0-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
     id("io.github.juuxel.loom-quiltflower") version("1.7.3")
 }
@@ -64,17 +64,10 @@ java {
 
 sourceSets {
     main {
-        resources.srcDir("src/main/generated")
-    }
-    register("gametest") {
-        java {
-            srcDir("src/gametest/java")
-        }
         resources {
-            srcDir("src/gametest/resources")
+            srcDir("src/main/generated")
+            exclude(".cache/**")
         }
-        compileClasspath += main.get().compileClasspath
-        runtimeClasspath += main.get().runtimeClasspath
     }
 }
 
@@ -87,40 +80,29 @@ loom {
     accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
     mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
 
-    sourceSets {
-        main {
-            resources {
-                srcDir("src/generated/resources")
-                exclude("src/generated/resources/.cache")
-            }
-        }
-    }
-
     runs {
         register("datagen") {
             server()
             name("Data Generation")
             runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/generated/resources")}", "-Dfabric-api.datagen.strict-validation")
+            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation")
         }
         register("datagenClient") {
             client()
             name("Data Generation Client")
             runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/generated/resources")}", "-Dfabric-api.datagen.strict-validation")
+            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation")
         }
         register("gametest") {
             server()
             name("Game Test")
-            source(sourceSets.getByName("gametest"))
-            property("fabric.log.level", "debug")
+            source(sourceSets.test.get())
             vmArg("-Dfabric-api.gametest")
         }
         register("gametestClient") {
             client()
             name("Game Test Client")
-            source(sourceSets.getByName("gametest"))
-            property("fabric.log.level", "debug")
+            source(sourceSets.test.get())
             vmArg("-Dfabric-api.gametest")
         }
     }
@@ -196,9 +178,9 @@ dependencies {
         "accessors",
         "constants",
         "common"
-    ).forEach({
+    ).forEach {
         includedDependency("io.github.fabricators_of_create.Porting-Lib:$it:${portingLibVersion}+${minecraftVersion}") { isTransitive = false }
-    })
+    }
     includedDependency("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
@@ -210,12 +192,11 @@ dependencies {
     includedDependency("dev.galacticraft:GalacticraftAPI:$galacticraftApiVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
-        exclude(group = "alexiil.mc.lib")
+        exclude(group = "dev.galacticraft", module = "MachineLib")
     }
     includedDependency("dev.galacticraft:MachineLib:$machineLibVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
-        exclude(group = "alexiil.mc.lib")
     }
     // Optional Dependencies
     optionalDependency("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
@@ -230,7 +211,6 @@ dependencies {
 
     // Runtime Dependencies
     modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
-    "gametestImplementation"(sourceSets.main.get().output)
 }
 
 tasks.processResources {

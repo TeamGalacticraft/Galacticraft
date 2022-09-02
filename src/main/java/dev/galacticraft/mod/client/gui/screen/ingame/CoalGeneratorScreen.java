@@ -54,8 +54,8 @@ public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorBlock
     protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.renderBackground(matrices, mouseX, mouseY, delta);
         if (this.machine.getFuelLength() > 0) {
-            double scale = ((double)(this.machine.getFuelLength() - this.machine.getFuelTime())) / (double)this.machine.getFuelLength();
-            DrawableUtil.drawProgressTexture(matrices, this.leftPos + FIRE_X, this.topPos + FIRE_Y, this.getBlitOffset(), FIRE_U, FIRE_V, FIRE_WIDTH, (float) (FIRE_HEIGHT * scale));
+            double scale = 1.0 - ((double)this.machine.getFuelTime()) / (double)this.machine.getFuelLength();
+            DrawableUtil.drawProgressTexture(matrices, this.leftPos + FIRE_X, this.topPos + FIRE_Y + FIRE_HEIGHT - (float) (FIRE_HEIGHT * scale), this.getBlitOffset(), FIRE_U, FIRE_V + FIRE_HEIGHT - (float) (FIRE_HEIGHT * scale), FIRE_WIDTH, (float) (FIRE_HEIGHT * scale));
         }
     }
 }

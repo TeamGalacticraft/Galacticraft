@@ -42,6 +42,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -86,6 +87,11 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 .build();
     }
 
+    @Override
+    public long getEnergyCapacity() {
+        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
+    }
+
     private int collectOxygen(@NotNull ServerLevel world, @NotNull BlockPos pos) {
         if (!this.oxygenWorld) {
             int minX = pos.getX() - 5;
@@ -118,23 +124,23 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        super.tickConstant(world, pos, state);
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(world, pos, state, profiler);
         this.attemptChargeFromStack(CHARGE_SLOT);
     }
 
     @Override
-    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        world.getProfiler().push("transfer");
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        profiler.push("transfer");
         this.trySpreadFluids(world);
 
         if (this.fluidStorage().isFull(OXYGEN_TANK)) return GalacticraftMachineStatus.OXYGEN_TANK_FULL;
-        world.getProfiler().popPush("transaction");
+        profiler.popPush("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate()) {
-                world.getProfiler().push("collect");
+                profiler.push("collect");
                 this.collectionAmount = collectOxygen(world, pos);
-                world.getProfiler().pop();
+                profiler.pop();
                 if (this.collectionAmount > 0) {
                     this.fluidStorage().insert(OXYGEN_TANK, FluidVariant.of(Gases.OXYGEN), FluidUtil.bucketsToDroplets(this.collectionAmount), transaction);
                     transaction.commit();
@@ -147,7 +153,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
             }
         } finally {
-            world.getProfiler().pop();
+            profiler.pop();
         }
     }
 

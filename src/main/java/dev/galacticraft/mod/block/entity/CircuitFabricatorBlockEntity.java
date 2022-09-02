@@ -48,6 +48,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -103,11 +104,11 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     }
 
     @Override
-    public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        super.tickConstant(world, pos, state);
-        world.getProfiler().push("charge");
+    public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(world, pos, state, profiler);
+        profiler.push("charge");
         this.attemptChargeFromStack(CHARGE_SLOT);
-        world.getProfiler().pop();
+        profiler.pop();
     }
 
     @Override

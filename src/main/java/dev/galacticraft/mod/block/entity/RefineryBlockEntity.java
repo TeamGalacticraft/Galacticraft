@@ -44,19 +44,22 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
 import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RefineryBlockEntity extends MachineBlockEntity {
-    private static final long MAX_CAPACITY = FluidUtil.bucketsToDroplets(8);
+    @VisibleForTesting
+    public static final long MAX_CAPACITY = FluidUtil.bucketsToDroplets(8);
     public static final int OIL_TANK = 0;
     public static final int FUEL_TANK = 1;
     public static final int CHARGE_SLOT = 0;
@@ -67,9 +70,13 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     private final StateCachingStorageProvider<Storage<FluidVariant>> fluidInputSlot = StateCachingStorageProvider.create(this.itemStorage().getSlot(FLUID_INPUT_SLOT), FluidStorage.ITEM);
     private final StateCachingStorageProvider<Storage<FluidVariant>> fluidOutputSlot = StateCachingStorageProvider.create(this.itemStorage().getSlot(FLUID_OUTPUT_SLOT), FluidStorage.ITEM);
 
-
     public RefineryBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.REFINERY, pos, state);
+    }
+
+    @Override
+    public long getEnergyCapacity() {
+        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
     }
 
     @Override
@@ -90,8 +97,8 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        super.tickConstant(world, pos, state);
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(world, pos, state, profiler);
         this.attemptChargeFromStack(chargeSlot);
 
         Storage<FluidVariant> storage = this.fluidInputSlot.getStorage();
@@ -105,10 +112,10 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         if (this.fluidStorage().isEmpty(OIL_TANK)) return GalacticraftMachineStatus.MISSING_OIL;
         if (this.fluidStorage().isFull(FUEL_TANK)) return GalacticraftMachineStatus.FUEL_TANK_FULL;
-        world.getProfiler().push("transaction");
+        profiler.push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate()) {
                 long extracted;
@@ -129,7 +136,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
             }
         } finally {
-            world.getProfiler().pop();
+            profiler.pop();
         }
     }
 

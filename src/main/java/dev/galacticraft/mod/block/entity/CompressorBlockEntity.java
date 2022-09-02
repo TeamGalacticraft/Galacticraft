@@ -25,9 +25,11 @@ package dev.galacticraft.mod.block.entity;
 import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.api.machine.MachineStatus;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.storage.StorageSlot;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
+import dev.galacticraft.mod.machine.LongProperty;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
@@ -41,10 +43,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -60,6 +64,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
     private final Container craftingInv = this.itemStorage().subInv(0, FUEL_INPUT_SLOT);
     public int fuelTime;
     public int fuelLength;
+    private LongProperty fuelSlotModification = LongProperty.create(-1);
 
     public CompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE);
@@ -115,8 +120,8 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        super.tickConstant(world, pos, state);
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(world, pos, state, profiler);
         if (--this.fuelTime <= 0) {
             this.fuelLength = 0;
             this.fuelTime = 0;
@@ -124,29 +129,32 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
     }
 
     @Override
-    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         if (this.getMaxProgress() > 0) {
             if (this.getProgress() % (this.getMaxProgress() / 8) == 0 && this.getProgress() > this.getMaxProgress() / 2) {
                 world.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
             }
         }
 
-        return super.tick(world, pos, state);
+        return super.tick(world, pos, state, profiler);
     }
 
     @Override
     protected @Nullable MachineStatus extractResourcesToWork(@NotNull TransactionContext context) {
         if (this.fuelLength == 0) {
-            ItemStack remainingItem = null;
-            if (this.itemStorage().getStack(FUEL_INPUT_SLOT).getItem().hasCraftingRemainingItem())
-                remainingItem = this.itemStorage().getStack(FUEL_INPUT_SLOT).getItem().getCraftingRemainingItem().getDefaultInstance();
-            ItemStack stack = this.itemStorage().extract(FUEL_INPUT_SLOT, 1, context);
-            Integer integer = FuelRegistry.INSTANCE.get(stack.getItem());
-            if (integer != null && integer > 0) {
-                this.fuelTime = this.fuelLength = integer;
+            StorageSlot<Item, ItemVariant, ItemStack> slot = this.itemStorage().getSlot(FUEL_INPUT_SLOT);
+            if (slot.getModCountUnsafe() != this.fuelSlotModification.getValue()) {
+                this.fuelSlotModification.setValue(slot.getModCountUnsafe(), context);
+                ItemStack stack = this.itemStorage().extract(FUEL_INPUT_SLOT, 1, context);
+                Item remainingItem = stack.getItem().getCraftingRemainingItem();
+                Integer integer = FuelRegistry.INSTANCE.get(stack.getItem());
+                if (integer != null && integer > 0) {
+                    this.fuelTime = this.fuelLength = integer;
+                    if (remainingItem != null && slot.getResource().isBlank()) {
+                        slot.insert(ItemVariant.of(remainingItem), 1, context);
+                    }
+                }
             }
-            if (remainingItem != null)
-                this.itemStorage().setSlot(FUEL_INPUT_SLOT, ItemVariant.of(remainingItem), 1);
         }
         return this.fuelLength == 0 ? GalacticraftMachineStatus.NO_FUEL : super.extractResourcesToWork(context);
     }

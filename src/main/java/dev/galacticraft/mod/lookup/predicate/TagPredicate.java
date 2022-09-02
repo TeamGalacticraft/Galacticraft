@@ -28,9 +28,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
-public record TagPredicate<T, V extends TransferVariant<T>>(TagKey<T> tag) implements Predicate<V> {
+//todo: update for tags
+public record TagPredicate<T, V extends TransferVariant<T>>(TagKey<T> tag, InternalTagMatcher<T, V> matcher) implements Predicate<V> {
     @Override
     public boolean test(@NotNull V v) {
-        return /*tag.values().contains(v.getObject())*/false;
+        return matcher.test(v.getObject(), tag);
+    }
+
+    @FunctionalInterface
+    public interface InternalTagMatcher<T, V extends TransferVariant<T>> {
+        boolean test(T t, TagKey<T> tag);
     }
 }

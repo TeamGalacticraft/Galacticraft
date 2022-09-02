@@ -66,9 +66,9 @@ public class CompressorScreen extends MachineHandledScreen<CompressorBlockEntity
 
     protected void drawFuelProgressBar(PoseStack matrices) {
         if (this.menu.machine.fuelLength > 0) {
-            float fuelUsageScale = (float)((double)(this.menu.machine.fuelLength - this.menu.machine.fuelTime) / (double)this.menu.machine.fuelLength);
+            float fuelUsageScale = (float)(1.0 - (double)(this.menu.machine.fuelLength - this.menu.machine.fuelTime) / (double)this.menu.machine.fuelLength);
             RenderSystem.setShaderTexture(0, Constant.ScreenTexture.COMPRESSOR_SCREEN);
-            DrawableUtil.drawProgressTexture(matrices, this.leftPos + FIRE_X, (this.topPos + FIRE_Y + (FIRE_HEIGHT - (fuelUsageScale * FIRE_HEIGHT))), FIRE_U, FIRE_V - (FIRE_HEIGHT - (fuelUsageScale * FIRE_HEIGHT)), FIRE_WIDTH, (fuelUsageScale * FIRE_HEIGHT));
+            DrawableUtil.drawProgressTexture(matrices, this.leftPos + FIRE_X, (this.topPos + FIRE_Y + FIRE_HEIGHT - (fuelUsageScale * FIRE_HEIGHT)), FIRE_U, FIRE_V + (FIRE_HEIGHT - (fuelUsageScale * FIRE_HEIGHT)), FIRE_WIDTH, (fuelUsageScale * FIRE_HEIGHT));
         }
     }
 

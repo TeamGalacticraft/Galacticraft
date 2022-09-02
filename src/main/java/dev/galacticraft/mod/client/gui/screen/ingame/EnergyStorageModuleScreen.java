@@ -38,6 +38,9 @@ import net.minecraft.world.entity.player.Inventory;
 public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorageModuleBlockEntity, SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity>> {
     public EnergyStorageModuleScreen(SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.ENERGY_STORAGE_MODULE_SCREEN);
+
+        this.capacitorX = 54;
+        this.capacitorY = 20;
     }
 
     @Override

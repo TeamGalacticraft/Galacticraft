@@ -40,7 +40,22 @@ import team.reborn.energy.api.EnergyStorage;
 public class GalacticraftApiLookupProviders {
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] MACHINE_TYPES = new BlockEntityType[]{
-            GalacticraftBlockEntityType.COAL_GENERATOR
+            GalacticraftBlockEntityType.COAL_GENERATOR,
+            GalacticraftBlockEntityType.BASIC_SOLAR_PANEL,
+            GalacticraftBlockEntityType.ADVANCED_SOLAR_PANEL,
+            GalacticraftBlockEntityType.CIRCUIT_FABRICATOR,
+            GalacticraftBlockEntityType.COMPRESSOR,
+            GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR,
+            GalacticraftBlockEntityType.ELECTRIC_FURNACE,
+            GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE,
+            GalacticraftBlockEntityType.REFINERY,
+            GalacticraftBlockEntityType.OXYGEN_COLLECTOR,
+            GalacticraftBlockEntityType.OXYGEN_COMPRESSOR,
+            GalacticraftBlockEntityType.OXYGEN_DECOMPRESSOR,
+            GalacticraftBlockEntityType.OXYGEN_SEALER,
+            GalacticraftBlockEntityType.OXYGEN_BUBBLE_DISTRIBUTOR,
+            GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE,
+            GalacticraftBlockEntityType.OXYGEN_STORAGE_MODULE
     };
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] WIRE_TYPES = new BlockEntityType[]{
