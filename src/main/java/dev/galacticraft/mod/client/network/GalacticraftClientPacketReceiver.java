@@ -80,7 +80,7 @@ public class GalacticraftClientPacketReceiver {
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "open_screen"), (client, handler, buf, responseSender) -> {
             String screen = buf.readUtf();
             switch (screen) {
-                case "celestial" -> client.setScreen(new CelestialSelectionScreen(true, null, true));
+                case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(true, RocketData.empty(), true)));
                 default -> Galacticraft.LOGGER.error("No screen found!");
             }
         });

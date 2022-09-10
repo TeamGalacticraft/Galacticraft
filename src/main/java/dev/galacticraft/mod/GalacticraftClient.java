@@ -24,6 +24,8 @@ package dev.galacticraft.mod;
 
 import dev.galacticraft.api.client.model.MachineModelRegistry;
 import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.client.gui.overlay.CountdownOverylay;
+import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.*;
 import dev.galacticraft.mod.client.network.GalacticraftClientPacketReceiver;
@@ -56,6 +58,7 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -96,6 +99,8 @@ public class GalacticraftClient implements ClientModInitializer {
             registry.register(Constant.Fluid.getId(Constant.Fluid.CRUDE_OIL_FLOWING));
             registry.register(Constant.Fluid.getId(Constant.Fluid.FUEL_STILL));
             registry.register(Constant.Fluid.getId(Constant.Fluid.FUEL_FLOWING));
+
+            registry.register(new ResourceLocation("galacticraft", "model/rocket"));
         });
 
         MenuScreens.register(GalacticraftScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER, BasicSolarPanelScreen::new);
@@ -178,6 +183,9 @@ public class GalacticraftClient implements ClientModInitializer {
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
 
         BuiltinItemRendererRegistry.INSTANCE.register(GalacticraftItem.ROCKET, new RocketItemRenderer());
+
+        HudRenderCallback.EVENT.register(RocketOverlay::onHudRender);
+        HudRenderCallback.EVENT.register(CountdownOverylay::renderCountdown);
 
         Galacticraft.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

@@ -30,6 +30,7 @@ import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.entity.RocketEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -51,7 +52,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         matrices.pushPose();
         Minecraft client = Minecraft.getInstance();
-        matrices.translate(0.0D, 1.75, 0.0D);
+        matrices.translate(-0.5D, 1.75, -0.5D);
         if (entity.getStage() == LaunchStage.IGNITED) {
             matrices.translate((entity.level.random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level.random.nextDouble() - 0.5D) * 0.1D);
         }

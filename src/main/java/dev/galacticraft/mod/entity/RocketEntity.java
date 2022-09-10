@@ -89,10 +89,15 @@ public class RocketEntity extends Entity implements Rocket {
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
     private BlockPos linkedPad = BlockPos.ZERO;
-    private long timeAsState = 0;
+    private int timeAsState = 0;
+    private int timeBeforeLaunch;
 
     public RocketEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
+    }
+
+    public int getTimeAsState() {
+        return timeAsState;
     }
 
     @Override
@@ -224,6 +229,7 @@ public class RocketEntity extends Entity implements Rocket {
             if (this.getPassengers().get(0) instanceof ServerPlayer) {
                 if (getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
 //                    if (!this.getTank().getInvFluid(0).isEmpty()) {
+                        this.timeBeforeLaunch = 400;
                         this.setStage(this.getStage().next());
                         if (getStage() == LaunchStage.WARNING) {
                             ((ServerPlayer) this.getPassengers().get(0)).sendSystemMessage(Component.translatable("chat.galacticraft.rocket.warning"), true);
@@ -333,6 +339,7 @@ public class RocketEntity extends Entity implements Rocket {
                     this.setStage(LaunchStage.FAILED);
                 } else {
                     this.setStage(LaunchStage.IDLE);
+                    this.timeBeforeLaunch = 400;
                 }
 
                 this.removePassenger(this.getPassengers().get(0));
@@ -347,6 +354,7 @@ public class RocketEntity extends Entity implements Rocket {
             }
 
             if (getStage() == LaunchStage.IGNITED) {
+                timeBeforeLaunch--;
 //                if (this.getTank().getInvFluid(0).isEmpty() && !debugMode) {
 //                    this.setStage(LaunchStage.IDLE);
 //                    if (this.getPassengers().get(0) instanceof ServerPlayer) {
@@ -502,5 +510,9 @@ public class RocketEntity extends Entity implements Rocket {
         CompoundTag nbt = RocketData.create(this.getColor(), parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]).toNbt(new CompoundTag());
         buf.writeNbt(nbt);
         return ServerPlayNetworking.createS2CPacket(Constant.id("rocket_spawn"), buf);
+    }
+
+    public int getTimeBeforeLaunch() {
+        return timeBeforeLaunch;
     }
 }

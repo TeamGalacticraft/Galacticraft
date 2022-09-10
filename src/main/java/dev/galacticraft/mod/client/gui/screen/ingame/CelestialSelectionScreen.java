@@ -47,6 +47,8 @@ import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
+import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
+import dev.galacticraft.impl.universe.display.type.IconCelestialDisplayType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.ColorUtil;
@@ -1912,7 +1914,7 @@ public class CelestialSelectionScreen extends Screen {
                         buffer.normal(1, -1, -1);
                     }
 
-                    buffer.nextElement();
+                    buffer.endVertex();
 
                     temp = x;
                     x = cos * x - sin * y;
@@ -1929,7 +1931,7 @@ public class CelestialSelectionScreen extends Screen {
                         buffer.normal(1, -1, -1);
                     }
 
-                    buffer.nextElement();
+                    buffer.endVertex();
 
                     temp = x;
                     x = cos2 * x - sin2 * y;
