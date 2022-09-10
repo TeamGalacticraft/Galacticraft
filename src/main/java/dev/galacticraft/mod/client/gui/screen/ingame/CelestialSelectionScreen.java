@@ -1999,7 +1999,7 @@ public class CelestialSelectionScreen extends Screen {
         Vector3f celestialBodyPosition = this.getCelestialBodyPosition(body, delta);
         matrices.mulPose(Vector3f.YP.rotationDegrees(45));
         matrices.translate(celestialBodyPosition.x(), celestialBodyPosition.y(), celestialBodyPosition.z());
-        matrices.mulPose(Vector3f.XP.rotationDegrees(55));
+        matrices.mulPose(Vector3f.XN.rotationDegrees(55));
         if (scaleXZ != 1.0F) {
             matrices.scale(scaleXZ, scaleXZ, 1.0F);
         }
