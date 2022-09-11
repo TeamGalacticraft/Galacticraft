@@ -22,15 +22,88 @@
 
 package dev.galacticraft.mod.client.render.item;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
+import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
+import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.part.RocketPartType;
+import dev.galacticraft.mod.entity.GalacticraftEntityType;
+import dev.galacticraft.mod.entity.RocketEntity;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 
 public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
+    private final RocketEntity rocket = new RocketEntity(GalacticraftEntityType.ROCKET, Minecraft.getInstance().level); // Fake rocket entity for rendering
     @Override
     public void render(ItemStack stack, ItemTransforms.TransformType mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+        RocketData data = RocketData.fromNbt(stack.getTag());
+        rocket.setParts(data.parts());
+        rocket.setColor(data.color());
+        rocket.setOldPosAndRot();
+        matrices.pushPose();
+        if (mode == ItemTransforms.TransformType.GUI) {
+            matrices.scale(0.25f, 0.25f, 0.25f);
+            matrices.translate(2, 2, 2);
+            matrices.mulPose(Vector3f.ZP.rotationDegrees(65));
+            matrices.mulPose(Vector3f.XP.rotationDegrees(45));
+            matrices.mulPose(Vector3f.YP.rotation((float) (((Minecraft.getInstance().level.getGameTime() * 66.666666666666)) / 1000.0F)));
+        } else if (mode == ItemTransforms.TransformType.GROUND) {
+            matrices.scale(0.2f, 0.2f, 0.2f);
+            matrices.translate(2, 3, 2);
+        } else {
+            matrices.scale(0.5f, 0.5f, 0.5f);
+            matrices.translate(1, 0, 0);
+        }
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+        matrices.translate(0.0D, -1.75D, 0.0D);
+        ResourceLocation part = data.getPartForType(RocketPartType.BOTTOM);
+        if (part != null) {
+            matrices.pushPose();
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
+            matrices.popPose();
+        }
 
+        matrices.translate(0.0D, 0.5, 0.0D);
+
+        part = data.getPartForType(RocketPartType.BOOSTER);
+        if (part != null) {
+            matrices.pushPose();
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
+            matrices.popPose();
+        }
+
+        part = data.getPartForType(RocketPartType.FIN);
+        if (part != null) {
+            matrices.pushPose();
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
+            matrices.popPose();
+        }
+
+        matrices.translate(0.0D, 1.0D, 0.0D);
+
+        part = data.getPartForType(RocketPartType.BODY);
+        if (part != null) {
+            matrices.pushPose();
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
+            matrices.popPose();
+        }
+
+        matrices.translate(0.0D, 1.75, 0.0D);
+
+        part = data.getPartForType(RocketPartType.CONE);
+        if (part != null) {
+            matrices.pushPose();
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
+            matrices.popPose();
+        }
+
+        matrices.popPose();
     }
 }

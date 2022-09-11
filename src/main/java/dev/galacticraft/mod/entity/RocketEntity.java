@@ -55,6 +55,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -514,5 +515,10 @@ public class RocketEntity extends Entity implements Rocket {
 
     public int getTimeBeforeLaunch() {
         return timeBeforeLaunch;
+    }
+
+    @Override
+    public SoundSource getSoundSource() {
+        return super.getSoundSource();
     }
 }
