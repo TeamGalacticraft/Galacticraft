@@ -1835,7 +1835,7 @@ public class CelestialSelectionScreen extends Screen {
         matrices.scale(1.1f + zoomLocal, 1.1F + zoomLocal, 1.1F + zoomLocal);
         matrices.mulPose(Vector3f.XP.rotationDegrees(55));
         matrices.translate(-cBodyPos.x, -cBodyPos.y, 0);
-        matrices.mulPose(Vector3f.YN.rotationDegrees(45));
+        matrices.mulPose(Vector3f.ZN.rotationDegrees(45));
     }
 
     /**
@@ -1890,7 +1890,7 @@ public class CelestialSelectionScreen extends Screen {
 
             if (alpha > 0.0F) {
                 matrices.pushPose();
-                matrices.mulPose(Vector3f.YP.rotationDegrees(45));
+                matrices.mulPose(Vector3f.ZP.rotationDegrees(45));
                 matrices.translate(systemOffset.x(), systemOffset.y(), systemOffset.z());
 //                matrices.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(55));
                 float[] color = switch (count % 2) {
@@ -1997,7 +1997,7 @@ public class CelestialSelectionScreen extends Screen {
 
     protected void setupMatrix(CelestialBody<?, ?> body, PoseStack matrices, float scaleXZ, float delta) {
         Vector3f celestialBodyPosition = this.getCelestialBodyPosition(body, delta);
-        matrices.mulPose(Vector3f.YP.rotationDegrees(45));
+        matrices.mulPose(Vector3f.ZP.rotationDegrees(45));
         matrices.translate(celestialBodyPosition.x(), celestialBodyPosition.y(), celestialBodyPosition.z());
         matrices.mulPose(Vector3f.XN.rotationDegrees(55));
         if (scaleXZ != 1.0F) {
