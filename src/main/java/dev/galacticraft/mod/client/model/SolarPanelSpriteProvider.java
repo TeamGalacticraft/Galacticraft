@@ -23,9 +23,9 @@
 package dev.galacticraft.mod.client.model;
 
 import com.google.gson.JsonObject;
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.block.util.BlockFace;
-import dev.galacticraft.api.client.model.MachineModelRegistry;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.block.face.BlockFace;
+import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -46,7 +46,7 @@ public class SolarPanelSpriteProvider implements MachineModelRegistry.SpriteProv
         if (face == BlockFace.FRONT) return atlas.apply(this.front);
         if (face == BlockFace.BACK) return atlas.apply(this.back);
         if (face == BlockFace.TOP) return atlas.apply(this.top);
-        if (face.horizontal()) return atlas.apply(MachineModelRegistry.MACHINE_SIDE);
+        if (face.side()) return atlas.apply(MachineModelRegistry.MACHINE_SIDE);
         return atlas.apply(MachineModelRegistry.MACHINE);
     }
 

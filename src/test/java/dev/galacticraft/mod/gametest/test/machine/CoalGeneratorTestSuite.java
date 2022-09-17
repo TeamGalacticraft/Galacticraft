@@ -46,7 +46,7 @@ public class CoalGeneratorTestSuite implements MachineGameTest {
     public void coalGeneratorFuelingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);
-        coalGenerator.itemStorage().setSlotUnsafe(CoalGeneratorBlockEntity.FUEL_SLOT, ItemVariant.of(Items.COAL), 2, true);
+        coalGenerator.itemStorage().setSlot(CoalGeneratorBlockEntity.FUEL_SLOT, ItemVariant.of(Items.COAL), 2);
         runNext(context, () -> {
             ItemStack stack = coalGenerator.itemStorage().getStack(CoalGeneratorBlockEntity.FUEL_SLOT);
             if (stack.isEmpty() || stack.getItem() != Items.COAL || stack.getCount() != 1) {

@@ -22,10 +22,11 @@
 
 package dev.galacticraft.mod.lookup;
 
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
+import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.item.GalacticraftItem;
@@ -33,29 +34,30 @@ import dev.galacticraft.mod.item.OxygenTankItem;
 import dev.galacticraft.mod.storage.SingleTypeStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
 public class GalacticraftApiLookupProviders {
     @SuppressWarnings("rawtypes")
-    private static final BlockEntityType[] MACHINE_TYPES = new BlockEntityType[]{
-            GalacticraftBlockEntityType.COAL_GENERATOR,
-            GalacticraftBlockEntityType.BASIC_SOLAR_PANEL,
-            GalacticraftBlockEntityType.ADVANCED_SOLAR_PANEL,
-            GalacticraftBlockEntityType.CIRCUIT_FABRICATOR,
-            GalacticraftBlockEntityType.COMPRESSOR,
-            GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR,
-            GalacticraftBlockEntityType.ELECTRIC_FURNACE,
-            GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE,
-            GalacticraftBlockEntityType.REFINERY,
-            GalacticraftBlockEntityType.OXYGEN_COLLECTOR,
-            GalacticraftBlockEntityType.OXYGEN_COMPRESSOR,
-            GalacticraftBlockEntityType.OXYGEN_DECOMPRESSOR,
-            GalacticraftBlockEntityType.OXYGEN_SEALER,
-            GalacticraftBlockEntityType.OXYGEN_BUBBLE_DISTRIBUTOR,
-            GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE,
-            GalacticraftBlockEntityType.OXYGEN_STORAGE_MODULE
+    private static final Block[] MACHINE_BLOCKS = new Block[]{
+            GalacticraftBlock.COAL_GENERATOR,
+            GalacticraftBlock.BASIC_SOLAR_PANEL,
+            GalacticraftBlock.ADVANCED_SOLAR_PANEL,
+            GalacticraftBlock.CIRCUIT_FABRICATOR,
+            GalacticraftBlock.COMPRESSOR,
+            GalacticraftBlock.ELECTRIC_COMPRESSOR,
+            GalacticraftBlock.ELECTRIC_FURNACE,
+            GalacticraftBlock.ELECTRIC_ARC_FURNACE,
+            GalacticraftBlock.REFINERY,
+            GalacticraftBlock.OXYGEN_COLLECTOR,
+            GalacticraftBlock.OXYGEN_COMPRESSOR,
+            GalacticraftBlock.OXYGEN_DECOMPRESSOR,
+            GalacticraftBlock.OXYGEN_SEALER,
+            GalacticraftBlock.BUBBLE_DISTRIBUTOR,
+            GalacticraftBlock.ENERGY_STORAGE_MODULE,
+            GalacticraftBlock.OXYGEN_STORAGE_MODULE
     };
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] WIRE_TYPES = new BlockEntityType[]{
@@ -71,9 +73,7 @@ public class GalacticraftApiLookupProviders {
     };
 
     public static void register() {
-        for (BlockEntityType machineType : MACHINE_TYPES) {
-            MachineBlockEntity.registerComponents(machineType);
-        }
+        MachineBlockEntity.registerComponents(MACHINE_BLOCKS);
 
         FluidStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
             assert blockEntity instanceof PipeBlockEntity;

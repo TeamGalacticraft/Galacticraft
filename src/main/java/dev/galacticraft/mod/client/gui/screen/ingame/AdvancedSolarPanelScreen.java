@@ -22,13 +22,14 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.AdvancedSolarPanelBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+
 import java.util.List;
 
 /**

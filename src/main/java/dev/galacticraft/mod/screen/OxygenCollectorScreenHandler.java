@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.api.screen.MachineScreenHandler;
+import dev.galacticraft.machinelib.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

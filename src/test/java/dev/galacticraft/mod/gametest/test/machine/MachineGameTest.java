@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import dev.galacticraft.api.block.MachineBlock;
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.block.MachineBlock;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GalacticraftItem;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -50,7 +50,7 @@ public interface MachineGameTest extends GalacticraftGameTest {
 
     default <T extends MachineBlockEntity, B extends MachineBlock<T>> void testItemCharging(GameTestHelper context, BlockPos pos, B block, BlockEntityType<T> type, int slot) {
         T machine = this.createBlockEntity(context, pos, block, type);
-        machine.itemStorage().setSlotUnsafe(slot, ItemVariant.of(GalacticraftItem.INFINITE_BATTERY), 1, true);
+        machine.itemStorage().setSlot(slot, ItemVariant.of(GalacticraftItem.INFINITE_BATTERY), 1);
         runFinalTaskNext(context, () -> {
             if (machine.energyStorage().getAmount() <= 0) {
                 context.fail(String.format("Expected %s to charge from an item, but found %s energy!", Registry.BLOCK_ENTITY_TYPE.getKey(type), machine.energyStorage().getAmount()), pos);
@@ -61,7 +61,7 @@ public interface MachineGameTest extends GalacticraftGameTest {
     default <T extends MachineBlockEntity, B extends MachineBlock<T>> void testItemDraining(GameTestHelper context, BlockPos pos, B block, BlockEntityType<T> type, int slot) {
         T machine = this.createBlockEntity(context, pos, block, type);
         machine.energyStorage().setEnergyUnsafe(machine.energyStorage().getCapacity());
-        machine.itemStorage().setSlotUnsafe(slot, ItemVariant.of(GalacticraftItem.BATTERY), 1, true);
+        machine.itemStorage().setSlot(slot, ItemVariant.of(GalacticraftItem.BATTERY), 1);
         runFinalTaskNext(context, () -> {
             if (machine.energyStorage().getAmount() >= machine.energyStorage().getCapacity()) {
                 context.fail(String.format("Expected %s to drain power to an item, but it was still at max energy!", Registry.BLOCK_ENTITY_TYPE.getKey(type)), pos);

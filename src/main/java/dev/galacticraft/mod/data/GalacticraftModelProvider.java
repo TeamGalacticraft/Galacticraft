@@ -22,9 +22,8 @@
 
 package dev.galacticraft.mod.data;
 
-import dev.galacticraft.impl.client.model.MachineUnbakedModel;
+import dev.galacticraft.machinelib.client.impl.model.MachineUnbakedModel;
 import dev.galacticraft.mod.item.GalacticraftItem;
-import dev.galacticraft.mod.mixin.BlockModelGeneratorsAccessor;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.models.BlockModelGenerators;
@@ -34,10 +33,7 @@ import net.minecraft.data.models.blockstates.PropertyDispatch;
 import net.minecraft.data.models.blockstates.Variant;
 import net.minecraft.data.models.blockstates.VariantProperties;
 import net.minecraft.data.models.model.ModelLocationUtils;
-import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.data.models.model.TexturedModel;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import static dev.galacticraft.mod.block.GalacticraftBlock.*;

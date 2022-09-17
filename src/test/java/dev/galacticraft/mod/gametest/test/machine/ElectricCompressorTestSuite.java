@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.block.entity.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
@@ -71,8 +71,8 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
         final var electricCompressor = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR);
         final var inv = electricCompressor.itemStorage();
         electricCompressor.energyStorage().setEnergyUnsafe(electricCompressor.getEnergyCapacity());
-        inv.setSlotUnsafe(ElectricCompressorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
-        inv.setSlotUnsafe(ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
+        inv.setSlot(ElectricCompressorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
+        inv.setSlot(ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
         fillElectricCompressorSlots(inv);
         runFinalTaskNext(context, () -> {
             if (electricCompressor.getMaxProgress() != 0) {
@@ -82,7 +82,7 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
     }
 
     private static void fillElectricCompressorSlots(@NotNull MachineItemStorage inv) {
-        inv.setSlotUnsafe(0, ItemVariant.of(Items.IRON_INGOT), 1);
-        inv.setSlotUnsafe(1, ItemVariant.of(Items.IRON_INGOT), 1);
+        inv.setSlot(0, ItemVariant.of(Items.IRON_INGOT), 1);
+        inv.setSlot(1, ItemVariant.of(Items.IRON_INGOT), 1);
     }
 }

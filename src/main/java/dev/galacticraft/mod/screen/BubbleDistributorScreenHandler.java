@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.api.screen.MachineScreenHandler;
-import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
+import dev.galacticraft.machinelib.api.screen.MachineScreenHandler;
+import dev.galacticraft.mod.block.entity.OxygenBubbleDistributorBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -31,14 +31,14 @@ import net.minecraft.world.entity.player.Player;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleDistributorBlockEntity> {
-    public BubbleDistributorScreenHandler(int syncId, Player player, BubbleDistributorBlockEntity machine) {
+public class BubbleDistributorScreenHandler extends MachineScreenHandler<OxygenBubbleDistributorBlockEntity> {
+    public BubbleDistributorScreenHandler(int syncId, Player player, OxygenBubbleDistributorBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerType.BUBBLE_DISTRIBUTOR_HANDLER);
 
         this.addPlayerInventorySlots(8, 84);
     }
 
     public BubbleDistributorScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
-        this(syncId, inv.player, (BubbleDistributorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
+        this(syncId, inv.player, (OxygenBubbleDistributorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

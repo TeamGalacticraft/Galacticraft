@@ -60,7 +60,7 @@ public class GalacticraftBlockEntityType {
     public static final BlockEntityType<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR = FabricBlockEntityTypeBuilder.create(OxygenCompressorBlockEntity::new, GalacticraftBlock.OXYGEN_COMPRESSOR).build();
     public static final BlockEntityType<OxygenDecompressorBlockEntity> OXYGEN_DECOMPRESSOR = FabricBlockEntityTypeBuilder.create(OxygenDecompressorBlockEntity::new, GalacticraftBlock.OXYGEN_DECOMPRESSOR).build();
     public static final BlockEntityType<OxygenSealerBlockEntity> OXYGEN_SEALER = FabricBlockEntityTypeBuilder.create(OxygenSealerBlockEntity::new, GalacticraftBlock.OXYGEN_SEALER).build();
-    public static final BlockEntityType<BubbleDistributorBlockEntity> OXYGEN_BUBBLE_DISTRIBUTOR = FabricBlockEntityTypeBuilder.create(BubbleDistributorBlockEntity::new, GalacticraftBlock.BUBBLE_DISTRIBUTOR).build();
+    public static final BlockEntityType<OxygenBubbleDistributorBlockEntity> OXYGEN_BUBBLE_DISTRIBUTOR = FabricBlockEntityTypeBuilder.create(OxygenBubbleDistributorBlockEntity::new, GalacticraftBlock.BUBBLE_DISTRIBUTOR).build();
 
     // RESOURCE STORAGE
     public static final BlockEntityType<EnergyStorageModuleBlockEntity> ENERGY_STORAGE_MODULE = FabricBlockEntityTypeBuilder.create(EnergyStorageModuleBlockEntity::new, GalacticraftBlock.ENERGY_STORAGE_MODULE).build();

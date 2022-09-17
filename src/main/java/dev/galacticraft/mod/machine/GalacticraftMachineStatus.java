@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.machine;
 
-import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

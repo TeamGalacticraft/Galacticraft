@@ -23,9 +23,9 @@
 package dev.galacticraft.mod.client.model;
 
 import com.google.gson.JsonObject;
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.block.util.BlockFace;
-import dev.galacticraft.api.client.model.MachineModelRegistry;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.block.face.BlockFace;
+import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -46,7 +46,7 @@ public class OxygenSealerSpriteProvider implements MachineModelRegistry.SpritePr
         if (face == BlockFace.LEFT) return atlas.apply(this.left);
         if (face == BlockFace.RIGHT) return atlas.apply(this.right);
         if (face == BlockFace.TOP) return atlas.apply(this.top);
-        if (face.horizontal()) return atlas.apply(MachineModelRegistry.MACHINE_SIDE);
+        if (face.side()) return atlas.apply(MachineModelRegistry.MACHINE_SIDE);
         return atlas.apply(MachineModelRegistry.MACHINE);
     }
 

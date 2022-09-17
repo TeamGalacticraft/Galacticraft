@@ -23,19 +23,19 @@
 package dev.galacticraft.mod.item;
 
 import com.google.common.collect.Iterators;
-import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.machinelib.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.fabricmc.fabric.impl.transfer.TransferApiImpl;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
@@ -143,7 +143,7 @@ public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant
     }
 
     @Override
-    public @Nullable StorageView<FluidVariant> exactView(TransactionContext transaction, FluidVariant resource) {
+    public @Nullable StorageView<FluidVariant> exactView(@NotNull FluidVariant resource) {
         if (resource.isOf(Gases.OXYGEN)) {
             return this;
         }

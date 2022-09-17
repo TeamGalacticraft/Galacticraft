@@ -22,18 +22,11 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Transformation;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
+import dev.galacticraft.mod.block.entity.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.entity.BubbleEntity;
-import io.github.fabricators_of_create.porting_lib.model.PortingLibRenderTypes;
-import io.github.fabricators_of_create.porting_lib.model.geometry.IGeometryBakingContext;
-import io.github.fabricators_of_create.porting_lib.model.obj.ObjLoader;
-import io.github.fabricators_of_create.porting_lib.model.obj.ObjModel;
-import io.github.fabricators_of_create.porting_lib.renderable.CompositeRenderable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -41,26 +34,14 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -81,7 +62,7 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
             assert bubbleModel != null;
         }
         BlockEntity blockEntity = entity.level.getBlockEntity(entity.blockPosition());
-        if (!(blockEntity instanceof BubbleDistributorBlockEntity machine) || entity.isRemoved()) {
+        if (!(blockEntity instanceof OxygenBubbleDistributorBlockEntity machine) || entity.isRemoved()) {
             ((ClientLevel) entity.level).removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
             return;
         }

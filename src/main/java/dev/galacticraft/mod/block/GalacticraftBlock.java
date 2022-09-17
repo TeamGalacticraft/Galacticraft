@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block;
 
-import dev.galacticraft.api.block.MachineBlock;
+import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.decoration.GratingBlock;
 import dev.galacticraft.mod.block.decoration.LightPanelBlock;
@@ -299,7 +299,7 @@ public class GalacticraftBlock {
     public static final MachineBlock<RefineryBlockEntity> REFINERY = new RefineryBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS));
     public static final MachineBlock<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR = new OxygenCollectorBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS));
     public static final MachineBlock<OxygenSealerBlockEntity> OXYGEN_SEALER = SimpleMachineBlock.create(OxygenSealerBlockEntity::new);
-    public static final MachineBlock<BubbleDistributorBlockEntity> BUBBLE_DISTRIBUTOR = SimpleMachineBlock.create(BubbleDistributorBlockEntity::new);
+    public static final MachineBlock<OxygenBubbleDistributorBlockEntity> BUBBLE_DISTRIBUTOR = SimpleMachineBlock.create(OxygenBubbleDistributorBlockEntity::new);
     public static final MachineBlock<OxygenDecompressorBlockEntity> OXYGEN_DECOMPRESSOR = SimpleMachineBlock.create(OxygenDecompressorBlockEntity::new);
     public static final MachineBlock<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR = SimpleMachineBlock.create(OxygenCompressorBlockEntity::new);
     public static final MachineBlock<OxygenStorageModuleBlockEntity> OXYGEN_STORAGE_MODULE = SimpleMachineBlock.create(OxygenStorageModuleBlockEntity::new);

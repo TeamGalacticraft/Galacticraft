@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.network;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
+import dev.galacticraft.mod.block.entity.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.screen.GalacticraftPlayerInventoryScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -43,7 +43,7 @@ public class GalacticraftServerPacketReceiver {
             byte max = buf.readByte();
             server.execute(() -> {
                 if (player.containerMenu instanceof BubbleDistributorScreenHandler sHandler) {
-                    BubbleDistributorBlockEntity machine = sHandler.machine;
+                    OxygenBubbleDistributorBlockEntity machine = sHandler.machine;
                     if (machine.getSecurity().hasAccess(player)) {
                         if (max > 0) {
                             machine.setTargetSize(max);
@@ -57,7 +57,7 @@ public class GalacticraftServerPacketReceiver {
             boolean visible = buf.readBoolean();
             server.execute(() -> {
                 if (player.containerMenu instanceof BubbleDistributorScreenHandler sHandler) {
-                    BubbleDistributorBlockEntity machine = sHandler.machine;
+                    OxygenBubbleDistributorBlockEntity machine = sHandler.machine;
                     if (machine.getSecurity().hasAccess(player)) {
                         machine.bubbleVisible = visible;
                     }

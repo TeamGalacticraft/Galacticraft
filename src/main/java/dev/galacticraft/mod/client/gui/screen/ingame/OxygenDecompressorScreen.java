@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
-import dev.galacticraft.mod.Constant;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.OxygenDecompressorBlockEntity;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;

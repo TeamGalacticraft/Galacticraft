@@ -23,7 +23,7 @@
 package dev.galacticraft.mod;
 
 import com.google.common.base.Predicates;
-import dev.galacticraft.mod.fluid.GalacticraftFluid;
+import dev.galacticraft.mod.item.GalacticraftItem;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagExtractPredicate;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagInsertPredicate;
 import dev.galacticraft.mod.lookup.predicate.TagPredicate;
@@ -42,8 +42,8 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import team.reborn.energy.api.EnergyStorage;
@@ -718,9 +718,9 @@ public interface Constant {
         }
 
         interface Item {
-//            Predicate<ItemVariant> DIAMOND = new TagPredicate<>(ConventionalItemTags.DIAMONDS); TODO: PORT
-//            Predicate<ItemVariant> SILICON = new TagPredicate<>(GalacticraftTag.SILICONS);
-//            Predicate<ItemVariant> REDSTONE = new TagPredicate<>(GalacticraftTag.REDSTONES);
+            Predicate<ItemVariant> DIAMOND = v -> v.getItem() == Items.DIAMOND;
+            Predicate<ItemVariant> SILICON = v -> v.getItem() == GalacticraftItem.RAW_SILICON;
+            Predicate<ItemVariant> REDSTONE = v -> v.getItem() == Items.REDSTONE;
 
             Predicate<ItemVariant> CAN_EXTRACT_ENERGY = stack -> {
                 EnergyStorage energyStorage = ContainerItemContext.withInitial(stack.toStack()).find(EnergyStorage.ITEM);

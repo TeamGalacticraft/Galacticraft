@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.network;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
+import dev.galacticraft.mod.block.entity.OxygenBubbleDistributorBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -34,6 +34,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
 import java.util.UUID;
 
 /**
@@ -65,7 +66,7 @@ public class GalacticraftClientPacketReceiver {
                 BlockPos pos = buffer.readBlockPos();
                 if (client.level.hasChunk(pos.getX() >> 4, pos.getZ() >> 4)) {
                     BlockEntity entity = client.level.getBlockEntity(pos);
-                    if (entity instanceof BubbleDistributorBlockEntity machine) {
+                    if (entity instanceof OxygenBubbleDistributorBlockEntity machine) {
                         machine.setSize(buffer.readDouble());
                     }
                 }

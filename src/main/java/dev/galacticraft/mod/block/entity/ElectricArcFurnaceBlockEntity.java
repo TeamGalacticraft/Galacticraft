@@ -22,15 +22,16 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
-import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.MachineStatuses;
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
-import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
-import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -62,10 +63,10 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Cont
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61))
-                .addSlot(GalacticraftSlotTypes.ITEM_INPUT, new ItemSlotDisplay(44, 35))
-                .addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(108, 35))
-                .addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(134, 35))
+                .addSlot(GalacticraftSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 61))
+                .addSlot(GalacticraftSlotGroups.GENERIC_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(44, 35))
+                .addSlot(GalacticraftSlotGroups.GENERIC_OUTPUT, Constant.Filter.any(), false, ItemSlotDisplay.create(108, 35))
+                .addSlot(GalacticraftSlotGroups.GENERIC_OUTPUT, Constant.Filter.any(), false, ItemSlotDisplay.create(134, 35))
                 .build();
     }
 

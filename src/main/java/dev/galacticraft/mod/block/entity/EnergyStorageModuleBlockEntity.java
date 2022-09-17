@@ -22,14 +22,15 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
-import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
-import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
-import dev.galacticraft.api.transfer.StateCachingStorageProvider;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
+import dev.galacticraft.machinelib.api.transfer.CachingItemApiProvider;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
 import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -49,8 +50,8 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_TO_BATTERY_SLOT = 0;
     public static final int DRAIN_FROM_BATTERY_SLOT = 1;
 
-    private final StateCachingStorageProvider<EnergyStorage> batteryChargeSlot = StateCachingStorageProvider.create(this.itemStorage().getSlot(CHARGE_TO_BATTERY_SLOT), EnergyStorage.ITEM);
-    private final StateCachingStorageProvider<EnergyStorage> batteryDrainSlot = StateCachingStorageProvider.create(this.itemStorage().getSlot(DRAIN_FROM_BATTERY_SLOT), EnergyStorage.ITEM);
+    private final CachingItemApiProvider<EnergyStorage> batteryChargeSlot = CachingItemApiProvider.create(this.itemStorage().getSlot(CHARGE_TO_BATTERY_SLOT), EnergyStorage.ITEM);
+    private final CachingItemApiProvider<EnergyStorage> batteryDrainSlot = CachingItemApiProvider.create(this.itemStorage().getSlot(DRAIN_FROM_BATTERY_SLOT), EnergyStorage.ITEM);
 
     public EnergyStorageModuleBlockEntity(BlockPos pos, BlockState state) {
         super(GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE, pos, state);
@@ -59,8 +60,8 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(102, 24))
-                .addSlot(GalacticraftSlotTypes.ENERGY_DRAIN, new ItemSlotDisplay(102, 48))
+                .addSlot(GalacticraftSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(102, 24))
+                .addSlot(GalacticraftSlotGroups.ENERGY_DRAIN, Constant.Filter.Item.CAN_INSERT_ENERGY, true, ItemSlotDisplay.create(102, 48))
                 .build();
     }
 
@@ -88,7 +89,7 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        this.trySpreadEnergy(world);
+        this.trySpreadEnergy(world, state);
         return MachineStatus.INVALID;
     }
 

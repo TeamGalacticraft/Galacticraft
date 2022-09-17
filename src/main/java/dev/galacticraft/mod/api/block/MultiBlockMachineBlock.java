@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.api.block;
 
-import dev.galacticraft.api.block.MachineBlock;
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.block.MachineBlock;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;

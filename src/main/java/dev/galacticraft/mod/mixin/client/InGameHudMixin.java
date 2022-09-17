@@ -25,10 +25,10 @@ package dev.galacticraft.mod.mixin.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
+import dev.galacticraft.machinelib.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
@@ -38,7 +38,6 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiComponent;
@@ -75,11 +74,9 @@ public abstract class InGameHudMixin extends GuiComponent {
             for (int i = 0; i < inv.getContainerSize(); i++) {
                 Storage<FluidVariant> storage = ContainerItemContext.withInitial(inv.getItem(i)).find(FluidStorage.ITEM);
                 if (storage != null) {
-                    try (Transaction transaction = Transaction.openOuter()) {
-                        StorageView<FluidVariant> exact = storage.exactView(transaction, FluidVariant.of(Gases.OXYGEN));
-                        if (exact != null) {
-                            DrawableUtil.drawOxygenBuffer(matrices, this.minecraft.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, exact.getAmount(), exact.getCapacity());
-                        }
+                    StorageView<FluidVariant> exact = storage.exactView(FluidVariant.of(Gases.OXYGEN));
+                    if (exact != null) {
+                        DrawableUtil.drawOxygenBuffer(matrices, this.minecraft.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, exact.getAmount(), exact.getCapacity());
                     }
                 } else if (minecraft.player.isCreative()) {
                     DrawableUtil.drawOxygenBuffer(matrices, this.minecraft.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, 1, 1);

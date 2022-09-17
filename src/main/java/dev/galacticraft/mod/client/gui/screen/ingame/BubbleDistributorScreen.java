@@ -24,9 +24,9 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
+import dev.galacticraft.mod.block.entity.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
 import io.netty.buffer.Unpooled;
@@ -42,7 +42,7 @@ import net.minecraft.world.entity.player.Inventory;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistributorBlockEntity, BubbleDistributorScreenHandler> {
+public class BubbleDistributorScreen extends MachineHandledScreen<OxygenBubbleDistributorBlockEntity, BubbleDistributorScreenHandler> {
     private final EditBox textField;
 
     public BubbleDistributorScreen(BubbleDistributorScreenHandler handler, Inventory inv, Component title) {

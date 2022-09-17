@@ -24,20 +24,21 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.client.screen.MachineHandledScreen;
-import dev.galacticraft.api.screen.MachineScreenHandler;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.screen.MachineScreenHandler;
+import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import dev.galacticraft.mod.api.solarpanel.LightSource;
 import dev.galacticraft.mod.api.solarpanel.SolarPanelRegistry;
 import dev.galacticraft.mod.api.solarpanel.WorldLightSources;
 import dev.galacticraft.mod.util.DrawableUtil;
-import java.util.LinkedList;
-import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S extends MachineScreenHandler<M>> extends MachineHandledScreen<M, S> {
     private static final int DAY_SOURCE_U = 0;

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.api.pipe.impl;
 
-import dev.galacticraft.impl.fluid.FluidStack;
+import dev.galacticraft.machinelib.impl.fluid.FluidStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.pipe.Pipe;

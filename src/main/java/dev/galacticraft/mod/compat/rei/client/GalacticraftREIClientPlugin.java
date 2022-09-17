@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.compat.rei.client;
 
-import dev.galacticraft.api.client.screen.MachineHandledScreen;
-import dev.galacticraft.impl.MLConstant.TextureCoordinate;
+import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.impl.Constant.TextureCoordinate;
 import dev.galacticraft.mod.block.GalacticraftBlock;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;
@@ -48,7 +48,6 @@ import me.shedaniel.rei.plugin.common.BuiltinPlugin;
 import net.minecraft.world.level.ItemLike;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
