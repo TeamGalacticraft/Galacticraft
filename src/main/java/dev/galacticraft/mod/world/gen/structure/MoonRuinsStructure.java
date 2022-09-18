@@ -59,6 +59,6 @@ public class MoonRuinsStructure extends Structure {
 
    @Override
    public StructureType<?> type() {
-      return GalacticraftStructureType.MOON_RUINS;
+      return GCStructureType.MOON_RUINS;
    }
 }

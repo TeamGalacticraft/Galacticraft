@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.compat.rei.client.category;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import me.shedaniel.math.Point;
@@ -54,7 +54,7 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(GalacticraftBlock.CIRCUIT_FABRICATOR.asItem().getDefaultInstance());
+        return EntryStacks.of(GCBlocks.CIRCUIT_FABRICATOR.asItem().getDefaultInstance());
     }
 
     @Override

@@ -28,9 +28,9 @@ import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.StorageSlot;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.machine.LongProperty;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
+import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
@@ -75,18 +75,18 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
         MachineItemStorage.Builder builder = MachineItemStorage.Builder.create();
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                builder.addSlot(GalacticraftSlotTypes.ITEM_INPUT, new ItemSlotDisplay(x * 18 + 17, y * 18 + 17));
+                builder.addSlot(GCSlotTypes.ITEM_INPUT, new ItemSlotDisplay(x * 18 + 17, y * 18 + 17));
             }
         }
         return builder
-                .addSlot(GalacticraftSlotTypes.SOLID_FUEL, new ItemSlotDisplay(83, 47))
-                .addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(143, 36))
+                .addSlot(GCSlotTypes.SOLID_FUEL, new ItemSlotDisplay(83, 47))
+                .addSlot(GCSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(143, 36))
                 .build();
     }
 
     @Override
     protected @NotNull MachineStatus workingStatus() {
-        return GalacticraftMachineStatus.COMPRESSING;
+        return GCMachineStatus.COMPRESSING;
     }
 
     @Override
@@ -156,7 +156,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
                 }
             }
         }
-        return this.fuelLength == 0 ? GalacticraftMachineStatus.NO_FUEL : super.extractResourcesToWork(context);
+        return this.fuelLength == 0 ? GCMachineStatus.NO_FUEL : super.extractResourcesToWork(context);
     }
 
     @Override

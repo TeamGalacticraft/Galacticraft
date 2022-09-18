@@ -34,8 +34,8 @@ import dev.galacticraft.api.machine.storage.io.ResourceType;
 import dev.galacticraft.api.machine.storage.io.SlotType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
+import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
 import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -93,7 +93,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
+                .addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
                 .addSlot(COAL_INPUT, new ItemSlotDisplay(71, 53))
                 .build();
     }
@@ -128,9 +128,9 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         if (this.fuelLength == 0) {
             if (!this.consumeFuel()) {
                 if (this.heat > 0) {
-                    return GalacticraftMachineStatus.COOLING_DOWN;
+                    return GCMachineStatus.COOLING_DOWN;
                 } else {
-                    return GalacticraftMachineStatus.NO_FUEL;
+                    return GCMachineStatus.NO_FUEL;
                 }
             }
         }
@@ -144,9 +144,9 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         if (this.energyStorage().isFull()) {
             return MachineStatuses.CAPACITOR_FULL;
         } else if (this.heat < 1.0) {
-            return GalacticraftMachineStatus.WARMING_UP;
+            return GCMachineStatus.WARMING_UP;
         } else {
-            return GalacticraftMachineStatus.GENERATING;
+            return GCMachineStatus.GENERATING;
         }
     }
 

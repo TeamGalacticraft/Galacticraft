@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.environment;
 
-import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -38,11 +38,11 @@ public class MoonDirtPathBlock extends DirtPathBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return !this.defaultBlockState().canSurvive(ctx.getLevel(), ctx.getClickedPos()) ? Block.pushEntitiesUp(this.defaultBlockState(), GalacticraftBlock.MOON_DIRT.defaultBlockState(), ctx.getLevel(), ctx.getClickedPos()) : super.getStateForPlacement(ctx);
+        return !this.defaultBlockState().canSurvive(ctx.getLevel(), ctx.getClickedPos()) ? Block.pushEntitiesUp(this.defaultBlockState(), GCBlocks.MOON_DIRT.defaultBlockState(), ctx.getLevel(), ctx.getClickedPos()) : super.getStateForPlacement(ctx);
     }
 
     @Override
     public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        world.setBlockAndUpdate(pos, pushEntitiesUp(state, GalacticraftBlock.MOON_DIRT.defaultBlockState(), world, pos));
+        world.setBlockAndUpdate(pos, pushEntitiesUp(state, GCBlocks.MOON_DIRT.defaultBlockState(), world, pos));
     }
 }

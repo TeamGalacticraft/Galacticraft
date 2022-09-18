@@ -29,11 +29,11 @@ import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
+import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
@@ -70,12 +70,12 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
         MachineItemStorage.Builder builder = MachineItemStorage.Builder.create();
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                builder.addSlot(GalacticraftSlotTypes.ITEM_INPUT, new ItemSlotDisplay(x * 18 + 30, y * 18 + 17));
+                builder.addSlot(GCSlotTypes.ITEM_INPUT, new ItemSlotDisplay(x * 18 + 30, y * 18 + 17));
             }
         }
-        return builder.addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61))
-                .addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(148, 22))
-                .addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(148, 48))
+        return builder.addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61))
+                .addSlot(GCSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(148, 22))
+                .addSlot(GCSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(148, 48))
                 .build();
     }
 
@@ -102,7 +102,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
 
     @Override
     protected @NotNull MachineStatus workingStatus() {
-        return GalacticraftMachineStatus.COMPRESSING;
+        return GCMachineStatus.COMPRESSING;
     }
 
     @Override
@@ -162,7 +162,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
                     syncId,
                     player,
                     this,
-                    GalacticraftScreenHandlerType.ELECTRIC_COMPRESSOR_HANDLER
+                    GCScreenHandlerType.ELECTRIC_COMPRESSOR_HANDLER
             );
         }
         return null;

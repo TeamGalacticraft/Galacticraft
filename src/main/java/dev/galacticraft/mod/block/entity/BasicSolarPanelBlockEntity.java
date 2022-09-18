@@ -30,9 +30,9 @@ import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
-import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -61,7 +61,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
+                .addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
                 .build();
     }
 
@@ -106,16 +106,16 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
         profiler.push("transfer");
         this.trySpreadEnergy(world);
         profiler.pop();
-        if (this.blocked == 9) return GalacticraftMachineStatus.BLOCKED;
+        if (this.blocked == 9) return GCMachineStatus.BLOCKED;
         if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
         MachineStatus status = null;
         double multiplier = this.blocked / 9.0;
-        if (this.blocked > 0) status = GalacticraftMachineStatus.PARTIALLY_BLOCKED;
+        if (this.blocked > 0) status = GCMachineStatus.PARTIALLY_BLOCKED;
         if (world.isRaining() || world.isThundering()) {
-            if (status == null) status = GalacticraftMachineStatus.RAIN;
+            if (status == null) status = GCMachineStatus.RAIN;
             multiplier *= 0.5;
         }
-        if (!world.isDay()) status = GalacticraftMachineStatus.NIGHT;
+        if (!world.isDay()) status = GCMachineStatus.NIGHT;
         double time = world.getDayTime() % 24000;
         if (time > 6000) time = 12000L - time;
         profiler.push("transaction");
@@ -124,7 +124,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
             transaction.commit();
         }
         profiler.pop();
-        return status == null ? GalacticraftMachineStatus.COLLECTING : status;
+        return status == null ? GCMachineStatus.COLLECTING : status;
     }
 
     @Nullable
@@ -135,7 +135,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
                     syncId,
                     player,
                     this,
-                    GalacticraftScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER
+                    GCScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER
             );
         }
         return null;

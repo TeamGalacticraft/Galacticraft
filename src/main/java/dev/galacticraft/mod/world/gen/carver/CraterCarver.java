@@ -24,7 +24,7 @@ package dev.galacticraft.mod.world.gen.carver;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
-import dev.galacticraft.mod.world.gen.structure.GalacticraftStructure;
+import dev.galacticraft.mod.world.gen.structure.GCStructure;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -53,7 +53,7 @@ public class CraterCarver extends WorldCarver<CraterCarverConfig> {
         //pos = center chunk pos
         BlockPos craterCenter = pos.getBlockAt(random.nextInt(16), y, random.nextInt(16));
 
-        if (!chunk.getReferencesForStructure(GalacticraftStructure.MOON_VILLAGE_HIGHLANDS.value()).isEmpty()) {
+        if (!chunk.getReferencesForStructure(GCStructure.MOON_VILLAGE_HIGHLANDS.value()).isEmpty()) {
             return false;
         }
 

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.gametest.test.machine;
 
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
-import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.entity.ElectricFurnaceBlockEntity;
 import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
@@ -41,18 +41,18 @@ import org.jetbrains.annotations.NotNull;
 public class ElectricFurnaceTestSuite implements MachineGameTest {
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void electricFurnacePlacementTest(GameTestHelper context) {
-        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GalacticraftBlock.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE));
+        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GCBlocks.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE));
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void electricFurnaceChargeTest(GameTestHelper context) {
-        this.testItemCharging(context, new BlockPos(0, 0, 0), GalacticraftBlock.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE, ElectricFurnaceBlockEntity.CHARGE_SLOT);
+        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE, ElectricFurnaceBlockEntity.CHARGE_SLOT);
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 201)
     public void electricFurnaceCraftingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
-        final var electricFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE);
+        final var electricFurnace = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE);
         final var inv = electricFurnace.itemStorage();
         electricFurnace.energyStorage().setEnergyUnsafe(electricFurnace.getEnergyCapacity());
         fillElectricFurnaceSlots(inv);
@@ -67,7 +67,7 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void electricFurnaceCraftingFullTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
-        final var electricFurnace = this.createBlockEntity(context, pos, GalacticraftBlock.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE);
+        final var electricFurnace = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_FURNACE, GalacticraftBlockEntityType.ELECTRIC_FURNACE);
         final var inv = electricFurnace.itemStorage();
         electricFurnace.energyStorage().setEnergyUnsafe(electricFurnace.getEnergyCapacity());
         fillElectricFurnaceSlots(inv);

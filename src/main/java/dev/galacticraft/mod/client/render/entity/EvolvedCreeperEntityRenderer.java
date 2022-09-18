@@ -26,7 +26,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.EvolvedCreeperEntityModel;
 import dev.galacticraft.mod.client.render.entity.feature.EvolvedCreeperChargeFeatureRenderer;
-import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLayer;
+import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.entity.EvolvedCreeperEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -41,7 +41,7 @@ public class EvolvedCreeperEntityRenderer extends MobRenderer<EvolvedCreeperEnti
     private static final ResourceLocation TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/entity/evolved/creeper.png");
 
     public EvolvedCreeperEntityRenderer(EntityRendererProvider.Context context) {
-        super(context, new EvolvedCreeperEntityModel(context.bakeLayer(GalacticraftEntityModelLayer.EVOLVED_CREEPER), true), 0.5F);
+        super(context, new EvolvedCreeperEntityModel(context.bakeLayer(GCEntityModelLayer.EVOLVED_CREEPER), true), 0.5F);
         this.addLayer(new EvolvedCreeperChargeFeatureRenderer(this, context.getModelSet()));
     }
 

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.entity;
 
 import dev.galacticraft.mod.mixin.AbstractSkeletonEntityAccessor;
-import dev.galacticraft.mod.tag.GalacticraftTag;
+import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
@@ -76,6 +76,6 @@ public class EvolvedSkeletonEntity extends Skeleton {
 
     @Override
     protected boolean isSunBurnTick() {
-        return super.isSunBurnTick() && this.level.getBiome(this.blockPosition()).is(GalacticraftTag.MOON_MARE);
+        return super.isSunBurnTick() && this.level.getBiome(this.blockPosition()).is(GCTags.MOON_MARE);
     }
 }

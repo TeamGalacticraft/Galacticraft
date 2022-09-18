@@ -35,9 +35,9 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerWorldAccessor;
-import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
@@ -89,15 +89,15 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
-                .addSlot(GalacticraftSlotTypes.OXYGEN_TANK_FILL, new ItemSlotDisplay(8, 62))
+                .addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
+                .addSlot(GCSlotTypes.OXYGEN_TANK_FILL, new ItemSlotDisplay(8, 62))
                 .build();
     }
 
     @Override
     protected @NotNull MachineFluidStorage createFluidStorage() {
         return MachineFluidStorage.Builder.create()
-                .addTank(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48), true)
+                .addTank(GCSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48), true)
                 .build();
     }
 
@@ -133,7 +133,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                         BlockPos pos1 = pos.relative(Direction.UP);
                         if (this.oxygenWorld || (this.breathablePositions.isEmpty() && ((WorldOxygenAccessor) world).isBreathable(pos1))) {
                             profiler.pop();
-                            return GalacticraftMachineStatus.ALREADY_SEALED;
+                            return GCMachineStatus.ALREADY_SEALED;
                         }
                         for (BlockPos pos2 : this.breathablePositions) {
                             ((WorldOxygenAccessor) world).setBreathable(pos2, false);
@@ -160,7 +160,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                                     this.updateQueued = true;
                                     this.sealCheckTime = SEAL_CHECK_TIME * 5;
                                     profiler.pop();
-                                    return GalacticraftMachineStatus.AREA_TOO_LARGE;
+                                    return GCMachineStatus.AREA_TOO_LARGE;
                                 }
                                 added.add(pos1);
                                 final BlockPos finalPos = pos1;
@@ -186,10 +186,10 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                     this.fluidStorage().extract(OXYGEN_TANK, breathablePositions.size() * 2L, transaction);
                     transaction.commit();
                     profiler.pop();
-                    return GalacticraftMachineStatus.SEALED;
+                    return GCMachineStatus.SEALED;
                 } else {
                     this.sealCheckTime = 0;
-                    return GalacticraftMachineStatus.NOT_ENOUGH_OXYGEN;
+                    return GCMachineStatus.NOT_ENOUGH_OXYGEN;
                 }
             } else {
                 this.sealCheckTime = 0;
@@ -230,7 +230,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                     syncId,
                     player,
                     this,
-                    GalacticraftScreenHandlerType.OXYGEN_SEALER_HANDLER
+                    GCScreenHandlerType.OXYGEN_SEALER_HANDLER
             );
         }
         return null;

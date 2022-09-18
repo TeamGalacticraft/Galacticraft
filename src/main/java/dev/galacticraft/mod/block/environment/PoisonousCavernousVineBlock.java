@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.block.environment;
 
-import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.entity.damage.GalacticraftDamageSource;
+import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.entity.damage.GCDamageSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -47,14 +47,14 @@ public class PoisonousCavernousVineBlock extends CavernousVineBlock {
     @Override
     public void onCollided(LivingEntity entity) {
         super.onCollided(entity);
-        entity.hurt(GalacticraftDamageSource.VINE_POISON, 5.0f);
+        entity.hurt(GCDamageSource.VINE_POISON, 5.0f);
         entity.setYRot(entity.getYRot() + 0.4F); // Spin the player
     }
 
     @Override
     public InteractionResult use(BlockState blockState, Level world, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         if (player.getItemInHand(hand).getItem() instanceof ShearsItem) {
-            world.setBlockAndUpdate(blockPos, GalacticraftBlock.CAVERNOUS_VINE.defaultBlockState().setValue(VINES, blockState.getValue(VINES)));
+            world.setBlockAndUpdate(blockPos, GCBlocks.CAVERNOUS_VINE.defaultBlockState().setValue(VINES, blockState.getValue(VINES)));
             world.playLocalSound(blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.GRASS_BREAK, SoundSource.BLOCKS, 1f, 1f, true);
             return InteractionResult.SUCCESS;
         }
