@@ -37,5 +37,7 @@ public class GalacticraftDataGenerator implements DataGeneratorEntrypoint {
 //        generator.addProvider(GalacticraftModelProvider::new);
         generator.addProvider(GalacticraftRecipeProvider::new);
         generator.addProvider(GalacticraftFluidTagProvider::new);
+
+        generator.addProvider(GalacticraftCelestialBodyProvider::new);
     }
 }
