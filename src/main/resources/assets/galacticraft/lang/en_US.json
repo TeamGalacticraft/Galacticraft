@@ -543,6 +543,7 @@
   "config.galacticraft.energy.machines.electric_furnace_energy_consumption_rate": "Electric Furnace Energy Consumption Rate/t",
   "config.galacticraft.energy.machines.energy_storage_module_storage_size": "Energy Storage Module Energy Storage Size",
   "config.galacticraft.energy.machines.energy_storage_size": "Default Machine Energy Storage Size",
+
   "item.galacticraft.legacy_music_disc_mars": "Music Disc",
   "item.galacticraft.legacy_music_disc_mimas": "Music Disc",
   "item.galacticraft.legacy_music_disc_orbit": "Music Disc",
