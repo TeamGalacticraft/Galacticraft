@@ -1,8 +1,8 @@
 "project_id" : "3"
 "base_path" : "."
-"api_token_env": "CROWDIN_PERSONAL_TOKEN"
+"api_token_env" : "CROWDIN_PERSONAL_TOKEN"
 "base_url" : "https://teamgalacticraft.crowdin.com"
-
+"commit_message" : "[ci skip] fix: sync new translations for %language% from Crowdin"
 "preserve_hierarchy": false
 files: [
  {
