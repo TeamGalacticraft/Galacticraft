@@ -3,7 +3,8 @@
 "api_token_env" : "CROWDIN_PERSONAL_TOKEN"
 "base_url" : "https://teamgalacticraft.crowdin.com"
 "commit_message" : "[ci skip] fix: sync new translations for %language% from Crowdin"
-"preserve_hierarchy": false
+"append_commit_message" : false
+"preserve_hierarchy" : false
 files: [
  {
   "source" : "/src/main/resources/assets/galacticraft/lang/en_US.json",
