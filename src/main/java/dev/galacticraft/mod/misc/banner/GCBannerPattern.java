@@ -26,13 +26,18 @@ package dev.galacticraft.mod.misc.banner;
 //import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPatterns;
 
 
+import dev.galacticraft.mod.Constant;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.entity.BannerPattern;
+
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GCBannerPattern { // todo: banners are a registry in 1.19
-//    public static final LoomPattern ROCKET = new LoomPattern(false);
-//
+public class GCBannerPattern {
+    public static final BannerPattern ROCKET = new BannerPattern("gc:r");
+
     public static void register() {
-//        Registry.register(LoomPatterns.REGISTRY, new ResourceLocation(Constant.MOD_ID, "rocket"), ROCKET);
+        Registry.register(Registry.BANNER_PATTERN, new ResourceLocation(Constant.MOD_ID, "rocket"), ROCKET);
     }
 }

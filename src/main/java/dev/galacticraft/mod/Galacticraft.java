@@ -109,10 +109,8 @@ public class Galacticraft implements ModInitializer {
         MoonVillagerType.register();
         GCVillagerProfession.register();
         GCMachineStatus.register();
+        GCBannerPattern.register();
 
-        if (FabricLoader.getInstance().isModLoaded("bannerpp")) {
-            GCBannerPattern.register();
-        }
         LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }
