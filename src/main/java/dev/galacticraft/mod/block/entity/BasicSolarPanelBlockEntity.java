@@ -72,6 +72,11 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
     }
 
     @Override
+    public boolean canExposedExtractEnergy() {
+        return true;
+    }
+
+    @Override
     protected void tickClient(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state) {
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {

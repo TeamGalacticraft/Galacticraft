@@ -105,6 +105,11 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
+    public boolean canExposedExtractEnergy() {
+        return true;
+    }
+
+    @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
         if (this.fuelLength == 0) {

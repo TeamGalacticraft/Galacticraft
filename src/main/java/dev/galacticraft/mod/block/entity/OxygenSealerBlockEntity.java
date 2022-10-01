@@ -87,6 +87,11 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
+    public boolean canExposedInsertEnergy() {
+        return true;
+    }
+
+    @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
                 .addSlot(GalacticraftSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 62))

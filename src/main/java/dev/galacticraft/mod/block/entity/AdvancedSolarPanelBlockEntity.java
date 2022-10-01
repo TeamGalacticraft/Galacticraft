@@ -151,6 +151,11 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
     }
 
     @Override
+    public boolean canExposedExtractEnergy() {
+        return true;
+    }
+
+    @Override
     public boolean @NotNull [] getBlockage() {
         return this.blockage;
     }

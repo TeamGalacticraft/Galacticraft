@@ -100,6 +100,11 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     }
 
     @Override
+    public boolean canExposedInsertEnergy() {
+        return true;
+    }
+
+    @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
         profiler.push("charge");

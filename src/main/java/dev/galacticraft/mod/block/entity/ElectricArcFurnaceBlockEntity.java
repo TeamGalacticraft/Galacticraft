@@ -94,6 +94,11 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Cont
     }
 
     @Override
+    public boolean canExposedInsertEnergy() {
+        return true;
+    }
+
+    @Override
     public @NotNull Container craftingInv() {
         return this.craftingInv;
     }

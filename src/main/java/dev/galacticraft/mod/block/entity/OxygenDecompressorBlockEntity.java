@@ -87,6 +87,11 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
+    public boolean canExposedInsertEnergy() {
+        return true;
+    }
+
+    @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
         this.attemptChargeFromStack(CHARGE_SLOT);
