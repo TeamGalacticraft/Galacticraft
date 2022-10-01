@@ -29,9 +29,9 @@ import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
@@ -62,15 +62,15 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Cont
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61))
-                .addSlot(GalacticraftSlotTypes.ITEM_INPUT, new ItemSlotDisplay(44, 35))
-                .addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(108, 35))
-                .addSlot(GalacticraftSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(134, 35))
+                .addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61))
+                .addSlot(GCSlotTypes.ITEM_INPUT, new ItemSlotDisplay(44, 35))
+                .addSlot(GCSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(108, 35))
+                .addSlot(GCSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(134, 35))
                 .build();
     }
 
     public ElectricArcFurnaceBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE, pos, state, RecipeType.BLASTING);
+        super(GCBlockEntityTypes.ELECTRIC_ARC_FURNACE, pos, state, RecipeType.BLASTING);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Cont
 
     @Override
     protected @NotNull MachineStatus workingStatus() {
-        return GalacticraftMachineStatus.ACTIVE;
+        return GCMachineStatus.ACTIVE;
     }
 
     @Override
@@ -134,7 +134,7 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Cont
                     syncId,
                     player,
                     this,
-                    GalacticraftScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER
+                    GCScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER
             );
         }
         return null;

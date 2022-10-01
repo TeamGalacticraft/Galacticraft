@@ -26,8 +26,8 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.gui.screen.ingame.GalacticraftPlayerInventoryScreen;
-import dev.galacticraft.mod.item.GalacticraftItem;
+import dev.galacticraft.mod.client.gui.screen.ingame.GCPlayerInventoryScreen;
+import dev.galacticraft.mod.item.GCItem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -57,11 +57,11 @@ public abstract class PlayerInventoryScreenMixin extends EffectRenderingInventor
         super(screenHandler, playerInventory, textComponent);
     }
 
-    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "mouseClicked", at = @At("HEAD"))
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
-        if (GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseX), leftPos + 30, leftPos + 59)
-                && GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseY), topPos - 26, topPos)) {
-            ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "open_gc_inv"), new FriendlyByteBuf(Unpooled.buffer(0)));
+        if (GCPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseX), leftPos + 30, leftPos + 59)
+                && GCPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseY), topPos - 26, topPos)) {
+            ClientPlayNetworking.send(Constant.Packet.OPEN_GC_INVENTORY, new FriendlyByteBuf(Unpooled.buffer(0)));
         }
     }
 
@@ -77,7 +77,7 @@ public abstract class PlayerInventoryScreenMixin extends EffectRenderingInventor
     public void render(PoseStack matrices, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         Lighting.setupFor3DItems();
         this.itemRenderer.renderAndDecorateItem(Items.CRAFTING_TABLE.getDefaultInstance(), this.leftPos + 6, this.topPos - 20);
-        this.itemRenderer.renderAndDecorateItem(GalacticraftItem.OXYGEN_MASK.getDefaultInstance(), this.leftPos + 35, this.topPos - 20);
+        this.itemRenderer.renderAndDecorateItem(GCItem.OXYGEN_MASK.getDefaultInstance(), this.leftPos + 35, this.topPos - 20);
         Lighting.setupForFlatItems();
     }
 }

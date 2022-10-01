@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.item;
 
-import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -43,6 +42,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+
 import java.util.List;
 
 /**
@@ -129,7 +129,7 @@ public class OxygenTankItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         ItemStack copy = user.getItemInHand(hand).copy();
         try (Transaction transaction = Transaction.openOuter()) {
-            long l = InventoryStorage.of(((GearInventoryProvider) user).getOxygenTanks(), null).insert(ItemVariant.of(copy), copy.getCount(), transaction);
+            long l = InventoryStorage.of(user.getOxygenTanks(), null).insert(ItemVariant.of(copy), copy.getCount(), transaction);
             if (l == copy.getCount()) {
                 transaction.commit();
                 return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);

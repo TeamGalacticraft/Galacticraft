@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.entity.CoalGeneratorBlockEntity;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.core.BlockPos;
@@ -39,13 +39,13 @@ import net.minecraft.world.item.Items;
 public class CoalGeneratorTestSuite implements MachineGameTest {
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void coalGeneratorPlacementTest(GameTestHelper context) {
-        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR));
+        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GCBlocks.COAL_GENERATOR, GCBlockEntityTypes.COAL_GENERATOR));
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 322)
     public void coalGeneratorFuelingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
-        final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);
+        final var coalGenerator = this.createBlockEntity(context, pos, GCBlocks.COAL_GENERATOR, GCBlockEntityTypes.COAL_GENERATOR);
         coalGenerator.itemStorage().setSlotUnsafe(CoalGeneratorBlockEntity.FUEL_SLOT, ItemVariant.of(Items.COAL), 2, true);
         runNext(context, () -> {
             ItemStack stack = coalGenerator.itemStorage().getStack(CoalGeneratorBlockEntity.FUEL_SLOT);
@@ -68,7 +68,7 @@ public class CoalGeneratorTestSuite implements MachineGameTest {
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 372)
     public void coalGeneratorGenerationTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
-        final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);
+        final var coalGenerator = this.createBlockEntity(context, pos, GCBlocks.COAL_GENERATOR, GCBlockEntityTypes.COAL_GENERATOR);
         coalGenerator.setFuelLength(CoalGeneratorBlockEntity.FUEL_MAP.getInt(Items.COAL));
         runFinalTaskAt(context, 370 + 1, () -> {
             if (coalGenerator.energyStorage().getAmount() != 26251) {
@@ -80,7 +80,7 @@ public class CoalGeneratorTestSuite implements MachineGameTest {
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 251)
     public void coalGeneratorHeatTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
-        final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);
+        final var coalGenerator = this.createBlockEntity(context, pos, GCBlocks.COAL_GENERATOR, GCBlockEntityTypes.COAL_GENERATOR);
         coalGenerator.setFuelLength(250);
         runFinalTaskAt(context, 250, () -> {
             if (coalGenerator.getHeat() != 1) {
@@ -92,7 +92,7 @@ public class CoalGeneratorTestSuite implements MachineGameTest {
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 50)
     public void coalGeneratorCoolingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
-        final var coalGenerator = this.createBlockEntity(context, pos, GalacticraftBlock.COAL_GENERATOR, GalacticraftBlockEntityType.COAL_GENERATOR);
+        final var coalGenerator = this.createBlockEntity(context, pos, GCBlocks.COAL_GENERATOR, GCBlockEntityTypes.COAL_GENERATOR);
         coalGenerator.setHeat(1.0);
         runFinalTaskAt(context, 50, () -> {
             if (coalGenerator.getHeat() != 0) {

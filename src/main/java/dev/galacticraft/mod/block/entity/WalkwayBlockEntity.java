@@ -37,7 +37,7 @@ public class WalkwayBlockEntity extends BlockEntity implements Walkway {
     private final boolean[] connections = new boolean[6];
 
     public WalkwayBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.WALKWAY, pos, state);
+        super(GCBlockEntityTypes.WALKWAY, pos, state);
     }
 
     @Override

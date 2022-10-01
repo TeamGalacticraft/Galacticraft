@@ -23,11 +23,10 @@
 package dev.galacticraft.mod;
 
 import com.google.common.base.Predicates;
-import dev.galacticraft.mod.fluid.GalacticraftFluid;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagExtractPredicate;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagInsertPredicate;
 import dev.galacticraft.mod.lookup.predicate.TagPredicate;
-import dev.galacticraft.mod.tag.GalacticraftTag;
+import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -43,7 +42,6 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import team.reborn.energy.api.EnergyStorage;
@@ -690,6 +688,7 @@ public interface Constant {
         String OXYGEN_DECOMPRESSOR_SCREEN_HANDLER = "oxygen_decompressor_screen_handler";
         String OXYGEN_STORAGE_MODULE_SCREEN_HANDLER = "oxygen_storage_module_screen_handler";
         String OXYGEN_SEALER_SCREEN_HANDLER = "oxygen_sealer_screen_handler";
+        String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
     }
 
     interface Biome {
@@ -738,22 +737,22 @@ public interface Constant {
                 }
             };
 
-            Predicate<ItemVariant> CAN_EXTRACT_OXYGEN = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.OXYGEN);
-            Predicate<ItemVariant> CAN_INSERT_OXYGEN = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.OXYGEN);
+            Predicate<ItemVariant> CAN_EXTRACT_OXYGEN = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.OXYGEN);
+            Predicate<ItemVariant> CAN_INSERT_OXYGEN = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.OXYGEN);
 
-            Predicate<ItemVariant> CAN_EXTRACT_OIL = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.OIL);
-            Predicate<ItemVariant> CAN_INSERT_FUEL = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.FUEL);
-            Predicate<ItemVariant> CAN_EXTRACT_LOX = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.LIQUID_OXYGEN);
+            Predicate<ItemVariant> CAN_EXTRACT_OIL = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.OIL);
+            Predicate<ItemVariant> CAN_INSERT_FUEL = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.FUEL);
+            Predicate<ItemVariant> CAN_EXTRACT_LOX = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.LIQUID_OXYGEN);
         }
 
         interface Gas {
-            Predicate<FluidVariant> OXYGEN = v -> v.getFluid().is(GalacticraftTag.OXYGEN);
+            Predicate<FluidVariant> OXYGEN = v -> v.getFluid().is(GCTags.OXYGEN);
         }
 
         interface Fluid {
-            Predicate<FluidVariant> LOX_ONLY = new TagPredicate<>(GalacticraftTag.LIQUID_OXYGEN, net.minecraft.world.level.material.Fluid::is);
-            Predicate<FluidVariant> OIL = new TagPredicate<>(GalacticraftTag.OIL, net.minecraft.world.level.material.Fluid::is);
-            Predicate<FluidVariant> FUEL = new TagPredicate<>(GalacticraftTag.FUEL, net.minecraft.world.level.material.Fluid::is);
+            Predicate<FluidVariant> LOX_ONLY = new TagPredicate<>(GCTags.LIQUID_OXYGEN, net.minecraft.world.level.material.Fluid::is);
+            Predicate<FluidVariant> OIL = new TagPredicate<>(GCTags.OIL, net.minecraft.world.level.material.Fluid::is);
+            Predicate<FluidVariant> FUEL = new TagPredicate<>(GCTags.FUEL, net.minecraft.world.level.material.Fluid::is);
         }
     }
 
@@ -891,5 +890,14 @@ public interface Constant {
         String MOON_CRATER_CARVER = "moon_crater_carver";
         String MOON_HIGHLANDS_CAVE_CARVER = "moon_highlands_cave_carver";
         String MOON_MARE_CAVE_CARVER = "moon_mare_cave_carver";
+    }
+
+    interface Packet {
+        ResourceLocation BUBBLE_SIZE = id("bubble_size");
+        ResourceLocation BUBBLE_MAX = id("bubble_max");
+        ResourceLocation BUBBLE_VISIBLE = id("bubble_visible");
+        ResourceLocation DISABLE_SEAL = id("toggle_seal");
+        ResourceLocation OPEN_GC_INVENTORY = id("open_gc_inv");
+        ResourceLocation ENTITY_SPAWN = id("entity_spawn");
     }
 }

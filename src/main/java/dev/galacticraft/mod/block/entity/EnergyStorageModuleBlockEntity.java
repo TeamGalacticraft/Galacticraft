@@ -29,8 +29,8 @@ import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.api.transfer.StateCachingStorageProvider;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -53,14 +53,14 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     private final StateCachingStorageProvider<EnergyStorage> batteryDrainSlot = StateCachingStorageProvider.create(this.itemStorage().getSlot(DRAIN_FROM_BATTERY_SLOT), EnergyStorage.ITEM);
 
     public EnergyStorageModuleBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE, pos, state);
+        super(GCBlockEntityTypes.ENERGY_STORAGE_MODULE, pos, state);
     }
 
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(102, 24))
-                .addSlot(GalacticraftSlotTypes.ENERGY_DRAIN, new ItemSlotDisplay(102, 48))
+                .addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(102, 24))
+                .addSlot(GCSlotTypes.ENERGY_DRAIN, new ItemSlotDisplay(102, 48))
                 .build();
     }
 
@@ -100,7 +100,7 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
                     syncId,
                     player,
                     this,
-                    GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER
+                    GCScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER
             );
         }
         return null;

@@ -40,3 +40,5 @@ accessible field com/mojang/math/Matrix4f m30 F
 accessible field com/mojang/math/Matrix4f m31 F
 accessible field com/mojang/math/Matrix4f m32 F
 accessible field com/mojang/math/Matrix4f m33 F
+
+extendable class net/minecraft/world/SimpleMenuProvider

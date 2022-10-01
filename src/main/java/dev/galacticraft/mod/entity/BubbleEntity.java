@@ -263,6 +263,6 @@ public class BubbleEntity extends Entity {
         buf.writeShort((int) (e * 8000.0D));
         buf.writeShort((int) (f * 8000.0D));
         buf.writeShort((int) (g * 8000.0D));
-        return new ClientboundCustomPayloadPacket(new ResourceLocation(Constant.MOD_ID, "entity_spawn"), buf);
+        return new ClientboundCustomPayloadPacket(Constant.Packet.ENTITY_SPAWN, buf);
     }
 }

@@ -24,7 +24,6 @@ package dev.galacticraft.mod.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
@@ -64,14 +63,14 @@ public abstract class InGameHudMixin extends GuiComponent {
     private void draw(PoseStack matrices, float delta, CallbackInfo ci) {
         CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(this.minecraft.level).orElse(null);
         if (body != null && !body.atmosphere().breathable()) {
-            fill(matrices, this.minecraft.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * 2) - 11, 4, this.minecraft.getWindow().getGuiScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 9, 6 + Constant.TextureCoordinate.OVERLAY_HEIGHT, 0);
+            fill(matrices, this.minecraft.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH) - 11, 4, this.minecraft.getWindow().getGuiScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 9, 6 + Constant.TextureCoordinate.OVERLAY_HEIGHT, 0);
             fill(matrices, this.minecraft.getWindow().getGuiScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 6, 4, this.minecraft.getWindow().getGuiScaledWidth() - 4, 6 + Constant.TextureCoordinate.OVERLAY_HEIGHT, 0);
 
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f , 1.0f);
             RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
             assert this.minecraft.player != null;
-            Container inv = ((GearInventoryProvider) this.minecraft.player).getOxygenTanks();
+            Container inv = this.minecraft.player.getOxygenTanks();
             for (int i = 0; i < inv.getContainerSize(); i++) {
                 Storage<FluidVariant> storage = ContainerItemContext.withInitial(inv.getItem(i)).find(FluidStorage.ITEM);
                 if (storage != null) {

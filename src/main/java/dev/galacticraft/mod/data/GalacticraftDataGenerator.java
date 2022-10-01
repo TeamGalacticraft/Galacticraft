@@ -29,13 +29,16 @@ import org.jetbrains.annotations.NotNull;
 public class GalacticraftDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(@NotNull FabricDataGenerator generator) {
-        generator.addProvider(GalacticraftBiomeTagProvider::new);
-        generator.addProvider(GalacticraftBlockLootTableProvider::new);
-        GalacticraftBlockTagProvider provider = new GalacticraftBlockTagProvider(generator);
+        generator.addProvider(GCBiomeTagProvider::new);
+        generator.addProvider(GCBlockLootTableProvider::new);
+        GCBlockTagProvider provider = new GCBlockTagProvider(generator);
         generator.addProvider(provider);
-        generator.addProvider(new GalacticraftItemTagProvider(generator, provider));
+        generator.addProvider(new GCItemTagProvider(generator, provider));
 //        generator.addProvider(GalacticraftModelProvider::new);
-        generator.addProvider(GalacticraftRecipeProvider::new);
-        generator.addProvider(GalacticraftFluidTagProvider::new);
+        generator.addProvider(GCRecipeProvider::new);
+        generator.addProvider(GCFluidTagProvider::new);
+
+//        generator.addProvider(GCCelestialBodyProvider::new);
+        generator.addProvider(GCBannerTagProvider::new);
     }
 }

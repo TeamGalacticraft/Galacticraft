@@ -34,8 +34,8 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.entity.BubbleEntity;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
-import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotTypes;
+import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.GenericStorageUtil;
@@ -78,21 +78,21 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     private double prevSize;
 
     public BubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state);
+        super(GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state);
     }
 
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GalacticraftSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
-                .addSlot(GalacticraftSlotTypes.OXYGEN_TANK_FILL, new ItemSlotDisplay(31, 62))
+                .addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
+                .addSlot(GCSlotTypes.OXYGEN_TANK_FILL, new ItemSlotDisplay(31, 62))
                 .build();
     }
 
     @Override
     protected @NotNull MachineFluidStorage createFluidStorage() {
         return MachineFluidStorage.Builder.create()
-                .addTank(GalacticraftSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48), true)
+                .addTank(GCSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48), true)
                 .build();
     }
 
@@ -139,7 +139,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
                     this.prevSize = this.size;
                     profiler.push("network");
                     for (ServerPlayer player : world.players()) {
-                        ServerPlayNetworking.send(player, new ResourceLocation(Constant.MOD_ID, "bubble_size"), new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
+                        ServerPlayNetworking.send(player, Constant.Packet.BUBBLE_SIZE, new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
                     }
                     profiler.pop();
                 }
@@ -152,9 +152,9 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
                     transaction.commit();
                     profiler.pop();
                     distributeOxygenToArea(this.size, true);
-                    return GalacticraftMachineStatus.DISTRIBUTING;
+                    return GCMachineStatus.DISTRIBUTING;
                 } else {
-                    status = GalacticraftMachineStatus.NOT_ENOUGH_OXYGEN;
+                    status = GCMachineStatus.NOT_ENOUGH_OXYGEN;
                     profiler.pop();
                 }
             } else {

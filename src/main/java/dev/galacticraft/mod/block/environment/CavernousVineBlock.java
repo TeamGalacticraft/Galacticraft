@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.environment;
 
-import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -123,8 +123,8 @@ public class CavernousVineBlock extends Block implements SimpleWaterloggedBlock 
         //If it isn't on the ground and it is below a block
         return (!WorldView.getBlockState(pos3).getBlock().equals(Blocks.AIR))
                 && (WorldView.getBlockState(pos2).getBlock().equals(Blocks.AIR)
-                || WorldView.getBlockState(pos2).getBlock().equals(GalacticraftBlock.CAVERNOUS_VINE)
-                || WorldView.getBlockState(pos2).getBlock().equals(GalacticraftBlock.POISONOUS_CAVERNOUS_VINE));
+                || WorldView.getBlockState(pos2).getBlock().equals(GCBlocks.CAVERNOUS_VINE)
+                || WorldView.getBlockState(pos2).getBlock().equals(GCBlocks.POISONOUS_CAVERNOUS_VINE));
     }
 
     @Override
@@ -151,7 +151,7 @@ public class CavernousVineBlock extends Block implements SimpleWaterloggedBlock 
     }
 
     private BlockState getStateFromMeta(int meta) {
-        return GalacticraftBlock.POISONOUS_CAVERNOUS_VINE.defaultBlockState().setValue(VINES, VineTypes.byMetadata(meta));
+        return GCBlocks.POISONOUS_CAVERNOUS_VINE.defaultBlockState().setValue(VINES, VineTypes.byMetadata(meta));
     }
 
     private int getVineLength(Level world, BlockPos pos) {
@@ -170,7 +170,7 @@ public class CavernousVineBlock extends Block implements SimpleWaterloggedBlock 
         BlockPos abovePos = new BlockPos(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ());
         BlockState stateAbove = world.getBlockState(abovePos);
 
-        if (stateAbove.getBlock() == GalacticraftBlock.CAVERNOUS_VINE || stateAbove.getBlock() == GalacticraftBlock.POISONOUS_CAVERNOUS_VINE) {
+        if (stateAbove.getBlock() == GCBlocks.CAVERNOUS_VINE || stateAbove.getBlock() == GCBlocks.POISONOUS_CAVERNOUS_VINE) {
             switch (stateAbove.getValue(VINES).getMeta()) {
                 case 0 -> world.setBlockAndUpdate(blockPos, this.getStateDefinition().any().setValue(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).setValue(VINES, VineTypes.VINE_1));
                 case 1 -> world.setBlockAndUpdate(blockPos, this.getStateDefinition().any().setValue(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).setValue(VINES, VineTypes.VINE_2));

@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.item;
 
-import dev.galacticraft.api.accessor.GearInventoryProvider;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -50,7 +49,7 @@ public class ThermalArmorItem extends Item {
 
     @Override //should sync with server
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-        Container inv = ((GearInventoryProvider)player).getThermalArmor();
+        Container inv = player.getThermalArmor();
         ItemStack thermalPiece = inv.getItem(this.getSlotIdForType(this.getSlotType()));
         if (thermalPiece.isEmpty()) {
             inv.setItem(this.getSlotIdForType(getSlotType()), player.getItemInHand(hand));

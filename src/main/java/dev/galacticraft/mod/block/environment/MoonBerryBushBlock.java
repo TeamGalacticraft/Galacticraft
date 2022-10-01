@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.block.environment;
 
 import com.mojang.math.Vector3f;
-import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.item.GalacticraftItem;
+import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.item.GCItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerLevel;
@@ -64,7 +64,7 @@ public class MoonBerryBushBlock extends BushBlock {
 
     @Override
     public ItemStack getCloneItemStack(BlockGetter view, BlockPos pos, BlockState state) {
-        return new ItemStack(GalacticraftItem.MOON_BERRIES);
+        return new ItemStack(GCItem.MOON_BERRIES);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class MoonBerryBushBlock extends BushBlock {
 
         if (mature) {
             int amount = 1 + world.random.nextInt(3);
-            popResource(world, blockPos, new ItemStack(GalacticraftItem.MOON_BERRIES, amount));
+            popResource(world, blockPos, new ItemStack(GCItem.MOON_BERRIES, amount));
             world.playSound(null, blockPos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
             world.setBlock(blockPos, blockState.setValue(AGE, 1), 2);
             return InteractionResult.SUCCESS;
@@ -113,7 +113,7 @@ public class MoonBerryBushBlock extends BushBlock {
 
     @Override
     public boolean mayPlaceOn(BlockState blockState, BlockGetter blockView, BlockPos blockPos) {
-        return blockState.getBlock() == GalacticraftBlock.MOON_DIRT;
+        return blockState.getBlock() == GCBlocks.MOON_DIRT;
     }
 
     @Override

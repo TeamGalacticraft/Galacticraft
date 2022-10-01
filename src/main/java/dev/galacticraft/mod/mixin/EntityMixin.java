@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.entity.damage.GalacticraftDamageSource;
-import dev.galacticraft.mod.tag.GalacticraftTag;
-import dev.galacticraft.mod.world.dimension.GalacticraftDimensionType;
+import dev.galacticraft.mod.entity.damage.GCDamageSource;
+import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.world.dimension.GCDimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -65,7 +65,7 @@ public abstract class EntityMixin {
 
     @Inject(method = "findDimensionEntryPoint", at = @At("HEAD"), cancellable = true)
     private void getTeleportTargetGC(ServerLevel destination, CallbackInfoReturnable<PortalInfo> cir) {
-        if (destination.dimension().equals(GalacticraftDimensionType.MOON_KEY) || this.level.dimension().equals(GalacticraftDimensionType.MOON_KEY)) { //TODO lander/parachute stuff
+        if (destination.dimension().equals(GCDimensionType.MOON_KEY) || this.level.dimension().equals(GCDimensionType.MOON_KEY)) { //TODO lander/parachute stuff
             BlockPos pos = destination.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, destination.getSharedSpawnPos());
             cir.setReturnValue(new PortalInfo(new Vec3((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getDeltaMovement(), this.yRot, this.xRot));
         }
@@ -97,12 +97,12 @@ public abstract class EntityMixin {
 
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"), cancellable = true)
     private void checkWaterStateGC(CallbackInfo ci) {
-        if (this.updateFluidHeightAndDoFluidPushing(GalacticraftTag.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GalacticraftTag.FUEL, 0.0028d)) {
+        if (this.updateFluidHeightAndDoFluidPushing(GCTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCTags.FUEL, 0.0028d)) {
             if (this.isOnFire())
             {
                 level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Explosion.BlockInteraction.NONE);
                 if ((this.isAlwaysTicking() && !level.getPlayerByUUID(uuid).isCreative()) || !this.isInvulnerable()) {
-                    this.hurt(GalacticraftDamageSource.OIL_BOOM, 20.0f);
+                    this.hurt(GCDamageSource.OIL_BOOM, 20.0f);
                 }
             }
         }
