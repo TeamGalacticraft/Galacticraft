@@ -12,9 +12,7 @@ import java.util.HashSet;
 class AirLockProtocol
 {
     public boolean isValidFrame(BlockPos pos) {
-        if (world.getBlockState(pos).getBlock() instanceof AirlockBlock)
-            return true;
-        return false;
+        return world.getBlockState(pos).getBlock() instanceof AirlockBlock;
     }
 
 

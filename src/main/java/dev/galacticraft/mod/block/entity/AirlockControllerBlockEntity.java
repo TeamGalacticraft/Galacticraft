@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -276,9 +277,9 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                         if (this.getLevel().getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL)
                         {
                             if (sealedSide)
-                                this.getLevel().setBreathable(pos, true);
+                                this.getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                             else
-                                this.getLevel().setBreathable(pos, false);
+                                this.getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                         }
                     }
                 }
@@ -325,9 +326,9 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                         if (this.getLevel().getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL))
                         {
                             if (sealedSide)
-                                this.getLevel().setBreathable(pos, true);
+                                this.getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                             else
-                                this.getLevel().setBreathable(pos, false);
+                                this.getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                         }
                     }
                 }
@@ -371,9 +372,9 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                         if (this.getLevel().getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL))
                         {
                             if (sealedSide)
-                                this.getLevel().setBreathable(pos, true);
+                                this.getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                             else
-                                this.getLevel().setBreathable(pos, false);
+                                this.getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                         }
                     }
                 }

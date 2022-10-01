@@ -888,4 +888,13 @@ public interface Constant {
         String MOON_HIGHLANDS_CAVE_CARVER = "moon_highlands_cave_carver";
         String MOON_MARE_CAVE_CARVER = "moon_mare_cave_carver";
     }
+
+    interface Packet {
+        ResourceLocation BUBBLE_SIZE = id("bubble_size");
+        ResourceLocation BUBBLE_MAX = id("bubble_max");
+        ResourceLocation BUBBLE_VISIBLE = id("bubble_visible");
+        ResourceLocation DISABLE_SEAL = id("toggle_seal");
+        ResourceLocation OPEN_GC_INVENTORY = id("open_gc_inv");
+        ResourceLocation ENTITY_SPAWN = id("entity_spawn");
+    }
 }

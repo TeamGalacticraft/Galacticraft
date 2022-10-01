@@ -37,9 +37,9 @@ import net.minecraft.world.SimpleMenuProvider;
  */
 public class GCServerPacketReceiver {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openMenu(new SimpleMenuProvider(GCPlayerInventoryScreenHandler::new, Component.empty()))));
+        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.OPEN_GC_INVENTORY, (server, player, handler, buf, responseSender) -> server.execute(() -> player.openMenu(new SimpleMenuProvider(GCPlayerInventoryScreenHandler::new, Component.empty()))));
 
-        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "bubble_max"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.BUBBLE_MAX, (server, player, handler, buf, responseSender) -> {
             byte max = buf.readByte();
             server.execute(() -> {
                 if (player.containerMenu instanceof BubbleDistributorScreenHandler sHandler) {
@@ -53,7 +53,7 @@ public class GCServerPacketReceiver {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "bubble_visible"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.BUBBLE_VISIBLE, (server, player, handler, buf, responseSender) -> {
             boolean visible = buf.readBoolean();
             server.execute(() -> {
                 if (player.containerMenu instanceof BubbleDistributorScreenHandler sHandler) {

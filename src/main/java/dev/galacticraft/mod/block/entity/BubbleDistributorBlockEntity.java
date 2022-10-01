@@ -139,7 +139,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
                     this.prevSize = this.size;
                     profiler.push("network");
                     for (ServerPlayer player : world.players()) {
-                        ServerPlayNetworking.send(player, new ResourceLocation(Constant.MOD_ID, "bubble_size"), new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
+                        ServerPlayNetworking.send(player, Constant.Packet.BUBBLE_SIZE, new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
                     }
                     profiler.pop();
                 }

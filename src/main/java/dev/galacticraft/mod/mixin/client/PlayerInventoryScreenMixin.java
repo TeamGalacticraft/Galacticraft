@@ -61,7 +61,7 @@ public abstract class PlayerInventoryScreenMixin extends EffectRenderingInventor
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
         if (GCPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseX), leftPos + 30, leftPos + 59)
                 && GCPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseY), topPos - 26, topPos)) {
-            ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "open_gc_inv"), new FriendlyByteBuf(Unpooled.buffer(0)));
+            ClientPlayNetworking.send(Constant.Packet.OPEN_GC_INVENTORY, new FriendlyByteBuf(Unpooled.buffer(0)));
         }
     }
 

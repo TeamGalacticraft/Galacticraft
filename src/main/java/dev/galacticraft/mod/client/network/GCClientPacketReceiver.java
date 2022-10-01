@@ -43,7 +43,7 @@ import java.util.UUID;
 @Environment(EnvType.CLIENT)
 public class GCClientPacketReceiver {
     public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "entity_spawn"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
+        ClientPlayNetworking.registerGlobalReceiver(Constant.Packet.ENTITY_SPAWN, (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
             FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
             client.execute(() -> {
                 int id = buffer.readVarInt();
@@ -59,7 +59,7 @@ public class GCClientPacketReceiver {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "bubble_size"), (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(Constant.Packet.BUBBLE_SIZE, (client, handler, buf, responseSender) -> {
             FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
             client.execute(() -> {
                 BlockPos pos = buffer.readBlockPos();

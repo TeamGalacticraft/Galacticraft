@@ -138,7 +138,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
         if (button == 0) {
             if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT)) {
                 this.machine.bubbleVisible = ! this.machine.bubbleVisible;
-                ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "bubble_visible"), new FriendlyByteBuf(Unpooled.buffer().writeBoolean(this.machine.bubbleVisible)));
+                ClientPlayNetworking.send(Constant.Packet.BUBBLE_VISIBLE, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(this.machine.bubbleVisible)));
                 return true;
             }
 
@@ -146,7 +146,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
                 if (this.machine.getTargetSize() != Byte.MAX_VALUE) {
                     this.machine.setTargetSize((byte) (this.machine.getTargetSize() + 1));
                     textField.setValue(String.valueOf(this.machine.getTargetSize()));
-                    ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "bubble_max"), new FriendlyByteBuf(Unpooled.buffer().writeByte(this.machine.getTargetSize())));
+                    ClientPlayNetworking.send(Constant.Packet.BUBBLE_MAX, new FriendlyByteBuf(Unpooled.buffer().writeByte(this.machine.getTargetSize())));
                     return true;
                 }
             }
@@ -155,7 +155,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
                 if (this.machine.getTargetSize() > 1) {
                     this.machine.setTargetSize((byte) (this.machine.getTargetSize() - 1));
                     textField.setValue(String.valueOf(this.machine.getTargetSize()));
-                    ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "bubble_max"), new FriendlyByteBuf(Unpooled.buffer().writeByte(this.machine.getTargetSize())));
+                    ClientPlayNetworking.send(Constant.Packet.BUBBLE_MAX, new FriendlyByteBuf(Unpooled.buffer().writeByte(this.machine.getTargetSize())));
                     return true;
                 }
             }
