@@ -23,9 +23,7 @@
 package dev.galacticraft.mod.screen;
 
 import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.item.FrequencyModuleItem;
 import dev.galacticraft.mod.item.OxygenGearItem;
 import dev.galacticraft.mod.item.OxygenMaskItem;
 import dev.galacticraft.mod.item.ThermalArmorItem;
@@ -66,7 +64,7 @@ public class GCPlayerInventoryScreenHandler extends AbstractContainerMenu {
         super(GCScreenHandlerType.PLAYER_INV_GC_HANDLER, syncId);
 
         this.player = player;
-        this.inventory = ((GearInventoryProvider)player).getGearInv();
+        this.inventory = player.getGearInv();
 
         for (int slotY = 0; slotY < 4; ++slotY) {
             EquipmentSlot slot = EQUIPMENT_SLOT_ORDER[slotY];

@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.item;
 
-import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.item.Accessory;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -43,7 +42,7 @@ public class AccessoryItem extends Item implements Accessory {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
-        Container inv = ((GearInventoryProvider)user).getAccessories();
+        Container inv = user.getAccessories();
         boolean alreadyEquipped = false;
         int minAcceptableSlot = -1;
         ItemStack copy = user.getItemInHand(hand).copy();

@@ -57,7 +57,7 @@ public abstract class PlayerInventoryScreenMixin extends EffectRenderingInventor
         super(screenHandler, playerInventory, textComponent);
     }
 
-    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "mouseClicked", at = @At("HEAD"))
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
         if (GCPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseX), leftPos + 30, leftPos + 59)
                 && GCPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseY), topPos - 26, topPos)) {
