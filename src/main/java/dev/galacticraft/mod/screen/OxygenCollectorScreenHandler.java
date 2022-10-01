@@ -34,7 +34,7 @@ import net.minecraft.world.inventory.DataSlot;
  */
 public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCollectorBlockEntity> {
     public OxygenCollectorScreenHandler(int syncId, Player player, OxygenCollectorBlockEntity blockEntity) {
-        super(syncId, player, blockEntity, GalacticraftScreenHandlerType.OXYGEN_COLLECTOR_HANDLER);
+        super(syncId, player, blockEntity, GCScreenHandlerType.OXYGEN_COLLECTOR_HANDLER);
         this.addDataSlot(new DataSlot() {
             @Override
             public int get() {

@@ -28,10 +28,9 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.BasicSolarPanelBlockEntity;
-import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLayer;
+import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -57,7 +56,7 @@ public class BasicSolarPanelBlockEntityRenderer implements BlockEntityRenderer<B
     private final ModelPart pole;
 
     public BasicSolarPanelBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
-        ModelPart root = context.bakeLayer(GalacticraftEntityModelLayer.SOLAR_PANEL);
+        ModelPart root = context.bakeLayer(GCEntityModelLayer.SOLAR_PANEL);
         this.panel = root.getChild(Constant.ModelPartName.SOLAR_PANEL_PANEL);
         this.pole = root.getChild(Constant.ModelPartName.SOLAR_PANEL_POLE);
     }

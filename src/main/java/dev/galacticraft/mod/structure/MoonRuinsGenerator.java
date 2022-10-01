@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.structure;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.loot.GalacticraftLootTable;
+import dev.galacticraft.mod.loot.GCLootTable;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -117,12 +117,12 @@ public class MoonRuinsGenerator {
       private final float integrity;
 
       public Piece(StructureTemplateManager structureManager, ResourceLocation template, BlockPos pos, Rotation rotation, float integrity) {
-         super(GalacticraftStructurePieceType.MOON_RUINS_PIECE, 0, structureManager, template, template.toString(), method_35446(rotation), pos);
+         super(GCStructurePieceType.MOON_RUINS_PIECE, 0, structureManager, template, template.toString(), method_35446(rotation), pos);
          this.integrity = integrity;
       }
 
       public Piece(StructureTemplateManager structureManager, CompoundTag nbt) {
-         super(GalacticraftStructurePieceType.MOON_RUINS_PIECE, nbt, structureManager, (identifier) -> method_35446(Rotation.valueOf(nbt.getString("Rot"))));
+         super(GCStructurePieceType.MOON_RUINS_PIECE, nbt, structureManager, (identifier) -> method_35446(Rotation.valueOf(nbt.getString("Rot"))));
          this.integrity = nbt.getFloat("Integrity");
       }
 
@@ -143,7 +143,7 @@ public class MoonRuinsGenerator {
             world.setBlock(pos, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.WATERLOGGED, world.getFluidState(pos).is(FluidTags.WATER)), Block.UPDATE_CLIENTS);
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof ChestBlockEntity chest) {
-               chest.setLootTable(GalacticraftLootTable.BASIC_MOON_RUINS_CHEST, random.nextLong());
+               chest.setLootTable(GCLootTable.BASIC_MOON_RUINS_CHEST, random.nextLong());
             }
          }
       }

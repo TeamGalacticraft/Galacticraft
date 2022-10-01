@@ -71,6 +71,6 @@ public class CoalGeneratorScreenHandler extends MachineScreenHandler<CoalGenerat
 
     @Override
     public MenuType<?> getType() {
-        return GalacticraftScreenHandlerType.COAL_GENERATOR_HANDLER;
+        return GCScreenHandlerType.COAL_GENERATOR_HANDLER;
     }
 }

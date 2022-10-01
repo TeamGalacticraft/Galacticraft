@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.block.special;
 
 import dev.galacticraft.mod.api.block.MultiBlockBase;
-import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.entity.SolarPanelPartBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -61,7 +61,7 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
         Block down = blockView.getBlockState(pos.below()).getBlock();
         if (down instanceof MultiBlockBase) {
             return POLE_SHAPE;
-        } else if (blockView.getBlockState(pos.below().below()).getBlock() == GalacticraftBlock.BASIC_SOLAR_PANEL) {
+        } else if (blockView.getBlockState(pos.below().below()).getBlock() == GCBlocks.BASIC_SOLAR_PANEL) {
             return TOP_MID_SHAPE;
         }
         return TOP_SHAPE;
@@ -96,7 +96,7 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
 
     @Override
     public ItemStack getCloneItemStack(BlockGetter blockView, BlockPos pos, BlockState state) {
-        return new ItemStack(GalacticraftBlock.BASIC_SOLAR_PANEL);
+        return new ItemStack(GCBlocks.BASIC_SOLAR_PANEL);
     }
 
     @Override

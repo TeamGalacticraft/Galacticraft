@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.world.gen.carver;
 
 import com.mojang.serialization.Codec;
-import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -72,7 +72,7 @@ public class LunarCaveCarver extends CaveWorldCarver {
     @Override
     protected boolean carveBlock(CarvingContext context, CaveCarverConfiguration config, @NotNull ChunkAccess chunk, Function<BlockPos, Holder<Biome>> posToBiome, CarvingMask carvingMask, BlockPos.MutableBlockPos mutable, BlockPos.MutableBlockPos mutable2, Aquifer aquiferSampler, MutableBoolean mutableBoolean) {
         BlockState blockState = chunk.getBlockState(mutable);
-        if (blockState.is(GalacticraftBlock.MOON_TURF) || blockState.is(Blocks.MYCELIUM)) {
+        if (blockState.is(GCBlocks.MOON_TURF) || blockState.is(Blocks.MYCELIUM)) {
             mutableBoolean.setTrue();
         }
 
@@ -90,7 +90,7 @@ public class LunarCaveCarver extends CaveWorldCarver {
 
                 if (mutableBoolean.isTrue()) {
                     mutable2.setWithOffset(mutable, Direction.DOWN);
-                    if (chunk.getBlockState(mutable2).is(GalacticraftBlock.MOON_DIRT)) {
+                    if (chunk.getBlockState(mutable2).is(GCBlocks.MOON_DIRT)) {
                         context.topMaterial(posToBiome, chunk, mutable2, !blockState2.getFluidState().isEmpty()).ifPresent(blockStatex -> chunk.setBlockState(mutable2, blockStatex, false));
                     }
                 }

@@ -31,7 +31,7 @@ import dev.galacticraft.machinelib.api.transfer.CachingItemApiProvider;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -101,7 +101,7 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
                     syncId,
                     player,
                     this,
-                    GalacticraftScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER
+                    GCScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER
             );
         }
         return null;

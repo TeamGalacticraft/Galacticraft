@@ -30,9 +30,9 @@ import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
@@ -114,7 +114,7 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Cont
 
     @Override
     protected @NotNull MachineStatus workingStatus() {
-        return GalacticraftMachineStatus.ACTIVE;
+        return GCMachineStatus.ACTIVE;
     }
 
     @Override
@@ -135,7 +135,7 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Cont
                     syncId,
                     player,
                     this,
-                    GalacticraftScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER
+                    GCScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER
             );
         }
         return null;

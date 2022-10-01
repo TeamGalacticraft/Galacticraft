@@ -24,7 +24,7 @@ package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
-import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.GCBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -35,41 +35,41 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
  */
 public class GalacticraftBlockEntityType {
     // POWER GENERATION
-    public static final BlockEntityType<CoalGeneratorBlockEntity> COAL_GENERATOR = FabricBlockEntityTypeBuilder.create(CoalGeneratorBlockEntity::new, GalacticraftBlock.COAL_GENERATOR).build();
-    public static final BlockEntityType<BasicSolarPanelBlockEntity> BASIC_SOLAR_PANEL = FabricBlockEntityTypeBuilder.create(BasicSolarPanelBlockEntity::new, GalacticraftBlock.BASIC_SOLAR_PANEL).build();
-    public static final BlockEntityType<AdvancedSolarPanelBlockEntity> ADVANCED_SOLAR_PANEL = FabricBlockEntityTypeBuilder.create(AdvancedSolarPanelBlockEntity::new, GalacticraftBlock.ADVANCED_SOLAR_PANEL).build();
+    public static final BlockEntityType<CoalGeneratorBlockEntity> COAL_GENERATOR = FabricBlockEntityTypeBuilder.create(CoalGeneratorBlockEntity::new, GCBlocks.COAL_GENERATOR).build();
+    public static final BlockEntityType<BasicSolarPanelBlockEntity> BASIC_SOLAR_PANEL = FabricBlockEntityTypeBuilder.create(BasicSolarPanelBlockEntity::new, GCBlocks.BASIC_SOLAR_PANEL).build();
+    public static final BlockEntityType<AdvancedSolarPanelBlockEntity> ADVANCED_SOLAR_PANEL = FabricBlockEntityTypeBuilder.create(AdvancedSolarPanelBlockEntity::new, GCBlocks.ADVANCED_SOLAR_PANEL).build();
 
     // WIRES, PIPES, WALKWAYS
-    public static final BlockEntityType<WireBlockEntity> WIRE_T1 = FabricBlockEntityTypeBuilder.create((pos, state) -> WireBlockEntity.createT1(GalacticraftBlockEntityType.WIRE_T1, pos, state), GalacticraftBlock.ALUMINUM_WIRE, GalacticraftBlock.SEALABLE_ALUMINUM_WIRE, GalacticraftBlock.WIRE_WALKWAY).build();
+    public static final BlockEntityType<WireBlockEntity> WIRE_T1 = FabricBlockEntityTypeBuilder.create((pos, state) -> WireBlockEntity.createT1(GalacticraftBlockEntityType.WIRE_T1, pos, state), GCBlocks.ALUMINUM_WIRE, GCBlocks.SEALABLE_ALUMINUM_WIRE, GCBlocks.WIRE_WALKWAY).build();
     public static final BlockEntityType<WireBlockEntity> WIRE_T2 = FabricBlockEntityTypeBuilder.create((pos, state) -> WireBlockEntity.createT2(GalacticraftBlockEntityType.WIRE_T2, pos, state)).build();
-    public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = FabricBlockEntityTypeBuilder.create(GlassFluidPipeBlockEntity::new, GalacticraftBlock.GLASS_FLUID_PIPE).build();
-    public static final BlockEntityType<WalkwayBlockEntity> WALKWAY = FabricBlockEntityTypeBuilder.create(WalkwayBlockEntity::new, GalacticraftBlock.WALKWAY).build();
-    public static final BlockEntityType<WireWalkwayBlockEntity> WIRE_WALKWAY = FabricBlockEntityTypeBuilder.create(WireWalkwayBlockEntity::new, GalacticraftBlock.WIRE_WALKWAY).build();
-    public static final BlockEntityType<PipeWalkwayBlockEntity> PIPE_WALKWAY = FabricBlockEntityTypeBuilder.create(PipeWalkwayBlockEntity::new, GalacticraftBlock.PIPE_WALKWAY).build();
+    public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = FabricBlockEntityTypeBuilder.create(GlassFluidPipeBlockEntity::new, GCBlocks.GLASS_FLUID_PIPE).build();
+    public static final BlockEntityType<WalkwayBlockEntity> WALKWAY = FabricBlockEntityTypeBuilder.create(WalkwayBlockEntity::new, GCBlocks.WALKWAY).build();
+    public static final BlockEntityType<WireWalkwayBlockEntity> WIRE_WALKWAY = FabricBlockEntityTypeBuilder.create(WireWalkwayBlockEntity::new, GCBlocks.WIRE_WALKWAY).build();
+    public static final BlockEntityType<PipeWalkwayBlockEntity> PIPE_WALKWAY = FabricBlockEntityTypeBuilder.create(PipeWalkwayBlockEntity::new, GCBlocks.PIPE_WALKWAY).build();
 
     // MACHINES
-    public static final BlockEntityType<CircuitFabricatorBlockEntity> CIRCUIT_FABRICATOR = FabricBlockEntityTypeBuilder.create(CircuitFabricatorBlockEntity::new, GalacticraftBlock.CIRCUIT_FABRICATOR).build();
-    public static final BlockEntityType<CompressorBlockEntity> COMPRESSOR = FabricBlockEntityTypeBuilder.create(CompressorBlockEntity::new, GalacticraftBlock.COMPRESSOR).build();
-    public static final BlockEntityType<ElectricCompressorBlockEntity> ELECTRIC_COMPRESSOR = FabricBlockEntityTypeBuilder.create(ElectricCompressorBlockEntity::new, GalacticraftBlock.ELECTRIC_COMPRESSOR).build();
-    public static final BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE = FabricBlockEntityTypeBuilder.create(ElectricFurnaceBlockEntity::new, GalacticraftBlock.ELECTRIC_FURNACE).build();
-    public static final BlockEntityType<ElectricArcFurnaceBlockEntity> ELECTRIC_ARC_FURNACE = FabricBlockEntityTypeBuilder.create(ElectricArcFurnaceBlockEntity::new, GalacticraftBlock.ELECTRIC_ARC_FURNACE).build();
-    public static final BlockEntityType<RefineryBlockEntity> REFINERY = FabricBlockEntityTypeBuilder.create(RefineryBlockEntity::new, GalacticraftBlock.REFINERY).build();
+    public static final BlockEntityType<CircuitFabricatorBlockEntity> CIRCUIT_FABRICATOR = FabricBlockEntityTypeBuilder.create(CircuitFabricatorBlockEntity::new, GCBlocks.CIRCUIT_FABRICATOR).build();
+    public static final BlockEntityType<CompressorBlockEntity> COMPRESSOR = FabricBlockEntityTypeBuilder.create(CompressorBlockEntity::new, GCBlocks.COMPRESSOR).build();
+    public static final BlockEntityType<ElectricCompressorBlockEntity> ELECTRIC_COMPRESSOR = FabricBlockEntityTypeBuilder.create(ElectricCompressorBlockEntity::new, GCBlocks.ELECTRIC_COMPRESSOR).build();
+    public static final BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE = FabricBlockEntityTypeBuilder.create(ElectricFurnaceBlockEntity::new, GCBlocks.ELECTRIC_FURNACE).build();
+    public static final BlockEntityType<ElectricArcFurnaceBlockEntity> ELECTRIC_ARC_FURNACE = FabricBlockEntityTypeBuilder.create(ElectricArcFurnaceBlockEntity::new, GCBlocks.ELECTRIC_ARC_FURNACE).build();
+    public static final BlockEntityType<RefineryBlockEntity> REFINERY = FabricBlockEntityTypeBuilder.create(RefineryBlockEntity::new, GCBlocks.REFINERY).build();
 
     // OXYGEN MACHINES
-    public static final BlockEntityType<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR = FabricBlockEntityTypeBuilder.create(OxygenCollectorBlockEntity::new, GalacticraftBlock.OXYGEN_COLLECTOR).build();
-    public static final BlockEntityType<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR = FabricBlockEntityTypeBuilder.create(OxygenCompressorBlockEntity::new, GalacticraftBlock.OXYGEN_COMPRESSOR).build();
-    public static final BlockEntityType<OxygenDecompressorBlockEntity> OXYGEN_DECOMPRESSOR = FabricBlockEntityTypeBuilder.create(OxygenDecompressorBlockEntity::new, GalacticraftBlock.OXYGEN_DECOMPRESSOR).build();
-    public static final BlockEntityType<OxygenSealerBlockEntity> OXYGEN_SEALER = FabricBlockEntityTypeBuilder.create(OxygenSealerBlockEntity::new, GalacticraftBlock.OXYGEN_SEALER).build();
-    public static final BlockEntityType<OxygenBubbleDistributorBlockEntity> OXYGEN_BUBBLE_DISTRIBUTOR = FabricBlockEntityTypeBuilder.create(OxygenBubbleDistributorBlockEntity::new, GalacticraftBlock.BUBBLE_DISTRIBUTOR).build();
+    public static final BlockEntityType<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR = FabricBlockEntityTypeBuilder.create(OxygenCollectorBlockEntity::new, GCBlocks.OXYGEN_COLLECTOR).build();
+    public static final BlockEntityType<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR = FabricBlockEntityTypeBuilder.create(OxygenCompressorBlockEntity::new, GCBlocks.OXYGEN_COMPRESSOR).build();
+    public static final BlockEntityType<OxygenDecompressorBlockEntity> OXYGEN_DECOMPRESSOR = FabricBlockEntityTypeBuilder.create(OxygenDecompressorBlockEntity::new, GCBlocks.OXYGEN_DECOMPRESSOR).build();
+    public static final BlockEntityType<OxygenSealerBlockEntity> OXYGEN_SEALER = FabricBlockEntityTypeBuilder.create(OxygenSealerBlockEntity::new, GCBlocks.OXYGEN_SEALER).build();
+    public static final BlockEntityType<OxygenBubbleDistributorBlockEntity> OXYGEN_BUBBLE_DISTRIBUTOR = FabricBlockEntityTypeBuilder.create(OxygenBubbleDistributorBlockEntity::new, GCBlocks.BUBBLE_DISTRIBUTOR).build();
 
     // RESOURCE STORAGE
-    public static final BlockEntityType<EnergyStorageModuleBlockEntity> ENERGY_STORAGE_MODULE = FabricBlockEntityTypeBuilder.create(EnergyStorageModuleBlockEntity::new, GalacticraftBlock.ENERGY_STORAGE_MODULE).build();
-    public static final BlockEntityType<OxygenStorageModuleBlockEntity> OXYGEN_STORAGE_MODULE = FabricBlockEntityTypeBuilder.create(OxygenStorageModuleBlockEntity::new, GalacticraftBlock.OXYGEN_STORAGE_MODULE).build();
+    public static final BlockEntityType<EnergyStorageModuleBlockEntity> ENERGY_STORAGE_MODULE = FabricBlockEntityTypeBuilder.create(EnergyStorageModuleBlockEntity::new, GCBlocks.ENERGY_STORAGE_MODULE).build();
+    public static final BlockEntityType<OxygenStorageModuleBlockEntity> OXYGEN_STORAGE_MODULE = FabricBlockEntityTypeBuilder.create(OxygenStorageModuleBlockEntity::new, GCBlocks.OXYGEN_STORAGE_MODULE).build();
 
     // ROCKETS
 
     // MISC
-    public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = FabricBlockEntityTypeBuilder.create(SolarPanelPartBlockEntity::new, GalacticraftBlock.SOLAR_PANEL_PART).build();
+    public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = FabricBlockEntityTypeBuilder.create(SolarPanelPartBlockEntity::new, GCBlocks.SOLAR_PANEL_PART).build();
 
     public static void register() {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.COAL_GENERATOR), COAL_GENERATOR);

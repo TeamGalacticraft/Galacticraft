@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.fluid;
 
-import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.item.GalacticraftItem;
-import dev.galacticraft.mod.particle.GalacticraftParticleType;
+import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.item.GCItem;
+import dev.galacticraft.mod.particle.GCParticleType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.RandomSource;
@@ -44,27 +44,27 @@ public abstract class CrudeOilFluid extends BasicFluid {
 
     @Override
     public Fluid getFlowing() {
-        return GalacticraftFluid.FLOWING_CRUDE_OIL;
+        return GCFluid.FLOWING_CRUDE_OIL;
     }
 
     @Override
     public Fluid getSource() {
-        return GalacticraftFluid.CRUDE_OIL;
+        return GCFluid.CRUDE_OIL;
     }
 
     public ParticleOptions getDripParticle() {
-        return GalacticraftParticleType.DRIPPING_CRUDE_OIL_PARTICLE;
+        return GCParticleType.DRIPPING_CRUDE_OIL_PARTICLE;
     }
 
     @Override
     public Item getBucket() {
-        return GalacticraftItem.CRUDE_OIL_BUCKET;
+        return GCItem.CRUDE_OIL_BUCKET;
     }
 
     @Override
     public void animateTick(Level world, BlockPos blockPos, FluidState fluidState, RandomSource random) {
         if (random.nextInt(10) == 0) {
-            world.addParticle(GalacticraftParticleType.DRIPPING_CRUDE_OIL_PARTICLE,
+            world.addParticle(GCParticleType.DRIPPING_CRUDE_OIL_PARTICLE,
                     (double) blockPos.getX() + 0.5D - random.nextGaussian() + random.nextGaussian(),
                     (double) blockPos.getY() + 1.1F,
                     (double) blockPos.getZ() + 0.5D - random.nextGaussian() + random.nextGaussian(),
@@ -74,7 +74,7 @@ public abstract class CrudeOilFluid extends BasicFluid {
 
     @Override
     protected LiquidBlock getBlock() {
-        return GalacticraftBlock.CRUDE_OIL;
+        return GCBlocks.CRUDE_OIL;
     }
 
     public static class Still extends CrudeOilFluid {

@@ -23,11 +23,11 @@
 package dev.galacticraft.mod;
 
 import com.google.common.base.Predicates;
-import dev.galacticraft.mod.item.GalacticraftItem;
+import dev.galacticraft.mod.item.GCItem;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagExtractPredicate;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagInsertPredicate;
 import dev.galacticraft.mod.lookup.predicate.TagPredicate;
-import dev.galacticraft.mod.tag.GalacticraftTag;
+import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -719,7 +719,7 @@ public interface Constant {
 
         interface Item {
             Predicate<ItemVariant> DIAMOND = v -> v.getItem() == Items.DIAMOND;
-            Predicate<ItemVariant> SILICON = v -> v.getItem() == GalacticraftItem.RAW_SILICON;
+            Predicate<ItemVariant> SILICON = v -> v.getItem() == GCItem.RAW_SILICON;
             Predicate<ItemVariant> REDSTONE = v -> v.getItem() == Items.REDSTONE;
 
             Predicate<ItemVariant> CAN_EXTRACT_ENERGY = stack -> {
@@ -735,22 +735,22 @@ public interface Constant {
                 }
             };
 
-            Predicate<ItemVariant> CAN_EXTRACT_OXYGEN = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.OXYGEN);
-            Predicate<ItemVariant> CAN_INSERT_OXYGEN = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.OXYGEN);
+            Predicate<ItemVariant> CAN_EXTRACT_OXYGEN = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.OXYGEN);
+            Predicate<ItemVariant> CAN_INSERT_OXYGEN = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.OXYGEN);
 
-            Predicate<ItemVariant> CAN_EXTRACT_OIL = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.OIL);
-            Predicate<ItemVariant> CAN_INSERT_FUEL = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.FUEL);
-            Predicate<ItemVariant> CAN_EXTRACT_LOX = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GalacticraftTag.LIQUID_OXYGEN);
+            Predicate<ItemVariant> CAN_EXTRACT_OIL = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.OIL);
+            Predicate<ItemVariant> CAN_INSERT_FUEL = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.FUEL);
+            Predicate<ItemVariant> CAN_EXTRACT_LOX = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.LIQUID_OXYGEN);
         }
 
         interface Gas {
-            Predicate<FluidVariant> OXYGEN = v -> v.getFluid().is(GalacticraftTag.OXYGEN);
+            Predicate<FluidVariant> OXYGEN = v -> v.getFluid().is(GCTags.OXYGEN);
         }
 
         interface Fluid {
-            Predicate<FluidVariant> LOX_ONLY = new TagPredicate<>(GalacticraftTag.LIQUID_OXYGEN, net.minecraft.world.level.material.Fluid::is);
-            Predicate<FluidVariant> OIL = new TagPredicate<>(GalacticraftTag.OIL, net.minecraft.world.level.material.Fluid::is);
-            Predicate<FluidVariant> FUEL = new TagPredicate<>(GalacticraftTag.FUEL, net.minecraft.world.level.material.Fluid::is);
+            Predicate<FluidVariant> LOX_ONLY = new TagPredicate<>(GCTags.LIQUID_OXYGEN, net.minecraft.world.level.material.Fluid::is);
+            Predicate<FluidVariant> OIL = new TagPredicate<>(GCTags.OIL, net.minecraft.world.level.material.Fluid::is);
+            Predicate<FluidVariant> FUEL = new TagPredicate<>(GCTags.FUEL, net.minecraft.world.level.material.Fluid::is);
         }
     }
 

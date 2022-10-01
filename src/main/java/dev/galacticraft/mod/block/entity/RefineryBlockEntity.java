@@ -33,10 +33,10 @@ import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
 import dev.galacticraft.machinelib.api.transfer.CachingItemApiProvider;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.fluid.GalacticraftFluid;
-import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
+import dev.galacticraft.mod.fluid.GCFluid;
+import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -104,18 +104,18 @@ public class RefineryBlockEntity extends MachineBlockEntity {
 
         Storage<FluidVariant> storage = this.fluidInputSlot.getApi();
         if (storage != null) {
-            FluidUtil.move(FluidVariant.of(GalacticraftFluid.CRUDE_OIL), storage, this.fluidStorage().getSlot(OIL_TANK), Long.MAX_VALUE, null);
+            FluidUtil.move(FluidVariant.of(GCFluid.CRUDE_OIL), storage, this.fluidStorage().getSlot(OIL_TANK), Long.MAX_VALUE, null);
         }
         storage = this.fluidOutputSlot.getApi();
         if (storage != null) {
-            FluidUtil.move(FluidVariant.of(GalacticraftFluid.FUEL), this.fluidStorage().getSlot(FUEL_TANK), storage, Long.MAX_VALUE, null);
+            FluidUtil.move(FluidVariant.of(GCFluid.FUEL), this.fluidStorage().getSlot(FUEL_TANK), storage, Long.MAX_VALUE, null);
         }
     }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        if (this.fluidStorage().isEmpty(OIL_TANK)) return GalacticraftMachineStatus.MISSING_OIL;
-        if (this.fluidStorage().isFull(FUEL_TANK)) return GalacticraftMachineStatus.FUEL_TANK_FULL;
+        if (this.fluidStorage().isEmpty(OIL_TANK)) return GCMachineStatus.MISSING_OIL;
+        if (this.fluidStorage().isFull(FUEL_TANK)) return GCMachineStatus.FUEL_TANK_FULL;
         profiler.push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate()) {
@@ -125,14 +125,14 @@ public class RefineryBlockEntity extends MachineBlockEntity {
                 }
 
                 try (Transaction inner = Transaction.openNested(transaction)) {
-                    long accepted = this.fluidStorage().insert(FUEL_TANK, FluidVariant.of(GalacticraftFluid.FUEL), extracted, inner);
+                    long accepted = this.fluidStorage().insert(FUEL_TANK, FluidVariant.of(GCFluid.FUEL), extracted, inner);
 
                     if (this.fluidStorage().extract(OIL_TANK, accepted, inner).getAmount() == accepted) {
                         inner.commit();
                     }
                 }
                 transaction.commit();
-                return GalacticraftMachineStatus.ACTIVE;
+                return GCMachineStatus.ACTIVE;
             } else {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
             }
@@ -149,7 +149,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
                     syncId,
                     player,
                     this,
-                    GalacticraftScreenHandlerType.REFINERY_HANDLER
+                    GCScreenHandlerType.REFINERY_HANDLER
             );
         }
         return null;

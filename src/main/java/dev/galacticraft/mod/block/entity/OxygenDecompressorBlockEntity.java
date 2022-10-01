@@ -33,9 +33,9 @@ import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
 import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.GenericStorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -98,15 +98,15 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
         this.trySpreadFluids(world, state);
         Storage<FluidVariant> fluidStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(FluidStorage.ITEM);
         profiler.pop();
-        if (fluidStorage == null) return GalacticraftMachineStatus.MISSING_OXYGEN_TANK;
-        if (fluidStorage.simulateExtract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GalacticraftMachineStatus.EMPTY_OXYGEN_TANK;
+        if (fluidStorage == null) return GCMachineStatus.MISSING_OXYGEN_TANK;
+        if (fluidStorage.simulateExtract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GCMachineStatus.EMPTY_OXYGEN_TANK;
         profiler.push("transaction");
 
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenDecompressorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenDecompressorEnergyConsumptionRate()) {
                 GenericStorageUtil.move(FluidVariant.of(Gases.OXYGEN), fluidStorage, this.fluidStorage(), Long.MAX_VALUE, transaction);
                 transaction.commit();
-                return GalacticraftMachineStatus.DECOMPRESSING;
+                return GCMachineStatus.DECOMPRESSING;
             } else {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
             }
@@ -123,7 +123,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
                     syncId,
                     player,
                     this,
-                    GalacticraftScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER
+                    GCScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER
             );
         }
         return null;

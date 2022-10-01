@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.gametest.test;
 
-import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.decoration.GratingBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -43,7 +43,7 @@ public class GalacticraftTestSuite implements GalacticraftGameTest {
         final var pos2 = new BlockPos(0, 2, 0);
         final var pos1 = new BlockPos(0, 1, 0);
         final var mutable = new BlockPos.MutableBlockPos();
-        context.setBlock(pos2, GalacticraftBlock.GRATING.defaultBlockState().setValue(GratingBlock.GRATING_STATE, GratingBlock.GratingState.LOWER));
+        context.setBlock(pos2, GCBlocks.GRATING.defaultBlockState().setValue(GratingBlock.GRATING_STATE, GratingBlock.GratingState.LOWER));
         if (!context.getBlockState(pos2).getFluidState().isEmpty()) {
             context.fail(String.format("Expected grating to not be filled with fluid but found %s instead!", Registry.FLUID.getKey(context.getBlockState(pos2).getFluidState().getType())), pos2);
         } else {

@@ -34,9 +34,9 @@ import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
 import dev.galacticraft.machinelib.impl.fluid.FluidStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.GenericStorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -95,12 +95,12 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        if (this.fluidStorage().isEmpty(OXYGEN_TANK)) return GalacticraftMachineStatus.NOT_ENOUGH_OXYGEN;
+        if (this.fluidStorage().isEmpty(OXYGEN_TANK)) return GCMachineStatus.NOT_ENOUGH_OXYGEN;
         profiler.push("find_storage");
         Storage<FluidVariant> fluidStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(FluidStorage.ITEM);
         profiler.pop();
-        if (fluidStorage == null) return GalacticraftMachineStatus.MISSING_OXYGEN_TANK;
-        if (!fluidStorage.supportsInsertion() || fluidStorage.simulateInsert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GalacticraftMachineStatus.OXYGEN_TANK_FULL;
+        if (fluidStorage == null) return GCMachineStatus.MISSING_OXYGEN_TANK;
+        if (!fluidStorage.supportsInsertion() || fluidStorage.simulateInsert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GCMachineStatus.OXYGEN_TANK_FULL;
         profiler.push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate()) {
@@ -119,7 +119,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
             profiler.pop();
         }
 
-        return GalacticraftMachineStatus.COMPRESSING;
+        return GCMachineStatus.COMPRESSING;
     }
 
     @Nullable
@@ -130,7 +130,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
                     syncId,
                     player,
                     this,
-                    GalacticraftScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER
+                    GCScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER
             );
         }
         return null;

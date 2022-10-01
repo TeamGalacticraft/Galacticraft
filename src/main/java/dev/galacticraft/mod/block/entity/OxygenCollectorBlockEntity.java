@@ -35,7 +35,7 @@ import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
 import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
 import dev.galacticraft.mod.screen.OxygenCollectorScreenHandler;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -135,7 +135,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         profiler.push("transfer");
         this.trySpreadFluids(world, state);
 
-        if (this.fluidStorage().isFull(OXYGEN_TANK)) return GalacticraftMachineStatus.OXYGEN_TANK_FULL;
+        if (this.fluidStorage().isFull(OXYGEN_TANK)) return GCMachineStatus.OXYGEN_TANK_FULL;
         profiler.popPush("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate()) {
@@ -145,9 +145,9 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 if (this.collectionAmount > 0) {
                     this.fluidStorage().insert(OXYGEN_TANK, FluidVariant.of(Gases.OXYGEN), FluidUtil.bucketsToDroplets(this.collectionAmount), transaction);
                     transaction.commit();
-                    return GalacticraftMachineStatus.COLLECTING;
+                    return GCMachineStatus.COLLECTING;
                 } else {
-                    return GalacticraftMachineStatus.NOT_ENOUGH_OXYGEN;
+                    return GCMachineStatus.NOT_ENOUGH_OXYGEN;
                 }
             } else {
                 this.collectionAmount = 0;

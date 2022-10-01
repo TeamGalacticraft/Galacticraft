@@ -33,7 +33,7 @@ import net.minecraft.world.entity.player.Player;
  */
 public class BubbleDistributorScreenHandler extends MachineScreenHandler<OxygenBubbleDistributorBlockEntity> {
     public BubbleDistributorScreenHandler(int syncId, Player player, OxygenBubbleDistributorBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerType.BUBBLE_DISTRIBUTOR_HANDLER);
+        super(syncId, player, machine, GCScreenHandlerType.BUBBLE_DISTRIBUTOR_HANDLER);
 
         this.addPlayerInventorySlots(8, 84);
     }

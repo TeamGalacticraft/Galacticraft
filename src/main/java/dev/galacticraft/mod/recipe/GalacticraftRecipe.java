@@ -31,8 +31,8 @@ import net.minecraft.world.item.crafting.RecipeType;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftRecipe {
-    public static final RecipeType<FabricationRecipe> FABRICATION_TYPE = new GalacticraftRecipeType<>();
-    public static final RecipeType<CompressingRecipe> COMPRESSING_TYPE = new GalacticraftRecipeType<>();
+    public static final RecipeType<FabricationRecipe> FABRICATION_TYPE = new GCRecipeType<>();
+    public static final RecipeType<CompressingRecipe> COMPRESSING_TYPE = new GCRecipeType<>();
 
     public static final FabricationRecipe.Serializer FABRICATION_SERIALIZER = FabricationRecipe.Serializer.INSTANCE;
     public static final ShapelessCompressingRecipe.Serializer SHAPELESS_COMPRESSING_SERIALIZER = ShapelessCompressingRecipe.Serializer.INSTANCE;

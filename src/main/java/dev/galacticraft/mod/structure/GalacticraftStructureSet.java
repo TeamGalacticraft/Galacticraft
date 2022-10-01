@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.structure;
 
-import dev.galacticraft.mod.world.gen.structure.GalacticraftStructure;
+import dev.galacticraft.mod.world.gen.structure.GCStructure;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Vec3i;
 import net.minecraft.data.worldgen.StructureSets;
@@ -36,8 +36,8 @@ import java.util.Optional;
 
 public class GalacticraftStructureSet {
     public static final Holder<StructureSet> MOON_PILLAGER_BASES = StructureSets.register(
-            GalacticraftStructureSetKeys.MOON_PILLAGER_BASES,
-            GalacticraftStructure.MOON_PILLAGER_BASE,
+            GCStructureSetKeys.MOON_PILLAGER_BASES,
+            GCStructure.MOON_PILLAGER_BASE,
             new RandomSpreadStructurePlacement(
                     Vec3i.ZERO,
                     StructurePlacement.FrequencyReductionMethod.LEGACY_TYPE_1,
@@ -50,9 +50,9 @@ public class GalacticraftStructureSet {
             )
     );
     public static final Holder<StructureSet> MOON_RUINS = StructureSets.register(
-            GalacticraftStructureSetKeys.MOON_RUINS,
+            GCStructureSetKeys.MOON_RUINS,
             new StructureSet(
-                    List.of(StructureSet.entry(GalacticraftStructure.MOON_RUINS)),
+                    List.of(StructureSet.entry(GCStructure.MOON_RUINS)),
                     new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 38245864)
             )
     );

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.render.entity.feature;
 
 import dev.galacticraft.mod.client.model.entity.EvolvedCreeperEntityModel;
-import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLayer;
+import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.entity.EvolvedCreeperEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -40,7 +40,7 @@ public class EvolvedCreeperChargeFeatureRenderer extends EnergySwirlLayer<Evolve
 
     public EvolvedCreeperChargeFeatureRenderer(RenderLayerParent<EvolvedCreeperEntity, EvolvedCreeperEntityModel> context, EntityModelSet loader) {
         super(context);
-        this.model = new EvolvedCreeperEntityModel(loader.bakeLayer(GalacticraftEntityModelLayer.EVOLVED_CREEPER_ARMOR), false);
+        this.model = new EvolvedCreeperEntityModel(loader.bakeLayer(GCEntityModelLayer.EVOLVED_CREEPER_ARMOR), false);
     }
 
     @Override

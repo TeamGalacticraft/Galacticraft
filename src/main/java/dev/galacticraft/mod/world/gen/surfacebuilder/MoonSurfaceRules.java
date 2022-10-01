@@ -24,8 +24,8 @@ package dev.galacticraft.mod.world.gen.surfacebuilder;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.world.biome.GalacticraftBiomeKey;
+import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.world.biome.GCBiomeKey;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -41,15 +41,15 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public class MoonSurfaceRules {
-    private static final ConditionSource IS_MARE = biome(GalacticraftBiomeKey.Moon.MARE, GalacticraftBiomeKey.Moon.MARE_EDGE, GalacticraftBiomeKey.Moon.MARE_FLAT, GalacticraftBiomeKey.Moon.MARE_HILLS, GalacticraftBiomeKey.Moon.MARE_VALLEY);
-    private static final ConditionSource IS_HIGHLANDS = biome(GalacticraftBiomeKey.Moon.HIGHLANDS, GalacticraftBiomeKey.Moon.HIGHLANDS_EDGE, GalacticraftBiomeKey.Moon.HIGHLANDS_FLAT, GalacticraftBiomeKey.Moon.HIGHLANDS_HILLS, GalacticraftBiomeKey.Moon.HIGHLANDS_VALLEY);
+    private static final ConditionSource IS_MARE = biome(GCBiomeKey.Moon.MARE, GCBiomeKey.Moon.MARE_EDGE, GCBiomeKey.Moon.MARE_FLAT, GCBiomeKey.Moon.MARE_HILLS, GCBiomeKey.Moon.MARE_VALLEY);
+    private static final ConditionSource IS_HIGHLANDS = biome(GCBiomeKey.Moon.HIGHLANDS, GCBiomeKey.Moon.HIGHLANDS_EDGE, GCBiomeKey.Moon.HIGHLANDS_FLAT, GCBiomeKey.Moon.HIGHLANDS_HILLS, GCBiomeKey.Moon.HIGHLANDS_VALLEY);
 
     private static final RuleSource BEDROCK = block(Blocks.BEDROCK);
-    private static final RuleSource LUNASLATE = block(GalacticraftBlock.LUNASLATE);
-    private static final RuleSource MOON_DIRT = block(GalacticraftBlock.MOON_DIRT);
-    private static final RuleSource MOON_TURF = block(GalacticraftBlock.MOON_TURF);
-    private static final RuleSource MOON_BASALT = block(GalacticraftBlock.MOON_BASALT);
-    private static final RuleSource DEBUG_STATE = block(GalacticraftBlock.ALUMINUM_DECORATION);
+    private static final RuleSource LUNASLATE = block(GCBlocks.LUNASLATE);
+    private static final RuleSource MOON_DIRT = block(GCBlocks.MOON_DIRT);
+    private static final RuleSource MOON_TURF = block(GCBlocks.MOON_TURF);
+    private static final RuleSource MOON_BASALT = block(GCBlocks.MOON_BASALT);
+    private static final RuleSource DEBUG_STATE = block(GCBlocks.ALUMINUM_DECORATION);
 
     private static final RuleSource SECONDARY_MATERIAL = SurfaceRules.sequence(
             SurfaceRules.ifTrue(IS_MARE, MOON_BASALT),

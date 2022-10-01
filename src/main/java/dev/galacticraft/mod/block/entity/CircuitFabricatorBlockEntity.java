@@ -32,12 +32,12 @@ import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.Tier1EnergyMachine;
-import dev.galacticraft.mod.item.GalacticraftItem;
-import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
+import dev.galacticraft.mod.item.GCItem;
+import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -136,8 +136,8 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     protected boolean extractCraftingMaterials(@NotNull FabricationRecipe recipe, @NotNull TransactionContext context) {
         try (Transaction transaction = Transaction.openNested(context)) {
             if (this.itemStorage().extract(INPUT_SLOT_DIAMOND, Items.DIAMOND, 1, transaction) == 1) {
-                if (this.itemStorage().extract(INPUT_SLOT_SILICON, GalacticraftItem.RAW_SILICON, 1, transaction) == 1) {
-                    if (this.itemStorage().extract(INPUT_SLOT_SILICON_2, GalacticraftItem.RAW_SILICON, 1, transaction) == 1) {
+                if (this.itemStorage().extract(INPUT_SLOT_SILICON, GCItem.RAW_SILICON, 1, transaction) == 1) {
+                    if (this.itemStorage().extract(INPUT_SLOT_SILICON_2, GCItem.RAW_SILICON, 1, transaction) == 1) {
                         if (this.itemStorage().extract(INPUT_SLOT_REDSTONE, Items.REDSTONE, 1, transaction) == 1) {
                             if (recipe.getIngredients().get(0).test(this.itemStorage().extract(INPUT_SLOT, 1, transaction))) {
                                 transaction.commit();
@@ -153,15 +153,15 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
 
     @Override
     protected @NotNull MachineStatus workingStatus() {
-        return GalacticraftMachineStatus.FABRICATING;
+        return GCMachineStatus.FABRICATING;
     }
 
     @Override
     protected @NotNull Optional<FabricationRecipe> findValidRecipe(@NotNull Level world) {
         try (Transaction transaction = Transaction.openOuter()) {
             if (this.itemStorage().getSlot(INPUT_SLOT_DIAMOND).simulateExtract(ItemVariant.of(Items.DIAMOND), 1, transaction) == 1
-                    && this.itemStorage().getSlot(INPUT_SLOT_SILICON).simulateExtract(ItemVariant.of(GalacticraftItem.RAW_SILICON), 1, transaction) == 1
-                    && this.itemStorage().getSlot(INPUT_SLOT_SILICON_2).simulateExtract(ItemVariant.of(GalacticraftItem.RAW_SILICON), 1, transaction) == 1
+                    && this.itemStorage().getSlot(INPUT_SLOT_SILICON).simulateExtract(ItemVariant.of(GCItem.RAW_SILICON), 1, transaction) == 1
+                    && this.itemStorage().getSlot(INPUT_SLOT_SILICON_2).simulateExtract(ItemVariant.of(GCItem.RAW_SILICON), 1, transaction) == 1
                     && this.itemStorage().getSlot(INPUT_SLOT_REDSTONE).simulateExtract(ItemVariant.of(Items.REDSTONE), 1, transaction) == 1) {
                 return super.findValidRecipe(world);
             }
@@ -182,7 +182,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
                     syncId,
                     player,
                     this,
-                    GalacticraftScreenHandlerType.CIRCUIT_FABRICATOR_HANDLER,
+                    GCScreenHandlerType.CIRCUIT_FABRICATOR_HANDLER,
                     94
             );
         }

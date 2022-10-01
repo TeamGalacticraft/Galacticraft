@@ -28,7 +28,7 @@ import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
 import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
+import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -72,7 +72,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
                     syncId,
                     player,
                     this,
-                    GalacticraftScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER
+                    GCScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER
             );
         }
         return null;

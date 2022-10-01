@@ -28,7 +28,7 @@ import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.slot.StorageSlot;
 import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.machine.GalacticraftMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.machine.LongProperty;
 import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
@@ -86,7 +86,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
 
     @Override
     protected @NotNull MachineStatus workingStatus() {
-        return GalacticraftMachineStatus.COMPRESSING;
+        return GCMachineStatus.COMPRESSING;
     }
 
     @Override
@@ -156,7 +156,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
                 }
             }
         }
-        return this.fuelLength == 0 ? GalacticraftMachineStatus.NO_FUEL : super.extractResourcesToWork(context);
+        return this.fuelLength == 0 ? GCMachineStatus.NO_FUEL : super.extractResourcesToWork(context);
     }
 
     @Override
