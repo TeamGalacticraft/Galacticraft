@@ -65,7 +65,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     private boolean oxygenWorld = false;
 
     public OxygenCollectorBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.OXYGEN_COLLECTOR, pos, state);
+        super(GCBlockEntityTypes.OXYGEN_COLLECTOR, pos, state);
     }
 
     @Override

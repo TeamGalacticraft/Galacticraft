@@ -25,7 +25,7 @@ package dev.galacticraft.mod.gametest.test.machine;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.entity.CircuitFabricatorBlockEntity;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GCItem;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -42,18 +42,18 @@ import org.jetbrains.annotations.NotNull;
 public class CircuitFabricatorTestSuite implements MachineGameTest {
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void circuitFabricatorPlacementTest(GameTestHelper context) {
-        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GCBlocks.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR));
+        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GCBlocks.CIRCUIT_FABRICATOR, GCBlockEntityTypes.CIRCUIT_FABRICATOR));
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void circuitFabricatorChargeTest(GameTestHelper context) {
-        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR, CircuitFabricatorBlockEntity.CHARGE_SLOT);
+        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.CIRCUIT_FABRICATOR, GCBlockEntityTypes.CIRCUIT_FABRICATOR, CircuitFabricatorBlockEntity.CHARGE_SLOT);
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 301)
     public void circuitFabricatorCraftingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
-        final var circuitFabricator = this.createBlockEntity(context, pos, GCBlocks.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
+        final var circuitFabricator = this.createBlockEntity(context, pos, GCBlocks.CIRCUIT_FABRICATOR, GCBlockEntityTypes.CIRCUIT_FABRICATOR);
         final var inv = circuitFabricator.itemStorage();
         circuitFabricator.energyStorage().setEnergyUnsafe(circuitFabricator.getEnergyCapacity());
         fillCircuitFabricatorSlots(inv);
@@ -68,7 +68,7 @@ public class CircuitFabricatorTestSuite implements MachineGameTest {
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void circuitFabricatorCraftingFullTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
-        final var circuitFabricator = this.createBlockEntity(context, pos, GCBlocks.CIRCUIT_FABRICATOR, GalacticraftBlockEntityType.CIRCUIT_FABRICATOR);
+        final var circuitFabricator = this.createBlockEntity(context, pos, GCBlocks.CIRCUIT_FABRICATOR, GCBlockEntityTypes.CIRCUIT_FABRICATOR);
         final var inv = circuitFabricator.itemStorage();
         circuitFabricator.energyStorage().setEnergyUnsafe(circuitFabricator.getEnergyCapacity());
         inv.setSlotUnsafe(CircuitFabricatorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);

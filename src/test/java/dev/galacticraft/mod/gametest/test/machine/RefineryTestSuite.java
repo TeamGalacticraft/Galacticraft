@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.gametest.test.machine;
 
 import dev.galacticraft.mod.block.GCBlocks;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
 import dev.galacticraft.mod.block.entity.RefineryBlockEntity;
 import dev.galacticraft.mod.fluid.GCFluid;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
@@ -43,18 +43,18 @@ import net.minecraft.world.item.Items;
 public class RefineryTestSuite implements MachineGameTest {
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void refineryPlacementTest(GameTestHelper context) {
-        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GCBlocks.REFINERY, GalacticraftBlockEntityType.REFINERY));
+        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GCBlocks.REFINERY, GCBlockEntityTypes.REFINERY));
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void refineryChargingTest(GameTestHelper context) {
-        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.REFINERY, GalacticraftBlockEntityType.REFINERY, RefineryBlockEntity.CHARGE_SLOT);
+        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.REFINERY, GCBlockEntityTypes.REFINERY, RefineryBlockEntity.CHARGE_SLOT);
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void refineryOilInputTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
-        final var refinery = this.createBlockEntity(context, pos, GCBlocks.REFINERY, GalacticraftBlockEntityType.REFINERY);
+        final var refinery = this.createBlockEntity(context, pos, GCBlocks.REFINERY, GCBlockEntityTypes.REFINERY);
         final var inv = refinery.itemStorage();
         inv.setSlotUnsafe(RefineryBlockEntity.FLUID_INPUT_SLOT, ItemVariant.of(GCItem.CRUDE_OIL_BUCKET), 1, true);
         refinery.energyStorage().setEnergyUnsafe(refinery.getEnergyCapacity());
@@ -69,7 +69,7 @@ public class RefineryTestSuite implements MachineGameTest {
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 201)
     public void refineryCraftingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
-        final var refinery = this.createBlockEntity(context, pos, GCBlocks.REFINERY, GalacticraftBlockEntityType.REFINERY);
+        final var refinery = this.createBlockEntity(context, pos, GCBlocks.REFINERY, GCBlockEntityTypes.REFINERY);
         refinery.energyStorage().setEnergyUnsafe(refinery.getEnergyCapacity());
         refinery.fluidStorage().setSlotUnsafe(RefineryBlockEntity.OIL_TANK, FluidVariant.of(GCFluid.CRUDE_OIL), FluidConstants.BUCKET, true);
         runFinalTaskAt(context, 200 + 1, () -> {
@@ -87,7 +87,7 @@ public class RefineryTestSuite implements MachineGameTest {
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void refineryRefiningFullTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
-        final var refinery = this.createBlockEntity(context, pos, GCBlocks.REFINERY, GalacticraftBlockEntityType.REFINERY);
+        final var refinery = this.createBlockEntity(context, pos, GCBlocks.REFINERY, GCBlockEntityTypes.REFINERY);
         refinery.energyStorage().setEnergyUnsafe(refinery.getEnergyCapacity());
         refinery.fluidStorage().setSlotUnsafe(RefineryBlockEntity.OIL_TANK, FluidVariant.of(GCFluid.CRUDE_OIL), FluidConstants.BUCKET, true);
         refinery.fluidStorage().setSlotUnsafe(RefineryBlockEntity.FUEL_TANK, FluidVariant.of(GCFluid.FUEL), RefineryBlockEntity.MAX_CAPACITY, true);

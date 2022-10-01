@@ -35,7 +35,7 @@ public class SolarPanelPartBlockEntity extends BlockEntity implements MultiBlock
     public BlockPos basePos = BlockPos.ZERO;
 
     public SolarPanelPartBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.SOLAR_PANEL_PART, pos, state);
+        super(GCBlockEntityTypes.SOLAR_PANEL_PART, pos, state);
     }
 
     @Override

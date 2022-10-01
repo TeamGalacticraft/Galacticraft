@@ -87,7 +87,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
      */
 
     public CoalGeneratorBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.COAL_GENERATOR, pos, state);
+        super(GCBlockEntityTypes.COAL_GENERATOR, pos, state);
     }
 
     @Override

@@ -55,7 +55,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
     public long currentEnergyGeneration = 0;
 
     public BasicSolarPanelBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.BASIC_SOLAR_PANEL, pos, state);
+        super(GCBlockEntityTypes.BASIC_SOLAR_PANEL, pos, state);
     }
 
     @Override

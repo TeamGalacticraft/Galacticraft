@@ -25,6 +25,7 @@ package dev.galacticraft.mod.item;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.fluid.GCFluid;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.core.Registry;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
@@ -459,6 +460,10 @@ public class GCItem {
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
 
+    public static final BlockItem AIR_LOCK_FRAME = new BlockItem(GCBlocks.AIR_LOCK_FRAME, new FabricItemSettings().tab(GCItemGroup.ITEMS_GROUP));
+    public static final BlockItem AIR_LOCK_CONTROLLER = new BlockItem(GCBlocks.AIR_LOCK_CONTROLLER, new FabricItemSettings().tab(GCItemGroup.ITEMS_GROUP));
+    public static final BlockItem AIR_LOCK_SEAL = new BlockItem(GCBlocks.AIR_LOCK_SEAL, new FabricItemSettings().tab(GCItemGroup.ITEMS_GROUP));
+
     
     public static void register() {
         // === START BLOCKS ===
@@ -869,5 +874,9 @@ public class GCItem {
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.MOON_BUGGY_SCHEMATIC), MOON_BUGGY_SCHEMATIC);
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.TIER_3_ROCKET_SCHEMATIC), TIER_3_ROCKET_SCHEMATIC);
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.ASTRO_MINER_SCHEMATIC), ASTRO_MINER_SCHEMATIC);
+
+        Registry.register(Registry.ITEM, Constant.id(Constant.Block.AIR_LOCK_FRAME), AIR_LOCK_FRAME);
+        Registry.register(Registry.ITEM, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIR_LOCK_CONTROLLER);
+        Registry.register(Registry.ITEM, Constant.id(Constant.Block.AIR_LOCK_SEAL), AIR_LOCK_SEAL);
     }
 }

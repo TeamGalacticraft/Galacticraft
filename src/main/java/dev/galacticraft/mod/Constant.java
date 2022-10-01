@@ -685,6 +685,7 @@ public interface Constant {
         String OXYGEN_DECOMPRESSOR_SCREEN_HANDLER = "oxygen_decompressor_screen_handler";
         String OXYGEN_STORAGE_MODULE_SCREEN_HANDLER = "oxygen_storage_module_screen_handler";
         String OXYGEN_SEALER_SCREEN_HANDLER = "oxygen_sealer_screen_handler";
+        String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
     }
 
     interface Biome {

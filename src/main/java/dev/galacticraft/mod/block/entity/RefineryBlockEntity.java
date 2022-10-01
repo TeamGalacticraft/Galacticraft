@@ -71,7 +71,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     private final StateCachingStorageProvider<Storage<FluidVariant>> fluidOutputSlot = StateCachingStorageProvider.create(this.itemStorage().getSlot(FLUID_OUTPUT_SLOT), FluidStorage.ITEM);
 
     public RefineryBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.REFINERY, pos, state);
+        super(GCBlockEntityTypes.REFINERY, pos, state);
     }
 
     @Override

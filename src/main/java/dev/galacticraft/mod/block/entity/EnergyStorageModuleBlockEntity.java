@@ -53,7 +53,7 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     private final StateCachingStorageProvider<EnergyStorage> batteryDrainSlot = StateCachingStorageProvider.create(this.itemStorage().getSlot(DRAIN_FROM_BATTERY_SLOT), EnergyStorage.ITEM);
 
     public EnergyStorageModuleBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE, pos, state);
+        super(GCBlockEntityTypes.ENERGY_STORAGE_MODULE, pos, state);
     }
 
     @Override

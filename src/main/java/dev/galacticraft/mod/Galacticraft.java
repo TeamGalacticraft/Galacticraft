@@ -24,7 +24,7 @@ package dev.galacticraft.mod;
 
 import dev.galacticraft.mod.api.config.ConfigManager;
 import dev.galacticraft.mod.block.GCBlocks;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
 import dev.galacticraft.mod.command.GCCommand;
 import dev.galacticraft.mod.config.ConfigManagerImpl;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
@@ -59,7 +59,6 @@ import dev.galacticraft.mod.world.gen.structure.GCStructureType;
 import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
 import dev.galacticraft.mod.world.poi.GCPointOfInterestType;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +77,7 @@ public class Galacticraft implements ModInitializer {
         GCTags.register();
         GCBlocks.register();
         GCFluid.register();
-        GalacticraftBlockEntityType.register();
+        GCBlockEntityTypes.register();
         GCItem.register();
         GCApiLookupProviders.register();
         GalacticraftRecipe.register();

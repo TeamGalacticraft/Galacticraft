@@ -31,6 +31,7 @@ import dev.galacticraft.mod.block.decoration.VacuumGlassBlock;
 import dev.galacticraft.mod.block.entity.*;
 import dev.galacticraft.mod.block.environment.*;
 import dev.galacticraft.mod.block.machine.*;
+import dev.galacticraft.mod.block.special.AirlockBlock;
 import dev.galacticraft.mod.block.special.SolarPanelPartBlock;
 import dev.galacticraft.mod.block.special.TinLadderBlock;
 import dev.galacticraft.mod.block.special.aluminumwire.tier1.AluminumWireBlock;
@@ -304,6 +305,10 @@ public class GCBlocks {
     public static final MachineBlock<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR = SimpleMachineBlock.create(OxygenCompressorBlockEntity::new);
     public static final MachineBlock<OxygenStorageModuleBlockEntity> OXYGEN_STORAGE_MODULE = SimpleMachineBlock.create(OxygenStorageModuleBlockEntity::new);
 
+    public static final AirlockBlock AIR_LOCK_FRAME = new AirlockBlock(false, FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));
+    public static final AirlockBlock AIR_LOCK_CONTROLLER = new AirlockBlock(true, FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));
+    public static final Block AIR_LOCK_SEAL = new Block(FabricBlockSettings.copyOf(AIR_LOCK_FRAME));
+
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);
         FlammableBlockRegistry.getDefaultInstance().add(CRUDE_OIL, 60, 100);
@@ -549,6 +554,10 @@ public class GCBlocks {
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR), OXYGEN_DECOMPRESSOR);
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.OXYGEN_COMPRESSOR), OXYGEN_COMPRESSOR);
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
+
+        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.AIR_LOCK_FRAME), AIR_LOCK_FRAME);
+        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIR_LOCK_CONTROLLER);
+        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.AIR_LOCK_SEAL), AIR_LOCK_SEAL);
     }
 
     private static FabricBlockSettings oreSettings(float hardness, float resistance, boolean deepslate) {

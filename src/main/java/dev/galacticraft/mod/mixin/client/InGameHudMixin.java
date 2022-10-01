@@ -64,7 +64,7 @@ public abstract class InGameHudMixin extends GuiComponent {
     private void draw(PoseStack matrices, float delta, CallbackInfo ci) {
         CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(this.minecraft.level).orElse(null);
         if (body != null && !body.atmosphere().breathable()) {
-            fill(matrices, this.minecraft.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * 2) - 11, 4, this.minecraft.getWindow().getGuiScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 9, 6 + Constant.TextureCoordinate.OVERLAY_HEIGHT, 0);
+            fill(matrices, this.minecraft.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH) - 11, 4, this.minecraft.getWindow().getGuiScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 9, 6 + Constant.TextureCoordinate.OVERLAY_HEIGHT, 0);
             fill(matrices, this.minecraft.getWindow().getGuiScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 6, 4, this.minecraft.getWindow().getGuiScaledWidth() - 4, 6 + Constant.TextureCoordinate.OVERLAY_HEIGHT, 0);
 
             RenderSystem.setShader(GameRenderer::getPositionTexShader);

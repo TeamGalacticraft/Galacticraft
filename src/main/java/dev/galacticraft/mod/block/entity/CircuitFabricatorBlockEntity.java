@@ -82,7 +82,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     private final Container craftingInv = this.itemStorage().subInv(INPUT_SLOT, 1);
 
     public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.CIRCUIT_FABRICATOR, pos, state, GalacticraftRecipe.FABRICATION_TYPE);
+        super(GCBlockEntityTypes.CIRCUIT_FABRICATOR, pos, state, GalacticraftRecipe.FABRICATION_TYPE);
     }
 
     @Override

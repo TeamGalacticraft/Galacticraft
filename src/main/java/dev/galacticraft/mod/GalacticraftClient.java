@@ -110,6 +110,7 @@ public class GalacticraftClient implements ClientModInitializer {
         MenuScreens.register(GCScreenHandlerType.BUBBLE_DISTRIBUTOR_HANDLER, BubbleDistributorScreen::new);
         MenuScreens.register(GCScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER, OxygenStorageModuleScreen::new);
         MenuScreens.register(GCScreenHandlerType.OXYGEN_SEALER_HANDLER, OxygenSealerScreen::new);
+        MenuScreens.register(GCScreenHandlerType.AIRLOCK_CONTROLLER_MENU, AirlockControllerScreen::new);
 
         EntityRendererRegistry.register(GalacticraftEntityType.EVOLVED_ZOMBIE, EvolvedZombieRenderer::new);
         EntityRendererRegistry.register(GalacticraftEntityType.EVOLVED_CREEPER, EvolvedCreeperEntityRenderer::new);

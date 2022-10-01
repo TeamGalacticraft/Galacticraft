@@ -38,7 +38,7 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     private Direction direction = null;
 
     public WireWalkwayBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.WIRE_WALKWAY, pos, state, 240);
+        super(GCBlockEntityTypes.WIRE_WALKWAY, pos, state, 240);
     }
 
     @Override

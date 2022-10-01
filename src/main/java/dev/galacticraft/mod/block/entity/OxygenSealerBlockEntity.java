@@ -78,7 +78,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     private boolean oxygenWorld = false;
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.OXYGEN_SEALER, pos, state);
+        super(GCBlockEntityTypes.OXYGEN_SEALER, pos, state);
     }
 
     @Override

@@ -25,7 +25,7 @@ package dev.galacticraft.mod.gametest.test.machine;
 import dev.galacticraft.api.machine.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.entity.ElectricCompressorBlockEntity;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GCItem;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -42,18 +42,18 @@ import org.jetbrains.annotations.NotNull;
 public class ElectricCompressorTestSuite implements MachineGameTest {
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void electricCompressorPlacementTest(GameTestHelper context) {
-        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GCBlocks.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR));
+        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GCBlocks.ELECTRIC_COMPRESSOR, GCBlockEntityTypes.ELECTRIC_COMPRESSOR));
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void electricCompressorChargingTest(GameTestHelper context) {
-        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR, ElectricCompressorBlockEntity.CHARGE_SLOT);
+        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.ELECTRIC_COMPRESSOR, GCBlockEntityTypes.ELECTRIC_COMPRESSOR, ElectricCompressorBlockEntity.CHARGE_SLOT);
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 201)
     public void electricCompressorCraftingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
-        final var electricCompressor = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR);
+        final var electricCompressor = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_COMPRESSOR, GCBlockEntityTypes.ELECTRIC_COMPRESSOR);
         final var inv = electricCompressor.itemStorage();
         fillElectricCompressorSlots(inv);
         electricCompressor.energyStorage().setEnergyUnsafe(electricCompressor.getEnergyCapacity());
@@ -68,7 +68,7 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void electricCompressorCraftingFullTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
-        final var electricCompressor = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_COMPRESSOR, GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR);
+        final var electricCompressor = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_COMPRESSOR, GCBlockEntityTypes.ELECTRIC_COMPRESSOR);
         final var inv = electricCompressor.itemStorage();
         electricCompressor.energyStorage().setEnergyUnsafe(electricCompressor.getEnergyCapacity());
         inv.setSlotUnsafe(ElectricCompressorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);

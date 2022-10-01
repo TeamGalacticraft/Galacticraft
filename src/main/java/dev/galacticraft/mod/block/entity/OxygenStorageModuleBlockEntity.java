@@ -48,7 +48,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
 
     public OxygenStorageModuleBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.OXYGEN_STORAGE_MODULE, pos, state);
+        super(GCBlockEntityTypes.OXYGEN_STORAGE_MODULE, pos, state);
     }
 
     @Override

@@ -70,7 +70,7 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Cont
     }
 
     public ElectricArcFurnaceBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE, pos, state, RecipeType.BLASTING);
+        super(GCBlockEntityTypes.ELECTRIC_ARC_FURNACE, pos, state, RecipeType.BLASTING);
     }
 
     @Override

@@ -33,15 +33,15 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftBlockEntityType {
+public class GCBlockEntityTypes {
     // POWER GENERATION
     public static final BlockEntityType<CoalGeneratorBlockEntity> COAL_GENERATOR = FabricBlockEntityTypeBuilder.create(CoalGeneratorBlockEntity::new, GCBlocks.COAL_GENERATOR).build();
     public static final BlockEntityType<BasicSolarPanelBlockEntity> BASIC_SOLAR_PANEL = FabricBlockEntityTypeBuilder.create(BasicSolarPanelBlockEntity::new, GCBlocks.BASIC_SOLAR_PANEL).build();
     public static final BlockEntityType<AdvancedSolarPanelBlockEntity> ADVANCED_SOLAR_PANEL = FabricBlockEntityTypeBuilder.create(AdvancedSolarPanelBlockEntity::new, GCBlocks.ADVANCED_SOLAR_PANEL).build();
 
     // WIRES, PIPES, WALKWAYS
-    public static final BlockEntityType<WireBlockEntity> WIRE_T1 = FabricBlockEntityTypeBuilder.create((pos, state) -> WireBlockEntity.createT1(GalacticraftBlockEntityType.WIRE_T1, pos, state), GCBlocks.ALUMINUM_WIRE, GCBlocks.SEALABLE_ALUMINUM_WIRE, GCBlocks.WIRE_WALKWAY).build();
-    public static final BlockEntityType<WireBlockEntity> WIRE_T2 = FabricBlockEntityTypeBuilder.create((pos, state) -> WireBlockEntity.createT2(GalacticraftBlockEntityType.WIRE_T2, pos, state)).build();
+    public static final BlockEntityType<WireBlockEntity> WIRE_T1 = FabricBlockEntityTypeBuilder.create((pos, state) -> WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, pos, state), GCBlocks.ALUMINUM_WIRE, GCBlocks.SEALABLE_ALUMINUM_WIRE, GCBlocks.WIRE_WALKWAY).build();
+    public static final BlockEntityType<WireBlockEntity> WIRE_T2 = FabricBlockEntityTypeBuilder.create((pos, state) -> WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state)).build();
     public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = FabricBlockEntityTypeBuilder.create(GlassFluidPipeBlockEntity::new, GCBlocks.GLASS_FLUID_PIPE).build();
     public static final BlockEntityType<WalkwayBlockEntity> WALKWAY = FabricBlockEntityTypeBuilder.create(WalkwayBlockEntity::new, GCBlocks.WALKWAY).build();
     public static final BlockEntityType<WireWalkwayBlockEntity> WIRE_WALKWAY = FabricBlockEntityTypeBuilder.create(WireWalkwayBlockEntity::new, GCBlocks.WIRE_WALKWAY).build();
@@ -70,6 +70,7 @@ public class GalacticraftBlockEntityType {
 
     // MISC
     public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = FabricBlockEntityTypeBuilder.create(SolarPanelPartBlockEntity::new, GCBlocks.SOLAR_PANEL_PART).build();
+    public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = FabricBlockEntityTypeBuilder.create(AirlockControllerBlockEntity::new, GCBlocks.AIR_LOCK_CONTROLLER).build();
 
     public static void register() {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.COAL_GENERATOR), COAL_GENERATOR);
@@ -99,6 +100,7 @@ public class GalacticraftBlockEntityType {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
 
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.SOLAR_PANEL_PART), SOLAR_PANEL_PART);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIRLOCK_CONTROLLER);
     }
 
     private static void register(String id, BlockEntityType<?> type) {

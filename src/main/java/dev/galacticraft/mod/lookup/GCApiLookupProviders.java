@@ -26,7 +26,7 @@ import dev.galacticraft.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
 import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.item.GCItem;
 import dev.galacticraft.mod.item.OxygenTankItem;
@@ -40,34 +40,34 @@ import team.reborn.energy.api.EnergyStorage;
 public class GCApiLookupProviders {
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] MACHINE_TYPES = new BlockEntityType[]{
-            GalacticraftBlockEntityType.COAL_GENERATOR,
-            GalacticraftBlockEntityType.BASIC_SOLAR_PANEL,
-            GalacticraftBlockEntityType.ADVANCED_SOLAR_PANEL,
-            GalacticraftBlockEntityType.CIRCUIT_FABRICATOR,
-            GalacticraftBlockEntityType.COMPRESSOR,
-            GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR,
-            GalacticraftBlockEntityType.ELECTRIC_FURNACE,
-            GalacticraftBlockEntityType.ELECTRIC_ARC_FURNACE,
-            GalacticraftBlockEntityType.REFINERY,
-            GalacticraftBlockEntityType.OXYGEN_COLLECTOR,
-            GalacticraftBlockEntityType.OXYGEN_COMPRESSOR,
-            GalacticraftBlockEntityType.OXYGEN_DECOMPRESSOR,
-            GalacticraftBlockEntityType.OXYGEN_SEALER,
-            GalacticraftBlockEntityType.OXYGEN_BUBBLE_DISTRIBUTOR,
-            GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE,
-            GalacticraftBlockEntityType.OXYGEN_STORAGE_MODULE
+            GCBlockEntityTypes.COAL_GENERATOR,
+            GCBlockEntityTypes.BASIC_SOLAR_PANEL,
+            GCBlockEntityTypes.ADVANCED_SOLAR_PANEL,
+            GCBlockEntityTypes.CIRCUIT_FABRICATOR,
+            GCBlockEntityTypes.COMPRESSOR,
+            GCBlockEntityTypes.ELECTRIC_COMPRESSOR,
+            GCBlockEntityTypes.ELECTRIC_FURNACE,
+            GCBlockEntityTypes.ELECTRIC_ARC_FURNACE,
+            GCBlockEntityTypes.REFINERY,
+            GCBlockEntityTypes.OXYGEN_COLLECTOR,
+            GCBlockEntityTypes.OXYGEN_COMPRESSOR,
+            GCBlockEntityTypes.OXYGEN_DECOMPRESSOR,
+            GCBlockEntityTypes.OXYGEN_SEALER,
+            GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR,
+            GCBlockEntityTypes.ENERGY_STORAGE_MODULE,
+            GCBlockEntityTypes.OXYGEN_STORAGE_MODULE
     };
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] WIRE_TYPES = new BlockEntityType[]{
-            GalacticraftBlockEntityType.WIRE_T1,
+            GCBlockEntityTypes.WIRE_T1,
 //            GalacticraftBlockEntityType.WIRE_T2,
-            GalacticraftBlockEntityType.WIRE_WALKWAY
+            GCBlockEntityTypes.WIRE_WALKWAY
     };
 
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] PIPE_TYPES = new BlockEntityType[]{
-            GalacticraftBlockEntityType.GLASS_FLUID_PIPE,
-            GalacticraftBlockEntityType.PIPE_WALKWAY
+            GCBlockEntityTypes.GLASS_FLUID_PIPE,
+            GCBlockEntityTypes.PIPE_WALKWAY
     };
 
     public static void register() {

@@ -62,7 +62,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
     private final Container craftingInv = this.itemStorage().subInv(CHARGE_SLOT);
 
     public ElectricCompressorBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.ELECTRIC_COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE);
+        super(GCBlockEntityTypes.ELECTRIC_COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE);
     }
 
     @Override

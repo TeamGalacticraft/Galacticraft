@@ -62,7 +62,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     public static final int OXYGEN_TANK = 0;
 
     public OxygenDecompressorBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.OXYGEN_DECOMPRESSOR, pos, state);
+        super(GCBlockEntityTypes.OXYGEN_DECOMPRESSOR, pos, state);
     }
 
     @Override

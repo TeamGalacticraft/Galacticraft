@@ -24,7 +24,7 @@ package dev.galacticraft.mod.block.special.aluminumwire.tier2;
 
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +39,6 @@ public class HeavySealableAluminumWireBlock extends WireBlock {
 
     @Override
     public @Nullable WireBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return WireBlockEntity.createT2(GalacticraftBlockEntityType.WIRE_T2, pos, state);
+        return WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state);
     }
 }

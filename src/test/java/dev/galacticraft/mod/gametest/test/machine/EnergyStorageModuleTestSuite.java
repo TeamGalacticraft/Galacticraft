@@ -24,7 +24,7 @@ package dev.galacticraft.mod.gametest.test.machine;
 
 import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.entity.EnergyStorageModuleBlockEntity;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
@@ -36,16 +36,16 @@ import net.minecraft.gametest.framework.GameTestHelper;
 public class EnergyStorageModuleTestSuite implements MachineGameTest {
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void energyStorageModulePlacementTest(GameTestHelper context) {
-        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GCBlocks.ENERGY_STORAGE_MODULE, GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE));
+        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GCBlocks.ENERGY_STORAGE_MODULE, GCBlockEntityTypes.ENERGY_STORAGE_MODULE));
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void energyStorageModuleChargingTest(GameTestHelper context) {
-        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.ENERGY_STORAGE_MODULE, GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE, EnergyStorageModuleBlockEntity.DRAIN_FROM_BATTERY_SLOT);
+        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.ENERGY_STORAGE_MODULE, GCBlockEntityTypes.ENERGY_STORAGE_MODULE, EnergyStorageModuleBlockEntity.DRAIN_FROM_BATTERY_SLOT);
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void energyStorageModuleDrainingTest(GameTestHelper context) {
-        this.testItemDraining(context, new BlockPos(0, 0, 0), GCBlocks.ENERGY_STORAGE_MODULE, GalacticraftBlockEntityType.ENERGY_STORAGE_MODULE, EnergyStorageModuleBlockEntity.CHARGE_TO_BATTERY_SLOT);
+        this.testItemDraining(context, new BlockPos(0, 0, 0), GCBlocks.ENERGY_STORAGE_MODULE, GCBlockEntityTypes.ENERGY_STORAGE_MODULE, EnergyStorageModuleBlockEntity.CHARGE_TO_BATTERY_SLOT);
     }
 }

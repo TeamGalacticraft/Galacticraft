@@ -56,7 +56,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
     private final boolean[] blockage = new boolean[9];
 
     public AdvancedSolarPanelBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.ADVANCED_SOLAR_PANEL, pos, state);
+        super(GCBlockEntityTypes.ADVANCED_SOLAR_PANEL, pos, state);
     }
 
     @Override

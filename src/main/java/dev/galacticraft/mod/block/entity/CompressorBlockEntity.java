@@ -67,7 +67,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
     private LongProperty fuelSlotModification = LongProperty.create(-1);
 
     public CompressorBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE);
+        super(GCBlockEntityTypes.COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE);
     }
 
     @Override

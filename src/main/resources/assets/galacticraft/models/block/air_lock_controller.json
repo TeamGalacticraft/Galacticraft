@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "down": "galacticraft:block/air_lock_frame",
+        "up": "galacticraft:block/air_lock_frame",
+        "north": "galacticraft:block/air_lock_controller",
+        "south": "galacticraft:block/air_lock_controller",
+        "west": "galacticraft:block/air_lock_controller",
+        "east": "galacticraft:block/air_lock_controller",
+        "particle": "galacticraft:block/air_lock_frame"
+    }
+}

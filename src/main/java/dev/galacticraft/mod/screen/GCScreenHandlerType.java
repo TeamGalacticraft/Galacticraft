@@ -99,6 +99,8 @@ public class GCScreenHandlerType {
 
     public static final MenuType<GCPlayerInventoryScreenHandler> PLAYER_INV_GC_HANDLER = new MenuType<>(GCPlayerInventoryScreenHandler::new);
 
+    public static final MenuType<AirlockControllerMenu> AIRLOCK_CONTROLLER_MENU = new MenuType<>(AirlockControllerMenu::new);
+
     public static void register() {
         Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.PLAYER_INVENTORY_SCREEN_HANDLER), PLAYER_INV_GC_HANDLER);
 
@@ -121,5 +123,7 @@ public class GCScreenHandlerType {
 
         Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.ENERGY_STORAGE_MODULE_SCREEN_HANDLER), ENERGY_STORAGE_MODULE_HANDLER);
         Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_STORAGE_MODULE_SCREEN_HANDLER), OXYGEN_STORAGE_MODULE_HANDLER);
+
+        Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.AIR_LOCK_CONTROLLER_MENU), AIRLOCK_CONTROLLER_MENU);
     }
 }
