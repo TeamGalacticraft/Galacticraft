@@ -600,6 +600,7 @@ public interface Constant {
         String THERMAL_PANTS = "slot/thermal_leggings";
         String THERMAL_BOOTS = "slot/thermal_boots";
         String OXYGEN_MASK = "slot/oxygen_mask";
+        String FREQUENCY_MODULE = "frequency_module";
         String OXYGEN_GEAR = "slot/oxygen_gear";
         String OXYGEN_TANK = "slot/oxygen_tank";
     }

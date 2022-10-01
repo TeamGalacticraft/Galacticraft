@@ -25,6 +25,9 @@ package dev.galacticraft.mod.screen;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.item.FrequencyModuleItem;
+import dev.galacticraft.mod.item.OxygenGearItem;
+import dev.galacticraft.mod.item.OxygenMaskItem;
 import dev.galacticraft.mod.item.ThermalArmorItem;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -94,8 +97,8 @@ public class GCPlayerInventoryScreenHandler extends AbstractContainerMenu {
         this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
         this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_2_SLOT, 80, 8 + 3 * 18));
 
-        this.addSlot(new AccessorySlot(inventory, 6, 80, 8));
-        this.addSlot(new AccessorySlot(inventory, 7, 80, 8 + 18));
+        this.addSlot(new AccessorySlot(inventory, 6, 80, 8, OxygenMaskItem.class, Constant.id(Constant.SlotSprite.OXYGEN_MASK)));
+        this.addSlot(new AccessorySlot(inventory, 7, 80, 8 + 18, OxygenGearItem.class, Constant.id(Constant.SlotSprite.OXYGEN_GEAR)));
 
         int accessorySlot = 0;
         for (int i = 8; i < 12; i++) {

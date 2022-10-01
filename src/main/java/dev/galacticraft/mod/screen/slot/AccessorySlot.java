@@ -22,18 +22,40 @@
 
 package dev.galacticraft.mod.screen.slot;
 
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.item.Accessory;
+import dev.galacticraft.mod.Constant;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 public class AccessorySlot extends Slot {
+    private final Class<? extends Accessory> clazz;
+    private final Pair<ResourceLocation, ResourceLocation> icon;
+
+    public AccessorySlot(Container inventory, int index, int x, int y, Class<? extends Accessory> clazz, ResourceLocation icon) {
+        super(inventory, index, x, y);
+        this.clazz = clazz;
+        this.icon = Pair.of(InventoryMenu.BLOCK_ATLAS, icon);
+    }
+
     public AccessorySlot(Container inventory, int index, int x, int y) {
         super(inventory, index, x, y);
+        this.clazz = Accessory.class;
+        this.icon = null;
     }
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return stack.getItem() instanceof Accessory;
+        return stack.getItem().getClass().equals(clazz);
+    }
+
+    @Nullable
+    @Override
+    public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+        return this.icon;
     }
 }
