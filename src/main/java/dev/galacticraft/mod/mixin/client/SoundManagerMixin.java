@@ -1,5 +1,6 @@
 package dev.galacticraft.mod.mixin.client;
 
+import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.mod.item.FrequencyModuleItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -16,7 +17,7 @@ public class SoundManagerMixin {
     private void galacticraft$play(SoundInstance soundInstance, CallbackInfo ci) {
         if (soundInstance.getAttenuation() != SoundInstance.Attenuation.NONE) {
             Player player = Minecraft.getInstance().player;
-            boolean hasModule = player.getGearInv().hasAnyMatching(itemStack -> itemStack.getItem() instanceof FrequencyModuleItem);
+            boolean hasModule = player.getGearInv().hasAnyMatching(itemStack -> itemStack.getItem() instanceof Accessory accessory && accessory.enablesHearing());
             if (!Minecraft.getInstance().level.isBreathable(player.blockPosition()))
                 if (!hasModule)
                     ci.cancel();
