@@ -32,25 +32,27 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Predicate;
+
 public class AccessorySlot extends Slot {
-    private final Class<? extends Accessory> clazz;
+    private final Predicate<ItemStack> stackPredicate;
     private final Pair<ResourceLocation, ResourceLocation> icon;
 
     public AccessorySlot(Container inventory, int index, int x, int y, Class<? extends Accessory> clazz, ResourceLocation icon) {
         super(inventory, index, x, y);
-        this.clazz = clazz;
+        this.stackPredicate = itemStack -> itemStack.getItem().getClass().equals(clazz);
         this.icon = Pair.of(InventoryMenu.BLOCK_ATLAS, icon);
     }
 
     public AccessorySlot(Container inventory, int index, int x, int y) {
         super(inventory, index, x, y);
-        this.clazz = Accessory.class;
+        this.stackPredicate = itemStack -> itemStack.getItem() instanceof Accessory;
         this.icon = null;
     }
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return stack.getItem().getClass().equals(clazz);
+        return stackPredicate.test(stack);
     }
 
     @Nullable

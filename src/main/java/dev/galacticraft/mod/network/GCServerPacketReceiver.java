@@ -37,7 +37,12 @@ import net.minecraft.world.SimpleMenuProvider;
  */
 public class GCServerPacketReceiver {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.OPEN_GC_INVENTORY, (server, player, handler, buf, responseSender) -> server.execute(() -> player.openMenu(new SimpleMenuProvider(GCPlayerInventoryScreenHandler::new, Component.empty()))));
+        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.OPEN_GC_INVENTORY, (server, player, handler, buf, responseSender) -> server.execute(() -> player.openMenu(new SimpleMenuProvider(GCPlayerInventoryScreenHandler::new, Component.empty()) {
+            @Override
+            public boolean shouldCloseCurrentScreen() {
+                return false;
+            }
+        })));
 
         ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.BUBBLE_MAX, (server, player, handler, buf, responseSender) -> {
             byte max = buf.readByte();

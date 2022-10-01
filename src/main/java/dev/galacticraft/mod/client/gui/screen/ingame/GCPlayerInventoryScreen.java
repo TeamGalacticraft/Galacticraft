@@ -140,4 +140,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.PLAYER_INVENTORY_TABS);
         this.blit(matrices, this.leftPos, this.topPos - 28, 0, 32, 57, 62);
     }
+
+    @Override
+    protected void renderLabels(PoseStack poseStack, int i, int j) {}
 }
