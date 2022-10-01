@@ -25,7 +25,6 @@
     "client.InGameHudMixin",
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",
-    "client.SoundManagerMixin",
     "client.VillagerEntityRendererMixin",
     "client.VillagerResemblingModelMixin"
   ],
