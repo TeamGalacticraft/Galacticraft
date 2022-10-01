@@ -68,7 +68,7 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<OxygenStorageModuleBlockEntity> OXYGEN_STORAGE_MODULE = FabricBlockEntityTypeBuilder.create(OxygenStorageModuleBlockEntity::new, GCBlocks.OXYGEN_STORAGE_MODULE).build();
 
     // ROCKETS
-    public static final BlockEntityType<RocketLaunchPadBlockEntity> LAUNCH_PAD_TYPE = FabricBlockEntityTypeBuilder.create(RocketLaunchPadBlockEntity::new, GalacticraftBlock.ROCKET_LAUNCH_PAD).build(null);
+    public static final BlockEntityType<RocketLaunchPadBlockEntity> LAUNCH_PAD_TYPE = FabricBlockEntityTypeBuilder.create(RocketLaunchPadBlockEntity::new, GCBlocks.ROCKET_LAUNCH_PAD).build(null);
 
     // MISC
     public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = FabricBlockEntityTypeBuilder.create(SolarPanelPartBlockEntity::new, GCBlocks.SOLAR_PANEL_PART).build();

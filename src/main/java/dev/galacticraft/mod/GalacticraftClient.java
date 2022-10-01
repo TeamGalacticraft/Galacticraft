@@ -43,7 +43,7 @@ import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
 import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resource.GCResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
-import dev.galacticraft.mod.item.GalacticraftItem;
+import dev.galacticraft.mod.item.GCItem;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.particle.GCParticleType;
 import dev.galacticraft.mod.screen.GCScreenHandlerType;
@@ -183,7 +183,7 @@ public class GalacticraftClient implements ClientModInitializer {
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
 
-        BuiltinItemRendererRegistry.INSTANCE.register(GalacticraftItem.ROCKET, new RocketItemRenderer());
+        BuiltinItemRendererRegistry.INSTANCE.register(GCItem.ROCKET, new RocketItemRenderer());
 
         HudRenderCallback.EVENT.register(RocketOverlay::onHudRender);
         HudRenderCallback.EVENT.register(CountdownOverylay::renderCountdown);

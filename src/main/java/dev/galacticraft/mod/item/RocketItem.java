@@ -26,7 +26,7 @@ import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
-import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
@@ -61,10 +61,10 @@ public class RocketItem extends Item {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if (!context.getLevel().isClientSide && context.getLevel().getBlockState(context.getClickedPos()).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
+        if (!context.getLevel().isClientSide && context.getLevel().getBlockState(context.getClickedPos()).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
                 && context.getLevel().getBlockState(context.getClickedPos()).getValue(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
             BlockPos pos = new BlockPos(context.getClickedPos()).offset(RocketLaunchPadBlock.partToCenterPos(context.getLevel().getBlockState(context.getClickedPos()).getValue(RocketLaunchPadBlock.PART)));
-            assert context.getLevel().getBlockState(pos).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD;
+            assert context.getLevel().getBlockState(pos).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD;
             RocketLaunchPadBlockEntity blockEntity = (RocketLaunchPadBlockEntity) context.getLevel().getBlockEntity(pos);
             if (blockEntity.hasRocket()) return InteractionResult.FAIL;
 

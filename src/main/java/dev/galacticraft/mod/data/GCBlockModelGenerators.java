@@ -46,15 +46,15 @@ public class GCBlockModelGenerators extends BlockModelGenerators {
 
     public final BlockModelGenerators.BlockFamilyProvider family(Block block, TexturedModel.Provider provider) {
         TexturedModel texturedModel = ((BlockModelGeneratorsAccessor)parent).getTexturedModels().getOrDefault(block, TexturedModel.CUBE.get(block));
-        return new GalacticraftBlockFamilyProvider(parent, texturedModel.getMapping(), provider).fullBlock(block, texturedModel.getTemplate());
+        return new GCBlocksFamilyProvider(parent, texturedModel.getMapping(), provider).fullBlock(block, texturedModel.getTemplate());
     }
 
-    public class GalacticraftBlockFamilyProvider extends BlockFamilyProvider {
+    public class GCBlocksFamilyProvider extends BlockFamilyProvider {
 
         private final BlockModelGenerators parent;
         private final TexturedModel.Provider provider;
 
-        public GalacticraftBlockFamilyProvider(BlockModelGenerators parent, TextureMapping textureMapping, TexturedModel.Provider provider) {
+        public GCBlocksFamilyProvider(BlockModelGenerators parent, TextureMapping textureMapping, TexturedModel.Provider provider) {
             super(textureMapping);
             this.parent = parent;
             this.provider = provider;

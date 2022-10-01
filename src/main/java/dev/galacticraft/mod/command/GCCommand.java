@@ -78,7 +78,7 @@ public class GCCommand {
             commandDispatcher.register(
                     Commands.literal("opencelestialscreen")
                         .requires(stack -> stack.hasPermission(2))
-                        .executes(GalacticraftCommand::openCelestialScreen));
+                        .executes(GCCommand::openCelestialScreen));
         });
     }
 

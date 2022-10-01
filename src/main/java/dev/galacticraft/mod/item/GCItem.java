@@ -216,7 +216,7 @@ public class GCItem {
     public static final Item SEALABLE_ALUMINUM_WIRE = new BlockItem(GCBlocks.SEALABLE_ALUMINUM_WIRE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
     public static final Item HEAVY_SEALABLE_ALUMINUM_WIRE = new BlockItem(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
     public static final Item GLASS_FLUID_PIPE = new BlockItem(GCBlocks.GLASS_FLUID_PIPE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item ROCKET_LAUNCH_PAD = new BlockItem(GalacticraftBlock.ROCKET_LAUNCH_PAD, new Item.Properties().tab(GalacticraftItemGroup.BLOCKS_GROUP));
+    public static final Item ROCKET_LAUNCH_PAD = new BlockItem(GCBlocks.ROCKET_LAUNCH_PAD, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
 
     // LIGHT PANELS
     public static final Item SQUARE_LIGHT_PANEL = new BlockItem(GCBlocks.SQUARE_LIGHT_PANEL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
@@ -454,7 +454,7 @@ public class GCItem {
     public static final Item THERMAL_PADDING_LEGGINGS = new ThermalArmorItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP), EquipmentSlot.LEGS);
     public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP), EquipmentSlot.FEET);
     // ROCKETS
-    public static final Item ROCKET = new RocketItem(new Item.Properties().tab(GalacticraftItemGroup.ITEMS_GROUP));
+    public static final Item ROCKET = new RocketItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
 
     // SCHEMATICS
     public static final Item TIER_2_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));

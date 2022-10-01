@@ -31,11 +31,10 @@ import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
-import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
-import dev.galacticraft.mod.entity.data.GalacticraftTrackedDataHandler;
-import dev.galacticraft.mod.tag.GalacticraftTag;
+import dev.galacticraft.mod.entity.data.GCTrackedDataHandler;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -76,7 +75,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class RocketEntity extends Entity implements Rocket {
-    private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GalacticraftTrackedDataHandler.LAUNCH_STAGE);
+    private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCTrackedDataHandler.LAUNCH_STAGE);
 
     private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
 
@@ -84,9 +83,9 @@ public class RocketEntity extends Entity implements Rocket {
     public static final EntityDataAccessor<Integer> DAMAGE_WOBBLE_SIDE = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> DAMAGE_WOBBLE_STRENGTH = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.FLOAT);
 
-    public static final EntityDataAccessor<Double> SPEED = SynchedEntityData.defineId(RocketEntity.class, GalacticraftTrackedDataHandler.DOUBLE);
+    public static final EntityDataAccessor<Double> SPEED = SynchedEntityData.defineId(RocketEntity.class, GCTrackedDataHandler.DOUBLE);
 
-    public static final EntityDataAccessor<ResourceLocation[]> PARTS = SynchedEntityData.defineId(RocketEntity.class, GalacticraftTrackedDataHandler.ROCKET_PART_IDS);
+    public static final EntityDataAccessor<ResourceLocation[]> PARTS = SynchedEntityData.defineId(RocketEntity.class, GCTrackedDataHandler.ROCKET_PART_IDS);
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
     private BlockPos linkedPad = BlockPos.ZERO;
@@ -369,7 +368,7 @@ public class RocketEntity extends Entity implements Rocket {
                     if (this.getLinkedPad() != BlockPos.ZERO) {
                         for (int x = -1; x <= 1; x++) {
                             for (int z = -1; z <= 1; z++) {
-                                if (level.getBlockState(getLinkedPad().offset(x, 0, z)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
+                                if (level.getBlockState(getLinkedPad().offset(x, 0, z)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
                                         && level.getBlockState(getLinkedPad().offset(x, 0, z)).getValue(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
                                     level.setBlock(getLinkedPad().offset(x, 0, z), Blocks.AIR.defaultBlockState(), 4);
                                 }

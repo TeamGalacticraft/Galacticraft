@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.special.rocketlaunchpad;
 
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
+import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.entity.RocketEntity;
 import net.minecraft.core.BlockPos;
@@ -40,7 +40,7 @@ public class RocketLaunchPadBlockEntity extends BlockEntity/* implements BlockEn
     private int rocketEntityId = Integer.MIN_VALUE;
 
     public RocketLaunchPadBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.LAUNCH_PAD_TYPE, pos, state);
+        super(GCBlockEntityTypes.LAUNCH_PAD_TYPE, pos, state);
     }
 
     public void setRocketEntityUUID(UUID rocketEntityUUID) {

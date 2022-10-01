@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.special.rocketlaunchpad;
 
-import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.entity.RocketEntity;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
@@ -125,7 +125,7 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
                 BlockPos center = pos.relative(Direction.valueOf(state.getValue(PART).getSerializedName().toUpperCase()).getOpposite());
                 for (int x = -1; x <= 1; x++) {
                     for (int z = -1; z <= 1; z++) {
-                        if (world.getBlockState(center.offset(x, 0, z)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
+                        if (world.getBlockState(center.offset(x, 0, z)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
                                 && world.getBlockState(center.offset(x, 0, z)).getValue(PART) != Part.NONE) {
                             if (world.getBlockEntity(pos) instanceof RocketLaunchPadBlockEntity) {
                                 if (((RocketLaunchPadBlockEntity) world.getBlockEntity(pos)).hasRocket()) {
@@ -150,7 +150,7 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
                 BlockPos center = pos.relative(Direction.valueOf(parts[0].toUpperCase()).getOpposite()).relative(Direction.valueOf(parts[1].toUpperCase()).getOpposite());
                 for (int x = -1; x <= 1; x++) {
                     for (int z = -1; z <= 1; z++) {
-                        if (world.getBlockState(center.offset(x, 0, z)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
+                        if (world.getBlockState(center.offset(x, 0, z)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
                                 && world.getBlockState(center.offset(x, 0, z)).getValue(PART) != Part.NONE) {
                             if (world.getBlockEntity(pos) instanceof RocketLaunchPadBlockEntity) {
                                 if (((RocketLaunchPadBlockEntity) world.getBlockEntity(pos)).hasRocket()) {
@@ -170,7 +170,7 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
             case CENTER: {
                 for (int x = -1; x <= 1; x++) {
                     for (int z = -1; z <= 1; z++) {
-                        if (world.getBlockState(pos.offset(x, 0, z)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD
+                        if (world.getBlockState(pos.offset(x, 0, z)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
                                 && world.getBlockState(pos.offset(x, 0, z)).getValue(PART) != Part.NONE) {
                             if (world.getBlockEntity(pos) instanceof RocketLaunchPadBlockEntity) {
                                 if (((RocketLaunchPadBlockEntity) world.getBlockEntity(pos)).hasRocket()) {
@@ -196,7 +196,7 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
         if (state.getValue(PART) == Part.NONE) {
             int connections = 0;
             for (Direction direction : CARDINAL) {
-                if (world.getBlockState(pos.relative(direction)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                if (world.getBlockState(pos.relative(direction)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD) {
                     connections++;
                 }
             }
@@ -205,7 +205,7 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
                 boolean allValid = true;
                 for (int x = -1; x <= 1; x++) {
                     for (int z = -1; z <= 1; z++) {
-                        if (world.getBlockState(pos.offset(x, 0, z)).getBlock() != GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                        if (world.getBlockState(pos.offset(x, 0, z)).getBlock() != GCBlocks.ROCKET_LAUNCH_PAD) {
                             allValid = false;
                             break;
                         } else if (world.getBlockState(pos.offset(x, 0, z)).getValue(PART) != Part.NONE) {
@@ -229,14 +229,14 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
 
             if (connections == 3) {
                 for (Direction direction : CARDINAL) {
-                    if (world.getBlockState(pos.relative(direction)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
-                        if (world.getBlockState(pos.relative(direction.getOpposite())).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                    if (world.getBlockState(pos.relative(direction)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD) {
+                        if (world.getBlockState(pos.relative(direction.getOpposite())).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD) {
                             for (Direction dir : CARDINAL) {
                                 if (dir.getAxis() != direction.getAxis()) {
                                     boolean allValid = true;
                                     for (int x = -1; x <= 1; x++) {
                                         for (int z = -1; z <= 1; z++) {
-                                            if (world.getBlockState(pos.relative(dir).offset(x, 0, z)).getBlock() != GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                                            if (world.getBlockState(pos.relative(dir).offset(x, 0, z)).getBlock() != GCBlocks.ROCKET_LAUNCH_PAD) {
                                                 allValid = false;
                                                 break;
                                             } else if (world.getBlockState(pos.relative(dir).offset(x, 0, z)).getValue(PART) != Part.NONE) {
@@ -265,18 +265,18 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
 
             if (connections == 2) {
                 for (Direction direction : CARDINAL) {
-                    if (world.getBlockState(pos.relative(direction)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                    if (world.getBlockState(pos.relative(direction)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD) {
                         Direction[] dirs = new Direction[]{Direction.NORTH, Direction.SOUTH};
                         if (direction.getAxis() == Direction.Axis.Z)
                             dirs = new Direction[]{Direction.EAST, Direction.WEST};
 
                         for (Direction dir : dirs) {
-                            if (world.getBlockState(pos.relative(dir)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
-                                if (world.getBlockState(pos.relative(dir).relative(direction)).getBlock() == GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                            if (world.getBlockState(pos.relative(dir)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD) {
+                                if (world.getBlockState(pos.relative(dir).relative(direction)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD) {
                                     boolean allValid = true;
                                     for (int x = -1; x <= 1; x++) {
                                         for (int z = -1; z <= 1; z++) {
-                                            if (world.getBlockState(pos.relative(dir).relative(direction).offset(x, 0, z)).getBlock() != GalacticraftBlock.ROCKET_LAUNCH_PAD) {
+                                            if (world.getBlockState(pos.relative(dir).relative(direction).offset(x, 0, z)).getBlock() != GCBlocks.ROCKET_LAUNCH_PAD) {
                                                 allValid = false;
                                                 break;
                                             } else if (world.getBlockState(pos.relative(dir).relative(direction).offset(x, 0, z)).getValue(PART) != Part.NONE) {
