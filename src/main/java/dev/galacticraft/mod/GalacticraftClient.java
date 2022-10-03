@@ -119,6 +119,8 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(GalacticraftEntityType.EVOLVED_EVOKER, EvolvedEvokerEntityRenderer::new);
         EntityRendererRegistry.register(GalacticraftEntityType.EVOLVED_PILLAGER, EvolvedPillagerEntityRenderer::new);
         EntityRendererRegistry.register(GalacticraftEntityType.EVOLVED_VINDICATOR, EvolvedVindicatorEntityRenderer::new);
+        EntityRendererRegistry.register(GalacticraftEntityType.GAZER, GazerEntityRenderer::new);
+        EntityRendererRegistry.register(GalacticraftEntityType.ARCH_GREY, ArchGreyEntityRenderer::new);
         EntityRendererRegistry.register(GalacticraftEntityType.BUBBLE, BubbleEntityRenderer::new);
 
         GCBlockEntityRenderer.register();

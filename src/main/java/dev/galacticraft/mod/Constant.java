@@ -614,6 +614,8 @@ public interface Constant {
         String EVOLVED_PILLAGER = "evolved_pillager";
         String EVOLVED_EVOKER = "evolved_evoker";
         String EVOLVED_VINDICATOR = "evolved_vindicator";
+        String ARCH_GREY = "arch_grey";
+        String GAZER = "gazer";
     }
 
     interface TextureCoordinate {
