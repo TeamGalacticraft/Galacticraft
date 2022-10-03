@@ -352,7 +352,7 @@ public class RocketEntity extends Entity implements Rocket {
     @Override
     public void positionRider(Entity passenger) {
         if (this.hasPassenger(passenger)) {
-            passenger.absMoveTo(this.getX(), this.getY() + this.getPassengersRidingOffset() + passenger.getMyRidingOffset() - 2.5, this.getZ());
+            passenger.setPos(this.getX(), this.getY() + this.getPassengersRidingOffset() + passenger.getMyRidingOffset() - 2.5, this.getZ());
         }
     }
 
