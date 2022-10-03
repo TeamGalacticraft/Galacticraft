@@ -55,14 +55,14 @@ public class LocalPlayerMixin {
     private void gcRocketJumpCheck(CallbackInfo ci) {
         LocalPlayer player = (LocalPlayer) (Object) this;
         if (player.isPassenger()) {
-            if (player.getVehicle() instanceof Rocket) {
+            if (player.getVehicle() instanceof Rocket rocket) {
 
-                if (this.input.jumping && ((Rocket) player.getVehicle()).getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
-                    ((Rocket) player.getVehicle()).onJump();
+                if (this.input.jumping && rocket.getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
+                    rocket.onJump();
                     ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "rocket_jump"), PacketByteBufs.create());
                 }
 
-                if (((Rocket) player.getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
+                if (rocket.getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
                     if (this.input.up) {
                         player.getVehicle().setXRot((player.getVehicle().getXRot() - 2.0F) % 360.0f);
                         ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "rocket_pitch"), new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));

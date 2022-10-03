@@ -35,11 +35,13 @@ import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.entity.data.GCTrackedDataHandler;
+import dev.galacticraft.mod.events.RocketEvents;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.renderer.entity.AbstractHorseRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -63,16 +65,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 public class RocketEntity extends Entity implements Rocket {
     private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCTrackedDataHandler.LAUNCH_STAGE);
@@ -91,6 +92,12 @@ public class RocketEntity extends Entity implements Rocket {
     private BlockPos linkedPad = BlockPos.ZERO;
     private int timeAsState = 0;
     private int timeBeforeLaunch;
+    private int lerpSteps;
+    private double lerpX;
+    private double lerpY;
+    private double lerpZ;
+    private double lerpYRot;
+    private double lerpXRot;
 
     public RocketEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -123,9 +130,11 @@ public class RocketEntity extends Entity implements Rocket {
 
     @Override
     public void setStage(LaunchStage launchStage) {
-        if (entityData.get(STAGE) != launchStage) {
+        LaunchStage oldStage = getStage();
+        if (oldStage != launchStage) {
             this.entityData.set(STAGE, launchStage);
             timeAsState = 0;
+            RocketEvents.STAGE_CHANGED.invoker().onStageChanged(this, oldStage);
         }
     }
 
@@ -197,10 +206,10 @@ public class RocketEntity extends Entity implements Rocket {
     public void remove(RemovalReason reason) {
         super.remove(reason);
         if (this.linkedPad != null) {
-            BlockEntity pad = this.level.getBlockEntity(this.linkedPad);
-            if (pad instanceof RocketLaunchPadBlockEntity){
-                ((RocketLaunchPadBlockEntity) pad).setRocketEntityId(Integer.MIN_VALUE);
-                ((RocketLaunchPadBlockEntity) pad).setRocketEntityUUID(null);
+            BlockEntity blockEntity = this.level.getBlockEntity(this.linkedPad);
+            if (blockEntity instanceof RocketLaunchPadBlockEntity pad){
+                pad.setRocketEntityId(Integer.MIN_VALUE);
+                pad.setRocketEntityUUID(null);
             }
 
         }
@@ -226,18 +235,24 @@ public class RocketEntity extends Entity implements Rocket {
     @Override
     public void onJump() {
         if (!this.getPassengers().isEmpty() && ticksSinceJump > 10) {
-            if (this.getPassengers().get(0) instanceof ServerPlayer) {
+            if (this.getFirstPassenger() instanceof ServerPlayer) {
                 if (getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
 //                    if (!this.getTank().getInvFluid(0).isEmpty()) {
                         this.timeBeforeLaunch = 400;
                         this.setStage(this.getStage().next());
                         if (getStage() == LaunchStage.WARNING) {
-                            ((ServerPlayer) this.getPassengers().get(0)).sendSystemMessage(Component.translatable("chat.galacticraft.rocket.warning"), true);
+                            ((ServerPlayer) this.getFirstPassenger()).sendSystemMessage(Component.translatable("chat.galacticraft.rocket.warning"), true);
                         }
 //                    }
                 }
             }
         }
+    }
+
+    @Nullable
+    @Override
+    public Entity getControllingPassenger() {
+        return null;
     }
 
     @Override
@@ -255,6 +270,40 @@ public class RocketEntity extends Entity implements Rocket {
         if (onGround) vec3d.multiply(1.0D, 0.0D, 1.0D);
         super.move(type, vec3d);
         this.getPassengers().forEach(this::positionRider);
+    }
+
+    @Override
+    public void lerpTo(double d, double e, double f, float g, float h, int i, boolean bl) {
+        this.lerpX = d;
+        this.lerpY = e;
+        this.lerpZ = f;
+        this.lerpYRot = g;
+        this.lerpXRot = h;
+        this.lerpSteps = 10;
+    }
+
+    private void tickLerp() { // Stolen from the boat class to fix the rocket from bugging out
+        if (this.isControlledByLocalInstance()) {
+            this.lerpSteps = 0;
+            this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
+        }
+
+        if (this.lerpSteps > 0) {
+            double d = this.getX() + (this.lerpX - this.getX()) / (double)this.lerpSteps;
+            double e = this.getY() + (this.lerpY - this.getY()) / (double)this.lerpSteps;
+            double f = this.getZ() + (this.lerpZ - this.getZ()) / (double)this.lerpSteps;
+            double g = Mth.wrapDegrees(this.lerpYRot - (double)this.getYRot());
+            this.setYRot(this.getYRot() + (float)g / (float)this.lerpSteps);
+            this.setXRot(this.getXRot() + (float)(this.lerpXRot - (double)this.getXRot()) / (float)this.lerpSteps);
+            --this.lerpSteps;
+            this.setPos(d, e, f);
+            this.setRot(this.getYRot(), this.getXRot());
+        }
+    }
+
+    @Override
+    public void lerpMotion(double d, double e, double f) {
+        super.lerpMotion(d, e, f);
     }
 
     @Override
@@ -324,6 +373,7 @@ public class RocketEntity extends Entity implements Rocket {
         timeAsState++;
 
         super.tick();
+        tickLerp();
 
         if (!level.isClientSide()) {
             if (this.getPassengers().isEmpty()) {
@@ -334,7 +384,7 @@ public class RocketEntity extends Entity implements Rocket {
                         this.setStage(LaunchStage.IDLE);
                     }
                 }
-            } else if (!(this.getPassengers().get(0) instanceof Player) && this.getStage() != LaunchStage.FAILED) {
+            } else if (!(this.getFirstPassenger() instanceof Player) && this.getStage() != LaunchStage.FAILED) {
                 if (getStage() == LaunchStage.LAUNCHED) {
                     this.setStage(LaunchStage.FAILED);
                 } else {
@@ -342,7 +392,7 @@ public class RocketEntity extends Entity implements Rocket {
                     this.timeBeforeLaunch = 400;
                 }
 
-                this.removePassenger(this.getPassengers().get(0));
+                this.removePassenger(this.getFirstPassenger());
             }
 
             if (isOnFire() && !level.isClientSide) {
