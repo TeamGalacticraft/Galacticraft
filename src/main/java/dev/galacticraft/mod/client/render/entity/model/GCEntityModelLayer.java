@@ -23,7 +23,9 @@
 package dev.galacticraft.mod.client.render.entity.model;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.model.entity.ArchGreyEntityModel;
 import dev.galacticraft.mod.client.model.entity.EvolvedCreeperEntityModel;
+import dev.galacticraft.mod.client.model.entity.GazerEntityModel;
 import dev.galacticraft.mod.client.render.block.entity.BasicSolarPanelBlockEntityRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -36,11 +38,15 @@ import net.minecraft.resources.ResourceLocation;
 public class GCEntityModelLayer {
     public static final ModelLayerLocation EVOLVED_CREEPER = new ModelLayerLocation(new ResourceLocation(Constant.MOD_ID, "evolved_creeper"), "main");
     public static final ModelLayerLocation EVOLVED_CREEPER_ARMOR = new ModelLayerLocation(new ResourceLocation(Constant.MOD_ID, "evolved_creeper_armor"), "armor");
+    public static final ModelLayerLocation GAZER = new ModelLayerLocation(Constant.id("gazer"), "main");
+    public static final ModelLayerLocation ARCH_GREY = new ModelLayerLocation(Constant.id("arch_grey"), "main");
     public static final ModelLayerLocation SOLAR_PANEL = new ModelLayerLocation(new ResourceLocation(Constant.MOD_ID, "solar_panel"), "main");
 
     public static void register() {
         EntityModelLayerRegistry.registerModelLayer(EVOLVED_CREEPER, () -> EvolvedCreeperEntityModel.getTexturedModelData(CubeDeformation.NONE));
         EntityModelLayerRegistry.registerModelLayer(EVOLVED_CREEPER_ARMOR, () -> EvolvedCreeperEntityModel.getTexturedModelData(new CubeDeformation(2.0f)));
+        EntityModelLayerRegistry.registerModelLayer(GAZER, GazerEntityModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(ARCH_GREY, ArchGreyEntityModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(SOLAR_PANEL, BasicSolarPanelBlockEntityRenderer::getTexturedModelData);
     }
 }
