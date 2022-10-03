@@ -249,12 +249,6 @@ public class RocketEntity extends Entity implements Rocket {
         }
     }
 
-    @Nullable
-    @Override
-    public Entity getControllingPassenger() {
-        return null;
-    }
-
     @Override
     public void onBaseDestroyed() {
 
@@ -299,11 +293,6 @@ public class RocketEntity extends Entity implements Rocket {
             this.setPos(d, e, f);
             this.setRot(this.getYRot(), this.getXRot());
         }
-    }
-
-    @Override
-    public void lerpMotion(double d, double e, double f) {
-        super.lerpMotion(d, e, f);
     }
 
     @Override
