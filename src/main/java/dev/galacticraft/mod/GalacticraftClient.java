@@ -43,6 +43,7 @@ import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
 import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resource.GCResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
+import dev.galacticraft.mod.events.ClientEventHandler;
 import dev.galacticraft.mod.item.GCItem;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.particle.GCParticleType;
@@ -77,6 +78,7 @@ public class GalacticraftClient implements ClientModInitializer {
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();
         Galacticraft.LOGGER.info("Starting client initialization.");
+        ClientEventHandler.init();
         CapesLoader.load();
 
         ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register((spriteAtlasTexture, registry) -> {
