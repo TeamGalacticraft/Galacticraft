@@ -614,8 +614,21 @@ public interface Constant {
         String EVOLVED_PILLAGER = "evolved_pillager";
         String EVOLVED_EVOKER = "evolved_evoker";
         String EVOLVED_VINDICATOR = "evolved_vindicator";
+        String GREY = "grey";
         String ARCH_GREY = "arch_grey";
+        String RUMBLER = "rumbler";
+        String OLI_GRUB = "oli_grub";
+        String COMET_CUBE = "comet_cube";
         String GAZER = "gazer";
+    }
+
+    interface EntityTexture {
+        String GREY = "textures/entity/grey.png";
+        String ARCH_GREY = "textures/entity/arch_grey.png";
+        String RUMBLER = "textures/entity/rumbler.png";
+        String OLI_GRUB = "textures/entity/oli_grub.png";
+        String COMET_CUBE = "textures/entity/comet_cube.png";
+        String GAZER = "textures/entity/gazer.png";
     }
 
     interface TextureCoordinate {

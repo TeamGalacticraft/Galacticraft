@@ -8,8 +8,8 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 
-public class GazerEntity extends Monster {
-    public GazerEntity(EntityType<? extends Monster> entityType, Level level) {
+public class RumblerEntity extends Monster {
+    protected RumblerEntity(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
     }
 

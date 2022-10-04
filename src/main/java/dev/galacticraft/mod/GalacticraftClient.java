@@ -120,7 +120,11 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(GalacticraftEntityType.EVOLVED_PILLAGER, EvolvedPillagerEntityRenderer::new);
         EntityRendererRegistry.register(GalacticraftEntityType.EVOLVED_VINDICATOR, EvolvedVindicatorEntityRenderer::new);
         EntityRendererRegistry.register(GalacticraftEntityType.GAZER, GazerEntityRenderer::new);
-        EntityRendererRegistry.register(GalacticraftEntityType.ARCH_GREY, ArchGreyEntityRenderer::new);
+        EntityRendererRegistry.register(GalacticraftEntityType.RUMBLER, RumblerEntityRenderer::new);
+        EntityRendererRegistry.register(GalacticraftEntityType.COMET_CUBE, CometCubeEntityRenderer::new);
+        EntityRendererRegistry.register(GalacticraftEntityType.OLI_GRUB, OliGrubEntityRenderer::new);
+        EntityRendererRegistry.register(GalacticraftEntityType.GREY, GreyEntityRenderer::new);
+        EntityRendererRegistry.register(GalacticraftEntityType.ARCH_GREY, GreyEntityRenderer::arch);
         EntityRendererRegistry.register(GalacticraftEntityType.BUBBLE, BubbleEntityRenderer::new);
 
         GCBlockEntityRenderer.register();

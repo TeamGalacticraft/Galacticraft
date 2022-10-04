@@ -15,6 +15,6 @@ public class GazerEntityRenderer extends MobRenderer<GazerEntity, GazerEntityMod
 
     @Override
     public ResourceLocation getTextureLocation(GazerEntity entity) {
-        return Constant.id("textures/entity/gazer.png");
+        return Constant.id(Constant.EntityTexture.GAZER);
     }
 }
