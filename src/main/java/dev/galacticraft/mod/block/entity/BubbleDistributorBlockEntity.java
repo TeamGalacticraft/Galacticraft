@@ -166,7 +166,6 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
         profiler.push("size");
         if (this.bubbleId != -1 && this.size <= 0) {
             world.getEntity(bubbleId).remove(Entity.RemovalReason.DISCARDED);
-            world.getEntity(bubbleId).onClientRemoval();
             this.bubbleId = -1;
         }
 

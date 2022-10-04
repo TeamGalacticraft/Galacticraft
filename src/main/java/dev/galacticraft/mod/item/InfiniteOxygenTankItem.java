@@ -143,7 +143,7 @@ public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant
     }
 
     @Override
-    public @Nullable StorageView<FluidVariant> exactView(TransactionContext transaction, FluidVariant resource) {
+    public @Nullable StorageView<FluidVariant> exactView(FluidVariant resource) {
         if (resource.isOf(Gases.OXYGEN)) {
             return this;
         }

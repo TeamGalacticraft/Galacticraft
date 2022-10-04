@@ -45,7 +45,7 @@ public class BaseWidget extends Widget {
 
     public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         Lighting.setupForFlatItems();
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.REI_DISPLAY_TEXTURE);
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE);
         this.blit(matrices, this.startPoint.x, this.startPoint.y, 0, 83, 137, 157);
 
         int height = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);

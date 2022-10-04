@@ -59,7 +59,7 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
     @Override
     public Component getTitle() {
-        return Component.translatable("category.rei.circuit_fabricator");
+        return Component.translatable("category.recipe_viewer.circuit_fabricator");
     }
 
     @Override
@@ -68,7 +68,7 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
         List<Widget> widgets = new LinkedList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(Constant.ScreenTexture.REI_DISPLAY_TEXTURE, new Rectangle(startPoint.x, startPoint.y, 162, 82)));
+        widgets.add(Widgets.createTexturedWidget(Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE, new Rectangle(startPoint.x, startPoint.y, 162, 82)));
 
         // Diamond input
         // Silicon

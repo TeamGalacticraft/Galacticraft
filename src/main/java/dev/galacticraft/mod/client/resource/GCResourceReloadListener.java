@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.resource;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.WalkwayBakedModel;
 import dev.galacticraft.mod.client.model.WireBakedModel;
+import dev.galacticraft.mod.client.render.entity.BubbleEntityRenderer;
 import dev.galacticraft.mod.fluid.GCFluid;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -70,6 +71,6 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluid.FUEL, fuel);
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluid.FLOWING_FUEL, fuel);
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluid.LIQUID_OXYGEN, oxygen);
-//        BubbleEntityRenderer.bubbleModel = null;
+        BubbleEntityRenderer.bubbleModel = null;
     }
 }

@@ -65,7 +65,7 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
 
     @Override
     public Component getTitle() {
-        return Component.translatable("category.rei.compressing");
+        return Component.translatable("category.recipe_viewer.compressing");
     }
 
     public @NotNull List<Widget> setupDisplay(DefaultCompressingDisplay recipeDisplay, Rectangle bounds) {
