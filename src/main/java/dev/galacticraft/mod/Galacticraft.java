@@ -29,6 +29,7 @@ import dev.galacticraft.mod.command.GCCommand;
 import dev.galacticraft.mod.config.ConfigManagerImpl;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.entity.data.GCTrackedDataHandler;
+import dev.galacticraft.mod.events.GCEventHandler;
 import dev.galacticraft.mod.fluid.GCFluid;
 import dev.galacticraft.mod.item.GCItem;
 import dev.galacticraft.mod.lookup.GCApiLookupProviders;
@@ -109,6 +110,7 @@ public class Galacticraft implements ModInitializer {
         GCVillagerProfession.register();
         GCMachineStatus.register();
         GCBannerPattern.register();
+        GCEventHandler.init();
 
         LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

@@ -70,6 +70,9 @@ public class GCBlockEntityTypes {
 
     // MISC
     public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = FabricBlockEntityTypeBuilder.create(SolarPanelPartBlockEntity::new, GCBlocks.SOLAR_PANEL_PART).build();
+    public static final BlockEntityType<CryogenicChamberBlockEntity> CRYOGENIC_CHAMBER = FabricBlockEntityTypeBuilder.create(CryogenicChamberBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER).build();
+    public static final BlockEntityType<CryogenicChamberPartBlockEntity> CRYOGENIC_CHAMBER_PART = FabricBlockEntityTypeBuilder.create(CryogenicChamberPartBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER_PART).build();
+
     public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = FabricBlockEntityTypeBuilder.create(AirlockControllerBlockEntity::new, GCBlocks.AIR_LOCK_CONTROLLER).build();
 
     public static void register() {
@@ -100,6 +103,8 @@ public class GCBlockEntityTypes {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
 
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.SOLAR_PANEL_PART), SOLAR_PANEL_PART);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CRYOGENIC_CHAMBER_PART), CRYOGENIC_CHAMBER_PART);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIRLOCK_CONTROLLER);
     }
 

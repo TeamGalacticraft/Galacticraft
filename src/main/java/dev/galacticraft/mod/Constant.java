@@ -306,6 +306,7 @@ public interface Constant {
         String ARC_LAMP = "arc_lamp";
         String SPIN_THRUSTER = "spin_thruster";
         String CRYOGENIC_CHAMBER = "cryogenic_chamber";
+        String CRYOGENIC_CHAMBER_PART = "cryogenic_chamber_part";
         String ASTRO_MINER_BASE = "astro_miner_base";
         String SHORT_RANGE_TELEPAD = "short_range_telepad";
 

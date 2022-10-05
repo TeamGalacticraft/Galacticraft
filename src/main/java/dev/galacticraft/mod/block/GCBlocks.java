@@ -31,9 +31,7 @@ import dev.galacticraft.mod.block.decoration.VacuumGlassBlock;
 import dev.galacticraft.mod.block.entity.*;
 import dev.galacticraft.mod.block.environment.*;
 import dev.galacticraft.mod.block.machine.*;
-import dev.galacticraft.mod.block.special.AirlockBlock;
-import dev.galacticraft.mod.block.special.SolarPanelPartBlock;
-import dev.galacticraft.mod.block.special.TinLadderBlock;
+import dev.galacticraft.mod.block.special.*;
 import dev.galacticraft.mod.block.special.aluminumwire.tier1.AluminumWireBlock;
 import dev.galacticraft.mod.block.special.aluminumwire.tier1.SealableAluminumWireBlock;
 import dev.galacticraft.mod.block.special.aluminumwire.tier2.HeavySealableAluminumWireBlock;
@@ -286,6 +284,10 @@ public class GCBlocks {
 
     // DUMMY
     public static final BaseEntityBlock SOLAR_PANEL_PART = new SolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).noLootTable().sound(SoundType.METAL));
+    public static final BaseEntityBlock CRYOGENIC_CHAMBER_PART = new CryogenicChamberPart(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).noLootTable().sound(SoundType.METAL));
+
+    // MISC MACHINES
+    public static final Block CRYOGENIC_CHAMBER = new CryogenicChamberBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS));
 
     // MACHINES
     public static final MachineBlock<CircuitFabricatorBlockEntity> CIRCUIT_FABRICATOR = SimpleMachineBlock.create(CircuitFabricatorBlockEntity::new);
@@ -536,6 +538,10 @@ public class GCBlocks {
 
         // DUMMY
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.SOLAR_PANEL_PART), SOLAR_PANEL_PART);
+        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CRYOGENIC_CHAMBER_PART), CRYOGENIC_CHAMBER_PART);
+
+        // MISC MACHINES
+        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);
 
         // MACHINES
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CIRCUIT_FABRICATOR), CIRCUIT_FABRICATOR);

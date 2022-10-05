@@ -498,6 +498,7 @@
   "category.recipe_viewer.circuit_fabricator": "Circuit Fabricating",
   "category.recipe_viewer.compressing": "Compressing",
   "galacticraft:moon": "Moon",
+  "chat.galacticraft.bed_fail": "Uh oh, what if the oxygen runs out when I am asleep?  I'll need a Cryogenic Chamber to sleep in space!",
   "commands.galacticraft.dimensiontp.success.multiple": "Teleported %s entities to %s",
   "commands.galacticraft.dimensiontp.success.single": "Teleported to %s",
   "commands.galacticraft.dimensiontp.success.pos": "Teleported to %s at (%d, %d, %d)",
