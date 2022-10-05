@@ -24,6 +24,7 @@ package dev.galacticraft.mod.compat.jei;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.compat.jei.category.JEICompressingCategory;
 import dev.galacticraft.mod.compat.jei.category.JEIFabricationCategory;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import mezz.jei.api.IModPlugin;
@@ -48,7 +49,8 @@ public class GCJEIPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.CIRCUIT_FABRICATOR), GCJEIRecipeTypes.FABRICATION);
-//        registration.addRecipeCatalyst(GalacticraftREIServerPlugin.COMPRESSING, EntryStacks.of(GCBlocks.COMPRESSOR), EntryStacks.of(GCBlocks.ELECTRIC_COMPRESSOR));
+        registration.addRecipeCatalyst(new ItemStack(GCBlocks.COMPRESSOR), GCJEIRecipeTypes.COMPRESSING);
+        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_COMPRESSOR), GCJEIRecipeTypes.COMPRESSING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_ARC_FURNACE), RecipeTypes.BLASTING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_FURNACE), RecipeTypes.SMELTING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.COMPRESSOR), RecipeTypes.FUELING);
@@ -57,7 +59,10 @@ public class GCJEIPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         IGuiHelper helper = registration.getJeiHelpers().getGuiHelper();
-        registration.addRecipeCategories(new JEIFabricationCategory(helper));
+        registration.addRecipeCategories(
+                new JEIFabricationCategory(helper),
+                new JEICompressingCategory(helper)
+        );
     }
 
     @Override
@@ -66,5 +71,6 @@ public class GCJEIPlugin implements IModPlugin {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
 
         registration.addRecipes(GCJEIRecipeTypes.FABRICATION, manager.getAllRecipesFor(GalacticraftRecipe.FABRICATION_TYPE));
+        registration.addRecipes(GCJEIRecipeTypes.COMPRESSING, manager.getAllRecipesFor(GalacticraftRecipe.COMPRESSING_TYPE));
     }
 }

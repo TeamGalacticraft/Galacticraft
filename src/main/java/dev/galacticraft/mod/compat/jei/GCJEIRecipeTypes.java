@@ -23,9 +23,11 @@
 package dev.galacticraft.mod.compat.jei;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import mezz.jei.api.recipe.RecipeType;
 
 public interface GCJEIRecipeTypes {
     RecipeType<FabricationRecipe> FABRICATION = RecipeType.create(Constant.MOD_ID, "fabrication", FabricationRecipe.class);
+    RecipeType<CompressingRecipe> COMPRESSING = RecipeType.create(Constant.MOD_ID, "compressing", CompressingRecipe.class);
 }
