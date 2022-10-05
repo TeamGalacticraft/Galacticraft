@@ -49,8 +49,8 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         matrices.pushPose();
         if (mode == ItemTransforms.TransformType.GUI) {
             matrices.scale(0.25f, 0.25f, 0.25f);
-            matrices.translate(1.7, 2, 2);
-            matrices.mulPose(Vector3f.ZP.rotationDegrees(65));
+            matrices.translate(1.5, 2, 2);
+            matrices.mulPose(Vector3f.ZP.rotationDegrees(55));
             matrices.mulPose(Vector3f.XP.rotationDegrees(45));
             matrices.translate(0.5D, 0, 0.5D);
             matrices.mulPose(Vector3f.YP.rotation((float) (((Minecraft.getInstance().level.getGameTime() * 66.666666666666)) / 1000.0F)));
