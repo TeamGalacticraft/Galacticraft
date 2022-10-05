@@ -268,6 +268,9 @@ public class GCItem {
     public static final Item POISONOUS_CAVERNOUS_VINE = new BlockItem(GCBlocks.POISONOUS_CAVERNOUS_VINE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
     public static final Item MOON_BERRY_BUSH = new BlockItem(GCBlocks.MOON_BERRY_BUSH, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
 
+    // MISC MACHINES
+    public static final Item CRYOGENIC_CHAMBER = new BlockItem(GCBlocks.CRYOGENIC_CHAMBER, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
+
     // MACHINES
     public static final Item CIRCUIT_FABRICATOR = new BlockItem(GCBlocks.CIRCUIT_FABRICATOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
     public static final Item COMPRESSOR = new BlockItem(GCBlocks.COMPRESSOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
@@ -685,6 +688,9 @@ public class GCItem {
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.CAVERNOUS_VINE), CAVERNOUS_VINE);
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.POISONOUS_CAVERNOUS_VINE), POISONOUS_CAVERNOUS_VINE);
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.MOON_BERRY_BUSH), MOON_BERRY_BUSH);
+
+        // MISC MACHINES
+        Registry.register(Registry.ITEM, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);
 
         // MACHINES
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.CIRCUIT_FABRICATOR), CIRCUIT_FABRICATOR);

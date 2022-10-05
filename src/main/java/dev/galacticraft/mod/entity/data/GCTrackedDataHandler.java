@@ -25,9 +25,12 @@ package dev.galacticraft.mod.entity.data;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.part.RocketPartType;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 
 public class GCTrackedDataHandler {
     public static final EntityDataSerializer<LaunchStage> LAUNCH_STAGE = new EntityDataSerializer<>() {
@@ -93,6 +96,10 @@ public class GCTrackedDataHandler {
             return parts;
         }
     };
+
+    public static final EntityDataAccessor<Boolean> IS_IN_CRYO_SLEEP_ID = SynchedEntityData.defineId(
+            Player.class, EntityDataSerializers.BOOLEAN
+    );
 
     public static void register() {
         EntityDataSerializers.registerSerializer(LAUNCH_STAGE);

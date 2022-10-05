@@ -29,6 +29,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.NonNullList;
@@ -59,10 +60,12 @@ public class OxygenTankItem extends Item {
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> list) {
         if (this.allowedIn(group)) {
-            ItemStack charged = new ItemStack(this);
+            ItemStack charged = getDefaultInstance();
             try (Transaction transaction = Transaction.openOuter()) {
-                ContainerItemContext.withInitial(charged).find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
+                Storage<FluidVariant> storage = ContainerItemContext.withInitial(charged).find(FluidStorage.ITEM);
+                storage.insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
                 transaction.commit();
+                charged.getOrCreateTag().putLong(Constant.Nbt.VALUE, storage.exactView(FluidVariant.of(Gases.OXYGEN)).getAmount());
             }
             list.add(charged);
 
@@ -82,22 +85,18 @@ public class OxygenTankItem extends Item {
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        try (Transaction transaction = Transaction.openOuter()) {
-            StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(transaction, FluidVariant.of(Gases.OXYGEN));
-            assert storage != null;
+        StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(FluidVariant.of(Gases.OXYGEN));
+        assert storage != null;
 
-            return (int) Math.round(13.0 - (((double) storage.getAmount() / (double) storage.getCapacity()) * 13.0));
-        }
+        return (int) Math.round(13.0 - (((double) storage.getAmount() / (double) storage.getCapacity()) * 13.0));
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
-        try (Transaction transaction = Transaction.openOuter()) {
-            StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(transaction, FluidVariant.of(Gases.OXYGEN));
-            assert storage != null;
-            double scale = 1.0 - Math.max(0.0, (double) storage.getAmount() / (double)storage.getCapacity());
-            return ((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8);
-        }
+        StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(FluidVariant.of(Gases.OXYGEN));
+        assert storage != null;
+        double scale = 1.0 - Math.max(0.0, (double) storage.getAmount() / (double)storage.getCapacity());
+        return ((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8);
     }
 
     @Override
@@ -117,11 +116,9 @@ public class OxygenTankItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
-        try (Transaction transaction = Transaction.openOuter()) {
-            StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(transaction, FluidVariant.of(Gases.OXYGEN));
-            assert storage != null;
-            lines.add(Component.translatable("tooltip.galacticraft.oxygen_remaining", storage.getAmount() + "/" + storage.getCapacity()).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double)storage.getAmount() / (double)storage.getCapacity()))));
-        }
+        StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(FluidVariant.of(Gases.OXYGEN));
+        assert storage != null;
+        lines.add(Component.translatable("tooltip.galacticraft.oxygen_remaining", storage.getAmount() + "/" + storage.getCapacity()).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double)storage.getAmount() / (double)storage.getCapacity()))));
         super.appendHoverText(stack, world, lines, context);
     }
 

@@ -96,7 +96,7 @@ public class SingleTypeStorage<T, V extends TransferVariant<T>> extends Snapshot
     }
 
     @Override
-    public @Nullable StorageView<V> exactView(TransactionContext transaction, V resource) {
+    public @Nullable StorageView<V> exactView(V resource) {
         return this;
     }
 

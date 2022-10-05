@@ -128,6 +128,9 @@
     ],
     "rei_common": [
       "dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin"
+    ],
+    "jei_mod_plugin": [
+      "dev.galacticraft.mod.compat.jei.GCJEIPlugin"
     ]
   },
   "mixins": [
