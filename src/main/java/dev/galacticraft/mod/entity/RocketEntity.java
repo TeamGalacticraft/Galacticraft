@@ -36,10 +36,18 @@ import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.entity.data.GCTrackedDataHandler;
 import dev.galacticraft.mod.events.RocketEvents;
+import dev.galacticraft.mod.fluid.GCFluid;
+import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.util.FluidUtil;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.renderer.entity.AbstractHorseRenderer;
 import net.minecraft.core.BlockPos;
@@ -90,6 +98,7 @@ public class RocketEntity extends Entity implements Rocket {
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
     private BlockPos linkedPad = BlockPos.ZERO;
+    private final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets(10), () -> {});
     private int timeAsState = 0;
     private int timeBeforeLaunch;
     private int lerpSteps;
@@ -232,18 +241,26 @@ public class RocketEntity extends Entity implements Rocket {
 
     private long ticksSinceJump = 0;
 
+    public SingleFluidStorage getTank() {
+        return this.tank;
+    }
+
+    public boolean isTankEmpty() {
+        return this.getTank().getAmount() <= 0 || this.getTank().getResource().isBlank();
+    }
+
     @Override
     public void onJump() {
         if (!this.getPassengers().isEmpty() && ticksSinceJump > 10) {
             if (this.getFirstPassenger() instanceof ServerPlayer) {
                 if (getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
-//                    if (!this.getTank().getInvFluid(0).isEmpty()) {
+                    if (!isTankEmpty()) {
                         this.timeBeforeLaunch = 400;
                         this.setStage(this.getStage().next());
                         if (getStage() == LaunchStage.WARNING) {
                             ((ServerPlayer) this.getFirstPassenger()).sendSystemMessage(Component.translatable("chat.galacticraft.rocket.warning"), true);
                         }
-//                    }
+                    }
                 }
             }
         }
@@ -417,10 +434,13 @@ public class RocketEntity extends Entity implements Rocket {
                     this.setSpeed(0.0D);
                 }
             } else if (getStage() == LaunchStage.LAUNCHED) {
-//                if (!debugMode && (this.getTank().getInvFluid(0).isEmpty() || !GalacticraftTag.FUEL.contains(this.getTank().getInvFluid(0).getRawFluid())) && FabricLoader.getInstance().isDevelopmentEnvironment()) {
-//                    this.setStage(LaunchStage.FAILED);
-//                } else {
-//                    this.getTank().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 100), Simulation.ACTION); //todo find balanced values
+                if (!debugMode && (isTankEmpty() || !this.getTank().getResource().getFluid().is(GCTags.FUEL)) && FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                    this.setStage(LaunchStage.FAILED);
+                } else {
+                    try (Transaction t = Transaction.openOuter()) {
+                        this.getTank().extract(FluidVariant.of(GCFluid.FUEL), FluidConstants.NUGGET, t); //todo find balanced values
+                        t.commit();
+                    }
                     for (int i = 0; i < 4; i++) ((ServerLevel) level).sendParticles(ParticleTypes.FLAME, this.getX() + (level.random.nextDouble() - 0.5), this.getY() - 7, this.getZ() + (level.random.nextDouble() - 0.5), 0, (level.random.nextDouble() - 0.5), -1, level.random.nextDouble() - 0.5, 0.12000000596046448D);
                     for (int i = 0; i < 4; i++) ((ServerLevel) level).sendParticles(ParticleTypes.CLOUD, this.getX() + (level.random.nextDouble() - 0.5), this.getY() - 7, this.getZ() + (level.random.nextDouble() - 0.5), 0, (level.random.nextDouble() - 0.5), -1, level.random.nextDouble() - 0.5, 0.12000000596046448D);
 
@@ -441,7 +461,7 @@ public class RocketEntity extends Entity implements Rocket {
                     double velZ = Mth.cos(this.getYRot() / 180.0F * (float) Math.PI) * Mth.cos((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
 
                     this.setDeltaMovement(velX, velY, velZ);
-//                }
+                }
 
                 if (this.position().y() >= 1200.0F) {
                     for (Entity entity : getPassengers()) {

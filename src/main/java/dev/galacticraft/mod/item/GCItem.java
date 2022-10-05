@@ -288,6 +288,7 @@ public class GCItem {
     public static final Item OXYGEN_DECOMPRESSOR = new BlockItem(GCBlocks.OXYGEN_DECOMPRESSOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
     public static final Item OXYGEN_COMPRESSOR = new BlockItem(GCBlocks.OXYGEN_COMPRESSOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
     public static final Item OXYGEN_STORAGE_MODULE = new BlockItem(GCBlocks.OXYGEN_STORAGE_MODULE, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
+    public static final Item FUEL_LOADER = new BlockItem(GCBlocks.FUEL_LOADER, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
     // === END BLOCKS ===
     
     // MATERIALS
@@ -709,6 +710,7 @@ public class GCItem {
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR), OXYGEN_DECOMPRESSOR);
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.OXYGEN_COMPRESSOR), OXYGEN_COMPRESSOR);
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
+        Registry.register(Registry.ITEM, Constant.id(Constant.Block.FUEL_LOADER), FUEL_LOADER);
         // === END BLOCKS ===
 
         // MATERIALS

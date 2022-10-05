@@ -590,6 +590,7 @@ public interface Constant {
         ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
         ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
+        ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
         ResourceLocation DEFAULT_SOLAR_PANELS = id("textures/solar_panel/default_solar_panels.png");
         ResourceLocation DEFAULT_LIGHT_SOURCES = id("textures/solar_panel/default_light_sources.png");
         ResourceLocation MOON_LIGHT_SOURCES = id("textures/solar_panel/moon_light_sources.png");
@@ -704,6 +705,7 @@ public interface Constant {
         String OXYGEN_DECOMPRESSOR_SCREEN_HANDLER = "oxygen_decompressor_screen_handler";
         String OXYGEN_STORAGE_MODULE_SCREEN_HANDLER = "oxygen_storage_module_screen_handler";
         String OXYGEN_SEALER_SCREEN_HANDLER = "oxygen_sealer_screen_handler";
+        String FUEL_LOADER_SCREEN_HANDLER = "fuel_loader_screen_handler";
         String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
     }
 
