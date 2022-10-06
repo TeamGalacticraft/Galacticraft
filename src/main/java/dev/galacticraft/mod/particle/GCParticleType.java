@@ -34,9 +34,11 @@ import net.minecraft.resources.ResourceLocation;
 public class GCParticleType {
     public static final SimpleParticleType DRIPPING_FUEL_PARTICLE = FabricParticleTypes.simple();
     public static final SimpleParticleType DRIPPING_CRUDE_OIL_PARTICLE = FabricParticleTypes.simple();
+    public static final SimpleParticleType CRYOGENIC_PARTICLE = FabricParticleTypes.simple();
 
     public static void register() {
         Registry.register(Registry.PARTICLE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Particle.DRIPPING_CRUDE_OIL_PARTICLE), DRIPPING_FUEL_PARTICLE);
         Registry.register(Registry.PARTICLE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Particle.DRIPPING_FUEL_PARTICLE), DRIPPING_CRUDE_OIL_PARTICLE);
+        Registry.register(Registry.PARTICLE_TYPE, Constant.id(Constant.Particle.CRYOGENIC_PARTICLE), CRYOGENIC_PARTICLE);
     }
 }

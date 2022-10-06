@@ -36,23 +36,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HumanoidModel.class)
-@Environment(EnvType.CLIENT)
-public abstract class HumanoidModelMixin<T extends LivingEntity> {
-    @Final @Shadow public ModelPart head;
+public class HumanoidModelMixin<T extends LivingEntity> {
+    @Shadow @Final public ModelPart head;
 
-    @Final @Shadow public ModelPart leftArm;
+    @Shadow @Final public ModelPart leftArm;
 
-    @Final @Shadow public ModelPart rightArm;
+    @Shadow @Final public ModelPart rightArm;
 
-    @Final @Shadow public ModelPart leftLeg;
+    @Shadow @Final public ModelPart leftLeg;
 
-    @Final
-    @Shadow
-    public ModelPart rightLeg;
-
-    @Shadow @Final public ModelPart hat;
+    @Shadow @Final public ModelPart rightLeg;
 
     @Shadow @Final public ModelPart body;
+
+    @Shadow @Final public ModelPart hat;
 
     @Inject(at = @At("HEAD"), method = "setupAnim")
     private void standInRocketGC(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo ci) {
@@ -63,7 +60,7 @@ public abstract class HumanoidModelMixin<T extends LivingEntity> {
         }
     }
 
-//    @Inject(method = "setAngles", at = @At(value = "TAIL"))
+    //    @Inject(method = "setAngles", at = @At(value = "TAIL"))
 //    private void rotateToMatchRocket(T entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
 //        if (entity.hasVehicle()) {
 //            if (entity.getVehicle() instanceof RocketEntity) {
@@ -73,8 +70,25 @@ public abstract class HumanoidModelMixin<T extends LivingEntity> {
 //        }
 //    }
 
-    @Inject(method = "setupAnim", at = @At(value = "RETURN"))
-    private void rotateToMatchRocketHeadRender(T entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
+    @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
+    private void gc$setCryoSleepAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
+        if (((LivingEntityAccessor)entity).isInCryoSleep()) { // TODO: possibly cleaner way of doing this?
+            this.hat.xRot = 0;
+            this.hat.yRot = 0;
+            this.head.xRot = 45F;
+            this.head.yRot = 0;
+            this.leftArm.xRot = 0;
+            this.leftArm.yRot = 0;
+            this.rightArm.xRot = 0;
+            this.rightArm.yRot = 0;
+            this.leftLeg.xRot = 0;
+            this.leftLeg.yRot = 0;
+            this.rightLeg.xRot = 0;
+            this.rightLeg.yRot = 0;
+            this.body.xRot = 0;
+            this.body.yRot = 0;
+        }
+
         if (entity.isPassenger()) {
             if (entity.getVehicle() instanceof RocketEntity) {
                 this.head.xRot = 0.0F;

@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -41,6 +42,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         if (problem != null)
             return problem;
         this.entityData.set(GCTrackedDataHandler.IS_IN_CRYO_SLEEP_ID, true);
+        this.setPose(Pose.SLEEPING);
         setPosToBed(pos);
         setSleepingPos(pos);
         setDeltaMovement(Vec3.ZERO);
@@ -71,7 +73,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     @Inject(method = "setPosToBed", at = @At("HEAD"), cancellable = true)
     private void gc$setCryoSleepPos(BlockPos blockPos, CallbackInfo ci) {
         if (isInCryoSleep()) {
-            this.setPos(blockPos.getX() + 0.5F, blockPos.getY() + 1F, blockPos.getZ() + 0.5F);
+            this.setPos(blockPos.getX(), blockPos.getY() + 1F, blockPos.getZ());
             ci.cancel();
         }
     }

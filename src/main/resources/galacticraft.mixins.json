@@ -24,6 +24,7 @@
     "client.AbstractClientPlayerEntityMixin",
     "client.AlphaWarningTitleScreenMixin",
     "client.AnimalModelInvoker",
+    "client.CameraMixin",
     "client.ClientPacketListenerMixin",
     "client.ClientWorldMixin",
     "client.HumanoidModelMixin",
