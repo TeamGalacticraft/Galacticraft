@@ -93,7 +93,7 @@ public class HumanoidModelMixin<T extends LivingEntity> {
 //                this.hat.yRot = entity.getVehicle().getYRot() * -1.0F;
 //                this.body.xRot = 0.0F;
 //                this.body.yRot = entity.getVehicle().getYRot() * -1.0F;
-//            }
+            }
         }
     }
 }

@@ -281,9 +281,26 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
+    public void setDeltaMovement(double x, double y, double z) {
+        this.setDeltaMovement(new Vec3(x, y, z));
+    }
+
+    @Override
+    public void setDeltaMovement(Vec3 vec3d) {
+        super.setDeltaMovement(vec3d);
+        this.hasImpulse = true;
+    }
+
+    @Override
     public void move(MoverType type, Vec3 vec3d) {
         if (onGround) vec3d.multiply(1.0D, 0.0D, 1.0D);
         super.move(type, vec3d);
+        this.getPassengers().forEach(this::positionRider);
+    }
+
+    @Override
+    protected void reapplyPosition() {
+        super.reapplyPosition();
         this.getPassengers().forEach(this::positionRider);
     }
 
@@ -415,14 +432,17 @@ public class RocketEntity extends Entity implements Rocket {
 
             if (getStage() == LaunchStage.IGNITED) {
                 timeBeforeLaunch--;
-//                if (this.getTank().getInvFluid(0).isEmpty() && !debugMode) {
-//                    this.setStage(LaunchStage.IDLE);
-//                    if (this.getPassengers().get(0) instanceof ServerPlayer) {
-//                        ((ServerPlayer) this.getPassengers().get(0)).sendSystemMessage(Component.translatable("chat.galacticraft.rocket.no_fuel"), false);
-//                    }
-//                    return;
-//                }
-//                this.getTank().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 100), Simulation.ACTION); //todo find balanced values
+                if (isTankEmpty() && !debugMode) {
+                    this.setStage(LaunchStage.IDLE);
+                    if (this.getPassengers().get(0) instanceof ServerPlayer) {
+                        ((ServerPlayer) this.getPassengers().get(0)).sendSystemMessage(Component.translatable("chat.galacticraft.rocket.no_fuel"), false);
+                    }
+                    return;
+                }
+                try (Transaction t = Transaction.openOuter()) {
+                    this.getTank().extract(FluidVariant.of(GCFluid.FUEL), FluidConstants.NUGGET, t); //todo find balanced values
+                    t.commit();
+                }
                 if (timeAsState >= 400) {
                     this.setStage(LaunchStage.LAUNCHED);
                     if (this.getLinkedPad() != BlockPos.ZERO) {
