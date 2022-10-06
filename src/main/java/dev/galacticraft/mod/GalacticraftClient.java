@@ -27,6 +27,7 @@ import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.*;
 import dev.galacticraft.mod.client.network.GCClientPacketReceiver;
+import dev.galacticraft.mod.client.particle.CryoFreezeParticle;
 import dev.galacticraft.mod.client.particle.DrippingFuelFactory;
 import dev.galacticraft.mod.client.particle.DrippingOilFactory;
 import dev.galacticraft.mod.client.render.block.entity.GCBlockEntityRenderer;
@@ -145,11 +146,13 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.UNLIT_LANTERN, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.POISONOUS_CAVERNOUS_VINE, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINE, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.CRYOGENIC_CHAMBER, GCBlocks.CRYOGENIC_CHAMBER_PART);
 
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new GCResourceReloadListener());
 
         ParticleFactoryRegistry.getInstance().register(GCParticleType.DRIPPING_FUEL_PARTICLE, DrippingFuelFactory::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleType.DRIPPING_CRUDE_OIL_PARTICLE, DrippingOilFactory::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleType.CRYOGENIC_PARTICLE, CryoFreezeParticle.Provider::new);
 
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "solar_panel"), SolarPanelSpriteProvider::new);
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "oxygen_sealer"), OxygenSealerSpriteProvider::new);

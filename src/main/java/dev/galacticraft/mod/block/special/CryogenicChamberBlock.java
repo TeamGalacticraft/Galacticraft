@@ -27,7 +27,10 @@ import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
 import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.entity.CryogenicChamberBlockEntity;
+import dev.galacticraft.mod.particle.GCParticleType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -62,6 +65,11 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     }
 
     @Override
+    public RenderShape getRenderShape(BlockState blockState) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(FACING);
@@ -84,9 +92,11 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
     @Override
     public void onMultiBlockPlaced(Level world, BlockPos pos, BlockState state) {
+        boolean isTop = false;
         for (BlockPos otherPart : this.getOtherParts(state)) {
             otherPart = otherPart.immutable().offset(pos);
-            world.setBlockAndUpdate(otherPart, GCBlocks.CRYOGENIC_CHAMBER_PART.defaultBlockState().setValue(FACING, state.getValue(FACING)));
+            world.setBlockAndUpdate(otherPart, GCBlocks.CRYOGENIC_CHAMBER_PART.defaultBlockState().setValue(FACING, state.getValue(FACING)).setValue(CryogenicChamberPart.TOP, isTop));
+            isTop = true;
 
             BlockEntity part = world.getBlockEntity(otherPart);
             assert part != null; // This will never be null because world.setBlockState will put a blockentity there.
@@ -139,5 +149,16 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
         ((LivingEntityAccessor) player).startCryogenicSleep(basePos);
 
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public void animateTick(BlockState blockState, Level level, BlockPos pos, RandomSource rand) {
+        level.addParticle(GCParticleType.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, 0.05 + rand.nextDouble() * 0.01, 0.0);
+        level.addParticle(GCParticleType.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, 0.05 + rand.nextDouble() * 0.01, 0.0);
+        level.addParticle(GCParticleType.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, 0.05 + rand.nextDouble() * 0.01, 0.0);
+
+        level.addParticle(GCParticleType.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -(0.05 + rand.nextDouble() * 0.01), 0.0);
+        level.addParticle(GCParticleType.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -(0.05 + rand.nextDouble() * 0.01), 0.0);
+        level.addParticle(GCParticleType.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -(0.05 + rand.nextDouble() * 0.01), 0.0);
     }
 }
