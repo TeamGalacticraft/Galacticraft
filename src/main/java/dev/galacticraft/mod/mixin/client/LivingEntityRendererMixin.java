@@ -25,7 +25,9 @@ package dev.galacticraft.mod.mixin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import dev.galacticraft.mod.accessor.LivingEntityAccessor;
+import dev.galacticraft.mod.entity.RocketEntity;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -56,6 +58,18 @@ public abstract class LivingEntityRendererMixin {
         if (((LivingEntityAccessor)instance).isInCryoSleep())
             return false;
         return instance.hasPose(pose);
+    }
+
+    @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getAttackAnim(Lnet/minecraft/world/entity/LivingEntity;F)F"))
+    private void rotateToMatchRocket(LivingEntity entity, float f, float tickDelta, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
+        if (entity.isPassenger()) {
+            if (entity.getVehicle() instanceof RocketEntity) {
+                poseStack.mulPose(Vector3f.YP.rotationDegrees(entity.getVehicle().getViewYRot(tickDelta)));
+                poseStack.translate(0, 0.5D, 0);
+                poseStack.mulPose(Vector3f.XP.rotationDegrees(entity.getVehicle().getViewXRot(tickDelta)));
+                poseStack.translate(0, -0.5D, 0);
+            }
+        }
     }
 
     @Inject(method = "setupRotations", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getBedOrientation()Lnet/minecraft/core/Direction;"), cancellable = true)

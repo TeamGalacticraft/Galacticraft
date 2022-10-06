@@ -22,9 +22,8 @@
 
 package dev.galacticraft.mod.mixin.client;
 
+import dev.galacticraft.mod.accessor.LivingEntityAccessor;
 import dev.galacticraft.mod.entity.RocketEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.LivingEntity;
@@ -59,16 +58,6 @@ public class HumanoidModelMixin<T extends LivingEntity> {
             }
         }
     }
-
-    //    @Inject(method = "setAngles", at = @At(value = "TAIL"))
-//    private void rotateToMatchRocket(T entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
-//        if (entity.hasVehicle()) {
-//            if (entity.getVehicle() instanceof RocketEntity) {
-//                GlStateManager.rotatef((entity.getVehicle().getYaw() - 180.0F) * -1.0F, 0.0F, 1.0F, 0.0F); //todo: what is this mess??
-//                GlStateManager.rotatef(entity.getVehicle().getPitch() * -1.0F, 1.0F, 0.0F, 0.0F); //what was i thinking?
-//            }
-//        }
-//    }
 
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
     private void gc$setCryoSleepAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
