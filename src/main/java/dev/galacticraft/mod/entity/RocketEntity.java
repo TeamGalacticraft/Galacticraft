@@ -423,7 +423,7 @@ public class RocketEntity extends Entity implements Rocket {
 //                    return;
 //                }
 //                this.getTank().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 100), Simulation.ACTION); //todo find balanced values
-                if (timeAsState >= 10) {
+                if (timeAsState >= 400) {
                     this.setStage(LaunchStage.LAUNCHED);
                     if (this.getLinkedPad() != BlockPos.ZERO) {
                         for (int x = -1; x <= 1; x++) {

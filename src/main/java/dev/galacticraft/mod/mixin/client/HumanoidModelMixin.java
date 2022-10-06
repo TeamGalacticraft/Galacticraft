@@ -80,20 +80,20 @@ public class HumanoidModelMixin<T extends LivingEntity> {
 
         if (entity.isPassenger()) {
             if (entity.getVehicle() instanceof RocketEntity) {
-                this.head.xRot = 0.0F;
-                this.leftArm.xRot = 0.0F;
-                this.leftArm.yRot = entity.getVehicle().getXRot() * -1.0F;
-                this.rightArm.xRot = 0.0F;
-                this.rightArm.yRot = entity.getVehicle().getXRot() * -1.0F;
-                this.leftLeg.xRot = 0.0F;
-                this.leftLeg.yRot = entity.getVehicle().getXRot() * -1.0F;
-                this.rightLeg.xRot = 0.0F;
-                this.rightLeg.yRot = entity.getVehicle().getXRot() * -1.0F;
-                this.hat.xRot = 0.0F;
-                this.hat.yRot = entity.getVehicle().getXRot() * -1.0F;
-                this.body.xRot = 0.0F;
-                this.body.yRot = entity.getVehicle().getXRot() * -1.0F;
-            }
+//                this.head.xRot = 0.0F; TODO: rework this
+//                this.leftArm.xRot = 0.0F;
+//                this.leftArm.yRot = entity.getVehicle().getYRot() * -1.0F;
+//                this.rightArm.xRot = 0.0F;
+//                this.rightArm.yRot = entity.getVehicle().getYRot() * -1.0F;
+//                this.leftLeg.xRot = 0.0F;
+//                this.leftLeg.yRot = entity.getVehicle().getYRot() * -1.0F;
+//                this.rightLeg.xRot = 0.0F;
+//                this.rightLeg.yRot = entity.getVehicle().getYRot() * -1.0F;
+//                this.hat.xRot = 0.0F;
+//                this.hat.yRot = entity.getVehicle().getYRot() * -1.0F;
+//                this.body.xRot = 0.0F;
+//                this.body.yRot = entity.getVehicle().getYRot() * -1.0F;
+//            }
         }
     }
 }
