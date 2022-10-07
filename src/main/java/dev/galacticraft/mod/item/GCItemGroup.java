@@ -25,13 +25,21 @@ package dev.galacticraft.mod.item;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GCBlocks;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class GCItemGroup {
     public static final CreativeModeTab ITEMS_GROUP = FabricItemGroupBuilder.create(new ResourceLocation(Constant.MOD_ID, Constant.Item.ITEM_GROUP))
             .icon(() -> new ItemStack(GCItem.CANVAS))
+            .appendItems((itemStacks, creativeModeTab) -> {
+                // todo: add rockets here
+                for (Item item : Registry.ITEM)
+                    item.fillItemCategory(creativeModeTab, (NonNullList<ItemStack>) itemStacks);
+            })
             .build();
 
     public static final CreativeModeTab BLOCKS_GROUP = FabricItemGroupBuilder.create(

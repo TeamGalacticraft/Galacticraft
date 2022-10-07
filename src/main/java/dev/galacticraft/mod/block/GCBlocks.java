@@ -36,6 +36,7 @@ import dev.galacticraft.mod.block.special.aluminumwire.tier1.AluminumWireBlock;
 import dev.galacticraft.mod.block.special.aluminumwire.tier1.SealableAluminumWireBlock;
 import dev.galacticraft.mod.block.special.aluminumwire.tier2.HeavySealableAluminumWireBlock;
 import dev.galacticraft.mod.block.special.fluidpipe.GlassFluidPipeBlock;
+import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.walkway.PipeWalkway;
 import dev.galacticraft.mod.block.special.walkway.WalkwayBlock;
 import dev.galacticraft.mod.block.special.walkway.WireWalkway;
@@ -49,6 +50,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+
+import static dev.galacticraft.mod.block.machine.SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -231,6 +234,7 @@ public class GCBlocks {
     public static final Block SEALABLE_ALUMINUM_WIRE = new SealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATION));
     public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = new HeavySealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATION));
     public static final Block GLASS_FLUID_PIPE = new GlassFluidPipeBlock(FabricBlockSettings.of(Material.GLASS).sound(SoundType.GLASS));
+    public static final Block ROCKET_LAUNCH_PAD = new RocketLaunchPadBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_GRAY).strength(1.5F, 6.0F));
 
     // LIGHT PANELS
     public static final Block SQUARE_LIGHT_PANEL = new LightPanelBlock(FabricBlockSettings.of(Material.METAL));
@@ -287,25 +291,26 @@ public class GCBlocks {
     public static final BaseEntityBlock CRYOGENIC_CHAMBER_PART = new CryogenicChamberPart(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).noLootTable().sound(SoundType.METAL));
 
     // MISC MACHINES
-    public static final Block CRYOGENIC_CHAMBER = new CryogenicChamberBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS));
+    public static final Block CRYOGENIC_CHAMBER = new CryogenicChamberBlock(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS));
 
     // MACHINES
     public static final MachineBlock<CircuitFabricatorBlockEntity> CIRCUIT_FABRICATOR = SimpleMachineBlock.create(CircuitFabricatorBlockEntity::new);
     public static final MachineBlock<CompressorBlockEntity> COMPRESSOR = SimpleMachineBlock.create(CompressorBlockEntity::new);
     public static final MachineBlock<ElectricCompressorBlockEntity> ELECTRIC_COMPRESSOR = SimpleMachineBlock.create(ElectricCompressorBlockEntity::new);
-    public static final MachineBlock<CoalGeneratorBlockEntity> COAL_GENERATOR = new CoalGeneratorBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS).lightLevel(state -> state.getValue(MachineBlock.ACTIVE) ? 13 : 0));
+    public static final MachineBlock<CoalGeneratorBlockEntity> COAL_GENERATOR = new CoalGeneratorBlock(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS).lightLevel(state -> state.getValue(MachineBlock.ACTIVE) ? 13 : 0));
     public static final MachineBlock<BasicSolarPanelBlockEntity> BASIC_SOLAR_PANEL = SimpleMultiBlockMachineBlock.create(BasicSolarPanelBlockEntity::new, MultiBlockUtil.generateSolarPanelParts(), GCBlocks.SOLAR_PANEL_PART);
     public static final MachineBlock<AdvancedSolarPanelBlockEntity> ADVANCED_SOLAR_PANEL = SimpleMultiBlockMachineBlock.create(AdvancedSolarPanelBlockEntity::new, MultiBlockUtil.generateSolarPanelParts(), GCBlocks.SOLAR_PANEL_PART);
     public static final MachineBlock<EnergyStorageModuleBlockEntity> ENERGY_STORAGE_MODULE = SimpleMachineBlock.create(EnergyStorageModuleBlockEntity::new);
     public static final MachineBlock<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE = SimpleMachineBlock.create(ElectricFurnaceBlockEntity::new);
     public static final MachineBlock<ElectricArcFurnaceBlockEntity> ELECTRIC_ARC_FURNACE = SimpleMachineBlock.create(ElectricArcFurnaceBlockEntity::new);
-    public static final MachineBlock<RefineryBlockEntity> REFINERY = new RefineryBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS));
-    public static final MachineBlock<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR = new OxygenCollectorBlock(FabricBlockSettings.copyOf(SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS));
+    public static final MachineBlock<RefineryBlockEntity> REFINERY = new RefineryBlock(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS));
+    public static final MachineBlock<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR = new OxygenCollectorBlock(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS));
     public static final MachineBlock<OxygenSealerBlockEntity> OXYGEN_SEALER = SimpleMachineBlock.create(OxygenSealerBlockEntity::new);
     public static final MachineBlock<BubbleDistributorBlockEntity> BUBBLE_DISTRIBUTOR = SimpleMachineBlock.create(BubbleDistributorBlockEntity::new);
     public static final MachineBlock<OxygenDecompressorBlockEntity> OXYGEN_DECOMPRESSOR = SimpleMachineBlock.create(OxygenDecompressorBlockEntity::new);
     public static final MachineBlock<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR = SimpleMachineBlock.create(OxygenCompressorBlockEntity::new);
     public static final MachineBlock<OxygenStorageModuleBlockEntity> OXYGEN_STORAGE_MODULE = SimpleMachineBlock.create(OxygenStorageModuleBlockEntity::new);
+    public static final MachineBlock<FuelLoaderBlockEntity> FUEL_LOADER = new FuelLoaderBlock(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS));
 
     public static final AirlockBlock AIR_LOCK_FRAME = new AirlockBlock(false, FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));
     public static final AirlockBlock AIR_LOCK_CONTROLLER = new AirlockBlock(true, FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));
@@ -485,6 +490,7 @@ public class GCBlocks {
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.SEALABLE_ALUMINUM_WIRE), SEALABLE_ALUMINUM_WIRE);
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE), HEAVY_SEALABLE_ALUMINUM_WIRE);
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.GLASS_FLUID_PIPE), GLASS_FLUID_PIPE);
+        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ROCKET_LAUNCH_PAD), ROCKET_LAUNCH_PAD);
 
         // LIGHT PANELS
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.SQUARE_LIGHT_PANEL), SQUARE_LIGHT_PANEL);
@@ -560,6 +566,7 @@ public class GCBlocks {
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR), OXYGEN_DECOMPRESSOR);
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.OXYGEN_COMPRESSOR), OXYGEN_COMPRESSOR);
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
+        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.FUEL_LOADER), FUEL_LOADER);
 
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.AIR_LOCK_FRAME), AIR_LOCK_FRAME);
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIR_LOCK_CONTROLLER);

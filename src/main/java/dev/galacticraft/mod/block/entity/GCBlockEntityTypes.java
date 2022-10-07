@@ -25,6 +25,7 @@ package dev.galacticraft.mod.block.entity;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -67,6 +68,8 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<OxygenStorageModuleBlockEntity> OXYGEN_STORAGE_MODULE = FabricBlockEntityTypeBuilder.create(OxygenStorageModuleBlockEntity::new, GCBlocks.OXYGEN_STORAGE_MODULE).build();
 
     // ROCKETS
+    public static final BlockEntityType<RocketLaunchPadBlockEntity> LAUNCH_PAD_TYPE = FabricBlockEntityTypeBuilder.create(RocketLaunchPadBlockEntity::new, GCBlocks.ROCKET_LAUNCH_PAD).build();
+    public static final BlockEntityType<FuelLoaderBlockEntity> FUEL_LOADER_TYPE = FabricBlockEntityTypeBuilder.create(FuelLoaderBlockEntity::new, GCBlocks.FUEL_LOADER).build();
 
     // MISC
     public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = FabricBlockEntityTypeBuilder.create(SolarPanelPartBlockEntity::new, GCBlocks.SOLAR_PANEL_PART).build();
@@ -101,7 +104,9 @@ public class GCBlockEntityTypes {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.OXYGEN_SEALER), OXYGEN_SEALER);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR), OXYGEN_BUBBLE_DISTRIBUTOR);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.FUEL_LOADER), FUEL_LOADER_TYPE);
 
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.ROCKET_LAUNCH_PAD), LAUNCH_PAD_TYPE);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.SOLAR_PANEL_PART), SOLAR_PANEL_PART);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CRYOGENIC_CHAMBER_PART), CRYOGENIC_CHAMBER_PART);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);

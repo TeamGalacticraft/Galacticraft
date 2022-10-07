@@ -22,8 +22,12 @@
 
 package dev.galacticraft.mod.client.network;
 
+import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
+import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
+import dev.galacticraft.mod.entity.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -33,6 +37,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.UUID;
 
@@ -73,7 +78,48 @@ public class GCClientPacketReceiver {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "open_screen"), (client, handler, buf, responseSender) -> {
-
+            String screen = buf.readUtf();
+            switch (screen) {
+                case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(true, RocketData.empty(), true)));
+                default -> Galacticraft.LOGGER.error("No screen found!");
+            }
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "planet_menu_open"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+            RocketData rocketData = RocketData.fromNbt(packetByteBuf.readNbt());
+            minecraftClient.execute(() -> minecraftClient.setScreen(new CelestialSelectionScreen(false, rocketData, true)));
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "rocket_spawn"), ((client, handler, buf, responseSender) -> {
+            EntityType<? extends RocketEntity> type = (EntityType<? extends RocketEntity>) Registry.ENTITY_TYPE.byId(buf.readVarInt());
+
+            int entityID = buf.readVarInt();
+            UUID entityUUID = buf.readUUID();
+
+            double x = buf.readDouble();
+            double y = buf.readDouble();
+            double z = buf.readDouble();
+
+            float pitch = (buf.readByte() * 360) / 256.0F;
+            float yaw = (buf.readByte() * 360) / 256.0F;
+
+            RocketData data = RocketData.fromNbt(buf.readNbt());
+
+            client.execute(() -> {
+                RocketEntity entity = type.create(client.level);
+                assert entity != null;
+                entity.syncPacketPositionCodec(x, y, z);
+                entity.setPos(x, y, z);
+                entity.setXRot(pitch);
+                entity.setYRot(yaw);
+                entity.setId(entityID);
+                entity.setUUID(entityUUID);
+
+                entity.setColor(data.color());
+                entity.setParts(data.parts());
+
+                Minecraft.getInstance().level.putNonPlayerEntity(entityID, entity);
+            });
+        }));
     }
 }

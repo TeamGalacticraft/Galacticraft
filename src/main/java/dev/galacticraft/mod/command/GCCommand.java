@@ -31,6 +31,8 @@ import dev.galacticraft.mod.Constant;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.DimensionArgument;
@@ -72,7 +74,17 @@ public class GCCommand {
                             .then(Commands.argument("pos", BlockPosArgument.blockPos())
                                     .executes(GCCommand::teleportToCoords))));
             commandDispatcher.register(Commands.literal("dimtp").redirect(node));
+
+            commandDispatcher.register(
+                    Commands.literal("opencelestialscreen")
+                        .requires(stack -> stack.hasPermission(2))
+                        .executes(GCCommand::openCelestialScreen));
         });
+    }
+
+    private static int openCelestialScreen(CommandContext<CommandSourceStack> context) {
+        ServerPlayNetworking.send(context.getSource().getPlayer(), Constant.id("open_screen"), PacketByteBufs.create().writeUtf("celestial"));
+        return Command.SINGLE_SUCCESS;
     }
 
     private static int teleportToEarth(CommandContext<CommandSourceStack> context) {

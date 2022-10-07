@@ -33,4 +33,12 @@ public class ColorUtil {
     public static int rgb(int red, int green, int blue) {
         return (red << 16) + (green << 8) + blue;
     }
+
+    public static int to32BitColor(int a, int r, int g, int b) {
+        r = r << 24;
+        g = g << 16;
+        b = b << 8;
+
+        return  r | g | b | a;
+    }
 }

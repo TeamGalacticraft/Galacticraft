@@ -24,6 +24,8 @@ package dev.galacticraft.mod;
 
 import dev.galacticraft.api.client.model.MachineModelRegistry;
 import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.client.gui.overlay.CountdownOverylay;
+import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.*;
 import dev.galacticraft.mod.client.network.GCClientPacketReceiver;
@@ -37,8 +39,13 @@ import dev.galacticraft.mod.client.render.dimension.MoonDimensionEffects;
 import dev.galacticraft.mod.client.render.dimension.MoonSkyRenderer;
 import dev.galacticraft.mod.client.render.entity.*;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
+import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
+import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
+import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resource.GCResourceReloadListener;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
+import dev.galacticraft.mod.events.ClientEventHandler;
+import dev.galacticraft.mod.item.GCItem;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.particle.GCParticleType;
 import dev.galacticraft.mod.screen.GCScreenHandlerType;
@@ -50,8 +57,10 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -70,6 +79,7 @@ public class GalacticraftClient implements ClientModInitializer {
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();
         Galacticraft.LOGGER.info("Starting client initialization.");
+        ClientEventHandler.init();
         CapesLoader.load();
 
         ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register((spriteAtlasTexture, registry) -> {
@@ -92,6 +102,8 @@ public class GalacticraftClient implements ClientModInitializer {
             registry.register(Constant.Fluid.getId(Constant.Fluid.CRUDE_OIL_FLOWING));
             registry.register(Constant.Fluid.getId(Constant.Fluid.FUEL_STILL));
             registry.register(Constant.Fluid.getId(Constant.Fluid.FUEL_FLOWING));
+
+            registry.register(new ResourceLocation("galacticraft", "model/rocket"));
         });
 
         MenuScreens.register(GCScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER, BasicSolarPanelScreen::new);
@@ -111,6 +123,7 @@ public class GalacticraftClient implements ClientModInitializer {
         MenuScreens.register(GCScreenHandlerType.BUBBLE_DISTRIBUTOR_HANDLER, BubbleDistributorScreen::new);
         MenuScreens.register(GCScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER, OxygenStorageModuleScreen::new);
         MenuScreens.register(GCScreenHandlerType.OXYGEN_SEALER_HANDLER, OxygenSealerScreen::new);
+        MenuScreens.register(GCScreenHandlerType.FUEL_LOADER_HANDLER, FuelLoaderScreen::new);
         MenuScreens.register(GCScreenHandlerType.AIRLOCK_CONTROLLER_MENU, AirlockControllerScreen::new);
 
         EntityRendererRegistry.register(GalacticraftEntityType.EVOLVED_ZOMBIE, EvolvedZombieRenderer::new);
@@ -127,10 +140,13 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(GalacticraftEntityType.GREY, GreyEntityRenderer::new);
         EntityRendererRegistry.register(GalacticraftEntityType.ARCH_GREY, GreyEntityRenderer::arch);
         EntityRendererRegistry.register(GalacticraftEntityType.BUBBLE, BubbleEntityRenderer::new);
+        EntityRendererRegistry.register(GalacticraftEntityType.ROCKET, RocketEntityRenderer::new);
 
         GCBlockEntityRenderer.register();
         GCClientPacketReceiver.register();
         GCEntityModelLayer.register();
+        GalacticraftRocketPartRenderers.register();
+        GalacticraftRocketPartRenderers.registerModelLoader();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.TIN_LADDER, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLASS_FLUID_PIPE, RenderType.cutout());
@@ -178,6 +194,11 @@ public class GalacticraftClient implements ClientModInitializer {
         DimensionRenderingRegistry.registerSkyRenderer(GCDimensionType.MOON_KEY, MoonSkyRenderer.INSTANCE);
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
+
+        BuiltinItemRendererRegistry.INSTANCE.register(GCItem.ROCKET, new RocketItemRenderer());
+
+        HudRenderCallback.EVENT.register(RocketOverlay::onHudRender);
+        HudRenderCallback.EVENT.register(CountdownOverylay::renderCountdown);
 
         Galacticraft.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

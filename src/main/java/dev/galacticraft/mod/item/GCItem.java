@@ -216,6 +216,7 @@ public class GCItem {
     public static final Item SEALABLE_ALUMINUM_WIRE = new BlockItem(GCBlocks.SEALABLE_ALUMINUM_WIRE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
     public static final Item HEAVY_SEALABLE_ALUMINUM_WIRE = new BlockItem(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
     public static final Item GLASS_FLUID_PIPE = new BlockItem(GCBlocks.GLASS_FLUID_PIPE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item ROCKET_LAUNCH_PAD = new BlockItem(GCBlocks.ROCKET_LAUNCH_PAD, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
 
     // LIGHT PANELS
     public static final Item SQUARE_LIGHT_PANEL = new BlockItem(GCBlocks.SQUARE_LIGHT_PANEL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
@@ -287,6 +288,7 @@ public class GCItem {
     public static final Item OXYGEN_DECOMPRESSOR = new BlockItem(GCBlocks.OXYGEN_DECOMPRESSOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
     public static final Item OXYGEN_COMPRESSOR = new BlockItem(GCBlocks.OXYGEN_COMPRESSOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
     public static final Item OXYGEN_STORAGE_MODULE = new BlockItem(GCBlocks.OXYGEN_STORAGE_MODULE, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
+    public static final Item FUEL_LOADER = new BlockItem(GCBlocks.FUEL_LOADER, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
     // === END BLOCKS ===
     
     // MATERIALS
@@ -455,6 +457,8 @@ public class GCItem {
     public static final Item THERMAL_PADDING_CHESTPIECE = new ThermalArmorItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP), EquipmentSlot.CHEST);
     public static final Item THERMAL_PADDING_LEGGINGS = new ThermalArmorItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP), EquipmentSlot.LEGS);
     public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP), EquipmentSlot.FEET);
+    // ROCKETS
+    public static final Item ROCKET = new RocketItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
 
     // SCHEMATICS
     public static final Item TIER_2_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
@@ -634,6 +638,7 @@ public class GCItem {
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.SEALABLE_ALUMINUM_WIRE), SEALABLE_ALUMINUM_WIRE);
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE), HEAVY_SEALABLE_ALUMINUM_WIRE);
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.GLASS_FLUID_PIPE), GLASS_FLUID_PIPE);
+        Registry.register(Registry.ITEM, Constant.id(Constant.Block.ROCKET_LAUNCH_PAD), ROCKET_LAUNCH_PAD);
 
         // LIGHT PANELS
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.SQUARE_LIGHT_PANEL), SQUARE_LIGHT_PANEL);
@@ -705,6 +710,7 @@ public class GCItem {
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR), OXYGEN_DECOMPRESSOR);
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.OXYGEN_COMPRESSOR), OXYGEN_COMPRESSOR);
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
+        Registry.register(Registry.ITEM, Constant.id(Constant.Block.FUEL_LOADER), FUEL_LOADER);
         // === END BLOCKS ===
 
         // MATERIALS
@@ -873,6 +879,9 @@ public class GCItem {
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.THERMAL_PADDING_CHESTPIECE), THERMAL_PADDING_CHESTPIECE);
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.THERMAL_PADDING_LEGGINGS), THERMAL_PADDING_LEGGINGS);
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.THERMAL_PADDING_BOOTS), THERMAL_PADDING_BOOTS);
+
+        // ROCKETS
+        Registry.register(Registry.ITEM, Constant.id(Constant.Item.ROCKET), ROCKET);
 
         // SCHEMATICS
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.TIER_2_ROCKET_SCHEMATIC), TIER_2_ROCKET_SCHEMATIC);

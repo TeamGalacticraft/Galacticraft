@@ -23,6 +23,7 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.mod.api.config.ConfigManager;
+import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
 import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
 import dev.galacticraft.mod.command.GCCommand;
@@ -107,6 +108,7 @@ public class Galacticraft implements ModInitializer {
         GCSounds.register();
         GCPointOfInterestType.register();
         MoonVillagerType.register();
+        GalacticraftRocketParts.register();
         GCVillagerProfession.register();
         GCMachineStatus.register();
         GCBannerPattern.register();

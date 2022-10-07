@@ -15,6 +15,7 @@
     "LanternBlockMixin",
     "LivingEntityMixin",
     "LootTablesAccessor",
+    "ServerPlayerMixin",
     "PlayerMixin",
     "ServerWorldMixin",
     "TorchBlockMixin"
@@ -29,6 +30,7 @@
     "client.HumanoidModelMixin",
     "client.InGameHudMixin",
     "client.LivingEntityRendererMixin",
+    "client.LocalPlayerMixin",
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",
     "client.VillagerEntityRendererMixin",
