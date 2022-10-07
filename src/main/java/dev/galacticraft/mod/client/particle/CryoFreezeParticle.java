@@ -43,32 +43,33 @@ public class CryoFreezeParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
-        this.xo = this.x;
-        this.yo = this.y;
-        this.zo = this.z;
-
-        if (this.age++ >= this.lifetime)
-        {
-            this.remove();
-        }
-
-        setSpriteFromAge(this.spriteSet);
-        this.move(0, this.yd, 0);
-        this.yd *= 0.9599999785423279D;
-        Player player = this.level.getNearestPlayer(this.x, this.y, this.z, 2.0D, false);
-
-        if (player != null && this.y > player.getBoundingBox().minY)
-        {
-            this.y += (player.getBoundingBox().minY - this.y) * 0.2D;
-            this.yd += (player.getDeltaMovement().y - this.yd) * 0.2D;
-            this.setPos(this.x, this.y, this.z);
-        }
-
-        if (this.onGround)
-        {
-            this.xd *= 0.699999988079071D;
-            this.zd *= 0.699999988079071D;
-        }
+//        this.xo = this.x;
+//        this.yo = this.y;
+//        this.zo = this.z;
+//
+//        if (this.age++ >= this.lifetime)
+//        {
+//            this.remove();
+//        }
+//
+//        setSpriteFromAge(this.spriteSet);
+//        this.move(0, this.yd, 0);
+//        this.yd *= 0.9599999785423279D;
+//        Player player = this.level.getNearestPlayer(this.x, this.y, this.z, 2.0D, false);
+//
+//        if (player != null && this.y > player.getBoundingBox().minY)
+//        {
+//            this.y += (player.getBoundingBox().minY - this.y) * 0.2D;
+//            this.yd += (player.getDeltaMovement().y - this.yd) * 0.2D;
+//            this.setPos(this.x, this.y, this.z);
+//        }
+//
+//        if (this.onGround)
+//        {
+//            this.xd *= 0.699999988079071D;
+//            this.zd *= 0.699999988079071D;
+//        }
+        super.tick();
     }
 
     public record Provider(SpriteSet spriteSet) implements ParticleProvider<SimpleParticleType> {

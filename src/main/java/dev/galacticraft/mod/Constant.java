@@ -847,6 +847,7 @@ public interface Constant {
         String SHAPED = "Shaped";
         String ITEMS = "Items";
         String GASES = "Gases";
+        String CRYOGENIC_COOLDOWN = "cryogenic_cooldown";
     }
 
     interface Property {

@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +21,8 @@ public class GCEventHandler {
         EntitySleepEvents.ALLOW_BED.register(GCEventHandler::allowCryogenicSleep);
         EntitySleepEvents.MODIFY_SLEEPING_DIRECTION.register(GCEventHandler::changeSleepPosition);
         EntitySleepEvents.ALLOW_SLEEPING.register(GCEventHandler::sleepInSpace);
-
+        EntitySleepEvents.ALLOW_SLEEP_TIME.register(GCEventHandler::canCryoSleep);
+        EntitySleepEvents.STOP_SLEEPING.register(GCEventHandler::onWakeFromCryoSleep);
     }
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
@@ -49,6 +51,25 @@ public class GCEventHandler {
             player.sendSystemMessage(Component.translatable("chat.galacticraft.bed_fail"));
             return Player.BedSleepingProblem.NOT_POSSIBLE_HERE;
         }
+
         return null;
+    }
+
+    public static InteractionResult canCryoSleep(Player player, BlockPos sleepingPos, boolean vanillaResult) {
+        if (((LivingEntityAccessor)player).isInCryoSleep())
+            return InteractionResult.SUCCESS;
+        return vanillaResult ? InteractionResult.SUCCESS : InteractionResult.PASS;
+    }
+
+    public static void onWakeFromCryoSleep(LivingEntity entity, BlockPos sleepingPos) {
+        Level level = entity.getLevel();
+        if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
+            entity.heal(5.0F);
+            ((LivingEntityAccessor)entity).setCryogenicChamberCooldown(6000);
+
+//            if (serverLevel.areAllPlayersAsleep() && ws.getGameRules().getBoolean("doDaylightCycle")) {
+//                WorldUtil.setNextMorning(ws);
+//            }
+        }
     }
 }

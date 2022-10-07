@@ -1,9 +1,11 @@
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.LivingEntityAccessor;
 import dev.galacticraft.mod.entity.data.GCTrackedDataHandler;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -14,6 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -31,6 +34,9 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     @Shadow public abstract void setYHeadRot(float f);
 
     @Shadow protected abstract void setPosToBed(BlockPos blockPos);
+
+    @Unique
+    public int cryogenicChamberCooldown;
 
     public LivingEntityMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -63,6 +69,33 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     @Override
     public boolean isInCryoSleep() {
         return this.entityData.get(GCTrackedDataHandler.IS_IN_CRYO_SLEEP_ID);
+    }
+
+    @Override
+    public int getCryogenicChamberCooldown() {
+        return this.cryogenicChamberCooldown;
+    }
+
+    @Override
+    public void setCryogenicChamberCooldown(int cryogenicChamberCooldown) {
+        this.cryogenicChamberCooldown = cryogenicChamberCooldown;
+    }
+
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    private void gc$readCryoData(CompoundTag tag, CallbackInfo ci) {
+        this.cryogenicChamberCooldown = tag.getInt(Constant.Nbt.CRYOGENIC_COOLDOWN);
+    }
+
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    private void gc$addCryoData(CompoundTag tag, CallbackInfo ci) {
+        tag.putInt(Constant.Nbt.CRYOGENIC_COOLDOWN, this.cryogenicChamberCooldown);
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void gc$tickCryo(CallbackInfo ci) {
+        if (getCryogenicChamberCooldown() > 0) {
+            setCryogenicChamberCooldown(getCryogenicChamberCooldown() - 1);
+        }
     }
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))

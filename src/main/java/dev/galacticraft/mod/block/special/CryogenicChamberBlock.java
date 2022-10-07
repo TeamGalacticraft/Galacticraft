@@ -29,7 +29,6 @@ import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.entity.CryogenicChamberBlockEntity;
 import dev.galacticraft.mod.particle.GCParticleType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

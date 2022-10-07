@@ -32,5 +32,9 @@ public interface LivingEntityAccessor {
 
     void stopCryogenicSleep(boolean resetSleepCounter, boolean sync);
 
+    int getCryogenicChamberCooldown();
+
+    void setCryogenicChamberCooldown(int cryogenicChamberCooldown);
+
     boolean isInCryoSleep();
 }

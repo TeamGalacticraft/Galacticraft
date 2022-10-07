@@ -138,6 +138,9 @@
   ],
   "accessWidener": "galacticraft.accesswidener",
   "custom": {
+    "loom:injected_interfaces": {
+
+    },
     "waila:plugins": {
       "id": "galacticraft:plugin",
       "initializer": "dev.galacticraft.mod.compat.waila.GalacticraftWailaPlugin"
