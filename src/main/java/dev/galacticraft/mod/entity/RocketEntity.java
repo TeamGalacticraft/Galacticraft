@@ -98,7 +98,7 @@ public class RocketEntity extends Entity implements Rocket {
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
     private BlockPos linkedPad = BlockPos.ZERO;
-    private final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets(10), () -> {});
+    private final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets(100), () -> {});
     private int timeAsState = 0;
     private int timeBeforeLaunch;
     private int lerpSteps;
