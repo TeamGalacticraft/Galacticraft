@@ -22,9 +22,13 @@
 
 package dev.galacticraft.mod.block.entity;
 
+import org.jetbrains.annotations.Nullable;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -60,11 +64,11 @@ public class SolarPanelPartBlockEntity extends BlockEntity implements MultiBlock
         this.setChanged();
     }
 
-    /*@Override
+    @Override
     @Nullable
     public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundUpdateTagsPacket.create(this);TODO
-    }*/
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
 
     @Override
     public CompoundTag getUpdateTag() {
