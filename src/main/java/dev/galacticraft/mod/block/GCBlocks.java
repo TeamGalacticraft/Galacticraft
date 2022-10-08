@@ -314,7 +314,7 @@ public class GCBlocks {
 
     public static final AirlockBlock AIR_LOCK_FRAME = new AirlockBlock(false, FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));
     public static final AirlockBlock AIR_LOCK_CONTROLLER = new AirlockBlock(true, FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));
-    public static final Block AIR_LOCK_SEAL = new Block(FabricBlockSettings.copyOf(AIR_LOCK_FRAME));
+    public static final Block AIR_LOCK_SEAL = new Block(FabricBlockSettings.copyOf(AIR_LOCK_FRAME).noLootTable());
 
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);

@@ -245,6 +245,11 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(LUNAR_SAPPHIRE_BLOCK);
 
         dropSelf(LUNAR_CARTOGRAPHY_TABLE);
+        dropSelf(ROCKET_LAUNCH_PAD);
+        dropSelf(AIR_LOCK_CONTROLLER);
+        dropSelf(AIR_LOCK_FRAME);
+        dropSelf(CRYOGENIC_CHAMBER);
+        dropSelf(FUEL_LOADER);
 
         add(CAVERNOUS_VINE, BlockLoot::createShearsOnlyDrop);
         add(POISONOUS_CAVERNOUS_VINE, BlockLoot::createShearsOnlyDrop);
