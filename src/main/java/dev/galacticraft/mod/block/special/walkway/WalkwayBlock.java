@@ -57,10 +57,10 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
 
     public WalkwayBlock(Properties settings) {
         super(settings);
-
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(FLUID, INVALID)
-                .setValue(FlowingFluid.LEVEL, 8));
+                .setValue(FlowingFluid.LEVEL, 8)
+                .setValue(FlowingFluid.FALLING, false));
     }
 
     private static int getFacingMask(Direction dir) {
@@ -84,7 +84,8 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
         return this.defaultBlockState()
                 .setValue(FLUID, Registry.FLUID.getKey(fluidState.getType()))
-                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1));
+                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1))
+                .setValue(FlowingFluid.FALLING, fluidState.hasProperty(FlowingFluid.FALLING) ? fluidState.getValue(FlowingFluid.FALLING) : false);
     }
 
     @Override
@@ -146,7 +147,7 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
     @Override
     public FluidState getFluidState(BlockState state) {
         if (this.isEmpty(state)) return EMPTY_STATE;
-        FluidState state1 = Registry.FLUID.get(state.getValue(FLUID)).defaultFluidState();
+        FluidState state1 = Registry.FLUID.get(state.getValue(FLUID)).defaultFluidState().setValue(FlowingFluid.FALLING, state.getValue(FlowingFluid.FALLING));
         if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
             state1 = state1.setValue(FlowingFluid.LEVEL, state.getValue(FlowingFluid.LEVEL));
         }
@@ -155,7 +156,7 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
 
     @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(FLUID, FlowingFluid.LEVEL);
+        stateBuilder.add(FLUID, FlowingFluid.LEVEL, FlowingFluid.FALLING);
     }
 
     @Nullable

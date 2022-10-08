@@ -92,13 +92,13 @@ public class GratingBlock extends Block implements FluidLoggable {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FLUID).add(GRATING_STATE).add(FlowingFluid.LEVEL, FlowingFluid.FALLING);
+        builder.add(FLUID, GRATING_STATE, FlowingFluid.LEVEL, FlowingFluid.FALLING);
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
         if (this.isEmpty(state)) return EMPTY_STATE;
-        FluidState state1 = Registry.FLUID.get(state.getValue(FLUID)).defaultFluidState().setValue(FlowingFluid.FALLING, state.getValue(FlowingFluid.FALLING));;
+        FluidState state1 = Registry.FLUID.get(state.getValue(FLUID)).defaultFluidState().setValue(FlowingFluid.FALLING, state.getValue(FlowingFluid.FALLING));
         if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
             state1 = state1.setValue(FlowingFluid.LEVEL, state.getValue(FlowingFluid.LEVEL));
         }
