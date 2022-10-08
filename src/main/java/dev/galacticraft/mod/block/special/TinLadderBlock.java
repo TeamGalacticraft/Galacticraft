@@ -22,40 +22,12 @@
 
 package dev.galacticraft.mod.block.special;
 
-<<<<<<< HEAD
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
-=======
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -76,7 +48,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
->>>>>>> 6593609d1587824a7c3451231d3600f8bfc1240e
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -100,64 +71,38 @@ public class TinLadderBlock extends Block {
     @Nullable
     private InteractionResult checkCanTinLadderBePlaced(Level world, BlockPos checkPos, BlockState state) {
         if (world.getBlockState(checkPos).isAir()) {
-<<<<<<< HEAD
-            var newState = this.getDefaultState().with(FACING, state.get(FACING));
-            world.setBlockState(checkPos, newState);
-            var blockSoundGroup = newState.getSoundGroup();
-            world.playSound(null, checkPos, blockSoundGroup.getPlaceSound(), SoundCategory.BLOCKS, (blockSoundGroup.getVolume() + 1.0F) / 2.0F, blockSoundGroup.getPitch() * 0.8F);
-            return ActionResult.SUCCESS;
-        } else if (world.getBlockState(checkPos).getBlock() != this) {
-            return ActionResult.PASS;
-=======
-            BlockState newState = this.defaultBlockState().setValue(FACING, state.getValue(FACING));
+            var newState = this.defaultBlockState().setValue(FACING, state.getValue(FACING));
             world.setBlockAndUpdate(checkPos, newState);
+            var blockSoundGroup = newState.getSoundType();
+            world.playSound(null, checkPos, blockSoundGroup.getPlaceSound(), SoundSource.BLOCKS, (blockSoundGroup.getVolume() + 1.0F) / 2.0F, blockSoundGroup.getPitch() * 0.8F);
             return InteractionResult.SUCCESS;
-        } else if (!(world.getBlockState(checkPos).getBlock() instanceof TinLadderBlock)) {
+        } else if (world.getBlockState(checkPos).getBlock() != this) {
             return InteractionResult.PASS;
->>>>>>> 6593609d1587824a7c3451231d3600f8bfc1240e
         }
         return null;
     }
 
     @Override
-<<<<<<< HEAD
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        var itemStack = player.getStackInHand(hand);
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        var itemStack = player.getItemInHand(hand);
         if (itemStack.getItem() == this.asItem()) {
-            if (player.getPitch() < 0f) {
-                for (BlockPos checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()); world.isInBuildLimit(checkPos); checkPos = checkPos.add(0, 1, 0)) {
+            if (player.getXRot() < 0f) {
+                for (BlockPos checkPos = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ()); world.isOutsideBuildHeight(checkPos); checkPos = checkPos.offset(0, 1, 0)) {
                     var result = this.checkCanTinLadderBePlaced(world, checkPos, state);
                     if (result != null) {
-                        if (!player.isCreative() && result == ActionResult.SUCCESS) {
-                            itemStack.decrement(1);
+                        if (!player.isCreative() && result == InteractionResult.SUCCESS) {
+                            itemStack.shrink(1);
                         }
-=======
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        ItemStack item = player.getInventory().getItem(player.getInventory().selected);
-        if (Block.byItem(item.getItem()) instanceof TinLadderBlock) {
-            if (!player.isCreative())
-                item.shrink(1);
-            if (player.getXRot() < 0f) {
-                for (BlockPos checkPos = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() < world.getHeight(); checkPos = checkPos.offset(0, 1, 0)) {
-                    InteractionResult result = this.checkCanTinLadderBePlaced(world, checkPos, state);
-                    if (result != null)
->>>>>>> 6593609d1587824a7c3451231d3600f8bfc1240e
                         return result;
                     }
                 }
             } else {
-<<<<<<< HEAD
-                for (BlockPos checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ()); world.isInBuildLimit(checkPos); checkPos = checkPos.add(0, -1, 0)) {
+                for (BlockPos checkPos = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ()); world.isOutsideBuildHeight(checkPos); checkPos = checkPos.offset(0, -1, 0)) {
                     var result = this.checkCanTinLadderBePlaced(world, checkPos, state);
                     if (result != null) {
-                        if (!player.isCreative() && result == ActionResult.SUCCESS) {
-                            itemStack.decrement(1);
+                        if (!player.isCreative() && result == InteractionResult.SUCCESS) {
+                            itemStack.shrink(1);
                         }
-=======
-                for (BlockPos checkPos = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() > 0; checkPos = checkPos.offset(0, -1, 0)) {
-                    InteractionResult result = this.checkCanTinLadderBePlaced(world, checkPos, state);
-                    if (result != null)
->>>>>>> 6593609d1587824a7c3451231d3600f8bfc1240e
                         return result;
                     }
                 }
@@ -205,25 +150,15 @@ public class TinLadderBlock extends Block {
         return true;
     }
 
-<<<<<<< HEAD
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return true;
-    }
-
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-=======
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         return true;
     }
 
+    @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState newState, LevelAccessor world, BlockPos pos, BlockPos posFrom) {
         if (state.getValue(WATERLOGGED)) {
             world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
->>>>>>> 6593609d1587824a7c3451231d3600f8bfc1240e
         }
         return super.updateShape(state, direction, newState, world, pos, posFrom);
     }
@@ -238,21 +173,12 @@ public class TinLadderBlock extends Block {
                 return null;
             }
         }
-<<<<<<< HEAD
-        blockState2 = this.getDefaultState();
-        var worldView = ctx.getWorld();
-        var blockPos = ctx.getBlockPos();
-        var fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        var placementDirs = ctx.getPlacementDirections();
-        for (var direction : placementDirs) {
-=======
         blockState2 = this.defaultBlockState();
-        LevelReader worldView = ctx.getLevel();
-        BlockPos blockPos = ctx.getClickedPos();
-        FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
-        Direction[] var6 = ctx.getNearestLookingDirections();
-        for (Direction direction : var6) {
->>>>>>> 6593609d1587824a7c3451231d3600f8bfc1240e
+        var worldView = ctx.getLevel();
+        var blockPos = ctx.getClickedPos();
+        var fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
+        var placementDirs = ctx.getNearestLookingDirections();
+        for (var direction : placementDirs) {
             if (direction.getAxis().isHorizontal()) {
                 blockState2 = blockState2.setValue(FACING, direction.getOpposite());
                 if (blockState2.canSurvive(worldView, blockPos)) {
@@ -263,30 +189,18 @@ public class TinLadderBlock extends Block {
         return null;
     }
 
-<<<<<<< HEAD
     @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
-    }
-
-    @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(state.get(FACING)));
-    }
-
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-=======
     public BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirror) {
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
->>>>>>> 6593609d1587824a7c3451231d3600f8bfc1240e
         builder.add(FACING, WATERLOGGED);
     }
 

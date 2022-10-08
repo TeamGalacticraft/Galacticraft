@@ -220,3 +220,6 @@ gradle-app.setting
 # FabricMC
 run/
 remappedSrc/
+
+# DataGen
+src/main/generated/.cache
