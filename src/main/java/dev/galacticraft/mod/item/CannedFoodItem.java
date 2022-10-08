@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,27 +22,27 @@
 
 package dev.galacticraft.mod.item;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CannedFoodItem extends Item {
-    public CannedFoodItem(Settings settings) {
+    public CannedFoodItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public ItemStack finishUsing(ItemStack stack, World world, LivingEntity entity) {
-        if (entity instanceof PlayerEntity player) {
-            player.eatFood(world, stack);
-            player.dropStack(new ItemStack(GalacticraftItem.TIN_CANISTER));
+    public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
+        if (entity instanceof Player player) {
+            player.eat(world, stack);
+            player.spawnAtLocation(new ItemStack(GCItem.TIN_CANISTER));
         }
-        stack.decrement(1);
+        stack.shrink(1);
         return stack;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +22,20 @@
 
 package dev.galacticraft.mod.api.pipe.impl;
 
-import alexiil.mc.lib.attributes.SearchOptions;
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.FluidInsertable;
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import dev.galacticraft.impl.fluid.FluidStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
-import dev.galacticraft.mod.util.FluidUtil;
 import it.unimi.dsi.fastutil.objects.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,20 +46,20 @@ import java.util.function.BiFunction;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class PipeNetworkImpl implements PipeNetwork {
-    private final @NotNull ServerWorld world;
-    private final @NotNull Object2ObjectOpenHashMap<BlockPos, FluidInsertable> insertable = new Object2ObjectOpenHashMap<>();
+    private final @NotNull ServerLevel world;
+    private final @NotNull Object2ObjectOpenHashMap<BlockPos, Storage<FluidVariant>> insertable = new Object2ObjectOpenHashMap<>();
     private final @NotNull ObjectSet<BlockPos> pipes = new ObjectLinkedOpenHashSet<>(1);
     private final @NotNull ObjectSet<PipeNetwork> peerNetworks = new ObjectLinkedOpenHashSet<>(0);
     private boolean markedForRemoval = false;
-    private final FluidAmount maxTransferRate;
+    private final long maxTransferRate;
     private int tickId;
-    private @NotNull FluidAmount transferred = FluidAmount.ZERO;
-    private @Nullable Fluid fluidTransferred = null; //can transfer <maxTransferRate> amount of fluid of 1 type per tick
+    private @NotNull long transferred = 0;
+    private @Nullable FluidVariant fluidTransferred = null; //can transfer <maxTransferRate> amount of fluid of 1 type per tick
 
-    public PipeNetworkImpl(@NotNull ServerWorld world, FluidAmount maxTransferRate) {
+    public PipeNetworkImpl(@NotNull ServerLevel world, long maxTransferRate) {
         this.world = world;
         this.maxTransferRate = maxTransferRate;
-        this.tickId = world.getServer().getTicks();
+        this.tickId = world.getServer().getTickCount();
     }
 
     @Override
@@ -74,21 +69,21 @@ public class PipeNetworkImpl implements PipeNetwork {
             pipe = (Pipe) world.getBlockEntity(pos);
         }
         assert pipe != null : "Attempted to add pipe that does not exist!";
-        assert pos.equals(((BlockEntity) pipe).getPos());
+        assert pos.equals(((BlockEntity) pipe).getBlockPos());
         if (this.isCompatibleWith(pipe)) {
             pipe.setNetwork(this);
             this.pipes.add(pos);
             for (Direction direction : Constant.Misc.DIRECTIONS) {
                 if (pipe.canConnect(direction)) {
-                    BlockEntity blockEntity = world.getBlockEntity(pos.offset(direction));
+                    BlockEntity blockEntity = world.getBlockEntity(pos.relative(direction));
                     if (blockEntity != null && !blockEntity.isRemoved()) {
                         if (blockEntity instanceof Pipe adjacentPipe) {
                             if (adjacentPipe.canConnect(direction.getOpposite())) {
                                 if (this.isCompatibleWith(adjacentPipe)) {
                                     if (adjacentPipe.getNetwork() == null || adjacentPipe.getNetwork().markedForRemoval()) {
-                                        this.addPipe(pos.offset(direction), adjacentPipe);
+                                        this.addPipe(pos.relative(direction), adjacentPipe);
                                     } else {
-                                        assert adjacentPipe.getNetwork().getMaxTransferRate().equals(this.getMaxTransferRate());
+                                        assert adjacentPipe.getNetwork().getMaxTransferRate() == this.getMaxTransferRate();
                                         if (adjacentPipe.getNetwork() != this) {
                                             this.takeAll(adjacentPipe.getNetwork());
                                         }
@@ -100,17 +95,16 @@ public class PipeNetworkImpl implements PipeNetwork {
                             continue;
                         }
                     }
-                    FluidInsertable insertable = FluidUtil.getInsertable(world, pos.offset(direction), direction);
-                    if (insertable != RejectingFluidInsertable.NULL) {
-                        this.insertable.put(pos.offset(direction), insertable);
+                    Storage<FluidVariant> insertable = FluidStorage.SIDED.find(world, pos.relative(direction), direction.getOpposite());
+                    if (insertable != null) {
+                        this.insertable.put(pos.relative(direction), insertable);
                     }
                 }
             }
-            return true;
         } else {
             this.peerNetworks.add(pipe.getOrCreateNetwork());
-            return true;
         }
+        return true;
     }
 
     public void takeAll(@NotNull PipeNetwork network) {
@@ -141,12 +135,15 @@ public class PipeNetworkImpl implements PipeNetwork {
         }
 
         List<BlockPos> adjacent = new LinkedList<>();
-        this.reattachAdjacent(removedPos, this.insertable, (blockPos, direction) -> FluidAttributes.INSERTABLE.getFirst(this.world, blockPos, SearchOptions.inDirection(direction)), adjacent);
+        this.reattachAdjacent(removedPos, this.insertable, (blockPos, direction) -> {
+            Storage<FluidVariant> storage = FluidStorage.SIDED.find(this.world, blockPos, direction.getOpposite());
+            return storage != null && storage.supportsInsertion() ? storage :  null;
+        }, adjacent);
         adjacent.clear();
 
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             if (pipe.canConnect(direction)) {
-                BlockPos adjacentPipePos = removedPos.offset(direction);
+                BlockPos adjacentPipePos = removedPos.relative(direction);
                 if (this.pipes.contains(adjacentPipePos)) {
                     if (((Pipe) Objects.requireNonNull(this.world.getBlockEntity(adjacentPipePos))).canConnect(direction.getOpposite())) {
                         adjacent.add(adjacentPipePos); // Don't bother testing if it was unable to connect
@@ -185,7 +182,7 @@ public class PipeNetworkImpl implements PipeNetwork {
             if (direction.getOpposite() == ignore) continue;
             Pipe pipe = (Pipe) world.getBlockEntity(pos);
             if (pipe.canConnect(direction)) {
-                pos1 = pos.offset(direction);
+                pos1 = pos.relative(direction);
                 if (this.pipes.contains(pos1)) {
                     if (world.getBlockEntity(pos1) instanceof Pipe pipe1 && pipe1.canConnect(direction.getOpposite())) {
                         if (!list.contains(pos1)) {
@@ -200,12 +197,12 @@ public class PipeNetworkImpl implements PipeNetwork {
 
     private <T> void reattachAdjacent(BlockPos pos, Object2ObjectOpenHashMap<BlockPos, T> map, BiFunction<BlockPos, Direction, T> function, List<BlockPos> optionalList) {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
-            BlockPos adjacentPos = pos.offset(direction);
+            BlockPos adjacentPos = pos.relative(direction);
             if (map.remove(adjacentPos) != null) {
                 for (Direction direction1 : Constant.Misc.DIRECTIONS) {
                     if (direction1 == direction.getOpposite()) continue;
-                    if (this.pipes.contains(adjacentPos.offset(direction1))) {
-                        if (((Pipe) world.getBlockEntity(adjacentPos.offset(direction1))).canConnect(direction1.getOpposite())) {
+                    if (this.pipes.contains(adjacentPos.relative(direction1))) {
+                        if (((Pipe) world.getBlockEntity(adjacentPos.relative(direction1))).canConnect(direction1.getOpposite())) {
                             T value = function.apply(adjacentPos, direction1);
                             if (value != null) {
                                 optionalList.add(adjacentPos);
@@ -224,9 +221,9 @@ public class PipeNetworkImpl implements PipeNetwork {
         assert !(world.getBlockEntity(updatedPos) instanceof Pipe);
         this.insertable.remove(updatedPos);
         BlockPos vector = updatedPos.subtract(adjacentToUpdated);
-        Direction direction = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
-        FluidInsertable insertable = FluidUtil.getInsertable(world, updatedPos, direction);
-        if (insertable != RejectingFluidInsertable.NULL) {
+        Direction direction = Direction.fromNormal(vector.getX(), vector.getY(), vector.getZ());
+        Storage<FluidVariant> insertable = FluidStorage.SIDED.find(world, updatedPos, direction.getOpposite());
+        if (insertable != null) {
             this.insertable.put(updatedPos, insertable);
             return true;
         }
@@ -234,94 +231,97 @@ public class PipeNetworkImpl implements PipeNetwork {
     }
 
     @Override
-    public FluidVolume insert(@NotNull BlockPos fromPipe, FluidVolume volume, Direction direction, @NotNull Simulation simulate) {
-        BlockPos source = fromPipe.offset(direction.getOpposite());
-        if (this.tickId != (this.tickId = world.getServer().getTicks())) {
-            this.transferred = FluidAmount.ZERO;
+    public long insert(@NotNull BlockPos fromPipe, FluidStack stack, Direction direction, @NotNull TransactionContext context) {
+        BlockPos source = fromPipe.relative(direction.getOpposite());
+        if (this.tickId != (this.tickId = world.getServer().getTickCount())) {
+            this.transferred = 0;
             this.fluidTransferred = null;
         } else {
-            if (this.fluidTransferred != null && volume.getRawFluid() != this.fluidTransferred || this.transferred.isGreaterThanOrEqual(this.maxTransferRate)) {
-                return volume;
+            if (this.fluidTransferred != null && FluidVariant.of(stack.getFluid(), stack.getNbt()) != this.fluidTransferred || this.transferred >= this.maxTransferRate) {
+                return stack.getAmount();
             }
         }
-        FluidAmount skipped = volume.amount().sub(this.getMaxTransferRate().sub(this.transferred).min(volume.amount()));
-        volume = volume.withAmount(volume.amount().sub(skipped));
-        if (volume.isEmpty()) return volume.withAmount(volume.amount().add(skipped));
+        long skipped = stack.getAmount() - Math.min(this.getMaxTransferRate() - this.transferred, stack.getAmount());
+        stack.setAmount(stack.getAmount() - skipped);
+        if (stack.isEmpty()) return stack.getAmount() + skipped;
 
-        Object2ObjectArrayMap<PipeNetwork, FluidAmount> nonFullInsertables = new Object2ObjectArrayMap<>(1 + this.peerNetworks.size());
-        this.getNonFullInsertables(nonFullInsertables, source, volume);
-        FluidAmount requested = FluidAmount.ZERO;
-        for (FluidAmount fluidAmount : nonFullInsertables.values()) {
-            requested = requested.add(fluidAmount);
+        Object2LongArrayMap<PipeNetwork> nonFullInsertables = new Object2LongArrayMap<>(1 + this.peerNetworks.size());
+        this.getNonFullInsertables(nonFullInsertables, source, stack, context);
+        long requested = 0;
+        for (long fluidAmount : nonFullInsertables.values()) {
+            requested = requested + fluidAmount;
         }
-        if (requested.isLessThanOrEqual(FluidAmount.ZERO)) return volume.withAmount(volume.amount().add(skipped));
+        if (requested <= 0) {
+            return stack.getAmount() + skipped;
+        }
         var ref = new Object() {
-            FluidVolume available = FluidVolumeUtil.EMPTY;
+            FluidStack available = FluidStack.EMPTY;
         };
-        ref.available = volume;
-        FluidAmount ratio = volume.amount().div(requested).min(FluidAmount.ONE);
+        ref.available = stack;
+        double ratio = Math.min((double)stack.getAmount() / (double)requested, 1.0);
 
-        FluidVolume finalAmount = volume;
-        nonFullInsertables.forEach((pipeNetwork, integer) -> ref.available = pipeNetwork.insertInternal(finalAmount, ratio, ref.available, simulate));
-
-        return volume.withAmount(ref.available.amount().add(skipped));
+        nonFullInsertables.forEach((pipeNetwork, integer) -> ref.available = pipeNetwork.insertInternal(stack, ratio, ref.available, context));
+        return ref.available.getAmount() + skipped;
     }
 
     @Override
-    public FluidVolume insertInternal(FluidVolume amount, FluidAmount ratio, FluidVolume available, Simulation simulate) {
-        if (this.tickId != (this.tickId = world.getServer().getTicks())) {
-            this.transferred = FluidAmount.ZERO;
+    public FluidStack insertInternal(FluidStack amount, double ratio, FluidStack available, TransactionContext context) {
+        if (this.tickId != (this.tickId = world.getServer().getTickCount())) {
+            this.transferred = 0;
             this.fluidTransferred = null;
         } else {
-            if (this.fluidTransferred != null && amount.getRawFluid() != this.fluidTransferred) {
+            if (this.fluidTransferred != null && amount.getFluid() != this.fluidTransferred) {
                 return amount;
             }
         }
-        final FluidAmount min = amount.amount().min(this.maxTransferRate.sub(this.transferred));
-        FluidAmount removed = amount.amount().sub(min);
-        amount = amount.withAmount(min);
-        for (FluidInsertable insertable : this.insertable.values()) {
-            FluidAmount consumed = available.amount().min(amount.amount().mul(ratio)).min(this.getMaxTransferRate().sub(this.transferred));
-            FluidAmount skipped = available.amount().mul(ratio).sub(consumed);
-            if (consumed.isNegative() || consumed.isZero()) continue;
-            consumed = consumed.sub(insertable.attemptInsertion(available.withAmount(consumed), simulate).amount());
-            available = available.withAmount(available.amount().sub(consumed).add(skipped));
-            this.transferred = this.transferred.add(consumed);
+        final long min = Math.min(amount.getAmount(), this.maxTransferRate - this.transferred);
+        long removed = amount.getAmount() - min;
+        amount.setAmount(min);
+        for (Storage<FluidVariant> insertable : this.insertable.values()) {
+            long consumed = Math.min((long)Math.min(available.getAmount(), amount.getAmount() * ratio), this.getMaxTransferRate() - this.transferred);
+            long skipped = (long) (available.getAmount() * ratio) - consumed;
+            if (consumed <= 0) continue;
+            consumed = insertable.insert(FluidVariant.of(available.getFluid(), available.getNbt()), consumed, context);
+             available.setAmount(available.getAmount() - consumed + skipped);
+            this.transferred = this.transferred + consumed;
         }
-        return available.withAmount(available.amount().add(removed));
+        available.setAmount(available.getAmount() + removed);
+        return available;
     }
 
     @Override
-    public void getNonFullInsertables(Object2ObjectMap<PipeNetwork, FluidAmount> fluidRequirement, BlockPos source, FluidVolume amount) {
-        if (this.tickId != (this.tickId = world.getServer().getTicks())) {
-            this.transferred = FluidAmount.ZERO;
+    public void getNonFullInsertables(Object2LongMap<PipeNetwork> fluidRequirement, BlockPos source, FluidStack stack, TransactionContext context) {
+        if (this.tickId != (this.tickId = world.getServer().getTickCount())) {
+            this.transferred = 0;
             this.fluidTransferred = null;
         } else {
-            if (this.fluidTransferred != null && amount.getRawFluid() != this.fluidTransferred) {
-                fluidRequirement.putIfAbsent(this, FluidAmount.ZERO);
+            if (this.fluidTransferred != null && FluidVariant.of(stack.getFluid(), stack.getNbt()) != this.fluidTransferred) {
+                fluidRequirement.putIfAbsent(this, 0);
                 return;
             }
         }
-        final FluidAmount min = amount.amount().min(this.maxTransferRate.sub(this.transferred));
-        FluidAmount removed = amount.amount().sub(min);
-        amount = amount.withAmount(min);
-        if (fluidRequirement.putIfAbsent(this, FluidAmount.ZERO) == null) {
-            FluidAmount requested = FluidAmount.ZERO;
-            for (ObjectIterator<Object2ObjectMap.Entry<BlockPos, FluidInsertable>> it = this.getInsertable().object2ObjectEntrySet().fastIterator(); it.hasNext(); ) {
-                Map.Entry<BlockPos, FluidInsertable> entry = it.next();
+        final long min = Math.min(stack.getAmount(), this.maxTransferRate - this.transferred);
+        long removed = stack.getAmount() - min;
+        stack.setAmount(min);
+        boolean b = fluidRequirement.containsKey(this);
+        fluidRequirement.putIfAbsent(this, 0);
+        if (!b) {
+            long requested = 0;
+            for (ObjectIterator<Object2ObjectMap.Entry<BlockPos, Storage<FluidVariant>>> it = this.getInsertable().object2ObjectEntrySet().fastIterator(); it.hasNext(); ) {
+                Map.Entry<BlockPos, Storage<FluidVariant>> entry = it.next();
                 if (entry.getKey().equals(source)) continue;
-                FluidAmount failed = entry.getValue().attemptInsertion(amount, Simulation.SIMULATE).amount();
-                if (!failed.equals(amount.amount())) {
-                    requested = requested.add(amount.amount().sub(failed));
-                    if (requested.isGreaterThanOrEqual(this.maxTransferRate.sub(this.transferred))) {
-                        requested = this.maxTransferRate.sub(this.transferred);
+                long success = entry.getValue().simulateInsert(FluidVariant.of(stack.getFluid(), stack.getNbt()), stack.getAmount(), context);
+                if (success > 0) {
+                    requested = requested + success;
+                    if (requested >= this.maxTransferRate - this.transferred) {
+                        requested = this.maxTransferRate - this.transferred;
                         break;
                     }
                 }
             }
             for (PipeNetwork peerNetwork : this.peerNetworks) {
                 if (!fluidRequirement.containsKey(peerNetwork)) {
-                    peerNetwork.getNonFullInsertables(fluidRequirement, source, amount);
+                    peerNetwork.getNonFullInsertables(fluidRequirement, source, stack, context);
                 }
             }
             fluidRequirement.put(this, requested);
@@ -329,7 +329,7 @@ public class PipeNetworkImpl implements PipeNetwork {
     }
 
     @Override
-    public FluidAmount getMaxTransferRate() {
+    public long getMaxTransferRate() {
         return this.maxTransferRate;
     }
 
@@ -339,7 +339,7 @@ public class PipeNetworkImpl implements PipeNetwork {
     }
 
     @Override
-    public @NotNull Object2ObjectOpenHashMap<BlockPos, FluidInsertable> getInsertable() {
+    public @NotNull Object2ObjectOpenHashMap<BlockPos, Storage<FluidVariant>> getInsertable() {
         return this.insertable;
     }
 
@@ -355,13 +355,13 @@ public class PipeNetworkImpl implements PipeNetwork {
 
     @Override
     public boolean isCompatibleWith(Pipe pipe) {
-        return this.getMaxTransferRate().equals(pipe.getMaxTransferRate());
+        return this.getMaxTransferRate() == pipe.getMaxTransferRate();
     }
 
     @Override
     public String toString() {
         return "PipeNetworkImpl{" +
-                "world=" + world.getRegistryKey().getValue() +
+                "world=" + world.dimension().location() +
                 ", insertable=" + insertable +
                 ", pipes=" + pipes +
                 ", markedForRemoval=" + markedForRemoval +

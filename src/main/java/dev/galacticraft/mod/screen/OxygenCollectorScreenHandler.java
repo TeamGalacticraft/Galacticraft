@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,20 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.mod.api.screen.MachineScreenHandler;
+import dev.galacticraft.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.Property;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.DataSlot;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCollectorBlockEntity> {
-    public OxygenCollectorScreenHandler(int syncId, PlayerEntity player, OxygenCollectorBlockEntity blockEntity) {
-        super(syncId, player, blockEntity, GalacticraftScreenHandlerType.OXYGEN_COLLECTOR_HANDLER);
-        this.addProperty(new Property() {
+    public OxygenCollectorScreenHandler(int syncId, Player player, OxygenCollectorBlockEntity blockEntity) {
+        super(syncId, player, blockEntity, GCScreenHandlerType.OXYGEN_COLLECTOR_HANDLER);
+        this.addDataSlot(new DataSlot() {
             @Override
             public int get() {
                 return machine.collectionAmount;
@@ -49,7 +49,7 @@ public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCol
         this.addPlayerInventorySlots(8, 84);
     }
 
-    public OxygenCollectorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (OxygenCollectorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public OxygenCollectorScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (OxygenCollectorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

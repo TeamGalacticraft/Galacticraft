@@ -9,31 +9,28 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      - name: Validate Gradle wrapper
+      - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
 
-      - name: Setup JDK 16
-        uses: actions/setup-java@v2
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
         with:
-          java-version: 16
+          java-version: 17
           distribution: temurin
 
       - name: Build
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: checkLicenses build test runGametest
-          gradle-version: wrapper
+          arguments: checkLicenses build runGametest
 
       - name: Copy GameTest Results
         run: cp run/TEST-gametest.xml build/test-results/test/
 
       - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v2
+        uses: mikepenz/action-junit-report@v3
         if: always()
         with:
           report_paths: "**/build/test-results/test/TEST-*.xml"

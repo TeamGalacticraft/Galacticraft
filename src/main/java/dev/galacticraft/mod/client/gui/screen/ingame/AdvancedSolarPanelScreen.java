@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,13 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.AdvancedSolarPanelBlockEntity;
-import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import java.util.List;
 
 /**
@@ -38,14 +36,14 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public class AdvancedSolarPanelScreen extends SolarPanelScreen<AdvancedSolarPanelBlockEntity, SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity>> {
-    public AdvancedSolarPanelScreen(SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity> handler, PlayerInventory inv, Text title) {
+    public AdvancedSolarPanelScreen(SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title);
     }
 
     @Override
-    public void appendEnergyTooltip(List<Text> list) {
-        if (this.machine.getStatus().getType().isActive()) {
-            list.add(new TranslatableText("ui.galacticraft.machine.gj_per_t", this.machine.getEnergyGenerated()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
+    public void appendEnergyTooltip(List<Component> list) {
+        if (this.machine.getStatus().type().isActive()) {
+            list.add(Component.translatable("ui.galacticraft.machine.gj_per_t", this.machine.currentEnergyGeneration).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
         }
     }
 }

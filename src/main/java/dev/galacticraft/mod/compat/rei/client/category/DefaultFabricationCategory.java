@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.compat.rei.client.category;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import me.shedaniel.math.Point;
@@ -36,8 +36,7 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
@@ -55,12 +54,12 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(GalacticraftBlock.CIRCUIT_FABRICATOR.asItem().getDefaultStack());
+        return EntryStacks.of(GCBlocks.CIRCUIT_FABRICATOR.asItem().getDefaultInstance());
     }
 
     @Override
-    public Text getTitle() {
-        return new TranslatableText("category.rei.circuit_fabricator");
+    public Component getTitle() {
+        return Component.translatable("category.recipe_viewer.circuit_fabricator");
     }
 
     @Override
@@ -69,7 +68,7 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
         List<Widget> widgets = new LinkedList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(Constant.ScreenTexture.REI_DISPLAY_TEXTURE, new Rectangle(startPoint.x, startPoint.y, 162, 82)));
+        widgets.add(Widgets.createTexturedWidget(Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE, new Rectangle(startPoint.x, startPoint.y, 162, 82)));
 
         // Diamond input
         // Silicon

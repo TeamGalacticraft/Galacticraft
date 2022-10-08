@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,24 +22,24 @@
 
 package dev.galacticraft.mod.fluid;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FluidBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.state.StateManager;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public abstract class BasicFluid extends FlowableFluid {
+public abstract class BasicFluid extends FlowingFluid {
     private final boolean infinite;
     private final boolean randomTicks;
     private final int flowSpeed;
@@ -57,74 +57,74 @@ public abstract class BasicFluid extends FlowableFluid {
         this.blastResistance = blastResistance;
     }
 
-    protected abstract FluidBlock getBlock();
+    protected abstract LiquidBlock getBlock();
 
     public abstract boolean isStill();
 
     @Override
-    protected boolean canBeReplacedWith(FluidState state, BlockView world, BlockPos pos, Fluid fluid, Direction direction) {
-        return direction == Direction.DOWN && this.matchesType(fluid);
+    protected boolean canBeReplacedWith(FluidState state, BlockGetter world, BlockPos pos, Fluid fluid, Direction direction) {
+        return direction == Direction.DOWN && this.isSame(fluid);
     }
 
     @Override
-    protected boolean isInfinite() {
+    protected boolean canConvertToSource() {
         return this.infinite;
     }
 
     @Override
-    protected void beforeBreakingBlock(WorldAccess world, BlockPos pos, BlockState state) {
+    protected void beforeDestroyingBlock(LevelAccessor world, BlockPos pos, BlockState state) {
         BlockEntity blockEntity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
-        Block.dropStacks(state, world, pos, blockEntity);
+        Block.dropResources(state, world, pos, blockEntity);
     }
 
     @Override
-    protected int getFlowSpeed(WorldView world) {
+    protected int getSlopeFindDistance(LevelReader world) {
         return this.flowSpeed;
     }
 
     @Override
-    protected int getLevelDecreasePerBlock(WorldView world) {
+    protected int getDropOff(LevelReader world) {
         return this.levelDecrease;
     }
 
     @Override
-    public int getTickRate(WorldView world) {
+    public int getTickDelay(LevelReader world) {
         return this.tickRate;
     }
 
     @Override
-    protected float getBlastResistance() {
+    protected float getExplosionResistance() {
         return this.blastResistance;
     }
 
     @Override
-    public boolean matchesType(Fluid fluid) {
-        return fluid == this.getStill() || fluid == this.getFlowing();
+    public boolean isSame(Fluid fluid) {
+        return fluid == this.getSource() || fluid == this.getFlowing();
     }
 
     @Override
-    protected BlockState toBlockState(FluidState state) {
-        return this.getBlock().getDefaultState().with(FluidBlock.LEVEL, getBlockStateLevel(state));
+    protected BlockState createLegacyBlock(FluidState state) {
+        return this.getBlock().defaultBlockState().setValue(LiquidBlock.LEVEL, getLegacyLevel(state));
     }
 
     @Override
-    public boolean isStill(FluidState state) {
+    public boolean isSource(FluidState state) {
         return this.isStill();
     }
 
     @Override
-    public int getLevel(FluidState state) {
-        return !this.isStill() ? state.get(LEVEL) : 8;
+    public int getAmount(FluidState state) {
+        return !this.isStill() ? state.getValue(LEVEL) : 8;
     }
 
     @Override
-    protected boolean hasRandomTicks() {
+    protected boolean isRandomlyTicking() {
         return randomTicks;
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Fluid, FluidState> builder) {
-        super.appendProperties(builder);
+    protected void createFluidStateDefinition(StateDefinition.Builder<Fluid, FluidState> builder) {
+        super.createFluidStateDefinition(builder);
         if (!this.isStill()) {
             builder.add(LEVEL);
         }

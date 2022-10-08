@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +24,23 @@ package dev.galacticraft.mod.world.gen.carver.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.util.math.floatprovider.FloatProvider;
-import net.minecraft.world.gen.YOffset;
-import net.minecraft.world.gen.carver.CarverConfig;
-import net.minecraft.world.gen.carver.CarverDebugConfig;
-import net.minecraft.world.gen.heightprovider.HeightProvider;
+import dev.galacticraft.mod.tag.GCTags;
+import net.minecraft.core.Registry;
+import net.minecraft.util.valueproviders.FloatProvider;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.carver.CarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.CarverDebugSettings;
+import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CraterCarverConfig extends CarverConfig {
+public class CraterCarverConfig extends CarverConfiguration {
     public static final Codec<CraterCarverConfig> CRATER_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.FLOAT.fieldOf("probability").forGetter(i -> i.probability),
             HeightProvider.CODEC.fieldOf("y").forGetter(i -> i.y),
-            FloatProvider.VALUE_CODEC.fieldOf("y_scale").forGetter(i -> i.yScale),
-            CarverDebugConfig.CODEC.fieldOf("debug_settings").forGetter(i -> i.debugConfig),
+            FloatProvider.CODEC.fieldOf("y_scale").forGetter(i -> i.yScale),
+            CarverDebugSettings.CODEC.fieldOf("debug_settings").forGetter(i -> i.debugSettings),
             Codec.INT.fieldOf("max_radius").forGetter(i -> i.maxRadius),
             Codec.INT.fieldOf("min_radius").forGetter(i -> i.minRadius),
             Codec.INT.fieldOf("ideal_range_offset").forGetter(i -> i.idealRangeOffset)
@@ -48,8 +50,8 @@ public class CraterCarverConfig extends CarverConfig {
     public final int minRadius;
     public final int idealRangeOffset;
 
-    public CraterCarverConfig(float probability, HeightProvider y, FloatProvider yScale, CarverDebugConfig debugConfig, int maxRadius, int minRadius, int idealRangeOffset) {
-        super(probability, y, yScale, YOffset.fixed(0), false, debugConfig);
+    public CraterCarverConfig(float probability, HeightProvider y, FloatProvider yScale, CarverDebugSettings carverDebugConfig, int maxRadius, int minRadius, int idealRangeOffset) {
+        super(probability, y, yScale, VerticalAnchor.absolute(-64), carverDebugConfig, Registry.BLOCK.getOrCreateTag(GCTags.MOON_CRATER_CARVER_REPLACEABLES)); // TODO: Crater replaceables
         this.maxRadius = maxRadius;
         this.minRadius = minRadius;
         this.idealRangeOffset = idealRangeOffset;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,26 +23,26 @@
 package dev.galacticraft.mod.client.render.dimension;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.VertexBuffer;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 
 import java.util.Random;
 
 public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
     INSTANCE;
 
-    private static final Identifier EARTH_TEXTURE = new Identifier(Constant.MOD_ID, "textures/gui/celestialbodies/earth.png");
-    private static final Identifier SUN_TEXTURE = new Identifier(Constant.MOD_ID, "textures/gui/celestialbodies/sun.png");
+    private static final ResourceLocation EARTH_TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/gui/celestialbodies/earth.png");
+    private static final ResourceLocation SUN_TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/gui/celestialbodies/sun.png");
 
     private VertexBuffer starBuffer = null;
 
@@ -51,9 +51,9 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         if (starBuffer == null) { //cannot be done in init as the gl context has not been created yet.
             starBuffer = new VertexBuffer();
             final Random random = new Random(27893L);
-            final BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+            final BufferBuilder buffer = Tesselator.getInstance().getBuilder();
             RenderSystem.setShader(GameRenderer::getPositionShader);
-            buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
+            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
             for (int i = 0; i < 12000; ++i) {
                 double j = random.nextFloat() * 2.0F - 1.0F;
                 double k = random.nextFloat() * 2.0F - 1.0F;
@@ -89,83 +89,83 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
                         double h = b * v - e * w;
                         double aa = h * s - f * t;
                         double ab = f * s + h * t;
-                        buffer.vertex((o + aa) * (i > 6000 ? -1 : 1), (p + g) * (i > 6000 ? -1 : 1), (q + ab) * (i > 6000 ? -1 : 1)).next();
+                        buffer.vertex((o + aa) * (i > 6000 ? -1 : 1), (p + g) * (i > 6000 ? -1 : 1), (q + ab) * (i > 6000 ? -1 : 1)).endVertex();
                     }
                 }
             }
-            buffer.end();
-            this.starBuffer.upload(buffer);
+            this.starBuffer.bind();
+            this.starBuffer.upload(buffer.end());
+            VertexBuffer.unbind();
         }
         context.profiler().push("moon_sky_render");
         RenderSystem.disableTexture();
         RenderSystem.disableBlend();
         RenderSystem.depthMask(false);
 
-        final MatrixStack matrices = context.matrixStack();
-        final BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+        final PoseStack matrices = context.matrixStack();
+        final BufferBuilder buffer = Tesselator.getInstance().getBuilder();
         float starBrightness = this.getStarBrightness(context.world(), context.tickDelta());
 
         context.profiler().push("stars");
-        matrices.push();
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(context.world().getSkyAngle(context.tickDelta()) * 360.0f));
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-19.0F));
+        matrices.pushPose();
+        matrices.mulPose(Vector3f.YP.rotationDegrees(-90.0F));
+        matrices.mulPose(Vector3f.XP.rotationDegrees(context.world().getTimeOfDay(context.tickDelta()) * 360.0f));
+        matrices.mulPose(Vector3f.YP.rotationDegrees(-19.0F));
         RenderSystem.setShaderColor(1.0F, 0.95F, 0.9F, starBrightness);
         RenderSystem.disableTexture();
-        this.starBuffer.setShader(matrices.peek().getModel(), context.projectionMatrix(), GameRenderer.getPositionShader());
+
+        FogRenderer.setupNoFog();
         this.starBuffer.bind();
-        this.starBuffer.drawVertices();
+        this.starBuffer.drawWithShader(matrices.last().pose(), context.projectionMatrix(), GameRenderer.getPositionShader());
         VertexBuffer.unbind();
 
-        matrices.pop();
+        matrices.popPose();
         context.profiler().pop();
 
         context.profiler().push("sun");
-        matrices.push();
+        matrices.pushPose();
 
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(context.world().getSkyAngle(context.tickDelta()) * 360.0f));
+        matrices.mulPose(Vector3f.YP.rotationDegrees(-90.0F));
+        matrices.mulPose(Vector3f.XP.rotationDegrees(context.world().getTimeOfDay(context.tickDelta()) * 360.0f));
 
-        Matrix4f matrix = matrices.peek().getModel();
+        Matrix4f matrix = matrices.last().pose();
         RenderSystem.enableTexture();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         float size = 15.0F;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, SUN_TEXTURE);
-        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-        buffer.vertex(matrix, -size, 100.0F, -size).texture(0.0F, 0.0F).next();
-        buffer.vertex(matrix, size, 100.0F, -size).texture(1.0F, 0.0F).next();
-        buffer.vertex(matrix, size, 100.0F, size).texture(1.0F, 1.0F).next();
-        buffer.vertex(matrix, -size, 100.0F, size).texture(0.0F, 1.0F).next();
-        buffer.end();
-        BufferRenderer.draw(buffer);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.vertex(matrix, -size, 100.0F, -size).uv(0.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, size, 100.0F, -size).uv(1.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, size, 100.0F, size).uv(1.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, -size, 100.0F, size).uv(0.0F, 1.0F).endVertex();
+        BufferUploader.drawWithShader(buffer.end());
 
-        matrices.pop();
+        matrices.popPose();
         context.profiler().pop();
 
         context.profiler().push("earth");
-        matrices.push();
-        matrix = matrices.peek().getModel();
+        matrices.pushPose();
+        matrix = matrices.last().pose();
 
         size = 10.0F;
-        assert MinecraftClient.getInstance().player != null;
-        float earthRotation = (float) (context.world().getSpawnPos().getZ() - MinecraftClient.getInstance().player.getZ()) * 0.01F;
+        assert Minecraft.getInstance().player != null;
+        float earthRotation = (float) (context.world().getSharedSpawnPos().getZ() - Minecraft.getInstance().player.getZ()) * 0.01F;
         matrices.scale(0.6F, 0.6F, 0.6F);
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion((context.world().getSkyAngle(context.tickDelta()) * 360.0F) * 0.001F));
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(earthRotation + 200.0F));
+        matrices.mulPose(Vector3f.XP.rotationDegrees((context.world().getTimeOfDay(context.tickDelta()) * 360.0F) * 0.001F));
+        matrices.mulPose(Vector3f.XP.rotationDegrees(earthRotation + 200.0F));
 
         RenderSystem.setShaderTexture(0, EARTH_TEXTURE);
 
-        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-        buffer.vertex(matrix, -size, -100.0F, size).texture(0.0F, 1.0F).next();
-        buffer.vertex(matrix, size, -100.0F, size).texture(1.0F, 1.0F).next();
-        buffer.vertex(matrix, size, -100.0F, -size).texture(1.0F, 0.0F).next();
-        buffer.vertex(matrix, -size, -100.0F, -size).texture(0.0F, 0.0F).next();
-        buffer.end();
-        BufferRenderer.draw(buffer);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.vertex(matrix, -size, -100.0F, size).uv(0.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, size, -100.0F, size).uv(1.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, size, -100.0F, -size).uv(1.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, -size, -100.0F, -size).uv(0.0F, 0.0F).endVertex();
+        BufferUploader.drawWithShader(buffer.end());
 
         context.profiler().pop();
-        matrices.pop();
+        matrices.popPose();
 
         RenderSystem.disableTexture();
         RenderSystem.depthMask(true);
@@ -173,9 +173,9 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
     }
 
 
-    private float getStarBrightness(World world, float delta) {
-        final float skyAngle = world.getSkyAngle(delta);
-        float brightness = 1.0F - (MathHelper.cos((float) (skyAngle * Math.PI * 2.0D) * 2.0F + 0.25F));
+    private float getStarBrightness(Level world, float delta) {
+        final float skyAngle = world.getTimeOfDay(delta);
+        float brightness = 1.0F - (Mth.cos((float) (skyAngle * Math.PI * 2.0D) * 2.0F + 0.25F));
 
         if (brightness < 0.0F) {
             brightness = 0.0F;

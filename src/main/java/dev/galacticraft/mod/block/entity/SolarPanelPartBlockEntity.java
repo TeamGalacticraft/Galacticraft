@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,41 +23,40 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.mod.api.block.MultiBlockPart;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SolarPanelPartBlockEntity extends BlockEntity implements MultiBlockPart {
-    public BlockPos basePos = BlockPos.ORIGIN;
+    public BlockPos basePos = BlockPos.ZERO;
 
     public SolarPanelPartBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.SOLAR_PANEL_PART, pos, state);
+        super(GCBlockEntityTypes.SOLAR_PANEL_PART, pos, state);
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
-        if (this.basePos != BlockPos.ORIGIN) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        if (this.basePos != BlockPos.ZERO) {
             tag.putLong("Base", this.basePos.asLong());
         }
-        return tag;
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Base")) {
-            this.basePos = BlockPos.fromLong(tag.getLong("Base"));
+            this.basePos = BlockPos.of(tag.getLong("Base"));
         }
     }
 
     @Override
     public void setBasePos(BlockPos basePos) {
         this.basePos = basePos;
-        this.markDirty();
+        this.setChanged();
     }
 }

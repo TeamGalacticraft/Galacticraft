@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,15 @@
 
 package dev.galacticraft.mod.api.pipe;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FluidInsertable;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import dev.galacticraft.impl.fluid.FluidStack;
 import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +41,7 @@ import java.util.Map;
  * The basic 'Pipe Network' spec
  */
 public interface PipeNetwork {
-    static PipeNetwork create(ServerWorld world, FluidAmount maxTransferRate) {
+    static PipeNetwork create(ServerLevel world, long maxTransferRate) {
         return new PipeNetworkImpl(world, maxTransferRate);
     }
 
@@ -69,31 +69,28 @@ public interface PipeNetwork {
 
     /**
      * Inserts fluid into the network
-     * @param fromPipe The pipe that received the fluid
-     * @param amount The amount of fluid to insert
-     * @param direction
-     * @param simulate Whether to perform the action or not
      * @return the amount of fluid that failed to insert
      */
-    FluidVolume insert(@NotNull BlockPos fromPipe, FluidVolume amount, Direction direction, @NotNull Simulation simulate);
+    long insert(BlockPos pipe, FluidStack amount, Direction direction, TransactionContext transaction);
 
-    FluidVolume insertInternal(FluidVolume amount, FluidAmount ratio, FluidVolume available, Simulation simulate);
+    FluidStack insertInternal(FluidStack amount, double ratio, FluidStack available, TransactionContext transaction);
 
-    void getNonFullInsertables(Object2ObjectMap<PipeNetwork, FluidAmount> fluidRequirement, BlockPos source, FluidVolume amount);
+    void getNonFullInsertables(Object2LongMap<PipeNetwork> fluidRequirement, BlockPos source, FluidStack amount, TransactionContext context);
 
     /**
      * Returns the maximum amount of fluid allowed to pass through this network per tick
      * @return the maximum amount of fluid allowed to pass through this network per tick
      */
-    FluidAmount getMaxTransferRate();
+    long getMaxTransferRate();
 
     Collection<BlockPos> getAllPipes();
 
-    Map<BlockPos, FluidInsertable> getInsertable();
+    Map<BlockPos, Storage<FluidVariant>> getInsertable();
 
     boolean markedForRemoval();
 
     void markForRemoval();
 
     boolean isCompatibleWith(Pipe pipe);
+
 }

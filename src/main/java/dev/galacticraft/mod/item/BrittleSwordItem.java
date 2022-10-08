@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,24 +22,24 @@
 
 package dev.galacticraft.mod.item;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
-import net.minecraft.item.ToolMaterial;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class BrittleSwordItem extends SwordItem {
-    public BrittleSwordItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings) {
+    public BrittleSwordItem(Tier toolMaterial, int attackDamage, float attackSpeed, Properties settings) {
         super(toolMaterial, attackDamage, attackSpeed, settings);
     }
 
     @Override
-    public boolean postMine(ItemStack stack, World world, BlockState blockState, BlockPos blockPos, LivingEntity entityLiving) {
-        if (blockState.getHardness(world, blockPos) > 0.2001F) {
-            stack.damage(2, entityLiving, (livingEntity) -> livingEntity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
+    public boolean mineBlock(ItemStack stack, Level world, BlockState blockState, BlockPos blockPos, LivingEntity entityLiving) {
+        if (blockState.getDestroySpeed(world, blockPos) > 0.2001F) {
+            stack.hurtAndBreak(2, entityLiving, (livingEntity) -> livingEntity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
         return true;
     }

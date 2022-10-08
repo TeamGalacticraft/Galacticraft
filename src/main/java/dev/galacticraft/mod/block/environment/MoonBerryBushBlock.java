@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,104 +22,103 @@
 
 package dev.galacticraft.mod.block.environment;
 
-import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.item.GalacticraftItem;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.PlantBlock;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-
-import java.util.Random;
+import com.mojang.math.Vector3f;
+import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.item.GCItem;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class MoonBerryBushBlock extends PlantBlock {
-    public static final IntProperty AGE = Properties.AGE_3;
-    private static final VoxelShape SMALL_SHAPE = Block.createCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
-    private static final VoxelShape LARGE_SHAPE = Block.createCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D);
+public class MoonBerryBushBlock extends BushBlock {
+    public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
+    private static final VoxelShape SMALL_SHAPE = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
+    private static final VoxelShape LARGE_SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D);
 
-    public MoonBerryBushBlock(Settings settings) {
+    public MoonBerryBushBlock(Properties settings) {
         super(settings);
-        this.setDefaultState(this.getStateManager().getDefaultState().with(AGE, 0));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(AGE, 0));
     }
 
     @Override
-    public ItemStack getPickStack(BlockView view, BlockPos pos, BlockState state) {
-        return new ItemStack(GalacticraftItem.MOON_BERRIES);
+    public ItemStack getCloneItemStack(BlockGetter view, BlockPos pos, BlockState state) {
+        return new ItemStack(GCItem.MOON_BERRIES);
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
-        if (blockState.get(AGE) == 0) {
+    public VoxelShape getShape(BlockState blockState, BlockGetter blockView, BlockPos blockPos, CollisionContext context) {
+        if (blockState.getValue(AGE) == 0) {
             return SMALL_SHAPE;
         } else {
-            return blockState.get(AGE) < 3 ? LARGE_SHAPE : super.getOutlineShape(blockState, blockView, blockPos, context);
+            return blockState.getValue(AGE) < 3 ? LARGE_SHAPE : super.getShape(blockState, blockView, blockPos, context);
         }
     }
 
     @Override
-    public void scheduledTick(BlockState blockState, ServerWorld world, BlockPos blockPos, Random random) {
-        super.scheduledTick(blockState, world, blockPos, random);
-        int age = blockState.get(AGE);
+    public void tick(BlockState blockState, ServerLevel world, BlockPos blockPos, RandomSource random) {
+        super.tick(blockState, world, blockPos, random);
+        int age = blockState.getValue(AGE);
         if (age < 3 && random.nextInt(20) == 0) {
-            world.setBlockState(blockPos, blockState.with(AGE, age + 1), 2);
+            world.setBlock(blockPos, blockState.setValue(AGE, age + 1), 2);
         }
     }
 
     @Override
-    public void onEntityCollision(BlockState blockState, World world, BlockPos blockPos, Entity entity) {
-        entity.slowMovement(blockState, new Vec3d(0.800000011920929D, 0.75D, 0.800000011920929D));
+    public void entityInside(BlockState blockState, Level world, BlockPos blockPos, Entity entity) {
+        entity.makeStuckInBlock(blockState, new Vec3(0.800000011920929D, 0.75D, 0.800000011920929D));
     }
 
     @Override
-    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
-        int age = blockState.get(AGE);
+    public InteractionResult use(BlockState blockState, Level world, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+        int age = blockState.getValue(AGE);
         boolean mature = age == 3;
 
         if (mature) {
             int amount = 1 + world.random.nextInt(3);
-            dropStack(world, blockPos, new ItemStack(GalacticraftItem.MOON_BERRIES, amount));
-            world.playSound(null, blockPos, SoundEvents.BLOCK_SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
-            world.setBlockState(blockPos, blockState.with(AGE, 1), 2);
-            return ActionResult.SUCCESS;
+            popResource(world, blockPos, new ItemStack(GCItem.MOON_BERRIES, amount));
+            world.playSound(null, blockPos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
+            world.setBlock(blockPos, blockState.setValue(AGE, 1), 2);
+            return InteractionResult.SUCCESS;
         } else {
-            return super.onUse(blockState, world, blockPos, player, hand, blockHitResult);
+            return super.use(blockState, world, blockPos, player, hand, blockHitResult);
         }
     }
 
     @Override
-    public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
         stateBuilder.add(AGE);
     }
 
     @Override
-    protected boolean canPlantOnTop(BlockState blockState, BlockView blockView, BlockPos blockPos) {
-        return blockState.getBlock() == GalacticraftBlock.MOON_DIRT;
+    public boolean mayPlaceOn(BlockState blockState, BlockGetter blockView, BlockPos blockPos) {
+        return blockState.getBlock() == GCBlocks.MOON_DIRT;
     }
 
     @Override
-    public void randomDisplayTick(BlockState blockState, World world, BlockPos blockPos, Random random) {
-        if (blockState.get(AGE) == 3) {
+    public void animateTick(BlockState blockState, Level world, BlockPos blockPos, RandomSource random) {
+        if (blockState.getValue(AGE) == 3) {
 
             double x = blockPos.getX() + 0.5D + (random.nextFloat() - random.nextFloat());
             double y = blockPos.getY() + random.nextFloat();
@@ -127,7 +126,7 @@ public class MoonBerryBushBlock extends PlantBlock {
             int times = random.nextInt(4);
 
             for (int i = 0; i < times; i++) {
-                world.addParticle(new DustParticleEffect(new Vec3f(0.5f, 0.5f, 1.0f), 0.6f), x, y, z, 0.0D, 0.0D, 0.0D);
+                world.addParticle(new DustParticleOptions(new Vector3f(0.5f, 0.5f, 1.0f), 0.6f), x, y, z, 0.0D, 0.0D, 0.0D);
             }
         }
     }

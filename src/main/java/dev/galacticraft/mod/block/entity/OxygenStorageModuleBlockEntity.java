@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,21 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.fluid.MachineFluidInv;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
-import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.screen.tank.NullTank;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.util.math.BlockPos;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.api.machine.storage.MachineFluidStorage;
+import dev.galacticraft.api.machine.storage.display.TankDisplay;
+import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.mod.screen.GCScreenHandlerType;
+import dev.galacticraft.mod.util.FluidUtil;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,57 +45,36 @@ import org.jetbrains.annotations.Nullable;
  */
 public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     private static final int OXYGEN_TANK = 0;
-    public static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(50);
+    public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
 
     public OxygenStorageModuleBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.OXYGEN_STORAGE_MODULE, pos, state);
+        super(GCBlockEntityTypes.OXYGEN_STORAGE_MODULE, pos, state);
     }
 
     @Override
-    protected MachineFluidInv.Builder createFluidInv(MachineFluidInv.Builder builder) {
-        builder.addTank(OXYGEN_TANK, SlotType.OXYGEN, (index, inv) -> NullTank.INSTANCE);
-        return builder;
+    protected @NotNull MachineFluidStorage createFluidStorage() {
+        return MachineFluidStorage.Builder.create()
+                .addTank(GCSlotTypes.OXYGEN_IO, MAX_OXYGEN, new TankDisplay(31, 8, 48), true)
+                .build();
     }
 
     @Override
-    public FluidAmount fluidInvCapacity() {
-        return MAX_CAPACITY;
-    }
-
-    @Override
-    protected MachineStatus getStatusById(int index) {
-        return MachineStatus.NULL;
-    }
-
-    @Override
-    public void updateComponents() {
-        super.updateComponents();
-        this.trySpreadFluids(OXYGEN_TANK);
-    }
-
-    @Override
-    public @NotNull MachineStatus updateStatus() {
-        return MachineStatus.NULL;
-    }
-
-    @Override
-    public void tickWork() {
-    }
-
-    @Override
-    public int getEnergyCapacity() {
-        return 0;
-    }
-
-    @Override
-    protected void tickDisabled() {
-
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        this.trySpreadFluids(world);
+        return MachineStatus.INVALID;
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER, syncId, inv, this);
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+        if (this.getSecurity().hasAccess(player)) {
+            return SimpleMachineScreenHandler.create(
+                    syncId,
+                    player,
+                    this,
+                    GCScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER
+            );
+        }
         return null;
     }
 }

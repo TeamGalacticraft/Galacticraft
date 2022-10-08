@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,53 +22,46 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.block.entity.Pullable;
 import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.Objects;
-
-public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colored, Connected, Pullable, BlockEntityClientSerializable {
+public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colored, Connected, Pullable {
+    private boolean awaitDirty = false;
     private boolean pull = false;
 
     public GlassFluidPipeBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.GLASS_FLUID_PIPE, pos, state, FluidAmount.of(1, 50)); //0.4B/s
+        super(GCBlockEntityTypes.GLASS_FLUID_PIPE, pos, state, FluidConstants.BUCKET / 50); //0.4B/s
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         this.readPullNbt(nbt);
+
+        this.awaitDirty = true;
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        if (this.awaitDirty && level != null && level.isClientSide) {
+            this.awaitDirty = false;
+            Minecraft.getInstance().levelRenderer.setSectionDirty(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ());
+        }
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         this.writePullNbt(nbt);
-        return super.writeNbt(nbt);
-    }
-
-    @Override
-    public void fromClientTag(NbtCompound tag) {
-        super.fromClientTag(tag);
-        this.readPullNbt(tag);
-        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        this.writePullNbt(tag);
-        return super.toClientTag(tag);
     }
 
     @Override

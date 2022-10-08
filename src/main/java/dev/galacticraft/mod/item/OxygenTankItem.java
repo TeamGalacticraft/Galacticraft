@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,61 +22,85 @@
 
 package dev.galacticraft.mod.item;
 
-import alexiil.mc.lib.attributes.AttributeProviderItem;
-import alexiil.mc.lib.attributes.ItemAttributeList;
-import alexiil.mc.lib.attributes.misc.LimitedConsumer;
-import alexiil.mc.lib.attributes.misc.Reference;
-import dev.galacticraft.api.accessor.GearInventoryProvider;
-import dev.galacticraft.api.attribute.GcApiAttributes;
-import dev.galacticraft.api.attribute.oxygen.OxygenTank;
-import dev.galacticraft.api.attribute.oxygen.OxygenTankImpl;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.attribute.misc.ArrayReference;
-import dev.galacticraft.mod.attribute.oxygen.InfiniteOxygenTank;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenTankItem extends Item implements AttributeProviderItem {
-    private int ticks = (int) (Math.random() * 500.0);
-    private final int size;
+public class OxygenTankItem extends Item {
+    public final int capacity;
 
-    public OxygenTankItem(Settings settings, int size) {
-        super(settings.maxDamage(size));
-        this.size = size;
+    public OxygenTankItem(Properties settings, int capacity) {
+        super(settings.durability(capacity));
+        this.capacity = capacity;
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> list) {
-        if (this.isIn(group)) {
-            final ItemStack[] stack = new ItemStack[]{new ItemStack(this)};
-            stack[0].setDamage(this.size);
-            list.add(stack[0]);
-            stack[0] = stack[0].copy();
-
-            if (this.size > 0) {
-                GcApiAttributes.OXYGEN_TANK.getFirst(new ArrayReference<>(stack, 0, itemStack -> itemStack.getItem() instanceof OxygenTankItem)).setAmount(this.size);
-                list.add(stack[0]);
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> list) {
+        if (this.allowedIn(group)) {
+            ItemStack charged = getDefaultInstance();
+            try (Transaction transaction = Transaction.openOuter()) {
+                Storage<FluidVariant> storage = ContainerItemContext.withInitial(charged).find(FluidStorage.ITEM);
+                storage.insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
+                transaction.commit();
+                charged.getOrCreateTag().putLong(Constant.Nbt.VALUE, storage.exactView(FluidVariant.of(Gases.OXYGEN)).getAmount());
             }
+            list.add(charged);
+
+            ItemStack depleted = new ItemStack(this);
+            try (Transaction transaction = Transaction.openOuter()) {
+                ContainerItemContext.withInitial(charged).find(FluidStorage.ITEM).extract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
+                transaction.commit();
+            }
+            list.add(depleted);
         }
     }
 
     @Override
-    public int getEnchantability() {
+    public boolean isBarVisible(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(FluidVariant.of(Gases.OXYGEN));
+        assert storage != null;
+
+        return (int) Math.round(13.0 - (((double) storage.getAmount() / (double) storage.getCapacity()) * 13.0));
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(FluidVariant.of(Gases.OXYGEN));
+        assert storage != null;
+        double scale = 1.0 - Math.max(0.0, (double) storage.getAmount() / (double)storage.getCapacity());
+        return ((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8);
+    }
+
+    @Override
+    public int getEnchantmentValue() {
         return -1;
     }
 
@@ -86,50 +110,28 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
     }
 
     @Override
-    public boolean hasGlint(ItemStack stack) {
-        return this.size <= 0;
+    public boolean isFoil(ItemStack stack) {
+        return this.capacity <= 0;
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        if (this.size > 0){
-            OxygenTank tank = GcApiAttributes.OXYGEN_TANK.getFirst(stack);
-            lines.add(new TranslatableText("tooltip.galacticraft.oxygen_remaining", tank.getAmount() + "/" + tank.getCapacity()).setStyle(Constant.Text.getStorageLevelColor(1.0 - ((double)tank.getAmount() / (double)tank.getCapacity()))));
-        } else {
-            lines.add(new TranslatableText("tooltip.galacticraft.oxygen_remaining", new TranslatableText("tooltip.galacticraft.infinite").setStyle(Constant.Text.getRainbow(++ticks))));
-            lines.add(new TranslatableText("tooltip.galacticraft.creative_only").setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
-        }
-        if (ticks >= 500) ticks -= 500;
-        super.appendTooltip(stack, world, lines, context);
+    public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
+        StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(FluidVariant.of(Gases.OXYGEN));
+        assert storage != null;
+        lines.add(Component.translatable("tooltip.galacticraft.oxygen_remaining", storage.getAmount() + "/" + storage.getCapacity()).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double)storage.getAmount() / (double)storage.getCapacity()))));
+        super.appendHoverText(stack, world, lines, context);
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) { //should sync with server
-        if (((GearInventoryProvider) user).getOxygenTanks().getInsertable().insert(user.getStackInHand(hand).copy()).isEmpty()) {
-            return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        ItemStack copy = user.getItemInHand(hand).copy();
+        try (Transaction transaction = Transaction.openOuter()) {
+            long l = InventoryStorage.of(user.getOxygenTanks(), null).insert(ItemVariant.of(copy), copy.getCount(), transaction);
+            if (l == copy.getCount()) {
+                transaction.commit();
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);
+            }
         }
         return super.use(world, user, hand);
-    }
-
-    @Override
-    public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> to) {
-        ItemStack ref = reference.get().copy();
-        if (this.size > 0) {
-            OxygenTankImpl tank = new OxygenTankImpl(this.size);
-            tank.fromTag(ref.getOrCreateNbt());
-            tank.toTag(ref.getOrCreateNbt());
-            ref.setDamage(this.size - tank.getAmount());
-            reference.set(ref);
-            tank.listen((view, previous) -> {
-                        ItemStack stack = reference.get().copy();
-                        stack.setDamage(this.size - view.getAmount());
-                        tank.toTag(stack.getOrCreateNbt());
-                        reference.set(stack);
-                    }
-            );
-            to.offer(tank);
-        } else {
-            to.offer(InfiniteOxygenTank.INSTANCE);
-        }
     }
 }

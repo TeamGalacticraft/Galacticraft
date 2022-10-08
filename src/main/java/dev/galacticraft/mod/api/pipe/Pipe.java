@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,9 @@
 
 package dev.galacticraft.mod.api.pipe;
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Connected;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -66,5 +65,5 @@ public interface Pipe extends Connected, Colored {
      * Returns the maximum amount of fluid allowed to be transferred through this pipe.
      * @return the maximum amount of fluid allowed to be transferred through this pipe.
      */
-    FluidAmount getMaxTransferRate();
+    long getMaxTransferRate();
 }

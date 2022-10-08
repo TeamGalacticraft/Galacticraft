@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,9 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -39,15 +39,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(AbstractClientPlayerEntity.class)
+@Mixin(AbstractClientPlayer.class)
 @Environment(EnvType.CLIENT)
 public abstract class AbstractClientPlayerEntityMixin {
-    @Shadow @Nullable protected abstract PlayerListEntry getPlayerListEntry();
+    @Shadow @Nullable protected abstract PlayerInfo getPlayerInfo();
 
-    @Inject(method = "getCapeTexture", at = @At("RETURN"), cancellable = true)
-    private void getCapeTexture_gc(CallbackInfoReturnable<Identifier> info) {
-        if (CapesLoader.UUID_CAPE_MAP != null && this.getPlayerListEntry() != null && CapesLoader.UUID_CAPE_MAP.containsKey(this.getPlayerListEntry().getProfile().getId().toString())) {
-            info.setReturnValue(new Identifier(Constant.MOD_ID, "textures/cape/cape_" + CapesLoader.UUID_CAPE_MAP.get(this.getPlayerListEntry().getProfile().getId().toString()) + ".png"));
+    @Inject(method = "getCloakTextureLocation", at = @At("RETURN"), cancellable = true)
+    private void getCapeTexture_gc(CallbackInfoReturnable<ResourceLocation> info) {
+        if (CapesLoader.UUID_CAPE_MAP != null && this.getPlayerInfo() != null && CapesLoader.UUID_CAPE_MAP.containsKey(this.getPlayerInfo().getProfile().getId().toString())) {
+            info.setReturnValue(new ResourceLocation(Constant.MOD_ID, "textures/cape/cape_" + CapesLoader.UUID_CAPE_MAP.get(this.getPlayerInfo().getProfile().getId().toString()) + ".png"));
         }
     }
 }

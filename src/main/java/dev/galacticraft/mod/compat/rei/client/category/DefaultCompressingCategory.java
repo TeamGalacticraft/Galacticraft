@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.compat.rei.client.category;
 
 import com.google.common.collect.Lists;
-import dev.galacticraft.mod.block.GalacticraftBlock;
+import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultCompressingDisplay;
 import me.shedaniel.math.Point;
@@ -38,10 +38,9 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -61,12 +60,12 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(new ItemStack(GalacticraftBlock.COMPRESSOR));
+        return EntryStacks.of(new ItemStack(GCBlocks.COMPRESSOR));
     }
 
     @Override
-    public Text getTitle() {
-        return new TranslatableText("category.rei.compressing");
+    public Component getTitle() {
+        return Component.translatable("category.recipe_viewer.compressing");
     }
 
     public @NotNull List<Widget> setupDisplay(DefaultCompressingDisplay recipeDisplay, Rectangle bounds) {
@@ -94,7 +93,7 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
         widgets.addAll(slots);
         widgets.add(Widgets.createSlot(new Point(startPoint.x + 120, startPoint.y + (18) + 3)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
 
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4)).markInput().entries(AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().stream().map(EntryStacks::of).collect(Collectors.toList())));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4)).markInput().entries(AbstractFurnaceBlockEntity.getFuel().keySet().stream().map(EntryStacks::of).collect(Collectors.toList())));
         return widgets;
     }
 

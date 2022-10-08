@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +24,21 @@ package dev.galacticraft.mod.block.special.aluminumwire.tier2;
 
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
+import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class HeavySealableAluminumWireBlock extends WireBlock {
-    public HeavySealableAluminumWireBlock(Settings settings) {
+    public HeavySealableAluminumWireBlock(Properties settings) {
         super(settings);
     }
 
     @Override
-    public @Nullable WireBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return WireBlockEntity.createT2(GalacticraftBlockEntityType.WIRE_T2, pos, state);
+    public @Nullable WireBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,31 @@
 
 package dev.galacticraft.mod;
 
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.fluid.filter.RawFluidTagFilter;
-import dev.galacticraft.mod.api.block.util.BlockFace;
-import dev.galacticraft.mod.tag.GalacticraftTag;
-import dev.galacticraft.mod.util.ColorUtil;
+import com.google.common.base.Predicates;
+import dev.galacticraft.mod.lookup.predicate.ItemResourceTagExtractPredicate;
+import dev.galacticraft.mod.lookup.predicate.ItemResourceTagInsertPredicate;
+import dev.galacticraft.mod.lookup.predicate.TagPredicate;
+import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.text.Style;
-import net.minecraft.text.TextColor;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import team.reborn.energy.api.EnergyStorage;
+
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -45,8 +56,8 @@ public interface Constant {
     String ADDON_API_ID = "galacticraft-api";
     String COMMON_NAMESPACE = "c";
 
-    static Identifier id(String id) {
-        return new Identifier(MOD_ID, id);  
+    static ResourceLocation id(String id) {
+        return new ResourceLocation(MOD_ID, id);  
     }
 
     interface Block {
@@ -57,13 +68,43 @@ public interface Constant {
         String MOON_TURF = "moon_turf";
         String MOON_SURFACE_ROCK = "moon_surface_rock";
         String MOON_ROCK = "moon_rock";
+        String MOON_ROCK_SLAB = "moon_rock_slab";
+        String MOON_ROCK_STAIRS = "moon_rock_stairs";
+        String MOON_ROCK_WALL = "moon_rock_wall";
         String COBBLED_MOON_ROCK = "cobbled_moon_rock";
+        String COBBLED_MOON_ROCK_SLAB = "cobbled_moon_rock_slab";
+        String COBBLED_MOON_ROCK_STAIRS = "cobbled_moon_rock_stairs";
+        String COBBLED_MOON_ROCK_WALL = "cobbled_moon_rock_wall";
+        String LUNASLATE = "lunaslate";
+        String LUNASLATE_SLAB = "lunaslate_slab";
+        String LUNASLATE_STAIRS = "lunaslate_stairs";
+        String LUNASLATE_WALL = "lunaslate_wall";
+        String COBBLED_LUNASLATE = "cobbled_lunaslate";
+        String COBBLED_LUNASLATE_SLAB = "cobbled_lunaslate_slab";
+        String COBBLED_LUNASLATE_STAIRS = "cobbled_lunaslate_stairs";
+        String COBBLED_LUNASLATE_WALL = "cobbled_lunaslate_wall";
         String MOON_BASALT = "moon_basalt";
+        String MOON_BASALT_SLAB = "moon_basalt_slab";
+        String MOON_BASALT_STAIRS = "moon_basalt_stairs";
+        String MOON_BASALT_WALL = "moon_basalt_wall";
+        String MOON_BASALT_BRICK = "moon_basalt_brick";
+        String MOON_BASALT_BRICK_SLAB = "moon_basalt_brick_slab";
+        String MOON_BASALT_BRICK_STAIRS = "moon_basalt_brick_stairs";
+        String MOON_BASALT_BRICK_WALL = "moon_basalt_brick_wall";
+        String CRACKED_MOON_BASALT_BRICK = "cracked_moon_basalt_brick";
+        String CRACKED_MOON_BASALT_BRICK_SLAB = "cracked_moon_basalt_brick_slab";
+        String CRACKED_MOON_BASALT_BRICK_STAIRS = "cracked_moon_basalt_brick_stairs";
+        String CRACKED_MOON_BASALT_BRICK_WALL = "cracked_moon_basalt_brick_wall";
+
         String MOON_DIRT = "moon_dirt";
         String MARS_SURFACE_ROCK = "mars_surface_rock";
         String MARS_SUB_SURFACE_ROCK = "mars_sub_surface_rock";
         String MARS_STONE = "mars_stone";
         String MARS_COBBLESTONE = "mars_cobblestone";
+        String MARS_COBBLESTONE_SLAB = "mars_cobblestone_slab";
+        String MARS_COBBLESTONE_STAIRS = "mars_cobblestone_stairs";
+        String MARS_COBBLESTONE_WALL = "mars_cobblestone_wall";
+
         String ASTEROID_ROCK = "asteroid_rock";
         String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
         String ASTEROID_ROCK_2 = "asteroid_rock_block_2";
@@ -76,10 +117,8 @@ public interface Constant {
         String VAPOR_SPOUT = "vapor_spout";
 
         // Ore
-        String MOON_CHEESE_ORE = "moon_cheese_ore";
-        String MOON_BASALT_CHEESE_ORE = "moon_basalt_cheese_ore";
         String MOON_COPPER_ORE = "moon_copper_ore";
-        String MOON_BASALT_COPPER_ORE = "moon_basalt_copper_ore";
+        String LUNASLATE_COPPER_ORE = "lunaslate_copper_ore";
         String DESH_ORE = "desh_ore";
         String ILMENITE_ORE = "ilmenite_ore";
         String SILICON_ORE = "silicon_ore";
@@ -87,7 +126,7 @@ public interface Constant {
         String TIN_ORE = "tin_ore";
         String DEEPSLATE_TIN_ORE = "deepslate_tin_ore";
         String MOON_TIN_ORE = "moon_tin_ore";
-        String MOON_BASALT_TIN_ORE = "moon_basalt_tin_ore";
+        String LUNASLATE_TIN_ORE = "lunaslate_tin_ore";
         String ALUMINUM_ORE = "aluminum_ore";
         String DEEPSLATE_ALUMINUM_ORE = "deepslate_aluminum_ore";
         String GALENA_ORE = "galena_ore";
@@ -102,14 +141,86 @@ public interface Constant {
 
         // Decorative BLocks
         String ALUMINUM_DECORATION = "aluminum_decoration";
+        String ALUMINUM_DECORATION_SLAB = "aluminum_decoration_slab";
+        String ALUMINUM_DECORATION_STAIRS = "aluminum_decoration_stairs";
+        String ALUMINUM_DECORATION_WALL = "aluminum_decoration_wall";
+        String DETAILED_ALUMINUM_DECORATION = "detailed_aluminum_decoration";
+        String DETAILED_ALUMINUM_DECORATION_SLAB = "detailed_aluminum_decoration_slab";
+        String DETAILED_ALUMINUM_DECORATION_STAIRS = "detailed_aluminum_decoration_stairs";
+        String DETAILED_ALUMINUM_DECORATION_WALL = "detailed_aluminum_decoration_wall";
+
         String BRONZE_DECORATION = "bronze_decoration";
+        String BRONZE_DECORATION_SLAB = "bronze_decoration_slab";
+        String BRONZE_DECORATION_STAIRS = "bronze_decoration_stairs";
+        String BRONZE_DECORATION_WALL = "bronze_decoration_wall";
+        String DETAILED_BRONZE_DECORATION = "detailed_bronze_decoration";
+        String DETAILED_BRONZE_DECORATION_SLAB = "detailed_bronze_decoration_slab";
+        String DETAILED_BRONZE_DECORATION_STAIRS = "detailed_bronze_decoration_stairs";
+        String DETAILED_BRONZE_DECORATION_WALL = "detailed_bronze_decoration_wall";
+
         String COPPER_DECORATION = "copper_decoration";
+        String COPPER_DECORATION_SLAB = "copper_decoration_slab";
+        String COPPER_DECORATION_STAIRS = "copper_decoration_stairs";
+        String COPPER_DECORATION_WALL = "copper_decoration_wall";
+        String DETAILED_COPPER_DECORATION = "detailed_copper_decoration";
+        String DETAILED_COPPER_DECORATION_SLAB = "detailed_copper_decoration_slab";
+        String DETAILED_COPPER_DECORATION_STAIRS = "detailed_copper_decoration_stairs";
+        String DETAILED_COPPER_DECORATION_WALL = "detailed_copper_decoration_wall";
+
         String IRON_DECORATION = "iron_decoration";
+        String IRON_DECORATION_SLAB = "iron_decoration_slab";
+        String IRON_DECORATION_STAIRS = "iron_decoration_stairs";
+        String IRON_DECORATION_WALL = "iron_decoration_wall";
+        String DETAILED_IRON_DECORATION = "detailed_iron_decoration";
+        String DETAILED_IRON_DECORATION_SLAB = "detailed_iron_decoration_slab";
+        String DETAILED_IRON_DECORATION_STAIRS = "detailed_iron_decoration_stairs";
+        String DETAILED_IRON_DECORATION_WALL = "detailed_iron_decoration_wall";
+
         String METEORIC_IRON_DECORATION = "meteoric_iron_decoration";
+        String METEORIC_IRON_DECORATION_SLAB = "meteoric_iron_decoration_slab";
+        String METEORIC_IRON_DECORATION_STAIRS = "meteoric_iron_decoration_stairs";
+        String METEORIC_IRON_DECORATION_WALL = "meteoric_iron_decoration_wall";
+        String DETAILED_METEORIC_IRON_DECORATION = "detailed_meteoric_iron_decoration";
+        String DETAILED_METEORIC_IRON_DECORATION_SLAB = "detailed_meteoric_iron_decoration_slab";
+        String DETAILED_METEORIC_IRON_DECORATION_STAIRS = "detailed_meteoric_iron_decoration_stairs";
+        String DETAILED_METEORIC_IRON_DECORATION_WALL = "detailed_meteoric_iron_decoration_wall";
+
         String STEEL_DECORATION = "steel_decoration";
+        String STEEL_DECORATION_SLAB = "steel_decoration_slab";
+        String STEEL_DECORATION_STAIRS = "steel_decoration_stairs";
+        String STEEL_DECORATION_WALL = "steel_decoration_wall";
+        String DETAILED_STEEL_DECORATION = "detailed_steel_decoration";
+        String DETAILED_STEEL_DECORATION_SLAB = "detailed_steel_decoration_slab";
+        String DETAILED_STEEL_DECORATION_STAIRS = "detailed_steel_decoration_stairs";
+        String DETAILED_STEEL_DECORATION_WALL = "detailed_steel_decoration_wall";
+
         String TIN_DECORATION = "tin_decoration";
+        String TIN_DECORATION_SLAB = "tin_decoration_slab";
+        String TIN_DECORATION_STAIRS = "tin_decoration_stairs";
+        String TIN_DECORATION_WALL = "tin_decoration_wall";
+        String DETAILED_TIN_DECORATION = "detailed_tin_decoration";
+        String DETAILED_TIN_DECORATION_SLAB = "detailed_tin_decoration_slab";
+        String DETAILED_TIN_DECORATION_STAIRS = "detailed_tin_decoration_stairs";
+        String DETAILED_TIN_DECORATION_WALL = "detailed_tin_decoration_wall";
+
         String TITANIUM_DECORATION = "titanium_decoration";
+        String TITANIUM_DECORATION_SLAB = "titanium_decoration_slab";
+        String TITANIUM_DECORATION_STAIRS = "titanium_decoration_stairs";
+        String TITANIUM_DECORATION_WALL = "titanium_decoration_wall";
+        String DETAILED_TITANIUM_DECORATION = "detailed_titanium_decoration";
+        String DETAILED_TITANIUM_DECORATION_SLAB = "detailed_titanium_decoration_slab";
+        String DETAILED_TITANIUM_DECORATION_STAIRS = "detailed_titanium_decoration_stairs";
+        String DETAILED_TITANIUM_DECORATION_WALL = "detailed_titanium_decoration_wall";
+
         String DARK_DECORATION = "dark_decoration";
+        String DARK_DECORATION_SLAB = "dark_decoration_slab";
+        String DARK_DECORATION_STAIRS = "dark_decoration_stairs";
+        String DARK_DECORATION_WALL = "dark_decoration_wall";
+        String DETAILED_DARK_DECORATION = "detailed_dark_decoration";
+        String DETAILED_DARK_DECORATION_SLAB = "detailed_dark_decoration_slab";
+        String DETAILED_DARK_DECORATION_STAIRS = "detailed_dark_decoration_stairs";
+        String DETAILED_DARK_DECORATION_WALL = "detailed_dark_decoration_wall";
+
         String GRATING = "grating";
         String TIN_LADDER = "tin_ladder";
         String SQUARE_LIGHT_PANEL = "square_light_panel";
@@ -123,8 +234,6 @@ public interface Constant {
         String WALKWAY = "walkway";
         String WIRE_WALKWAY = "wire_walkway";
         String PIPE_WALKWAY = "pipe_walkway";
-        String MOON_CHEESE_LEAVES = "moon_cheese_leaves";
-        String MOON_CHEESE_LOG = "moon_cheese_log";
 
         //  Environment
         String GLOWSTONE_TORCH = "glowstone_torch";
@@ -197,6 +306,7 @@ public interface Constant {
         String ARC_LAMP = "arc_lamp";
         String SPIN_THRUSTER = "spin_thruster";
         String CRYOGENIC_CHAMBER = "cryogenic_chamber";
+        String CRYOGENIC_CHAMBER_PART = "cryogenic_chamber_part";
         String ASTRO_MINER_BASE = "astro_miner_base";
         String SHORT_RANGE_TELEPAD = "short_range_telepad";
 
@@ -208,8 +318,8 @@ public interface Constant {
         String GEOTHERMAL_GENERATOR = "geothermal_generator";
         String ENERGY_STORAGE_MODULE = "energy_storage_module";
         String ENERGY_STORAGE_CLUSTER = "energy_storage_cluster";
-        String WIRE_T1 = "wire";
-        String WIRE_T2 = "heavy_wire";
+        String ALUMINUM_WIRE = "aluminum_wire";
+        String HEAVY_ALUMINUM_WIRE = "heavy_aluminum_wire";
         String SWITCHABLE_ALUMINUM_WIRE = "switchable_aluminum_wire";
         String SEALABLE_ALUMINUM_WIRE = "sealable_aluminum_wire";
         String HEAVY_SEALABLE_ALUMINUM_WIRE = "heavy_sealable_aluminum_wire";
@@ -217,10 +327,9 @@ public interface Constant {
         String BEAM_RECEIVER = "beam_receiver";
         String SOLAR_ARRAY_MODULE = "solar_array_module";
         String OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK = "oxygen_distributor_bubble_dummy_block";
-        String MOON_BASALT_BRICK = "moon_basalt_brick";
-        String CRACKED_MOON_BASALT_BRICK = "cracked_moon_basalt_brick";
         String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
         String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
+        String MOON_DIRT_PATH = "moon_dirt_path";
     }
 
     interface Fluid {
@@ -235,21 +344,33 @@ public interface Constant {
         String OXYGEN_GAS = "oxygen_gas";
         String LIQUID_OXYGEN = "liquid_oxygen";
 
-        static Identifier getId(String s) {
-            return new Identifier(Constant.MOD_ID, "block/" + s);
+        static ResourceLocation getId(String s) {
+            return new ResourceLocation(Constant.MOD_ID, "block/" + s);
         }
     }
 
     interface Item {
         String ITEM_GROUP = "items";
         String RAW_SILICON = "raw_silicon";
-        String METEORIC_IRON = "meteoric_iron";
-        String DESH = "desh";
-        String LEAD = "lead";
-        String ALUMINUM = "aluminum";
-        String TIN = "tin";
-        String STEEL = "steel";
-        String TITANIUM = "titanium";
+        String RAW_METEORIC_IRON = "raw_meteoric_iron";
+        String METEORIC_IRON_INGOT = "meteoric_iron_ingot";
+        String METEORIC_IRON_NUGGET = "meteoric_iron_nugget";
+        String RAW_DESH = "raw_desh";
+        String DESH_INGOT = "desh_ingot";
+        String DESH_NUGGET = "desh_nugget";
+        String RAW_LEAD = "raw_lead";
+        String LEAD_INGOT = "lead_ingot";
+        String LEAD_NUGGET = "lead_nugget";
+        String RAW_ALUMINUM = "raw_aluminum";
+        String ALUMINUM_INGOT = "aluminum_ingot";
+        String ALUMINUM_NUGGET = "aluminum_nugget";
+        String RAW_TIN = "raw_tin";
+        String TIN_INGOT = "tin_ingot";
+        String TIN_NUGGET = "tin_nugget";
+        String RAW_TITANIUM = "raw_titanium";
+        String TITANIUM_INGOT = "titanium_ingot";
+        String TITANIUM_NUGGET = "titanium_nugget";
+        String STEEL_INGOT = "steel_ingot";
         String LUNAR_SAPPHIRE = "lunar_sapphire";
         String DESH_STICK = "desh_stick";
         String CARBON_FRAGMENTS = "carbon_fragments";
@@ -387,6 +508,8 @@ public interface Constant {
         String ISOTHERMAL_PADDING_LEGGINGS = "isothermal_padding_leggings";
         String ISOTHERMAL_PADDING_BOOTS = "isothermal_padding_boots";
 
+        String ROCKET = "rocket";
+
         String TIER_2_ROCKET_SCHEMATIC = "tier_2_rocket_schematic";
         String TIER_3_ROCKET_SCHEMATIC = "tier_3_rocket_schematic";
         String CARGO_ROCKET_SCHEMATIC = "cargo_rocket_schematic";
@@ -410,6 +533,7 @@ public interface Constant {
     interface Particle {
         String DRIPPING_FUEL_PARTICLE = "dripping_fuel_particle";
         String DRIPPING_CRUDE_OIL_PARTICLE = "dripping_crude_oil_particle";
+        String CRYOGENIC_PARTICLE = "cryogenic_particle";
     }
 
     interface Config {
@@ -445,33 +569,34 @@ public interface Constant {
     }
 
     interface ScreenTexture {
-        Identifier COAL_GENERATOR_SCREEN = id("textures/gui/coal_generator_screen.png");
-        Identifier SOLAR_PANEL_SCREEN = id("textures/gui/solar_panel_screen.png");
-        Identifier CIRCUIT_FABRICATOR_SCREEN = id("textures/gui/circuit_fabricator_screen.png");
-        Identifier REFINERY_SCREEN = id("textures/gui/refinery_screen.png");
-        Identifier ELECTRIC_FURNACE_SCREEN = id("textures/gui/electric_furnace_screen.png");
-        Identifier ELECTRIC_ARC_FURNACE_SCREEN = id("textures/gui/electric_arc_furnace_screen.png");
-        Identifier COMPRESSOR_SCREEN = id("textures/gui/compressor_screen.png");
-        Identifier ELECTRIC_COMPRESSOR_SCREEN = id("textures/gui/electric_compressor_screen.png");
-        Identifier ENERGY_STORAGE_MODULE_SCREEN = id("textures/gui/energy_storage_module_screen.png");
-        Identifier OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
+        ResourceLocation COAL_GENERATOR_SCREEN = id("textures/gui/coal_generator_screen.png");
+        ResourceLocation SOLAR_PANEL_SCREEN = id("textures/gui/solar_panel_screen.png");
+        ResourceLocation CIRCUIT_FABRICATOR_SCREEN = id("textures/gui/circuit_fabricator_screen.png");
+        ResourceLocation REFINERY_SCREEN = id("textures/gui/refinery_screen.png");
+        ResourceLocation ELECTRIC_FURNACE_SCREEN = id("textures/gui/electric_furnace_screen.png");
+        ResourceLocation ELECTRIC_ARC_FURNACE_SCREEN = id("textures/gui/electric_arc_furnace_screen.png");
+        ResourceLocation COMPRESSOR_SCREEN = id("textures/gui/compressor_screen.png");
+        ResourceLocation ELECTRIC_COMPRESSOR_SCREEN = id("textures/gui/electric_compressor_screen.png");
+        ResourceLocation ENERGY_STORAGE_MODULE_SCREEN = id("textures/gui/energy_storage_module_screen.png");
+        ResourceLocation OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
 
-        Identifier MACHINE_CONFIG_PANELS = id("textures/gui/machine_config.png");
-        Identifier PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
-        Identifier PLAYER_INVENTORY_TABS = id("textures/gui/player_inventory_switch_tabs.png");
-        Identifier OVERLAY = id("textures/gui/overlay.png");
+        ResourceLocation MACHINE_CONFIG_PANELS = id("textures/gui/machine_config.png");
+        ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
+        ResourceLocation PLAYER_INVENTORY_TABS = id("textures/gui/player_inventory_switch_tabs.png");
+        ResourceLocation OVERLAY = id("textures/gui/overlay.png");
 
-        Identifier MAP_SCREEN = id("textures/gui/map.png");
-        Identifier PLANET_ICONS = id("textures/gui/planet_icons.png");
-        Identifier BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
-        Identifier OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
-        Identifier OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
-        Identifier OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
-        Identifier DEFAULT_SOLAR_PANELS = id("textures/solar_panel/default_solar_panels.png");
-        Identifier DEFAULT_LIGHT_SOURCES = id("textures/solar_panel/default_light_sources.png");
-        Identifier MOON_LIGHT_SOURCES = id("textures/solar_panel/moon_light_sources.png");
+        ResourceLocation MAP_SCREEN = id("textures/gui/map.png");
+        ResourceLocation PLANET_ICONS = id("textures/gui/planet_icons.png");
+        ResourceLocation BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
+        ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
+        ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
+        ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
+        ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
+        ResourceLocation DEFAULT_SOLAR_PANELS = id("textures/solar_panel/default_solar_panels.png");
+        ResourceLocation DEFAULT_LIGHT_SOURCES = id("textures/solar_panel/default_light_sources.png");
+        ResourceLocation MOON_LIGHT_SOURCES = id("textures/solar_panel/moon_light_sources.png");
 
-        Identifier REI_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
+        ResourceLocation RECIPE_VEIWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
     }
 
     interface SlotSprite {
@@ -488,12 +613,28 @@ public interface Constant {
         String EVOLVED_ZOMBIE = "evolved_zombie";
         String EVOLVED_CREEPER = "evolved_creeper";
         String T1_ROCKET = "t1_rocket";
+        String ROCKET = "rocket";
         String BUBBLE = "bubble";
         String EVOLVED_SKELETON = "evolved_skeleton";
         String EVOLVED_SPIDER = "evolved_spider";
         String EVOLVED_PILLAGER = "evolved_pillager";
         String EVOLVED_EVOKER = "evolved_evoker";
         String EVOLVED_VINDICATOR = "evolved_vindicator";
+        String GREY = "grey";
+        String ARCH_GREY = "arch_grey";
+        String RUMBLER = "rumbler";
+        String OLI_GRUB = "oli_grub";
+        String COMET_CUBE = "comet_cube";
+        String GAZER = "gazer";
+    }
+
+    interface EntityTexture {
+        String GREY = "textures/entity/grey.png";
+        String ARCH_GREY = "textures/entity/arch_grey.png";
+        String RUMBLER = "textures/entity/rumbler.png";
+        String OLI_GRUB = "textures/entity/oli_grub.png";
+        String COMET_CUBE = "textures/entity/comet_cube.png";
+        String GAZER = "textures/entity/gazer.png";
     }
 
     interface TextureCoordinate {
@@ -513,40 +654,6 @@ public interface Constant {
         int FLUID_TANK_WIDTH = 18;
 
         int BASE_FLUID_TANK_Y = 49;
-
-        int FLUID_TANK_8_16_X = 32;
-        int FLUID_TANK_8_16_Y = BASE_FLUID_TANK_Y;
-        int FLUID_TANK_8_16_HEIGHT = 49;
-
-        int FLUID_TANK_7_14_X = FLUID_TANK_8_16_X + FLUID_TANK_WIDTH;
-        int FLUID_TANK_7_14_Y = BASE_FLUID_TANK_Y;
-        int FLUID_TANK_7_14_HEIGHT = FLUID_TANK_8_16_HEIGHT - 6; // segment size
-
-        int FLUID_TANK_6_12_X = FLUID_TANK_7_14_X + FLUID_TANK_WIDTH;
-        int FLUID_TANK_6_12_Y = BASE_FLUID_TANK_Y;
-        int FLUID_TANK_6_12_HEIGHT = FLUID_TANK_7_14_HEIGHT - 6;
-
-        int FLUID_TANK_5_10_X = FLUID_TANK_6_12_X + FLUID_TANK_WIDTH;
-        int FLUID_TANK_5_10_Y = BASE_FLUID_TANK_Y;
-        int FLUID_TANK_5_10_HEIGHT = FLUID_TANK_6_12_HEIGHT - 6;
-
-        int FLUID_TANK_4_8_X = FLUID_TANK_5_10_X + FLUID_TANK_WIDTH;
-        int FLUID_TANK_4_8_Y = BASE_FLUID_TANK_Y;
-        int FLUID_TANK_4_8_HEIGHT = FLUID_TANK_5_10_HEIGHT - 6;
-
-        int FLUID_TANK_3_6_X = FLUID_TANK_5_10_X;
-        int FLUID_TANK_3_6_Y = FLUID_TANK_5_10_Y - FLUID_TANK_5_10_HEIGHT;
-        int FLUID_TANK_3_6_HEIGHT = FLUID_TANK_4_8_HEIGHT - 6;
-
-        int FLUID_TANK_2_4_X = FLUID_TANK_6_12_X;
-        int FLUID_TANK_2_4_Y = FLUID_TANK_6_12_Y - FLUID_TANK_6_12_HEIGHT;
-        int FLUID_TANK_2_4_HEIGHT = FLUID_TANK_3_6_HEIGHT - 6;
-
-        int FLUID_TANK_1_2_X = FLUID_TANK_7_14_X;
-        int FLUID_TANK_1_2_Y = FLUID_TANK_7_14_Y - FLUID_TANK_7_14_HEIGHT;
-        int FLUID_TANK_1_2_HEIGHT = FLUID_TANK_2_4_HEIGHT - 6;
-
-        int FLUID_TANK_UNDERLAY_OFFSET = -49;
 
         int BUTTON_WIDTH = 13;
         int BUTTON_HEIGHT = 13;
@@ -598,7 +705,9 @@ public interface Constant {
         String OXYGEN_COMPRESSOR_SCREEN_HANDLER = "oxygen_compressor_screen_handler";
         String OXYGEN_DECOMPRESSOR_SCREEN_HANDLER = "oxygen_decompressor_screen_handler";
         String OXYGEN_STORAGE_MODULE_SCREEN_HANDLER = "oxygen_storage_module_screen_handler";
-        String OXYGEN_SEALER_SCREEN_HANDLER = "oxygen_sealer";
+        String OXYGEN_SEALER_SCREEN_HANDLER = "oxygen_sealer_screen_handler";
+        String FUEL_LOADER_SCREEN_HANDLER = "fuel_loader_screen_handler";
+        String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
     }
 
     interface Biome {
@@ -621,30 +730,95 @@ public interface Constant {
     }
 
     interface Filter {
-        FluidFilter LOX_ONLY = new RawFluidTagFilter(GalacticraftTag.LIQUID_OXYGEN);
-        FluidFilter OIL = new RawFluidTagFilter(GalacticraftTag.OIL);
-        FluidFilter FUEL = new RawFluidTagFilter(GalacticraftTag.FUEL);
+        static <T> @NotNull Predicate<T> any() {
+            return Predicates.alwaysTrue();
+        }
+
+        static <T> @NotNull Predicate<T> none() {
+            return Predicates.alwaysFalse();
+        }
+
+        interface Item {
+//            Predicate<ItemVariant> DIAMOND = new TagPredicate<>(ConventionalItemTags.DIAMONDS); TODO: PORT
+//            Predicate<ItemVariant> SILICON = new TagPredicate<>(GalacticraftTag.SILICONS);
+//            Predicate<ItemVariant> REDSTONE = new TagPredicate<>(GalacticraftTag.REDSTONES);
+
+            Predicate<ItemVariant> CAN_EXTRACT_ENERGY = stack -> {
+                EnergyStorage energyStorage = ContainerItemContext.withInitial(stack.toStack()).find(EnergyStorage.ITEM);
+                try (Transaction transaction = Transaction.openOuter()) {
+                    return energyStorage != null && energyStorage.supportsExtraction();
+                }
+            };
+            Predicate<ItemVariant> CAN_INSERT_ENERGY = stack -> {
+                EnergyStorage energyStorage = ContainerItemContext.withInitial(stack.toStack()).find(EnergyStorage.ITEM);
+                try (Transaction transaction = Transaction.openOuter()) {
+                    return energyStorage != null && energyStorage.supportsInsertion() && energyStorage.insert(Long.MAX_VALUE, transaction) > 0;
+                }
+            };
+
+            Predicate<ItemVariant> CAN_EXTRACT_OXYGEN = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.OXYGEN);
+            Predicate<ItemVariant> CAN_INSERT_OXYGEN = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.OXYGEN);
+
+            Predicate<ItemVariant> CAN_EXTRACT_OIL = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.OIL);
+            Predicate<ItemVariant> CAN_INSERT_FUEL = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.FUEL);
+            Predicate<ItemVariant> CAN_EXTRACT_LOX = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.LIQUID_OXYGEN);
+        }
+
+        interface Gas {
+            Predicate<FluidVariant> OXYGEN = v -> v.getFluid().is(GCTags.OXYGEN);
+        }
+
+        interface Fluid {
+            Predicate<FluidVariant> LOX_ONLY = new TagPredicate<>(GCTags.LIQUID_OXYGEN, net.minecraft.world.level.material.Fluid::is);
+            Predicate<FluidVariant> OIL = new TagPredicate<>(GCTags.OIL, net.minecraft.world.level.material.Fluid::is);
+            Predicate<FluidVariant> FUEL = new TagPredicate<>(GCTags.FUEL, net.minecraft.world.level.material.Fluid::is);
+        }
     }
 
     interface Text {
-        Style DARK_GRAY_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
-        Style GOLD_STYLE = Style.EMPTY.withColor(Formatting.GOLD);
-        Style GREEN_STYLE = Style.EMPTY.withColor(Formatting.GREEN);
-        Style RED_STYLE = Style.EMPTY.withColor(Formatting.RED);
-        Style BLUE_STYLE = Style.EMPTY.withColor(Formatting.BLUE);
-        Style AQUA_STYLE = Style.EMPTY.withColor(Formatting.AQUA);
-        Style GRAY_STYLE = Style.EMPTY.withColor(Formatting.GRAY);
-        Style DARK_RED_STYLE = Style.EMPTY.withColor(Formatting.DARK_RED);
-        Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(Formatting.LIGHT_PURPLE);
-        Style YELLOW_STYLE = Style.EMPTY.withColor(Formatting.YELLOW);
-        Style WHITE_STYLE = Style.EMPTY.withColor(Formatting.WHITE);
+        interface Color {
+            Style DARK_GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_GRAY);
+            Style GOLD_STYLE = Style.EMPTY.withColor(ChatFormatting.GOLD);
+            Style GREEN_STYLE = Style.EMPTY.withColor(ChatFormatting.GREEN);
+            Style RED_STYLE = Style.EMPTY.withColor(ChatFormatting.RED);
+            Style BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.BLUE);
+            Style AQUA_STYLE = Style.EMPTY.withColor(ChatFormatting.AQUA);
+            Style GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY);
+            Style DARK_RED_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_RED);
+            Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(ChatFormatting.LIGHT_PURPLE);
+            Style YELLOW_STYLE = Style.EMPTY.withColor(ChatFormatting.YELLOW);
+            Style WHITE_STYLE = Style.EMPTY.withColor(ChatFormatting.WHITE);
+            Style DARK_BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_BLUE);
 
-        static Style getStorageLevelColor(double scale) {
-            return Style.EMPTY.withColor(TextColor.fromRgb(((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8)));
+            static Style getStorageLevelColor(double scale) {
+                return Style.EMPTY.withColor(TextColor.fromRgb(((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8)));
+            }
+
+            static Style getRainbow(int ticks) {
+                return Style.EMPTY.withColor(TextColor.fromRgb(Mth.hsvToRgb(ticks / 1000.0f, 1, 1)));
+            }
         }
-
-        static Style getRainbow(int ticks) {
-            return Style.EMPTY.withColor(TextColor.fromRgb(ColorUtil.hsbToRGB(ticks / 500.0f, 1, 1)));
+        
+        interface TranslationKey {
+              String NOT_ENOUGH_LEAVES = "ui.galacticraft.machine.status.not_enough_leaves";
+              String ACTIVE = "ui.galacticraft.machine.status.active";
+              String IDLE = "ui.galacticraft.machine.status.idle";
+              String WARMING = "ui.galacticraft.machine.status.warming";
+              String INACTIVE = "ui.galacticraft.machine.status.inactive";
+              String NOT_ENOUGH_ENERGY = "ui.galacticraft.machine.status.not_enough_energy";
+              String OFF = "ui.galacticraft.machine.status.off";
+              String PROCESSING = "ui.galacticraft.machine.status.processing";
+              String COLLECTING = "ui.galacticraft.machine.status.collecting";
+              String COMPRESSING = "ui.galacticraft.machine.status.compressing";
+              String DECOMPRESSING = "ui.galacticraft.machine.status.decompressing";
+              String PARTIALLY_BLOCKED = "ui.galacticraft.machine.status.partially_blocked";
+              String NIGHT = "ui.galacticraft.machine.status.night";
+              String FULL = "ui.galacticraft.machine.status.full";
+              String EMPTY_CANISTER = "ui.galacticraft.machine.status.empty_canister";
+              String BLOCKED = "ui.galacticraft.machine.status.blocked";
+              String DISTRIBUTING = "ui.galacticraft.machine.status.distributing";
+              String NOT_ENOUGH_OXYGEN = "ui.galacticraft.machine.status.not_enough_oxygen";
+              String NOT_ENOUGH_ITEMS = "ui.galacticraft.machine.status.not_enough_items";
         }
     }
 
@@ -676,17 +850,24 @@ public interface Constant {
         String INPUTS = "Inputs";
         String OUTPUTS = "Outputs";
         String SHAPED = "Shaped";
+        String ITEMS = "Items";
+        String GASES = "Gases";
+        String CRYOGENIC_COOLDOWN = "cryogenic_cooldown";
     }
 
     interface Property {
-        BooleanProperty ACTIVE = BooleanProperty.of("active");
+        BooleanProperty ACTIVE = BooleanProperty.create("active");
+    }
+
+    interface Energy {
+        long T1_MACHINE_ENERGY_USAGE = 0;
+        long T2_MACHINE_ENERGY_USAGE = 0;
     }
 
     @ApiStatus.Internal
     interface Misc {
-        Identifier EMPTY = new Identifier("empty");
+        ResourceLocation EMPTY = new ResourceLocation("empty");
         Direction[] DIRECTIONS = Direction.values();
-        BlockFace[] BLOCK_FACES = BlockFace.values();
         String LOGGER_PREFIX = "[Galacticraft] ";
         boolean DEBUG = false;
         int MAX_STRING_READ = 32767;
@@ -695,7 +876,6 @@ public interface Constant {
     @ApiStatus.Internal
     interface Mixin {
         String STRUCTURE_POOL_DEBUG = "StructurePoolGeneratorMixin";
-        String OVERWORLD_SKY_OVERRIDE = "client.WorldRendererOverworldMixin";
     }
 
     interface Recipe {
@@ -723,5 +903,21 @@ public interface Constant {
         String SOLAR_PANEL_PANEL_VERTICAL_1 = "solar_panel_panel_vertical_1";
         String SOLAR_PANEL_PANEL_VERTICAL_2 = "solar_panel_panel_vertical_2";
         String SOLAR_PANEL_PANEL_VERTICAL_3 = "solar_panel_panel_vertical_3";
+    }
+
+    interface Carver {
+        String MOON_CANYON_CARVER = "moon_canyon_carver";
+        String MOON_CRATER_CARVER = "moon_crater_carver";
+        String MOON_HIGHLANDS_CAVE_CARVER = "moon_highlands_cave_carver";
+        String MOON_MARE_CAVE_CARVER = "moon_mare_cave_carver";
+    }
+
+    interface Packet {
+        ResourceLocation BUBBLE_SIZE = id("bubble_size");
+        ResourceLocation BUBBLE_MAX = id("bubble_max");
+        ResourceLocation BUBBLE_VISIBLE = id("bubble_visible");
+        ResourceLocation DISABLE_SEAL = id("toggle_seal");
+        ResourceLocation OPEN_GC_INVENTORY = id("open_gc_inv");
+        ResourceLocation ENTITY_SPAWN = id("entity_spawn");
     }
 }

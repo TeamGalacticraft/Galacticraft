@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,15 @@
 
 package dev.galacticraft.mod.entity;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.VindicatorEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Vindicator;
+import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class EvolvedVindicatorEntity extends VindicatorEntity {
-    public EvolvedVindicatorEntity(EntityType<? extends EvolvedVindicatorEntity> entityType, World world) {
+public class EvolvedVindicatorEntity extends Vindicator {
+    public EvolvedVindicatorEntity(EntityType<? extends EvolvedVindicatorEntity> entityType, Level world) {
         super(entityType, world);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.item;
 
 public class FrequencyModuleItem extends AccessoryItem {
-    public FrequencyModuleItem(Settings settings) {
+    public FrequencyModuleItem(Properties settings) {
         super(settings);
     }
 

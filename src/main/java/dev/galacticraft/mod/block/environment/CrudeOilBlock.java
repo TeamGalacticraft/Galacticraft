@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,36 +22,36 @@
 
 package dev.galacticraft.mod.block.environment;
 
-import dev.galacticraft.mod.api.block.FluidBlock;
-import dev.galacticraft.mod.tag.GalacticraftTag;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import dev.galacticraft.mod.tag.GCTags;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FlowingFluid;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CrudeOilBlock extends FluidBlock {
-    public CrudeOilBlock(FlowableFluid fluid, Settings settings) {
+public class CrudeOilBlock extends LiquidBlock {
+    public CrudeOilBlock(FlowingFluid fluid, Properties settings) {
         super(fluid, settings);
     }
 
     @Override
-    public void onEntityCollision(BlockState blockState, World world, BlockPos blockPos, Entity entity) {
-        if (GalacticraftTag.OIL.contains(world.getBlockState(entity.getBlockPos().add(0, (int) Math.floor(entity.getEyeHeight(entity.getPose())), 0)).getFluidState().getFluid())) {
+    public void entityInside(BlockState blockState, Level world, BlockPos blockPos, Entity entity) {
+        if (world.getBlockState(entity.blockPosition().offset(0, (int) Math.floor(entity.getEyeHeight(entity.getPose())), 0)).getFluidState().getType().is(GCTags.OIL)) {
             if (entity instanceof LivingEntity living) {
-                if (living instanceof PlayerEntity player) {
+                if (living instanceof Player player) {
                     if (player.isCreative()) {
                         return;
                     }
                 }
-                living.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 3 * 20));
+                living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 3 * 20));
             }
         }
     }

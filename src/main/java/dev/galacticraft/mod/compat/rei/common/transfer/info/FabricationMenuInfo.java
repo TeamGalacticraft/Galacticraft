@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,30 +22,35 @@
 
 package dev.galacticraft.mod.compat.rei.common.transfer.info;
 
-import dev.galacticraft.mod.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
-import dev.galacticraft.mod.compat.rei.common.transfer.info.stack.LBASlotAccessor;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
-import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoContext;
 import me.shedaniel.rei.api.common.transfer.info.clean.InputCleanHandler;
 import me.shedaniel.rei.api.common.transfer.info.simple.SimplePlayerInventoryMenuInfo;
+import me.shedaniel.rei.api.common.transfer.info.stack.ContainerSlotAccessor;
 import me.shedaniel.rei.api.common.transfer.info.stack.SlotAccessor;
-import net.minecraft.inventory.Inventory;
+import net.minecraft.world.Container;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FabricationMenuInfo<B extends RecipeMachineBlockEntity<Inventory, FabricationRecipe>, T extends RecipeMachineScreenHandler<Inventory, FabricationRecipe, B>, D extends DefaultFabricationDisplay> implements SimplePlayerInventoryMenuInfo<T, D> {
+public record FabricationMenuInfo<B extends RecipeMachineBlockEntity<Container, FabricationRecipe>, T extends RecipeMachineScreenHandler<Container, FabricationRecipe, B>, D extends DefaultFabricationDisplay>(D display) implements SimplePlayerInventoryMenuInfo<T, D> {
     @Override
     public Iterable<SlotAccessor> getInputSlots(MenuInfoContext<T, ?, D> context) {
         T menu = context.getMenu();
 
         List<SlotAccessor> list = new ArrayList<>(5);
         for (int i = 1; i < 6; i++) {
-            list.add(new LBASlotAccessor(menu.machine.itemInv(), i));
+            list.add(new ContainerSlotAccessor(menu.machine.itemStorage().playerInventory(), i));
         }
         return list;
+    }
+
+    @Override
+    public D getDisplay() {
+        return this.display;
     }
 
 

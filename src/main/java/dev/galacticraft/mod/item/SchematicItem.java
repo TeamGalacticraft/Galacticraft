@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,13 @@
 package dev.galacticraft.mod.item;
 
 import dev.galacticraft.api.item.Schematic;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SchematicItem extends Item implements Schematic {
-    public SchematicItem(Settings settings) {
+    public SchematicItem(Properties settings) {
         super(settings);
     }
 }

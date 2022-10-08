@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,20 @@
 
 package dev.galacticraft.mod.screen;
 
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.block.entity.CompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.Property;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.DataSlot;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CompressorScreenHandler extends RecipeMachineScreenHandler<Inventory, CompressingRecipe, CompressorBlockEntity> {
-    public final Property fuelTime = new Property() {
+public class CompressorScreenHandler extends RecipeMachineScreenHandler<Container, CompressingRecipe, CompressorBlockEntity> {
+    public final DataSlot fuelTime = new DataSlot() {
         @Override
         public int get() {
             return CompressorScreenHandler.this.machine.fuelTime;
@@ -46,7 +47,7 @@ public class CompressorScreenHandler extends RecipeMachineScreenHandler<Inventor
         }
     };
 
-    public final Property fuelLength = new Property() {
+    public final DataSlot fuelLength = new DataSlot() {
         @Override
         public int get() {
             return CompressorScreenHandler.this.machine.fuelLength;
@@ -58,13 +59,13 @@ public class CompressorScreenHandler extends RecipeMachineScreenHandler<Inventor
         }
     };
 
-    public CompressorScreenHandler(int syncId, PlayerEntity player, CompressorBlockEntity machine) {
-        super(syncId, player, machine, () -> GalacticraftScreenHandlerType.COMPRESSOR_HANDLER, 8, 85);
-        this.addProperty(this.fuelTime);
-        this.addProperty(this.fuelLength);
+    public CompressorScreenHandler(int syncId, Player player, CompressorBlockEntity machine) {
+        super(syncId, player, machine, GCScreenHandlerType.COMPRESSOR_HANDLER, 8, 85);
+        this.addDataSlot(this.fuelTime);
+        this.addDataSlot(this.fuelLength);
     }
 
-    public CompressorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (CompressorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public CompressorScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (CompressorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

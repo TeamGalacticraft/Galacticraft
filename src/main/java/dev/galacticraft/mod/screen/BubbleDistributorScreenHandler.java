@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,23 +22,23 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.mod.api.screen.MachineScreenHandler;
+import dev.galacticraft.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleDistributorBlockEntity> {
-    public BubbleDistributorScreenHandler(int syncId, PlayerEntity player, BubbleDistributorBlockEntity machine) {
-        super(syncId, player, machine, GalacticraftScreenHandlerType.BUBBLE_DISTRIBUTOR_HANDLER);
+    public BubbleDistributorScreenHandler(int syncId, Player player, BubbleDistributorBlockEntity machine) {
+        super(syncId, player, machine, GCScreenHandlerType.BUBBLE_DISTRIBUTOR_HANDLER);
 
         this.addPlayerInventorySlots(8, 84);
     }
 
-    public BubbleDistributorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (BubbleDistributorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    public BubbleDistributorScreenHandler(int syncId, Inventory inv, FriendlyByteBuf buf) {
+        this(syncId, inv.player, (BubbleDistributorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,57 +23,57 @@
 package dev.galacticraft.mod.client.render.block.entity;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.AdvancedSolarPanelBlockEntity;
-import dev.galacticraft.mod.client.render.entity.model.GalacticraftEntityModelLayer;
+import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.world.World;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class AdvancedSolarPanelBlockEntityRenderer implements BlockEntityRenderer<AdvancedSolarPanelBlockEntity> {
-    private static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/model/solar_panel.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/model/solar_panel.png");
     private final ModelPart panel;
     private final ModelPart pole;
 
-    public AdvancedSolarPanelBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
-        ModelPart root = context.getLayerModelPart(GalacticraftEntityModelLayer.SOLAR_PANEL);
+    public AdvancedSolarPanelBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
+        ModelPart root = context.bakeLayer(GCEntityModelLayer.SOLAR_PANEL);
         this.panel = root.getChild(Constant.ModelPartName.SOLAR_PANEL_PANEL);
         this.pole = root.getChild(Constant.ModelPartName.SOLAR_PANEL_POLE);
     }
 
     @Override
-    public void render(AdvancedSolarPanelBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        light = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().offset(Direction.UP, 3));
+    public void render(AdvancedSolarPanelBlockEntity blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+        light = LevelRenderer.getLightColor(blockEntity.getLevel(), blockEntity.getBlockPos().relative(Direction.UP, 3));
 
-        matrices.push();
+        matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
         RenderSystem.setShaderTexture(0, AdvancedSolarPanelBlockEntityRenderer.TEXTURE);
-        this.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(TEXTURE)), light, overlay, blockEntity.getWorld(), tickDelta);
-        matrices.pop();
+        this.render(matrices, vertexConsumers.getBuffer(RenderType.entityCutout(TEXTURE)), light, overlay, blockEntity.getLevel(), tickDelta);
+        matrices.popPose();
     }
 
-    public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, World world, float tickDelta) {
+    public void render(PoseStack matrices, VertexConsumer vertexConsumer, int light, int overlay, Level world, float tickDelta) {
         this.pole.render(matrices, vertexConsumer, light, overlay);
         matrices.translate(0.0F, 1.5F, 0.0F);
 
-        matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F));
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-        matrices.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(world.getSkyAngleRadians(tickDelta)));
+        matrices.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
+        matrices.mulPose(Vector3f.YP.rotationDegrees(-90.0F));
+        matrices.mulPose(Vector3f.XP.rotation(world.getSunAngle(tickDelta)));
 
         this.panel.render(matrices, vertexConsumer, light, overlay);
     }

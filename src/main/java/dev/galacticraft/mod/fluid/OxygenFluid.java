@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,76 +22,76 @@
 
 package dev.galacticraft.mod.fluid;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenFluid extends Fluid {
     @Override
-    public Item getBucketItem() {
+    public Item getBucket() {
         return Items.BUCKET;
     }
 
     @Override
-    protected boolean canBeReplacedWith(FluidState state, BlockView world, BlockPos pos, Fluid fluid, Direction direction) {
+    protected boolean canBeReplacedWith(FluidState state, BlockGetter world, BlockPos pos, Fluid fluid, Direction direction) {
         return true;
     }
 
     @Override
-    protected Vec3d getVelocity(BlockView world, BlockPos pos, FluidState state) {
-        return Vec3d.ZERO;
+    protected Vec3 getFlow(BlockGetter world, BlockPos pos, FluidState state) {
+        return Vec3.ZERO;
     }
 
     @Override
-    public int getTickRate(WorldView world) {
+    public int getTickDelay(LevelReader world) {
         return 0;
     }
 
     @Override
-    protected float getBlastResistance() {
+    protected float getExplosionResistance() {
         return 0;
     }
 
     @Override
-    public float getHeight(FluidState state, BlockView world, BlockPos pos) {
+    public float getHeight(FluidState state, BlockGetter world, BlockPos pos) {
         return 0;
     }
 
     @Override
-    public float getHeight(FluidState state) {
+    public float getOwnHeight(FluidState state) {
         return 0;
     }
 
     @Override
-    protected BlockState toBlockState(FluidState state) {
-        return Blocks.AIR.getDefaultState();
+    protected BlockState createLegacyBlock(FluidState state) {
+        return Blocks.AIR.defaultBlockState();
     }
 
     @Override
-    public boolean isStill(FluidState state) {
+    public boolean isSource(FluidState state) {
         return true;
     }
 
     @Override
-    public int getLevel(FluidState state) {
+    public int getAmount(FluidState state) {
         return 0;
     }
 
     @Override
-    public VoxelShape getShape(FluidState state, BlockView world, BlockPos pos) {
-        return VoxelShapes.empty();
+    public VoxelShape getShape(FluidState state, BlockGetter world, BlockPos pos) {
+        return Shapes.empty();
     }
 }

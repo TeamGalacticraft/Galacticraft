@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import dev.galacticraft.mod.Galacticraft;
-import net.minecraft.util.Util;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -35,6 +34,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import net.minecraft.Util;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -50,7 +50,7 @@ public class CapesLoader {
     private static final Type PLAYER_CAPE_DATA_TYPE = new TypeToken<List<PlayerCapeData>>(){}.getType();
 
     public static void load() {
-        Util.getMainWorkerExecutor().execute(() -> {
+        Util.backgroundExecutor().execute(() -> {
             long startLoad = System.currentTimeMillis();
             Gson gson = new GsonBuilder().create();
             Galacticraft.LOGGER.info("Loading capes data...");

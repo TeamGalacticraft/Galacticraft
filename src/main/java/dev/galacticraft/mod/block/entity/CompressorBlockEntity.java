@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,194 +22,166 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.storage.StorageSlot;
+import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
+import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.LongProperty;
+import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
-import dev.galacticraft.mod.screen.slot.SlotType;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CompressorBlockEntity extends RecipeMachineBlockEntity<Inventory, CompressingRecipe> {
+public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, CompressingRecipe> {
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
 
-    private final Inventory craftingInv = new MachineInvWrapper(this, this.itemInv().getSubInv(0, FUEL_INPUT_SLOT));
-    private final FixedItemInv outputInv = this.itemInv().getSubInv(OUTPUT_SLOT, OUTPUT_SLOT + 1);
+    private final Container craftingInv = this.itemStorage().subInv(0, FUEL_INPUT_SLOT);
     public int fuelTime;
     public int fuelLength;
+    private LongProperty fuelSlotModification = LongProperty.create(-1);
 
     public CompressorBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE, CompressingRecipe::getTime);
+        super(GCBlockEntityTypes.COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE);
     }
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
+    protected @NotNull MachineItemStorage createItemStorage() {
+        MachineItemStorage.Builder builder = MachineItemStorage.Builder.create();
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                builder.addSlot(y * 3 + x, SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 17, y * 18 + 17);
+                builder.addSlot(GCSlotTypes.ITEM_INPUT, new ItemSlotDisplay(x * 18 + 17, y * 18 + 17));
             }
         }
-        builder.addSlot(FUEL_INPUT_SLOT, SlotType.SOLID_FUEL, stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null, 83, 47);
-        builder.addOutputSlot(OUTPUT_SLOT, SlotType.OUTPUT, 143, 36);
-        return builder;
+        return builder
+                .addSlot(GCSlotTypes.SOLID_FUEL, new ItemSlotDisplay(83, 47))
+                .addSlot(GCSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(143, 36))
+                .build();
     }
 
     @Override
-    protected MachineStatus getStatusById(int index) {
-        return Status.values()[index];
+    protected @NotNull MachineStatus workingStatus() {
+        return GCMachineStatus.COMPRESSING;
     }
 
     @Override
-    public int getEnergyCapacity() {
-        return 0;
-    }
-
-    @Override
-    protected void tickDisabled() {
-    }
-
-    @Override
-    public @NotNull MachineStatus updateStatus() {
-        if (this.recipe() == null) return Status.INVALID_RECIPE;
-        if (!this.canCraft(this.recipe())) return Status.OUTPUT_FULL;
-        if (this.fuelTime <= 0) return Status.MISSING_FUEL;
-        return Status.PROCESSING;
-    }
-
-    @Override
-    public @NotNull Inventory craftingInv() {
+    public @NotNull Container craftingInv() {
         return this.craftingInv;
     }
 
     @Override
-    public @NotNull FixedItemInv outputInv() {
-        return this.outputInv;
+    protected boolean outputStacks(@NotNull CompressingRecipe recipe, @NotNull TransactionContext context) {
+        ItemStack output = recipe.getResultItem();
+        return this.itemStorage().insert(OUTPUT_SLOT, ItemVariant.of(output), output.getCount(), context) == output.getCount();
     }
 
     @Override
-    public void tickWork() {
-        if (this.getStatus() == Status.MISSING_FUEL) {
-            if (this.fuelLength == 0) {
-                Integer integer = FuelRegistry.INSTANCE.get(this.itemInv().extractStack(FUEL_INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem());
-                if (integer != null) {
-                    this.fuelTime = this.fuelLength = integer;
+    protected boolean extractCraftingMaterials(@NotNull CompressingRecipe recipe, @NotNull TransactionContext context) {
+        NonNullList<ItemStack> remainder = recipe.getRemainingItems(this.craftingInv);
+        for (int i = 0; i < 9; i++) {
+            ItemStack stack = remainder.get(i);
+            this.itemStorage().extract(i, 1, context);
+            if (stack != ItemStack.EMPTY) {
+                if (this.itemStorage().getAmount(i) == 0) {
+                    if (stack.getCount() != this.itemStorage().insert(i, ItemVariant.of(stack), stack.getCount(), context)) {
+                        return false;
+                    }
+                } else {
+                    return false;
                 }
             }
-            this.setStatus(this.updateStatus());
         }
+        return true;
+    }
+
+    @Override
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(world, pos, state, profiler);
         if (--this.fuelTime <= 0) {
             this.fuelLength = 0;
             this.fuelTime = 0;
         }
+    }
 
-        super.tickWork();
-        if (this.getStatus().getType().isActive() && this.maxProgress() > 0) {
-            if (this.progress() % (this.maxProgress() / 8) == 0 && this.progress() > this.maxProgress() / 2) {
-                this.world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+    @Override
+    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        if (this.getMaxProgress() > 0) {
+            if (this.getProgress() % (this.getMaxProgress() / 8) == 0 && this.getProgress() > this.getMaxProgress() / 2) {
+                world.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
             }
         }
+
+        return super.tick(world, pos, state, profiler);
     }
 
     @Override
-    protected void craft(CompressingRecipe recipe) {
-        super.craft(recipe);
-        recipe = this.recipe();
-        if (this.canCraft(recipe)) {
-            super.craft(recipe);
+    protected @Nullable MachineStatus extractResourcesToWork(@NotNull TransactionContext context) {
+        if (this.fuelLength == 0) {
+            StorageSlot<Item, ItemVariant, ItemStack> slot = this.itemStorage().getSlot(FUEL_INPUT_SLOT);
+            if (slot.getModCountUnsafe() != this.fuelSlotModification.getValue()) {
+                this.fuelSlotModification.setValue(slot.getModCountUnsafe(), context);
+                ItemStack stack = this.itemStorage().extract(FUEL_INPUT_SLOT, 1, context);
+                Item remainingItem = stack.getItem().getCraftingRemainingItem();
+                Integer integer = FuelRegistry.INSTANCE.get(stack.getItem());
+                if (integer != null && integer > 0) {
+                    this.fuelTime = this.fuelLength = integer;
+                    if (remainingItem != null && slot.getResource().isBlank()) {
+                        slot.insert(ItemVariant.of(remainingItem), 1, context);
+                    }
+                }
+            }
         }
+        return this.fuelLength == 0 ? GCMachineStatus.NO_FUEL : super.extractResourcesToWork(context);
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    protected int getProcessTime(@NotNull CompressingRecipe recipe) {
+        return recipe.getTime();
+    }
+
+    @Override
+    public void saveAdditional(@NotNull CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt(Constant.Nbt.FUEL_TIME, this.fuelTime);
         tag.putInt(Constant.Nbt.FUEL_LENGTH, this.fuelLength);
-        return super.writeNbt(tag);
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
-        this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
-        this.fuelLength = tag.getInt(Constant.Nbt.FUEL_LENGTH);
+    public void load(@NotNull CompoundTag nbt) {
+        super.load(nbt);
+        this.fuelTime = nbt.getInt(Constant.Nbt.FUEL_TIME);
+        this.fuelLength = nbt.getInt(Constant.Nbt.FUEL_LENGTH);
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return new CompressorScreenHandler(syncId, player, this);
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+        if (this.getSecurity().hasAccess(player)) return new CompressorScreenHandler(syncId, player, this);
         return null;
-    }
-
-    /**
-     * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
-     */
-    private enum Status implements MachineStatus {
-        /**
-         * Compressor is compressing items.
-         */
-        PROCESSING(new TranslatableText("ui.galacticraft.machine.status.active"), Formatting.GREEN, StatusType.WORKING),
-
-        /**
-         * Compressor has no valid recipe.
-         */
-        INVALID_RECIPE(new TranslatableText("ui.galacticraft.machine.status.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
-
-        /**
-         * Compressor has no valid recipe.
-         */
-        OUTPUT_FULL(new TranslatableText("ui.galacticraft.machine.status.output_full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-
-        /**
-         * Compressor has no fuel.
-         */
-        MISSING_FUEL(new TranslatableText("ui.galacticraft.machine.status.missing_fuel"), Formatting.RED, StatusType.MISSING_ENERGY);
-
-        private final Text text;
-        private final StatusType type;
-
-        Status(TranslatableText text, Formatting color, StatusType type) {
-            this.text = text.setStyle(Style.EMPTY.withColor(color));
-            this.type = type;
-        }
-
-        @Override
-        public @NotNull Text getName() {
-            return text;
-        }
-
-        @Override
-        public @NotNull StatusType getType() {
-            return type;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
     }
 }
