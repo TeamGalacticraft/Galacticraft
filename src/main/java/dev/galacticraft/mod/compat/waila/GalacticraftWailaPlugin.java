@@ -22,36 +22,34 @@
 
 package dev.galacticraft.mod.compat.waila;
 
+import dev.galacticraft.api.block.MachineBlock;
+import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.api.machine.MachineConfiguration;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.MachineBlock;
-import dev.galacticraft.mod.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.api.machine.MachineConfiguration;
 import mcp.mobius.waila.api.*;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftWailaPlugin implements IWailaPlugin {
-    private static final IComponentProvider COMPONENT_PROVIDER = new IComponentProvider() {
+    private static final IBlockComponentProvider COMPONENT_PROVIDER = new IBlockComponentProvider() {
         @Override
-        public void appendTail(List<Text> tooltip, IDataAccessor accessor, IPluginConfig config) {
+        public void appendTail(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
             if (Screen.hasShiftDown()) {
-                MachineConfiguration configuration = MachineConfiguration.fromClientTag(accessor.getServerData());
-                tooltip.add(new TranslatableText("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneInteraction().getName()).setStyle(Constant.Text.RED_STYLE));
-                if (configuration.getSecurity().getOwner() != null) tooltip.add(new TranslatableText("ui.galacticraft.machine.security.owned_by", new LiteralText(configuration.getSecurity().getOwner().getName()).setStyle(Constant.Text.WHITE_STYLE)).setStyle(Constant.Text.AQUA_STYLE));
+                MachineConfiguration configuration = MachineConfiguration.create();
+                configuration.readNbt(accessor.getServerData());
+                tooltip.addLine(Component.translatable("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneActivation().getName()).setStyle(Constant.Text.Color.RED_STYLE));
+                if (configuration.getSecurity().getOwner() != null) tooltip.addLine(Component.translatable("ui.galacticraft.machine.security.owned_by", Component.literal(configuration.getSecurity().getOwner().getName()).setStyle(Constant.Text.Color.WHITE_STYLE)).setStyle(Constant.Text.Color.AQUA_STYLE));
             }
         }
     };
 
     @Override
     public void register(IRegistrar registrar) {
-        registrar.registerBlockDataProvider((data, player, world, blockEntity) -> ((MachineBlockEntity) blockEntity).getConfiguration().toClientTag(data, player), MachineBlock.class);
-        registrar.registerComponentProvider(COMPONENT_PROVIDER, TooltipPosition.TAIL, MachineBlock.class);
+        registrar.addBlockData((data, accessor, config) -> ((MachineBlockEntity) accessor.getTarget()).getConfiguration().writeNbt(data), MachineBlock.class);
+        registrar.addComponent(COMPONENT_PROVIDER, TooltipPosition.TAIL, MachineBlock.class);
     }
 }

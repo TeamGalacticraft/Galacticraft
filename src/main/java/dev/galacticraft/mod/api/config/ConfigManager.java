@@ -25,7 +25,7 @@ package dev.galacticraft.mod.api.config;
 import dev.galacticraft.mod.Galacticraft;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screens.Screen;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>

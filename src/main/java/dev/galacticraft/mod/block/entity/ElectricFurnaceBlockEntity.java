@@ -22,148 +22,111 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.item.FixedItemInv;
+import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.api.machine.MachineStatuses;
+import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.machine.MachineStatus;
-import dev.galacticraft.mod.attribute.item.MachineInvWrapper;
-import dev.galacticraft.mod.attribute.item.MachineItemInv;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
-import dev.galacticraft.mod.screen.slot.SlotType;
-import dev.galacticraft.mod.util.EnergyUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.recipe.AbstractCookingRecipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.SmeltingRecipe;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
+import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.mod.screen.GCScreenHandlerType;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Inventory, SmeltingRecipe> {
+public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Container, SmeltingRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOT = 2;
     
-    private final @NotNull Inventory craftingInv = new MachineInvWrapper(this, this.itemInv().getSubInv(INPUT_SLOT, INPUT_SLOT + 1));
-    private final @NotNull FixedItemInv outputInv = this.itemInv().getSubInv(OUTPUT_SLOT, OUTPUT_SLOT + 1);
+    private final @NotNull Container craftingInv = this.itemStorage().subInv(INPUT_SLOT, 1);
 
     @Override
-    protected MachineItemInv.Builder createInventory(MachineItemInv.Builder builder) {
-        builder.addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtil.IS_EXTRACTABLE, 8, 61);
-        builder.addSlot(INPUT_SLOT, SlotType.INPUT, stack -> this.getRecipe(RecipeType.SMELTING, new SimpleInventory(stack)).isPresent(), 52, 35);
-        builder.addOutputSlot(OUTPUT_SLOT, SlotType.OUTPUT, 113, 35);
-        return builder;
+    protected @NotNull MachineItemStorage createItemStorage() {
+        return MachineItemStorage.Builder.create()
+                .addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61))
+                .addSlot(GCSlotTypes.ITEM_INPUT, new ItemSlotDisplay(52, 35))
+                .addSlot(GCSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(113, 35))
+                .build();
     }
 
     public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING, AbstractCookingRecipe::getCookTime);
+        super(GCBlockEntityTypes.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING);
     }
 
     @Override
-    public boolean canInsertEnergy() {
-        return true;
+    public long getEnergyCapacity() {
+        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
     }
 
     @Override
-    protected int getBaseEnergyConsumption() {
-        return Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate();
-    }
-
-    @Override
-    public @NotNull MachineStatus updateStatus() {
-        if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.recipe() == null) return Status.NOT_ENOUGH_ITEMS;
-        if (!this.canCraft(this.recipe())) return Status.OUTPUT_FULL;
-        return Status.ACTIVE;
-    }
-
-    @Override
-    public void updateComponents() {
-        super.updateComponents();
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(world, pos, state, profiler);
         this.attemptChargeFromStack(CHARGE_SLOT);
     }
 
     @Override
-    public @NotNull Inventory craftingInv() {
+    public @NotNull Container craftingInv() {
         return this.craftingInv;
     }
 
     @Override
-    public @NotNull FixedItemInv outputInv() {
-        return this.outputInv;
+    protected boolean outputStacks(@NotNull SmeltingRecipe recipe, TransactionContext transaction) {
+        ItemStack output = recipe.getResultItem();
+        return this.itemStorage().insert(OUTPUT_SLOT, ItemVariant.of(output), output.getCount(), transaction) == output.getCount();
     }
 
     @Override
-    protected MachineStatus getStatusById(int index) {
-        return Status.values()[index];
+    protected boolean extractCraftingMaterials(@NotNull SmeltingRecipe recipe, TransactionContext transaction) {
+        return recipe.getIngredients().get(0).test(this.itemStorage().extract(INPUT_SLOT, 1, transaction));
     }
 
     @Override
-    protected void tickDisabled() {
+    protected @NotNull MachineStatus workingStatus() {
+        return GCMachineStatus.ACTIVE;
+    }
 
+    @Override
+    protected int getProcessTime(@NotNull SmeltingRecipe recipe) {
+        return recipe.getCookingTime();
+    }
+
+    @Override
+    protected @Nullable MachineStatus extractResourcesToWork(@NotNull TransactionContext context) {
+        if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate(), context) != Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate()) {
+            return MachineStatuses.NOT_ENOUGH_ENERGY;
+        }
+        return super.extractResourcesToWork(context);
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        if (this.security().hasAccess(player)) return GalacticraftScreenHandlerType.create(GalacticraftScreenHandlerType.ELECTRIC_FURNACE_HANDLER, syncId, player.getInventory(), this);
+    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+        if (this.getSecurity().hasAccess(player)) {
+            return RecipeMachineScreenHandler.create(
+                    syncId,
+                    player,
+                    this,
+                    GCScreenHandlerType.ELECTRIC_FURNACE_HANDLER
+            );
+        }
         return null;
-    }
-
-    private enum Status implements MachineStatus {
-        /**
-         * The electric furnace is cooking/smelting items
-         */
-        ACTIVE(new TranslatableText("ui.galacticraft.machine.status.active"), Formatting.GREEN, StatusType.WORKING),
-
-        /**
-         * The output slot is full.
-         */
-        OUTPUT_FULL(new TranslatableText("ui.galacticraft.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-
-        /**
-         * There are no valid items to smelt/cook.
-         */
-        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft.machine.status.not_enough_items"), Formatting.GRAY, StatusType.MISSING_ITEMS),
-
-        /**
-         * The electric furnace has no more energy
-         */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
-
-        private final Text name;
-        private final StatusType type;
-
-        Status(MutableText name, Formatting color, StatusType type) {
-            this.type = type;
-            this.name = name.setStyle(Style.EMPTY.withColor(color));
-        }
-
-        @Override
-        public @NotNull Text getName() {
-            return name;
-        }
-
-        @Override
-        public @NotNull StatusType getType() {
-            return type;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
     }
 }

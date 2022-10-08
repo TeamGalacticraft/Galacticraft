@@ -30,12 +30,12 @@ import dev.galacticraft.mod.api.block.AbstractDirectionalBlock;
 public class LightPanelBlock extends AbstractDirectionalBlock {
     private float lightLevel = 6.0f;
 
-    public LightPanelBlock(Settings settings) {
+    public LightPanelBlock(Properties settings) {
         super(settings);
         settings.strength(2.0f, 2.0f);
     }
 
-    public LightPanelBlock(Settings settings, float lightLevel) {
+    public LightPanelBlock(Properties settings, float lightLevel) {
         super(settings);
         settings.strength(2.0f, 2.0f);
         this.lightLevel = lightLevel;

@@ -22,33 +22,34 @@
 
 package dev.galacticraft.mod.api.block.entity;
 
-import alexiil.mc.lib.attributes.AttributeList;
-import alexiil.mc.lib.attributes.AttributeProviderBlockEntity;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
-import dev.galacticraft.mod.attribute.energy.WireEnergyInsertable;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import dev.galacticraft.mod.attribute.energy.WireEnergyStorage;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class WireBlockEntity extends BlockEntity implements Wire, AttributeProviderBlockEntity, BlockEntityClientSerializable {
+public class WireBlockEntity extends BlockEntity implements Wire {
     private @Nullable WireNetwork network = null;
-    private @NotNull WireEnergyInsertable @Nullable[] insertables = null;
+    private @NotNull WireEnergyStorage @Nullable[] insertables = null;
     private final int maxTransferRate;
     private final boolean[] connections = new boolean[6];
+    private boolean awaitDirty = false;
 
     public WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state, int maxTransferRate) {
         super(type, pos, state);
@@ -66,7 +67,7 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     @Override
     public void setNetwork(@Nullable WireNetwork network) {
         this.network = network;
-        for (WireEnergyInsertable insertable : this.getInsertables()) {
+        for (WireEnergyStorage insertable : this.getInsertables()) {
             insertable.setNetwork(network);
         }
     }
@@ -74,22 +75,22 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     @Override
     public @NotNull WireNetwork getOrCreateNetwork() {
         if (this.network == null) {
-            if (!this.world.isClient()) {
+            if (!this.level.isClientSide()) {
                 for (Direction direction : Constant.Misc.DIRECTIONS) {
                     if (this.canConnect(direction)) {
-                        BlockEntity entity = world.getBlockEntity(pos.offset(direction));
+                        BlockEntity entity = level.getBlockEntity(worldPosition.relative(direction));
                         if (entity instanceof Wire wire && wire.getNetwork() != null) {
                             if (wire.canConnect(direction.getOpposite())) {
                                 if (wire.getOrCreateNetwork().isCompatibleWith(this)) {
-                                    wire.getNetwork().addWire(pos, this);
+                                    wire.getNetwork().addWire(worldPosition, this);
                                 }
                             }
                         }
                     }
                 }
                 if (this.network == null) {
-                    this.setNetwork(WireNetwork.create((ServerWorld) world, this.getMaxTransferRate()));
-                    this.network.addWire(pos, this);
+                    this.setNetwork(WireNetwork.create((ServerLevel) level, this.getMaxTransferRate()));
+                    this.network.addWire(worldPosition, this);
                 }
             }
         }
@@ -101,11 +102,11 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
         return this.network;
     }
 
-    public @NotNull WireEnergyInsertable @NotNull[] getInsertables() {
+    public @NotNull WireEnergyStorage @NotNull[] getInsertables() {
         if (this.insertables == null) {
-            this.insertables = new WireEnergyInsertable[6];
+            this.insertables = new WireEnergyStorage[6];
             for (Direction direction : Constant.Misc.DIRECTIONS) {
-                this.insertables[direction.ordinal()] = new WireEnergyInsertable(direction, this.getMaxTransferRate(), this.pos);
+                this.insertables[direction.ordinal()] = new WireEnergyStorage(direction, this.getMaxTransferRate(), this.worldPosition);
             }
         }
         return this.insertables;
@@ -117,17 +118,10 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     }
 
     @Override
-    public void markRemoved() {
-        super.markRemoved();
+    public void setRemoved() {
+        super.setRemoved();
         if (this.getNetwork() != null) {
-            this.getOrCreateNetwork().removeWire(this, this.pos);
-        }
-    }
-
-    @Override
-    public void addAllAttributes(AttributeList<?> to) {
-        if (to.getSearchDirection() != null && this.canConnect(to.getSearchDirection().getOpposite())) {
-            to.offer(this.getInsertables()[to.getSearchDirection().ordinal()]);
+            this.getOrCreateNetwork().removeWire(this, this.worldPosition);
         }
     }
 
@@ -137,26 +131,34 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag) {
-        this.readConnectionNbt(tag);
-        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        this.writeConnectionNbt(tag);
-        return tag;
-    }
-
-    @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         this.writeConnectionNbt(nbt);
-        return super.writeNbt(nbt);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        if (this.awaitDirty && level != null && level.isClientSide) {
+            this.awaitDirty = false;
+            Minecraft.getInstance().levelRenderer.setSectionDirty(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ());
+        }
+    }
+
+    @Override
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         this.readConnectionNbt(nbt);
-        super.readNbt(nbt);
+        this.awaitDirty = true;
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 }

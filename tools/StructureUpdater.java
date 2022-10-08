@@ -26,7 +26,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.DataFixer;
 import net.minecraft.datafixer.Schemas;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.structure.Structure;
@@ -42,22 +42,26 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * updates gc structures' data format
- * and removes the "-rewoven" suffix
+ * Automatically updates the data format for Galacticraft structures.
+ * Also does some string transformations.
+ *
+ * <code>galacticraft-rewoven</code> -> <code>galacticraft</code>
+ * <code>moon_pillager_base</code> -> <code>moon_pillager_outpost</code>
+ * <code>:moon_village</code> -> <code>:village/moon/highlands</code>
  */
 public class StructureUpdater {
     public static void run() {
         DataFixer dataFixer = Schemas.getFixer();
         try (Stream<Path> walk = Files.walk(new File("../src/main/resources/data/galacticraft/").toPath())) {
-            List<String> fileNamesList = walk.filter(Files::isRegularFile).map(Path::toString).filter(path -> path.endsWith("nbt")).collect(Collectors.toList());
+            List<String> fileNamesList = walk.filter(Files::isRegularFile).map(Path::toString).filter(path -> path.endsWith("nbt")).toList();
             LevelStorage storage = new LevelStorage(new File("./structure_update/").toPath(), new File("./structure_update/backup").toPath(), dataFixer);
             StructureManager manager = new StructureManager(null, storage.createSession("session"), dataFixer);
 
             for (String s : fileNamesList) {
-                CompoundTag tag = NbtIo.readCompressed(new File(s));
-                tag = new StringNbtReader(new StringReader(tag.toString().replaceAll("[- ][Rr]ewoven", ""))).parseCompoundTag();
+                NbtCompound tag = NbtIo.readCompressed(new File(s));
+                tag = new StringNbtReader(new StringReader(tag.toString().replaceAll("[- ][Rr]ewoven", "").replaceAll("moon_pillager_base", "moon_pillager_outpost").replaceAll(":moon_village", ":village/moon/highlands"))).parseCompound();
                 Structure structure = manager.createStructure(tag);
-                tag = structure.toTag(new CompoundTag());
+                tag = structure.writeNbt(new NbtCompound());
                 File file1 = new File("./structure_update/out/" + s.replace("../src/main/resources/data/galacticraft/", ""));
                 file1.getParentFile().mkdirs();
                 NbtIo.writeCompressed(tag, file1);

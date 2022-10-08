@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.api.wire;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

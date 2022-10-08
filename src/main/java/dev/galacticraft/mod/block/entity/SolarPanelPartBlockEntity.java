@@ -23,52 +23,55 @@
 package dev.galacticraft.mod.block.entity;
 
 import dev.galacticraft.mod.api.block.MultiBlockPart;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class SolarPanelPartBlockEntity extends BlockEntity implements MultiBlockPart, BlockEntityClientSerializable {
-    public BlockPos basePos = BlockPos.ORIGIN;
+public class SolarPanelPartBlockEntity extends BlockEntity implements MultiBlockPart {
+    public BlockPos basePos = BlockPos.ZERO;
 
     public SolarPanelPartBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.SOLAR_PANEL_PART, pos, state);
+        super(GCBlockEntityTypes.SOLAR_PANEL_PART, pos, state);
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
-        if (this.basePos != BlockPos.ORIGIN) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        if (this.basePos != BlockPos.ZERO) {
             tag.putLong("Base", this.basePos.asLong());
         }
-        return tag;
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Base")) {
-            this.basePos = BlockPos.fromLong(tag.getLong("Base"));
+            this.basePos = BlockPos.of(tag.getLong("Base"));
         }
     }
 
     @Override
     public void setBasePos(BlockPos basePos) {
         this.basePos = basePos;
-        this.markDirty();
+        this.setChanged();
     }
 
-    @Override
-    public void fromClientTag(NbtCompound tag) {
-        this.readNbt(tag);
-    }
+    /*@Override
+    @Nullable
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundUpdateTagsPacket.create(this);TODO
+    }*/
 
     @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        return this.writeNbt(tag);
+    public CompoundTag getUpdateTag() {
+        var tag = new CompoundTag();
+        if (this.basePos != BlockPos.ZERO) {
+            tag.putLong("Base", this.basePos.asLong());
+        }
+        return tag;
     }
 }

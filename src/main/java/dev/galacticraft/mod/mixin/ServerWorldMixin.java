@@ -25,20 +25,19 @@ package dev.galacticraft.mod.mixin;
 import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.accessor.ServerWorldAccessor;
 import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
-import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
+import dev.galacticraft.mod.world.dimension.GCDimensionType;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
-import net.minecraft.block.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.WorldGenerationProgressListener;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.Spawner;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.level.ServerWorldProperties;
-import net.minecraft.world.level.storage.LevelStorage;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.progress.ChunkProgressListener;
+import net.minecraft.world.level.CustomSpawner;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.storage.LevelStorageSource;
+import net.minecraft.world.level.storage.ServerLevelData;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -53,19 +52,19 @@ import java.util.concurrent.Executor;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(ServerWorld.class)
+@Mixin(ServerLevel.class)
 public abstract class ServerWorldMixin implements ServerWorldAccessor {
-    @Shadow @Final @Mutable private List<Spawner> spawners;
+    @Shadow @Final @Mutable private List<CustomSpawner> customSpawners;
     private final @Unique Set<OxygenSealerBlockEntity> sealers = new HashSet<>();
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void setSpawnersGC(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> registryKey, DimensionType dimensionType, WorldGenerationProgressListener worldGenerationProgressListener, ChunkGenerator chunkGenerator, boolean debugWorld, long l, List<Spawner> list, boolean bl, CallbackInfo ci) {
-        if (registryKey.equals(GalacticraftDimension.MOON)) {
-            this.spawners = ImmutableList.<Spawner>builder().add(new EvolvedPillagerSpawner()).build();
+    private void setSpawnersGC(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, ChunkProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List spawners, boolean shouldTickTime, CallbackInfo ci) {
+        if (worldKey.equals(GCDimensionType.MOON_KEY)) {
+            this.customSpawners = ImmutableList.<CustomSpawner>builder().add(new EvolvedPillagerSpawner()).build();
         }
     }
 
-    @Inject(method = "updateListeners", at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;", remap = false))
+    @Inject(method = "sendBlockUpdated", at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;", remap = false))
     private void updateSealerListeners_gc(BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci) {
         List<OxygenSealerBlockEntity> queueRemove = new LinkedList<>();
         for (OxygenSealerBlockEntity sealer : this.sealers) {
@@ -73,7 +72,7 @@ public abstract class ServerWorldMixin implements ServerWorldAccessor {
                 queueRemove.add(sealer);
                 assert false : "this shouldn't happen! Oxygen sealer was removed but nothing called #markRemoved";
             }
-            sealer.enqueueUpdate(pos, newState.getCollisionShape(((World)(Object) this), pos));
+            sealer.enqueueUpdate(pos, newState.getCollisionShape(((Level)(Object) this), pos));
         }
         this.sealers.removeAll(queueRemove);
     }

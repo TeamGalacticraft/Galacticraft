@@ -23,25 +23,24 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.CircuitFabricatorBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
-import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabricatorBlockEntity, RecipeMachineScreenHandler<Inventory, FabricationRecipe, CircuitFabricatorBlockEntity>> {
+public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabricatorBlockEntity, RecipeMachineScreenHandler<Container, FabricationRecipe, CircuitFabricatorBlockEntity>> {
     private static final int PROGRESS_SIZE = 4;
     private static final int INITIAL_PROGRESS_U = 0;
     private static final int INITIAL_PROGRESS_V = 186;
@@ -77,52 +76,49 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     private static final int SENARY_PROGRESS_X = 158;
     private static final int SENARY_PROGRESS_Y = 55;
 
-    public CircuitFabricatorScreen(RecipeMachineScreenHandler<Inventory, FabricationRecipe, CircuitFabricatorBlockEntity> handler, PlayerInventory inv, Text title) {
+    public CircuitFabricatorScreen(RecipeMachineScreenHandler<Container, FabricationRecipe, CircuitFabricatorBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
-        this.backgroundHeight = 176;
+        this.imageHeight = 176;
+
+        this.capacitorX = 8;
+        this.capacitorY = 15;
     }
 
     @Override
-    protected void init() {
-        super.init();
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 15, 48));
-    }
-
-    @Override
-    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        super.renderBackground(matrices, delta, mouseX, mouseY);
+    protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
+        super.renderBackground(matrices, mouseX, mouseY, delta);
         this.drawProgressBar(matrices);
     }
 
     //24 + 19 + 18 + 65 + 14 = 140
-    private void drawProgressBar(MatrixStack matrices) {
-        assert this.client != null;
+    private void drawProgressBar(PoseStack matrices) {
+        assert this.minecraft != null;
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
-        if (this.machine.progress() > 0) {
-            float progress = (float) ((((double) this.machine.progress()) / ((double) this.machine.maxProgress())) * 140.0);
+        if (this.machine.getProgress() > 0) {
+            float progress = (float) ((((double) this.machine.getProgress()) / ((double) this.machine.getMaxProgress())) * 140.0);
             if (progress <= 24) {
-                DrawableUtil.drawProgressTexture(matrices, this.x + INITIAL_PROGRESS_X, this.y + INITIAL_PROGRESS_Y, INITIAL_PROGRESS_U, INITIAL_PROGRESS_V, progress, PROGRESS_SIZE);
+                DrawableUtil.drawProgressTexture(matrices, this.leftPos + INITIAL_PROGRESS_X, this.topPos + INITIAL_PROGRESS_Y, INITIAL_PROGRESS_U, INITIAL_PROGRESS_V, progress, PROGRESS_SIZE);
             } else {
-                DrawableUtil.drawProgressTexture(matrices, this.x + INITIAL_PROGRESS_X, this.y + INITIAL_PROGRESS_Y, INITIAL_PROGRESS_U, INITIAL_PROGRESS_V, 24, Math.min(19, progress - 24) + 4);
+                DrawableUtil.drawProgressTexture(matrices, this.leftPos + INITIAL_PROGRESS_X, this.topPos + INITIAL_PROGRESS_Y, INITIAL_PROGRESS_U, INITIAL_PROGRESS_V, 24, Math.min(19, progress - 24) + 4);
                 if (progress > 24 + 19) {
-                    DrawableUtil.drawProgressTexture(matrices, this.x + SECONDARY_PROGRESS_X, this.y + SECONDARY_PROGRESS_Y, SECONDARY_PROGRESS_U, SECONDARY_PROGRESS_V, Math.min(18, progress - (24 + 19)), PROGRESS_SIZE);
-                    DrawableUtil.drawProgressTexture(matrices, this.x + SECONDARY_CONCURRENT_PROGRESS_X, this.y + SECONDARY_CONCURRENT_PROGRESS_Y - 4, SECONDARY_CONCURRENT_PROGRESS_U, SECONDARY_CONCURRENT_PROGRESS_V - 4, (float) Math.min(18, ((progress - (24.0 + 19.0)) * 1.77777777778)), 4);
+                    DrawableUtil.drawProgressTexture(matrices, this.leftPos + SECONDARY_PROGRESS_X, this.topPos + SECONDARY_PROGRESS_Y, SECONDARY_PROGRESS_U, SECONDARY_PROGRESS_V, Math.min(18, progress - (24 + 19)), PROGRESS_SIZE);
+                    DrawableUtil.drawProgressTexture(matrices, this.leftPos + SECONDARY_CONCURRENT_PROGRESS_X, this.topPos + SECONDARY_CONCURRENT_PROGRESS_Y - 4, SECONDARY_CONCURRENT_PROGRESS_U, SECONDARY_CONCURRENT_PROGRESS_V - 4, (float) Math.min(18, ((progress - (24.0 + 19.0)) * 1.77777777778)), 4);
 
                     if (!(((progress - (24.0 + 19.0)) * 1.77777777778) <= 18.0)) { //18 + 14 = 32 // 32/18
                         double min = Math.min(14, ((progress - (24.0 + 19.0 + (18.0 * (0.5624999999992969)))) * 1.77777777778));
-                        DrawableUtil.drawProgressTexture(matrices, this.x + SECONDARY_CONCURRENT_PROGRESS_2_X, (float) (this.y + SECONDARY_CONCURRENT_PROGRESS_2_Y - min), SECONDARY_CONCURRENT_PROGRESS_2_U, SECONDARY_CONCURRENT_PROGRESS_2_V, PROGRESS_SIZE, (float) min);
+                        DrawableUtil.drawProgressTexture(matrices, this.leftPos + SECONDARY_CONCURRENT_PROGRESS_2_X, (float) (this.topPos + SECONDARY_CONCURRENT_PROGRESS_2_Y - min), SECONDARY_CONCURRENT_PROGRESS_2_U, SECONDARY_CONCURRENT_PROGRESS_2_V, PROGRESS_SIZE, (float) min);
                     }
 
                     if (progress > 24 + 19 + 18) {
-                        DrawableUtil.drawProgressTexture(matrices, this.x + TERTIARY_PROGRESS_X, this.y + TERTIARY_PROGRESS_Y, TERTIARY_PROGRESS_U, TERTIARY_PROGRESS_V, progress - (24 + 19 + 18), PROGRESS_SIZE);
+                        DrawableUtil.drawProgressTexture(matrices, this.leftPos + TERTIARY_PROGRESS_X, this.topPos + TERTIARY_PROGRESS_Y, TERTIARY_PROGRESS_U, TERTIARY_PROGRESS_V, progress - (24 + 19 + 18), PROGRESS_SIZE);
                         if (progress > 24 + 19 + 18 + 17 + 3) {
-                            DrawableUtil.drawProgressTexture(matrices, this.x + QUATERNARY_PROGRESS_X, this.y + QUATERNARY_PROGRESS_Y, QUATERNARY_PROGRESS_U, QUATERNARY_PROGRESS_V, PROGRESS_SIZE, Math.min(14, progress - (24 + 19 + 18 + 17 + 3)));
+                            DrawableUtil.drawProgressTexture(matrices, this.leftPos + QUATERNARY_PROGRESS_X, this.topPos + QUATERNARY_PROGRESS_Y, QUATERNARY_PROGRESS_U, QUATERNARY_PROGRESS_V, PROGRESS_SIZE, Math.min(14, progress - (24 + 19 + 18 + 17 + 3)));
                         }
                         if (progress > 24 + 19 + 18 + 44 + 3) {
-                            DrawableUtil.drawProgressTexture(matrices, this.x + QUINARY_PROGRESS_X, (float) (this.y + QUINARY_PROGRESS_Y - Math.floor(Math.min(QUINARY_PROGRESS_HEIGHT, progress - (24 + 19 + 18 + 44 + 3)))), QUINARY_PROGRESS_U, QUINARY_PROGRESS_V, PROGRESS_SIZE, Math.min(19, progress - (24 + 19 + 18 + 44 + 3)));
+                            DrawableUtil.drawProgressTexture(matrices, this.leftPos + QUINARY_PROGRESS_X, (float) (this.topPos + QUINARY_PROGRESS_Y - Math.floor(Math.min(QUINARY_PROGRESS_HEIGHT, progress - (24 + 19 + 18 + 44 + 3)))), QUINARY_PROGRESS_U, QUINARY_PROGRESS_V, PROGRESS_SIZE, Math.min(19, progress - (24 + 19 + 18 + 44 + 3)));
                         }
                         if (progress > 24 + 19 + 18 + 65) {
-                            DrawableUtil.drawProgressTexture(matrices, this.x + SENARY_PROGRESS_X, this.y + SENARY_PROGRESS_Y, SENARY_PROGRESS_U, SENARY_PROGRESS_V, PROGRESS_SIZE, progress - (24 + 19 + 18 + 65));
+                            DrawableUtil.drawProgressTexture(matrices, this.leftPos + SENARY_PROGRESS_X, this.topPos + SENARY_PROGRESS_Y, SENARY_PROGRESS_U, SENARY_PROGRESS_V, PROGRESS_SIZE, progress - (24 + 19 + 18 + 65));
                         }
                     }
                 }

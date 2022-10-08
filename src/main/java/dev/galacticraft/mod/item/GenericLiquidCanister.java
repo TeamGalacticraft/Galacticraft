@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.item;
 
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Rarity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.material.Fluid;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -33,13 +33,13 @@ import net.minecraft.util.Rarity;
 public class GenericLiquidCanister extends Item {
     private final Fluid allowedFluid;
 
-    public GenericLiquidCanister(Settings settings, Fluid allowedFluid) {
+    public GenericLiquidCanister(Properties settings, Fluid allowedFluid) {
         super(settings);
         this.allowedFluid = allowedFluid;
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return -1;
     }
 

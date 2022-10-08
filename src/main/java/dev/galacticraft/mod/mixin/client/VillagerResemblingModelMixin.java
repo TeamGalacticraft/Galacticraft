@@ -26,14 +26,14 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.village.MoonVillagerType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.ModelData;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.model.ModelPartBuilder;
-import net.minecraft.client.model.ModelTransform;
-import net.minecraft.client.render.entity.model.EntityModelPartNames;
-import net.minecraft.client.render.entity.model.VillagerResemblingModel;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.client.model.VillagerModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartNames;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.Villager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -48,10 +48,10 @@ import java.util.NoSuchElementException;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(VillagerResemblingModel.class)
+@Mixin(VillagerModel.class)
 @Environment(EnvType.CLIENT)
 public abstract class VillagerResemblingModelMixin<T extends Entity> {
-    @Shadow public abstract void setHatVisible(boolean visible);
+    @Shadow public abstract void hatVisible(boolean visible);
     @Shadow @Final private ModelPart head;
 
     private @Unique ModelPart brain = null;
@@ -59,29 +59,29 @@ public abstract class VillagerResemblingModelMixin<T extends Entity> {
     @Inject(method = "<init>", at = @At(value = "RETURN"))
     private void getModelData_gc(ModelPart root, CallbackInfo ci) {
         try {
-            this.brain = root.getChild(EntityModelPartNames.HEAD).getChild(Constant.ModelPartName.MOON_VILLAGER_BRAIN);
+            this.brain = root.getChild(PartNames.HEAD).getChild(Constant.ModelPartName.MOON_VILLAGER_BRAIN);
         } catch (NoSuchElementException ignore) {}
     }
 
-    @Inject(method = "getModelData", at = @At(value = "RETURN"))
-    private static void getModelData_gc(CallbackInfoReturnable<ModelData> cir) {
-        cir.getReturnValue().getRoot().getChild(EntityModelPartNames.HEAD).addChild(Constant.ModelPartName.MOON_VILLAGER_BRAIN, ModelPartBuilder.create().uv(0, 38).cuboid(-5.0F, -16.0F, -5.0F, 10.0F, 8.0F, 10.0F), ModelTransform.NONE);
+    @Inject(method = "createBodyModel", at = @At(value = "RETURN"))
+    private static void getModelData_gc(CallbackInfoReturnable<MeshDefinition> cir) {
+        cir.getReturnValue().getRoot().getChild(PartNames.HEAD).addOrReplaceChild(Constant.ModelPartName.MOON_VILLAGER_BRAIN, CubeListBuilder.create().texOffs(0, 38).addBox(-5.0F, -16.0F, -5.0F, 10.0F, 8.0F, 10.0F), PartPose.ZERO);
     }
 
-    @Inject(method = "setAngles", at = @At(value = "RETURN"))
+    @Inject(method = "setupAnim", at = @At(value = "RETURN"))
     private void getModelData_gc(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, CallbackInfo ci) {
-        if (entity instanceof VillagerEntity villager) {
+        if (entity instanceof Villager villager) {
             if (MoonVillagerType.MOON_VILLAGER_TYPE_REGISTRY.contains(villager.getVillagerData().getType())) {
                 assert brain != null;
 
-                this.setHatVisible(false);
+                this.hatVisible(false);
                 this.brain.visible = this.head.visible;
-                this.brain.yaw = this.head.yaw;
-                this.brain.pitch = this.head.pitch;
-                this.brain.pivotX = this.head.pivotX;
-                this.brain.pivotY = this.head.pivotY;
-                this.brain.pivotZ = this.head.pivotZ;
-                this.brain.roll = this.head.roll;
+                this.brain.yRot = this.head.yRot;
+                this.brain.xRot = this.head.xRot;
+                this.brain.x = this.head.x;
+                this.brain.y = this.head.y;
+                this.brain.z = this.head.z;
+                this.brain.zRot = this.head.zRot;
             }
         }
     }

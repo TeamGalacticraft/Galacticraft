@@ -24,7 +24,7 @@ package dev.galacticraft.mod.api.entry;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.util.math.Position;
+import net.minecraft.core.Position;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>

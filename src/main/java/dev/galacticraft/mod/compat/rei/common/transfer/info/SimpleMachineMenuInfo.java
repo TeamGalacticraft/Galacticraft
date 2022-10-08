@@ -22,28 +22,33 @@
 
 package dev.galacticraft.mod.compat.rei.common.transfer.info;
 
-import dev.galacticraft.mod.block.entity.RecipeMachineBlockEntity;
-import dev.galacticraft.mod.compat.rei.common.transfer.info.stack.LBASlotAccessor;
-import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
 import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoContext;
 import me.shedaniel.rei.api.common.transfer.info.clean.InputCleanHandler;
 import me.shedaniel.rei.api.common.transfer.info.simple.DumpHandler;
 import me.shedaniel.rei.api.common.transfer.info.simple.SimpleGridMenuInfo;
+import me.shedaniel.rei.api.common.transfer.info.stack.ContainerSlotAccessor;
 import me.shedaniel.rei.api.common.transfer.info.stack.SlotAccessor;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.screen.ScreenHandler;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.stream.Collectors;
 
-public record SimpleMachineMenuInfo<C extends Inventory, R extends Recipe<C>, B extends RecipeMachineBlockEntity<C, R>, T extends RecipeMachineScreenHandler<C, R, B>, D extends SimpleGridMenuDisplay>(int width, int height, int resultIndex, int offset) implements SimpleGridMenuInfo<T, D> {
+public record SimpleMachineMenuInfo<C extends Container, R extends Recipe<C>, B extends RecipeMachineBlockEntity<C, R>, T extends RecipeMachineScreenHandler<C, R, B>, D extends SimpleGridMenuDisplay>(int width, int height, int resultIndex, int offset, D display) implements SimpleGridMenuInfo<T, D> {
     @Override
     public Iterable<SlotAccessor> getInputSlots(MenuInfoContext<T, ?, D> context) {
         return getInputStackSlotIds(context)
-                .mapToObj(value -> new LBASlotAccessor(context.getMenu().machine.itemInv(), value + offset))
+                .mapToObj(value -> new ContainerSlotAccessor(context.getMenu().machine.itemStorage().playerInventory(), value + offset))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public D getDisplay() {
+        return display;
     }
 
     @Override
@@ -72,7 +77,7 @@ public record SimpleMachineMenuInfo<C extends Inventory, R extends Recipe<C>, B 
         };
     }
 
-    static <T extends ScreenHandler> void returnSlotsToPlayerInventory(MenuInfoContext<T, ?, ?> context, DumpHandler<T, ?> dumpHandler, SlotAccessor slotAccessor) {
+    static <T extends AbstractContainerMenu> void returnSlotsToPlayerInventory(MenuInfoContext<T, ?, ?> context, DumpHandler<T, ?> dumpHandler, SlotAccessor slotAccessor) {
         if (!slotAccessor.getItemStack().isEmpty()) {
             for (; slotAccessor.getItemStack().getCount() > 0; slotAccessor.takeStack(1)) {
                 ItemStack stackToInsert = slotAccessor.getItemStack().copy();

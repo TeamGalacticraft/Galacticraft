@@ -25,21 +25,22 @@ package dev.galacticraft.mod.block.special.aluminumwire.tier1;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
-import dev.galacticraft.mod.util.EnergyUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -47,20 +48,20 @@ import java.util.List;
 public class AluminumWireBlock extends WireBlock {
     // If we start at 8,8,8 and subtract/add to/from 8, we do operations starting from the centre.
     private static final int OFFSET = 2;
-    private static final VoxelShape NORTH = createCuboidShape(8 - OFFSET, 8 - OFFSET, 0, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape EAST = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 16, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape SOUTH = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 16);
-    private static final VoxelShape WEST = createCuboidShape(0, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape UP = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 16, 8 + OFFSET);
-    private static final VoxelShape DOWN = createCuboidShape(8 - OFFSET, 0, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape NONE = createCuboidShape(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);    // 6x6x6 box in the center.
+    private static final VoxelShape NORTH = box(8 - OFFSET, 8 - OFFSET, 0, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape EAST = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 16, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape SOUTH = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 16);
+    private static final VoxelShape WEST = box(0, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape UP = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 16, 8 + OFFSET);
+    private static final VoxelShape DOWN = box(8 - OFFSET, 0, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape NONE = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);    // 6x6x6 box in the center.
 
-    public AluminumWireBlock(Settings settings) {
+    public AluminumWireBlock(Properties settings) {
         super(settings);
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
         WireBlockEntity wire = (WireBlockEntity) view.getBlockEntity(pos);
         if (wire != null) {
             List<VoxelShape> shapes = new ArrayList<>();
@@ -84,38 +85,38 @@ public class AluminumWireBlock extends WireBlock {
                 shapes.add(DOWN);
             }
             if (!shapes.isEmpty()) {
-                return VoxelShapes.union(NONE, shapes.toArray(new VoxelShape[0]));
+                return Shapes.or(NONE, shapes.toArray(new VoxelShape[0]));
             }
         }
         return NONE;
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        super.onBlockAdded(state, world, pos, oldState, notify);
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
+        super.onPlace(state, world, pos, oldState, notify);
         WireBlockEntity wire = (WireBlockEntity) world.getBlockEntity(pos);
         assert wire != null;
         boolean b = false;
         for (Direction dir : Constant.Misc.DIRECTIONS) {
-            b |= (wire.getConnections()[dir.ordinal()] = EnergyUtil.canAccessEnergy(world, pos.offset(dir), dir) && wire.canConnect(dir));
+            b |= (wire.getConnections()[dir.ordinal()] = wire.canConnect(dir) && EnergyStorage.SIDED.find(world, pos.relative(dir), dir.getOpposite()) != null);
         }
-        if (b) wire.sync();
+        if (!world.isClientSide && b) ((ServerLevel) world).getChunkSource().blockChanged(pos);
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborUpdate(state, world, pos, block, fromPos, notify);
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        super.neighborChanged(state, world, pos, block, fromPos, notify);
         WireBlockEntity wire = (WireBlockEntity) world.getBlockEntity(pos);
-        Direction dir = Direction.fromVector(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
+        Direction dir = Direction.fromNormal(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
         assert dir != null;
         assert wire != null;
-        if (wire.getConnections()[dir.ordinal()] != (wire.getConnections()[dir.ordinal()] = EnergyUtil.canAccessEnergy(world, fromPos, dir) && wire.canConnect(dir))) {
-            wire.sync();
+        if (!world.isClientSide && wire.getConnections()[dir.ordinal()] != (wire.getConnections()[dir.ordinal()] = wire.canConnect(dir) && EnergyStorage.SIDED.find(world, fromPos, dir.getOpposite()) != null)) {
+            ((ServerLevel) world).getChunkSource().blockChanged(pos);
         }
     }
 
     @Override
-    public @Nullable WireBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return WireBlockEntity.createT1(GalacticraftBlockEntityType.WIRE_T1, pos, state);
+    public @Nullable WireBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, pos, state);
     }
 }

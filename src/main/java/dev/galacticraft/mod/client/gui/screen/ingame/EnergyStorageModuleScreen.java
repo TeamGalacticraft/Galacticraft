@@ -22,29 +22,29 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import dev.galacticraft.api.client.screen.MachineHandledScreen;
+import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.EnergyStorageModuleBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
-import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
 public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorageModuleBlockEntity, SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity>> {
-    public EnergyStorageModuleScreen(SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity> handler, PlayerInventory inv, Text title) {
+    public EnergyStorageModuleScreen(SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.ENERGY_STORAGE_MODULE_SCREEN);
-    }
 
+        this.capacitorX = 54;
+        this.capacitorY = 20;
+    }
 
     @Override
     protected void init() {
         super.init();
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 54, this.y + 20, 48));
     }
 }

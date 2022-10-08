@@ -23,39 +23,37 @@
 package dev.galacticraft.mod.block.environment;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.TorchBlock;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-
 import java.util.List;
-import java.util.Random;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.TorchBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GlowstoneTorchBlock extends TorchBlock {
-    public GlowstoneTorchBlock(Settings settings) {
+    public GlowstoneTorchBlock(Properties settings) {
         super(settings, null);
     }
 
     @Override
-    public void randomDisplayTick(BlockState blockState, World world, BlockPos blockPos, Random random) {
+    public void animateTick(BlockState blockState, Level world, BlockPos blockPos, RandomSource random) {
         // stop particles from spawning
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
+    public void appendHoverText(ItemStack stack, BlockGetter blockView, List<Component> list, TooltipFlag tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableText("tooltip.galacticraft.glowstone_torch").setStyle(Constant.Text.GRAY_STYLE));
+            list.add(Component.translatable("tooltip.galacticraft.glowstone_torch").setStyle(Constant.Text.Color.GRAY_STYLE));
         } else {
-            list.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Constant.Text.GRAY_STYLE));
+            list.add(Component.translatable("tooltip.galacticraft.press_shift").setStyle(Constant.Text.Color.GRAY_STYLE));
         }
     }
 }

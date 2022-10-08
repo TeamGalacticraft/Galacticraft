@@ -28,7 +28,7 @@ import dev.galacticraft.api.item.OxygenGear;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenGearItem extends AccessoryItem implements OxygenGear {
-    public OxygenGearItem(Settings settings) {
+    public OxygenGearItem(Properties settings) {
         super(settings);
     }
 }

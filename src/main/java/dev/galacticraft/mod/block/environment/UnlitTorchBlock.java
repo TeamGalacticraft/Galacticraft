@@ -22,41 +22,40 @@
 
 package dev.galacticraft.mod.block.environment;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.TorchBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.FlintAndSteelItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
-import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.FlintAndSteelItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.TorchBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class UnlitTorchBlock extends TorchBlock {
-    public UnlitTorchBlock(Settings settings) {
+    public UnlitTorchBlock(Properties settings) {
         super(settings, null);
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (player.getStackInHand(hand).getItem() instanceof FlintAndSteelItem) {
-            world.setBlockState(pos, Blocks.TORCH.getDefaultState());
-            ItemStack stack = player.getStackInHand(hand).copy();
-            stack.damage(1, player, e -> {});
-            player.setStackInHand(hand, stack);
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (player.getItemInHand(hand).getItem() instanceof FlintAndSteelItem) {
+            world.setBlockAndUpdate(pos, Blocks.TORCH.defaultBlockState());
+            ItemStack stack = player.getItemInHand(hand).copy();
+            stack.hurtAndBreak(1, player, e -> {});
+            player.setItemInHand(hand, stack);
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.use(state, world, pos, player, hand, hit);
     }
 
     @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
         // stop particles from spawning
     }
 }

@@ -22,27 +22,22 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.WorldRendererAccessor;
 import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, Colored {
     private Direction direction;
 
     public PipeWalkwayBlockEntity(BlockPos pos, BlockState state) {
-        super(GalacticraftBlockEntityType.PIPE_WALKWAY, pos, state, FluidAmount.of(1, 50));
+        super(GCBlockEntityTypes.PIPE_WALKWAY, pos, state, FluidConstants.BUCKET / 50);
     }
 
     @Override
@@ -56,28 +51,17 @@ public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, 
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag) {
-        super.fromClientTag(tag);
-        this.readWalkwayNbt(tag);
-        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(this.pos);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        this.writeWalkwayNbt(tag);
-        return super.toClientTag(tag);
-    }
-
-    @Override
-    public void readNbt(NbtCompound nbt) {
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         this.readWalkwayNbt(nbt);
-        super.readNbt(nbt);
+        assert this.level != null;
+        if (this.level.isClientSide) Minecraft.getInstance().levelRenderer.setSectionDirty(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ());
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         this.writeWalkwayNbt(nbt);
-        return super.writeNbt(nbt);
     }
 
     @Override

@@ -1,7 +1,0 @@
-{
-  "config": {
-    "start_pool": "galacticraft:moon_village/starts",
-    "size": 6
-  },
-  "type": "minecraft:village"
-}

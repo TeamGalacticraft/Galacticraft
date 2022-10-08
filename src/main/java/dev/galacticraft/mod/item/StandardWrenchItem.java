@@ -23,72 +23,74 @@
 package dev.galacticraft.mod.item;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Property;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-
 import java.util.List;
+import net.minecraft.Util;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class StandardWrenchItem extends Item {
-    public StandardWrenchItem(Settings settings) {
+    public StandardWrenchItem(Properties settings) {
         super(settings);
+<<<<<<< HEAD
+=======
+        settings.durability(256);
+>>>>>>> 6593609d1587824a7c3451231d3600f8bfc1240e
     }
 
     private static <T extends Comparable<T>> BlockState cycle(BlockState state, Property<T> property, boolean reverse) {
-        return state.with(property, cycle(property.getValues(), state.get(property), reverse));
+        return state.setValue(property, cycle(property.getPossibleValues(), state.getValue(property), reverse));
     }
 
     private static <T> T cycle(Iterable<T> values, T obj, boolean reverse) {
-        return reverse ? Util.previous(values, obj) : Util.next(values, obj);
+        return reverse ? Util.findPreviousInIterable(values, obj) : Util.findNextInIterable(values, obj);
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        PlayerEntity player = context.getPlayer();
-        World world = context.getWorld();
-        if (!world.isClient && player != null) {
-            BlockPos pos = context.getBlockPos();
-            this.use(player, world.getBlockState(pos), world, pos, context.getStack());
+    public InteractionResult useOn(UseOnContext context) {
+        Player player = context.getPlayer();
+        Level world = context.getLevel();
+        if (!world.isClientSide && player != null) {
+            BlockPos pos = context.getClickedPos();
+            this.use(player, world.getBlockState(pos), world, pos, context.getItemInHand());
         }
 
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    private void use(PlayerEntity player, BlockState state, WorldAccess world, BlockPos pos, ItemStack stack) {
+    private void use(Player player, BlockState state, LevelAccessor world, BlockPos pos, ItemStack stack) {
         Block block = state.getBlock();
-        Property<?> property = block.getStateManager().getProperty("facing");
-        if (property instanceof EnumProperty && property.getValues().contains(Direction.NORTH)) {
-            BlockState newState = cycle(state, property, player.isSneaking());
-            world.setBlockState(pos, newState, 18);
-            stack.damage(2, player, (entity) -> entity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
+        Property<?> property = block.getStateDefinition().getProperty("facing");
+        if (property instanceof EnumProperty && property.getPossibleValues().contains(Direction.NORTH)) {
+            BlockState newState = cycle(state, property, player.isShiftKeyDown());
+            world.setBlock(pos, newState, 18);
+            stack.hurtAndBreak(2, player, (entity) -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
+    public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
         if (Screen.hasShiftDown()) {
-            lines.add(new TranslatableText("tooltip.galacticraft.standard_wrench").setStyle(Constant.Text.GRAY_STYLE));
+            lines.add(Component.translatable("tooltip.galacticraft.standard_wrench").setStyle(Constant.Text.Color.GRAY_STYLE));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft.press_shift").setStyle(Constant.Text.GRAY_STYLE));
+            lines.add(Component.translatable("tooltip.galacticraft.press_shift").setStyle(Constant.Text.Color.GRAY_STYLE));
         }
     }
 }

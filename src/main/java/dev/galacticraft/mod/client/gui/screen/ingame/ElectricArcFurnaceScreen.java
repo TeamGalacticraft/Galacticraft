@@ -22,22 +22,21 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
+import com.mojang.blaze3d.vertex.PoseStack;
+import dev.galacticraft.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.ElectricArcFurnaceBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
-import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.recipe.BlastingRecipe;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.crafting.BlastingRecipe;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFurnaceBlockEntity, RecipeMachineScreenHandler<Inventory, BlastingRecipe, ElectricArcFurnaceBlockEntity>> {
+public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFurnaceBlockEntity, RecipeMachineScreenHandler<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity>> {
     private static final int ARROW_X = 68;
     private static final int ARROW_Y = 35;
     private static final int ARROW_U = 176;
@@ -45,23 +44,17 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
     private static final int ARROW_WIDTH = 26;
     private static final int ARROW_HEIGHT = 16;
 
-    public ElectricArcFurnaceScreen(RecipeMachineScreenHandler<Inventory, BlastingRecipe, ElectricArcFurnaceBlockEntity> handler, PlayerInventory inv, Text title) {
+    public ElectricArcFurnaceScreen(RecipeMachineScreenHandler<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
     }
 
     @Override
-    protected void init() {
-        super.init();
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
-    }
+    protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
+        super.renderBackground(matrices, mouseX, mouseY, delta);
+        if (this.machine.getMaxProgress() != 0 && this.machine.getProgress() != 0) {
+            double scale = ((double)menu.machine.getProgress()) / ((double)menu.machine.getMaxProgress());
 
-    @Override
-    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        super.renderBackground(matrices, delta, mouseX, mouseY);
-        if (this.machine.maxProgress() != 0 && this.machine.progress() != 0) {
-            double scale = ((double)handler.machine.progress()) / ((double)handler.machine.maxProgress());
-
-            DrawableUtil.drawProgressTexture(matrices, this.x + ARROW_X, this.y + ARROW_Y, ARROW_U, ARROW_V, (float) (ARROW_WIDTH * scale), ARROW_HEIGHT);
+            DrawableUtil.drawProgressTexture(matrices, this.leftPos + ARROW_X, this.topPos + ARROW_Y, ARROW_U, ARROW_V, (float) (ARROW_WIDTH * scale), ARROW_HEIGHT);
         }
     }
 }
