@@ -414,7 +414,7 @@ public class GCItem {
     public static final Item TITANIUM_AXE = new AxeItem(GCToolMaterial.TITANIUM, 6.0F, -3.1F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
     public static final Item TITANIUM_HOE = new HoeItem(GCToolMaterial.TITANIUM, -3, -1.0F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
 
-    public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).defaultDurability(256));
 
     // BATTERIES
     public static final Item BATTERY = new BatteryItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP), 15000, 500);
