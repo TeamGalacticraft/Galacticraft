@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod;
 
+import dev.galacticraft.mod.block.environment.FallenMeteorBlock;
 import dev.galacticraft.api.client.model.MachineModelRegistry;
 import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.client.gui.overlay.CountdownOverylay;
@@ -57,6 +58,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -195,6 +197,7 @@ public class GalacticraftClient implements ClientModInitializer {
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
 
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> FallenMeteorBlock.colorMultiplier(state, world, pos), GCBlocks.FALLEN_METEOR);
         BuiltinItemRendererRegistry.INSTANCE.register(GCItem.ROCKET, new RocketItemRenderer());
 
         HudRenderCallback.EVENT.register(RocketOverlay::onHudRender);

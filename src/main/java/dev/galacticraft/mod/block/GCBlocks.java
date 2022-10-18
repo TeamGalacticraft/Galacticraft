@@ -200,6 +200,8 @@ public class GCBlocks {
     public static final Block CRACKED_MOON_BASALT_BRICK_STAIRS = new StairBlock(CRACKED_MOON_BASALT_BRICK.defaultBlockState(), FabricBlockSettings.copyOf(CRACKED_MOON_BASALT_BRICK));
     public static final Block CRACKED_MOON_BASALT_BRICK_WALL = new WallBlock(FabricBlockSettings.copyOf(CRACKED_MOON_BASALT_BRICK));
 
+    public static final Block FALLEN_METEOR = new FallenMeteorBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 6.0F).ticksRandomly().nonOpaque().sounds(SoundType.BASALT));
+
     // MARS NATURAL
     public static final Block MARS_SURFACE_ROCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.DIRT).destroyTime(2.2F));
     public static final Block MARS_SUB_SURFACE_ROCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_RED).destroyTime(2.6F));
@@ -455,6 +457,8 @@ public class GCBlocks {
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_SLAB), CRACKED_MOON_BASALT_BRICK_SLAB);
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_STAIRS), CRACKED_MOON_BASALT_BRICK_STAIRS);
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_WALL), CRACKED_MOON_BASALT_BRICK_WALL);
+
+        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.FALLEN_METEOR), FALLEN_METEOR);
 
         // MARS NATURAL
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MARS_SURFACE_ROCK), MARS_SURFACE_ROCK);
