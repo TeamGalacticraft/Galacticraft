@@ -22,14 +22,13 @@
 
 package dev.galacticraft.mod.compat.waila;
 
-import dev.galacticraft.api.block.MachineBlock;
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.machine.MachineConfiguration;
+import dev.galacticraft.machinelib.api.block.MachineBlock;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.machine.MachineConfiguration;
 import dev.galacticraft.mod.Constant;
 import mcp.mobius.waila.api.*;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -40,16 +39,19 @@ public class GalacticraftWailaPlugin implements IWailaPlugin {
         public void appendTail(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
             if (Screen.hasShiftDown()) {
                 MachineConfiguration configuration = MachineConfiguration.create();
-                configuration.readNbt(accessor.getServerData());
+                configuration.readNbt(accessor.getServerData(), null);
                 tooltip.addLine(Component.translatable("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneActivation().getName()).setStyle(Constant.Text.Color.RED_STYLE));
-                if (configuration.getSecurity().getOwner() != null) tooltip.addLine(Component.translatable("ui.galacticraft.machine.security.owned_by", Component.literal(configuration.getSecurity().getOwner().getName()).setStyle(Constant.Text.Color.WHITE_STYLE)).setStyle(Constant.Text.Color.AQUA_STYLE));
+                if (configuration.getSecurity().getOwner() != null) {
+                    String username = configuration.getSecurity().getUsername();
+                    tooltip.addLine(Component.translatable("ui.galacticraft.machine.security.owned_by", Component.literal(username != null ? username : "???").setStyle(Constant.Text.Color.WHITE_STYLE)).setStyle(Constant.Text.Color.AQUA_STYLE));
+                }
             }
         }
     };
 
     @Override
     public void register(IRegistrar registrar) {
-        registrar.addBlockData((data, accessor, config) -> ((MachineBlockEntity) accessor.getTarget()).getConfiguration().writeNbt(data), MachineBlock.class);
+        registrar.addBlockData((data, accessor, config) -> ((MachineBlockEntity) accessor.getTarget()).getConfiguration().writeNbt(data, null), MachineBlock.class);
         registrar.addComponent(COMPONENT_PROVIDER, TooltipPosition.TAIL, MachineBlock.class);
     }
 }

@@ -22,21 +22,21 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.MachineStatuses;
-import dev.galacticraft.api.machine.storage.MachineFluidStorage;
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
-import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
-import dev.galacticraft.api.machine.storage.display.TankDisplay;
-import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.api.accessor.WorldOxygenAccessor;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
+import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerWorldAccessor;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
 import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.GenericStorageUtil;
@@ -93,17 +93,22 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
+    public boolean canExposedInsertEnergy() {
+        return true;
+    }
+
+    @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
-                .addSlot(GCSlotTypes.OXYGEN_TANK_FILL, new ItemSlotDisplay(31, 62))
+                .addSlot(GalacticraftSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 62))
+                .addSlot(GalacticraftSlotGroups.OXYGEN_TANK_FILL, Constant.Filter.Item.CAN_EXTRACT_LOX, true, ItemSlotDisplay.create(31, 62))
                 .build();
     }
 
     @Override
     protected @NotNull MachineFluidStorage createFluidStorage() {
         return MachineFluidStorage.Builder.create()
-                .addTank(GCSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48), true)
+                .addTank(GalacticraftSlotGroups.OXYGEN_INPUT, MAX_OXYGEN, TankDisplay.create(31, 8), true)
                 .build();
     }
 

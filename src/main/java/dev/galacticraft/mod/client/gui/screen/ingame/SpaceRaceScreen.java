@@ -273,7 +273,7 @@ public class SpaceRaceScreen extends Screen {
 //
 //        DiffuseLighting.enableForItems();
 //        this.itemRenderer.renderGuiItem(Items.GRASS_BLOCK.getDefaultStack(), this.x + 6, this.y - 20);
-//        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_FAN.getDefaultStack(), this.x + 35, this.y - 20);
+//        this.itemRenderer.renderGuiItem(GCItems.OXYGEN_FAN.getDefaultStack(), this.x + 35, this.y - 20);
     }
 
     private void drawMouseoverTooltip(PoseStack stack, int mouseX, int mouseY) {

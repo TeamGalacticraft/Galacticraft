@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.entity.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
@@ -70,8 +70,8 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         final var electricArcFurnace = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_ARC_FURNACE, GCBlockEntityTypes.ELECTRIC_ARC_FURNACE);
         final var inv = electricArcFurnace.itemStorage();
         electricArcFurnace.energyStorage().setEnergyUnsafe(electricArcFurnace.getEnergyCapacity());
-        inv.setSlotUnsafe(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1, ItemVariant.of(Items.BARRIER), 1);
-        inv.setSlotUnsafe(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_2, ItemVariant.of(Items.BARRIER), 1);
+        inv.setSlot(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1, ItemVariant.of(Items.BARRIER), 1);
+        inv.setSlot(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_2, ItemVariant.of(Items.BARRIER), 1);
         fillElectricArcFurnaceSlots(inv);
         runFinalTaskNext(context, () -> {
             if (electricArcFurnace.getMaxProgress() != 0) {
@@ -81,6 +81,6 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
     }
 
     private static void fillElectricArcFurnaceSlots(@NotNull MachineItemStorage inv) {
-        inv.setSlotUnsafe(ElectricArcFurnaceBlockEntity.INPUT_SLOT, ItemVariant.of(Items.RAW_IRON), 1, true);
+        inv.setSlot(ElectricArcFurnaceBlockEntity.INPUT_SLOT, ItemVariant.of(Items.RAW_IRON), 1);
     }
 }

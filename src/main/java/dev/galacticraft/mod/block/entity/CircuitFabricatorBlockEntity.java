@@ -22,21 +22,19 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
-import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.MachineStatuses;
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
-import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
-import dev.galacticraft.api.machine.storage.io.ResourceFlow;
-import dev.galacticraft.api.machine.storage.io.ResourceType;
-import dev.galacticraft.api.machine.storage.io.SlotType;
-import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
+import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.Tier1EnergyMachine;
 import dev.galacticraft.mod.item.GCItem;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.GCScreenHandlerType;
@@ -46,14 +44,12 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -67,9 +63,9 @@ import java.util.Optional;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Container, FabricationRecipe> implements Tier1EnergyMachine {
-    private static final SlotType<Item, ItemVariant> DIAMOND_INPUT = SlotType.create(new ResourceLocation(Constant.MOD_ID, "diamond_input"), TextColor.fromRgb(0xFF0000), Component.translatable("slot_type.galacticraft.diamond_input"), v -> v.getItem() == Items.DIAMOND, ResourceFlow.INPUT, ResourceType.ITEM);
-    private static final SlotType<Item, ItemVariant> SILICON_INPUT = SlotType.create(new ResourceLocation(Constant.MOD_ID, "silicon_input"), TextColor.fromRgb(0xFF0000), Component.translatable("slot_type.galacticraft.silicon_input"), v -> v.getItem() == GCItem.RAW_SILICON, ResourceFlow.INPUT, ResourceType.ITEM);
-    private static final SlotType<Item, ItemVariant> REDSTONE_INPUT = SlotType.create(new ResourceLocation(Constant.MOD_ID, "redstone_input"), TextColor.fromRgb(0xFF0000), Component.translatable("slot_type.galacticraft.redstone_input"), v -> v.getItem() == Items.REDSTONE, ResourceFlow.INPUT, ResourceType.ITEM);
+    private static final SlotGroup DIAMOND_INPUT = SlotGroup.create(TextColor.fromRgb(0xFF0000), Component.translatable("slot_type.galacticraft.diamond_input"), true);
+    private static final SlotGroup SILICON_INPUT = SlotGroup.create(TextColor.fromRgb(0xFF0000), Component.translatable("slot_type.galacticraft.silicon_input"), true);
+    private static final SlotGroup REDSTONE_INPUT = SlotGroup.create(TextColor.fromRgb(0xFF0000), Component.translatable("slot_type.galacticraft.redstone_input"), true);
 
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT_DIAMOND = 1;
@@ -88,19 +84,24 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 70))
-                .addSlot(DIAMOND_INPUT, new ItemSlotDisplay(31, 15))
-                .addSlot(SILICON_INPUT, new ItemSlotDisplay(62, 45))
-                .addSlot(SILICON_INPUT, new ItemSlotDisplay(62, 63))
-                .addSlot(REDSTONE_INPUT, new ItemSlotDisplay(107, 70))
-                .addSlot(GCSlotTypes.ITEM_INPUT, new ItemSlotDisplay(134, 15))
-                .addSlot(GCSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(152, 70))
+                .addSlot(GalacticraftSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 70))
+                .addSlot(DIAMOND_INPUT, Constant.Filter.Item.DIAMOND, true, ItemSlotDisplay.create(31, 15))
+                .addSlot(SILICON_INPUT, Constant.Filter.Item.SILICON, true, ItemSlotDisplay.create(62, 45))
+                .addSlot(SILICON_INPUT, Constant.Filter.Item.SILICON, true, ItemSlotDisplay.create(62, 63))
+                .addSlot(REDSTONE_INPUT, Constant.Filter.Item.REDSTONE, true, ItemSlotDisplay.create(107, 70))
+                .addSlot(GalacticraftSlotGroups.GENERIC_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(134, 15))
+                .addSlot(GalacticraftSlotGroups.GENERIC_OUTPUT, Constant.Filter.any(), false, ItemSlotDisplay.create(152, 70))
                 .build();
     }
 
     @Override
     public long getEnergyCapacity() {
         return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
+    }
+
+    @Override
+    public boolean canExposedInsertEnergy() {
+        return true;
     }
 
     @Override

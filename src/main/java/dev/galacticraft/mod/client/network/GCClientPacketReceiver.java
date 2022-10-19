@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.network;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
+import dev.galacticraft.mod.block.entity.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
 import dev.galacticraft.mod.entity.RocketEntity;
 import net.fabricmc.api.EnvType;
@@ -39,6 +39,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
 import java.util.UUID;
 
 /**
@@ -70,7 +71,7 @@ public class GCClientPacketReceiver {
                 BlockPos pos = buffer.readBlockPos();
                 if (client.level.hasChunk(pos.getX() >> 4, pos.getZ() >> 4)) {
                     BlockEntity entity = client.level.getBlockEntity(pos);
-                    if (entity instanceof BubbleDistributorBlockEntity machine) {
+                    if (entity instanceof OxygenBubbleDistributorBlockEntity machine) {
                         machine.setSize(buffer.readDouble());
                     }
                 }

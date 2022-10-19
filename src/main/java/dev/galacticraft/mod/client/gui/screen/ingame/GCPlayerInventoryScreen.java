@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.machinelib.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.item.GCItem;
 import dev.galacticraft.mod.screen.GCPlayerInventoryScreenHandler;
@@ -63,7 +63,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
             Storage<FluidVariant> storage = ContainerItemContext.withInitial(this.menu.inventory.getItem(GCPlayerInventoryScreenHandler.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
             if (storage != null) {
                 try (Transaction transaction = Transaction.openOuter()) {
-                    StorageView<FluidVariant> exact = storage.exactView(transaction, FluidVariant.of(Gases.OXYGEN));
+                    StorageView<FluidVariant> exact = storage.exactView(FluidVariant.of(Gases.OXYGEN));
                     if (exact != null) {
                         this.renderTooltip(matrices, Component.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, exact.getAmount(), exact.getCapacity()), mouseX, mouseY);
                     } else {
@@ -76,7 +76,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
             Storage<FluidVariant> storage = ContainerItemContext.withInitial(this.menu.inventory.getItem(GCPlayerInventoryScreenHandler.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
             if (storage != null) {
                 try (Transaction transaction = Transaction.openOuter()) {
-                    StorageView<FluidVariant> exact = storage.exactView(transaction, FluidVariant.of(Gases.OXYGEN));
+                    StorageView<FluidVariant> exact = storage.exactView(FluidVariant.of(Gases.OXYGEN));
                     if (exact != null) {
                         this.renderTooltip(matrices, Component.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, exact.getAmount(), exact.getCapacity()), mouseX, mouseY);
                     } else {
@@ -119,20 +119,16 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
         this.blit(matrices, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         Storage<FluidVariant> storage1 = ContainerItemContext.withInitial(this.menu.inventory.getItem(GCPlayerInventoryScreenHandler.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
         if (storage1 != null) {
-            try (Transaction transaction = Transaction.openOuter()) {
-                StorageView<FluidVariant> exact = storage1.exactView(transaction, FluidVariant.of(Gases.OXYGEN));
-                if (exact != null) {
-                    DrawableUtil.drawOxygenBuffer(matrices, this.leftPos + 129, this.topPos + 8, exact.getAmount(), exact.getCapacity());
-                }
+            StorageView<FluidVariant> exact = storage1.exactView(FluidVariant.of(Gases.OXYGEN));
+            if (exact != null) {
+                DrawableUtil.drawOxygenBuffer(matrices, this.leftPos + 129, this.topPos + 8, exact.getAmount(), exact.getCapacity());
             }
         }
         Storage<FluidVariant> storage2 = ContainerItemContext.withInitial(this.menu.inventory.getItem(GCPlayerInventoryScreenHandler.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
         if (storage2 != null) {
-            try (Transaction transaction = Transaction.openOuter()) {
-                StorageView<FluidVariant> exact = storage2.exactView(transaction, FluidVariant.of(Gases.OXYGEN));
-                if (exact != null) {
-                    DrawableUtil.drawOxygenBuffer(matrices, this.leftPos + 152, this.topPos + 8, exact.getAmount(), exact.getCapacity());
-                }
+            StorageView<FluidVariant> exact = storage2.exactView(FluidVariant.of(Gases.OXYGEN));
+            if (exact != null) {
+                DrawableUtil.drawOxygenBuffer(matrices, this.leftPos + 152, this.topPos + 8, exact.getAmount(), exact.getCapacity());
             }
         }
 

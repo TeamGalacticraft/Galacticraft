@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.entity;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.BubbleDistributorBlockEntity;
+import dev.galacticraft.mod.block.entity.OxygenBubbleDistributorBlockEntity;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -228,7 +228,7 @@ public class BubbleEntity extends Entity {
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
         BlockEntity entity = level.getBlockEntity(blockPosition());
-        if (entity instanceof BubbleDistributorBlockEntity machine) {
+        if (entity instanceof OxygenBubbleDistributorBlockEntity machine) {
             double d = Math.abs(machine.getSize() * 2D + 1D);
             if (Double.isNaN(d)) {
                 d = 1.0D;

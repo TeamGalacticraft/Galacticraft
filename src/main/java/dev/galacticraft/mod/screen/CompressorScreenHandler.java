@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.machinelib.api.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.block.entity.CompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import net.minecraft.network.FriendlyByteBuf;

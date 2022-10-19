@@ -124,7 +124,7 @@ public class GCPlayerInventoryScreenHandler extends AbstractContainerMenu {
     private EquipmentSlot getPreferredEquipmentSlot(ItemStack stack) {
         Item item_1 = stack.getItem();
         if (item_1 instanceof ThermalArmorItem thermalArmorItem)
-            return thermalArmorItem.getSlotType();
+            return thermalArmorItem.getSlotGroup();
         return LivingEntity.getEquipmentSlotForItem(stack);
     }
 

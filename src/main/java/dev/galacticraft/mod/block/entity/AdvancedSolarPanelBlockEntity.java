@@ -22,17 +22,18 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.block.util.BlockFace;
-import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.MachineStatuses;
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
-import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
-import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.block.face.BlockFace;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
 import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
@@ -62,7 +63,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
+                .addSlot(GalacticraftSlotGroups.ENERGY_DRAIN, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 62))
                 .build();
     }
 
@@ -101,7 +102,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("push_energy");
-        this.trySpreadEnergy(world);
+        this.trySpreadEnergy(world, state);
         profiler.pop();
         if (this.blocked >= 9) return GCMachineStatus.BLOCKED;
         if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
@@ -147,6 +148,11 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
     @Override
     public long getEnergyCapacity() {
         return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
+    }
+
+    @Override
+    public boolean canExposedExtractEnergy() {
+        return true;
     }
 
     @Override

@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.block.machine;
 
-import dev.galacticraft.api.block.MachineBlock;
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.block.MachineBlock;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.core.BlockPos;

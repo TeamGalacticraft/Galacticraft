@@ -22,12 +22,12 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.storage.MachineFluidStorage;
-import dev.galacticraft.api.machine.storage.display.TankDisplay;
-import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
-import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
+import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
+import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
 import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
@@ -54,13 +54,13 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineFluidStorage createFluidStorage() {
         return MachineFluidStorage.Builder.create()
-                .addTank(GCSlotTypes.OXYGEN_IO, MAX_OXYGEN, new TankDisplay(31, 8, 48), true)
+                .addTank(GalacticraftSlotGroups.OXYGEN_TANK, MAX_OXYGEN, TankDisplay.create(31, 8), true)
                 .build();
     }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        this.trySpreadFluids(world);
+        this.trySpreadFluids(world, state);
         return MachineStatus.INVALID;
     }
 

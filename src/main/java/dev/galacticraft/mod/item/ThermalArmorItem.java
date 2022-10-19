@@ -36,30 +36,30 @@ import net.minecraft.world.level.Level;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ThermalArmorItem extends Item {
-    private final EquipmentSlot slotType;
+    private final EquipmentSlot slotGroup;
 
-    public ThermalArmorItem(Properties settings, EquipmentSlot slotType) {
+    public ThermalArmorItem(Properties settings, EquipmentSlot slotGroup) {
         super(settings.stacksTo(1));
-        this.slotType = slotType;
+        this.slotGroup = slotGroup;
     }
 
-    public EquipmentSlot getSlotType() {
-        return slotType;
+    public EquipmentSlot getSlotGroup() {
+        return slotGroup;
     }
 
     @Override //should sync with server
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         Container inv = player.getThermalArmor();
-        ItemStack thermalPiece = inv.getItem(this.getSlotIdForType(this.getSlotType()));
+        ItemStack thermalPiece = inv.getItem(this.getSlotIdForType(this.getSlotGroup()));
         if (thermalPiece.isEmpty()) {
-            inv.setItem(this.getSlotIdForType(getSlotType()), player.getItemInHand(hand));
+            inv.setItem(this.getSlotIdForType(getSlotGroup()), player.getItemInHand(hand));
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world, player, hand);
     }
 
-    public int getSlotIdForType(EquipmentSlot slotType) {
-        return switch (slotType) {
+    public int getSlotIdForType(EquipmentSlot slotGroup) {
+        return switch (slotGroup) {
             case HEAD -> 0;
             case CHEST -> 1;
             case LEGS -> 2;

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.data;
 
-import dev.galacticraft.impl.client.model.MachineUnbakedModel;
+import dev.galacticraft.machinelib.client.impl.model.MachineUnbakedModel;
 import dev.galacticraft.mod.item.GCItem;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
