@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.village;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.data.GCTags;
 import dev.galacticraft.mod.world.poi.GCPointOfInterestType;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerProfessionBuilder;

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.entity;
 
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.data.GCTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;

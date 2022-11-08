@@ -25,8 +25,8 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.screen.MachineScreenHandler;
-import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.api.screen.MachineMenu;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import dev.galacticraft.mod.api.solarpanel.LightSource;
@@ -40,7 +40,7 @@ import net.minecraft.world.entity.player.Inventory;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S extends MachineScreenHandler<M>> extends MachineHandledScreen<M, S> {
+public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S extends MachineMenu<M>> extends MachineScreen<M, S> {
     private static final int DAY_SOURCE_U = 0;
     private static final int DAY_SOURCE_V = 0;
     private static final int OVERCAST_SOURCE_U = 32;

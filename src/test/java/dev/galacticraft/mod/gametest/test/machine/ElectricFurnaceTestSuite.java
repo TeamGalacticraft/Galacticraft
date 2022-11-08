@@ -23,9 +23,9 @@
 package dev.galacticraft.mod.gametest.test.machine;
 
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
-import dev.galacticraft.mod.block.GCBlocks;
-import dev.galacticraft.mod.block.entity.ElectricFurnaceBlockEntity;
-import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
+import dev.galacticraft.mod.registries.GCBlocks;
+import dev.galacticraft.mod.registries.block.entity.ElectricFurnaceBlockEntity;
+import dev.galacticraft.mod.registries.block.entity.GCBlockEntityTypes;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.core.BlockPos;

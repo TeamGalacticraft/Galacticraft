@@ -24,9 +24,9 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.CompressorBlockEntity;
+import dev.galacticraft.mod.registries.block.entity.CompressorBlockEntity;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
@@ -38,7 +38,7 @@ import net.minecraft.world.entity.player.Inventory;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class CompressorScreen extends MachineHandledScreen<CompressorBlockEntity, CompressorScreenHandler> {
+public class CompressorScreen extends MachineScreen<CompressorBlockEntity, CompressorScreenHandler> {
     private static final int PROGRESS_U = 204;
     private static final int PROGRESS_V = 0;
     private static final int PROGRESS_X = 82;

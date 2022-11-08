@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.network;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.block.entity.OxygenBubbleDistributorBlockEntity;
+import dev.galacticraft.mod.registries.block.entity.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
 import dev.galacticraft.mod.entity.RocketEntity;
 import net.fabricmc.api.EnvType;

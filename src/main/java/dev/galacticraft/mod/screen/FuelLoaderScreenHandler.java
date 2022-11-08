@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.machinelib.api.screen.MachineScreenHandler;
-import dev.galacticraft.mod.block.entity.FuelLoaderBlockEntity;
+import dev.galacticraft.machinelib.api.screen.MachineMenu;
+import dev.galacticraft.mod.registries.block.entity.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.screen.property.BlockPosPropertyDelegate;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -32,7 +32,7 @@ import net.minecraft.world.entity.player.Player;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class FuelLoaderScreenHandler extends MachineScreenHandler<FuelLoaderBlockEntity> {
+public class FuelLoaderScreenHandler extends MachineMenu<FuelLoaderBlockEntity> {
     public FuelLoaderScreenHandler(int syncId, Player player, FuelLoaderBlockEntity machine) {
         super(syncId, player, machine, GCScreenHandlerType.FUEL_LOADER_HANDLER);
         this.addDataSlots(new BlockPosPropertyDelegate(machine::getConnectionPos, machine::setConnectionPos));

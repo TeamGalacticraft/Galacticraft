@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.machinelib.api.screen.MachineScreenHandler;
-import dev.galacticraft.mod.block.entity.OxygenBubbleDistributorBlockEntity;
+import dev.galacticraft.machinelib.api.screen.MachineMenu;
+import dev.galacticraft.mod.registries.block.entity.OxygenBubbleDistributorBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +31,7 @@ import net.minecraft.world.entity.player.Player;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BubbleDistributorScreenHandler extends MachineScreenHandler<OxygenBubbleDistributorBlockEntity> {
+public class BubbleDistributorScreenHandler extends MachineMenu<OxygenBubbleDistributorBlockEntity> {
     public BubbleDistributorScreenHandler(int syncId, Player player, OxygenBubbleDistributorBlockEntity machine) {
         super(syncId, player, machine, GCScreenHandlerType.BUBBLE_DISTRIBUTOR_HANDLER);
 

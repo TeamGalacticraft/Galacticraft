@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.machinelib.api.screen.RecipeMachineScreenHandler;
-import dev.galacticraft.mod.block.entity.CompressorBlockEntity;
+import dev.galacticraft.machinelib.api.screen.RecipeMachineMenu;
+import dev.galacticraft.mod.registries.block.entity.CompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -34,7 +34,7 @@ import net.minecraft.world.inventory.DataSlot;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CompressorScreenHandler extends RecipeMachineScreenHandler<Container, CompressingRecipe, CompressorBlockEntity> {
+public class CompressorScreenHandler extends RecipeMachineMenu<Container, CompressingRecipe, CompressorBlockEntity> {
     public final DataSlot fuelTime = new DataSlot() {
         @Override
         public int get() {

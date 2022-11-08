@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.compat.rei.client;
 
-import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.machinelib.impl.Constant.TextureCoordinate;
-import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.registries.GCBlocks;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
@@ -85,10 +85,10 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
 
     @Override
     public void registerExclusionZones(ExclusionZones zones) {
-        zones.register(MachineHandledScreen.class, provider -> {
+        zones.register(MachineScreen.class, provider -> {
             List<Rectangle> areas = new ArrayList<>();
-            if (MachineHandledScreen.Tab.STATS.isOpen() || MachineHandledScreen.Tab.SECURITY.isOpen()) {
-                areas.add(new Rectangle(provider.getX() + provider.getImageWidth(), provider.getY() + (MachineHandledScreen.Tab.STATS.isOpen() ? 0 : TextureCoordinate.TAB_HEIGHT), TextureCoordinate.PANEL_WIDTH, TextureCoordinate.PANEL_HEIGHT));
+            if (MachineScreen.Tab.STATS.isOpen() || MachineScreen.Tab.SECURITY.isOpen()) {
+                areas.add(new Rectangle(provider.getX() + provider.getImageWidth(), provider.getY() + (MachineScreen.Tab.STATS.isOpen() ? 0 : TextureCoordinate.TAB_HEIGHT), TextureCoordinate.PANEL_WIDTH, TextureCoordinate.PANEL_HEIGHT));
                 areas.add(new Rectangle(provider.getX() + provider.getImageWidth(), provider.getY() + TextureCoordinate.TAB_HEIGHT, TextureCoordinate.TAB_WIDTH, TextureCoordinate.PANEL_HEIGHT));
             }
             areas.add(new Rectangle(provider.getX() + provider.getImageWidth(), provider.getY(), TextureCoordinate.TAB_WIDTH, TextureCoordinate.TAB_HEIGHT * 2));

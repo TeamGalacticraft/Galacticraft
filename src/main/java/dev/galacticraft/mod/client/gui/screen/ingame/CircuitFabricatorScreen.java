@@ -24,10 +24,10 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.api.screen.RecipeMachineScreenHandler;
-import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.api.screen.RecipeMachineMenu;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.CircuitFabricatorBlockEntity;
+import dev.galacticraft.mod.registries.block.entity.CircuitFabricatorBlockEntity;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
@@ -40,7 +40,7 @@ import net.minecraft.world.entity.player.Inventory;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabricatorBlockEntity, RecipeMachineScreenHandler<Container, FabricationRecipe, CircuitFabricatorBlockEntity>> {
+public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBlockEntity, RecipeMachineMenu<Container, FabricationRecipe, CircuitFabricatorBlockEntity>> {
     private static final int PROGRESS_SIZE = 4;
     private static final int INITIAL_PROGRESS_U = 0;
     private static final int INITIAL_PROGRESS_V = 186;
@@ -76,7 +76,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     private static final int SENARY_PROGRESS_X = 158;
     private static final int SENARY_PROGRESS_Y = 55;
 
-    public CircuitFabricatorScreen(RecipeMachineScreenHandler<Container, FabricationRecipe, CircuitFabricatorBlockEntity> handler, Inventory inv, Component title) {
+    public CircuitFabricatorScreen(RecipeMachineMenu<Container, FabricationRecipe, CircuitFabricatorBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         this.imageHeight = 176;
 

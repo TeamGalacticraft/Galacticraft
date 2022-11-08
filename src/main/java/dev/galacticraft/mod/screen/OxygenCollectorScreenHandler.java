@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.machinelib.api.screen.MachineScreenHandler;
-import dev.galacticraft.mod.block.entity.OxygenCollectorBlockEntity;
+import dev.galacticraft.machinelib.api.screen.MachineMenu;
+import dev.galacticraft.mod.registries.block.entity.OxygenCollectorBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +32,7 @@ import net.minecraft.world.inventory.DataSlot;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCollectorBlockEntity> {
+public class OxygenCollectorScreenHandler extends MachineMenu<OxygenCollectorBlockEntity> {
     public OxygenCollectorScreenHandler(int syncId, Player player, OxygenCollectorBlockEntity blockEntity) {
         super(syncId, player, blockEntity, GCScreenHandlerType.OXYGEN_COLLECTOR_HANDLER);
         this.addDataSlot(new DataSlot() {

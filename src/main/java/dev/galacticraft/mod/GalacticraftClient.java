@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod;
 
-import dev.galacticraft.mod.block.environment.FallenMeteorBlock;
+import dev.galacticraft.mod.registries.block.environment.FallenMeteorBlock;
 import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
-import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.registries.GCBlocks;
 import dev.galacticraft.mod.client.gui.overlay.CountdownOverylay;
 import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;

@@ -25,10 +25,10 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.FuelLoaderBlockEntity;
-import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
+import dev.galacticraft.mod.registries.block.entity.FuelLoaderBlockEntity;
+import dev.galacticraft.mod.registries.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.entity.RocketEntity;
 import dev.galacticraft.mod.screen.FuelLoaderScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
@@ -53,7 +53,7 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
-public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderBlockEntity, FuelLoaderScreenHandler> {
+public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelLoaderScreenHandler> {
     public static final int RED_X_U = 176;
     public static final int RED_X_V = 40;
     public static final int RED_X_WIDTH = 11;

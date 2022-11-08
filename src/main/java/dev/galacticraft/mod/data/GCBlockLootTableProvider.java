@@ -39,7 +39,7 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
-import static dev.galacticraft.mod.block.GCBlocks.*;
+import static dev.galacticraft.mod.registries.GCBlocks.*;
 
 public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
     protected GCBlockLootTableProvider(FabricDataGenerator dataGenerator) {

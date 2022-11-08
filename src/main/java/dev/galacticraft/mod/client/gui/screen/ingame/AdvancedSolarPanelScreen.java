@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.AdvancedSolarPanelBlockEntity;
+import dev.galacticraft.mod.registries.block.entity.AdvancedSolarPanelBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -36,8 +36,8 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class AdvancedSolarPanelScreen extends SolarPanelScreen<AdvancedSolarPanelBlockEntity, SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity>> {
-    public AdvancedSolarPanelScreen(SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity> handler, Inventory inv, Component title) {
+public class AdvancedSolarPanelScreen extends SolarPanelScreen<AdvancedSolarPanelBlockEntity, SimpleMachineMenu<AdvancedSolarPanelBlockEntity>> {
+    public AdvancedSolarPanelScreen(SimpleMachineMenu<AdvancedSolarPanelBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title);
     }
 

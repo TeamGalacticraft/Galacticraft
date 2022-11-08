@@ -31,13 +31,13 @@ import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
-import dev.galacticraft.mod.block.GCBlocks;
-import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
-import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
+import dev.galacticraft.mod.registries.GCBlocks;
+import dev.galacticraft.mod.registries.block.special.rocketlaunchpad.RocketLaunchPadBlock;
+import dev.galacticraft.mod.registries.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.entity.data.GCTrackedDataHandler;
 import dev.galacticraft.mod.events.RocketEvents;
-import dev.galacticraft.mod.fluid.GCFluid;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.registries.GCFluids;
+import dev.galacticraft.mod.data.GCTags;
 import dev.galacticraft.mod.util.FluidUtil;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
@@ -46,10 +46,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.renderer.entity.AbstractHorseRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -79,7 +77,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -111,7 +108,7 @@ public class RocketEntity extends Entity implements Rocket {
     public RocketEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
         try (Transaction t = Transaction.openOuter()) { // TODO: remove when fuel loader is fully implemented
-            getTank().insert(FluidVariant.of(GCFluid.FUEL), getTank().getCapacity(), t);
+            getTank().insert(FluidVariant.of(GCFluids.FUEL), getTank().getCapacity(), t);
             t.commit();
         }
     }
@@ -440,7 +437,7 @@ public class RocketEntity extends Entity implements Rocket {
                     return;
                 }
                 try (Transaction t = Transaction.openOuter()) {
-                    this.getTank().extract(FluidVariant.of(GCFluid.FUEL), FluidConstants.NUGGET, t); //todo find balanced values
+                    this.getTank().extract(FluidVariant.of(GCFluids.FUEL), FluidConstants.NUGGET, t); //todo find balanced values
                     t.commit();
                 }
                 if (timeAsState >= 400) {
@@ -462,7 +459,7 @@ public class RocketEntity extends Entity implements Rocket {
                     this.setStage(LaunchStage.FAILED);
                 } else {
                     try (Transaction t = Transaction.openOuter()) {
-                        this.getTank().extract(FluidVariant.of(GCFluid.FUEL), FluidConstants.NUGGET, t); //todo find balanced values
+                        this.getTank().extract(FluidVariant.of(GCFluids.FUEL), FluidConstants.NUGGET, t); //todo find balanced values
                         t.commit();
                     }
                     for (int i = 0; i < 4; i++) ((ServerLevel) level).sendParticles(ParticleTypes.FLAME, this.getX() + (level.random.nextDouble() - 0.5), this.getY() - 7, this.getZ() + (level.random.nextDouble() - 0.5), 0, (level.random.nextDouble() - 0.5), -1, level.random.nextDouble() - 0.5, 0.12000000596046448D);

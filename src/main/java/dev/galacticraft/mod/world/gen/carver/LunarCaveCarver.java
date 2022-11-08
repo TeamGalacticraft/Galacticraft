@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.world.gen.carver;
 
 import com.mojang.serialization.Codec;
-import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.registries.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;

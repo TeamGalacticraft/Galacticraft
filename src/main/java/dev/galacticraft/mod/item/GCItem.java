@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.item;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.GCBlocks;
-import dev.galacticraft.mod.fluid.GCFluid;
+import dev.galacticraft.mod.registries.GCBlocks;
+import dev.galacticraft.mod.registries.GCFluids;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.core.Registry;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -421,8 +421,8 @@ public class GCItem {
     public static final Item INFINITE_BATTERY = new InfiniteBatteryItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).rarity(Rarity.EPIC));
 
     //FLUID BUCKETS
-    public static final Item CRUDE_OIL_BUCKET = new BucketItem(GCFluid.CRUDE_OIL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item FUEL_BUCKET = new BucketItem(GCFluid.FUEL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item CRUDE_OIL_BUCKET = new BucketItem(GCFluids.CRUDE_OIL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item FUEL_BUCKET = new BucketItem(GCFluids.FUEL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(GCItemGroup.ITEMS_GROUP));
 
     //GALACTICRAFT INVENTORY
     public static final Item PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));

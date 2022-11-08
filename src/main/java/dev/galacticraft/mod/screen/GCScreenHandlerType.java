@@ -22,12 +22,12 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.machinelib.api.screen.RecipeMachineScreenHandler;
-import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.machinelib.api.screen.RecipeMachineMenu;
+import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.*;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
+import dev.galacticraft.mod.registries.block.entity.*;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -43,58 +43,58 @@ public class GCScreenHandlerType {
 
     public static final ExtendedScreenHandlerType<CoalGeneratorScreenHandler> COAL_GENERATOR_HANDLER = new ExtendedScreenHandlerType<>(CoalGeneratorScreenHandler::new);
 
-    public static final MenuType<SimpleMachineScreenHandler<BasicSolarPanelBlockEntity>> BASIC_SOLAR_PANEL_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineScreenHandler.createFactory(() -> GCScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER)
+    public static final MenuType<SimpleMachineMenu<BasicSolarPanelBlockEntity>> BASIC_SOLAR_PANEL_HANDLER = new ExtendedScreenHandlerType<>(
+            SimpleMachineMenu.createFactory(() -> GCScreenHandlerType.BASIC_SOLAR_PANEL_HANDLER)
     );
 
-    public static final MenuType<SimpleMachineScreenHandler<AdvancedSolarPanelBlockEntity>> ADVANCED_SOLAR_PANEL_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineScreenHandler.createFactory(() -> GCScreenHandlerType.ADVANCED_SOLAR_PANEL_HANDLER)
+    public static final MenuType<SimpleMachineMenu<AdvancedSolarPanelBlockEntity>> ADVANCED_SOLAR_PANEL_HANDLER = new ExtendedScreenHandlerType<>(
+            SimpleMachineMenu.createFactory(() -> GCScreenHandlerType.ADVANCED_SOLAR_PANEL_HANDLER)
     );
 
-    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<Container, FabricationRecipe, CircuitFabricatorBlockEntity>> CIRCUIT_FABRICATOR_HANDLER = new ExtendedScreenHandlerType<>(
-            RecipeMachineScreenHandler.createFactory(() -> GCScreenHandlerType.CIRCUIT_FABRICATOR_HANDLER, 94)
+    public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, FabricationRecipe, CircuitFabricatorBlockEntity>> CIRCUIT_FABRICATOR_HANDLER = new ExtendedScreenHandlerType<>(
+            RecipeMachineMenu.createFactory(() -> GCScreenHandlerType.CIRCUIT_FABRICATOR_HANDLER, 94)
     );
 
     public static final ExtendedScreenHandlerType<CompressorScreenHandler> COMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(CompressorScreenHandler::new);
 
-    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<Container, CompressingRecipe, ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(
-            RecipeMachineScreenHandler.createFactory(() -> GCScreenHandlerType.ELECTRIC_COMPRESSOR_HANDLER)
+    public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, CompressingRecipe, ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(
+            RecipeMachineMenu.createFactory(() -> GCScreenHandlerType.ELECTRIC_COMPRESSOR_HANDLER)
     );
 
-    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<Container, SmeltingRecipe, ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE_HANDLER = new ExtendedScreenHandlerType<>(
-            RecipeMachineScreenHandler.createFactory(() -> GCScreenHandlerType.ELECTRIC_FURNACE_HANDLER)
+    public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, SmeltingRecipe, ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE_HANDLER = new ExtendedScreenHandlerType<>(
+            RecipeMachineMenu.createFactory(() -> GCScreenHandlerType.ELECTRIC_FURNACE_HANDLER)
     );
 
-    public static final ExtendedScreenHandlerType<RecipeMachineScreenHandler<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity>> ELECTRIC_ARC_FURNACE_HANDLER = new ExtendedScreenHandlerType<>(
-            RecipeMachineScreenHandler.createFactory(() -> GCScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER)
+    public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity>> ELECTRIC_ARC_FURNACE_HANDLER = new ExtendedScreenHandlerType<>(
+            RecipeMachineMenu.createFactory(() -> GCScreenHandlerType.ELECTRIC_ARC_FURNACE_HANDLER)
     );
 
-    public static final MenuType<SimpleMachineScreenHandler<RefineryBlockEntity>> REFINERY_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineScreenHandler.createFactory(() -> GCScreenHandlerType.REFINERY_HANDLER, 86)
+    public static final MenuType<SimpleMachineMenu<RefineryBlockEntity>> REFINERY_HANDLER = new ExtendedScreenHandlerType<>(
+            SimpleMachineMenu.createFactory(() -> GCScreenHandlerType.REFINERY_HANDLER, 86)
     );
 
     public static final MenuType<OxygenCollectorScreenHandler> OXYGEN_COLLECTOR_HANDLER = new ExtendedScreenHandlerType<>(OxygenCollectorScreenHandler::new);
 
-    public static final MenuType<SimpleMachineScreenHandler<OxygenCompressorBlockEntity>> OXYGEN_COMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineScreenHandler.createFactory(() -> GCScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER)
+    public static final MenuType<SimpleMachineMenu<OxygenCompressorBlockEntity>> OXYGEN_COMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(
+            SimpleMachineMenu.createFactory(() -> GCScreenHandlerType.OXYGEN_COMPRESSOR_HANDLER)
     );
 
-    public static final MenuType<SimpleMachineScreenHandler<OxygenDecompressorBlockEntity>> OXYGEN_DECOMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineScreenHandler.createFactory(() -> GCScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER)
+    public static final MenuType<SimpleMachineMenu<OxygenDecompressorBlockEntity>> OXYGEN_DECOMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(
+            SimpleMachineMenu.createFactory(() -> GCScreenHandlerType.OXYGEN_DECOMPRESSOR_HANDLER)
     );
 
-    public static final MenuType<SimpleMachineScreenHandler<OxygenSealerBlockEntity>> OXYGEN_SEALER_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineScreenHandler.createFactory(() -> GCScreenHandlerType.OXYGEN_SEALER_HANDLER)
+    public static final MenuType<SimpleMachineMenu<OxygenSealerBlockEntity>> OXYGEN_SEALER_HANDLER = new ExtendedScreenHandlerType<>(
+            SimpleMachineMenu.createFactory(() -> GCScreenHandlerType.OXYGEN_SEALER_HANDLER)
     );
 
     public static final MenuType<BubbleDistributorScreenHandler> BUBBLE_DISTRIBUTOR_HANDLER = new ExtendedScreenHandlerType<>(BubbleDistributorScreenHandler::new);
 
-    public static final MenuType<SimpleMachineScreenHandler<OxygenStorageModuleBlockEntity>> OXYGEN_STORAGE_MODULE_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineScreenHandler.createFactory(() -> GCScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER)
+    public static final MenuType<SimpleMachineMenu<OxygenStorageModuleBlockEntity>> OXYGEN_STORAGE_MODULE_HANDLER = new ExtendedScreenHandlerType<>(
+            SimpleMachineMenu.createFactory(() -> GCScreenHandlerType.OXYGEN_STORAGE_MODULE_HANDLER)
     );
 
-    public static final MenuType<SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity>> ENERGY_STORAGE_MODULE_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineScreenHandler.createFactory(() -> GCScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER)
+    public static final MenuType<SimpleMachineMenu<EnergyStorageModuleBlockEntity>> ENERGY_STORAGE_MODULE_HANDLER = new ExtendedScreenHandlerType<>(
+            SimpleMachineMenu.createFactory(() -> GCScreenHandlerType.ENERGY_STORAGE_MODULE_HANDLER)
     );
 
     public static final MenuType<GCPlayerInventoryScreenHandler> PLAYER_INV_GC_HANDLER = new MenuType<>(GCPlayerInventoryScreenHandler::new);

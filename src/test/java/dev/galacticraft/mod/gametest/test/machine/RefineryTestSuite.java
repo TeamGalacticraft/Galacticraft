@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import dev.galacticraft.mod.block.GCBlocks;
-import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
-import dev.galacticraft.mod.block.entity.RefineryBlockEntity;
-import dev.galacticraft.mod.fluid.GCFluid;
+import dev.galacticraft.mod.registries.GCBlocks;
+import dev.galacticraft.mod.registries.block.entity.GCBlockEntityTypes;
+import dev.galacticraft.mod.registries.block.entity.RefineryBlockEntity;
+import dev.galacticraft.mod.registries.GCFluids;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.item.GCItem;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -71,7 +71,7 @@ public class RefineryTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GCBlocks.REFINERY, GCBlockEntityTypes.REFINERY);
         refinery.energyStorage().setEnergyUnsafe(refinery.getEnergyCapacity());
-        refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, FluidVariant.of(GCFluid.CRUDE_OIL), FluidConstants.BUCKET);
+        refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, FluidVariant.of(GCFluids.CRUDE_OIL), FluidConstants.BUCKET);
         runFinalTaskAt(context, 200 + 1, () -> {
             long oil = refinery.fluidStorage().getAmount(RefineryBlockEntity.OIL_TANK);
             long fuel = refinery.fluidStorage().getAmount(RefineryBlockEntity.FUEL_TANK);
@@ -89,8 +89,8 @@ public class RefineryTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GCBlocks.REFINERY, GCBlockEntityTypes.REFINERY);
         refinery.energyStorage().setEnergyUnsafe(refinery.getEnergyCapacity());
-        refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, FluidVariant.of(GCFluid.CRUDE_OIL), FluidConstants.BUCKET);
-        refinery.fluidStorage().setSlot(RefineryBlockEntity.FUEL_TANK, FluidVariant.of(GCFluid.FUEL), RefineryBlockEntity.MAX_CAPACITY);
+        refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, FluidVariant.of(GCFluids.CRUDE_OIL), FluidConstants.BUCKET);
+        refinery.fluidStorage().setSlot(RefineryBlockEntity.FUEL_TANK, FluidVariant.of(GCFluids.FUEL), RefineryBlockEntity.MAX_CAPACITY);
         runFinalTaskNext(context, () -> {
             if (refinery.fluidStorage().getAmount(RefineryBlockEntity.OIL_TANK) != FluidConstants.BUCKET) {
                 context.fail("Expected refinery to be unable to refine oil as the fuel tank was full!", pos);

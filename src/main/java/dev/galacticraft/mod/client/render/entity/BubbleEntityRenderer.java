@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.render.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.OxygenBubbleDistributorBlockEntity;
+import dev.galacticraft.mod.registries.block.entity.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.entity.BubbleEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

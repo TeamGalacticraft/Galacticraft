@@ -36,7 +36,7 @@ import net.minecraft.data.models.model.ModelLocationUtils;
 import net.minecraft.data.models.model.TexturedModel;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-import static dev.galacticraft.mod.block.GCBlocks.*;
+import static dev.galacticraft.mod.registries.GCBlocks.*;
 import static net.minecraft.data.models.BlockModelGenerators.createRotatedVariant;
 
 public class GCModelProvider extends FabricModelProvider {

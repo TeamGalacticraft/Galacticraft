@@ -25,7 +25,7 @@ package dev.galacticraft.mod.world.gen.structure;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.structure.MoonPillagerOutpostGenerator;
 import dev.galacticraft.mod.structure.MoonVillageGenerator;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.data.GCTags;
 import net.minecraft.core.Holder;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.Structures;

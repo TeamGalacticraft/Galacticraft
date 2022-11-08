@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.entity;
 
 import dev.galacticraft.mod.mixin.AbstractSkeletonEntityAccessor;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.data.GCTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;

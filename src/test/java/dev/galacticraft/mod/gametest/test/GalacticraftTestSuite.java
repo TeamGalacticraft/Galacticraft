@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.gametest.test;
 
-import dev.galacticraft.mod.block.GCBlocks;
-import dev.galacticraft.mod.block.decoration.GratingBlock;
+import dev.galacticraft.mod.registries.GCBlocks;
+import dev.galacticraft.mod.registries.block.decoration.GratingBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.gametest.framework.GameTest;

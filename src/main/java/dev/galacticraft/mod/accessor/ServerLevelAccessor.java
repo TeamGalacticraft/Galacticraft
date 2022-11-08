@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.accessor;
 
-import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
+import dev.galacticraft.mod.registries.block.entity.OxygenSealerBlockEntity;
 
 public interface ServerLevelAccessor {
     void addSealer(OxygenSealerBlockEntity sealer);

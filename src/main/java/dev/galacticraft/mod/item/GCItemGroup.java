@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.item;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.registries.GCBlocks;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
