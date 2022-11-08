@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.entity.damage.GCDamageSource;
+import dev.galacticraft.mod.entity.damage.GCDamageSources;
 import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.world.dimension.GCDimensionType;
 import org.spongepowered.asm.mixin.Mixin;
@@ -102,7 +102,7 @@ public abstract class EntityMixin {
             {
                 level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Explosion.BlockInteraction.NONE);
                 if ((this.isAlwaysTicking() && !level.getPlayerByUUID(uuid).isCreative()) || !this.isInvulnerable()) {
-                    this.hurt(GCDamageSource.OIL_BOOM, 20.0f);
+                    this.hurt(GCDamageSources.OIL_BOOM, 20.0f);
                 }
             }
         }

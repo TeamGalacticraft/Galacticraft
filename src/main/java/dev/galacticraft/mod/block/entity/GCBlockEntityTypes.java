@@ -61,7 +61,7 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR = FabricBlockEntityTypeBuilder.create(OxygenCompressorBlockEntity::new, GCBlocks.OXYGEN_COMPRESSOR).build();
     public static final BlockEntityType<OxygenDecompressorBlockEntity> OXYGEN_DECOMPRESSOR = FabricBlockEntityTypeBuilder.create(OxygenDecompressorBlockEntity::new, GCBlocks.OXYGEN_DECOMPRESSOR).build();
     public static final BlockEntityType<OxygenSealerBlockEntity> OXYGEN_SEALER = FabricBlockEntityTypeBuilder.create(OxygenSealerBlockEntity::new, GCBlocks.OXYGEN_SEALER).build();
-    public static final BlockEntityType<BubbleDistributorBlockEntity> OXYGEN_BUBBLE_DISTRIBUTOR = FabricBlockEntityTypeBuilder.create(BubbleDistributorBlockEntity::new, GCBlocks.BUBBLE_DISTRIBUTOR).build();
+    public static final BlockEntityType<OxygenBubbleDistributorBlockEntity> OXYGEN_BUBBLE_DISTRIBUTOR = FabricBlockEntityTypeBuilder.create(OxygenBubbleDistributorBlockEntity::new, GCBlocks.BUBBLE_DISTRIBUTOR).build();
 
     // RESOURCE STORAGE
     public static final BlockEntityType<EnergyStorageModuleBlockEntity> ENERGY_STORAGE_MODULE = FabricBlockEntityTypeBuilder.create(EnergyStorageModuleBlockEntity::new, GCBlocks.ENERGY_STORAGE_MODULE).build();

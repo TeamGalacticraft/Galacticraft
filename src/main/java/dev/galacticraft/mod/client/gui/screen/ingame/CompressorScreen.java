@@ -24,8 +24,8 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.api.client.screen.MachineHandledScreen;
 import dev.galacticraft.mod.block.entity.CompressorBlockEntity;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;

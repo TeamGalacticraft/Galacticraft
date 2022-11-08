@@ -20,19 +20,20 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.loot;
+package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.mixin.LootTablesAccessor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GCLootTable {
-    public static final ResourceLocation BASIC_MOON_RUINS_CHEST = new ResourceLocation(Constant.MOD_ID, Constant.LootTable.BASIC_MOON_RUINS_CHEST);
-
-    public static void register() {
-        LootTablesAccessor.callRegisterLootTable(BASIC_MOON_RUINS_CHEST);
+@Mixin(BuiltInLootTables.class)
+public interface BuiltInLootTablesAccessor {
+    @Invoker("register")
+    static ResourceLocation callRegisterLootTable(ResourceLocation id) {
+        throw new UnsupportedOperationException("Invoker was not transformed.");
     }
 }

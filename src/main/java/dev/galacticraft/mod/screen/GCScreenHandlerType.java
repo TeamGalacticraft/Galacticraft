@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
-import dev.galacticraft.api.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.machinelib.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.*;
 import dev.galacticraft.mod.recipe.CompressingRecipe;

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.entity.CompressorBlockEntity;
 import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
@@ -50,7 +50,7 @@ public class CompressorTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var compressor = this.createBlockEntity(context, pos, GCBlocks.COMPRESSOR, GCBlockEntityTypes.COMPRESSOR);
         final var inv = compressor.itemStorage();
-        inv.setSlotUnsafe(CompressorBlockEntity.FUEL_INPUT_SLOT, ItemVariant.of(Items.COAL), 1, true);
+        inv.setSlot(CompressorBlockEntity.FUEL_INPUT_SLOT, ItemVariant.of(Items.COAL), 1);
         runNext(context, () -> {
             ItemStack stack = inv.getStack(CompressorBlockEntity.FUEL_INPUT_SLOT);
             if (stack.isEmpty() || stack.getItem() != Items.COAL || stack.getCount() != 1) {
@@ -86,7 +86,7 @@ public class CompressorTestSuite implements MachineGameTest {
         final var compressor = this.createBlockEntity(context, pos, GCBlocks.COMPRESSOR, GCBlockEntityTypes.COMPRESSOR);
         final var inv = compressor.itemStorage();
         compressor.fuelTime = compressor.fuelLength = 1000;
-        inv.setSlotUnsafe(CompressorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
+        inv.setSlot(CompressorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
         fillCompressorSlots(inv);
         runFinalTaskNext(context, () -> {
             if (compressor.getMaxProgress() != 0) {
@@ -96,7 +96,7 @@ public class CompressorTestSuite implements MachineGameTest {
     }
 
     private static void fillCompressorSlots(@NotNull MachineItemStorage inv) {
-        inv.setSlotUnsafe(0, ItemVariant.of(Items.IRON_INGOT), 1, true);
-        inv.setSlotUnsafe(1, ItemVariant.of(Items.IRON_INGOT), 1, true);
+        inv.setSlot(0, ItemVariant.of(Items.IRON_INGOT), 1);
+        inv.setSlot(1, ItemVariant.of(Items.IRON_INGOT), 1);
     }
 }

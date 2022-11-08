@@ -20,22 +20,15 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin.client;
+package dev.galacticraft.mod.entity.damage;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.level.Level;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.world.damagesource.DamageSource;
 
-@Mixin(ClientLevel.class)
-@Environment(EnvType.CLIENT)
-public abstract class ClientWorldMixin {
-    @Inject(method = "tickTime", at = @At("RETURN"))
-    private void update(CallbackInfo ci) {
-        ((Level)(Object)this).updateSkyBrightness();
-    }
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
+public class GCDamageSources {
+    public static final DamageSource OIL_BOOM = new DamageSource("galacticraft.oil_boom").bypassArmor();
+    public static final DamageSource VINE_POISON = new DamageSource("galacticraft.vine_poison");
+    public static final DamageSource SUFFOCATION = new DamageSource("galacticraft.suffocation");
 }

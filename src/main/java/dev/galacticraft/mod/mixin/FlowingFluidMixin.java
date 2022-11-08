@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Mixin(FlowingFluid.class)
-public abstract class FlowableFluidMixin {
+public abstract class FlowingFluidMixin {
     @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 1))
     private boolean onScheduledTickFill_gc(Level world, BlockPos pos, BlockState state, int flags) {
         BlockState blockState = world.getBlockState(pos);

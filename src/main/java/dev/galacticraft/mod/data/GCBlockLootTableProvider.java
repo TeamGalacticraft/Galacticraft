@@ -244,6 +244,8 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(LEAD_BLOCK);
         dropSelf(LUNAR_SAPPHIRE_BLOCK);
 
+        add(FALLEN_METEOR, block -> BlockLoot.createSilkTouchDispatchTable(block, BlockLoot.applyExplosionDecay(block, LootItem.lootTableItem(GCItem.RAW_METEORIC_IRON).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));
+
         dropSelf(LUNAR_CARTOGRAPHY_TABLE);
         dropSelf(ROCKET_LAUNCH_PAD);
         dropSelf(AIR_LOCK_CONTROLLER);

@@ -24,31 +24,27 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.api.client.screen.MachineHandledScreen;
-import dev.galacticraft.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.entity.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.entity.RocketEntity;
 import dev.galacticraft.mod.screen.FuelLoaderScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
-import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.material.Fluids;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,10 +94,10 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderBlockEntity
 
         if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 145, this.topPos + 37, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
             if (this.machine.getConnectionPos().closerThan(this.pos, 3.0)) {
-                BlockEntity be = world.getBlockEntity(this.machine.getConnectionPos());
+                BlockEntity be = level.getBlockEntity(this.machine.getConnectionPos());
                 if (be instanceof RocketLaunchPadBlockEntity) {
                     if (((RocketLaunchPadBlockEntity) be).hasRocket()) {
-                        Entity entity = world.getEntity(((RocketLaunchPadBlockEntity) be).getRocketEntityId());
+                        Entity entity = level.getEntity(((RocketLaunchPadBlockEntity) be).getRocketEntityId());
                         if (entity instanceof RocketEntity rocket) {
                             if (!rocket.isTankEmpty()) {
                                 long amount = rocket.getTank().getAmount();
@@ -143,10 +139,10 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderBlockEntity
 
         if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 145, this.topPos + 37, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
             if (this.machine.getConnectionPos().closerThan(this.pos, 3.0)) {
-                BlockEntity be = world.getBlockEntity(this.machine.getConnectionPos());
+                BlockEntity be = level.getBlockEntity(this.machine.getConnectionPos());
                 if (be instanceof RocketLaunchPadBlockEntity) {
                     if (((RocketLaunchPadBlockEntity) be).hasRocket()) {
-                        Entity entity = world.getEntity(((RocketLaunchPadBlockEntity) be).getRocketEntityId());
+                        Entity entity = level.getEntity(((RocketLaunchPadBlockEntity) be).getRocketEntityId());
                         if (entity instanceof RocketEntity rocket) {
                             if (rocket.isTankEmpty()) {
                                 list.add(Component.translatable("tooltip.galacticraft.no_fluid").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)).getVisualOrderText());

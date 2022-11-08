@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.structure;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.loot.GCLootTable;
+import dev.galacticraft.mod.registries.GCLootTables;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -143,7 +143,7 @@ public class MoonRuinsGenerator {
             world.setBlock(pos, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.WATERLOGGED, world.getFluidState(pos).is(FluidTags.WATER)), Block.UPDATE_CLIENTS);
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof ChestBlockEntity chest) {
-               chest.setLootTable(GCLootTable.BASIC_MOON_RUINS_CHEST, random.nextLong());
+               chest.setLootTable(GCLootTables.BASIC_MOON_RUINS_CHEST, random.nextLong());
             }
          }
       }

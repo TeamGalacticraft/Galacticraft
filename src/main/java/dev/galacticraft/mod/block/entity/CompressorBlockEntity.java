@@ -22,15 +22,15 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
-import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
-import dev.galacticraft.api.machine.storage.StorageSlot;
-import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
+import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.slot.StorageSlot;
+import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.machine.LongProperty;
-import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
@@ -64,7 +64,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
     private final Container craftingInv = this.itemStorage().subInv(0, FUEL_INPUT_SLOT);
     public int fuelTime;
     public int fuelLength;
-    private LongProperty fuelSlotModification = LongProperty.create(-1);
+    private final LongProperty fuelSlotModification = LongProperty.create(-1);
 
     public CompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE);
@@ -75,12 +75,12 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
         MachineItemStorage.Builder builder = MachineItemStorage.Builder.create();
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                builder.addSlot(GCSlotTypes.ITEM_INPUT, new ItemSlotDisplay(x * 18 + 17, y * 18 + 17));
+                builder.addSlot(GCSlotGroups.GENERIC_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(x * 18 + 17, y * 18 + 17));
             }
         }
         return builder
-                .addSlot(GCSlotTypes.SOLID_FUEL, new ItemSlotDisplay(83, 47))
-                .addSlot(GCSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(143, 36))
+                .addSlot(GCSlotGroups.SOLID_FUEL, v -> FuelRegistry.INSTANCE.get(v.getItem()) > 0, true, ItemSlotDisplay.create(83, 47))
+                .addSlot(GCSlotGroups.GENERIC_OUTPUT, Constant.Filter.any(), false, ItemSlotDisplay.create(143, 36))
                 .build();
     }
 
@@ -144,7 +144,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
         if (this.fuelLength == 0) {
             StorageSlot<Item, ItemVariant, ItemStack> slot = this.itemStorage().getSlot(FUEL_INPUT_SLOT);
             if (slot.getModCountUnsafe() != this.fuelSlotModification.getValue()) {
-                this.fuelSlotModification.setValue(slot.getModCountUnsafe(), context);
+                this.fuelSlotModification.setValue(slot.getModCountUnsafe(), context); //fixme
                 ItemStack stack = this.itemStorage().extract(FUEL_INPUT_SLOT, 1, context);
                 Item remainingItem = stack.getItem().getCraftingRemainingItem();
                 Integer integer = FuelRegistry.INSTANCE.get(stack.getItem());

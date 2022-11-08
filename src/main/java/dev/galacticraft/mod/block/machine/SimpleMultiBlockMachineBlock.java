@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.block.machine;
 
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.MultiBlockMachineBlock;
 import dev.galacticraft.mod.api.block.MultiBlockPart;

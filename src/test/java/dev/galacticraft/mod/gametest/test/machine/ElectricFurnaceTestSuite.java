@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.entity.ElectricFurnaceBlockEntity;
 import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
@@ -71,7 +71,7 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
         final var inv = electricFurnace.itemStorage();
         electricFurnace.energyStorage().setEnergyUnsafe(electricFurnace.getEnergyCapacity());
         fillElectricFurnaceSlots(inv);
-        inv.setSlotUnsafe(ElectricFurnaceBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
+        inv.setSlot(ElectricFurnaceBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
 
         runFinalTaskNext(context, () -> {
             if (electricFurnace.getMaxProgress() != 0) {
@@ -81,6 +81,6 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
     }
 
     private static void fillElectricFurnaceSlots(@NotNull MachineItemStorage inv) {
-        inv.setSlotUnsafe(ElectricFurnaceBlockEntity.INPUT_SLOT, ItemVariant.of(Items.PORKCHOP), 1);
+        inv.setSlot(ElectricFurnaceBlockEntity.INPUT_SLOT, ItemVariant.of(Items.PORKCHOP), 1);
     }
 }

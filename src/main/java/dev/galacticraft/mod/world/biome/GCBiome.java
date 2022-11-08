@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.world.biome;
 
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
-import dev.galacticraft.mod.sound.GCSounds;
+import dev.galacticraft.mod.registries.GCSounds;
 import dev.galacticraft.mod.world.gen.carver.GCConfiguredCarver;
 import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeature;
 import net.minecraft.core.Holder;

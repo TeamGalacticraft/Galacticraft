@@ -20,20 +20,12 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.mod.accessor;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Invoker;
+import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-@Mixin(BuiltInLootTables.class)
-public interface LootTablesAccessor {
-    @Invoker("register")
-    static ResourceLocation callRegisterLootTable(ResourceLocation id) {
-        throw new UnsupportedOperationException("Invoker was not transformed.");
-    }
+public interface ServerLevelAccessor {
+    void addSealer(OxygenSealerBlockEntity sealer);
+
+    void removeSealer(OxygenSealerBlockEntity sealer);
 }

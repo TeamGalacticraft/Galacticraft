@@ -50,7 +50,7 @@ import java.util.NoSuchElementException;
  */
 @Mixin(VillagerModel.class)
 @Environment(EnvType.CLIENT)
-public abstract class VillagerResemblingModelMixin<T extends Entity> {
+public abstract class VillagerModelMixin<T extends Entity> {
     @Shadow public abstract void hatVisible(boolean visible);
     @Shadow @Final private ModelPart head;
 

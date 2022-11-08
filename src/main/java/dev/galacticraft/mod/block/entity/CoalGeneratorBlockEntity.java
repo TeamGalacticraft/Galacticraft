@@ -23,19 +23,17 @@
 package dev.galacticraft.mod.block.entity;
 
 import com.google.common.annotations.VisibleForTesting;
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.MachineStatuses;
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
-import dev.galacticraft.api.machine.storage.StorageSlot;
-import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
-import dev.galacticraft.api.machine.storage.io.ResourceFlow;
-import dev.galacticraft.api.machine.storage.io.ResourceType;
-import dev.galacticraft.api.machine.storage.io.SlotType;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
+import dev.galacticraft.machinelib.api.storage.slot.StorageSlot;
+import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
 import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -46,7 +44,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
@@ -58,6 +55,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -71,9 +70,11 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         map.put(Items.CHARCOAL, 310);
     });
 
+    private static final Predicate<ItemVariant> FUEL_PREDICATE = v -> FUEL_MAP.getInt(v.getItem()) > 0;
+
     public static final int CHARGE_SLOT = 0;
     public static final int FUEL_SLOT = 1;
-    private static final SlotType<Item, ItemVariant> COAL_INPUT = SlotType.create(new ResourceLocation(Constant.MOD_ID, "coal_input"), TextColor.fromRgb(0x000000), Component.translatable("slot_type.galacticraft.coal_input"), v -> FUEL_MAP.containsKey(v.getItem()), ResourceFlow.INPUT, ResourceType.ITEM);
+    private static final SlotGroup COAL_INPUT = SlotGroup.create(TextColor.fromRgb(0x000000), Component.translatable("slot_type.galacticraft.coal_input"), true);
 
     private int fuelLength = 0;
     private long fuelSlotModCount = -1;
@@ -93,14 +94,19 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
-                .addSlot(COAL_INPUT, new ItemSlotDisplay(71, 53))
+                .addSlot(GCSlotGroups.ENERGY_DRAIN, Constant.Filter.Item.CAN_INSERT_ENERGY, true, ItemSlotDisplay.create(8, 62))
+                .addSlot(COAL_INPUT, FUEL_PREDICATE, true, ItemSlotDisplay.create(71, 53))
                 .build();
     }
 
     @Override
     public long getEnergyCapacity() {
         return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
+    }
+
+    @Override
+    public boolean canExposedExtractEnergy() {
+        return true;
     }
 
     @Override
@@ -123,7 +129,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
             this.energyStorage().insert((long) (Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate() * this.heat), transaction);
             transaction.commit();
         }
-        this.trySpreadEnergy(world);
+        this.trySpreadEnergy(world, state);
         profiler.popPush("fuel_reset");
         if (this.fuelLength == 0) {
             if (!this.consumeFuel()) {

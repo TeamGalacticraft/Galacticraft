@@ -22,20 +22,20 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.MachineStatuses;
-import dev.galacticraft.api.machine.storage.MachineFluidStorage;
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
-import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
-import dev.galacticraft.api.machine.storage.display.TankDisplay;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.gas.Gases;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
+import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.entity.BubbleEntity;
 import dev.galacticraft.mod.entity.GalacticraftEntityType;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
 import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.GenericStorageUtil;
@@ -49,7 +49,6 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -65,7 +64,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BubbleDistributorBlockEntity extends MachineBlockEntity {
+public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
     public static final int BATTERY_SLOT = 0;
     public static final int OXYGEN_TANK_SLOT = 1;
@@ -77,28 +76,33 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity {
     private int bubbleId = -1;
     private double prevSize;
 
-    public BubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
+    public OxygenBubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state);
     }
 
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 62))
-                .addSlot(GCSlotTypes.OXYGEN_TANK_FILL, new ItemSlotDisplay(31, 62))
+                .addSlot(GCSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 62))
+                .addSlot(GCSlotGroups.OXYGEN_TANK_FILL, Constant.Filter.Item.CAN_EXTRACT_LOX, true, ItemSlotDisplay.create(31, 62))
                 .build();
     }
 
     @Override
     protected @NotNull MachineFluidStorage createFluidStorage() {
         return MachineFluidStorage.Builder.create()
-                .addTank(GCSlotTypes.OXYGEN_INPUT, MAX_OXYGEN, new TankDisplay(31, 8, 48), true)
+                .addTank(GCSlotGroups.OXYGEN_INPUT, MAX_OXYGEN, TankDisplay.create(31, 8), true)
                 .build();
     }
 
     @Override
     public long getEnergyCapacity() {
         return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
+    }
+
+    @Override
+    public boolean canExposedInsertEnergy() {
+        return true;
     }
 
     @Override

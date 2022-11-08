@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.compat.rei.common;
 
-import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.machinelib.api.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;

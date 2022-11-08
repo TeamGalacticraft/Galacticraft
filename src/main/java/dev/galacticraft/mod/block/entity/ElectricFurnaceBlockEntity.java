@@ -22,15 +22,16 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.api.block.entity.RecipeMachineBlockEntity;
-import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.MachineStatuses;
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
-import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
-import dev.galacticraft.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
 import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -61,9 +62,9 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Contain
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61))
-                .addSlot(GCSlotTypes.ITEM_INPUT, new ItemSlotDisplay(52, 35))
-                .addSlot(GCSlotTypes.ITEM_OUTPUT, new ItemSlotDisplay(113, 35))
+                .addSlot(GCSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 61))
+                .addSlot(GCSlotGroups.GENERIC_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(52, 35))
+                .addSlot(GCSlotGroups.GENERIC_OUTPUT, Constant.Filter.any(), false, ItemSlotDisplay.create(113, 35))
                 .build();
     }
 
@@ -74,6 +75,11 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Contain
     @Override
     public long getEnergyCapacity() {
         return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
+    }
+
+    @Override
+    public boolean canExposedInsertEnergy() {
+        return true;
     }
 
     @Override

@@ -22,35 +22,31 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.machine.MachineStatus;
-import dev.galacticraft.api.machine.MachineStatus.Type;
-import dev.galacticraft.api.machine.storage.MachineFluidStorage;
-import dev.galacticraft.api.machine.storage.MachineItemStorage;
-import dev.galacticraft.api.machine.storage.display.ItemSlotDisplay;
-import dev.galacticraft.api.machine.storage.display.TankDisplay;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
+import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.entity.RocketEntity;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotTypes;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
 import dev.galacticraft.mod.screen.FuelLoaderScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -78,15 +74,15 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.builder()
-                .addSlot(GCSlotTypes.ENERGY_CHARGE, new ItemSlotDisplay(8, 61))
-                .addSlot(GCSlotTypes.FUEL_IN, new ItemSlotDisplay(80, 61))
+                .addSlot(GCSlotGroups.ENERGY_CHARGE, Constant.Filter.any(), true, ItemSlotDisplay.create(8, 61))
+                .addSlot(GCSlotGroups.FUEL_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(80, 61))
                 .build();
     }
 
     @Override
     protected @NotNull MachineFluidStorage createFluidStorage() {
         return MachineFluidStorage.Builder.create()
-                .addTank(GCSlotTypes.FUEL_IN, 0 , new TankDisplay(0, 0, 0))
+                .addTank(GCSlotGroups.FUEL_INPUT, 0, TankDisplay.create(0, 0, 0))
                 .build();
     }
 

@@ -22,10 +22,11 @@
 
 package dev.galacticraft.mod.lookup;
 
-import dev.galacticraft.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
+import dev.galacticraft.mod.block.GCBlocks;
 import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
 import dev.galacticraft.mod.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.item.GCItem;
@@ -33,29 +34,30 @@ import dev.galacticraft.mod.item.OxygenTankItem;
 import dev.galacticraft.mod.storage.SingleTypeStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
 public class GCApiLookupProviders {
     @SuppressWarnings("rawtypes")
-    private static final BlockEntityType[] MACHINE_TYPES = new BlockEntityType[]{
-            GCBlockEntityTypes.COAL_GENERATOR,
-            GCBlockEntityTypes.BASIC_SOLAR_PANEL,
-            GCBlockEntityTypes.ADVANCED_SOLAR_PANEL,
-            GCBlockEntityTypes.CIRCUIT_FABRICATOR,
-            GCBlockEntityTypes.COMPRESSOR,
-            GCBlockEntityTypes.ELECTRIC_COMPRESSOR,
-            GCBlockEntityTypes.ELECTRIC_FURNACE,
-            GCBlockEntityTypes.ELECTRIC_ARC_FURNACE,
-            GCBlockEntityTypes.REFINERY,
-            GCBlockEntityTypes.OXYGEN_COLLECTOR,
-            GCBlockEntityTypes.OXYGEN_COMPRESSOR,
-            GCBlockEntityTypes.OXYGEN_DECOMPRESSOR,
-            GCBlockEntityTypes.OXYGEN_SEALER,
-            GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR,
-            GCBlockEntityTypes.ENERGY_STORAGE_MODULE,
-            GCBlockEntityTypes.OXYGEN_STORAGE_MODULE
+    private static final Block[] MACHINE_BLOCKS = new Block[]{
+            GCBlocks.COAL_GENERATOR,
+            GCBlocks.BASIC_SOLAR_PANEL,
+            GCBlocks.ADVANCED_SOLAR_PANEL,
+            GCBlocks.CIRCUIT_FABRICATOR,
+            GCBlocks.COMPRESSOR,
+            GCBlocks.ELECTRIC_COMPRESSOR,
+            GCBlocks.ELECTRIC_FURNACE,
+            GCBlocks.ELECTRIC_ARC_FURNACE,
+            GCBlocks.REFINERY,
+            GCBlocks.OXYGEN_COLLECTOR,
+            GCBlocks.OXYGEN_COMPRESSOR,
+            GCBlocks.OXYGEN_DECOMPRESSOR,
+            GCBlocks.OXYGEN_SEALER,
+            GCBlocks.BUBBLE_DISTRIBUTOR,
+            GCBlocks.ENERGY_STORAGE_MODULE,
+            GCBlocks.OXYGEN_STORAGE_MODULE
     };
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] WIRE_TYPES = new BlockEntityType[]{
@@ -71,9 +73,7 @@ public class GCApiLookupProviders {
     };
 
     public static void register() {
-        for (BlockEntityType machineType : MACHINE_TYPES) {
-            MachineBlockEntity.registerComponents(machineType);
-        }
+        MachineBlockEntity.registerComponents(MACHINE_BLOCKS);
 
         FluidStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
             assert blockEntity instanceof PipeBlockEntity;
