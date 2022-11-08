@@ -24,7 +24,7 @@ package dev.galacticraft.mod.api.block;
 
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.pipe.Pipe;
-import dev.galacticraft.mod.registries.block.special.fluidpipe.PipeBlockEntity;
+import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;

@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.gui.overlay;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.api.rocket.LaunchStage;
-import dev.galacticraft.mod.entity.RocketEntity;
+import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.util.ColorUtil;
 import net.minecraft.client.Minecraft;
 

@@ -28,8 +28,8 @@ import com.mojang.math.Vector3f;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPartType;
-import dev.galacticraft.mod.entity.GalacticraftEntityType;
-import dev.galacticraft.mod.entity.RocketEntity;
+import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -39,7 +39,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 
 public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
-    private final RocketEntity rocket = new RocketEntity(GalacticraftEntityType.ROCKET, Minecraft.getInstance().level); // Fake rocket entity for rendering
+    private final RocketEntity rocket = new RocketEntity(GCEntityTypes.ROCKET, Minecraft.getInstance().level); // Fake rocket entity for rendering
     @Override
     public void render(ItemStack stack, ItemTransforms.TransformType mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         RocketData data = RocketData.fromNbt(stack.getTag());

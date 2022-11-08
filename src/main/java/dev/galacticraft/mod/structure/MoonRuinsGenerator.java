@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.structure;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.registries.GCLootTables;
+import dev.galacticraft.mod.content.GCLootTables;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

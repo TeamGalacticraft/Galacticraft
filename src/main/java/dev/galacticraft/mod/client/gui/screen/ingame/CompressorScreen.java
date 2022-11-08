@@ -26,8 +26,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.registries.block.entity.CompressorBlockEntity;
-import dev.galacticraft.mod.screen.CompressorScreenHandler;
+import dev.galacticraft.mod.content.block.entity.CompressorBlockEntity;
+import dev.galacticraft.mod.screen.CompressorMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -38,7 +38,7 @@ import net.minecraft.world.entity.player.Inventory;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class CompressorScreen extends MachineScreen<CompressorBlockEntity, CompressorScreenHandler> {
+public class CompressorScreen extends MachineScreen<CompressorBlockEntity, CompressorMenu> {
     private static final int PROGRESS_U = 204;
     private static final int PROGRESS_V = 0;
     private static final int PROGRESS_X = 82;
@@ -53,7 +53,7 @@ public class CompressorScreen extends MachineScreen<CompressorBlockEntity, Compr
     private static final int FIRE_X = 84;
     private static final int FIRE_Y = 26;
 
-    public CompressorScreen(CompressorScreenHandler handler, Inventory inv, Component title) {
+    public CompressorScreen(CompressorMenu handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.COMPRESSOR_SCREEN);
     }
 

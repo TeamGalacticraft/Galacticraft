@@ -24,7 +24,7 @@ package dev.galacticraft.mod.world.gen.surfacebuilder;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.registries.GCBlocks;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.world.biome.GCBiomeKey;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.data;
 
 import dev.galacticraft.machinelib.client.impl.model.MachineUnbakedModel;
-import dev.galacticraft.mod.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItem;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.models.BlockModelGenerators;
@@ -36,7 +36,7 @@ import net.minecraft.data.models.model.ModelLocationUtils;
 import net.minecraft.data.models.model.TexturedModel;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-import static dev.galacticraft.mod.registries.GCBlocks.*;
+import static dev.galacticraft.mod.content.GCBlocks.*;
 import static net.minecraft.data.models.BlockModelGenerators.createRotatedVariant;
 
 public class GCModelProvider extends FabricModelProvider {

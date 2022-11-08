@@ -26,7 +26,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.api.screen.RecipeMachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.registries.block.entity.ElectricArcFurnaceBlockEntity;
+import dev.galacticraft.mod.content.block.entity.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;

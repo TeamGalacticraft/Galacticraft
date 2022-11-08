@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.world.biome;
 
-import dev.galacticraft.mod.entity.GalacticraftEntityType;
-import dev.galacticraft.mod.registries.GCSounds;
+import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.world.gen.carver.GCConfiguredCarver;
 import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeature;
 import net.minecraft.core.Holder;
@@ -61,10 +61,10 @@ public class GCBiome {
                             GCOrePlacedFeature.BASALT_DISK_MOON
                     ),
                     new MobSpawnSettings.Builder()
-                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_ZOMBIE, 95, 4, 5))
-                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_CREEPER, 100, 4, 4))
-                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_SKELETON, 100, 4, 4))
-                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_SPIDER, 100, 4, 4))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_ZOMBIE, 95, 4, 5))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_CREEPER, 100, 4, 4))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_SKELETON, 100, 4, 4))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_SPIDER, 100, 4, 4))
                             .build()
             ),
 
@@ -84,10 +84,10 @@ public class GCBiome {
                             GCOrePlacedFeature.BASALT_DISK_MOON
                     ),
                     new MobSpawnSettings.Builder()
-                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_ZOMBIE, 95, 4, 5))
-                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_CREEPER, 100, 4, 5))
-                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_SKELETON, 100, 4, 5))
-                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_SPIDER, 100, 4, 5))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_ZOMBIE, 95, 4, 5))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_CREEPER, 100, 4, 5))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_SKELETON, 100, 4, 5))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_SPIDER, 100, 4, 5))
                             .build()
             );
 

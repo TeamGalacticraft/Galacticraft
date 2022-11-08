@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.registries.block.entity.EnergyStorageModuleBlockEntity;
+import dev.galacticraft.mod.content.block.entity.EnergyStorageModuleBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;

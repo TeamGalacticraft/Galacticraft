@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.model;
 
 import com.mojang.math.Vector3f;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.registries.block.entity.PipeWalkwayBlockEntity;
+import dev.galacticraft.mod.content.block.entity.PipeWalkwayBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;

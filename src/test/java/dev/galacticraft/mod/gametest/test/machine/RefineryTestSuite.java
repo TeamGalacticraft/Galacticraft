@@ -22,12 +22,12 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import dev.galacticraft.mod.registries.GCBlocks;
-import dev.galacticraft.mod.registries.block.entity.GCBlockEntityTypes;
-import dev.galacticraft.mod.registries.block.entity.RefineryBlockEntity;
-import dev.galacticraft.mod.registries.GCFluids;
+import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.entity.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.block.entity.RefineryBlockEntity;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
-import dev.galacticraft.mod.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItem;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;

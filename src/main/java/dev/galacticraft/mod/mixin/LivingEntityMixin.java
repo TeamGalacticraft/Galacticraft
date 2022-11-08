@@ -24,7 +24,7 @@ package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.LivingEntityAccessor;
-import dev.galacticraft.mod.entity.data.GCTrackedDataHandler;
+import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -69,7 +69,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         Player.BedSleepingProblem problem = EntitySleepEvents.ALLOW_SLEEPING.invoker().allowSleep((Player) (Object) this, pos);
         if (problem != null)
             return problem;
-        this.entityData.set(GCTrackedDataHandler.IS_IN_CRYO_SLEEP_ID, true);
+        this.entityData.set(GCEntityDataSerializers.IS_IN_CRYO_SLEEP_ID, true);
         this.setPose(Pose.SLEEPING);
         setPosToBed(pos);
         setSleepingPos(pos);
@@ -82,7 +82,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     public void stopCryogenicSleep(boolean resetSleepCounter, boolean sync) {
         EntitySleepEvents.STOP_SLEEPING.invoker().onStopSleeping((Player) (Object) this, getSleepingPos().get());
         clearSleepingPos();
-        this.entityData.set(GCTrackedDataHandler.IS_IN_CRYO_SLEEP_ID, false);
+        this.entityData.set(GCEntityDataSerializers.IS_IN_CRYO_SLEEP_ID, false);
         if (this.level instanceof ServerLevel serverLevel && sync) {
             serverLevel.updateSleepingPlayerList();
         }
@@ -90,7 +90,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
 
     @Override
     public boolean isInCryoSleep() {
-        return this.entityData.get(GCTrackedDataHandler.IS_IN_CRYO_SLEEP_ID);
+        return this.entityData.get(GCEntityDataSerializers.IS_IN_CRYO_SLEEP_ID);
     }
 
     @Override
@@ -122,7 +122,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
     private void gc$sleepData(CallbackInfo ci) {
-        this.entityData.define(GCTrackedDataHandler.IS_IN_CRYO_SLEEP_ID, false);
+        this.entityData.define(GCEntityDataSerializers.IS_IN_CRYO_SLEEP_ID, false);
     }
 
     @Inject(method = "setPosToBed", at = @At("HEAD"), cancellable = true)

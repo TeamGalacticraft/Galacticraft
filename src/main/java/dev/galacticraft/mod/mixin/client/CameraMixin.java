@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.registries.block.entity.CryogenicChamberBlockEntity;
-import dev.galacticraft.mod.registries.block.entity.CryogenicChamberPartBlockEntity;
-import dev.galacticraft.mod.registries.block.special.CryogenicChamberBlock;
+import dev.galacticraft.mod.content.block.entity.CryogenicChamberBlockEntity;
+import dev.galacticraft.mod.content.block.entity.CryogenicChamberPartBlockEntity;
+import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;

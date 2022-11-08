@@ -24,14 +24,14 @@ package dev.galacticraft.mod.compat.rei.client;
 
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.machinelib.impl.Constant.TextureCoordinate;
-import dev.galacticraft.mod.registries.GCBlocks;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultShapedCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultShapelessCompressingDisplay;
-import dev.galacticraft.mod.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;

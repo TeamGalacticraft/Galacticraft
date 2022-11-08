@@ -26,7 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.WalkwayBakedModel;
 import dev.galacticraft.mod.client.model.WireBakedModel;
 import dev.galacticraft.mod.client.render.entity.BubbleEntityRenderer;
-import dev.galacticraft.mod.registries.GCFluids;
+import dev.galacticraft.mod.content.GCFluids;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;

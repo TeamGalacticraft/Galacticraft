@@ -25,7 +25,7 @@ package dev.galacticraft.mod.mixin;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
-import dev.galacticraft.mod.registries.GCBlocks;
+import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;

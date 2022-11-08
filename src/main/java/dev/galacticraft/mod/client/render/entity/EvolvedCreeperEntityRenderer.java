@@ -27,7 +27,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.EvolvedCreeperEntityModel;
 import dev.galacticraft.mod.client.render.entity.feature.EvolvedCreeperChargeRenderLayer;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
-import dev.galacticraft.mod.entity.EvolvedCreeperEntity;
+import dev.galacticraft.mod.content.entity.EvolvedCreeperEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;

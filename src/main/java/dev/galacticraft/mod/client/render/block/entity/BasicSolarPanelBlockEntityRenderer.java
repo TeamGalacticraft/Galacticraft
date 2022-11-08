@@ -27,7 +27,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.registries.block.entity.BasicSolarPanelBlockEntity;
+import dev.galacticraft.mod.content.block.entity.BasicSolarPanelBlockEntity;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

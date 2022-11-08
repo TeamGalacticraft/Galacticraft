@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.compat.jei;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.registries.GCBlocks;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.compat.jei.category.JEICompressingCategory;
 import dev.galacticraft.mod.compat.jei.category.JEIFabricationCategory;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;

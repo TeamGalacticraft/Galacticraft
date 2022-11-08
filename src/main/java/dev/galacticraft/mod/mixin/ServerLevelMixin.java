@@ -24,7 +24,7 @@ package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
-import dev.galacticraft.mod.registries.block.entity.OxygenSealerBlockEntity;
+import dev.galacticraft.mod.content.block.entity.OxygenSealerBlockEntity;
 import dev.galacticraft.mod.world.dimension.GCDimensionType;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.core.BlockPos;

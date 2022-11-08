@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.data;
 
-import dev.galacticraft.mod.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItem;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
@@ -39,7 +39,7 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
-import static dev.galacticraft.mod.registries.GCBlocks.*;
+import static dev.galacticraft.mod.content.GCBlocks.*;
 
 public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
     protected GCBlockLootTableProvider(FabricDataGenerator dataGenerator) {

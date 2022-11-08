@@ -24,7 +24,7 @@ package dev.galacticraft.mod.events;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.accessor.LivingEntityAccessor;
-import dev.galacticraft.mod.registries.block.special.CryogenicChamberBlock;
+import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
