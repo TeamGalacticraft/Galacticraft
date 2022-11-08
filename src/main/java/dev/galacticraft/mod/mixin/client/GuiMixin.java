@@ -55,7 +55,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(Gui.class)
 @Environment(EnvType.CLIENT)
-public abstract class InGameHudMixin extends GuiComponent {
+public abstract class GuiMixin extends GuiComponent {
 
     @Shadow @Final private Minecraft minecraft;
 

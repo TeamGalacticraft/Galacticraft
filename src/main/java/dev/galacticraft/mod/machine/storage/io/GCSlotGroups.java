@@ -26,7 +26,7 @@ import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 
-public class GalacticraftSlotGroups {
+public class GCSlotGroups {
     public static final SlotGroup ENERGY_CHARGE = SlotGroup.create(TextColor.fromRgb(0xdcdb41), Component.translatable("slot_type.galacticraft.energy_charge"), false);
     public static final SlotGroup ENERGY_DRAIN = SlotGroup.create(TextColor.fromRgb(0xb5b41c), Component.translatable("slot_type.galacticraft.energy_drain"), false);
     public static final SlotGroup SOLID_FUEL = SlotGroup.create(TextColor.fromRgb(0x1f1f1f), Component.translatable("slot_type.galacticraft.solid_fuel"), true);
@@ -41,6 +41,7 @@ public class GalacticraftSlotGroups {
     public static final SlotGroup GENERIC_OUTPUT = SlotGroup.create(TextColor.fromRgb(0xc32727), Component.translatable("slot_type.galacticraft.item_output"), true);
 
     public static final SlotGroup OIL_INPUT = SlotGroup.create(TextColor.fromRgb(0x000000), Component.translatable("slot_type.galacticraft.oil_input"), true);
+    public static final SlotGroup FUEL_INPUT = SlotGroup.create(TextColor.fromRgb(0xc2c123), Component.translatable("slot_type.galacticraft.fuel_input"), true);
     public static final SlotGroup FUEL_OUTPUT = SlotGroup.create(TextColor.fromRgb(0xc2c123), Component.translatable("slot_type.galacticraft.fuel_output"), true);
 
     public static final SlotGroup OXYGEN_INPUT = SlotGroup.create(TextColor.fromRgb(0xdb2e4c), Component.translatable("slot_type.galacticraft.oxygen_input"), true);

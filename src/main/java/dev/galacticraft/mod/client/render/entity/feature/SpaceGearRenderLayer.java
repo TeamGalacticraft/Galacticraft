@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.render.entity.feature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.mixin.client.AnimalModelInvoker;
+import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartNames;
@@ -46,13 +46,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/entity/oxygen_gear.png");
     private final @Nullable ModelPart mask;
     private final @Nullable ModelPart tank;
     private final @Nullable ModelPart pipe;
 
-    public SpaceGearFeatureRenderer(RenderLayerParent<T, M> context) {
+    public SpaceGearRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
         ModelPart root, head, body;
         if (context.getModel() instanceof HierarchicalModel<?> model) {
@@ -62,7 +62,7 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
         } else if (context.getModel() instanceof HumanoidModel<?> model){
             head = model.head;
             body = model.body;
-        } else if (context.getModel() instanceof AnimalModelInvoker model){
+        } else if (context.getModel() instanceof AnimalModelAgeableListModel model){
             head = model.callGetHeadParts().iterator().next();
             body = model.callGetBodyParts().iterator().next();
         } else {

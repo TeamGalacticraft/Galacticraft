@@ -34,7 +34,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.Tier1EnergyMachine;
 import dev.galacticraft.mod.item.GCItem;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.GCScreenHandlerType;
@@ -84,13 +84,13 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GalacticraftSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 70))
+                .addSlot(GCSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 70))
                 .addSlot(DIAMOND_INPUT, Constant.Filter.Item.DIAMOND, true, ItemSlotDisplay.create(31, 15))
                 .addSlot(SILICON_INPUT, Constant.Filter.Item.SILICON, true, ItemSlotDisplay.create(62, 45))
                 .addSlot(SILICON_INPUT, Constant.Filter.Item.SILICON, true, ItemSlotDisplay.create(62, 63))
                 .addSlot(REDSTONE_INPUT, Constant.Filter.Item.REDSTONE, true, ItemSlotDisplay.create(107, 70))
-                .addSlot(GalacticraftSlotGroups.GENERIC_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(134, 15))
-                .addSlot(GalacticraftSlotGroups.GENERIC_OUTPUT, Constant.Filter.any(), false, ItemSlotDisplay.create(152, 70))
+                .addSlot(GCSlotGroups.GENERIC_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(134, 15))
+                .addSlot(GCSlotGroups.GENERIC_OUTPUT, Constant.Filter.any(), false, ItemSlotDisplay.create(152, 70))
                 .build();
     }
 

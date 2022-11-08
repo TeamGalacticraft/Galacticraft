@@ -20,20 +20,19 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.entity.damage;
+package dev.galacticraft.mod.registries;
 
-import dev.galacticraft.mod.mixin.DamageSourceAccessor;
-import net.minecraft.world.damagesource.DamageSource;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.mixin.BuiltInLootTablesAccessor;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GCDamageSource extends DamageSource {
-    public static final DamageSource OIL_BOOM = ((DamageSourceAccessor)new GCDamageSource("galacticraft.oil_boom")).invokeSetBypassesArmor();
-    public static final DamageSource VINE_POISON = new GCDamageSource("galacticraft.vine_poison");
-    public static final DamageSource SUFFOCATION = new GCDamageSource("galacticraft.suffocation");
+public class GCLootTables {
+    public static final ResourceLocation BASIC_MOON_RUINS_CHEST = new ResourceLocation(Constant.MOD_ID, Constant.LootTable.BASIC_MOON_RUINS_CHEST);
 
-    private GCDamageSource(String string_1) {
-        super(string_1);
+    public static void register() {
+        BuiltInLootTablesAccessor.callRegisterLootTable(BASIC_MOON_RUINS_CHEST);
     }
 }

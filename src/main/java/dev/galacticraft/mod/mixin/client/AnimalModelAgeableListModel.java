@@ -20,12 +20,24 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.accessor;
+package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.model.AgeableListModel;
+import net.minecraft.client.model.geom.ModelPart;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
-public interface ServerWorldAccessor {
-    void addSealer(OxygenSealerBlockEntity sealer);
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
+@Mixin(AgeableListModel.class)
+@Environment(EnvType.CLIENT)
+public interface AnimalModelAgeableListModel {
+    @Invoker("headParts")
+    Iterable<ModelPart> callGetHeadParts();
 
-    void removeSealer(OxygenSealerBlockEntity sealer);
+    @Invoker("bodyParts")
+    Iterable<ModelPart> callGetBodyParts();
 }

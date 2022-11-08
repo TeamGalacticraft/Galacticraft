@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.block.environment;
 
 import dev.galacticraft.mod.block.GCBlocks;
-import dev.galacticraft.mod.entity.damage.GCDamageSource;
+import dev.galacticraft.mod.entity.damage.GCDamageSources;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -47,7 +47,7 @@ public class PoisonousCavernousVineBlock extends CavernousVineBlock {
     @Override
     public void onCollided(LivingEntity entity) {
         super.onCollided(entity);
-        entity.hurt(GCDamageSource.VINE_POISON, 5.0f);
+        entity.hurt(GCDamageSources.VINE_POISON, 5.0f);
         entity.setYRot(entity.getYRot() + 0.4F); // Spin the player
     }
 

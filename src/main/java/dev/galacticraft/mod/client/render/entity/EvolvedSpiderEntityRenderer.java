@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.render.entity.feature.EvolvedSpiderEyesFeatureRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.EvolvedSpiderEyesRenderLayer;
 import dev.galacticraft.mod.entity.EvolvedSpiderEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -42,7 +42,7 @@ public class EvolvedSpiderEntityRenderer extends MobRenderer<EvolvedSpiderEntity
 
     public EvolvedSpiderEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new SpiderModel<>(context.bakeLayer(ModelLayers.SPIDER)), 0.8f);
-        this.addLayer(new EvolvedSpiderEyesFeatureRenderer<>(this));
+        this.addLayer(new EvolvedSpiderEyesRenderLayer<>(this));
     }
 
     @Override

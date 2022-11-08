@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.api.screen.MachineScreenHandler;
+import dev.galacticraft.machinelib.api.screen.MachineScreenHandler;
 import dev.galacticraft.mod.block.entity.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.screen.property.BlockPosPropertyDelegate;
 import net.minecraft.network.FriendlyByteBuf;

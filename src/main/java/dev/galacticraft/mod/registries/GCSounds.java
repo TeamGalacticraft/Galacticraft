@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.sound;
+package dev.galacticraft.mod.registries;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Registry;

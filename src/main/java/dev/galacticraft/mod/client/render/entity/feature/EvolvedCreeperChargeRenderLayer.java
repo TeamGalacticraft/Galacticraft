@@ -34,11 +34,11 @@ import net.minecraft.resources.ResourceLocation;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class EvolvedCreeperChargeFeatureRenderer extends EnergySwirlLayer<EvolvedCreeperEntity, EvolvedCreeperEntityModel> {
+public class EvolvedCreeperChargeRenderLayer extends EnergySwirlLayer<EvolvedCreeperEntity, EvolvedCreeperEntityModel> {
     private static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
     private final EvolvedCreeperEntityModel model;
 
-    public EvolvedCreeperChargeFeatureRenderer(RenderLayerParent<EvolvedCreeperEntity, EvolvedCreeperEntityModel> context, EntityModelSet loader) {
+    public EvolvedCreeperChargeRenderLayer(RenderLayerParent<EvolvedCreeperEntity, EvolvedCreeperEntityModel> context, EntityModelSet loader) {
         super(context);
         this.model = new EvolvedCreeperEntityModel(loader.bakeLayer(GCEntityModelLayer.EVOLVED_CREEPER_ARMOR), false);
     }

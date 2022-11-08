@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.block.entity;
 
-import dev.galacticraft.api.accessor.WorldOxygenAccessor;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.gas.Gases;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
@@ -34,9 +34,9 @@ import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
 import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.accessor.ServerWorldAccessor;
+import dev.galacticraft.mod.accessor.ServerLevelAccessor;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
 import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.GenericStorageUtil;
@@ -100,15 +100,15 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GalacticraftSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 62))
-                .addSlot(GalacticraftSlotGroups.OXYGEN_TANK_FILL, Constant.Filter.Item.CAN_EXTRACT_LOX, true, ItemSlotDisplay.create(31, 62))
+                .addSlot(GCSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 62))
+                .addSlot(GCSlotGroups.OXYGEN_TANK_FILL, Constant.Filter.Item.CAN_EXTRACT_LOX, true, ItemSlotDisplay.create(31, 62))
                 .build();
     }
 
     @Override
     protected @NotNull MachineFluidStorage createFluidStorage() {
         return MachineFluidStorage.Builder.create()
-                .addTank(GalacticraftSlotGroups.OXYGEN_INPUT, MAX_OXYGEN, TankDisplay.create(31, 8), true)
+                .addTank(GCSlotGroups.OXYGEN_INPUT, MAX_OXYGEN, TankDisplay.create(31, 8), true)
                 .build();
     }
 
@@ -117,7 +117,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         super.setLevel(world);
         this.sealCheckTime = SEAL_CHECK_TIME;
         this.oxygenWorld = CelestialBody.getByDimension(world).map(body -> body.atmosphere().breathable()).orElse(true);
-        if (!world.isClientSide) ((ServerWorldAccessor) world).addSealer(this);
+        if (!world.isClientSide) ((ServerLevelAccessor) world).addSealer(this);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         assert world != null;
         if (this.disabled != (this.disabled = false)) {
-            ((ServerWorldAccessor) world).addSealer(this);
+            ((ServerLevelAccessor) world).addSealer(this);
         }
 
         try (Transaction transaction = Transaction.openOuter()) {
@@ -213,7 +213,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Override
     protected void tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         this.disabled = true;
-        ((ServerWorldAccessor) world).removeSealer(this);
+        ((ServerLevelAccessor) world).removeSealer(this);
         for (BlockPos pos1 : this.breathablePositions) {
             world.setBreathable(pos1, false);
         }
@@ -225,7 +225,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public void setRemoved() {
         super.setRemoved();
         if (!this.level.isClientSide) {
-            ((ServerWorldAccessor) this.level).removeSealer(this);
+            ((ServerLevelAccessor) this.level).removeSealer(this);
         }
         for (BlockPos pos : this.breathablePositions) {
             this.level.setBreathable(pos, false);

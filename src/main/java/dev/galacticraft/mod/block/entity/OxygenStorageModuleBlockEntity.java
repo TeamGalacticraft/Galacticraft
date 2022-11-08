@@ -27,7 +27,7 @@ import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
 import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
 import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
 import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
@@ -54,7 +54,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineFluidStorage createFluidStorage() {
         return MachineFluidStorage.Builder.create()
-                .addTank(GalacticraftSlotGroups.OXYGEN_TANK, MAX_OXYGEN, TankDisplay.create(31, 8), true)
+                .addTank(GCSlotGroups.OXYGEN_TANK, MAX_OXYGEN, TankDisplay.create(31, 8), true)
                 .build();
     }
 

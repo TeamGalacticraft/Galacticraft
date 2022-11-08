@@ -35,7 +35,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.fluid.GCFluid;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
 import dev.galacticraft.mod.screen.GCScreenHandlerType;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -88,17 +88,17 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GalacticraftSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 7))
-                .addSlot(GalacticraftSlotGroups.OIL_FILL, Constant.Filter.Item.CAN_EXTRACT_OIL, true, ItemSlotDisplay.create(123, 7))
-                .addSlot(GalacticraftSlotGroups.FUEL_DRAIN, Constant.Filter.Item.CAN_INSERT_FUEL, true, ItemSlotDisplay.create(153, 7))
+                .addSlot(GCSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 7))
+                .addSlot(GCSlotGroups.OIL_FILL, Constant.Filter.Item.CAN_EXTRACT_OIL, true, ItemSlotDisplay.create(123, 7))
+                .addSlot(GCSlotGroups.FUEL_DRAIN, Constant.Filter.Item.CAN_INSERT_FUEL, true, ItemSlotDisplay.create(153, 7))
                 .build();
     }
 
     @Override
     protected @NotNull MachineFluidStorage createFluidStorage() {
         return MachineFluidStorage.Builder.create()
-                .addTank(GalacticraftSlotGroups.OIL_INPUT, MAX_CAPACITY, TankDisplay.create(122, 28))
-                .addTank(GalacticraftSlotGroups.FUEL_OUTPUT, MAX_CAPACITY, TankDisplay.create(152, 28))
+                .addTank(GCSlotGroups.OIL_INPUT, MAX_CAPACITY, TankDisplay.create(122, 28))
+                .addTank(GCSlotGroups.FUEL_OUTPUT, MAX_CAPACITY, TankDisplay.create(152, 28))
                 .build();
     }
 

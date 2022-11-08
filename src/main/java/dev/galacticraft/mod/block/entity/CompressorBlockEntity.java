@@ -30,7 +30,7 @@ import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.machine.LongProperty;
-import dev.galacticraft.mod.machine.storage.io.GalacticraftSlotGroups;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.CompressorScreenHandler;
@@ -75,12 +75,12 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
         MachineItemStorage.Builder builder = MachineItemStorage.Builder.create();
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                builder.addSlot(GalacticraftSlotGroups.GENERIC_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(x * 18 + 17, y * 18 + 17));
+                builder.addSlot(GCSlotGroups.GENERIC_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(x * 18 + 17, y * 18 + 17));
             }
         }
         return builder
-                .addSlot(GalacticraftSlotGroups.SOLID_FUEL, v -> FuelRegistry.INSTANCE.get(v.getItem()) > 0, true, ItemSlotDisplay.create(83, 47))
-                .addSlot(GalacticraftSlotGroups.GENERIC_OUTPUT, Constant.Filter.any(), false, ItemSlotDisplay.create(143, 36))
+                .addSlot(GCSlotGroups.SOLID_FUEL, v -> FuelRegistry.INSTANCE.get(v.getItem()) > 0, true, ItemSlotDisplay.create(83, 47))
+                .addSlot(GCSlotGroups.GENERIC_OUTPUT, Constant.Filter.any(), false, ItemSlotDisplay.create(143, 36))
                 .build();
     }
 

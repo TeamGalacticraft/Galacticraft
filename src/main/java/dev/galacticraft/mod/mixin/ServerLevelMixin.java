@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
-import dev.galacticraft.mod.accessor.ServerWorldAccessor;
+import dev.galacticraft.mod.accessor.ServerLevelAccessor;
 import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
 import dev.galacticraft.mod.world.dimension.GCDimensionType;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
@@ -53,7 +53,7 @@ import java.util.concurrent.Executor;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Mixin(ServerLevel.class)
-public abstract class ServerWorldMixin implements ServerWorldAccessor {
+public abstract class ServerLevelMixin implements ServerLevelAccessor {
     @Shadow @Final @Mutable private List<CustomSpawner> customSpawners;
     private final @Unique Set<OxygenSealerBlockEntity> sealers = new HashSet<>();
 

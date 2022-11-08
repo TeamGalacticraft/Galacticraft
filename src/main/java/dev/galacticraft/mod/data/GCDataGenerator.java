@@ -26,7 +26,7 @@ import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import org.jetbrains.annotations.NotNull;
 
-public class GalacticraftDataGenerator implements DataGeneratorEntrypoint {
+public class GCDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(@NotNull FabricDataGenerator generator) {
         generator.addProvider(GCBiomeTagProvider::new);

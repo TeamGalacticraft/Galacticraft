@@ -20,14 +20,22 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.mod.mixin.client;
 
-import net.minecraft.world.damagesource.DamageSource;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Invoker;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(DamageSource.class)
-public interface DamageSourceAccessor {
-    @Invoker("bypassArmor")
-    DamageSource invokeSetBypassesArmor();
+@Mixin(ClientLevel.class)
+@Environment(EnvType.CLIENT)
+public abstract class ClientLevelMixin {
+    @Inject(method = "tickTime", at = @At("RETURN"))
+    private void update(CallbackInfo ci) {
+        ((Level)(Object)this).updateSkyBrightness();
+    }
 }

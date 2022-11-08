@@ -37,7 +37,6 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Items;
@@ -52,8 +51,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(InventoryScreen.class)
 @Environment(EnvType.CLIENT)
-public abstract class PlayerInventoryScreenMixin extends EffectRenderingInventoryScreen<InventoryMenu> {
-    public PlayerInventoryScreenMixin(InventoryMenu screenHandler, Inventory playerInventory, Component textComponent) {
+public abstract class InventoryScreenMixin extends EffectRenderingInventoryScreen<InventoryMenu> {
+    public InventoryScreenMixin(InventoryMenu screenHandler, Inventory playerInventory, Component textComponent) {
         super(screenHandler, playerInventory, textComponent);
     }
 
