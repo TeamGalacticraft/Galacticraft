@@ -52,6 +52,7 @@ import dev.galacticraft.impl.universe.display.type.IconCelestialDisplayType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.ColorUtil;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -535,7 +536,7 @@ public class CelestialSelectionScreen extends Screen {
                         if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.getAbilities().instabuild)
                         {
 //                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BIND_SPACE_STATION_ID, GCCoreUtil.getWorld(this.minecraft.level), new Object[]{this.selectedBody.getWorld()}));
-                            ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "create_satellite"), PacketByteBufs.create().writeResourceLocation(celestialBodyRegistry.getKey(this.selectedBody)));
+                            ClientPlayNetworking.send(Constant.Packet.CREATE_SATELLITE, PacketByteBufs.create().writeResourceLocation(celestialBodyRegistry.getKey(this.selectedBody)));
                             //Zoom in on planet to show the new SpaceStation if not already zoomed
                             if (!this.isZoomed())
                             {
@@ -1417,9 +1418,9 @@ public class CelestialSelectionScreen extends Screen {
                         boolean validInputMaterials = true;
 
                         int i = 0;
-                        for (Object2IntMap.Entry<Ingredient> entry : recipe.ingredients().object2IntEntrySet())
+                        for (Int2ObjectMap.Entry<Ingredient> entry : recipe.ingredients().int2ObjectEntrySet())
                         {
-                            Ingredient ingredient = entry.getKey();
+                            Ingredient ingredient = entry.getValue();
                             int xPos = (int) (RHS - 95 + i * 93 / (double) recipe.ingredients().size() + 5);
                             int yPos = LHS + 154 + canCreateOffset;
 
@@ -1470,8 +1471,8 @@ public class CelestialSelectionScreen extends Screen {
                                 matrices.popPose();
                             }
 
-                            str = "" + entry.getIntValue();
-                            boolean valid = amount >= entry.getIntValue();
+                            str = "" + entry.getIntKey();
+                            boolean valid = amount >= entry.getIntKey();
                             if (!valid && validInputMaterials) {
                                 validInputMaterials = false;
                             }

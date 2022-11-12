@@ -921,5 +921,10 @@ public interface Constant {
         ResourceLocation DISABLE_SEAL = id("toggle_seal");
         ResourceLocation OPEN_GC_INVENTORY = id("open_gc_inv");
         ResourceLocation ENTITY_SPAWN = id("entity_spawn");
+        ResourceLocation CREATE_SATELLITE = id("create_satellite");
+    }
+
+    interface Structure {
+        ResourceLocation SPACE_STATION = id("space_station");
     }
 }

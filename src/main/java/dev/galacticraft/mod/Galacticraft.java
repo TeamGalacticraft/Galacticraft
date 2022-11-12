@@ -24,25 +24,20 @@ package dev.galacticraft.mod;
 
 import dev.galacticraft.mod.api.config.ConfigManager;
 import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
-import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.content.block.entity.GCBlockEntityTypes;
 import dev.galacticraft.mod.command.GCCommand;
 import dev.galacticraft.mod.config.ConfigManagerImpl;
-import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.events.GCEventHandler;
-import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.lookup.GCApiLookupProviders;
-import dev.galacticraft.mod.content.GCLootTables;
 import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.misc.banner.GCBannerPattern;
 import dev.galacticraft.mod.network.GCServerPacketReceiver;
 import dev.galacticraft.mod.particle.GCParticleType;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.GCMenuTypes;
-import dev.galacticraft.mod.content.GCLightSources;
-import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.structure.GCStructurePieceType;
 import dev.galacticraft.mod.structure.GalacticraftStructureSet;
 import dev.galacticraft.mod.data.GCTags;
@@ -112,6 +107,7 @@ public class Galacticraft implements ModInitializer {
         GCVillagerProfessions.register();
         GCMachineStatus.register();
         GCBannerPattern.register();
+        GCCelestialBodies.register();
         GCEventHandler.init();
 
         LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);

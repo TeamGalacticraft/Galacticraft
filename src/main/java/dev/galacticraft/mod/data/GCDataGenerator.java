@@ -38,7 +38,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         generator.addProvider(GCRecipeProvider::new);
         generator.addProvider(GCFluidTagProvider::new);
 
-//        generator.addProvider(GCCelestialBodyProvider::new);
+        generator.addProvider(GCCelestialBodyProvider::new);
         generator.addProvider(GCBannerTagProvider::new);
     }
 }

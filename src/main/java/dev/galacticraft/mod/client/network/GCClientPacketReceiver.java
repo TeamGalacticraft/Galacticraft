@@ -57,7 +57,7 @@ public class GCClientPacketReceiver {
                 Entity entity = Registry.ENTITY_TYPE.byId(buffer.readVarInt()).create(Minecraft.getInstance().level);
                 entity.setId(id);
                 entity.setUUID(uuid);
-                entity.setPosRaw(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
+                entity.syncPacketPositionCodec(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
                 entity.setYRot((float) (buffer.readByte() * 360) / 256.0F);
                 entity.setXRot((float) (buffer.readByte() * 360) / 256.0F);
                 entity.setDeltaMovement(buffer.readShort(), buffer.readShort(), buffer.readShort());
@@ -81,7 +81,7 @@ public class GCClientPacketReceiver {
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "open_screen"), (client, handler, buf, responseSender) -> {
             String screen = buf.readUtf();
             switch (screen) {
-                case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(true, RocketData.empty(), true)));
+                case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(false, RocketData.empty(), true)));
                 default -> Galacticraft.LOGGER.error("No screen found!");
             }
         });

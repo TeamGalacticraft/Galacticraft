@@ -276,6 +276,13 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
                 )
         );
 
+        dropSelf(ROCKET_LAUNCH_PAD);
+        dropSelf(AIR_LOCK_CONTROLLER);
+        dropSelf(AIR_LOCK_FRAME);
+
+        dropOther(CRYOGENIC_CHAMBER_PART, CRYOGENIC_CHAMBER);
+
+        dropSelf(CRYOGENIC_CHAMBER);
         dropSelf(CIRCUIT_FABRICATOR);
         dropSelf(COMPRESSOR);
         dropSelf(ELECTRIC_COMPRESSOR);
@@ -292,6 +299,9 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(OXYGEN_DECOMPRESSOR);
         dropSelf(OXYGEN_COMPRESSOR);
         dropSelf(OXYGEN_STORAGE_MODULE);
+        dropSelf(FUEL_LOADER);
+
+        add(AIR_LOCK_SEAL, noDrop());
     }
 
     public static LootTable.Builder siliconOreDrops(Block ore) {
