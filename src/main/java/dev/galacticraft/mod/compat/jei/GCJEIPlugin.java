@@ -22,15 +22,17 @@
 
 package dev.galacticraft.mod.compat.jei;
 
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.compat.jei.category.JEICompressingCategory;
 import dev.galacticraft.mod.compat.jei.category.JEIFabricationCategory;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
@@ -63,6 +65,11 @@ public class GCJEIPlugin implements IModPlugin {
                 new JEIFabricationCategory(helper),
                 new JEICompressingCategory(helper)
         );
+    }
+
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addGenericGuiContainerHandler(MachineScreen.class, new MachineGuiHandler());
     }
 
     @Override
