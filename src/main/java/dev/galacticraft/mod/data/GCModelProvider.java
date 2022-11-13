@@ -183,19 +183,19 @@ public class GCModelProvider extends FabricModelProvider {
 //        for (Block decor : CRACKED_MOON_BASALT_BRICKS) generator.registerSimpleState(decor);
 
         // ORES
-//        generator.createTrivialCube(SILICON_ORE);
-//        generator.createTrivialCube(DEEPSLATE_SILICON_ORE);
-//        generator.createTrivialCube(MOON_COPPER_ORE);
-//        generator.createTrivialCube(LUNASLATE_COPPER_ORE);
-//        generator.createTrivialCube(TIN_ORE);
-//        generator.createTrivialCube(DEEPSLATE_TIN_ORE);
-//        generator.createTrivialCube(MOON_TIN_ORE);
-//        generator.createTrivialCube(LUNASLATE_TIN_ORE);
-//        generator.createTrivialCube(ALUMINUM_ORE);
-//        generator.createTrivialCube(DEEPSLATE_ALUMINUM_ORE);
-//        generator.createTrivialCube(DESH_ORE);
-//        generator.createTrivialCube(ILMENITE_ORE);
-//        generator.createTrivialCube(GALENA_ORE);
+        generator.createTrivialCube(SILICON_ORE);
+        generator.createTrivialCube(DEEPSLATE_SILICON_ORE);
+        generator.createTrivialCube(MOON_COPPER_ORE);
+        generator.createTrivialCube(LUNASLATE_COPPER_ORE);
+        generator.createTrivialCube(TIN_ORE);
+        generator.createTrivialCube(DEEPSLATE_TIN_ORE);
+        generator.createTrivialCube(MOON_TIN_ORE);
+        generator.createTrivialCube(LUNASLATE_TIN_ORE);
+        generator.createTrivialCube(ALUMINUM_ORE);
+        generator.createTrivialCube(DEEPSLATE_ALUMINUM_ORE);
+        generator.createTrivialCube(DESH_ORE);
+        generator.createTrivialCube(ILMENITE_ORE);
+        generator.createTrivialCube(GALENA_ORE);
 //
 //        generator.createTrivialCube(MARS_SURFACE_ROCK);
 //        generator.createTrivialCube(MARS_SUB_SURFACE_ROCK);
