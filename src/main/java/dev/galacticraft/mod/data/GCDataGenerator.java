@@ -34,7 +34,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         GCBlockTagProvider provider = new GCBlockTagProvider(generator);
         generator.addProvider(provider);
         generator.addProvider(new GCItemTagProvider(generator, provider));
-//        generator.addProvider(GalacticraftModelProvider::new);
+        generator.addProvider(GCModelProvider::new);
         generator.addProvider(GCRecipeProvider::new);
         generator.addProvider(GCFluidTagProvider::new);
 

@@ -20,30 +20,22 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data;
+package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.content.item.GCItem;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.world.item.Items;
+import dev.galacticraft.mod.data.GCModelProvider;
+import net.minecraft.data.models.ModelProvider;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.function.Consumer;
+import java.util.List;
 
-public class GCRecipeProvider extends FabricRecipeProvider {
-    public GCRecipeProvider(FabricDataGenerator dataGenerator) {
-        super(dataGenerator);
-    }
-
-    @Override
-    protected void generateRecipes(Consumer<FinishedRecipe> exporter) {
-        ShapedRecipeBuilder.shaped(GCItem.ROCKET_LAUNCH_PAD, 9)
-                .define('C', GCItem.COMPRESSED_IRON)
-                .define('I', Items.IRON_BLOCK)
-                .pattern("CCC")
-                .pattern("III")
-                .unlockedBy(getHasName(Items.IRON_BLOCK), has(Items.IRON_BLOCK))
-                .save(exporter);
+@Mixin(ModelProvider.class)
+public class ModelProviderMixin {
+    @Redirect(method = "run", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
+    private boolean fixGcModelGen(List instance) {
+        if ((Object) this instanceof GCModelProvider)
+            return true;
+        return instance.isEmpty();
     }
 }
