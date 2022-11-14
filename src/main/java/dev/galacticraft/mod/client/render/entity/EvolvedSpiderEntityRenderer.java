@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.entity.feature.EvolvedSpiderEyesRenderLayer;
-import dev.galacticraft.mod.entity.EvolvedSpiderEntity;
+import dev.galacticraft.mod.content.entity.EvolvedSpiderEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.SpiderModel;

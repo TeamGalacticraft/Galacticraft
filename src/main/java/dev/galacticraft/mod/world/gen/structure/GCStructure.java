@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.world.gen.structure;
 
-import dev.galacticraft.mod.entity.GalacticraftEntityType;
+import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.structure.MoonPillagerOutpostGenerator;
 import dev.galacticraft.mod.structure.MoonVillageGenerator;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.data.GCTags;
 import net.minecraft.core.Holder;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.Structures;
@@ -55,7 +55,7 @@ public class GCStructure {
             new JigsawStructure(
                     new Structure.StructureSettings(BuiltinRegistries.BIOME.getOrCreateTag(GCTags.MOON_PILLAGER_BASE_HAS_STRUCTURE), Map.of(MobCategory.MONSTER,
                             new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.STRUCTURE,
-                                    WeightedRandomList.create(new MobSpawnSettings.SpawnerData(GalacticraftEntityType.EVOLVED_PILLAGER, 1, 1, 1))
+                                    WeightedRandomList.create(new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_PILLAGER, 1, 1, 1))
                             )),
                             GenerationStep.Decoration.SURFACE_STRUCTURES, TerrainAdjustment.BEARD_THIN),
                     MoonPillagerOutpostGenerator.ENTERANCE_POOL,

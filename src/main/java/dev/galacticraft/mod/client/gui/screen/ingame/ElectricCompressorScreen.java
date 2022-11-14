@@ -24,10 +24,10 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.api.screen.RecipeMachineScreenHandler;
-import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.api.screen.RecipeMachineMenu;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.ElectricCompressorBlockEntity;
+import dev.galacticraft.mod.content.block.entity.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
@@ -40,7 +40,7 @@ import net.minecraft.world.entity.player.Inventory;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompressorBlockEntity, RecipeMachineScreenHandler<Container, CompressingRecipe, ElectricCompressorBlockEntity>> {
+public class ElectricCompressorScreen extends MachineScreen<ElectricCompressorBlockEntity, RecipeMachineMenu<Container, CompressingRecipe, ElectricCompressorBlockEntity>> {
     private static final int PROGRESS_U = 177;
     private static final int PROGRESS_V = 0;
     private static final int PROGRESS_X = 87;
@@ -48,7 +48,7 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
-    public ElectricCompressorScreen(RecipeMachineScreenHandler<Container, CompressingRecipe, ElectricCompressorBlockEntity> handler, Inventory inv, Component title) {
+    public ElectricCompressorScreen(RecipeMachineMenu<Container, CompressingRecipe, ElectricCompressorBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
     }
 

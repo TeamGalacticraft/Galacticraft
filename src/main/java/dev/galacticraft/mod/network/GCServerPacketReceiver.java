@@ -29,15 +29,18 @@ import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
+import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.OxygenBubbleDistributorBlockEntity;
-import dev.galacticraft.mod.screen.BubbleDistributorScreenHandler;
-import dev.galacticraft.mod.screen.GCPlayerInventoryScreenHandler;
+import dev.galacticraft.mod.content.block.entity.OxygenBubbleDistributorBlockEntity;
+import dev.galacticraft.mod.screen.BubbleDistributorMenu;
+import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleMenuProvider;
+
+import java.util.Objects;
 
 /**
  * Handles server-bound (C2S) packets.
@@ -45,7 +48,7 @@ import net.minecraft.world.SimpleMenuProvider;
  */
 public class GCServerPacketReceiver {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.OPEN_GC_INVENTORY, (server, player, handler, buf, responseSender) -> server.execute(() -> player.openMenu(new SimpleMenuProvider(GCPlayerInventoryScreenHandler::new, Component.empty()) {
+        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.OPEN_GC_INVENTORY, (server, player, handler, buf, responseSender) -> server.execute(() -> player.openMenu(new SimpleMenuProvider(GCPlayerInventoryMenu::new, Component.empty()) {
             @Override
             public boolean shouldCloseCurrentScreen() {
                 return false;
@@ -55,7 +58,7 @@ public class GCServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.BUBBLE_MAX, (server, player, handler, buf, responseSender) -> {
             byte max = buf.readByte();
             server.execute(() -> {
-                if (player.containerMenu instanceof BubbleDistributorScreenHandler sHandler) {
+                if (player.containerMenu instanceof BubbleDistributorMenu sHandler) {
                     OxygenBubbleDistributorBlockEntity machine = sHandler.machine;
                     if (machine.getSecurity().hasAccess(player)) {
                         if (max > 0) {
@@ -69,7 +72,7 @@ public class GCServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.BUBBLE_VISIBLE, (server, player, handler, buf, responseSender) -> {
             boolean visible = buf.readBoolean();
             server.execute(() -> {
-                if (player.containerMenu instanceof BubbleDistributorScreenHandler sHandler) {
+                if (player.containerMenu instanceof BubbleDistributorMenu sHandler) {
                     OxygenBubbleDistributorBlockEntity machine = sHandler.machine;
                     if (machine.getSecurity().hasAccess(player)) {
                         machine.bubbleVisible = visible;
@@ -106,5 +109,9 @@ public class GCServerPacketReceiver {
                 player.connection.disconnect(Component.literal("Invalid planet teleport packet received."));
             }
         }));
+
+        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.CREATE_SATELLITE, (server, player, handler, buf, responseSender) -> {
+            SatelliteType.registerSatellite(server, player, Objects.requireNonNull(server.registryAccess().registryOrThrow(AddonRegistry.CELESTIAL_BODY_KEY).get(buf.readResourceLocation())), server.getStructureManager().get(Constant.Structure.SPACE_STATION).orElseThrow());
+        });
     }
 }

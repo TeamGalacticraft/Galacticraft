@@ -25,9 +25,9 @@ package dev.galacticraft.mod.client.network;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.block.entity.OxygenBubbleDistributorBlockEntity;
+import dev.galacticraft.mod.content.block.entity.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
-import dev.galacticraft.mod.entity.RocketEntity;
+import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -57,7 +57,7 @@ public class GCClientPacketReceiver {
                 Entity entity = Registry.ENTITY_TYPE.byId(buffer.readVarInt()).create(Minecraft.getInstance().level);
                 entity.setId(id);
                 entity.setUUID(uuid);
-                entity.setPosRaw(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
+                entity.syncPacketPositionCodec(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
                 entity.setYRot((float) (buffer.readByte() * 360) / 256.0F);
                 entity.setXRot((float) (buffer.readByte() * 360) / 256.0F);
                 entity.setDeltaMovement(buffer.readShort(), buffer.readShort(), buffer.readShort());
@@ -81,7 +81,7 @@ public class GCClientPacketReceiver {
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "open_screen"), (client, handler, buf, responseSender) -> {
             String screen = buf.readUtf();
             switch (screen) {
-                case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(true, RocketData.empty(), true)));
+                case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(false, RocketData.empty(), true)));
                 default -> Galacticraft.LOGGER.error("No screen found!");
             }
         });

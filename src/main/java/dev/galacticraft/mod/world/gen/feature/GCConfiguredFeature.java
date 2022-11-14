@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.world.gen.feature;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;

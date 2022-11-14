@@ -24,10 +24,10 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
-import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.OxygenStorageModuleBlockEntity;
+import dev.galacticraft.mod.content.block.entity.OxygenStorageModuleBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -39,8 +39,8 @@ import net.minecraft.world.entity.player.Inventory;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorageModuleBlockEntity, SimpleMachineScreenHandler<OxygenStorageModuleBlockEntity>> {
-    public OxygenStorageModuleScreen(SimpleMachineScreenHandler<OxygenStorageModuleBlockEntity> handler, Inventory inv, Component title) {
+public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModuleBlockEntity, SimpleMachineMenu<OxygenStorageModuleBlockEntity>> {
+    public OxygenStorageModuleScreen(SimpleMachineMenu<OxygenStorageModuleBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
     }
 

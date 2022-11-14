@@ -23,10 +23,10 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.api.screen.RecipeMachineScreenHandler;
-import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.api.screen.RecipeMachineMenu;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.ElectricFurnaceBlockEntity;
+import dev.galacticraft.mod.content.block.entity.ElectricFurnaceBlockEntity;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
@@ -36,7 +36,7 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceBlockEntity, RecipeMachineScreenHandler<Container, SmeltingRecipe, ElectricFurnaceBlockEntity>> {
+public class ElectricFurnaceScreen extends MachineScreen<ElectricFurnaceBlockEntity, RecipeMachineMenu<Container, SmeltingRecipe, ElectricFurnaceBlockEntity>> {
     private static final int ARROW_X = 74;
     private static final int ARROW_Y = 34;
     private static final int ARROW_U = 176;
@@ -44,7 +44,7 @@ public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceB
     private static final int ARROW_WIDTH = 30;
     private static final int ARROW_HEIGHT = 16;
 
-    public ElectricFurnaceScreen(RecipeMachineScreenHandler<Container, SmeltingRecipe, ElectricFurnaceBlockEntity> handler, Inventory inv, Component title) {
+    public ElectricFurnaceScreen(RecipeMachineMenu<Container, SmeltingRecipe, ElectricFurnaceBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_FURNACE_SCREEN);
     }
 

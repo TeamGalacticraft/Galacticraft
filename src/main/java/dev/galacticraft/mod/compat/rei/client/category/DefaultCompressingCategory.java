@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.compat.rei.client.category;
 
 import com.google.common.collect.Lists;
-import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultCompressingDisplay;
 import me.shedaniel.math.Point;

@@ -22,16 +22,16 @@
 
 package dev.galacticraft.mod.compat.rei.client;
 
-import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.machinelib.impl.Constant.TextureCoordinate;
-import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultShapedCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultShapelessCompressingDisplay;
-import dev.galacticraft.mod.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
@@ -85,10 +85,10 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
 
     @Override
     public void registerExclusionZones(ExclusionZones zones) {
-        zones.register(MachineHandledScreen.class, provider -> {
+        zones.register(MachineScreen.class, provider -> {
             List<Rectangle> areas = new ArrayList<>();
-            if (MachineHandledScreen.Tab.STATS.isOpen() || MachineHandledScreen.Tab.SECURITY.isOpen()) {
-                areas.add(new Rectangle(provider.getX() + provider.getImageWidth(), provider.getY() + (MachineHandledScreen.Tab.STATS.isOpen() ? 0 : TextureCoordinate.TAB_HEIGHT), TextureCoordinate.PANEL_WIDTH, TextureCoordinate.PANEL_HEIGHT));
+            if (MachineScreen.Tab.STATS.isOpen() || MachineScreen.Tab.SECURITY.isOpen()) {
+                areas.add(new Rectangle(provider.getX() + provider.getImageWidth(), provider.getY() + (MachineScreen.Tab.STATS.isOpen() ? 0 : TextureCoordinate.TAB_HEIGHT), TextureCoordinate.PANEL_WIDTH, TextureCoordinate.PANEL_HEIGHT));
                 areas.add(new Rectangle(provider.getX() + provider.getImageWidth(), provider.getY() + TextureCoordinate.TAB_HEIGHT, TextureCoordinate.TAB_WIDTH, TextureCoordinate.PANEL_HEIGHT));
             }
             areas.add(new Rectangle(provider.getX() + provider.getImageWidth(), provider.getY(), TextureCoordinate.TAB_WIDTH, TextureCoordinate.TAB_HEIGHT * 2));

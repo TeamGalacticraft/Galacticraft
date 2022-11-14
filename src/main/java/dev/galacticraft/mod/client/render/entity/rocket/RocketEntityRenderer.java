@@ -28,7 +28,7 @@ import com.mojang.math.Vector3f;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.part.RocketPartType;
-import dev.galacticraft.mod.entity.RocketEntity;
+import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;

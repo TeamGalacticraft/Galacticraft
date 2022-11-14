@@ -23,8 +23,7 @@
 package dev.galacticraft.mod.data;
 
 import dev.galacticraft.machinelib.api.gas.Gases;
-import dev.galacticraft.mod.fluid.GCFluid;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.content.GCFluids;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.tags.TagKey;
@@ -38,13 +37,13 @@ public class GCFluidTagProvider extends FabricTagProvider.FluidTagProvider {
     @Override
     protected void generateTags() {
         tag(GCTags.OIL)
-                .add(GCFluid.CRUDE_OIL)
-                .add(GCFluid.FLOWING_CRUDE_OIL);
+                .add(GCFluids.CRUDE_OIL)
+                .add(GCFluids.FLOWING_CRUDE_OIL);
         tag(GCTags.FUEL)
-                .add(GCFluid.FUEL)
-                .add(GCFluid.FLOWING_FUEL);
+                .add(GCFluids.FUEL)
+                .add(GCFluids.FLOWING_FUEL);
         tag(GCTags.LIQUID_OXYGEN)
-                .add(GCFluid.LIQUID_OXYGEN);
+                .add(GCFluids.LIQUID_OXYGEN);
         tag(GCTags.OXYGEN).add(Gases.OXYGEN);
     }
 

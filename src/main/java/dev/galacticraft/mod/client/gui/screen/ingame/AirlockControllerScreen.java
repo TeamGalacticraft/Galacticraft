@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.gui.widget.CheckboxWidget;
+import dev.galacticraft.mod.client.gui.widget.CheckboxButton;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -33,7 +33,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.phys.Vec2;
 
 public class AirlockControllerScreen extends AbstractContainerScreen<AirlockControllerMenu> {
 
@@ -47,7 +46,7 @@ public class AirlockControllerScreen extends AbstractContainerScreen<AirlockCont
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new CheckboxWidget(this.leftPos + 8, this.topPos + 20));
+        addRenderableWidget(new CheckboxButton(this.leftPos + 8, this.topPos + 20));
     }
 
     @Override

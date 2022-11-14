@@ -25,12 +25,12 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.FuelLoaderBlockEntity;
-import dev.galacticraft.mod.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
-import dev.galacticraft.mod.entity.RocketEntity;
-import dev.galacticraft.mod.screen.FuelLoaderScreenHandler;
+import dev.galacticraft.mod.content.block.entity.FuelLoaderBlockEntity;
+import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
+import dev.galacticraft.mod.content.entity.RocketEntity;
+import dev.galacticraft.mod.screen.FuelLoaderMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -53,7 +53,7 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
-public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderBlockEntity, FuelLoaderScreenHandler> {
+public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelLoaderMenu> {
     public static final int RED_X_U = 176;
     public static final int RED_X_V = 40;
     public static final int RED_X_WIDTH = 11;
@@ -69,7 +69,7 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderBlockEntity
     public static final int TANK_OVERLAY_WIDTH = 38;
     public static final int TANK_OVERLAY_HEIGHT = 38;
 
-    public FuelLoaderScreen(FuelLoaderScreenHandler handler, Inventory inv, Component title) {
+    public FuelLoaderScreen(FuelLoaderMenu handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.FUEL_LOADER_SCREEN);
     }
 

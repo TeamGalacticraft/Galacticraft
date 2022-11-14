@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.client.sounds;
 
 import dev.galacticraft.api.rocket.LaunchStage;
-import dev.galacticraft.mod.entity.RocketEntity;
-import dev.galacticraft.mod.registries.GCSounds;
+import dev.galacticraft.mod.content.entity.RocketEntity;
+import dev.galacticraft.mod.content.GCSounds;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.sounds.SoundSource;
 

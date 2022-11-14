@@ -25,7 +25,7 @@ package dev.galacticraft.mod.mixin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import dev.galacticraft.mod.accessor.LivingEntityAccessor;
-import dev.galacticraft.mod.entity.RocketEntity;
+import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;

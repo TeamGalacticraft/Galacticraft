@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.compat.rei.common.transfer.info;
 
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
-import dev.galacticraft.machinelib.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.machinelib.api.screen.RecipeMachineMenu;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoContext;
@@ -36,7 +36,7 @@ import net.minecraft.world.Container;
 import java.util.ArrayList;
 import java.util.List;
 
-public record FabricationMenuInfo<B extends RecipeMachineBlockEntity<Container, FabricationRecipe>, T extends RecipeMachineScreenHandler<Container, FabricationRecipe, B>, D extends DefaultFabricationDisplay>(D display) implements SimplePlayerInventoryMenuInfo<T, D> {
+public record FabricationMenuInfo<B extends RecipeMachineBlockEntity<Container, FabricationRecipe>, T extends RecipeMachineMenu<Container, FabricationRecipe, B>, D extends DefaultFabricationDisplay>(D display) implements SimplePlayerInventoryMenuInfo<T, D> {
     @Override
     public Iterable<SlotAccessor> getInputSlots(MenuInfoContext<T, ?, D> context) {
         T menu = context.getMenu();

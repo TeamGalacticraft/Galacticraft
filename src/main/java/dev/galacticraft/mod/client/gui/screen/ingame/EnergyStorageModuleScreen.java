@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
-import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.EnergyStorageModuleBlockEntity;
+import dev.galacticraft.mod.content.block.entity.EnergyStorageModuleBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -35,8 +35,8 @@ import net.minecraft.world.entity.player.Inventory;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorageModuleBlockEntity, SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity>> {
-    public EnergyStorageModuleScreen(SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity> handler, Inventory inv, Component title) {
+public class EnergyStorageModuleScreen extends MachineScreen<EnergyStorageModuleBlockEntity, SimpleMachineMenu<EnergyStorageModuleBlockEntity>> {
+    public EnergyStorageModuleScreen(SimpleMachineMenu<EnergyStorageModuleBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.ENERGY_STORAGE_MODULE_SCREEN);
 
         this.capacitorX = 54;

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.render.block.entity;
 
-import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.block.entity.GCBlockEntityTypes;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>

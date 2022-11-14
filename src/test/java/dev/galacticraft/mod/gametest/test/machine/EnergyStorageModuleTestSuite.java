@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
-import dev.galacticraft.mod.block.GCBlocks;
-import dev.galacticraft.mod.block.entity.EnergyStorageModuleBlockEntity;
-import dev.galacticraft.mod.block.entity.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.entity.EnergyStorageModuleBlockEntity;
+import dev.galacticraft.mod.content.block.entity.GCBlockEntityTypes;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;

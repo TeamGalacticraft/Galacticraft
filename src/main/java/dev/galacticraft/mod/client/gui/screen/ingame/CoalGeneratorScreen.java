@@ -23,10 +23,10 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.CoalGeneratorBlockEntity;
-import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
+import dev.galacticraft.mod.content.block.entity.CoalGeneratorBlockEntity;
+import dev.galacticraft.mod.screen.CoalGeneratorMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,7 +37,7 @@ import net.minecraft.world.entity.player.Inventory;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorBlockEntity, CoalGeneratorScreenHandler> {
+public class CoalGeneratorScreen extends MachineScreen<CoalGeneratorBlockEntity, CoalGeneratorMenu> {
     private static final int FIRE_X = 72;
     private static final int FIRE_Y = 37;
     private static final int FIRE_U = 176;
@@ -45,7 +45,7 @@ public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorBlock
     private static final int FIRE_WIDTH = 14;
     private static final int FIRE_HEIGHT = 14;
 
-    public CoalGeneratorScreen(CoalGeneratorScreenHandler handler, Inventory inv, Component title) {
+    public CoalGeneratorScreen(CoalGeneratorMenu handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.COAL_GENERATOR_SCREEN);
         this.imageHeight = 176;
     }

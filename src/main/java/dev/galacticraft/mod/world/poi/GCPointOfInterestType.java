@@ -24,7 +24,7 @@ package dev.galacticraft.mod.world.poi;
 
 import com.google.common.collect.ImmutableSet;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.GCBlocks;
+import dev.galacticraft.mod.content.GCBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;

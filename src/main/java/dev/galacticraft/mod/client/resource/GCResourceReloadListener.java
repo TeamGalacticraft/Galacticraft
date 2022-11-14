@@ -26,7 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.WalkwayBakedModel;
 import dev.galacticraft.mod.client.model.WireBakedModel;
 import dev.galacticraft.mod.client.render.entity.BubbleEntityRenderer;
-import dev.galacticraft.mod.fluid.GCFluid;
+import dev.galacticraft.mod.content.GCFluids;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
@@ -66,11 +66,11 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         FluidRenderHandler fuel = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/fuel_still")), atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/fuel_flowing"))};
         FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/oxygen")), atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/oxygen"))};
 
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluid.CRUDE_OIL, oil);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluid.FLOWING_CRUDE_OIL, oil);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluid.FUEL, fuel);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluid.FLOWING_FUEL, fuel);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluid.LIQUID_OXYGEN, oxygen);
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.CRUDE_OIL, oil);
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_CRUDE_OIL, oil);
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FUEL, fuel);
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_FUEL, fuel);
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.LIQUID_OXYGEN, oxygen);
         BubbleEntityRenderer.bubbleModel = null;
     }
 }

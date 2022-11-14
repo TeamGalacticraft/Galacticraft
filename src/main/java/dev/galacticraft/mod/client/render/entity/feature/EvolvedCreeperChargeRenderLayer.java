@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.render.entity.feature;
 
 import dev.galacticraft.mod.client.model.entity.EvolvedCreeperEntityModel;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
-import dev.galacticraft.mod.entity.EvolvedCreeperEntity;
+import dev.galacticraft.mod.content.entity.EvolvedCreeperEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.entity.RenderLayerParent;

@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.model.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.entity.EvolvedCreeperEntity;
+import dev.galacticraft.mod.content.entity.EvolvedCreeperEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;

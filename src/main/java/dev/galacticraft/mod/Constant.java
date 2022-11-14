@@ -23,11 +23,11 @@
 package dev.galacticraft.mod;
 
 import com.google.common.base.Predicates;
-import dev.galacticraft.mod.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagExtractPredicate;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagInsertPredicate;
 import dev.galacticraft.mod.lookup.predicate.TagPredicate;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.data.GCTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -921,5 +921,10 @@ public interface Constant {
         ResourceLocation DISABLE_SEAL = id("toggle_seal");
         ResourceLocation OPEN_GC_INVENTORY = id("open_gc_inv");
         ResourceLocation ENTITY_SPAWN = id("entity_spawn");
+        ResourceLocation CREATE_SATELLITE = id("create_satellite");
+    }
+
+    interface Structure {
+        ResourceLocation SPACE_STATION = id("space_station");
     }
 }

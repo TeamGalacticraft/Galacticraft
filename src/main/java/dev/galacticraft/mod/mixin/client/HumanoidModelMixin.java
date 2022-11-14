@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.mixin.client;
 
 import dev.galacticraft.mod.accessor.LivingEntityAccessor;
-import dev.galacticraft.mod.entity.RocketEntity;
+import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.LivingEntity;

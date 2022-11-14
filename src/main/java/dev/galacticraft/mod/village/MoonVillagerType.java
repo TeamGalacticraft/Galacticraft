@@ -40,8 +40,8 @@ public class MoonVillagerType {
     public static final VillagerType MOON_HIGHLANDS_ROCKS = VillagerTypeHelper.register(new ResourceLocation(Constant.MOD_ID, "moon_highlands_edge"));
 
     public static void register() {
-        VillagerTypeHelper.addVillagerTypeToBiome(GCBiomeKey.Moon.HIGHLANDS, MOON_HIGHLANDS);
-        VillagerTypeHelper.addVillagerTypeToBiome(GCBiomeKey.Moon.HIGHLANDS_EDGE, MOON_HIGHLANDS_ROCKS);
+        VillagerType.BY_BIOME.put(GCBiomeKey.Moon.HIGHLANDS, MOON_HIGHLANDS);
+        VillagerType.BY_BIOME.put(GCBiomeKey.Moon.HIGHLANDS_EDGE, MOON_HIGHLANDS_ROCKS);
         MOON_VILLAGER_TYPE_REGISTRY.add(MOON_HIGHLANDS);
         MOON_VILLAGER_TYPE_REGISTRY.add(MOON_HIGHLANDS_ROCKS);
     }

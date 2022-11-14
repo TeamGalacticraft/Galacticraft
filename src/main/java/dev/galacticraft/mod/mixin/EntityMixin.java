@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.entity.damage.GCDamageSources;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.content.entity.damage.GCDamageSources;
+import dev.galacticraft.mod.data.GCTags;
 import dev.galacticraft.mod.world.dimension.GCDimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

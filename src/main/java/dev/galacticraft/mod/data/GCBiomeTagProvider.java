@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.data;
 
-import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.world.biome.GCBiomeKey;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;

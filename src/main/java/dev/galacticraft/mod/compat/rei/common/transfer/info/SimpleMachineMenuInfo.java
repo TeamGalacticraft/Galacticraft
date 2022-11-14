@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.compat.rei.common.transfer.info;
 
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
-import dev.galacticraft.machinelib.api.screen.RecipeMachineScreenHandler;
+import dev.galacticraft.machinelib.api.screen.RecipeMachineMenu;
 import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoContext;
 import me.shedaniel.rei.api.common.transfer.info.clean.InputCleanHandler;
@@ -38,7 +38,7 @@ import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.stream.Collectors;
 
-public record SimpleMachineMenuInfo<C extends Container, R extends Recipe<C>, B extends RecipeMachineBlockEntity<C, R>, T extends RecipeMachineScreenHandler<C, R, B>, D extends SimpleGridMenuDisplay>(int width, int height, int resultIndex, int offset, D display) implements SimpleGridMenuInfo<T, D> {
+public record SimpleMachineMenuInfo<C extends Container, R extends Recipe<C>, B extends RecipeMachineBlockEntity<C, R>, T extends RecipeMachineMenu<C, R, B>, D extends SimpleGridMenuDisplay>(int width, int height, int resultIndex, int offset, D display) implements SimpleGridMenuInfo<T, D> {
     @Override
     public Iterable<SlotAccessor> getInputSlots(MenuInfoContext<T, ?, D> context) {
         return getInputStackSlotIds(context)

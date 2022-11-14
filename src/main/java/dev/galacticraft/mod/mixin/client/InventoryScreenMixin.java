@@ -27,7 +27,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.screen.ingame.GCPlayerInventoryScreen;
-import dev.galacticraft.mod.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

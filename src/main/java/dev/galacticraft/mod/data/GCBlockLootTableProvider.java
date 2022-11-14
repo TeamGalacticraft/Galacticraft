@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.data;
 
-import dev.galacticraft.mod.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItem;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
@@ -39,7 +39,7 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
-import static dev.galacticraft.mod.block.GCBlocks.*;
+import static dev.galacticraft.mod.content.GCBlocks.*;
 
 public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
     protected GCBlockLootTableProvider(FabricDataGenerator dataGenerator) {
@@ -281,6 +281,13 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
                 )
         );
 
+        dropSelf(ROCKET_LAUNCH_PAD);
+        dropSelf(AIR_LOCK_CONTROLLER);
+        dropSelf(AIR_LOCK_FRAME);
+
+        dropOther(CRYOGENIC_CHAMBER_PART, CRYOGENIC_CHAMBER);
+
+        dropSelf(CRYOGENIC_CHAMBER);
         dropSelf(CIRCUIT_FABRICATOR);
         dropSelf(COMPRESSOR);
         dropSelf(ELECTRIC_COMPRESSOR);
@@ -297,6 +304,9 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(OXYGEN_DECOMPRESSOR);
         dropSelf(OXYGEN_COMPRESSOR);
         dropSelf(OXYGEN_STORAGE_MODULE);
+        dropSelf(FUEL_LOADER);
+
+        add(AIR_LOCK_SEAL, noDrop());
     }
 
     public static LootTable.Builder siliconOreDrops(Block ore) {

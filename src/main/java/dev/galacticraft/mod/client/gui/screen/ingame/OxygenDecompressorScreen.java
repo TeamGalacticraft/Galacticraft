@@ -23,10 +23,10 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.api.screen.SimpleMachineScreenHandler;
-import dev.galacticraft.machinelib.client.api.screen.MachineHandledScreen;
+import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.block.entity.OxygenDecompressorBlockEntity;
+import dev.galacticraft.mod.content.block.entity.OxygenDecompressorBlockEntity;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,8 +37,8 @@ import net.minecraft.world.entity.player.Inventory;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenDecompressorScreen extends MachineHandledScreen<OxygenDecompressorBlockEntity, SimpleMachineScreenHandler<OxygenDecompressorBlockEntity>> {
-    public OxygenDecompressorScreen(SimpleMachineScreenHandler<OxygenDecompressorBlockEntity> handler, Inventory inv, Component title) {
+public class OxygenDecompressorScreen extends MachineScreen<OxygenDecompressorBlockEntity, SimpleMachineMenu<OxygenDecompressorBlockEntity>> {
+    public OxygenDecompressorScreen(SimpleMachineMenu<OxygenDecompressorBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
     }
 
