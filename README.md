@@ -14,7 +14,7 @@ For information regarding addon development please see the [GalacticraftAPI](htt
 Here we answer a few common questions we get regarding the release of the mod.\
 More information can be found in the `#faq` channel in [our Discord](https://discord.gg/n3QqhMYyFK).
 
-**Q:** When will Galacticraft 5 for 1.16+ be released?\
+**Q:** When will Galacticraft 5 for 1.19+ be released?\
 **A:** There is currently no ETA for a release, keep an eye out in [our Discord server](https://discord.gg/n3QqhMYyFK) for an alpha release announcement.
 
 **Q:** Will Galacticraft 5 be on Forge?\
