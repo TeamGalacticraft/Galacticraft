@@ -1,5 +1,6 @@
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.mod.world.dimension.GCDimensionType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.dimension.DimensionType;
@@ -20,7 +21,7 @@ public class DimensionTypeMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gc$initDimType(OptionalLong optionalLong, boolean bl, boolean bl2, boolean bl3, boolean bl4, double d, boolean bl5, boolean bl6, int i, int j, int k, TagKey tagKey, ResourceLocation resourceLocation, float f, DimensionType.MonsterSettings monsterSettings, CallbackInfo ci) {
-        isMoon = resourceLocation.getPath().contains("moon");
+        isMoon = resourceLocation.equals(GCDimensionType.MOON_KEY.location());
     }
 
     @ModifyVariable(method = "timeOfDay", at = @At("HEAD"), index = 1, argsOnly = true)
