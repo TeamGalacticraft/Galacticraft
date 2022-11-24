@@ -24,6 +24,8 @@ package dev.galacticraft.mod.client.render.entity.feature;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
 import net.minecraft.client.model.*;
@@ -103,10 +105,13 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
         if (mask != null) {
-            this.mask.yRot = headYaw;
-            this.mask.xRot = headPitch;
-            this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+            matrices.pushPose();
+            matrices.mulPose(new Quaternion(Vector3f.YP, headYaw, true));
+            matrices.mulPose(new Quaternion(Vector3f.XP, headPitch, true));
+            mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+            matrices.popPose();
         }
+
         if (this.tank != null) {
             assert this.pipe != null;
             this.tank.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
