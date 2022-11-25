@@ -43,7 +43,7 @@ public class GreyEntityRenderer extends LivingEntityRenderer<GreyEntity, EntityM
     }
 
     public static GreyEntityRenderer arch(EntityRendererProvider.Context context) {
-        return new GreyEntityRenderer(context, new ArchGreyEntityModel<>(context.bakeLayer(GCEntityModelLayer.ARCH_GREY)));
+        return new GreyEntityRenderer(context, new ArchGreyEntityModel(context.bakeLayer(GCEntityModelLayer.ARCH_GREY)));
     }
 
     @Override

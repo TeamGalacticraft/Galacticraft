@@ -24,26 +24,28 @@ package dev.galacticraft.mod.client.model.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import dev.galacticraft.mod.content.entity.ArchGreyEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 
-public class ArchGreyEntityModel<T extends Entity> extends EntityModel<T> {
+public class ArchGreyEntityModel<T extends ArchGreyEntity> extends EntityModel<T> {
 	private final ModelPart Body;
 	private final ModelPart Left_Arm;
 	private final ModelPart Right_Arm;
-	private final ModelPart Left_Leg;
-	private final ModelPart Right_Leg;
+	private final ModelPart Left_leg;
+	private final ModelPart Right_leg;
 	private final ModelPart Head;
 
 	public ArchGreyEntityModel(ModelPart root) {
 		this.Body = root.getChild("Body");
 		this.Left_Arm = root.getChild("Left_Arm");
 		this.Right_Arm = root.getChild("Right_Arm");
-		this.Left_Leg = root.getChild("Left_Leg");
-		this.Right_Leg = root.getChild("Right_Leg");
+		this.Left_leg = root.getChild("Left_Leg");
+		this.Right_leg = root.getChild("Right_Leg");
 		this.Head = root.getChild("Head");
 	}
 
@@ -70,8 +72,38 @@ public class ArchGreyEntityModel<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(T livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		boolean bl = livingEntity.getFallFlyingTicks() > 4;
+		this.Head.yRot = netHeadYaw * 0.017453292F;
 
+		this.Head.xRot = headPitch * 0.017453292F;
+
+		this.Body.yRot = 0.0F;
+		this.Right_Arm.z = 0.0F;
+		this.Right_Arm.x = -5.0F;
+		this.Left_Arm.z = 0.0F;
+		this.Left_Arm.x = 5.0F;
+		float k = 1.0F;
+		if (bl) {
+			k = (float)livingEntity.getDeltaMovement().lengthSqr();
+			k /= 0.2F;
+			k *= k * k;
+		}
+		if (k < 1.0F) {
+			k = 1.0F;
+		}
+		this.Right_Arm.xRot = Mth.cos(limbSwing * 0.6662F + 3.1415927F) * 2.0F * limbSwingAmount * 0.5F / k;
+		this.Left_Arm.xRot = Mth.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F / k;
+		this.Right_Arm.zRot = 0.0F;
+		this.Left_Arm.zRot = 0.0F;
+		this.Right_leg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount / k;
+		this.Left_leg.xRot = Mth.cos(limbSwing * 0.6662F + 3.1415927F) * 1.4F * limbSwingAmount / k;
+		this.Right_leg.yRot = 0.0F;
+		this.Left_leg.yRot = 0.0F;
+		this.Right_leg.zRot = 0.0F;
+		this.Left_leg.zRot = 0.0F;
+		this.Right_Arm.yRot = 0.0F;
+		this.Left_Arm.yRot = 0.0F;
 	}
 
 	@Override
@@ -79,8 +111,8 @@ public class ArchGreyEntityModel<T extends Entity> extends EntityModel<T> {
 		Body.render(poseStack, buffer, packedLight, packedOverlay);
 		Left_Arm.render(poseStack, buffer, packedLight, packedOverlay);
 		Right_Arm.render(poseStack, buffer, packedLight, packedOverlay);
-		Left_Leg.render(poseStack, buffer, packedLight, packedOverlay);
-		Right_Leg.render(poseStack, buffer, packedLight, packedOverlay);
+		Left_leg.render(poseStack, buffer, packedLight, packedOverlay);
+		Right_leg.render(poseStack, buffer, packedLight, packedOverlay);
 		Head.render(poseStack, buffer, packedLight, packedOverlay);
 	}
 }
