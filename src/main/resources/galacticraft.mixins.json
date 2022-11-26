@@ -13,6 +13,7 @@
     "FlowingFluidMixin",
     "ItemStackMixin",
     "LanternBlockMixin",
+    "DimensionTypeMixin",
     "LivingEntityMixin",
     "ModelProviderMixin",
     "PlayerMixin",

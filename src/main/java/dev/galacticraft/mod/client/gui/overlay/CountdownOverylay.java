@@ -32,14 +32,14 @@ public class CountdownOverylay {
     public static void renderCountdown(PoseStack poseStack, float tickDelta) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player.getVehicle() instanceof RocketEntity rocket && rocket.getStage() == LaunchStage.IGNITED) {
-            int count = rocket.getTimeAsState() / 2;
-
-            count = (int) Math.floor(count / 10.0F);
+            int count = (int) Math.floor(((float) rocket.getTimeAsState()) / 20.0f);
 
             final int width = mc.getWindow().getGuiScaledWidth();
             final int height = mc.getWindow().getGuiScaledHeight();
 
             poseStack.pushPose();
+
+            count = 20 - count;
 
             if (count <= 10) {
                 poseStack.scale(4.0F, 4.0F, 0.0F);
