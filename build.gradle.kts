@@ -115,6 +115,46 @@ loom {
             property("fabric-api.datagen.output-dir", project.file("src/main/generated").toString())
             property("fabric-api.datagen.strict-validation", "false")
         }
+
+        create("Minecraft Client [Mixin Hotswap]") {
+            client()
+            name("Minecraft Client [Mixin Hotswap]")
+
+            try {
+                afterEvaluate {
+                    val mixin = this.configurations.compileClasspath.get()
+                        .allDependencies
+                        .asIterable()
+                        .firstOrNull { it.name == "sponge-mixin" }
+
+                    if (mixin != null) {
+                        val mixinPath = this.configurations.compileClasspath.get().files(mixin).first().path;
+
+                        println(mixinPath)
+
+                        vmArg(
+                            "-javaagent:\"${mixinPath}\""
+                        )
+
+                        println("[Info]: Mixin Hotswap Run should be working")
+                    } else {
+                        println("[Warning]: Unable to locate file path for Mixin Jar, HotSwap Run will not work!!!")
+                    }
+                }
+            } catch (e: Exception) {
+                println("[Error]: MixinHotswap Run had a issue!")
+                e.printStackTrace()
+            }
+
+            vmArgs(
+                "-Dlog4j.configurationFile=${file(".gradle/loom-cache/log4j.xml")}",
+                "-Dfabric.log.disableAnsi=false",
+                "-Dmixin.debug.export=true"
+            )
+
+            this.ideConfigGenerated(true)
+        }
+
         register("gametest") {
             server()
             name("Game Test")
