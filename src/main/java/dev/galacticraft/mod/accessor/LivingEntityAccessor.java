@@ -27,10 +27,10 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public interface LivingEntityAccessor {
-    @Nullable
-    Player.BedSleepingProblem startCryogenicSleep(BlockPos pos);
 
-    void stopCryogenicSleep(boolean resetSleepCounter, boolean sync);
+    void beginCyroSleep();
+
+    void endCyroSleep();
 
     int getCryogenicChamberCooldown();
 

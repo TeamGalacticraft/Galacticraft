@@ -76,16 +76,13 @@ public class CryogenicChamberPart extends BaseEntityBlock {
         BlockEntity partBE = world.getBlockEntity(partPos);
         CryogenicChamberPartBlockEntity be = (CryogenicChamberPartBlockEntity) partBE;
 
-        if (be == null || be.basePos == BlockPos.ZERO) {
-            return;
-        }
+        if (be == null || be.basePos == BlockPos.ZERO) return;
+
         BlockPos basePos = new BlockPos(be.basePos);
         BlockState baseState = world.getBlockState(basePos);
 
-        if (baseState.isAir()) {
-            // The base has been destroyed already.
-            return;
-        }
+        // The base has been destroyed already.
+        if (baseState.isAir()) return;
 
         MultiBlockBase block = (MultiBlockBase) baseState.getBlock();
         block.onPartDestroyed(world, player, baseState, basePos, partState, partPos);
@@ -98,18 +95,16 @@ public class CryogenicChamberPart extends BaseEntityBlock {
         BlockEntity partBE = level.getBlockEntity(blockPos);
         CryogenicChamberPartBlockEntity be = (CryogenicChamberPartBlockEntity) partBE;
 
-        if (be == null || be.basePos == BlockPos.ZERO) {
-            return InteractionResult.PASS;
-        }
+        if (be == null || be.basePos == BlockPos.ZERO) return InteractionResult.CONSUME;
+
         BlockPos basePos = new BlockPos(be.basePos);
         BlockState baseState = level.getBlockState(basePos);
 
-        if (baseState.isAir()) {
-            // The base has been destroyed already.
-            return InteractionResult.PASS;
-        }
+        // The base has been destroyed already.
+        if (baseState.isAir()) return InteractionResult.PASS;
 
         MultiBlockBase block = (MultiBlockBase) baseState.getBlock();
+
         return block.onMultiBlockUse(blockState, level, basePos, player, interactionHand, blockHitResult);
     }
 }
