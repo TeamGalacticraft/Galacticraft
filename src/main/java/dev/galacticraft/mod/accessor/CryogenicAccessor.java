@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2022 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,19 @@
 
 package dev.galacticraft.mod.accessor;
 
-import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Unit;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 
-public interface CryogenicAccessor {
-    Either<Player.BedSleepingProblem, Unit> galacticraft$startCryogenicSleep(BlockPos blockPos);
+public interface LivingEntityAccessor {
 
-    void galacticraft$stopCryogenicSleep(boolean resetSleepCounter, boolean sync);
+    void beginCyroSleep();
 
-    int galacticraft$getCryogenicChamberCooldown();
+    void endCyroSleep();
 
-    void galacticraft$setCryogenicChamberCooldown(int cryogenicChamberCooldown);
+    int getCryogenicChamberCooldown();
 
-    boolean galacticraft$isInCryoSleep();
+    void setCryogenicChamberCooldown(int cryogenicChamberCooldown);
+
+    boolean isInCryoSleep();
 }

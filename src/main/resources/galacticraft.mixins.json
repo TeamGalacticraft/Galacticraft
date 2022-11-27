@@ -30,7 +30,6 @@
     "client.AnimalModelAgeableListModel",
     "client.CameraMixin",
     "client.ClientLevelMixin",
-    "client.ClientPacketListenerMixin",
     "client.FogRendererMixin",
     "client.HumanoidModelMixin",
     "client.LevelRendererMixin",

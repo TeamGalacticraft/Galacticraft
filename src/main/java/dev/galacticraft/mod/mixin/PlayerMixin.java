@@ -1,23 +1,25 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *  * Copyright (c) 2019-2023 Team Galacticraft
+ *  *
+ *  * Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  * of this software and associated documentation files (the "Software"), to deal
+ *  * in the Software without restriction, including without limitation the rights
+ *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  * copies of the Software, and to permit persons to whom the Software is
+ *  * furnished to do so, subject to the following conditions:
+ *  *
+ *  * The above copyright notice and this permission notice shall be included in all
+ *  * copies or substantial portions of the Software.
+ *  *
+ *  * THE SOFTWARE IS PROVIfDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  * SOFTWARE.
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
  */
 
 package dev.galacticraft.mod.mixin;
@@ -38,7 +40,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -122,40 +123,14 @@ public abstract class PlayerMixin extends LivingEntity implements CryogenicAcces
         super.setPosToBed(blockPos);
     }
 
-    @Inject(method = "stopSleepInBed", at = @At("HEAD"), cancellable = true)
-    private void gc$stopCryoSleep(boolean resetSleepCounter, boolean sync, CallbackInfo ci) {
-        if (this.galacticraft$isInCryoSleep()) {
-            this.galacticraft$stopCryogenicSleep(resetSleepCounter, sync);
-            ci.cancel();
-        }
-    }
+    @Shadow public abstract boolean isCreative();
 
-    @Inject(method = "defineSynchedData", at = @At("TAIL"))
-    private void gc$sleepData(CallbackInfo ci) {
-        this.entityData.define(GCEntityDataSerializers.IS_IN_CRYO_SLEEP_ID, false);
-    }
+    @Inject(method = "stopSleepInBed", at = @At(value = "HEAD"))
+    private void gc$shouldSetCryoCooldown(boolean bl, boolean bl2, CallbackInfo ci){
+        if(!((Player) (Object) this).level.isClientSide() && !this.isCreative() && this.isInCryoSleep()) {
+            ((Player) (Object) this).heal(5.0F);
 
-    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void gc$readCryoData(CompoundTag tag, CallbackInfo ci) {
-        this.cryogenicChamberCooldown = tag.getInt(Constant.Nbt.CRYOGENIC_COOLDOWN);
-    }
-
-    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void gc$addCryoData(CompoundTag tag, CallbackInfo ci) {
-        tag.putInt(Constant.Nbt.CRYOGENIC_COOLDOWN, this.cryogenicChamberCooldown);
-    }
-
-    @Inject(method = "tick", at = @At("HEAD"))
-    private void gc$tickCryo(CallbackInfo ci) {
-        if (this.galacticraft$getCryogenicChamberCooldown() > 0) {
-            this.galacticraft$setCryogenicChamberCooldown(this.galacticraft$getCryogenicChamberCooldown() - 1);
-        }
-    }
-
-    @Inject(method = "aiStep", at = @At("HEAD"), cancellable = true)
-    private void gc$preventMovement(CallbackInfo ci) {
-        if (this.galacticraft$isInCryoSleep()) {
-            ci.cancel();
+            this.setCryogenicChamberCooldown(6000);
         }
     }
 }

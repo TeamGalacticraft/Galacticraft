@@ -28,7 +28,7 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberBlockEntity;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -97,15 +97,17 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     @Override
     public void onMultiBlockPlaced(Level level, BlockPos blockPos, BlockState blockState) {
         var isTop = false;
-        for (var otherPart : this.getOtherParts(blockState)) {
-            otherPart = otherPart.immutable().offset(blockPos);
-            level.setBlockAndUpdate(otherPart, GCBlocks.CRYOGENIC_CHAMBER_PART.defaultBlockState().setValue(FACING, blockState.getValue(FACING)).setValue(CryogenicChamberPart.TOP, isTop));
-            isTop = true;
+        if (!world.isClientSide) {
+            for (var otherPart : this.getOtherParts(blockState)) {
+                otherPart = otherPart.immutable().offset(blockPos);
+                level.setBlockAndUpdate(otherPart, GCBlocks.CRYOGENIC_CHAMBER_PART.defaultBlockState().setValue(FACING, blockState.getValue(FACING)).setValue(CryogenicChamberPart.TOP, isTop));
+                isTop = true;
 
-            var part = level.getBlockEntity(otherPart);
-            assert part != null; // This will never be null because level.setBlockState will put a blockentity there.
-            ((MultiBlockPart) part).setBasePos(blockPos);
-            part.setChanged();
+                var part = level.getBlockEntity(otherPart);
+                assert part != null; // This will never be null because level.setBlockState will put a blockentity there.
+                ((MultiBlockPart) part).setBasePos(blockPos);
+                part.setChanged();
+            }
         }
     }
 
@@ -159,14 +161,22 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
     @Override
     public InteractionResult onMultiBlockUse(BlockState blockState, Level level, BlockPos basePos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if (level.isClientSide()) {
-            return InteractionResult.CONSUME;
+        if (level.isClientSide()) return InteractionResult.CONSUME;
+
+        LivingEntityAccessor accessor = ((LivingEntityAccessor) player);
+
+        if(accessor.getCryogenicChamberCooldown() == 0) {
+            accessor.beginCyroSleep();
+
+            player.startSleepInBed(basePos).ifLeft(problem -> {
+                if (problem.getMessage() != null) player.displayClientMessage(problem.getMessage(), true);
+
+                accessor.endCyroSleep();
+            });
+        } else {
+            player.displayClientMessage(Component.literal("The chamber is way to hot right now! It needs " + accessor.getCryogenicChamberCooldown() + " seconds to cool down before I sleep again."), false);
         }
-        player.galacticraft$startCryogenicSleep(basePos).ifLeft(bedSleepingProblem -> {
-            if (bedSleepingProblem.getMessage() != null) {
-                player.displayClientMessage(bedSleepingProblem.getMessage(), true);
-            }
-        });
+
         return InteractionResult.SUCCESS;
     }
 
