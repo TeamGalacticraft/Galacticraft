@@ -270,6 +270,7 @@ public class GCItem {
 
     // MISC MACHINES
     public static final Item CRYOGENIC_CHAMBER = new BlockItem(GCBlocks.CRYOGENIC_CHAMBER, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
+    public static final Item PLAYER_TRANSPORT_TUBE = new BlockItem(GCBlocks.PLAYER_TRANSPORT_TUBE, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
 
     // MACHINES
     public static final Item CIRCUIT_FABRICATOR = new BlockItem(GCBlocks.CIRCUIT_FABRICATOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
@@ -692,6 +693,7 @@ public class GCItem {
 
         // MISC MACHINES
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);
+        Registry.register(Registry.ITEM, Constant.id(Constant.Block.PLAYER_TRANSPORT_TUBE), PLAYER_TRANSPORT_TUBE);
 
         // MACHINES
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.CIRCUIT_FABRICATOR), CIRCUIT_FABRICATOR);

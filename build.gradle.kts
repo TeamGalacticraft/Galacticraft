@@ -178,9 +178,9 @@ dependencies {
 //        exclude(group = "net.fabricmc.fabric-api")
 //    }
     listOf(
-        "model-loader",
+        "model_loader",
         "extensions",
-        "obj-loader",
+        "obj_loader",
         "accessors",
         "constants",
         "common"
