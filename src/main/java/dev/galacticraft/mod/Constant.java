@@ -924,6 +924,9 @@ public interface Constant {
         ResourceLocation OPEN_GC_INVENTORY = id("open_gc_inv");
         ResourceLocation ENTITY_SPAWN = id("entity_spawn");
         ResourceLocation CREATE_SATELLITE = id("create_satellite");
+        ResourceLocation ROCKET_JUMP = id("rocket_jump");
+        ResourceLocation ROCKET_PITCH = id("rocket_pitch");
+        ResourceLocation ROCKET_YAW = id("rocket_yaw");
     }
 
     interface Structure {

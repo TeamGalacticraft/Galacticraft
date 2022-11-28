@@ -59,24 +59,24 @@ public class LocalPlayerMixin {
 
                 if (this.input.jumping && rocket.getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
                     rocket.onJump();
-                    ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "rocket_jump"), PacketByteBufs.create());
+                    ClientPlayNetworking.send(Constant.Packet.ROCKET_JUMP, PacketByteBufs.create());
                 }
 
                 if (rocket.getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
                     if (this.input.up) {
                         player.getVehicle().setXRot((player.getVehicle().getXRot() - 2.0F) % 360.0f);
-                        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "rocket_pitch"), new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
+                        ClientPlayNetworking.send(Constant.Packet.ROCKET_PITCH, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
                     } else if (this.input.down) {
                         player.getVehicle().setXRot((player.getVehicle().getXRot() + 2.0F) % 360.0f);
-                        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "rocket_pitch"), new FriendlyByteBuf(Unpooled.buffer().writeBoolean(true)));
+                        ClientPlayNetworking.send(Constant.Packet.ROCKET_PITCH, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(true)));
                     }
 
                     if (this.input.left) {
                         player.getVehicle().setYRot((player.getVehicle().getYRot() - 2.0F) % 360.0f);
-                        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "rocket_yaw"), new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
+                        ClientPlayNetworking.send(Constant.Packet.ROCKET_YAW, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
                     } else if (this.input.right) {
                         player.getVehicle().setYRot((player.getVehicle().getYRot() + 2.0F) % 360.0f);
-                        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "rocket_yaw"), new FriendlyByteBuf(Unpooled.buffer().writeBoolean(true)));
+                        ClientPlayNetworking.send(Constant.Packet.ROCKET_YAW, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(true)));
                     }
                 }
             }

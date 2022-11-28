@@ -81,15 +81,45 @@ public class GCServerPacketReceiver {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "rocket_jump"), ((server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.ROCKET_JUMP, (server, player, handler, buf, responseSender) -> {
             server.execute(() -> {
                 if (player.isPassenger()) {
-                    if (player.getVehicle() instanceof Rocket && ((Rocket) player.getVehicle()).getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
-                        ((Rocket) player.getVehicle()).onJump();
+                    if (player.getVehicle() instanceof Rocket rocket && rocket.getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
+                        rocket.onJump();
                     }
                 }
             });
-        }));
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.ROCKET_PITCH, (server, player, handler, buf, responseSender) -> {
+            boolean input = buf.readBoolean();
+            server.execute(() -> {
+                if (player.isPassenger()) {
+                    if (player.getVehicle() instanceof Rocket rocket && rocket.getStage() == LaunchStage.LAUNCHED) {
+                        if (input) {
+                            player.getVehicle().setXRot((player.getVehicle().getXRot() + 2.0F) % 360.0f);
+                        } else {
+                            player.getVehicle().setXRot((player.getVehicle().getXRot() - 2.0F) % 360.0f);
+                        }
+                    }
+                }
+            });
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.ROCKET_YAW, (server, player, handler, buf, responseSender) -> {
+            boolean input = buf.readBoolean();
+            server.execute(() -> {
+                if (player.isPassenger()) {
+                    if (player.getVehicle() instanceof Rocket rocket && rocket.getStage() == LaunchStage.LAUNCHED) {
+                        if (input) {
+                            player.getVehicle().setYRot((player.getVehicle().getYRot() + 2.0F) % 360.0f);
+                        } else {
+                            player.getVehicle().setYRot((player.getVehicle().getYRot() - 2.0F) % 360.0f);
+                        }
+                    }
+                }
+            });
+        });
 
         ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "planet_tp"), ((server, player, handler, buf, responseSender) -> {
             FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
