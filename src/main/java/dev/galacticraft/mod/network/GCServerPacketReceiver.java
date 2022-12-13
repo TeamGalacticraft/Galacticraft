@@ -121,7 +121,7 @@ public class GCServerPacketReceiver {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "planet_tp"), ((server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.PLANET_TP, ((server, player, handler, buf, responseSender) -> {
             FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
             if (player.getCelestialScreenState() != null) {
                 server.execute(() -> {

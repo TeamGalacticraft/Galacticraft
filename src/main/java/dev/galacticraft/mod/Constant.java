@@ -927,6 +927,7 @@ public interface Constant {
         ResourceLocation ROCKET_JUMP = id("rocket_jump");
         ResourceLocation ROCKET_PITCH = id("rocket_pitch");
         ResourceLocation ROCKET_YAW = id("rocket_yaw");
+        ResourceLocation PLANET_TP = id("planet_tp");
     }
 
     interface Structure {
