@@ -311,6 +311,8 @@ public interface Constant {
         String CRYOGENIC_CHAMBER_PART = "cryogenic_chamber_part";
         String ASTRO_MINER_BASE = "astro_miner_base";
         String SHORT_RANGE_TELEPAD = "short_range_telepad";
+        String PLAYER_TRANSPORT_TUBE = "player_transport_tube";
+        String HYPERLOOP = "hyperloop";
 
         // Power
         String BASIC_SOLAR_PANEL = "basic_solar_panel";
@@ -922,6 +924,9 @@ public interface Constant {
         ResourceLocation OPEN_GC_INVENTORY = id("open_gc_inv");
         ResourceLocation ENTITY_SPAWN = id("entity_spawn");
         ResourceLocation CREATE_SATELLITE = id("create_satellite");
+        ResourceLocation ROCKET_JUMP = id("rocket_jump");
+        ResourceLocation ROCKET_PITCH = id("rocket_pitch");
+        ResourceLocation ROCKET_YAW = id("rocket_yaw");
     }
 
     interface Structure {

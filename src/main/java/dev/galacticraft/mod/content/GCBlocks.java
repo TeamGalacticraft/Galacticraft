@@ -294,6 +294,7 @@ public class GCBlocks {
 
     // MISC MACHINES
     public static final Block CRYOGENIC_CHAMBER = new CryogenicChamberBlock(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS));
+    public static final Block PLAYER_TRANSPORT_TUBE = new TransportTube(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS).noCollission());
 
     // MACHINES
     public static final MachineBlock<CircuitFabricatorBlockEntity> CIRCUIT_FABRICATOR = SimpleMachineBlock.create(CircuitFabricatorBlockEntity::new);
@@ -553,6 +554,7 @@ public class GCBlocks {
 
         // MISC MACHINES
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);
+        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.PLAYER_TRANSPORT_TUBE), PLAYER_TRANSPORT_TUBE);
 
         // MACHINES
         Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CIRCUIT_FABRICATOR), CIRCUIT_FABRICATOR);
