@@ -1,0 +1,40 @@
+{
+  "type": "galacticraft-api:star",
+  "config": {
+    "description": "star.galacticraft-api.sol.description",
+    "display": {
+      "type": "galacticraft-api:icon",
+      "config": {
+        "height": 16,
+        "scale": 1.5,
+        "texture": "galacticraft-api:textures/body_icons.png",
+        "u": 0,
+        "v": 0,
+        "width": 16
+      }
+    },
+    "galaxy": "galacticraft-api:milky_way",
+    "gravity": 28.0,
+    "luminance": 1.0,
+    "name": "star.galacticraft-api.sol.name",
+    "photospheric_composition": {
+      "composition": {
+        "machinelib:helium": 248500.0,
+        "machinelib:hydrogen": 734600.0,
+        "machinelib:neon": 1200.0,
+        "machinelib:nitrogen": 900.0,
+        "machinelib:oxygen": 7700.0
+      },
+      "pressure": 28.0,
+      "temperature": 15.0
+    },
+    "position": {
+      "type": "galacticraft-api:static",
+      "config": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    "surface_temperature": 5772
+  }
+}

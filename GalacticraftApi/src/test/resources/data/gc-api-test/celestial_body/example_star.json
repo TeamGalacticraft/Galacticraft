@@ -1,0 +1,40 @@
+{
+  "config": {
+    "gravity": 28,
+    "luminance": 1,
+    "surface_temperature": 5772,
+    "display": {
+      "config": {
+        "width": 16,
+        "height": 16,
+        "scale": 1.5,
+        "texture": "galacticraft-api:textures/body_icons.png",
+        "u": 0,
+        "v": 0
+      },
+      "type": "galacticraft-api:icon"
+    },
+    "photospheric_composition": {
+      "composition": {
+        "galacticraft-api:hydrogen": 734600,
+        "galacticraft-api:helium": 248500,
+        "galacticraft-api:oxygen": 7700,
+        "galacticraft-api:neon": 1200,
+        "galacticraft-api:nitrogen": 900
+      },
+      "temperature": 15,
+      "pressure": 28
+    },
+    "name": "star.gc-api-test.star.name",
+    "description": "star.gc-api-test.star.description",
+    "galaxy": "gc-api-test:example_galaxy",
+    "position": {
+      "config": {
+        "x": 0,
+        "y": 0
+      },
+      "type": "galacticraft-api:static"
+    }
+  },
+  "type": "galacticraft-api:star"
+}

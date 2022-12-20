@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "gc-api-test",
+  "version": "$version",
+
+  "name": "Galacticraft API Test Mod",
+  "description": "Test mod for the Addon API for the FabricMC port of Galacticraft.",
+  "license": "MIT",
+  "contact": {
+    "homepage": "https://galacticraft.team/",
+    "sources": "https://github.com/TeamGalacticraft/Addon-API/",
+    "issues": "https://github.com/TeamGalacticraft/Addon-API/issues/"
+  },
+  "authors": [
+    {
+      "name": "Team Galacticraft",
+      "contact": {
+        "homepage": "https://github.com/TeamGalacticraft/",
+        "discord": "https://discord.gg/n3QqhMYyFK"
+      }
+    }
+  ],
+  "environment": "*",
+  "entrypoints": {
+    "fabric-gametest": [ "dev.galacticraft.api.gametest.GalacticraftApiTestSuite" ]
+  },
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "minecraft": ">=1.18.1",
+    "galacticraft-api": ">=0.4.0-prealpha.23+1.18.1"
+  }
+}

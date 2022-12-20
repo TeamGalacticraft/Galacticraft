@@ -1,0 +1,15 @@
+{
+  "name": "galaxy.gc-api-test.galaxy.name",
+  "description": "galaxy.gc-api-test.galaxy.description",
+  "position": {
+    "config": {
+      "x": 0,
+      "y": 0
+    },
+    "type": "galacticraft-api:static"
+  },
+  "display": {
+    "config": {},
+    "type": "galacticraft-api:empty"
+  }
+}

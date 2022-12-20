@@ -1,0 +1,40 @@
+{
+  "parent": "gc-api-test:custom/root",
+  "display": {
+    "icon": {
+      "item": "minecraft:diamond_block"
+    },
+    "title": {
+      "translate": "gc-api-test.advancements.custom.diamond_block.title"
+    },
+    "description": {
+      "translate": "gc-api-test.advancements.custom.diamond_block.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "rewards": {
+    "rocket_parts": [
+      "gc-api-test:test"
+    ]
+  },
+  "criteria": {
+    "diamond_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:diamond_block"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "diamond_block"
+    ]
+  ]
+}

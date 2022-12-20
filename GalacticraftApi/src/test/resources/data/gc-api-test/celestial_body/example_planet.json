@@ -1,0 +1,56 @@
+{
+  "config": {
+    "access_weight": 0,
+    "day_temperature": 21,
+    "night_temperature": 15,
+    "world": "minecraft:the_end",
+    "atmosphere": {
+      "composition": {
+        "galacticraft-api:nitrogen": 780840,
+        "galacticraft-api:oxygen": 209500,
+        "galacticraft-api:water_vapor": 25000,
+        "galacticraft-api:argon": 9300,
+        "galacticraft-api:carbon_dioxide": 399,
+        "galacticraft-api:neon": 18,
+        "galacticraft-api:helium": 5.42,
+        "galacticraft-api:methane": 1.79,
+        "galacticraft-api:krypton": 1.14,
+        "galacticraft-api:hydrogen": 0.55,
+        "galacticraft-api:nitrous_oxide": 0.325,
+        "galacticraft-api:carbon_monoxide": 0.1,
+        "galacticraft-api:xenon": 0.09,
+        "galacticraft-api:ozone": 0.07,
+        "galacticraft-api:nitrous_dioxide": 0.02,
+        "galacticraft-api:iodine": 0.01
+      },
+      "temperature": 15,
+      "pressure": 1
+    },
+    "gravity": 1,
+    "parent": "gc-api-test:example_star",
+    "position": {
+      "config": {
+        "orbit_time": 1536000,
+        "distance": 1,
+        "phase_shift": 0,
+        "planet": true
+      },
+      "type": "galacticraft-api:orbital"
+    },
+    "display": {
+      "config": {
+        "width": 16,
+        "height": 16,
+        "scale": 1,
+        "texture": "galacticraft-api:textures/body_icons.png",
+        "u": 0,
+        "v": 16
+      },
+      "type": "galacticraft-api:icon"
+    },
+    "name": "planet.gc-api-test.the_end.name",
+    "description": "planet.gc-api-test.the_end.description",
+    "galaxy": "gc-api-test:galaxy"
+  },
+  "type": "galacticraft-api:planet"
+}

@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:gold_block"
+    },
+    "title": {
+      "translate": "gc-api-test.advancements.custom.root.title"
+    },
+    "description": {
+      "translate": "gc-api-test.advancements.custom.root.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "minecraft:textures/block/iron_block.png"
+  },
+  "criteria": {
+    "gold_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:gold_block"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "gold_block"
+    ]
+  ]
+}

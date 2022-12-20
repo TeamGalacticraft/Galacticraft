@@ -57,65 +57,7 @@ plugins {
     id("io.github.juuxel.loom-quiltflower") version("1.7.3")
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-    withSourcesJar()
-}
-
-sourceSets {
-    main {
-        resources {
-            srcDir("src/main/generated")
-            exclude(".cache/**")
-        }
-    }
-}
-
-group = modGroup
-version = modVersion + getVersionDecoration()
-println("Galacticraft: $version")
-base.archivesName.set(modName)
-
-loom {
-    accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
-    mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
-
-    runs {
-        register("datagen") {
-            server()
-            name("Data Generation")
-            runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation=false")
-        }
-        register("datagenClient") {
-            client()
-            name("Data Generation Client")
-            runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation")
-        }
-        register("gametest") {
-            server()
-            name("Game Test")
-            source(sourceSets.test.get())
-            vmArg("-Dfabric-api.gametest")
-        }
-        register("gametestClient") {
-            client()
-            name("Game Test Client")
-            source(sourceSets.test.get())
-            vmArg("-Dfabric-api.gametest")
-        }
-    }
-}
-
 repositories {
-    mavenLocal()
-    maven("https://maven.galacticraft.net/repository/maven-releases/") {
-        content {
-            includeGroup("dev.galacticraft")
-        }
-    }
     maven("https://maven.galacticraft.net/repository/maven-snapshots/") {
         name = "Galacticraft Repository"
         content {
@@ -151,12 +93,6 @@ repositories {
             includeGroup("io.github.fablabsmc")
         }
     }
-    maven("https://maven.bai.lol") {
-        content {
-            includeGroup("mcp.mobius.waila")
-            includeGroup("lol.bai")
-        }
-    }
     maven("https://dvs1.progwml6.com/files/maven/") {
         content {
             includeGroup("mezz.jei")
@@ -164,19 +100,124 @@ repositories {
     }
 }
 
+val licenseHeader = project.file("LICENSE_HEADER.txt")
+
+allprojects {
+    apply(plugin = "org.cadixdev.licenser")
+    apply(plugin = "fabric-loom")
+    apply(plugin = "io.github.juuxel.loom-quiltflower")
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+        withSourcesJar()
+    }
+
+    sourceSets {
+        main {
+            resources {
+                srcDir("src/main/generated")
+                exclude(".cache/**")
+            }
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        maven("https://maven.galacticraft.net/repository/maven-releases/") {
+            name = "Galacticraft Repository"
+            content {
+                includeGroup("dev.galacticraft")
+            }
+        }
+        maven("https://maven.bai.lol")
+    }
+
+    dependencies {
+        // Minecraft, Mappings, Loader
+        minecraft("com.mojang:minecraft:$minecraftVersion")
+        mappings(loom.officialMojangMappings())
+        modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
+
+        modCompileOnly("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
+
+        modImplementation("dev.galacticraft:MachineLib:$machineLibVersion")
+    }
+
+    tasks.processResources {
+        inputs.property("version", project.version)
+
+        filesMatching("fabric.mod.json") {
+            expand("version" to project.version)
+        }
+
+        // Minify json resources
+        // https://stackoverflow.com/questions/41028030/gradle-minimize-json-resources-in-processresources#41029113
+        doLast {
+            fileTree(mapOf("dir" to outputs.files.asPath, "includes" to listOf("**/*.json", "**/*.mcmeta"))).forEach {
+                    file: File -> file.writeText(groovy.json.JsonOutput.toJson(groovy.json.JsonSlurper().parse(file)))
+            }
+        }
+    }
+
+    tasks.withType<JavaCompile> {
+        dependsOn(tasks.checkLicenses)
+        options.encoding = "UTF-8"
+        options.release.set(17)
+    }
+
+    license {
+        setHeader(licenseHeader)
+        include("**/dev/galacticraft/**/*.java")
+        include("build.gradle.kts")
+        ext {
+            set("year", "2022")
+            set("company", "Team Galacticraft")
+        }
+    }
+}
+
+group = modGroup
+version = modVersion + getVersionDecoration()
+println("Galacticraft: $version")
+base.archivesName.set(modName)
+
+loom {
+    accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
+    mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
+
+    runs {
+        register("datagen") {
+            server()
+            name("Data Generation")
+            runDir("build/datagen")
+            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation=false", "-Dmixin.debug.export=true")
+        }
+        register("datagenClient") {
+            client()
+            name("Data Generation Client")
+            runDir("build/datagen")
+            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation", "-Dmixin.debug.export=true")
+        }
+        register("gametest") {
+            server()
+            name("Game Test")
+            source(sourceSets.test.get())
+            vmArgs("-Dfabric-api.gametest", "-Dmixin.debug.export=true")
+        }
+        register("gametestClient") {
+            client()
+            name("Game Test Client")
+            source(sourceSets.test.get())
+            vmArgs("-Dfabric-api.gametest", "-Dmixin.debug.export=true")
+        }
+    }
+}
+
 dependencies {
-    // Minecraft, Mappings, Loader
-    minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings(loom.officialMojangMappings())
-    modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
-
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
-
     // Mandatory Dependencies (Included with Jar-In-Jar)
-//    includedDependency("dev.monarkhes:myron:$myronVersion") {
-//        exclude(group = "net.fabricmc")
-//        exclude(group = "net.fabricmc.fabric-api")
-//    }
+    modApi(project(":GalacticraftApi"))
+
     listOf(
         "model_loader",
         "extensions",
@@ -195,11 +236,7 @@ dependencies {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     }
-    includedDependency("dev.galacticraft:GalacticraftAPI:$galacticraftApiVersion") {
-        exclude(group = "net.fabricmc")
-        exclude(group = "net.fabricmc.fabric-api")
-        exclude(group = "dev.galacticraft", module = "MachineLib")
-    }
+
     includedDependency("dev.galacticraft:MachineLib:$machineLibVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
@@ -219,22 +256,13 @@ dependencies {
     // at runtime, use the full JEI jar for Fabric
     modRuntimeOnly("mezz.jei:jei-${minecraftVersion}-fabric:${jeiVersion}")
 
-    // Runtime Dependencies
-    modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 }
 
-tasks.processResources {
-    inputs.property("version", project.version)
-
-    filesMatching("fabric.mod.json") {
-        expand("version" to project.version)
-    }
-
-    // Minify json resources
-    // https://stackoverflow.com/questions/41028030/gradle-minimize-json-resources-in-processresources#41029113
-    doLast {
-        fileTree(mapOf("dir" to outputs.files.asPath, "includes" to listOf("**/*.json", "**/*.mcmeta"))).forEach {
-                file: File -> file.writeText(groovy.json.JsonOutput.toJson(groovy.json.JsonSlurper().parse(file)))
+loom {
+    subprojects.forEach {
+        interfaceInjection {
+            interfaceInjectionSourceSets.add(it.sourceSets.main)
         }
     }
 }
@@ -279,20 +307,6 @@ publishing {
             }
         }
     }
-}
-
-license {
-    setHeader(project.file("LICENSE_HEADER.txt"))
-    include("**/dev/galacticraft/**/*.java")
-    include("build.gradle.kts")
-    ext {
-        set("year", "2022")
-        set("company", "Team Galacticraft")
-    }
-}
-
-quiltflower {
-    addToRuntimeClasspath.set(true)
 }
 
 tasks.withType(JavaCompile::class) {

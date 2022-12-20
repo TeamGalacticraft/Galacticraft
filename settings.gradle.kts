@@ -20,3 +20,5 @@ pluginManagement {
 }
 
 rootProject.name = "Galacticraft"
+
+include("GalacticraftApi")

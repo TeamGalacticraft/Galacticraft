@@ -1,0 +1,29 @@
+{
+  "galaxy.galacticraft-api.milky_way.name": "Milky Way",
+  "galaxy.galacticraft-api.milky_way.desc": "",
+  "star.galacticraft-api.sol.name": "Sol",
+  "star.galacticraft-api.sol.desc": "",
+  "planet.galacticraft-api.earth.name": "Earth",
+  "planet.galacticraft-api.earth.desc": "The Overworld",
+  "ui.galacticraft-api.bodies.satellite": "Satellite",
+
+  "ui.galacticraft-api.gases.hydrogen": "Hydrogen",
+  "ui.galacticraft-api.gases.nitrogen": "Nitrogen",
+  "ui.galacticraft-api.gases.oxygen": "Oxygen",
+  "ui.galacticraft-api.gases.carbon_dioxide": "Carbon Dioxide",
+  "ui.galacticraft-api.gases.water_vapor": "Water Vapor",
+  "ui.galacticraft-api.gases.methane": "Methane",
+  "ui.galacticraft-api.gases.helium": "Helium",
+  "ui.galacticraft-api.gases.argon": "Argon",
+  "ui.galacticraft-api.gases.neon": "Neon",
+  "ui.galacticraft-api.gases.krypton": "Krypton",
+  "ui.galacticraft-api.gases.nitrous_oxide": "Nitrous Oxide",
+  "ui.galacticraft-api.gases.carbon_monoxide": "Carbon Monoxide",
+  "ui.galacticraft-api.gases.xenon": "Xenon",
+  "ui.galacticraft-api.gases.ozone": "Ozone",
+  "ui.galacticraft-api.gases.nitrous_dioxide": "Nitrous Dioxide",
+  "ui.galacticraft-api.gases.iodine": "Iodine",
+
+  "command.galacticraft-api.debug.registry.dump": "Dumped: %s",
+  "command.galacticraft-api.debug.registry.id": "%s - %s: %s"
+}

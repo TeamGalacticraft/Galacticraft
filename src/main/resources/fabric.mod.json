@@ -147,7 +147,7 @@
     }
   },
   "depends": {
-    "minecraft": ">=1.18.1",
+    "minecraft": ">=1.19.2",
     "fabricloader": ">=0.12.12",
     "galacticraft-api": ">=0.4.0-prealpha.25"
   },

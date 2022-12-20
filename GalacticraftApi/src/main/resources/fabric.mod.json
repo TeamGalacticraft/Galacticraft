@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "galacticraft-api",
+  "version": "$version",
+
+  "name": "Galacticraft Addon API",
+  "icon": "assets/galacticraft-api/icon.png",
+  "description": "Addon API for the FabricMC port of Galacticraft.",
+  "license": "MIT",
+  "contact": {
+    "homepage": "https://galacticraft.team",
+    "sources": "https://github.com/TeamGalacticraft/GalacticraftAPI",
+    "issues": "https://github.com/TeamGalacticraft/GalacticraftAPI/issues"
+  },
+  "authors": [
+    {
+      "name": "Team Galacticraft",
+      "contact": {
+        "homepage": "https://github.com/TeamGalacticraft",
+        "discord": "https://discord.gg/n3QqhMYyFK"
+      }
+    }
+  ],
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.galacticraft.impl.internal.fabric.GalacticraftAPI"
+    ],
+    "client": [
+      "dev.galacticraft.impl.internal.client.fabric.GalacticraftAPIClient"
+    ],
+    "fabric-datagen": [
+      "dev.galacticraft.impl.internal.fabric.GalacticraftAPIData"
+    ]
+  },
+  "mixins": [
+    "galacticraft-api.mixins.json"
+  ],
+  "accessWidener": "galacticraft-api.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.14",
+    "minecraft": ">=1.19.2",
+    "fabric-api-base": "*",
+    "fabric-api-lookup-api-v1": "*",
+    "fabric-command-api-v2": "*",
+    "fabric-lifecycle-events-v1": "*",
+    "fabric-networking-api-v1": "*",
+    "fabric-registry-sync-v0": "*",
+    "fabric-renderer-api-v1": "*",
+    "fabric-resource-loader-v0": "*",
+    "fabric-transfer-api-v1": "*"
+  },
+  "suggests": {
+    "modmenu": ">=4.0.0",
+    "galacticraft": "*"
+  },
+  "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/class_742": ["dev/galacticraft/api/accessor/GearInventoryProvider"],
+      "net/minecraft/class_1309": ["dev/galacticraft/api/accessor/GearInventoryProvider"],
+      "net/minecraft/class_1937": ["dev/galacticraft/api/accessor/WorldOxygenAccessor"],
+      "net/minecraft/class_2812": ["dev/galacticraft/api/accessor/ChunkOxygenAccessor"],
+      "net/minecraft/class_2818": ["dev/galacticraft/api/accessor/ChunkOxygenAccessor"],
+      "net/minecraft/class_2821": ["dev/galacticraft/api/accessor/ChunkOxygenAccessor"],
+      "net/minecraft/class_2826": ["dev/galacticraft/api/accessor/ChunkSectionOxygenAccessor"],
+      "net/minecraft/class_2839": ["dev/galacticraft/api/accessor/ChunkOxygenAccessor"],
+      "net/minecraft/class_3222": ["dev/galacticraft/api/accessor/GearInventoryProvider"]
+    },
+    "modmenu": {
+      "badges": [ "library" ],
+      "parent": "galacticraft"
+    }
+  }
+}
