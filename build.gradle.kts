@@ -139,7 +139,7 @@ allprojects {
         mappings(loom.officialMojangMappings())
         modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
 
-        modCompileOnly("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
+        modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 
         modImplementation("dev.galacticraft:MachineLib:$machineLibVersion")
     }
@@ -255,8 +255,6 @@ dependencies {
     modCompileOnlyApi("mezz.jei:jei-${minecraftVersion}-fabric-api:${jeiVersion}")
     // at runtime, use the full JEI jar for Fabric
     modRuntimeOnly("mezz.jei:jei-${minecraftVersion}-fabric:${jeiVersion}")
-
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 }
 
 loom {
