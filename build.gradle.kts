@@ -43,7 +43,7 @@ val machineLibVersion      = project.property("machinelib.version").toString()
 val architecturyVersion    = project.property("architectury.version").toString()
 val reiVersion             = project.property("rei.version").toString()
 val jeiVersion             = project.property("jei.version").toString()
-val myronVersion           = project.property("myron.version").toString()
+val dyndims                = project.property("dyndims.version").toString()
 val badpacketsVersion      = project.property("badpackets.version").toString()
 val wthitVersion           = project.property("wthit.version").toString()
 val portingLibVersion      = project.property("porting.lib.version").toString()
@@ -171,7 +171,7 @@ allprojects {
         include("**/dev/galacticraft/**/*.java")
         include("build.gradle.kts")
         ext {
-            set("year", "2022")
+            set("year", "2023")
             set("company", "Team Galacticraft")
         }
     }
@@ -216,7 +216,10 @@ loom {
 
 dependencies {
     // Mandatory Dependencies (Included with Jar-In-Jar)
-    modApi(project(":GalacticraftApi"))
+    // Cleaner way of doing this?
+    modCompileOnly(project(":GalacticraftApi"))
+    modRuntimeOnly(project(":GalacticraftApi"))
+    include(project(":GalacticraftApi"))
 
     listOf(
         "model_loader",
@@ -243,7 +246,7 @@ dependencies {
     }
     // Optional Dependencies
     optionalDependency("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
-    optionalDependency("lol.bai:badpackets:fabric-$badpacketsVersion") { isTransitive = false }
+    includedDependency("lol.bai:badpackets:fabric-$badpacketsVersion") { isTransitive = false }
     optionalDependency("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
     optionalDependency("dev.architectury:architectury-fabric:${architecturyVersion}") { isTransitive = false }
     optionalDependency("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
@@ -255,6 +258,8 @@ dependencies {
     modCompileOnlyApi("mezz.jei:jei-${minecraftVersion}-fabric-api:${jeiVersion}")
     // at runtime, use the full JEI jar for Fabric
     modRuntimeOnly("mezz.jei:jei-${minecraftVersion}-fabric:${jeiVersion}")
+
+    modImplementation("dev.galacticraft:dyndims-fabric:$dyndims")
 }
 
 loom {
@@ -305,12 +310,6 @@ publishing {
             }
         }
     }
-}
-
-tasks.withType(JavaCompile::class) {
-    dependsOn(tasks.checkLicenses)
-    options.encoding = "UTF-8"
-    options.release.set(17)
 }
 
 /**
