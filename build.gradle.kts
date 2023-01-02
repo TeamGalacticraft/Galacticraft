@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -286,7 +286,7 @@ license {
     include("**/dev/galacticraft/**/*.java")
     include("build.gradle.kts")
     ext {
-        set("year", "2022")
+        set("year", "2023")
         set("company", "Team Galacticraft")
     }
 }
