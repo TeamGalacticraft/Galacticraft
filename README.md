@@ -24,6 +24,29 @@ We will be using [architectury](https://github.com/architectury) to compile the 
 **Q:** Will Galacticraft 5 work with `*` Galacticraft 4 addon?\
 **A:** No, Galacticraft 5 is a complete rewrite, and does not have backwards compatibility with the old addon api.
 
+**Q:** I know nothing, but want to build this project:
+**A:** Okay, well this should get your started:
+
+1) IntelliJ IDEA
+2) Set JAVA_HOME = to Java 17
+3) Got to IJ settings and set Build Execution Deployment -> Build Tools ->  Gradle -> Gradle JVM Settings to JDK 17
+
+4) File -> New Project From Version Control (https://github.com/TeamGalacticraft/DynamicDimensions) via git
+5) This should build pretty smoothly.  ./gradlew assemble
+6) ./gradlew publishToMavenLocal
+7) Forget about dyndims for now.
+
+8)  File -> New Project From Version Control (https://github.com/TeamGalacticraft/GalacticraftAPI) via git
+9)  Checkout the branch found here: (https://github.com/TeamGalacticraft/GalacticraftAPI/tree/dev/0.4)
+10) This should build pretty smoothly.  ./gradlew assemble
+11) ./gradlew publishToMavenLocal
+
+12) File -> New Project From Version Control (https://github.com/TeamGalacticraft/Galacticraft) via git
+13) Checkout the branch found here: (https://github.com/TeamGalacticraft/Galacticraft/tree/minecraft/1.19+machinelib)
+14) This should build pretty smoothly.  ./gradlew assemble
+
+Optional 15) ./gradlew publishToMavenLocal  if you want to consume your new artifact locally
+
 ## Pre-Alpha Builds
 Pre-alpha builds are available for each commit to the `main` branch of this repository in the [Actions tab](https://github.com/TeamGalacticraft/Galacticraft/actions/workflows/build.yml?query=branch%3Amain) on GitHub.
 These builds are not production ready or survival playable, they exist solely for testing.\
