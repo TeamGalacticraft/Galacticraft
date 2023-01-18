@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+	  "TTT",
+	  "TTT",
+	  "TTT"
+	],
+	"key": {
+	  "T": {
+		"item": "galacticraft:tin_nugget"
+	  }
+	},
+	"result": {
+	  "item": "galacticraft:tin_ingot",
+	  "count": 1
+	}
+  }
