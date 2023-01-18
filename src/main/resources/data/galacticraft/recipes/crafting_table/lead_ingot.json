@@ -1,17 +1,17 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"pattern": [
-	  "LLL",
-	  "LLL",
-	  "LLL"
-	],
-	"key": {
-	  "L": {
-		"item": "galacticraft:lead_nugget"
-	  }
-	},
-	"result": {
-	  "item": "galacticraft:lead_ingot",
-	  "count": 1
-	}
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LLL",
+    "LLL",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+    "item": "galacticraft:lead_nugget"
+    }
+  },
+  "result": {
+    "item": "galacticraft:lead_ingot",
+    "count": 1
   }
+}

@@ -1,22 +1,22 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"pattern": [
-	  "DPD",
-	  "DBD",
-	  "DPD"
-	],
-	"key": {
-	  "D": {
-		  "item": "galacticraft:compressed_desh"
-	  },
-	  "P": {
-		  "item": "galacticraft:heavy_plating"
-	  },
-	  "B": {
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DPD",
+    "DBD",
+    "DPD"
+  ],
+  "key": {
+    "D": {
+      "item": "galacticraft:compressed_desh"
+    },
+    "P": {
+      "item": "galacticraft:heavy_plating"
+    },
+    "B": {
       "tag": "minecraft:beds"
     }
-	},
-	"result": {
-	  "item": "galacticraft:cryogenic_chamber"
-	}
+  },
+  "result": {
+    "item": "galacticraft:cryogenic_chamber"
+  }
 }
