@@ -217,6 +217,7 @@ public class GCItem {
     public static final Item HEAVY_SEALABLE_ALUMINUM_WIRE = new BlockItem(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
     public static final Item GLASS_FLUID_PIPE = new BlockItem(GCBlocks.GLASS_FLUID_PIPE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
     public static final Item ROCKET_LAUNCH_PAD = new BlockItem(GCBlocks.ROCKET_LAUNCH_PAD, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item NASA_WORKBENCH = new BlockItem(GCBlocks.NASA_WORKBENCH, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
 
     // LIGHT PANELS
     public static final Item SQUARE_LIGHT_PANEL = new BlockItem(GCBlocks.SQUARE_LIGHT_PANEL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
@@ -640,6 +641,7 @@ public class GCItem {
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE), HEAVY_SEALABLE_ALUMINUM_WIRE);
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.GLASS_FLUID_PIPE), GLASS_FLUID_PIPE);
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.ROCKET_LAUNCH_PAD), ROCKET_LAUNCH_PAD);
+        Registry.register(Registry.ITEM, Constant.id(Constant.Block.NASA_WORKBENCH), NASA_WORKBENCH);
 
         // LIGHT PANELS
         Registry.register(Registry.ITEM, Constant.id(Constant.Block.SQUARE_LIGHT_PANEL), SQUARE_LIGHT_PANEL);

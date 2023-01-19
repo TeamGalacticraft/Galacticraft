@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SCS",
+    "LWL",
+    "STS"
+  ],
+  "key": {
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    },
+    "C": {
+      "item": "minecraft:crafting_table"
+    },
+    "L": {
+      "item": "minecraft:lever"
+    },
+    "W": {
+      "item": "galacticraft:advanced_wafer"
+    },
+    "T": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "result": {
+    "item": "galacticraft:nasa_workbench"
+  }
+}

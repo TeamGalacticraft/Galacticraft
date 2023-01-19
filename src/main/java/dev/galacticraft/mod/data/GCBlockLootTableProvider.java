@@ -277,6 +277,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         );
 
         dropSelf(ROCKET_LAUNCH_PAD);
+        dropSelf(NASA_WORKBENCH);
         dropSelf(AIR_LOCK_CONTROLLER);
         dropSelf(AIR_LOCK_FRAME);
 
