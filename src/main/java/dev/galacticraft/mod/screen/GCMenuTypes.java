@@ -55,6 +55,10 @@ public class GCMenuTypes {
             RecipeMachineMenu.createFactory(() -> GCMenuTypes.CIRCUIT_FABRICATOR_HANDLER, 94)
     );
 
+//     public static final ExtendedScreenHandlerType<NasaWorkbenchMenu> NASA_WORKBENCH_HANDLER = new ExtendedScreenHandlerType<>(NasaWorkbenchMenu::new);
+//     public static final MenuType<NasaWorkbenchMenu> NASA_WORKBENCH_HANDLER = new ExtendedScreenHandlerType<>(NasaWorkbenchMenu::new); //?
+    public static final MenuType<NasaWorkbenchMenu> NASA_WORKBENCH_HANDLER = new MenuType<>(NasaWorkbenchMenu::new); //?
+
     public static final ExtendedScreenHandlerType<CompressorMenu> COMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(CompressorMenu::new);
 
     public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, CompressingRecipe, ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(
@@ -129,5 +133,7 @@ public class GCMenuTypes {
         Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.FUEL_LOADER_SCREEN_HANDLER), FUEL_LOADER_HANDLER);
 
         Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.AIR_LOCK_CONTROLLER_MENU), AIRLOCK_CONTROLLER_MENU);
+
+        Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.NASA_WORKBENCH_SCREEN_HANDLER), NASA_WORKBENCH_HANDLER);
     }
 }

@@ -712,6 +712,7 @@ public interface Constant {
         String OXYGEN_SEALER_SCREEN_HANDLER = "oxygen_sealer_screen_handler";
         String FUEL_LOADER_SCREEN_HANDLER = "fuel_loader_screen_handler";
         String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
+        String NASA_WORKBENCH_SCREEN_HANDLER = "nasa_workbench_screen_handler";
     }
 
     interface Biome {

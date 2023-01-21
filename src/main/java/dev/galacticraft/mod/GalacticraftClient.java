@@ -127,6 +127,7 @@ public class GalacticraftClient implements ClientModInitializer {
         MenuScreens.register(GCMenuTypes.OXYGEN_SEALER_HANDLER, OxygenSealerScreen::new);
         MenuScreens.register(GCMenuTypes.FUEL_LOADER_HANDLER, FuelLoaderScreen::new);
         MenuScreens.register(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, AirlockControllerScreen::new);
+        MenuScreens.register(GCMenuTypes.NASA_WORKBENCH_HANDLER, NasaWorkbenchScreen::new);
 
         EntityRendererRegistry.register(GCEntityTypes.EVOLVED_ZOMBIE, EvolvedZombieRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.EVOLVED_CREEPER, EvolvedCreeperEntityRenderer::new);
