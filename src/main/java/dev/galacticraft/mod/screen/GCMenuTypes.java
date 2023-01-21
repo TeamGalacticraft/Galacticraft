@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.screen;
 
+import dev.galacticraft.api.entity.Rocket;
 import dev.galacticraft.machinelib.api.screen.RecipeMachineMenu;
 import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
 import dev.galacticraft.mod.Constant;
@@ -54,10 +55,6 @@ public class GCMenuTypes {
     public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, FabricationRecipe, CircuitFabricatorBlockEntity>> CIRCUIT_FABRICATOR_HANDLER = new ExtendedScreenHandlerType<>(
             RecipeMachineMenu.createFactory(() -> GCMenuTypes.CIRCUIT_FABRICATOR_HANDLER, 94)
     );
-
-//     public static final ExtendedScreenHandlerType<NasaWorkbenchMenu> NASA_WORKBENCH_HANDLER = new ExtendedScreenHandlerType<>(NasaWorkbenchMenu::new);
-//     public static final MenuType<NasaWorkbenchMenu> NASA_WORKBENCH_HANDLER = new ExtendedScreenHandlerType<>(NasaWorkbenchMenu::new); //?
-    public static final MenuType<NasaWorkbenchMenu> NASA_WORKBENCH_HANDLER = new MenuType<>(NasaWorkbenchMenu::new); //?
 
     public static final ExtendedScreenHandlerType<CompressorMenu> COMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(CompressorMenu::new);
 
@@ -106,6 +103,11 @@ public class GCMenuTypes {
     public static final ExtendedScreenHandlerType<FuelLoaderMenu> FUEL_LOADER_HANDLER = new ExtendedScreenHandlerType<>(FuelLoaderMenu::new);
 
     public static final MenuType<AirlockControllerMenu> AIRLOCK_CONTROLLER_MENU = new MenuType<>(AirlockControllerMenu::new);
+    
+//     public static final ExtendedScreenHandlerType<NasaWorkbenchMenu> NASA_WORKBENCH_HANDLER = new ExtendedScreenHandlerType<>(NasaWorkbenchMenu::new);
+//     public static final MenuType<NasaWorkbenchMenu> NASA_WORKBENCH_HANDLER = new ExtendedScreenHandlerType<>(NasaWorkbenchMenu::new); //?
+//     public static final MenuType<AbstractNasaWorkbenchMenu> NASA_WORKBENCH_HANDLER = new MenuType<>(AbstractNasaWorkbenchMenu::new); //?
+    public static final MenuType<RocketWorkbenchMenu> ROCKET_WORKBENCH_MENU = new MenuType<>(RocketWorkbenchMenu::new);
 
     public static void register() {
         Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.PLAYER_INVENTORY_SCREEN_HANDLER), PLAYER_INV_GC_HANDLER);
@@ -134,6 +136,7 @@ public class GCMenuTypes {
 
         Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.AIR_LOCK_CONTROLLER_MENU), AIRLOCK_CONTROLLER_MENU);
 
-        Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.NASA_WORKBENCH_SCREEN_HANDLER), NASA_WORKBENCH_HANDLER);
+        // Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.NASA_WORKBENCH_SCREEN_HANDLER), NASA_WORKBENCH_HANDLER);
+        Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.ROCKET_WORKBENCH_MENU), ROCKET_WORKBENCH_MENU);
     }
 }

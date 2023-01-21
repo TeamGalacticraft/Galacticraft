@@ -26,43 +26,32 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.gui.widget.CheckboxButton;
-import dev.galacticraft.mod.screen.NasaWorkbenchMenu;
+import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class NasaWorkbenchScreen extends AbstractContainerScreen<NasaWorkbenchMenu> { // recipe update listener
-    private static final ResourceLocation TEXTURE = Constant.id("textures/gui/air_lock_controller.png");
+public class RocketWorkbenchScreen<M extends RocketWorkbenchMenu> extends AbstractContainerScreen<M> {
+    private static final ResourceLocation TEXTURE = Constant.id("textures/gui/rocketbench.png");
 
-    public NasaWorkbenchScreen(NasaWorkbenchMenu menu, Inventory inventory, Component component) {
+    public RocketWorkbenchScreen(M menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-        addRenderableWidget(new CheckboxButton(this.leftPos + 8, this.topPos + 20));
+        this.imageWidth = 176;
+        this.imageHeight = 220;
+        //TODO Auto-generated constructor stub
     }
 
     @Override
     protected void renderBg(PoseStack poseStack, float f, int i, int j) {
         // TODO Auto-generated method stub
-        // RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        // RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        // int k = this.leftPos;
-        // int l = (this.height - this.imageHeight) / 2;
-        this.blit(poseStack, this.leftPos, this.topPos, 0, 0, 256, 256);
-    }
-        
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
 
-    // @Override
-    // protected void renderBg(PoseStack poseStack, int i, int j, float f) {
-    // 	this.renderBackground(poseStack);
-    // 	// TODO Auto-generated method stub
-        
-    // }
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        this.blit(poseStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
+        RenderSystem.disableBlend();
+    }
+    
 }

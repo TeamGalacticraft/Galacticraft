@@ -22,38 +22,15 @@
 
 package dev.galacticraft.mod.screen;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ItemStack;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class NasaWorkbenchMenu extends AbstractContainerMenu { // I think this is the right superclass? // statics?
+public class RocketWorkbenchMenu extends AbstractNasaWorkbenchMenu {
 
-	public NasaWorkbenchMenu(int syncId, Player player) { // THIS ONLY EXECUTES ON SERVER WE CAN SAFELY CAST PLAYER TO SERVERPLAYER
-		// I think we need to communicate with the server here?d
-		super(GCMenuTypes.NASA_WORKBENCH_HANDLER, syncId); // should be GCMenuType.NASA_WORKBENCH
-	}
+    public RocketWorkbenchMenu(int syncId, Inventory inv) {
+        super(syncId, inv, inv.player, GCMenuTypes.ROCKET_WORKBENCH_MENU, 220);
+        //TODO Auto-generated constructor stub
+    }
 
-	public NasaWorkbenchMenu(int syncId, Inventory inv) { //, FriendlyByteBuf buf)
-		// can get inv.player.level.getBlockEntity(buf.readBlockPos()) the block data here
-		this(syncId, inv.player);
-	}
+    // public RocketWorkbenchMenu(int syncId, Inventory inv, Player player) {
 
-	@Override
-	public ItemStack quickMoveStack(Player var1, int var2) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean stillValid(Player var1) {
-		// TODO Auto-generated method stub
-		return true;
-	}
 }

@@ -22,25 +22,21 @@
 
 package dev.galacticraft.mod.content.block.special;
 
-import dev.galacticraft.mod.screen.NasaWorkbenchMenu;
+import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class NasaWorkbenchBlock extends Block implements MenuProvider {
-    // private static final Component CONTAINER_TITLE = Component.translatable("container.crafting");
 
     public NasaWorkbenchBlock(Properties properties) {
         super(properties);
@@ -51,34 +47,17 @@ public class NasaWorkbenchBlock extends Block implements MenuProvider {
         if (level.isClientSide) { // little confused with the client server relation here, why success if client but consume if other?
             return InteractionResult.SUCCESS;
         }
-        // MenuProvider menuProvider = blockState.getMenuProvider(level, blockPos);
-        player.openMenu(this);
-        // player.awardStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
+        player.openMenu(this); // this?
         return InteractionResult.CONSUME;
     }
 
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
-        // TODO Auto-generated method stub
-        return new NasaWorkbenchMenu(syncId, player);
+        return new RocketWorkbenchMenu(syncId, inv); //?
     }
 
     @Override
     public Component getDisplayName() {
-        // TODO Auto-generated method stub
-        return Component.literal("Nasa Workbench");
+        return Component.literal("Nasa Workbench"); // TODO: localize
     }
-
-
-    // @Override
-    // @Deprecated
-    // public MenuProvider getMenuProvider(BlockState blockState, Level level, BlockPos blockPos) { // method needed?
-    //     // return new SimpleMenuProvider((i, inventory, player) -> new CraftingMenu(i, inventory, ContainerLevelAccess.create(level, blockPos)), CONTAINER_TITLE);
-    //     return new SimpleMenuProvider((i, inventory, player) -> new NasaWorkbenchMenu(i, player), CONTAINER_TITLE);
-    // }
-
-    // @Override
-    // public AirlockControllerMenu createMenu(int syncId, Inventory inventory, Player player) {
-    //     return new AirlockControllerMenu(syncId, inventory);
-    // }
 }
