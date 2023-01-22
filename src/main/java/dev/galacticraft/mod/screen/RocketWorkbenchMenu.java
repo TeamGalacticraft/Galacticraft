@@ -23,14 +23,38 @@
 package dev.galacticraft.mod.screen;
 
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.ResultSlot;
+import net.minecraft.world.inventory.Slot;
 
 public class RocketWorkbenchMenu extends AbstractNasaWorkbenchMenu {
+    private final ResultContainer resultSlots = new ResultContainer();
 
     public RocketWorkbenchMenu(int syncId, Inventory inv) {
-        super(syncId, inv, inv.player, GCMenuTypes.ROCKET_WORKBENCH_MENU, 220);
-        //TODO Auto-generated constructor stub
+        super(syncId, inv, GCMenuTypes.ROCKET_WORKBENCH_MENU, 220, 17);
+        // this OR super ????
+
+        this.addSlot(new ResultSlot(inv.player, this.craftSlots, this.resultSlots, 0, 142, 96));
+        // Top Row
+        this.addSlot(new Slot(this.craftSlots, 0, 48, 19));
+        // Main Body
+        for (int i = 0; i < 3; i++) {
+            this.addSlot(new Slot(this.craftSlots, (i*2)+1, 39, 37+(i*18)));
+            this.addSlot(new Slot(this.craftSlots, (i*2)+2, 57, 37+(i*18)));
+        }
+        // 4 piece row
+        for (int i = 0; i < 4; i++) {
+            this.addSlot(new Slot(this.craftSlots, i+7, 21+(i*18), 91));
+        }
+        // Bottom row
+        for (int i = 0; i < 3; i++) {
+            this.addSlot(new Slot(this.craftSlots, i+11, 21+(i*27), 109));
+        }
+        // Chest addons
+        for (int i = 0; i < 3; i++) {
+            this.addSlot(new Slot(this.craftSlots, i+14, 93+(i*26), 12));
+        }
     }
 
     // public RocketWorkbenchMenu(int syncId, Inventory inv, Player player) {
-
 }

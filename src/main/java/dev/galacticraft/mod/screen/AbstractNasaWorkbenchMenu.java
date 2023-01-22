@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.screen;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -36,27 +36,56 @@ import net.minecraft.world.item.ItemStack;
  */
 public abstract class AbstractNasaWorkbenchMenu extends AbstractContainerMenu { // I think this is the right superclass? // statics?
 
-    protected int menuHeight;
+    protected final int menuHeight;
+    protected final CraftingContainer craftSlots;
 
-    public AbstractNasaWorkbenchMenu(int syncId, Inventory inv, Player player, MenuType type, int menuHeight) { // THIS ONLY EXECUTES ON SERVER WE CAN SAFELY CAST PLAYER TO SERVERPLAYER
+    protected <M extends AbstractNasaWorkbenchMenu> AbstractNasaWorkbenchMenu(int syncId, Inventory inv, MenuType<RocketWorkbenchMenu> rocketWorkbenchMenu, int menuHeight, int craftSlots) { // THIS ONLY EXECUTES ON SERVER WE CAN SAFELY CAST PLAYER TO SERVERPLAYER
         // I think we need to communicate with the server here?d
-        super(type, syncId);
+        super(rocketWorkbenchMenu, syncId);
+
+        this.menuHeight = menuHeight;
+        this.craftSlots = new CraftingContainer(this, craftSlots, 1);
 
         // Connect Inventory
         for (int i = 0; i < 3; ++i) { // we are gonna make this work irregardless of size
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(inv, j + (i + 1) * 9, 0 + 8 + j * 18, menuHeight - 82 + i * 18)); // not in love with hard coding
+                this.addSlot(new Slot(inv, j + (i + 1) * 9, 0 + 8 + j * 18, this.menuHeight - 82 + i * 18));
             }
         }
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(inv, i, 0 + 8 + i * 18, menuHeight - 24)); // TODO: refactor hardcoding
+            this.addSlot(new Slot(inv, i, 0 + 8 + i * 18, this.menuHeight - 24));
         }
     }
 
-    // Deal with here or in subclass?
     @Override
     public boolean stillValid(Player var1) {
         // TODO Auto-generated method stub
-        return true;
+        return true; // should do up call to protected static AbstractNasaWorkbenchMenu.stillValid
+    }
+
+    @Override
+    public ItemStack quickMoveStack(Player player, int index) {
+        ItemStack itemStack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) { // null check for slot?
+            ItemStack itemStack2 = slot.getItem();
+            itemStack = itemStack2.copy();
+            if (index < this.craftSlots.getContainerSize()) {
+                if (!this.moveItemStackTo(itemStack2, this.craftSlots.getContainerSize(), this.slots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.moveItemStackTo(itemStack2, 0, this.craftSlots.getContainerSize(), false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (itemStack2.isEmpty()) {
+                slot.set(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+        }
+
+
+        return itemStack;
     }
 }
