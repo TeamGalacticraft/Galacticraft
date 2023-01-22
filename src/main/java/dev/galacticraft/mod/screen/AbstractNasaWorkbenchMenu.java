@@ -47,15 +47,17 @@ public abstract class AbstractNasaWorkbenchMenu extends AbstractContainerMenu { 
         this.craftSlots = new CraftingContainer(this, craftSlots, 1);
 
         // Connect Inventory
-        for (int i = 0; i < 3; ++i) { // we are gonna make this work irregardless of size
+        for (int i = 0; i < 9; ++i) {
+            this.addSlot(new Slot(inv, i, 0 + 8 + i * 18, this.menuHeight - 24));
+        }
+        for (int i = 2; i >= 0; --i) { // we are gonna make this work irregardless of size
             for (int j = 0; j < 9; ++j) {
                 this.addSlot(new Slot(inv, j + (i + 1) * 9, 0 + 8 + j * 18, this.menuHeight - 82 + i * 18));
             }
         }
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(inv, i, 0 + 8 + i * 18, this.menuHeight - 24));
-        }
     }
+
+    protected abstract boolean validForBlueprintSpot(int index, ItemStack stack); // int index or Slot slot?
 
     @Override
     public boolean stillValid(Player var1) {
@@ -67,11 +69,12 @@ public abstract class AbstractNasaWorkbenchMenu extends AbstractContainerMenu { 
     public ItemStack quickMoveStack(Player player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.hasItem()) { // null check for slot?
+        if (slot != null && slot.hasItem()) { // null check for slot needed?
             ItemStack itemStack2 = slot.getItem();
             itemStack = itemStack2.copy();
-            if (index < this.craftSlots.getContainerSize()) {
-                if (!this.moveItemStackTo(itemStack2, this.craftSlots.getContainerSize(), this.slots.size(), true)) {
+            if (index <= 35) { // technically should not hardcode this since other mods may change inventory size
+                // Guard
+                if (this.validForBlueprintSpot(index, itemStack2) && !this.moveItemStackTo(itemStack2, this.craftSlots.getContainerSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
             } else if (!this.moveItemStackTo(itemStack2, 0, this.craftSlots.getContainerSize(), false)) {
@@ -84,8 +87,6 @@ public abstract class AbstractNasaWorkbenchMenu extends AbstractContainerMenu { 
                 slot.setChanged();
             }
         }
-
-
         return itemStack;
     }
 }

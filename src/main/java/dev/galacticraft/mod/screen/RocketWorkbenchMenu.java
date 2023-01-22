@@ -22,13 +22,19 @@
 
 package dev.galacticraft.mod.screen;
 
+import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 
 public class RocketWorkbenchMenu extends AbstractNasaWorkbenchMenu {
     private final ResultContainer resultSlots = new ResultContainer();
+    private static final RecipeType RECIPE_TYPE = GalacticraftRecipe.ROCKETEERING_TYPE;
 
     public RocketWorkbenchMenu(int syncId, Inventory inv) {
         super(syncId, inv, GCMenuTypes.ROCKET_WORKBENCH_MENU, 220, 17);
@@ -54,6 +60,7 @@ public class RocketWorkbenchMenu extends AbstractNasaWorkbenchMenu {
         for (int i = 0; i < 3; i++) {
             this.addSlot(new Slot(this.craftSlots, i+14, 93+(i*26), 12));
         }
+        this.resultSlots.setItem(0, new ItemStack(GCItem.ALUMINUM_ORE, 1));
     }
 
     // public RocketWorkbenchMenu(int syncId, Inventory inv, Player player) {
