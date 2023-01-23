@@ -22,8 +22,14 @@
 
 package dev.galacticraft.mod.screen;
 
+import java.util.Optional;
+
 import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
+import dev.galacticraft.mod.recipe.RocketeeringRecipe;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ResultContainer;
@@ -31,16 +37,16 @@ import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 public class RocketWorkbenchMenu extends AbstractNasaWorkbenchMenu {
     private final ResultContainer resultSlots = new ResultContainer();
-    private static final RecipeType RECIPE_TYPE = GalacticraftRecipe.ROCKETEERING_TYPE;
 
     public RocketWorkbenchMenu(int syncId, Inventory inv) {
-        super(syncId, inv, GCMenuTypes.ROCKET_WORKBENCH_MENU, 220, 17);
+        super(syncId, inv, GCMenuTypes.ROCKET_WORKBENCH_MENU, 220, 17, GalacticraftRecipe.ROCKETEERING_TYPE);
         // this OR super ????
 
-        this.addSlot(new ResultSlot(inv.player, this.craftSlots, this.resultSlots, 0, 142, 96));
+        this.addSlot(new ResultSlot(inv.player, this.craftSlots, this.resultSlots, 0, 142, 96)); // first or last?
         // Top Row
         this.addSlot(new Slot(this.craftSlots, 0, 48, 19));
         // Main Body
@@ -60,8 +66,31 @@ public class RocketWorkbenchMenu extends AbstractNasaWorkbenchMenu {
         for (int i = 0; i < 3; i++) {
             this.addSlot(new Slot(this.craftSlots, i+14, 93+(i*26), 12));
         }
-        this.resultSlots.setItem(0, new ItemStack(GCItem.ALUMINUM_ORE, 1));
     }
 
-    // public RocketWorkbenchMenu(int syncId, Inventory inv, Player player) {
+    // TODO: should extract this method to a intermediate class between this and super
+    @Override
+    public void slotsChanged(Container container) {
+        RocketeeringRecipe recipe;
+        Level level = this.inventory.player.level;
+        if (level.isClientSide) {
+            return; // guard for safety
+        }
+        ServerPlayer serverPlayer = (ServerPlayer)this.inventory.player;
+
+        ItemStack itemStack = ItemStack.EMPTY; 
+        // Need to do a catch
+        Optional<RocketeeringRecipe> optional = level.getServer().getRecipeManager().getRecipeFor(this.recipeType, this.craftSlots, level); // throwing error
+        if (optional.isPresent() && resultSlots.setRecipeUsed(level, serverPlayer, recipe = optional.get())) {
+            itemStack = recipe.assemble(craftSlots);
+        }
+        this.resultSlots.setItem(36, itemStack);
+        this.setRemoteSlot(36, itemStack); //36
+        serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(this.containerId, this.incrementStateId(), 36, itemStack));
+    }
+
+    @Override
+    protected boolean validForBlueprintSpot(int index, ItemStack stack) {
+        return true;
+    }
 }

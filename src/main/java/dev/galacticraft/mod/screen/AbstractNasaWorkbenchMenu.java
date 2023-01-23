@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.screen;
 
+import javax.management.MBeanAttributeInfo;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -30,21 +32,26 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public abstract class AbstractNasaWorkbenchMenu extends AbstractContainerMenu { // I think this is the right superclass? // statics?
-
+    protected final RecipeType<? extends Recipe> recipeType;
     protected final int menuHeight;
     protected final CraftingContainer craftSlots;
+    protected final Inventory inventory;
 
-    protected <M extends AbstractNasaWorkbenchMenu> AbstractNasaWorkbenchMenu(int syncId, Inventory inv, MenuType<RocketWorkbenchMenu> rocketWorkbenchMenu, int menuHeight, int craftSlots) { // THIS ONLY EXECUTES ON SERVER WE CAN SAFELY CAST PLAYER TO SERVERPLAYER
+    protected AbstractNasaWorkbenchMenu(int syncId, Inventory inv, MenuType<? extends AbstractNasaWorkbenchMenu> rocketWorkbenchMenu, int menuHeight, int craftSlots, RecipeType<? extends Recipe> recipeType) { // THIS ONLY EXECUTES ON SERVER WE CAN SAFELY CAST PLAYER TO SERVERPLAYER
         // I think we need to communicate with the server here?d
         super(rocketWorkbenchMenu, syncId);
 
         this.menuHeight = menuHeight;
+        this.recipeType = recipeType;
         this.craftSlots = new CraftingContainer(this, craftSlots, 1);
+        this.inventory = inv;
 
         // Connect Inventory
         for (int i = 0; i < 9; ++i) {
@@ -60,10 +67,13 @@ public abstract class AbstractNasaWorkbenchMenu extends AbstractContainerMenu { 
     protected abstract boolean validForBlueprintSpot(int index, ItemStack stack); // int index or Slot slot?
 
     @Override
-    public boolean stillValid(Player var1) {
+    public boolean stillValid(Player player) {
         // TODO Auto-generated method stub
-        return true; // should do up call to protected static AbstractNasaWorkbenchMenu.stillValid
+        // return true; // should do up call to protected static AbstractNasaWorkbenchMenu.stillValid
+        return this.craftSlots.stillValid(player); // not great here?
     }
+
+    
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {

@@ -887,10 +887,12 @@ public interface Constant {
     interface Recipe {
         String FABRICATION = "fabrication";
         String COMPRESSING = "compressing";
+        String ROCKETEERING = "rocketeering";
         interface Serializer {
             String FABRICATION = "fabrication";
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
+            String ROCKETEERING = "rocketeering";
         }
     }
 

@@ -1,0 +1,18 @@
+{
+  "type": "galacticraft:rocketeering",
+  "pattern": [
+    "DSSSSSSSSSSSSSSSS"
+  ],
+  "key": {
+    "D": {
+      "item": "minecraft:dirt"
+    },
+    "S": {
+      "item": "minecraft:stone"
+    }
+  },
+  "result": {
+    "item": "minecraft:sand",
+    "count": 1
+  }
+}
