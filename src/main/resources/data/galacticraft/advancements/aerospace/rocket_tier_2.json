@@ -1,19 +1,19 @@
 {
-	"display": {
-	  "icon": {
-		"item": "galacticraft:tier_2_rocket_schematic"
-	  },
-	  "title": "Curiosity and Perseverance",
-	  "description": "Obtain access to the Tier 2 Rocket plans",
-	  "frame": "goal",
-	  "show_toast": true,
-	  "announce_to_chat": true
-	},
-	"parent": "galacticraft:aerospace/rocket_tier_1",
-	"criteria": {
-	  "graduated": {
-		"trigger": "minecraft:impossible"
-	  }
-	}
+  "display": {
+    "icon": {
+      "item": "galacticraft:tier_2_rocket_schematic"
+    },
+    "title": "Curiosity and Perseverance",
+    "description": "Obtain access to the Tier 2 Rocket plans",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "galacticraft:aerospace/rocket_tier_1",
+  "criteria": {
+    "graduated": {
+      "trigger": "minecraft:impossible"
+    }
   }
+}
   

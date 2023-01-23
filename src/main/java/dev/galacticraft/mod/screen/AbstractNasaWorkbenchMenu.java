@@ -22,27 +22,35 @@
 
 package dev.galacticraft.mod.screen;
 
+import java.util.Optional;
+
+import dev.galacticraft.mod.recipe.RocketeeringRecipe;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public abstract class AbstractNasaWorkbenchMenu extends AbstractContainerMenu { // I think this is the right superclass? // statics?
+public abstract class AbstractNasaWorkbenchMenu extends AbstractContainerMenu { // New recipes should extend this
     protected final RecipeType<? extends Recipe> recipeType;
     protected final int menuHeight;
     protected final CraftingContainer craftSlots;
+    protected final ResultContainer resultSlots = new ResultContainer();
     protected final Inventory inventory;
 
-    protected AbstractNasaWorkbenchMenu(int syncId, Inventory inv, MenuType<? extends AbstractNasaWorkbenchMenu> rocketWorkbenchMenu, int menuHeight, int craftSlots, RecipeType<? extends Recipe> recipeType) { // THIS ONLY EXECUTES ON SERVER WE CAN SAFELY CAST PLAYER TO SERVERPLAYER
-        // I think we need to communicate with the server here?d
+    protected AbstractNasaWorkbenchMenu(int syncId, Inventory inv, MenuType<? extends AbstractNasaWorkbenchMenu> rocketWorkbenchMenu, int menuHeight, int craftSlots, RecipeType<? extends Recipe> recipeType) {
         super(rocketWorkbenchMenu, syncId);
 
         this.menuHeight = menuHeight;
@@ -66,8 +74,7 @@ public abstract class AbstractNasaWorkbenchMenu extends AbstractContainerMenu { 
     @Override
     public boolean stillValid(Player player) {
         // TODO Auto-generated method stub
-        // return true; // should do up call to protected static AbstractNasaWorkbenchMenu.stillValid
-        return this.craftSlots.stillValid(player); // not great here?
+        return this.craftSlots.stillValid(player);
     }
 
     @Override
@@ -93,5 +100,26 @@ public abstract class AbstractNasaWorkbenchMenu extends AbstractContainerMenu { 
             }
         }
         return itemStack;
+    }
+
+    // TODO: should extract this method to a super
+    @Override
+    public void slotsChanged(Container container) {
+        RocketeeringRecipe recipe;
+        Level level = this.inventory.player.level;
+        if (level.isClientSide) {
+            return; // guard for safety
+        }
+        ServerPlayer serverPlayer = (ServerPlayer)this.inventory.player;
+
+        ItemStack itemStack = ItemStack.EMPTY; 
+        // Need to do a catch
+        Optional<RocketeeringRecipe> optional = level.getServer().getRecipeManager().getRecipeFor(this.recipeType, this.craftSlots, level); // throwing error
+        if (optional.isPresent() && resultSlots.setRecipeUsed(level, serverPlayer, recipe = optional.get())) {
+            itemStack = recipe.assemble(craftSlots);
+        }
+        this.resultSlots.setItem(36, itemStack);
+        this.setRemoteSlot(36, itemStack); //36
+        serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(this.containerId, this.incrementStateId(), 36, itemStack));
     }
 }

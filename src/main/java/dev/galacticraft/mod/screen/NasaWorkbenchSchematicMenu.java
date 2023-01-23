@@ -30,14 +30,14 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class NasaWorkbenchSchematicMenu extends AbstractContainerMenu {
-	private final int menuHeight = 177;
-	private final SimpleContainer schematicContainer; // SimpleContainer or CraftingContainer or ???
+    private final int menuHeight = 177;
+    private final SimpleContainer schematicContainer; // SimpleContainer or CraftingContainer or ???
 
-	public NasaWorkbenchSchematicMenu(int syncId, Inventory inv) {
-		super(GCMenuTypes.NASA_WORKBENCH_SCHEMATIC_MENU, syncId);
-		this.schematicContainer = new SimpleContainer(1);
-		
-		for (int i = 0; i < 9; ++i) {
+    public NasaWorkbenchSchematicMenu(int syncId, Inventory inv) {
+        super(GCMenuTypes.NASA_WORKBENCH_SCHEMATIC_MENU, syncId);
+        this.schematicContainer = new SimpleContainer(1);
+        
+        for (int i = 0; i < 9; ++i) {
             this.addSlot(new Slot(inv, i, 0 + 8 + i * 18, this.menuHeight - 24));
         }
         for (int i = 2; i >= 0; --i) { // we are gonna make this work irregardless of size
@@ -46,23 +46,23 @@ public class NasaWorkbenchSchematicMenu extends AbstractContainerMenu {
             }
         }
 
-		this.addSlot(new Slot(this.schematicContainer, 0, 80, 28)); // TODO: make this a blueprint slot
-	}
+        this.addSlot(new Slot(this.schematicContainer, 0, 80, 28));
+    }
 
-	public ItemStack getSchematic() {
-		return this.schematicContainer.getItem(0);
-	}
+    public ItemStack getSchematic() {
+        return this.schematicContainer.getItem(0);
+    }
 
-	@Override
-	public ItemStack quickMoveStack(Player var1, int var2) {
-		// TODO Auto-generated method stub
-		return ItemStack.EMPTY; // TODO: allow for shifting on/to blueprint slot
-	}
+    @Override
+    public ItemStack quickMoveStack(Player var1, int var2) {
+        // TODO Auto-generated method stub
+        return ItemStack.EMPTY; // TODO: allow for shifting on/to blueprint slot
+    }
 
-	@Override
-	public boolean stillValid(Player var1) {
-		// TODO Auto-generated method stub
-		return true; // TODO: should use a better return here than just true
-	}
-	
+    @Override
+    public boolean stillValid(Player var1) {
+        // TODO Auto-generated method stub
+        return true; // TODO: should use a better return here than just true
+    }
+    
 }

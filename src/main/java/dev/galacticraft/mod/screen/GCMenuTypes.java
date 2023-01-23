@@ -104,9 +104,6 @@ public class GCMenuTypes {
 
     public static final MenuType<AirlockControllerMenu> AIRLOCK_CONTROLLER_MENU = new MenuType<>(AirlockControllerMenu::new);
     
-//     public static final ExtendedScreenHandlerType<NasaWorkbenchMenu> NASA_WORKBENCH_HANDLER = new ExtendedScreenHandlerType<>(NasaWorkbenchMenu::new);
-//     public static final MenuType<NasaWorkbenchMenu> NASA_WORKBENCH_HANDLER = new ExtendedScreenHandlerType<>(NasaWorkbenchMenu::new); //?
-//     public static final MenuType<AbstractNasaWorkbenchMenu> NASA_WORKBENCH_HANDLER = new MenuType<>(AbstractNasaWorkbenchMenu::new); //?
     public static final MenuType<RocketWorkbenchMenu> ROCKET_WORKBENCH_MENU = new MenuType<>(RocketWorkbenchMenu::new);
     public static final MenuType<NasaWorkbenchSchematicMenu> NASA_WORKBENCH_SCHEMATIC_MENU = new MenuType<>(NasaWorkbenchSchematicMenu::new);
 
@@ -137,7 +134,6 @@ public class GCMenuTypes {
 
         Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.AIR_LOCK_CONTROLLER_MENU), AIRLOCK_CONTROLLER_MENU);
 
-        // Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.NASA_WORKBENCH_SCREEN_HANDLER), NASA_WORKBENCH_HANDLER);
         Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.ROCKET_WORKBENCH_MENU), ROCKET_WORKBENCH_MENU);
         Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.NASA_WORKBENCH_SCHEMATIC_MENU), NASA_WORKBENCH_SCHEMATIC_MENU);
     }
