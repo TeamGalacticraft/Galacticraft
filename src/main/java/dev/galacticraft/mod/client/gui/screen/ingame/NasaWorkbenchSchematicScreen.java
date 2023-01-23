@@ -23,18 +23,18 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
+import dev.galacticraft.mod.screen.NasaWorkbenchSchematicMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class RocketWorkbenchScreen<M extends RocketWorkbenchMenu> extends AbstractNasaWorkbenchScreen<M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/gui/rocketbench.png");
+public class NasaWorkbenchSchematicScreen<M extends NasaWorkbenchSchematicMenu> extends AbstractNasaWorkbenchScreen<M> {
+    private static final ResourceLocation TEXTURE = Constant.id("textures/gui/schematicpage.png");
 
-    public RocketWorkbenchScreen(M menu, Inventory inventory, Component component) {
-        super(menu, inventory, component, TEXTURE, 1);
-        
+    public NasaWorkbenchSchematicScreen(M abstractContainerMenu, Inventory inventory, Component component) {
+        super(abstractContainerMenu, inventory, component, TEXTURE, 0);
+
         this.imageWidth = 176;
-        this.imageHeight = 220;
+        this.imageHeight = 177;
     }
 }

@@ -32,6 +32,7 @@ import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.OxygenBubbleDistributorBlockEntity;
+import dev.galacticraft.mod.content.block.special.NasaWorkbenchBlock.NasaWorkbenchHandler;
 import dev.galacticraft.mod.screen.BubbleDistributorMenu;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -143,5 +144,9 @@ public class GCServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.CREATE_SATELLITE, (server, player, handler, buf, responseSender) -> {
             SatelliteType.registerSatellite(server, player, Objects.requireNonNull(server.registryAccess().registryOrThrow(AddonRegistry.CELESTIAL_BODY_KEY).get(buf.readResourceLocation())), server.getStructureManager().get(Constant.Structure.SPACE_STATION).orElseThrow());
         });
+
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "change_workbench_menu"), ((server, player, handler, buf, responseSender) -> {
+            player.openMenu(new NasaWorkbenchHandler(buf.readInt(), buf.readBoolean()));
+        }));
     }
 }

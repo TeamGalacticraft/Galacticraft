@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special;
 
+import dev.galacticraft.mod.screen.NasaWorkbenchSchematicMenu;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -36,7 +37,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class NasaWorkbenchBlock extends Block implements MenuProvider {
+public class NasaWorkbenchBlock extends Block {
 
     public NasaWorkbenchBlock(Properties properties) {
         super(properties);
@@ -47,17 +48,39 @@ public class NasaWorkbenchBlock extends Block implements MenuProvider {
         if (level.isClientSide) { // little confused with the client server relation here, why success if client but consume if other?
             return InteractionResult.SUCCESS;
         }
-        player.openMenu(this); // this?
+        player.openMenu(new NasaWorkbenchHandler(0, true)); // not a great memory practice
         return InteractionResult.CONSUME;
     }
 
-    @Override
-    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
-        return new RocketWorkbenchMenu(syncId, inv); //?
-    }
+    public static class NasaWorkbenchHandler implements MenuProvider {
+        private final int page;
+        private final boolean next; 
+        
+        public NasaWorkbenchHandler(int page, boolean next) {
+            this.page = page;
+            this.next = next;
+        }
 
-    @Override
-    public Component getDisplayName() {
-        return Component.literal("Nasa Workbench"); // TODO: localize
+        private int getNextPage(Player player) {
+            return (next ? page + 1 : page - 1) % 2; // TODO: use advancements 
+        }
+
+        @Override
+        public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+            int gotoPage = getNextPage(player);
+            switch (gotoPage) { // populate here when adding new recipes
+                case 0:
+                    return new NasaWorkbenchSchematicMenu(syncId, inv);
+                case 1:
+                    return new RocketWorkbenchMenu(syncId, inv);
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public Component getDisplayName() {
+            return Component.literal("Nasa Workbench"); // TODO: localize // TODO: Could add title for each schematic
+        }
     }
 }

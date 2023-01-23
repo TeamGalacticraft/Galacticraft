@@ -108,6 +108,7 @@ public class GCMenuTypes {
 //     public static final MenuType<NasaWorkbenchMenu> NASA_WORKBENCH_HANDLER = new ExtendedScreenHandlerType<>(NasaWorkbenchMenu::new); //?
 //     public static final MenuType<AbstractNasaWorkbenchMenu> NASA_WORKBENCH_HANDLER = new MenuType<>(AbstractNasaWorkbenchMenu::new); //?
     public static final MenuType<RocketWorkbenchMenu> ROCKET_WORKBENCH_MENU = new MenuType<>(RocketWorkbenchMenu::new);
+    public static final MenuType<NasaWorkbenchSchematicMenu> NASA_WORKBENCH_SCHEMATIC_MENU = new MenuType<>(NasaWorkbenchSchematicMenu::new);
 
     public static void register() {
         Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.PLAYER_INVENTORY_SCREEN_HANDLER), PLAYER_INV_GC_HANDLER);
@@ -138,5 +139,6 @@ public class GCMenuTypes {
 
         // Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.NASA_WORKBENCH_SCREEN_HANDLER), NASA_WORKBENCH_HANDLER);
         Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.ROCKET_WORKBENCH_MENU), ROCKET_WORKBENCH_MENU);
+        Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.NASA_WORKBENCH_SCHEMATIC_MENU), NASA_WORKBENCH_SCHEMATIC_MENU);
     }
 }

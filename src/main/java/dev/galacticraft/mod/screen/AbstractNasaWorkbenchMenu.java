@@ -73,8 +73,6 @@ public abstract class AbstractNasaWorkbenchMenu extends AbstractContainerMenu { 
         return this.craftSlots.stillValid(player); // not great here?
     }
 
-    
-
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;

@@ -714,6 +714,7 @@ public interface Constant {
         String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
         // String NASA_WORKBENCH_SCREEN_HANDLER = "nasa_workbench_screen_handler"; // unused?
         String ROCKET_WORKBENCH_MENU = "rocket_workbench_menu";
+        String NASA_WORKBENCH_SCHEMATIC_MENU = "nasa_workbench_schematic_menu";
     }
 
     interface Biome {
