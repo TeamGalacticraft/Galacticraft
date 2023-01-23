@@ -33,13 +33,16 @@ import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.content.block.special.NasaWorkbenchBlock.NasaWorkbenchHandler;
+import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.screen.BubbleDistributorMenu;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.item.Item;
 
 import java.util.Objects;
 
@@ -145,8 +148,19 @@ public class GCServerPacketReceiver {
             SatelliteType.registerSatellite(server, player, Objects.requireNonNull(server.registryAccess().registryOrThrow(AddonRegistry.CELESTIAL_BODY_KEY).get(buf.readResourceLocation())), server.getStructureManager().get(Constant.Structure.SPACE_STATION).orElseThrow());
         });
 
+        // TODO: extract resource location to Constant
         ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "change_workbench_menu"), ((server, player, handler, buf, responseSender) -> {
             player.openMenu(new NasaWorkbenchHandler(buf.readInt(), buf.readBoolean()));
+        }));
+
+        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "unlock_schematic"), ((server, player, handler, buf, responseSender) -> {
+            Item item = buf.readItem().getItem();
+            Advancement adv;
+            if (item.equals(GCItem.TIER_2_ROCKET_SCHEMATIC)) {
+                // TODO: add security to check with server side menu
+                adv = server.getAdvancements().getAdvancement(new ResourceLocation("galacticraft:aerospace/rocket_tier_2"));
+                player.getAdvancements().award(adv, "graduated");
+            }
         }));
     }
 }

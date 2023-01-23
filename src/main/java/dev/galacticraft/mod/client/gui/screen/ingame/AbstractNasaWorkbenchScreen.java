@@ -66,6 +66,7 @@ public class AbstractNasaWorkbenchScreen<M extends AbstractContainerMenu> extend
         // TODO: Translations
         this.addRenderableWidget(new Button(this.leftPos - 41, this.topPos + 40, 40, 20, Component.literal("Next"), (button) -> {
             // TODO: extract resource location to a constant
+            // TODO: add translations
             ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "change_workbench_menu"), new FriendlyByteBuf(PacketByteBufs.create().writeInt(this.page).writeBoolean(true)));
         }));
         this.addRenderableWidget(new Button(this.leftPos - 41, this.topPos + 62, 40, 20, Component.literal("Back"), (button) -> {

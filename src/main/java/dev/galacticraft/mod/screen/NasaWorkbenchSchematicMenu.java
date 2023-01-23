@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.screen;
 
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -30,9 +31,11 @@ import net.minecraft.world.item.ItemStack;
 
 public class NasaWorkbenchSchematicMenu extends AbstractContainerMenu {
 	private final int menuHeight = 177;
+	private final SimpleContainer schematicContainer; // SimpleContainer or CraftingContainer or ???
 
 	public NasaWorkbenchSchematicMenu(int syncId, Inventory inv) {
 		super(GCMenuTypes.NASA_WORKBENCH_SCHEMATIC_MENU, syncId);
+		this.schematicContainer = new SimpleContainer(1);
 		
 		for (int i = 0; i < 9; ++i) {
             this.addSlot(new Slot(inv, i, 0 + 8 + i * 18, this.menuHeight - 24));
@@ -43,7 +46,11 @@ public class NasaWorkbenchSchematicMenu extends AbstractContainerMenu {
             }
         }
 
-		this.addSlot(new Slot(inv, 36, 80, 28)); // TODO: make this a blueprint slot
+		this.addSlot(new Slot(this.schematicContainer, 0, 80, 28)); // TODO: make this a blueprint slot
+	}
+
+	public ItemStack getSchematic() {
+		return this.schematicContainer.getItem(0);
 	}
 
 	@Override

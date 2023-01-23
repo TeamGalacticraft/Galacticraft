@@ -22,9 +22,6 @@
 
 package dev.galacticraft.mod.screen;
 
-import javax.management.MBeanAttributeInfo;
-
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;

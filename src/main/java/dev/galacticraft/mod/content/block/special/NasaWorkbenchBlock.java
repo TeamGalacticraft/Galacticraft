@@ -22,10 +22,15 @@
 
 package dev.galacticraft.mod.content.block.special;
 
+import java.util.ArrayList;
+
 import dev.galacticraft.mod.screen.NasaWorkbenchSchematicMenu;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.ServerAdvancementManager;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -62,7 +67,24 @@ public class NasaWorkbenchBlock extends Block {
         }
 
         private int getNextPage(Player player) {
-            return (next ? page + 1 : page - 1) % 2; // TODO: use advancements 
+            ArrayList<Integer> availablePages = new ArrayList();
+            availablePages.add(0);
+            ServerPlayer serverPlayer = (ServerPlayer) player;
+            ServerAdvancementManager manager = serverPlayer.getServer().getAdvancements();
+            // TODO: Expand with advancements for new recipes in the future as rockets are added
+            if (serverPlayer.getAdvancements().getOrStartProgress(manager.getAdvancement(new ResourceLocation("galacticraft:aerospace/rocket_tier_1"))).isDone()) {
+                availablePages.add(1);
+            }
+            // if (serverPlayer.getAdvancements().getOrStartProgress(manager.getAdvancement(new ResourceLocation("galacticraft:aerospace/rocket_tier_2"))).isDone()) { }
+
+            int index = availablePages.indexOf(page);
+            int selected = (next ? index + 1 : index - 1) % availablePages.size();
+
+            if (selected >= 0) {
+                return selected;
+            } else {
+                return availablePages.size() + selected;
+            }
         }
 
         @Override
