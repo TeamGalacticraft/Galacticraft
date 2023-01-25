@@ -1,14 +1,20 @@
 {
   "type": "galacticraft:rocketeering",
   "pattern": [
-    "DSSSSSSSSSSSSSSSS"
+    "NPPPPPPFPPFFEF   "
   ],
   "key": {
-    "D": {
-      "item": "minecraft:dirt"
+    "N": {
+      "item": "galacticraft:nose_cone"
     },
-    "S": {
-      "item": "minecraft:stone"
+    "P": {
+      "item": "galacticraft:heavy_plating"
+    },
+    "F": {
+      "item": "galacticraft:rocket_fins"
+    },
+    "E": {
+      "item": "galacticraft:e"
     }
   },
   "result": {

@@ -379,6 +379,11 @@ public class GCItem {
     public static final Item TIER_2_HEAVY_DUTY_PLATE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
     public static final Item TIER_3_HEAVY_DUTY_PLATE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
 
+    // ROCKET PARTS
+    public static final Item NOSE_CONE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item ROCKET_FINS = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item ROCKET_BOTTOM = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+
     // ARMOR
     public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, EquipmentSlot.HEAD, (new Item.Properties().tab(GCItemGroup.ITEMS_GROUP)));
     public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, EquipmentSlot.CHEST, (new Item.Properties().tab(GCItemGroup.ITEMS_GROUP)));
@@ -802,6 +807,11 @@ public class GCItem {
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.TIER_1_HEAVY_DUTY_PLATE), TIER_1_HEAVY_DUTY_PLATE);
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.TIER_2_HEAVY_DUTY_PLATE), TIER_2_HEAVY_DUTY_PLATE);
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.TIER_3_HEAVY_DUTY_PLATE), TIER_3_HEAVY_DUTY_PLATE);
+
+        // ROCKET PARTS
+        Registry.register(Registry.ITEM, Constant.id(Constant.Item.NOSE_CONE), NOSE_CONE);
+        Registry.register(Registry.ITEM, Constant.id(Constant.Item.ROCKET_FINS), ROCKET_FINS);
+        Registry.register(Registry.ITEM, Constant.id(Constant.Item.ROCKET_BOTTOM), ROCKET_BOTTOM);
 
         // ARMOR
         Registry.register(Registry.ITEM, Constant.id(Constant.Item.HEAVY_DUTY_HELMET), HEAVY_DUTY_HELMET);

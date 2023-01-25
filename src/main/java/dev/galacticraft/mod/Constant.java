@@ -429,6 +429,9 @@ public interface Constant {
         String TIER_1_HEAVY_DUTY_PLATE = "heavy_plating";
         String TIER_2_HEAVY_DUTY_PLATE = "heavy_plating_t2";
         String TIER_3_HEAVY_DUTY_PLATE = "heavy_plating_t3";
+        String NOSE_CONE = "nose_cone";
+        String ROCKET_FINS = "rocket_fins";
+        String ROCKET_BOTTOM = "rocket_bottom";
         //THROWABLE METEOR CHUNKS
         String THROWABLE_METEOR_CHUNK = "throwable_meteor_chunk";
         String HOT_THROWABLE_METEOR_CHUNK = "hot_throwable_meteor_chunk";
