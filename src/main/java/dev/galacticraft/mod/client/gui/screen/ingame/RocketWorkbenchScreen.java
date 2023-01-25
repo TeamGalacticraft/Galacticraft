@@ -29,12 +29,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class RocketWorkbenchScreen<M extends RocketWorkbenchMenu> extends AbstractNasaWorkbenchScreen<M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/gui/rocketbench.png");
+    private static final ResourceLocation TEXTURE = Constant.ScreenTexture.TIER_1_ROCKET_SCREEN;
 
     public RocketWorkbenchScreen(M menu, Inventory inventory, Component component) {
         super(menu, inventory, component, TEXTURE, 1);
         
         this.imageWidth = 176;
         this.imageHeight = 220;
+
+        this.inventoryLabelY = this.imageHeight - 93;
     }
 }

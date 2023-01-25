@@ -583,6 +583,8 @@ public interface Constant {
         ResourceLocation ELECTRIC_COMPRESSOR_SCREEN = id("textures/gui/electric_compressor_screen.png");
         ResourceLocation ENERGY_STORAGE_MODULE_SCREEN = id("textures/gui/energy_storage_module_screen.png");
         ResourceLocation OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
+        ResourceLocation SCHEMATIC_UNLOCK_SCREEN = id("textures/gui/schematicpage.png");
+        ResourceLocation TIER_1_ROCKET_SCREEN = id("textures/gui/rocketbench.png");
 
         ResourceLocation MACHINE_CONFIG_PANELS = id("textures/gui/machine_config.png");
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
@@ -931,6 +933,8 @@ public interface Constant {
         ResourceLocation ROCKET_JUMP = id("rocket_jump");
         ResourceLocation ROCKET_PITCH = id("rocket_pitch");
         ResourceLocation ROCKET_YAW = id("rocket_yaw");
+        ResourceLocation WORKBENCH_MENU_CHANGE = id("change_workbench_menu");
+        ResourceLocation UNLOCK_SCHEMATIC = id("unlock_schematic");
     }
 
     interface Structure {

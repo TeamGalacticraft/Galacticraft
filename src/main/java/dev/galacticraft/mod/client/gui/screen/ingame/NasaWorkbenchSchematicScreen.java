@@ -29,28 +29,28 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class NasaWorkbenchSchematicScreen<M extends NasaWorkbenchSchematicMenu> extends AbstractNasaWorkbenchScreen<M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/gui/schematicpage.png");
-
+    
     public NasaWorkbenchSchematicScreen(M schematicWorkbenchMenu, Inventory inventory, Component component) {
-        super(schematicWorkbenchMenu, inventory, component, TEXTURE, 0);
+        super(schematicWorkbenchMenu, inventory, component, Constant.ScreenTexture.SCHEMATIC_UNLOCK_SCREEN, 0);
 
         this.imageWidth = 176;
         this.imageHeight = 177;
+
+        this.inventoryLabelY = this.imageHeight - 93;
     }
 
     @Override
     public void init() {
         super.init();
 
-        this.addRenderableWidget(new Button(this.leftPos + (this.imageHeight / 2) - 50, this.topPos + 65, 100, 20, Component.literal("Unlock Schematic"), (button) -> {
+        this.addRenderableWidget(new Button(this.leftPos + (this.imageWidth / 2) - 50, this.topPos + 60, 100, 20, Component.literal("Unlock Schematic"), (button) -> {
             FriendlyByteBuf buf = new FriendlyByteBuf(PacketByteBufs.create());
             buf.writeItem(this.menu.getSchematic());
             
-            ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "unlock_schematic"), buf);
+            ClientPlayNetworking.send(Constant.Packet.UNLOCK_SCHEMATIC, buf);
         }));
     }
 }

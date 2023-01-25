@@ -37,13 +37,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 public class AbstractNasaWorkbenchScreen<M extends AbstractContainerMenu> extends AbstractContainerScreen<M> {
-    private final Inventory inventory;
     private final ResourceLocation texture;
     private final int page;
 
     public AbstractNasaWorkbenchScreen(M menu, Inventory inventory, Component component, ResourceLocation texture, int page) {
         super(menu, inventory, component);
-        this.inventory = inventory;
         this.texture = texture;
         this.page = page;
     }
@@ -63,14 +61,12 @@ public class AbstractNasaWorkbenchScreen<M extends AbstractContainerMenu> extend
     public void init() { // TODO: we can pull this up into an abstract class because of the similar logic
         super.init();
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        // TODO: Translations
+        // TODO: Grab component from translations file
         this.addRenderableWidget(new Button(this.leftPos - 41, this.topPos + 40, 40, 20, Component.literal("Next"), (button) -> {
-            // TODO: extract resource location to a constant
-            // TODO: add translations
-            ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "change_workbench_menu"), new FriendlyByteBuf(PacketByteBufs.create().writeInt(this.page).writeBoolean(true)));
+            ClientPlayNetworking.send(Constant.Packet.WORKBENCH_MENU_CHANGE, new FriendlyByteBuf(PacketByteBufs.create().writeInt(this.page).writeBoolean(true)));
         }));
         this.addRenderableWidget(new Button(this.leftPos - 41, this.topPos + 62, 40, 20, Component.literal("Back"), (button) -> {
-            ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "change_workbench_menu"), new FriendlyByteBuf(PacketByteBufs.create().writeInt(this.page).writeBoolean(false)));
+            ClientPlayNetworking.send(Constant.Packet.WORKBENCH_MENU_CHANGE, new FriendlyByteBuf(PacketByteBufs.create().writeInt(this.page).writeBoolean(false)));
         }));
     }
 }
