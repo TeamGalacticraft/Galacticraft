@@ -110,7 +110,6 @@ loom {
 }
 
 repositories {
-    mavenLocal()
     maven("https://maven.galacticraft.net/repository/maven-releases/") {
         content {
             includeGroup("dev.galacticraft")
