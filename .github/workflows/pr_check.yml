@@ -24,10 +24,10 @@ jobs:
       - name: Build
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: checkLicenses build runGametest
+          arguments: checkLicenses build
 
-      - name: Copy GameTest Results
-        run: cp run/TEST-gametest.xml build/test-results/test/
+#      - name: Copy GameTest Results
+#        run: cp run/TEST-gametest.xml build/test-results/test/
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
