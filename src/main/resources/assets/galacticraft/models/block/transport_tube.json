@@ -1,0 +1,10 @@
+{
+  "loader": "forge:obj",
+  "model": "galacticraft:models/block/transport_tube/player_transport_tube.obj",
+  "mtl_override": "galacticraft:models/block/transport_tube/player_transport_tube.mtl",
+  "textures": {
+    "0": "galacticraft:block/aluminum_decoration"
+  },
+  "automatic_culling": false,
+  "flip_v": true
+}

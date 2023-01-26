@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,42 @@
 
 package dev.galacticraft.mod.screen.slot;
 
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.item.Accessory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+import dev.galacticraft.mod.Constant;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Predicate;
 
 public class AccessorySlot extends Slot {
-    public AccessorySlot(Inventory inventory, int index, int x, int y) {
+    private final Predicate<ItemStack> stackPredicate;
+    private final Pair<ResourceLocation, ResourceLocation> icon;
+
+    public AccessorySlot(Container inventory, int index, int x, int y, Class<? extends Accessory> clazz, ResourceLocation icon) {
         super(inventory, index, x, y);
+        this.stackPredicate = itemStack -> itemStack.getItem().getClass().equals(clazz);
+        this.icon = Pair.of(InventoryMenu.BLOCK_ATLAS, icon);
+    }
+
+    public AccessorySlot(Container inventory, int index, int x, int y) {
+        super(inventory, index, x, y);
+        this.stackPredicate = itemStack -> itemStack.getItem() instanceof Accessory;
+        this.icon = null;
     }
 
     @Override
-    public boolean canInsert(ItemStack stack) {
-        return stack.getItem() instanceof Accessory;
+    public boolean mayPlace(ItemStack stack) {
+        return stackPredicate.test(stack);
+    }
+
+    @Nullable
+    @Override
+    public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+        return this.icon;
     }
 }

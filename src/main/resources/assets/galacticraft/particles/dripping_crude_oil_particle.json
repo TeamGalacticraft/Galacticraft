@@ -1,3 +1,5 @@
 {
-  "texture": "galacticraft:particle/dripping_crude_oil_particle"
+  "textures": [
+    "galacticraft:dripping_crude_oil_particle"
+  ]
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,12 +23,12 @@
 package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -44,15 +44,15 @@ public abstract class ItemStackMixin {
     public abstract Item getItem();
 
     @SuppressWarnings("RedundantSuppression")
-    @Inject(method = "getName", at = @At("RETURN"), cancellable = true)
-    private void getName(CallbackInfoReturnable<Text> returnable) {
+    @Inject(method = "getHoverName", at = @At("RETURN"), cancellable = true)
+    private void getName(CallbackInfoReturnable<Component> returnable) {
         //noinspection ConstantConditions
         if (false) {
-            Identifier id = Registry.ITEM.getId(getItem());
+            ResourceLocation id = Registry.ITEM.getKey(getItem());
             if (id.getNamespace().equals(Constant.MOD_ID)) {
-                Text returnVal = returnable.getReturnValue();
+                Component returnVal = returnable.getReturnValue();
                 if (returnVal.getStyle().getColor() == null) {
-                    returnable.setReturnValue(returnVal.shallowCopy().setStyle(returnVal.getStyle().withColor(Formatting.BLUE)));
+                    returnable.setReturnValue(returnVal.copy().setStyle(returnVal.getStyle().withColor(ChatFormatting.BLUE)));
                 }
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,15 @@
 
 package dev.galacticraft.mod.compat.rei.client.category;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.mod.Constant;
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.util.Mth;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,19 +43,40 @@ public class BaseWidget extends Widget {
         this.startPoint = startPoint;
     }
 
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        DiffuseLighting.disableGuiDepthLighting();
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.REI_DISPLAY_TEXTURE);
-        this.drawTexture(matrices, this.startPoint.x, this.startPoint.y, 0, 83, 137, 157);
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+        Lighting.setupForFlatItems();
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE);
+        this.blit(matrices, this.startPoint.x, this.startPoint.y, 0, 83, 137, 157);
 
-        int height = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
-        this.drawTexture(matrices, this.startPoint.x + 2, this.startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
-        int width = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D);
-        this.drawTexture(matrices, this.startPoint.x + 24, this.startPoint.y + 18, 82, 91, width, 17);
+        int height = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
+        this.blit(matrices, this.startPoint.x + 2, this.startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
+        int width = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D);
+        this.blit(matrices, this.startPoint.x + 24, this.startPoint.y + 18, 82, 91, width, 17);
     }
 
     @Override
-    public List<? extends Element> children() {
+    public List<? extends GuiEventListener> children() {
         return Collections.emptyList();
+    }
+
+    @Override
+    public boolean isDragging() {
+        return false;
+    }
+
+    @Override
+    public void setDragging(boolean dragging) {
+
+    }
+
+    @Nullable
+    @Override
+    public GuiEventListener getFocused() {
+        return null;
+    }
+
+    @Override
+    public void setFocused(@Nullable GuiEventListener focused) {
+
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,44 +23,47 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.mod.api.config.ConfigManager;
-import dev.galacticraft.mod.block.GalacticraftBlock;
-import dev.galacticraft.mod.block.entity.GalacticraftBlockEntityType;
-import dev.galacticraft.mod.command.GalacticraftCommand;
+import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
+import dev.galacticraft.mod.content.*;
+import dev.galacticraft.mod.content.block.entity.GCBlockEntityTypes;
+import dev.galacticraft.mod.command.GCCommand;
 import dev.galacticraft.mod.config.ConfigManagerImpl;
-import dev.galacticraft.mod.entity.GalacticraftEntityType;
-import dev.galacticraft.mod.entity.data.GalacticraftTrackedDataHandler;
-import dev.galacticraft.mod.fluid.GalacticraftFluid;
-import dev.galacticraft.mod.item.GalacticraftItem;
-import dev.galacticraft.mod.log.GalacticraftPrependingMessageFactory;
-import dev.galacticraft.mod.loot.GalacticraftLootTable;
-import dev.galacticraft.mod.misc.banner.GalacticraftBannerPattern;
-import dev.galacticraft.mod.network.GalacticraftServerPacketReceiver;
-import dev.galacticraft.mod.particle.GalacticraftParticle;
+import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
+import dev.galacticraft.mod.events.GCEventHandler;
+import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.lookup.GCApiLookupProviders;
+import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.misc.banner.GCBannerPattern;
+import dev.galacticraft.mod.network.GCServerPacketReceiver;
+import dev.galacticraft.mod.particle.GCParticleType;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
-import dev.galacticraft.mod.screen.GalacticraftScreenHandlerType;
-import dev.galacticraft.mod.solarpanel.GalacticraftLightSource;
-import dev.galacticraft.mod.sound.GalacticraftSound;
-import dev.galacticraft.mod.structure.GalacticraftStructure;
-import dev.galacticraft.mod.tag.GalacticraftTag;
-import dev.galacticraft.mod.village.GalacticraftVillagerProfession;
+import dev.galacticraft.mod.screen.GCMenuTypes;
+import dev.galacticraft.mod.structure.GCStructurePieceType;
+import dev.galacticraft.mod.structure.GalacticraftStructureSet;
+import dev.galacticraft.mod.data.GCTags;
+import dev.galacticraft.mod.village.GCVillagerProfessions;
 import dev.galacticraft.mod.village.MoonVillagerType;
-import dev.galacticraft.mod.world.biome.source.GalacticraftBiomeSource;
-import dev.galacticraft.mod.world.dimension.GalacticraftGas;
-import dev.galacticraft.mod.world.gen.carver.GalacticraftCarver;
-import dev.galacticraft.mod.world.gen.chunk.GalacticraftChunkGenerator;
-import dev.galacticraft.mod.world.gen.feature.GalacticraftFeature;
-import dev.galacticraft.mod.world.gen.surfacebuilder.GalacticraftSurfaceBuilder;
-import dev.galacticraft.mod.world.poi.GalacticraftPointOfInterestType;
+import dev.galacticraft.mod.world.biome.GCBiome;
+import dev.galacticraft.mod.world.biome.source.GCBiomeParameters;
+import dev.galacticraft.mod.world.dimension.GCGas;
+import dev.galacticraft.mod.world.gen.carver.GCCarver;
+import dev.galacticraft.mod.world.gen.feature.GCConfiguredFeature;
+import dev.galacticraft.mod.world.gen.feature.GCOreConfiguredFeature;
+import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeature;
+import dev.galacticraft.mod.world.gen.feature.GCPlacedFeature;
+import dev.galacticraft.mod.world.gen.structure.GCStructure;
+import dev.galacticraft.mod.world.gen.structure.GCStructureType;
+import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
+import dev.galacticraft.mod.world.poi.GCPointOfInterestType;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class Galacticraft implements ModInitializer {
-    public static final Logger LOGGER = LogManager.getLogger("Galacticraft", new GalacticraftPrependingMessageFactory());
+    public static final Logger LOGGER = LoggerFactory.getLogger("Galacticraft");
 
     public static final ConfigManager CONFIG_MANAGER = new ConfigManagerImpl();
 
@@ -68,35 +71,45 @@ public class Galacticraft implements ModInitializer {
     public void onInitialize() {
         long startInitTime = System.currentTimeMillis();
         LOGGER.info("Starting initialization.");
-        GalacticraftFluid.register();
-        GalacticraftBlock.register();
-        GalacticraftBlockEntityType.register();
-        GalacticraftItem.register();
-        GalacticraftTag.register();
+        GCTags.register();
+        GCBlocks.register();
+        GCFluids.register();
+        GCBlockEntityTypes.register();
+        GCItem.register();
+        GCApiLookupProviders.register();
         GalacticraftRecipe.register();
-        GalacticraftTrackedDataHandler.register();
-        GalacticraftEntityType.register();
-        GalacticraftLootTable.register();
-        GalacticraftGas.register();
-        GalacticraftStructure.register();
-        GalacticraftFeature.register();
-        GalacticraftSurfaceBuilder.register();
-        GalacticraftCarver.register();
-        GalacticraftBiomeSource.register();
-        GalacticraftChunkGenerator.register();
-        GalacticraftScreenHandlerType.register();
-        GalacticraftParticle.register();
-        GalacticraftCommand.register();
-        GalacticraftLightSource.register();
-        GalacticraftServerPacketReceiver.register();
-        GalacticraftSound.register();
-        GalacticraftPointOfInterestType.register();
+        GCEntityDataSerializers.register();
+        GCEntityTypes.register();
+        GCLootTables.register();
+        GCGas.register();
+        GCOreConfiguredFeature.register();
+        GCOrePlacedFeature.register();
+        GCConfiguredFeature.register();
+        GCPlacedFeature.register();
+        GCBiomeParameters.register();
+        GCStructurePieceType.register();
+        GCStructureType.register();
+        GCStructure.register();
+        GalacticraftStructureSet.register();
+        GCStructure.register();
+        GCCarver.register();
+        GCBiome.register();
+        MoonSurfaceRules.register();
+        GCMenuTypes.register();
+        GCParticleType.register();
+        GCCommand.register();
+        GCLightSources.register();
+        GCServerPacketReceiver.register();
+        GCSounds.register();
+        GCPointOfInterestType.register();
         MoonVillagerType.register();
-        GalacticraftVillagerProfession.register();
+        GalacticraftRocketParts.register();
+        GCVillagerProfessions.register();
+        GCMachineStatus.register();
+        GCBannerPattern.register();
+        GCCelestialBodies.register();
+        GCEventHandler.init();
 
-        if (FabricLoader.getInstance().isModLoaded("bannerpp")) {
-            GalacticraftBannerPattern.register();
-        }
         LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

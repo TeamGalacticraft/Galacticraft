@@ -1,5 +1,11 @@
 {
-  "parent": "block/cube",
+  "machine": "galacticraft:refinery",
+  "sprite_provider": "machinelib:z_axis",
+  "sprite_info": {
+    "front": "galacticraft:block/refinery_front",
+    "back": "galacticraft:block/refinery_back",
+    "sided": true
+  },
   "textures": {
     "up": "galacticraft:block/machine",
     "down": "galacticraft:block/machine",

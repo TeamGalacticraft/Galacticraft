@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,20 @@
 
 package dev.galacticraft.mod.mixin;
 
-import net.minecraft.entity.ai.goal.BowAttackGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.mob.AbstractSkeletonEntity;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Mixin(AbstractSkeletonEntity.class)
+@Mixin(AbstractSkeleton.class)
 public interface AbstractSkeletonEntityAccessor {
-    @Accessor("meleeAttackGoal")
+    @Accessor("meleeGoal")
     MeleeAttackGoal getMeleeAttackGoal();
 
-    @Accessor("bowAttackGoal")
-    BowAttackGoal<?> getBowAttackGoal();
+    @Accessor("bowGoal")
+    RangedBowAttackGoal<?> getBowAttackGoal();
 }

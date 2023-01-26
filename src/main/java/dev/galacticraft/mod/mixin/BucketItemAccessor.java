@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.mixin;
 
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BucketItem;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.level.material.Fluid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -32,6 +32,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
  */
 @Mixin(BucketItem.class)
 public interface BucketItemAccessor {
-    @Accessor("fluid")
+    @Accessor("content")
     Fluid getFluid();
 }

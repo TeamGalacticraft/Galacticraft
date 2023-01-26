@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "item": "galacticraft:compressed_iron"
+    },
+    "I": {
+      "item": "minecraft:iron_block"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "III"
+  ],
+  "result": {
+    "count": 9,
+    "item": "galacticraft:rocket_launch_pad"
+  }
+}

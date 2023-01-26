@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod;
 
-import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
@@ -57,11 +56,8 @@ public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
     @Override
     public List<String> getMixins() {
         List<String> optionalMixins = new LinkedList<>();
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled()) {
             optionalMixins.add(Constant.Mixin.STRUCTURE_POOL_DEBUG);
-        }
-        if (Galacticraft.CONFIG_MANAGER.get().areMoreMulticoloredStarsEnabled() && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            optionalMixins.add(Constant.Mixin.OVERWORLD_SKY_OVERRIDE);
         }
         return optionalMixins;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,16 +22,16 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.client.render.entity.feature.SpaceGearFeatureRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.SkeletonEntityRenderer;
+import dev.galacticraft.mod.client.render.entity.feature.SpaceGearRenderLayer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.SkeletonRenderer;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class EvolvedSkeletonEntityRenderer extends SkeletonEntityRenderer {
-    public EvolvedSkeletonEntityRenderer(EntityRendererFactory.Context context) {
+public class EvolvedSkeletonEntityRenderer extends SkeletonRenderer {
+    public EvolvedSkeletonEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
-        this.addFeature(new SpaceGearFeatureRenderer<>(this));
+        this.addLayer(new SpaceGearRenderLayer<>(this));
     }
 }

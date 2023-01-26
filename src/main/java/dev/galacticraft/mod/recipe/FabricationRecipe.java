@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,26 +24,30 @@ package dev.galacticraft.mod.recipe;
 
 import com.google.gson.JsonObject;
 import dev.galacticraft.mod.Constant;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.*;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class FabricationRecipe implements Recipe<Inventory> {
-    private final Identifier id;
+public class FabricationRecipe implements Recipe<Container> {
+    private final ResourceLocation id;
     private final String group;
     private final ItemStack output;
-    private final DefaultedList<Ingredient> input = DefaultedList.ofSize(1, Ingredient.EMPTY);
+    private final NonNullList<Ingredient> input = NonNullList.withSize(1, Ingredient.EMPTY);
     private final int time;
 
-    public FabricationRecipe(Identifier id, String group, Ingredient input, ItemStack output, int time) {
+    public FabricationRecipe(ResourceLocation id, String group, Ingredient input, ItemStack output, int time) {
         this.id = id;
         this.group = group;
         this.input.set(0, input);
@@ -52,23 +56,23 @@ public class FabricationRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public ItemStack craft(Inventory inventory) {
+    public ItemStack assemble(Container inventory) {
         return this.output.copy();
     }
 
     @Override
-    public boolean fits(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return width * height > 0;
     }
 
     @Override
-    public DefaultedList<Ingredient> getIngredients() {
+    public NonNullList<Ingredient> getIngredients() {
         return this.input;
     }
 
     @Override
-    public boolean matches(Inventory inventory, World world) {
-        return this.input.get(0).test(inventory.getStack(0));
+    public boolean matches(Container inventory, Level world) {
+        return this.input.get(0).test(inventory.getItem(0));
     }
 
     @Override
@@ -77,7 +81,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return this.id;
     }
 
@@ -87,7 +91,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public ItemStack getOutput() {
+    public ItemStack getResultItem() {
         return this.output;
     }
 
@@ -104,24 +108,24 @@ public class FabricationRecipe implements Recipe<Inventory> {
         INSTANCE;
 
         @Override
-        public FabricationRecipe read(Identifier id, JsonObject json) {
-            String group = JsonHelper.getString(json, "group", "");
-            int time = JsonHelper.getInt(json, "time", 300);
-            Ingredient ingredient = Ingredient.fromJson(JsonHelper.getObject(json, "ingredient"));
-            ItemStack result = new ItemStack(ShapedRecipe.getItem(JsonHelper.getObject(json, "result")));
+        public FabricationRecipe fromJson(ResourceLocation id, JsonObject json) {
+            String group = GsonHelper.getAsString(json, "group", "");
+            int time = GsonHelper.getAsInt(json, "time", 300);
+            Ingredient ingredient = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "ingredient"));
+            ItemStack result = new ItemStack(ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(json, "result")));
             return new FabricationRecipe(id, group, ingredient, result, time);
         }
 
         @Override
-        public FabricationRecipe read(Identifier id, PacketByteBuf buf) {
-            return new FabricationRecipe(id, buf.readString(Constant.Misc.MAX_STRING_READ), Ingredient.fromPacket(buf), buf.readItemStack(), buf.readInt());
+        public FabricationRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+            return new FabricationRecipe(id, buf.readUtf(Constant.Misc.MAX_STRING_READ), Ingredient.fromNetwork(buf), buf.readItem(), buf.readInt());
         }
 
         @Override
-        public void write(PacketByteBuf buf, FabricationRecipe recipe) {
-            buf.writeString(recipe.group);
-            recipe.input.get(0).write(buf);
-            buf.writeItemStack(recipe.output);
+        public void toNetwork(FriendlyByteBuf buf, FabricationRecipe recipe) {
+            buf.writeUtf(recipe.group);
+            recipe.input.get(0).toNetwork(buf);
+            buf.writeItem(recipe.output);
             buf.writeInt(recipe.time);
         }
     }

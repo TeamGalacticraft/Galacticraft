@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,23 +22,22 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
-import dev.galacticraft.mod.block.entity.CoalGeneratorBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
-import dev.galacticraft.mod.screen.CoalGeneratorScreenHandler;
+import dev.galacticraft.mod.content.block.entity.CoalGeneratorBlockEntity;
+import dev.galacticraft.mod.screen.CoalGeneratorMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorBlockEntity, CoalGeneratorScreenHandler> {
+public class CoalGeneratorScreen extends MachineScreen<CoalGeneratorBlockEntity, CoalGeneratorMenu> {
     private static final int FIRE_X = 72;
     private static final int FIRE_Y = 37;
     private static final int FIRE_U = 176;
@@ -46,23 +45,17 @@ public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorBlock
     private static final int FIRE_WIDTH = 14;
     private static final int FIRE_HEIGHT = 14;
 
-    public CoalGeneratorScreen(CoalGeneratorScreenHandler handler, PlayerInventory inv, Text title) {
+    public CoalGeneratorScreen(CoalGeneratorMenu handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.COAL_GENERATOR_SCREEN);
-        this.backgroundHeight = 176;
+        this.imageHeight = 176;
     }
 
     @Override
-    protected void init() {
-        super.init();
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
-    }
-
-    @Override
-    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        super.renderBackground(matrices, delta, mouseX, mouseY);
-        if (this.machine.fuelLength > 0) {
-            double scale = ((double)(this.machine.fuelLength - this.machine.fuelTime)) / (double)this.machine.fuelLength;
-            DrawableUtil.drawProgressTexture(matrices, this.x + FIRE_X, this.y + FIRE_Y, this.getZOffset(), FIRE_U, FIRE_V, FIRE_WIDTH, (float) (FIRE_HEIGHT * scale));
+    protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
+        super.renderBackground(matrices, mouseX, mouseY, delta);
+        if (this.machine.getFuelLength() > 0) {
+            double scale = 1.0 - ((double)this.machine.getFuelTime()) / (double)this.machine.getFuelLength();
+            DrawableUtil.drawProgressTexture(matrices, this.leftPos + FIRE_X, this.topPos + FIRE_Y + FIRE_HEIGHT - (float) (FIRE_HEIGHT * scale), this.getBlitOffset(), FIRE_U, FIRE_V + FIRE_HEIGHT - (float) (FIRE_HEIGHT * scale), FIRE_WIDTH, (float) (FIRE_HEIGHT * scale));
         }
     }
 }

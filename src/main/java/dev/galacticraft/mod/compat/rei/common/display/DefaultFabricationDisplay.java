@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,14 @@
 package dev.galacticraft.mod.compat.rei.common.display;
 
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
-import dev.galacticraft.mod.item.GalacticraftItem;
+import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -43,16 +43,16 @@ import java.util.Optional;
  */
 public class DefaultFabricationDisplay extends BasicDisplay {
 
-    protected DefaultFabricationDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<Identifier> location) {
+    protected DefaultFabricationDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
         super(inputs, outputs, location);
     }
 
     public DefaultFabricationDisplay(@Nullable FabricationRecipe recipe) {
-        super(getInputs(recipe), recipe == null ? Collections.emptyList() : Collections.singletonList(EntryIngredients.of(recipe.getOutput())));
+        super(getInputs(recipe), recipe == null ? Collections.emptyList() : Collections.singletonList(EntryIngredients.of(recipe.getResultItem())));
     }
 
 
-    public static DefaultFabricationDisplay createRaw(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<Identifier> location) {
+    public static DefaultFabricationDisplay createRaw(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
         return new DefaultFabricationDisplay(inputs, outputs, location);
     }
 
@@ -65,8 +65,8 @@ public class DefaultFabricationDisplay extends BasicDisplay {
         if (recipe == null) return Collections.emptyList();
         List<EntryIngredient> list = new ArrayList<>(5);
         list.add(EntryIngredients.of(Items.DIAMOND));
-        list.add(EntryIngredients.of(GalacticraftItem.RAW_SILICON));
-        list.add(EntryIngredients.of(GalacticraftItem.RAW_SILICON));
+        list.add(EntryIngredients.of(GCItem.RAW_SILICON));
+        list.add(EntryIngredients.of(GCItem.RAW_SILICON));
         list.add(EntryIngredients.of(Items.REDSTONE));
         list.add(EntryIngredients.ofIngredient(recipe.getIngredients().get(0)));
         return list;
