@@ -26,6 +26,8 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.content.block.entity.GCBlockEntityTypes;
+import dev.galacticraft.mod.util.ConnectingBlockUtil;
+
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
@@ -33,14 +35,17 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -58,6 +63,10 @@ public class AluminumWireBlock extends WireBlock {
 
     public AluminumWireBlock(Properties settings) {
         super(settings);
+        this.registerDefaultState(this.defaultBlockState()
+                .setValue(BlockStateProperties.NORTH, false).setValue(BlockStateProperties.EAST, false)
+                .setValue(BlockStateProperties.SOUTH, false).setValue(BlockStateProperties.WEST, false)
+                .setValue(BlockStateProperties.UP, false).setValue(BlockStateProperties.DOWN, false));
     }
 
     @Override
@@ -66,22 +75,22 @@ public class AluminumWireBlock extends WireBlock {
         if (wire != null) {
             List<VoxelShape> shapes = new ArrayList<>();
 
-            if (wire.getConnections()[2]) {
+            if (state.getValue(BlockStateProperties.NORTH)) {
                 shapes.add(NORTH);
             }
-            if (wire.getConnections()[3]) {
-                shapes.add(SOUTH);
-            }
-            if (wire.getConnections()[5]) {
+            if (state.getValue(BlockStateProperties.EAST)) {
                 shapes.add(EAST);
             }
-            if (wire.getConnections()[4]) {
+            if (state.getValue(BlockStateProperties.SOUTH)) {
+                shapes.add(SOUTH);
+            }
+            if (state.getValue(BlockStateProperties.WEST)) {
                 shapes.add(WEST);
             }
-            if (wire.getConnections()[1]) {
+            if (state.getValue(BlockStateProperties.UP)) {
                 shapes.add(UP);
             }
-            if (wire.getConnections()[0]) {
+            if (state.getValue(BlockStateProperties.DOWN)) {
                 shapes.add(DOWN);
             }
             if (!shapes.isEmpty()) {
@@ -91,7 +100,7 @@ public class AluminumWireBlock extends WireBlock {
         return NONE;
     }
 
-    @Override
+    @Override // TODO: investigate speed ups and why single wires are strange
     public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
         super.onPlace(state, world, pos, oldState, notify);
         WireBlockEntity wire = (WireBlockEntity) world.getBlockEntity(pos);
@@ -100,7 +109,24 @@ public class AluminumWireBlock extends WireBlock {
         for (Direction dir : Constant.Misc.DIRECTIONS) {
             b |= (wire.getConnections()[dir.ordinal()] = wire.canConnect(dir) && EnergyStorage.SIDED.find(world, pos.relative(dir), dir.getOpposite()) != null);
         }
-        if (!world.isClientSide && b) ((ServerLevel) world).getChunkSource().blockChanged(pos);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) { // first thing that is called, ala before blockEntity is made
+        BlockState state = this.defaultBlockState();
+        for (Direction dir : Constant.Misc.DIRECTIONS) {
+            BlockState block = context.getLevel().getBlockState(context.getClickedPos().relative(dir));
+            state = state.setValue(ConnectingBlockUtil.getBooleanProperty(dir), !block.isAir() && (block.getBlock() instanceof WireBlock
+                    || EnergyStorage.SIDED.find(context.getLevel(), context.getClickedPos().relative(dir), dir.getOpposite()) != null));
+        }
+
+        return state;
+    }
+
+    @Override
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(BlockStateProperties.NORTH, BlockStateProperties.EAST, BlockStateProperties.SOUTH, BlockStateProperties.WEST, BlockStateProperties.UP, BlockStateProperties.DOWN);
     }
 
     @Override
@@ -111,7 +137,7 @@ public class AluminumWireBlock extends WireBlock {
         assert dir != null;
         assert wire != null;
         if (!world.isClientSide && wire.getConnections()[dir.ordinal()] != (wire.getConnections()[dir.ordinal()] = wire.canConnect(dir) && EnergyStorage.SIDED.find(world, fromPos, dir.getOpposite()) != null)) {
-            ((ServerLevel) world).getChunkSource().blockChanged(pos);
+            world.setBlockAndUpdate(pos, state.setValue(ConnectingBlockUtil.getBooleanProperty(dir), wire.getConnections()[dir.ordinal()]));
         }
     }
 
