@@ -27,7 +27,6 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.minecraft.core.Holder;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.placement.BiomeFilter;
@@ -65,13 +64,13 @@ public class GCOrePlacedFeature {
 
     public static void register() {
         BiomeModifications.create(Constant.id("ores")).add(ModificationPhase.ADDITIONS, BiomeSelectors.foundInOverworld(), context -> {
-            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_SILICON.value());
-            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_SILICON_LARGE.value());
-            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_TIN_UPPER.value());
-            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_TIN_MIDDLE.value());
-            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_TIN_SMALL.value());
-            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_ALUMINUM_MIDDLE.value());
-            context.getGenerationSettings().addBuiltInFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_ALUMINUM_SMALL.value());
+            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_SILICON.value());
+            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_SILICON_LARGE.value());
+            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_TIN_UPPER.value());
+            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_TIN_MIDDLE.value());
+            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_TIN_SMALL.value());
+            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_ALUMINUM_MIDDLE.value());
+            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_ALUMINUM_SMALL.value());
         });
     }
 

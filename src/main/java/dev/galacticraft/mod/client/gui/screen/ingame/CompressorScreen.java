@@ -54,7 +54,7 @@ public class CompressorScreen extends MachineScreen<CompressorBlockEntity, Compr
     private static final int FIRE_Y = 26;
 
     public CompressorScreen(CompressorMenu handler, Inventory inv, Component title) {
-        super(handler, inv, title, Constant.ScreenTexture.COMPRESSOR_SCREEN);
+        super(handler, title, Constant.ScreenTexture.COMPRESSOR_SCREEN);
     }
 
     @Override
@@ -65,15 +65,15 @@ public class CompressorScreen extends MachineScreen<CompressorBlockEntity, Compr
     }
 
     protected void drawFuelProgressBar(PoseStack matrices) {
-        if (this.menu.machine.fuelLength > 0) {
-            float fuelUsageScale = (float)(1.0 - (double)(this.menu.machine.fuelLength - this.menu.machine.fuelTime) / (double)this.menu.machine.fuelLength);
+        if (this.menu.getFuelLength() > 0) {
+            float fuelUsageScale = (float)(1.0 - (double)(this.menu.getFuelLength() - this.menu.getFuelTime()) / (double)this.menu.getFuelLength());
             RenderSystem.setShaderTexture(0, Constant.ScreenTexture.COMPRESSOR_SCREEN);
             DrawableUtil.drawProgressTexture(matrices, this.leftPos + FIRE_X, (this.topPos + FIRE_Y + FIRE_HEIGHT - (fuelUsageScale * FIRE_HEIGHT)), FIRE_U, FIRE_V + (FIRE_HEIGHT - (fuelUsageScale * FIRE_HEIGHT)), FIRE_WIDTH, (fuelUsageScale * FIRE_HEIGHT));
         }
     }
 
     protected void drawCraftProgressBar(PoseStack matrices) {
-        float progressScale = (((float)this.menu.machine.getProgress()) / ((float)this.menu.machine.getMaxProgress()));
+        float progressScale = (((float)this.menu.getProgress()) / ((float)this.menu.getMaxProgress()));
 
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.COMPRESSOR_SCREEN);
         DrawableUtil.drawProgressTexture(matrices, this.leftPos + PROGRESS_X, this.topPos + PROGRESS_Y, PROGRESS_U, PROGRESS_V, PROGRESS_WIDTH * progressScale, PROGRESS_HEIGHT);

@@ -24,10 +24,10 @@ package dev.galacticraft.mod.content.block.entity;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
 import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
+import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
@@ -48,13 +48,13 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
 
     public OxygenStorageModuleBlockEntity(BlockPos pos, BlockState state) {
-        super(GCBlockEntityTypes.OXYGEN_STORAGE_MODULE, pos, state);
+        super(GCMachineTypes.OXYGEN_STORAGE_MODULE, pos, state);
     }
 
     @Override
     protected @NotNull MachineFluidStorage createFluidStorage() {
         return MachineFluidStorage.Builder.create()
-                .addTank(GCSlotGroups.OXYGEN_TANK, MAX_OXYGEN, TankDisplay.create(31, 8), true)
+                .addTank(GCSlotGroupTypes.OXYGEN_TANK, MAX_OXYGEN, TankDisplay.create(31, 8), true)
                 .build();
     }
 
@@ -72,7 +72,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
                     syncId,
                     player,
                     this,
-                    GCMenuTypes.OXYGEN_STORAGE_MODULE_HANDLER
+                    GCMenuTypes.OXYGEN_STORAGE_MODULE
             );
         }
         return null;

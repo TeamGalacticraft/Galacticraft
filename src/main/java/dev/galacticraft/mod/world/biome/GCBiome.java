@@ -28,7 +28,6 @@ import dev.galacticraft.mod.world.gen.carver.GCConfiguredCarver;
 import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeature;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.Music;
 import net.minecraft.world.entity.MobCategory;

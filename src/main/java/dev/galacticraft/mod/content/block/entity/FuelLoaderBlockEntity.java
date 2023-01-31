@@ -30,11 +30,12 @@ import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
 import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.FuelLoaderMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -63,7 +64,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     private Direction check = null;
 
     public FuelLoaderBlockEntity(BlockPos pos, BlockState state) {
-        super(GCBlockEntityTypes.FUEL_LOADER_TYPE, pos, state);
+        super(GCMachineTypes.FUEL_LOADER, pos, state);
     }
 
     @NotNull
@@ -74,15 +75,15 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.builder()
-                .addSlot(GCSlotGroups.ENERGY_CHARGE, Constant.Filter.any(), true, ItemSlotDisplay.create(8, 61))
-                .addSlot(GCSlotGroups.FUEL_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(80, 61))
+                .addSlot(GCSlotGroupTypes.ENERGY_TO_SELF, Constant.Filter.any(), true, ItemSlotDisplay.create(8, 61))
+                .addSlot(GCSlotGroupTypes.FUEL_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(80, 61))
                 .build();
     }
 
     @Override
     protected @NotNull MachineFluidStorage createFluidStorage() {
         return MachineFluidStorage.Builder.create()
-                .addTank(GCSlotGroups.FUEL_INPUT, 0, TankDisplay.create(0, 0, 0))
+                .addTank(GCSlotGroupTypes.FUEL_INPUT, 0, TankDisplay.create(0, 0, 0))
                 .build();
     }
 

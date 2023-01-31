@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.OxygenDecompressorBlockEntity;
@@ -37,9 +37,9 @@ import net.minecraft.world.entity.player.Inventory;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenDecompressorScreen extends MachineScreen<OxygenDecompressorBlockEntity, SimpleMachineMenu<OxygenDecompressorBlockEntity>> {
-    public OxygenDecompressorScreen(SimpleMachineMenu<OxygenDecompressorBlockEntity> handler, Inventory inv, Component title) {
-        super(handler, inv, title, Constant.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
+public class OxygenDecompressorScreen extends MachineScreen<OxygenDecompressorBlockEntity, MachineMenu<OxygenDecompressorBlockEntity>> {
+    public OxygenDecompressorScreen(MachineMenu<OxygenDecompressorBlockEntity> handler, Inventory inv, Component title) {
+        super(handler, title, Constant.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class OxygenDecompressorScreen extends MachineScreen<OxygenDecompressorBl
     @Override
     protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.renderBackground(matrices, mouseX, mouseY, delta);
-        if (this.machine.getStatus().type().isActive()) {
+        if (this.menu.configuration.getStatus().type().isActive()) {
             double height = (int) (System.currentTimeMillis() % 2250);
             if (height == 0) return; //prevent dividing by zero
             height /= 125.0;

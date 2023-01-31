@@ -61,7 +61,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
     public final Player player;
 
     public GCPlayerInventoryMenu(int syncId, Inventory playerInventory, Player player) {
-        super(GCMenuTypes.PLAYER_INV_GC_HANDLER, syncId);
+        super(GCMenuTypes.PLAYER_INV_GC, syncId);
 
         this.player = player;
         this.inventory = player.getGearInv();

@@ -22,11 +22,10 @@
 
 package dev.galacticraft.mod.content.entity;
 
-import dev.galacticraft.api.entity.Rocket;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.RocketPart;
-import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
@@ -77,6 +76,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3d;
 
 import java.util.Arrays;
 
@@ -231,11 +231,40 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
+    public LaunchStage getLaunchStage() {
+        return null;
+    }
+
+    @Override
+    public Entity getEntity() {
+        return this;
+    }
+
+    @Override
+    public Level getWorld() {
+        return this.level;
+    }
+
+    @Override
+    public Vector3d getPos() {
+        return this.position();
+    }
+
+    @Override
+    public Vector3d getVelocity() {
+        return null;
+    }
+
+    @Override
+    public BlockPos getBlockPos() {
+        return this.blockPosition();
+    }
+
+    @Override
     public double getSpeed() {
         return this.entityData.get(SPEED);
     }
 
-    @Override
     public void setSpeed(double speed) {
         this.entityData.set(SPEED, speed);
     }
@@ -599,5 +628,55 @@ public class RocketEntity extends Entity implements Rocket {
     @Override
     public SoundSource getSoundSource() {
         return super.getSoundSource();
+    }
+
+    @Override
+    public CompoundTag toNbt(CompoundTag nbt) {
+        return null;
+    }
+
+    @Override
+    public int color() {
+        return 0;
+    }
+
+    @Override
+    public ResourceLocation cone() {
+        return null;
+    }
+
+    @Override
+    public ResourceLocation body() {
+        return null;
+    }
+
+    @Override
+    public ResourceLocation fin() {
+        return null;
+    }
+
+    @Override
+    public ResourceLocation booster() {
+        return null;
+    }
+
+    @Override
+    public ResourceLocation bottom() {
+        return null;
+    }
+
+    @Override
+    public ResourceLocation[] upgrades() {
+        return new ResourceLocation[0];
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public boolean canTravelTo(RegistryAccess manager, CelestialBody<?, ?> from, CelestialBody<?, ?> to) {
+        return false;
     }
 }

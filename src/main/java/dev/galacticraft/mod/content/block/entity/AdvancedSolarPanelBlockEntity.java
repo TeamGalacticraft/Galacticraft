@@ -26,23 +26,20 @@ import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.face.BlockFace;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
-import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
-import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
-import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
+import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
-import dev.galacticraft.mod.screen.GCMenuTypes;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
+import dev.galacticraft.mod.screen.SolarPanelMenu;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,41 +48,18 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements SolarPanel {
-    public static final int CHARGE_SLOT = 0;
     private int blocked = 0;
     public long currentEnergyGeneration = 0;
     private final boolean[] blockage = new boolean[9];
 
     public AdvancedSolarPanelBlockEntity(BlockPos pos, BlockState state) {
-        super(GCBlockEntityTypes.ADVANCED_SOLAR_PANEL, pos, state);
-    }
-
-    @Override
-    protected @NotNull MachineItemStorage createItemStorage() {
-        return MachineItemStorage.Builder.create()
-                .addSlot(GCSlotGroups.ENERGY_DRAIN, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 62))
-                .build();
-    }
-
-    @Override
-    protected void tickClient(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        for (int x = -1; x < 2; x++) {
-            for (int z = -1; z < 2; z++) {
-                this.blockage[(z + 1) * 3 + (x + 1)] = !world.canSeeSky(pos.offset(x, 2, z));
-            }
-        }
-
-        double multiplier = this.blocked / 9.0;
-        if (world.isRaining() || world.isThundering()) multiplier *= 0.5;
-        double time = world.getDayTime() % 24000;
-        if (time > 6000) time = 12000L - time;
-        this.currentEnergyGeneration = (long)(Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * (time / 6000.0) * multiplier) * 4L;
+        super(GCMachineTypes.ADVANCED_SOLAR_PANEL, pos, state);
     }
 
     @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("charge");
-        this.attemptDrainPowerToStack(CHARGE_SLOT);
+        this.attemptDrainPowerToStack(GCSlotGroupTypes.ENERGY_TO_ITEM);
         profiler.popPush("blockage");
         this.blocked = 0;
         for (int x = -1; x < 2; x++) {
@@ -119,7 +93,8 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
 
         profiler.push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
-            this.energyStorage().insert((long)(Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * (time / 6000.0) * multiplier) * 4L, transaction);
+            this.currentEnergyGeneration = (long) (Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * (time / 6000.0) * multiplier) * 4L;
+            this.energyStorage().insert(this.currentEnergyGeneration, transaction);
             transaction.commit();
         }
         profiler.pop();
@@ -135,24 +110,14 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) {
-            return SimpleMachineMenu.create(
+            return new SolarPanelMenu<>(
                     syncId,
-                    player,
+                    ((ServerPlayer) player),
                     this,
-                    GCMenuTypes.ADVANCED_SOLAR_PANEL_HANDLER
+                    GCMachineTypes.ADVANCED_SOLAR_PANEL
             );
         }
         return null;
-    }
-
-    @Override
-    public long getEnergyCapacity() {
-        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
-    }
-
-    @Override
-    public boolean canExposedExtractEnergy() {
-        return true;
     }
 
     @Override

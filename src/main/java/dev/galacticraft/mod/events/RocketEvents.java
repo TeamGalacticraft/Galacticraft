@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.events;
 
-import dev.galacticraft.api.entity.Rocket;
 import dev.galacticraft.api.rocket.LaunchStage;
+import dev.galacticraft.api.rocket.entity.Rocket;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 

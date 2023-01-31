@@ -24,13 +24,13 @@ package dev.galacticraft.mod.content.block.entity;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
 import dev.galacticraft.machinelib.api.transfer.CachingItemApiProvider;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
+import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -54,14 +54,14 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     private final CachingItemApiProvider<EnergyStorage> batteryDrainSlot = CachingItemApiProvider.create(this.itemStorage().getSlot(DRAIN_FROM_BATTERY_SLOT), EnergyStorage.ITEM);
 
     public EnergyStorageModuleBlockEntity(BlockPos pos, BlockState state) {
-        super(GCBlockEntityTypes.ENERGY_STORAGE_MODULE, pos, state);
+        super(GCMachineTypes.ENERGY_STORAGE_MODULE, pos, state);
     }
 
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GCSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(102, 24))
-                .addSlot(GCSlotGroups.ENERGY_DRAIN, Constant.Filter.Item.CAN_INSERT_ENERGY, true, ItemSlotDisplay.create(102, 48))
+                .addSlot(GCSlotGroupTypes.ENERGY_TO_SELF, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(102, 24))
+                .addSlot(GCSlotGroupTypes.ENERGY_TO_ITEM, Constant.Filter.Item.CAN_INSERT_ENERGY, true, ItemSlotDisplay.create(102, 48))
                 .build();
     }
 
@@ -111,7 +111,7 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
                     syncId,
                     player,
                     this,
-                    GCMenuTypes.ENERGY_STORAGE_MODULE_HANDLER
+                    GCMenuTypes.ENERGY_STORAGE_MODULE
             );
         }
         return null;

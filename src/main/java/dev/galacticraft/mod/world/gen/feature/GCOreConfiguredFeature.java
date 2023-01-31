@@ -26,8 +26,9 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.data.GCTags;
 import net.minecraft.core.Holder;
-import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.features.OreFeatures;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
@@ -41,9 +42,9 @@ public class GCOreConfiguredFeature {
     public static final RuleTest MOON_STONE_ORE_REPLACEABLES = new TagMatchTest(GCTags.MOON_STONE_ORE_REPLACABLES);
     public static final RuleTest LUNASLATE_ORE_REPLACEABLES = new TagMatchTest(GCTags.LUNASLATE_ORE_REPLACABLES);
 
-    public static final List<OreConfiguration.TargetBlockState> TIN_ORES = List.of(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, GCBlocks.TIN_ORE.defaultBlockState()), OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES, GCBlocks.DEEPSLATE_TIN_ORE.defaultBlockState()));
-    public static final List<OreConfiguration.TargetBlockState> ALUMINUM_ORES = List.of(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, GCBlocks.ALUMINUM_ORE.defaultBlockState()), OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES, GCBlocks.DEEPSLATE_ALUMINUM_ORE.defaultBlockState()));
-    public static final List<OreConfiguration.TargetBlockState> SILICON_ORES = List.of(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, GCBlocks.SILICON_ORE.defaultBlockState()), OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES, GCBlocks.DEEPSLATE_SILICON_ORE.defaultBlockState()));
+    public static final List<OreConfiguration.TargetBlockState> TIN_ORES = List.of(OreConfiguration.target(new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES), GCBlocks.TIN_ORE.defaultBlockState()), OreConfiguration.target(new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES), GCBlocks.DEEPSLATE_TIN_ORE.defaultBlockState()));
+    public static final List<OreConfiguration.TargetBlockState> ALUMINUM_ORES = List.of(OreConfiguration.target(new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES), GCBlocks.ALUMINUM_ORE.defaultBlockState()), OreConfiguration.target(new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES), GCBlocks.DEEPSLATE_ALUMINUM_ORE.defaultBlockState()));
+    public static final List<OreConfiguration.TargetBlockState> SILICON_ORES = List.of(OreConfiguration.target(new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES), GCBlocks.SILICON_ORE.defaultBlockState()), OreConfiguration.target(new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES), GCBlocks.DEEPSLATE_SILICON_ORE.defaultBlockState()));
 
     public static final List<OreConfiguration.TargetBlockState> COPPER_ORES_MOON = List.of(OreConfiguration.target(MOON_STONE_ORE_REPLACEABLES, GCBlocks.MOON_COPPER_ORE.defaultBlockState()), OreConfiguration.target(LUNASLATE_ORE_REPLACEABLES, GCBlocks.LUNASLATE_COPPER_ORE.defaultBlockState()));
     public static final List<OreConfiguration.TargetBlockState> TIN_ORES_MOON = List.of(OreConfiguration.target(MOON_STONE_ORE_REPLACEABLES, GCBlocks.TIN_ORE.defaultBlockState()), OreConfiguration.target(LUNASLATE_ORE_REPLACEABLES, GCBlocks.LUNASLATE_TIN_ORE.defaultBlockState()));
@@ -70,6 +71,6 @@ public class GCOreConfiguredFeature {
     public static void register() {}
 
     private static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<ConfiguredFeature<?, ?>> register(String id, ConfiguredFeature<FC, F> feature) {
-        return BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_FEATURE, Constant.id(id), feature);
+        return Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Constant.id(id), feature);
     }
 }

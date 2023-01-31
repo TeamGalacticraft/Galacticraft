@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.OxygenStorageModuleBlockEntity;
@@ -39,9 +39,9 @@ import net.minecraft.world.entity.player.Inventory;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModuleBlockEntity, SimpleMachineMenu<OxygenStorageModuleBlockEntity>> {
-    public OxygenStorageModuleScreen(SimpleMachineMenu<OxygenStorageModuleBlockEntity> handler, Inventory inv, Component title) {
-        super(handler, inv, title, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
+public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModuleBlockEntity, MachineMenu<OxygenStorageModuleBlockEntity>> {
+    public OxygenStorageModuleScreen(MachineMenu<OxygenStorageModuleBlockEntity> handler, Inventory inv, Component title) {
+        super(handler, title, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModule
     }
 
     private void drawOxygenBufferBar(PoseStack matrices) {
-        double oxygenScale = (double)this.machine.fluidStorage().getAmount(0) / (double)this.machine.fluidStorage().getMaxCount(0);
+        double oxygenScale = (double)this.menu.fluidStorage.getAmount(0) / (double)this.menu.fluidStorage.getMaxCount(0);
 
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
         this.blit(matrices, this.leftPos + 52, this.topPos + 57, 176, 0, (int) (72.0D * oxygenScale), 3);

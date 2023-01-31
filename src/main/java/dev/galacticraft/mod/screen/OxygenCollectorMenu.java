@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.machinelib.api.screen.MachineMenu;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.mod.content.block.entity.OxygenCollectorBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -34,7 +34,7 @@ import net.minecraft.world.inventory.DataSlot;
  */
 public class OxygenCollectorMenu extends MachineMenu<OxygenCollectorBlockEntity> {
     public OxygenCollectorMenu(int syncId, Player player, OxygenCollectorBlockEntity blockEntity) {
-        super(syncId, player, blockEntity, GCMenuTypes.OXYGEN_COLLECTOR_HANDLER);
+        super(syncId, player, blockEntity, GCMenuTypes.OXYGEN_COLLECTOR);
         this.addDataSlot(new DataSlot() {
             @Override
             public int get() {

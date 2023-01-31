@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.api.screen.RecipeMachineMenu;
+import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.CircuitFabricatorBlockEntity;
@@ -77,7 +77,7 @@ public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBloc
     private static final int SENARY_PROGRESS_Y = 55;
 
     public CircuitFabricatorScreen(RecipeMachineMenu<Container, FabricationRecipe, CircuitFabricatorBlockEntity> handler, Inventory inv, Component title) {
-        super(handler, inv, title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
+        super(handler, title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         this.imageHeight = 176;
 
         this.capacitorX = 8;
@@ -94,8 +94,8 @@ public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBloc
     private void drawProgressBar(PoseStack matrices) {
         assert this.minecraft != null;
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
-        if (this.machine.getProgress() > 0) {
-            float progress = (float) ((((double) this.machine.getProgress()) / ((double) this.machine.getMaxProgress())) * 140.0);
+        if (this.menu.getProgress() > 0) {
+            float progress = (float) ((((double) this.menu.getProgress()) / ((double) this.menu.getMaxProgress())) * 140.0);
             if (progress <= 24) {
                 DrawableUtil.drawProgressTexture(matrices, this.leftPos + INITIAL_PROGRESS_X, this.topPos + INITIAL_PROGRESS_Y, INITIAL_PROGRESS_U, INITIAL_PROGRESS_V, progress, PROGRESS_SIZE);
             } else {

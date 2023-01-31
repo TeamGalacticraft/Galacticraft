@@ -25,8 +25,7 @@ package dev.galacticraft.mod.client.render.dimension;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -41,6 +40,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 // TODO: Allow support for more planets
@@ -114,9 +114,9 @@ public class OverworldRenderer {
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
             RenderSystem.disableTexture();
             poseStack.pushPose();
-            poseStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
-            poseStack.mulPose(Vector3f.ZP.rotationDegrees(Mth.sin(this.minecraft.level.getSunAngle(partialTicks)) < 0.0F ? 180.0F : 0.0F));
-            poseStack.mulPose(Vector3f.ZP.rotationDegrees(90.0F));
+            poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.sin(this.minecraft.level.getSunAngle(partialTicks)) < 0.0F ? 180.0F : 0.0F));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
             z = sunriseColors[0] * sunsetModInv;
             var9 = sunriseColors[1] * sunsetModInv;
             size = sunriseColors[2] * sunsetModInv;
@@ -150,9 +150,9 @@ public class OverworldRenderer {
         rand1 = 0.0F;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, z);
         poseStack.translate(var9, size, rand1);
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(-90.0F));
+        poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
 
-        poseStack.mulPose(Vector3f.XP.rotationDegrees(this.minecraft.level.getTimeOfDay(partialTicks) * 360.0F));
+        poseStack.mulPose(Axis.XP.rotationDegrees(this.minecraft.level.getTimeOfDay(partialTicks) * 360.0F));
         double playerHeight = player.getY();
 
         // Draw stars

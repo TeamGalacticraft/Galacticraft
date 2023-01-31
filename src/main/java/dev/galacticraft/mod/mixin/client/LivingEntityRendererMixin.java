@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import dev.galacticraft.mod.accessor.LivingEntityAccessor;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.model.EntityModel;
@@ -64,9 +64,9 @@ public abstract class LivingEntityRendererMixin {
     private void rotateToMatchRocket(LivingEntity entity, float f, float tickDelta, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
         if (entity.isPassenger()) {
             if (entity.getVehicle() instanceof RocketEntity) {
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(entity.getVehicle().getViewYRot(tickDelta)));
+                poseStack.mulPose(Axis.YP.rotationDegrees(entity.getVehicle().getViewYRot(tickDelta)));
                 poseStack.translate(0, 0.5D, 0);
-                poseStack.mulPose(Vector3f.XP.rotationDegrees(entity.getVehicle().getViewXRot(tickDelta)));
+                poseStack.mulPose(Axis.XP.rotationDegrees(entity.getVehicle().getViewXRot(tickDelta)));
                 poseStack.translate(0, -0.5D, 0);
             }
         }
@@ -77,7 +77,7 @@ public abstract class LivingEntityRendererMixin {
         if (livingEntity instanceof LivingEntityAccessor livingEntityAccessor && livingEntityAccessor.isInCryoSleep()) {
             Direction direction = livingEntity.getBedOrientation();
             float j = direction != null ? sleepDirectionToRotationCryo(direction) : g;
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(j));
+            poseStack.mulPose(Axis.YP.rotationDegrees(j));
             ci.cancel();
         }
     }

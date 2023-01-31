@@ -26,7 +26,6 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
@@ -40,7 +39,7 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
  */
 public class GCConfiguredFeature {
     public static final ResourceKey<ConfiguredFeature<?, ?>> OIL_LAKE_KEY = ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, new ResourceLocation(Constant.MOD_ID, "oil_lake"));
-    public static final Holder<ConfiguredFeature<?, ?>> OIL_LAKE = BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_FEATURE,
+    public static final Holder<ConfiguredFeature<?, ?>> OIL_LAKE = Registry.register(BuiltinRegistries.CONFIGURED_FEATURE,
             OIL_LAKE_KEY.location(),
             new ConfiguredFeature<>(Feature.LAKE,
             new LakeFeature.Configuration(BlockStateProvider.simple(GCBlocks.CRUDE_OIL), BlockStateProvider.simple(Blocks.STONE)))

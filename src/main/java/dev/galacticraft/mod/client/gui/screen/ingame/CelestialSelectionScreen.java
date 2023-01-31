@@ -30,9 +30,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
+import com.mojang.math.Axis;
 import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
 import dev.galacticraft.api.registry.AddonRegistry;
@@ -40,6 +38,7 @@ import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.satellite.Satellite;
 import dev.galacticraft.api.satellite.SatelliteRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.api.universe.celestialbody.Tiered;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
 import dev.galacticraft.api.universe.celestialbody.star.Star;
@@ -47,13 +46,10 @@ import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
-import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
-import dev.galacticraft.impl.universe.display.type.IconCelestialDisplayType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.ColorUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -78,6 +74,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
@@ -135,6 +134,7 @@ public class CelestialSelectionScreen extends Screen {
     protected double lastMovePosX = -1;
     protected double lastMovePosY = -1;
     protected final RegistryAccess manager = Minecraft.getInstance().level.registryAccess();
+    protected final CelestialBody<?, ?> fromBody;
     protected final Registry<Galaxy> galaxyRegistry = manager.registryOrThrow(AddonRegistry.GALAXY_KEY);
     protected final Registry<CelestialBody<?, ?>> celestialBodyRegistry = manager.registryOrThrow(AddonRegistry.CELESTIAL_BODY_KEY);
     protected @Nullable CelestialBody<?, ?> selectedParent = celestialBodyRegistry.get(new ResourceLocation("galacticraft-api", "sol"));
@@ -147,11 +147,12 @@ public class CelestialSelectionScreen extends Screen {
         }
     };
 
-    public CelestialSelectionScreen(boolean mapMode, RocketData data, boolean canCreateStations) {
+    public CelestialSelectionScreen(boolean mapMode, RocketData data, boolean canCreateStations, CelestialBody<?, ?> fromBody) {
         super(Component.empty());
         this.mapMode = mapMode;
         this.data = data;
         this.canCreateStations = canCreateStations;
+        this.fromBody = fromBody;
     }
 
     protected static float lerp(float v0, float v1, float t) {
@@ -182,7 +183,7 @@ public class CelestialSelectionScreen extends Screen {
 
     protected String getGrandparentName() {
         CelestialBody<?, ?> body = this.selectedBody;
-        if (body == null) return I18n.get(((TranslatableContents)BuiltinObjects.MILKY_WAY.name().getContents()).getKey());
+        if (body == null) return I18n.get("galaxy.galacticraft-api.milky_way.name"); //fixme
         if (body.parent(manager) != null) {
             if (body.parent(manager).parent(manager) != null) {
                 return I18n.get(((TranslatableContents)body.parent(manager).parent(manager).name().getContents()).getKey());
@@ -211,7 +212,7 @@ public class CelestialSelectionScreen extends Screen {
     }
 
     protected String parentName() {
-        if (this.selectedBody == null) return I18n.get(((TranslatableContents)BuiltinObjects.SOL.name().getContents()).getKey());
+        if (this.selectedBody == null) return I18n.get("star.galacticraft-api.sol.name"); //fixme
         if (this.selectedBody.parent(manager) != null) return I18n.get(((TranslatableContents)this.selectedBody.parent(manager).name().getContents()).getKey());
         return I18n.get(((TranslatableContents)galaxyRegistry.get(this.selectedBody.galaxy()).name().getContents()).getKey());
     }
@@ -394,7 +395,7 @@ public class CelestialSelectionScreen extends Screen {
             return false;
         }
 
-        if (!this.data.canTravelTo(manager, atBody) && this.data != RocketData.empty()) {
+        if (this.data != RocketData.empty() && !this.data.canTravelTo(manager, this.fromBody, atBody)) {
             // If parent body is unreachable, the satellite is also unreachable
             return false;
         }
@@ -452,9 +453,10 @@ public class CelestialSelectionScreen extends Screen {
     }
 
     protected void teleportToSelectedBody() {
+        assert !this.mapMode;
         if (this.selectedBody != null && this.selectedBody.type() instanceof Landable landable) {
             landable.world(this.selectedBody.config());
-            if (this.data.canTravelTo(manager, this.selectedBody) || this.data == RocketData.empty()) {
+            if (this.data == RocketData.empty() || this.data.canTravelTo(manager, this.fromBody, this.selectedBody)) {
                 try {
                     assert this.minecraft != null;
                     ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "planet_tp"), PacketByteBufs.create().writeResourceLocation(celestialBodyRegistry.getKey(this.selectedBody)));
@@ -973,13 +975,12 @@ public class CelestialSelectionScreen extends Screen {
             RenderSystem.applyModelViewMatrix();
             RenderSystem.backupProjectionMatrix();
             Matrix4f projectionMatrix = new Matrix4f();
-            projectionMatrix.setIdentity();
-            projectionMatrix.m00 = 2.0F / width;
-            projectionMatrix.m11 = 2.0F / -height;
-            projectionMatrix.m22 = -2.0F / 9000.0F;
-            projectionMatrix.m03 = -1.0F;
-            projectionMatrix.m13 = 1.0F;
-            projectionMatrix.m23 = -2.0F;
+            projectionMatrix.m00(2.0F / width);
+            projectionMatrix.m11(2.0F / -height);
+            projectionMatrix.m22(-2.0F / 9000.0F);
+            projectionMatrix.m03(-1.0F);
+            projectionMatrix.m13(1.0F);
+            projectionMatrix.m23(-2.0F);
 
             RenderSystem.setProjectionMatrix(projectionMatrix);
             RenderSystem.applyModelViewMatrix();
@@ -1093,7 +1094,7 @@ public class CelestialSelectionScreen extends Screen {
 
     protected Vector3f getCelestialBodyPosition(CelestialBody<?, ?> cBody, float delta) {
         if (cBody == null) {
-            return Vector3f.ZERO;
+            return new Vector3f();
         }
         assert this.minecraft != null;
         assert this.minecraft.level != null;
@@ -1136,7 +1137,7 @@ public class CelestialSelectionScreen extends Screen {
                 Vector4f vector4f = display.render(matrices, Tesselator.getInstance().getBuilder(), this.getWidthForCelestialBody(body), mouseX, mouseY, delta, s -> resetAlphaShader(alpha, s));
                 matrices.translate(vector4f.x(), vector4f.y(), 0);
                 Matrix4f model = matrices.last().pose();
-                planetPosMap.put(body, new Vec3(model.m03, model.m13, vector4f.z() * model.m00));
+                planetPosMap.put(body, new Vec3(model.m03(), model.m13(), vector4f.z() * model.m00()));
                 matrices.popPose();
             }
         }
@@ -1538,9 +1539,9 @@ public class CelestialSelectionScreen extends Screen {
                     }
                 }
                 this.blit(width / 2 - 47, LHS, 94, 11, 0, 414, 188, 22, false, false);
-                if (this.selectedBody.type() instanceof Landable landable && landable.accessWeight(this.selectedBody.config()) >= 0 && (!(isSatellite(this.selectedBody)))) {
+                if (this.selectedBody.type() instanceof Tiered tiered && tiered.accessWeight(this.selectedBody.config()) >= 0 && (!(isSatellite(this.selectedBody)))) {
                     boolean canReach;
-                    if ((!this.data.canTravelTo(manager, this.selectedBody) && this.data != RocketData.empty())) {
+                    if (this.data != RocketData.empty() && !this.data.canTravelTo(manager, this.fromBody, this.selectedBody)) {
                         canReach = false;
                         RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1.0F);
                     } else {
@@ -1549,7 +1550,7 @@ public class CelestialSelectionScreen extends Screen {
                     }
                     this.blit(width / 2 - 30, LHS + 11, 30, 11, 0, 414, 60, 22, false, false);
                     this.blit(width / 2, LHS + 11, 30, 11, 128, 414, 60, 22, false, false);
-                    str = I18n.get("ui.galacticraft.celestialselection.tier", landable.accessWeight(this.selectedBody.config()) == -1 ? "?" : landable.accessWeight(this.selectedBody.config()));
+                    str = I18n.get("ui.galacticraft.celestialselection.tier", tiered.accessWeight(this.selectedBody.config()) == -1 ? "?" : tiered.accessWeight(this.selectedBody.config()));
                     this.font.draw(matrices, str, width / 2f - this.font.width(str) / 2f, LHS + 13, canReach ? GREY4 : RED3);
                 }
 
@@ -1569,7 +1570,7 @@ public class CelestialSelectionScreen extends Screen {
 
                 if (!this.mapMode) {
                     resetShader(GameRenderer::getPositionTexColorShader);
-                    if (!this.data.canTravelTo(manager, this.selectedBody) && this.data != RocketData.empty() || !(this.selectedBody.type() instanceof Landable) || isSatellite(this.selectedBody) && !((Satellite) this.selectedBody.type()).ownershipData(this.selectedBody.config()).canAccess(this.minecraft.player))
+                    if (this.data != RocketData.empty() && !this.data.canTravelTo(manager, this.fromBody, this.selectedBody) || !(this.selectedBody.type() instanceof Landable) || isSatellite(this.selectedBody) && !((Satellite) this.selectedBody.type()).ownershipData(this.selectedBody.config()).canAccess(this.minecraft.player))
                     {
                         RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
                     } else {
@@ -1690,7 +1691,7 @@ public class CelestialSelectionScreen extends Screen {
             resetShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
             float brightness = child.equals(this.selectedBody) ? 0.2F : 0.0F;
-            if (child.type() instanceof Landable landable && (this.data.canTravelTo(manager, child) || this.data == RocketData.empty())) {
+            if (child.type() instanceof Landable<?> && (this.data == RocketData.empty() || this.fromBody == null || this.data.canTravelTo(manager, this.fromBody, child))) {
                 RenderSystem.setShaderColor(0.0F, 0.6F + brightness, 0.0F, scale / 95.0F);
             } else {
                 RenderSystem.setShaderColor(0.6F + brightness, 0.0F, 0.0F, scale / 95.0F);
@@ -1834,9 +1835,9 @@ public class CelestialSelectionScreen extends Screen {
         float zoomLocal = this.getZoomAdvanced();
         this.zoom = zoomLocal;
         matrices.scale(1.1f + zoomLocal, 1.1F + zoomLocal, 1.1F + zoomLocal);
-        matrices.mulPose(Vector3f.XP.rotationDegrees(55));
+        matrices.mulPose(Axis.XP.rotationDegrees(55));
         matrices.translate(-cBodyPos.x, -cBodyPos.y, 0);
-        matrices.mulPose(Vector3f.ZN.rotationDegrees(45));
+        matrices.mulPose(Axis.ZN.rotationDegrees(45));
     }
 
     /**
@@ -1878,7 +1879,7 @@ public class CelestialSelectionScreen extends Screen {
         final float sin2 = Mth.sin(theta2);
 
         for (CelestialBody<?, ?> body : this.bodiesToRender) {
-            Vector3f systemOffset = Vector3f.ZERO;
+            Vector3f systemOffset = new Vector3f();
             if (body.parent(manager) != null) {
                 systemOffset = this.getCelestialBodyPosition(body.parent(manager), delta);
             }
@@ -1891,7 +1892,7 @@ public class CelestialSelectionScreen extends Screen {
 
             if (alpha > 0.0F) {
                 matrices.pushPose();
-                matrices.mulPose(Vector3f.ZP.rotationDegrees(45));
+                matrices.mulPose(Axis.ZP.rotationDegrees(45));
                 matrices.translate(systemOffset.x(), systemOffset.y(), systemOffset.z());
 //                matrices.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(55));
                 float[] color = switch (count % 2) {
@@ -1998,9 +1999,9 @@ public class CelestialSelectionScreen extends Screen {
 
     protected void setupMatrix(CelestialBody<?, ?> body, PoseStack matrices, float scaleXZ, float delta) {
         Vector3f celestialBodyPosition = this.getCelestialBodyPosition(body, delta);
-        matrices.mulPose(Vector3f.ZP.rotationDegrees(45));
+        matrices.mulPose(Axis.ZP.rotationDegrees(45));
         matrices.translate(celestialBodyPosition.x(), celestialBodyPosition.y(), celestialBodyPosition.z());
-        matrices.mulPose(Vector3f.XN.rotationDegrees(55));
+        matrices.mulPose(Axis.XN.rotationDegrees(55));
         if (scaleXZ != 1.0F) {
             matrices.scale(scaleXZ, scaleXZ, 1.0F);
         }

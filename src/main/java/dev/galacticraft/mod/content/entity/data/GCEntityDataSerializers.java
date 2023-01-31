@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.entity.data;
 
 import dev.galacticraft.api.rocket.LaunchStage;
-import dev.galacticraft.api.rocket.part.RocketPartType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializer;

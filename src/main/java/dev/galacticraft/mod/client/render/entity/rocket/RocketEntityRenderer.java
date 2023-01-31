@@ -24,10 +24,9 @@ package dev.galacticraft.mod.client.render.entity.rocket;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
-import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -56,8 +55,8 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
             matrices.translate((entity.level.random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level.random.nextDouble() - 0.5D) * 0.1D);
         }
         matrices.translate(0.5D, 0, 0.5D);
-        matrices.mulPose(Vector3f.YP.rotationDegrees(entity.getViewYRot(tickDelta)));
-        matrices.mulPose(Vector3f.XP.rotationDegrees(entity.getViewXRot(tickDelta)));
+        matrices.mulPose(Axis.YP.rotationDegrees(entity.getViewYRot(tickDelta)));
+        matrices.mulPose(Axis.XP.rotationDegrees(entity.getViewXRot(tickDelta)));
         matrices.translate(-0.5D, 0, -0.5D);
 
         float wobbleTicks = (float) entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - tickDelta;
@@ -68,7 +67,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         }
 
         if (wobbleTicks > 0.0F) {
-            matrices.mulPose(Vector3f.XP.rotationDegrees(Mth.sin(wobbleTicks) * wobbleTicks * wobbleStrength / 10.0F * (float) entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_SIDE)));
+            matrices.mulPose(Axis.XP.rotationDegrees(Mth.sin(wobbleTicks) * wobbleTicks * wobbleStrength / 10.0F * (float) entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_SIDE)));
         }
 
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);

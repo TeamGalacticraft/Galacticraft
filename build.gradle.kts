@@ -40,10 +40,9 @@ val modMenuVersion         = project.property("modmenu.version").toString()
 val energyVersion          = project.property("energy.version").toString()
 val galacticraftApiVersion = project.property("galacticraft.api.version").toString()
 val machineLibVersion      = project.property("machinelib.version").toString()
-val architecturyVersion    = project.property("architectury.version").toString()
+//val architecturyVersion    = project.property("architectury.version").toString()
 val reiVersion             = project.property("rei.version").toString()
 val jeiVersion             = project.property("jei.version").toString()
-val myronVersion           = project.property("myron.version").toString()
 val badpacketsVersion      = project.property("badpackets.version").toString()
 val wthitVersion           = project.property("wthit.version").toString()
 val portingLibVersion      = project.property("porting.lib.version").toString()
@@ -52,9 +51,9 @@ val runtimeOptional        = project.property("optional_dependencies.enabled").t
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("1.0-SNAPSHOT")
+    id("fabric-loom") version("1.1-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
-    id("io.github.juuxel.loom-quiltflower") version("1.7.3")
+    id("io.github.juuxel.loom-quiltflower") version("1.8.0")
 }
 
 java {
@@ -110,6 +109,7 @@ loom {
 }
 
 repositories {
+    mavenLocal()
     maven("https://maven.galacticraft.net/repository/maven-releases/") {
         content {
             includeGroup("dev.galacticraft")
@@ -121,7 +121,11 @@ repositories {
             includeVersionByRegex("dev.galacticraft", ".*", ".*-SNAPSHOT")
         }
     }
-    maven("https://mvn.devos.one/snapshots/")
+    maven("https://mvn.devos.one/snapshots/") {
+        content {
+            includeGroup("io.github.fabricators_of_create.Porting-Lib")
+        }
+    }
     maven("https://maven.shedaniel.me/") {
         content {
             includeGroup("me.shedaniel.cloth.api")
@@ -172,10 +176,6 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 
     // Mandatory Dependencies (Included with Jar-In-Jar)
-//    includedDependency("dev.monarkhes:myron:$myronVersion") {
-//        exclude(group = "net.fabricmc")
-//        exclude(group = "net.fabricmc.fabric-api")
-//    }
     listOf(
         "model_loader",
         "extensions",
@@ -184,7 +184,7 @@ dependencies {
         "constants",
         "common"
     ).forEach {
-        includedDependency("io.github.fabricators_of_create.Porting-Lib:$it:${portingLibVersion}+${minecraftVersion}") { isTransitive = false }
+        includedDependency("io.github.fabricators_of_create.Porting-Lib:$it:${portingLibVersion}+1.19.2") { isTransitive = false }
     }
     includedDependency("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion") {
         exclude(group = "net.fabricmc")
@@ -207,16 +207,16 @@ dependencies {
     optionalDependency("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
     optionalDependency("lol.bai:badpackets:fabric-$badpacketsVersion") { isTransitive = false }
     optionalDependency("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
-    optionalDependency("dev.architectury:architectury-fabric:${architecturyVersion}") { isTransitive = false }
+//    optionalDependency("dev.architectury:architectury-fabric:${architecturyVersion}") { isTransitive = false }
     optionalDependency("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     }
-    modCompileOnlyApi("mezz.jei:jei-${minecraftVersion}-common-api:${jeiVersion}")
-    modCompileOnlyApi("mezz.jei:jei-${minecraftVersion}-fabric-api:${jeiVersion}")
+    modCompileOnlyApi("mezz.jei:jei-1.19.2-common-api:${jeiVersion}")
+    modCompileOnlyApi("mezz.jei:jei-1.19.2-fabric-api:${jeiVersion}")
     // at runtime, use the full JEI jar for Fabric
-    modRuntimeOnly("mezz.jei:jei-${minecraftVersion}-fabric:${jeiVersion}")
+    modRuntimeOnly("mezz.jei:jei-1.19.2-fabric:${jeiVersion}")
 
     // Runtime Dependencies
     modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
@@ -284,10 +284,6 @@ license {
     setHeader(project.file("LICENSE_HEADER.txt"))
     include("**/dev/galacticraft/**/*.java")
     include("build.gradle.kts")
-    ext {
-        set("year", "2023")
-        set("company", "Team Galacticraft")
-    }
 }
 
 quiltflower {
@@ -295,7 +291,6 @@ quiltflower {
 }
 
 tasks.withType(JavaCompile::class) {
-    dependsOn(tasks.checkLicenses)
     options.encoding = "UTF-8"
     options.release.set(17)
 }

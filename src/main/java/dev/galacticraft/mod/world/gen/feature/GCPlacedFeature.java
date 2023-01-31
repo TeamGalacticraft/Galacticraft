@@ -26,7 +26,6 @@ import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -49,7 +48,7 @@ public class GCPlacedFeature {
     )));
 
     public static Holder<PlacedFeature> register(ResourceKey<PlacedFeature> id, PlacedFeature placedFeature) {
-        return BuiltinRegistries.register(BuiltinRegistries.PLACED_FEATURE, id, placedFeature);
+        return Registry.register(BuiltinRegistries.PLACED_FEATURE, id, placedFeature);
     }
 
     public static void register() {

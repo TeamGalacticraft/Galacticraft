@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.AdvancedSolarPanelBlockEntity;
+import dev.galacticraft.mod.screen.SolarPanelMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -36,15 +36,15 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class AdvancedSolarPanelScreen extends SolarPanelScreen<AdvancedSolarPanelBlockEntity, SimpleMachineMenu<AdvancedSolarPanelBlockEntity>> {
-    public AdvancedSolarPanelScreen(SimpleMachineMenu<AdvancedSolarPanelBlockEntity> handler, Inventory inv, Component title) {
+public class AdvancedSolarPanelScreen extends SolarPanelScreen<AdvancedSolarPanelBlockEntity, SolarPanelMenu<AdvancedSolarPanelBlockEntity>> {
+    public AdvancedSolarPanelScreen(SolarPanelMenu<AdvancedSolarPanelBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title);
     }
 
     @Override
     public void appendEnergyTooltip(List<Component> list) {
-        if (this.machine.getStatus().type().isActive()) {
-            list.add(Component.translatable("ui.galacticraft.machine.gj_per_t", this.machine.currentEnergyGeneration).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+        if (this.menu.configuration.getStatus().type().isActive()) {
+            list.add(Component.translatable("ui.galacticraft.machine.gj_per_t", this.menu.getCurrentEnergyGeneration()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
         }
     }
 }

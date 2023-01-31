@@ -27,7 +27,7 @@ import dev.galacticraft.mod.structure.MoonPillagerOutpostGenerator;
 import dev.galacticraft.mod.structure.MoonVillageGenerator;
 import dev.galacticraft.mod.data.GCTags;
 import net.minecraft.core.Holder;
-import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.Structures;
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.MobCategory;
@@ -48,9 +48,9 @@ import java.util.Map;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GCStructure {
-    public static final Holder<Structure> MOON_RUINS = BuiltinRegistries.register(BuiltinRegistries.STRUCTURES, GCStructureKeys.MOON_RUINS, new MoonRuinsStructure(Structures.structure(GCTags.MOON_RUINS_HAS_STRUCTURE, TerrainAdjustment.BEARD_THIN)));
+    public static final Holder<Structure> MOON_RUINS = Registry.register(BuiltinRegistries.STRUCTURES, GCStructureKeys.MOON_RUINS, new MoonRuinsStructure(Structures.structure(GCTags.MOON_RUINS_HAS_STRUCTURE, TerrainAdjustment.BEARD_THIN)));
 
-    public static final Holder<Structure> MOON_PILLAGER_BASE = BuiltinRegistries.register(BuiltinRegistries.STRUCTURES,
+    public static final Holder<Structure> MOON_PILLAGER_BASE = Registry.register(BuiltinRegistries.STRUCTURES,
             GCStructureKeys.MOON_PILLAGER_BASE,
             new JigsawStructure(
                     new Structure.StructureSettings(BuiltinRegistries.BIOME.getOrCreateTag(GCTags.MOON_PILLAGER_BASE_HAS_STRUCTURE), Map.of(MobCategory.MONSTER,
@@ -64,7 +64,7 @@ public class GCStructure {
                     true,
                     Heightmap.Types.WORLD_SURFACE_WG
             ));
-    public static final Holder<Structure> MOON_VILLAGE_HIGHLANDS = BuiltinRegistries.register(BuiltinRegistries.STRUCTURES, GCStructureKeys.MOON_VILLAGE_HIGHLANDS,
+    public static final Holder<Structure> MOON_VILLAGE_HIGHLANDS = Registry.register(BuiltinRegistries.STRUCTURES, GCStructureKeys.MOON_VILLAGE_HIGHLANDS,
             new JigsawStructure(
             new Structure.StructureSettings(BuiltinRegistries.BIOME.getOrCreateTag(GCTags.MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE),
                     Collections.emptyMap(),

@@ -22,13 +22,13 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
-import com.mojang.math.Vector3f;
 import dev.galacticraft.mod.content.block.entity.OxygenCollectorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Vector3f;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>

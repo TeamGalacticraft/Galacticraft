@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.attribute.fluid;
 
-import dev.galacticraft.machinelib.impl.fluid.FluidStack;
+import dev.galacticraft.machinelib.api.fluid.FluidStack;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;

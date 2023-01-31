@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.events;
 
-import dev.galacticraft.api.entity.Rocket;
 import dev.galacticraft.api.rocket.LaunchStage;
+import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.mod.client.sounds.RocketSound;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.Minecraft;

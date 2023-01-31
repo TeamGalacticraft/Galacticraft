@@ -24,10 +24,9 @@ package dev.galacticraft.mod.client.render.item;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
@@ -50,10 +49,10 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         if (mode == ItemTransforms.TransformType.GUI) {
             matrices.scale(0.25f, 0.25f, 0.25f);
             matrices.translate(1.5, 2, 2);
-            matrices.mulPose(Vector3f.ZP.rotationDegrees(55));
-            matrices.mulPose(Vector3f.XP.rotationDegrees(45));
+            matrices.mulPose(Axis.ZP.rotationDegrees(55));
+            matrices.mulPose(Axis.XP.rotationDegrees(45));
             matrices.translate(0.5D, 0, 0.5D);
-            matrices.mulPose(Vector3f.YP.rotation((float) (((Minecraft.getInstance().level.getGameTime() * 66.666666666666)) / 1000.0F)));
+            matrices.mulPose(Axis.YP.rotation((float) (((Minecraft.getInstance().level.getGameTime() * 66.666666666666)) / 1000.0F)));
             matrices.translate(-0.5D, 0, -0.5D);
         } else if (mode == ItemTransforms.TransformType.GROUND) {
             matrices.scale(0.2f, 0.2f, 0.2f);
@@ -64,7 +63,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         }
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         matrices.translate(0.0D, -1.75D, 0.0D);
-        ResourceLocation part = data.getPartForType(RocketPartType.BOTTOM);
+        ResourceLocation part = data.bottom();
         if (part != null) {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
@@ -73,14 +72,14 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
 
         matrices.translate(0.0D, 0.5, 0.0D);
 
-        part = data.getPartForType(RocketPartType.BOOSTER);
+        part = data.booster();
         if (part != null) {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
             matrices.popPose();
         }
 
-        part = data.getPartForType(RocketPartType.FIN);
+        part = data.fin();
         if (part != null) {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
@@ -89,7 +88,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
 
         matrices.translate(0.0D, 1.0D, 0.0D);
 
-        part = data.getPartForType(RocketPartType.BODY);
+        part = data.body();
         if (part != null) {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
@@ -98,7 +97,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
 
         matrices.translate(0.0D, 1.75, 0.0D);
 
-        part = data.getPartForType(RocketPartType.CONE);
+        part = data.cone();
         if (part != null) {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);

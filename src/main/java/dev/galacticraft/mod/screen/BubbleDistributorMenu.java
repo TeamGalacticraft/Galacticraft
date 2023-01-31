@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.machinelib.api.screen.MachineMenu;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.mod.content.block.entity.OxygenBubbleDistributorBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -33,7 +33,7 @@ import net.minecraft.world.entity.player.Player;
  */
 public class BubbleDistributorMenu extends MachineMenu<OxygenBubbleDistributorBlockEntity> {
     public BubbleDistributorMenu(int syncId, Player player, OxygenBubbleDistributorBlockEntity machine) {
-        super(syncId, player, machine, GCMenuTypes.BUBBLE_DISTRIBUTOR_HANDLER);
+        super(syncId, player, machine, GCMenuTypes.BUBBLE_DISTRIBUTOR);
 
         this.addPlayerInventorySlots(8, 84);
     }

@@ -81,14 +81,14 @@ public class GCClientPacketReceiver {
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "open_screen"), (client, handler, buf, responseSender) -> {
             String screen = buf.readUtf();
             switch (screen) {
-                case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(false, RocketData.empty(), true)));
+                case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(false, RocketData.empty(), true, fromBody)));
                 default -> Galacticraft.LOGGER.error("No screen found!");
             }
         });
 
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "planet_menu_open"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
             RocketData rocketData = RocketData.fromNbt(packetByteBuf.readNbt());
-            minecraftClient.execute(() -> minecraftClient.setScreen(new CelestialSelectionScreen(false, rocketData, true)));
+            minecraftClient.execute(() -> minecraftClient.setScreen(new CelestialSelectionScreen(false, rocketData, true, fromBody)));
         });
 
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "rocket_spawn"), ((client, handler, buf, responseSender) -> {

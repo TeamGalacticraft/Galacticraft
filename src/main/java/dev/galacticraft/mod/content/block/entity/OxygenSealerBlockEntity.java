@@ -27,7 +27,6 @@ import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.gas.Gases;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
-import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
@@ -35,8 +34,9 @@ import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
+import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.GenericStorageUtil;
@@ -84,7 +84,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     private boolean oxygenWorld = false;
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
-        super(GCBlockEntityTypes.OXYGEN_SEALER, pos, state);
+        super(GCMachineTypes.OXYGEN_SEALER, pos, state);
     }
 
     @Override
@@ -100,15 +100,15 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
         return MachineItemStorage.Builder.create()
-                .addSlot(GCSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 62))
-                .addSlot(GCSlotGroups.OXYGEN_TANK_FILL, Constant.Filter.Item.CAN_EXTRACT_LOX, true, ItemSlotDisplay.create(31, 62))
+                .addSlot(GCSlotGroupTypes.ENERGY_TO_SELF, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 62))
+                .addSlot(GCSlotGroupTypes.OXYGEN_TANK_FILL, Constant.Filter.Item.CAN_EXTRACT_LOX, true, ItemSlotDisplay.create(31, 62))
                 .build();
     }
 
     @Override
     protected @NotNull MachineFluidStorage createFluidStorage() {
         return MachineFluidStorage.Builder.create()
-                .addTank(GCSlotGroups.OXYGEN_INPUT, MAX_OXYGEN, TankDisplay.create(31, 8), true)
+                .addTank(GCSlotGroupTypes.OXYGEN_INPUT, MAX_OXYGEN, TankDisplay.create(31, 8), true)
                 .build();
     }
 
@@ -242,7 +242,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                     syncId,
                     player,
                     this,
-                    GCMenuTypes.OXYGEN_SEALER_HANDLER
+                    GCMenuTypes.OXYGEN_SEALER
             );
         }
         return null;

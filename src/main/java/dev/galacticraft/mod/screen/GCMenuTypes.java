@@ -22,14 +22,16 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.machinelib.api.screen.RecipeMachineMenu;
-import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.content.block.entity.*;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.MenuType;
@@ -40,94 +42,62 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GCMenuTypes {
+    public static final MenuType<CoalGeneratorMenu> COAL_GENERATOR = MachineMenu.createType(CoalGeneratorMenu::new);
+    public static final MenuType<SolarPanelMenu<BasicSolarPanelBlockEntity>> BASIC_SOLAR_PANEL = MachineMenu.createType(SolarPanelMenu::new, () -> GCMachineTypes.BASIC_SOLAR_PANEL);
+    public static final MenuType<SolarPanelMenu<AdvancedSolarPanelBlockEntity>> ADVANCED_SOLAR_PANEL = MachineMenu.createType(SolarPanelMenu::new, () -> GCMachineTypes.ADVANCED_SOLAR_PANEL);
 
-    public static final ExtendedScreenHandlerType<CoalGeneratorMenu> COAL_GENERATOR_HANDLER = new ExtendedScreenHandlerType<>(CoalGeneratorMenu::new);
+    public static final MenuType<RecipeMachineMenu<Container, FabricationRecipe, CircuitFabricatorBlockEntity>> CIRCUIT_FABRICATOR = RecipeMachineMenu.createType(() -> GCMachineTypes.CIRCUIT_FABRICATOR, 94);
+    public static final MenuType<CompressorMenu> COMPRESSOR = MachineMenu.createType(CompressorMenu::new);
 
-    public static final MenuType<SimpleMachineMenu<BasicSolarPanelBlockEntity>> BASIC_SOLAR_PANEL_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineMenu.createFactory(() -> GCMenuTypes.BASIC_SOLAR_PANEL_HANDLER)
-    );
+    public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, CompressingRecipe, ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR = RecipeMachineMenu.createType(() -> GCMachineTypes.ELECTRIC_COMPRESSOR);
+    public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, SmeltingRecipe, ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE = RecipeMachineMenu.createType(() -> GCMachineTypes.ELECTRIC_FURNACE);
+    public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity>> ELECTRIC_ARC_FURNACE = RecipeMachineMenu.createType(() -> GCMachineTypes.ELECTRIC_ARC_FURNACE);
 
-    public static final MenuType<SimpleMachineMenu<AdvancedSolarPanelBlockEntity>> ADVANCED_SOLAR_PANEL_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineMenu.createFactory(() -> GCMenuTypes.ADVANCED_SOLAR_PANEL_HANDLER)
-    );
+    public static final MenuType<MachineMenu<RefineryBlockEntity>> REFINERY = MachineMenu.createSimple(() -> GCMachineTypes.REFINERY);
 
-    public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, FabricationRecipe, CircuitFabricatorBlockEntity>> CIRCUIT_FABRICATOR_HANDLER = new ExtendedScreenHandlerType<>(
-            RecipeMachineMenu.createFactory(() -> GCMenuTypes.CIRCUIT_FABRICATOR_HANDLER, 94)
-    );
+    public static final MenuType<OxygenCollectorMenu> OXYGEN_COLLECTOR = MachineMenu.createType(OxygenCollectorMenu::new);
 
-    public static final ExtendedScreenHandlerType<CompressorMenu> COMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(CompressorMenu::new);
+    public static final MenuType<MachineMenu<OxygenCompressorBlockEntity>> OXYGEN_COMPRESSOR = MachineMenu.createSimple(() -> GCMachineTypes.OXYGEN_COMPRESSOR);
+    public static final MenuType<MachineMenu<OxygenDecompressorBlockEntity>> OXYGEN_DECOMPRESSOR = MachineMenu.createSimple(() -> GCMachineTypes.OXYGEN_DECOMPRESSOR);
 
-    public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, CompressingRecipe, ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(
-            RecipeMachineMenu.createFactory(() -> GCMenuTypes.ELECTRIC_COMPRESSOR_HANDLER)
-    );
+    public static final MenuType<MachineMenu<OxygenSealerBlockEntity>> OXYGEN_SEALER = MachineMenu.createSimple(() -> GCMachineTypes.OXYGEN_SEALER);
 
-    public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, SmeltingRecipe, ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE_HANDLER = new ExtendedScreenHandlerType<>(
-            RecipeMachineMenu.createFactory(() -> GCMenuTypes.ELECTRIC_FURNACE_HANDLER)
-    );
+    public static final MenuType<BubbleDistributorMenu> BUBBLE_DISTRIBUTOR = MachineMenu.createType(BubbleDistributorMenu::new);
 
-    public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity>> ELECTRIC_ARC_FURNACE_HANDLER = new ExtendedScreenHandlerType<>(
-            RecipeMachineMenu.createFactory(() -> GCMenuTypes.ELECTRIC_ARC_FURNACE_HANDLER)
-    );
+    public static final MenuType<MachineMenu<OxygenStorageModuleBlockEntity>> OXYGEN_STORAGE_MODULE = MachineMenu.createSimple(() -> GCMachineTypes.OXYGEN_STORAGE_MODULE);
+    public static final MenuType<MachineMenu<EnergyStorageModuleBlockEntity>> ENERGY_STORAGE_MODULE = MachineMenu.createSimple(() -> GCMachineTypes.ENERGY_STORAGE_MODULE);
 
-    public static final MenuType<SimpleMachineMenu<RefineryBlockEntity>> REFINERY_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineMenu.createFactory(() -> GCMenuTypes.REFINERY_HANDLER, 86)
-    );
+    public static final MenuType<GCPlayerInventoryMenu> PLAYER_INV_GC = new MenuType<>(GCPlayerInventoryMenu::new);
 
-    public static final MenuType<OxygenCollectorMenu> OXYGEN_COLLECTOR_HANDLER = new ExtendedScreenHandlerType<>(OxygenCollectorMenu::new);
-
-    public static final MenuType<SimpleMachineMenu<OxygenCompressorBlockEntity>> OXYGEN_COMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineMenu.createFactory(() -> GCMenuTypes.OXYGEN_COMPRESSOR_HANDLER)
-    );
-
-    public static final MenuType<SimpleMachineMenu<OxygenDecompressorBlockEntity>> OXYGEN_DECOMPRESSOR_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineMenu.createFactory(() -> GCMenuTypes.OXYGEN_DECOMPRESSOR_HANDLER)
-    );
-
-    public static final MenuType<SimpleMachineMenu<OxygenSealerBlockEntity>> OXYGEN_SEALER_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineMenu.createFactory(() -> GCMenuTypes.OXYGEN_SEALER_HANDLER)
-    );
-
-    public static final MenuType<BubbleDistributorMenu> BUBBLE_DISTRIBUTOR_HANDLER = new ExtendedScreenHandlerType<>(BubbleDistributorMenu::new);
-
-    public static final MenuType<SimpleMachineMenu<OxygenStorageModuleBlockEntity>> OXYGEN_STORAGE_MODULE_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineMenu.createFactory(() -> GCMenuTypes.OXYGEN_STORAGE_MODULE_HANDLER)
-    );
-
-    public static final MenuType<SimpleMachineMenu<EnergyStorageModuleBlockEntity>> ENERGY_STORAGE_MODULE_HANDLER = new ExtendedScreenHandlerType<>(
-            SimpleMachineMenu.createFactory(() -> GCMenuTypes.ENERGY_STORAGE_MODULE_HANDLER)
-    );
-
-    public static final MenuType<GCPlayerInventoryMenu> PLAYER_INV_GC_HANDLER = new MenuType<>(GCPlayerInventoryMenu::new);
-
-    public static final ExtendedScreenHandlerType<FuelLoaderMenu> FUEL_LOADER_HANDLER = new ExtendedScreenHandlerType<>(FuelLoaderMenu::new);
+    public static final ExtendedScreenHandlerType<FuelLoaderMenu> FUEL_LOADER = new ExtendedScreenHandlerType<>(FuelLoaderMenu::new);
 
     public static final MenuType<AirlockControllerMenu> AIRLOCK_CONTROLLER_MENU = new MenuType<>(AirlockControllerMenu::new);
 
     public static void register() {
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.PLAYER_INVENTORY_SCREEN_HANDLER), PLAYER_INV_GC_HANDLER);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.PLAYER_INVENTORY_MENU), PLAYER_INV_GC);
 
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.COAL_GENERATOR_SCREEN_HANDLER), COAL_GENERATOR_HANDLER);
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.BASIC_SOLAR_PANEL_SCREEN_HANDLER), BASIC_SOLAR_PANEL_HANDLER);
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.ADVANCED_SOLAR_PANEL_SCREEN_HANDLER), ADVANCED_SOLAR_PANEL_HANDLER);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.COAL_GENERATOR_MENU), COAL_GENERATOR);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.BASIC_SOLAR_PANEL_MENU), BASIC_SOLAR_PANEL);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.ADVANCED_SOLAR_PANEL_MENU), ADVANCED_SOLAR_PANEL);
 
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.CIRCUIT_FABRICATOR_SCREEN_HANDLER), CIRCUIT_FABRICATOR_HANDLER);
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.COMPRESSOR_SCREEN_HANDLER), COMPRESSOR_HANDLER);
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.ELECTRIC_COMPRESSOR_SCREEN_HANDLER), ELECTRIC_COMPRESSOR_HANDLER);
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.ELECTRIC_FURNACE_SCREEN_HANDLER), ELECTRIC_FURNACE_HANDLER);
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.ELECTRIC_ARC_FURNACE_SCREEN_HANDLER), ELECTRIC_ARC_FURNACE_HANDLER);
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.REFINERY_SCREEN_HANDLER), REFINERY_HANDLER);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.CIRCUIT_FABRICATOR_MENU), CIRCUIT_FABRICATOR);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.COMPRESSOR_MENU), COMPRESSOR);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.ELECTRIC_COMPRESSOR_MENU), ELECTRIC_COMPRESSOR);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.ELECTRIC_FURNACE_MENU), ELECTRIC_FURNACE);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.ELECTRIC_ARC_FURNACE_MENU), ELECTRIC_ARC_FURNACE);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.REFINERY_MENU), REFINERY);
 
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_COLLECTOR_SCREEN_HANDLER), OXYGEN_COLLECTOR_HANDLER);
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_COMPRESSOR_SCREEN_HANDLER), OXYGEN_COMPRESSOR_HANDLER);
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_DECOMPRESSOR_SCREEN_HANDLER), OXYGEN_DECOMPRESSOR_HANDLER);
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.BUBBLE_DISTRIBUTOR_SCREEN_HANDLER), BUBBLE_DISTRIBUTOR_HANDLER);
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_SEALER_SCREEN_HANDLER), OXYGEN_SEALER_HANDLER);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.OXYGEN_COLLECTOR_MENU), OXYGEN_COLLECTOR);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.OXYGEN_COMPRESSOR_MENU), OXYGEN_COMPRESSOR);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.OXYGEN_DECOMPRESSOR_MENU), OXYGEN_DECOMPRESSOR);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.BUBBLE_DISTRIBUTOR_MENU), BUBBLE_DISTRIBUTOR);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.OXYGEN_SEALER_MENU), OXYGEN_SEALER);
 
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.ENERGY_STORAGE_MODULE_SCREEN_HANDLER), ENERGY_STORAGE_MODULE_HANDLER);
-        Registry.register(Registry.MENU, new ResourceLocation(Constant.MOD_ID, Constant.ScreenHandler.OXYGEN_STORAGE_MODULE_SCREEN_HANDLER), OXYGEN_STORAGE_MODULE_HANDLER);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.ENERGY_STORAGE_MODULE_MENU), ENERGY_STORAGE_MODULE);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.OXYGEN_STORAGE_MODULE_MENU), OXYGEN_STORAGE_MODULE);
 
-        Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.FUEL_LOADER_SCREEN_HANDLER), FUEL_LOADER_HANDLER);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.FUEL_LOADER_MENU), FUEL_LOADER);
 
-        Registry.register(Registry.MENU, Constant.id(Constant.ScreenHandler.AIR_LOCK_CONTROLLER_MENU), AIRLOCK_CONTROLLER_MENU);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.AIR_LOCK_CONTROLLER_MENU), AIRLOCK_CONTROLLER_MENU);
     }
 }

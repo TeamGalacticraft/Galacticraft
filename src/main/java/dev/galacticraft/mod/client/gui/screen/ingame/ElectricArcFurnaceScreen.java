@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.api.screen.RecipeMachineMenu;
+import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.ElectricArcFurnaceBlockEntity;
@@ -45,14 +45,14 @@ public class ElectricArcFurnaceScreen extends MachineScreen<ElectricArcFurnaceBl
     private static final int ARROW_HEIGHT = 16;
 
     public ElectricArcFurnaceScreen(RecipeMachineMenu<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity> handler, Inventory inv, Component title) {
-        super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
+        super(handler, title, Constant.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
     }
 
     @Override
     protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.renderBackground(matrices, mouseX, mouseY, delta);
-        if (this.machine.getMaxProgress() != 0 && this.machine.getProgress() != 0) {
-            double scale = ((double)menu.machine.getProgress()) / ((double)menu.machine.getMaxProgress());
+        if (this.menu.getMaxProgress() != 0 && this.menu.getProgress() != 0) {
+            double scale = ((double)this.menu.getProgress()) / ((double)this.menu.getMaxProgress());
 
             DrawableUtil.drawProgressTexture(matrices, this.leftPos + ARROW_X, this.topPos + ARROW_Y, ARROW_U, ARROW_V, (float) (ARROW_WIDTH * scale), ARROW_HEIGHT);
         }

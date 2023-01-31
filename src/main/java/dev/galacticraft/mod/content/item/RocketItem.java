@@ -24,7 +24,6 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.api.rocket.part.RocketPartType;
 import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;

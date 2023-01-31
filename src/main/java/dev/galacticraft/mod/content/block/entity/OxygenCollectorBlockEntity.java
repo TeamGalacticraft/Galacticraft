@@ -35,8 +35,9 @@ import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
 import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroups;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.OxygenCollectorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -66,7 +67,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     private boolean oxygenWorld = false;
 
     public OxygenCollectorBlockEntity(BlockPos pos, BlockState state) {
-        super(GCBlockEntityTypes.OXYGEN_COLLECTOR, pos, state);
+        super(GCMachineTypes.OXYGEN_COLLECTOR, pos, state);
     }
 
     @Override
@@ -78,13 +79,13 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
 
     @Override
     protected @NotNull MachineItemStorage createItemStorage() {
-        return MachineItemStorage.Builder.create().addSlot(GCSlotGroups.ENERGY_CHARGE, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 62)).build();
+        return MachineItemStorage.Builder.create().addSlot(GCSlotGroupTypes.ENERGY_TO_SELF, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 62)).build();
     }
 
     @Override
     protected @NotNull MachineFluidStorage createFluidStorage() {
         return MachineFluidStorage.Builder.create()
-                .addTank(GCSlotGroups.OXYGEN_OUTPUT, MAX_OXYGEN, TankDisplay.create(31, 8), true)
+                .addTank(GCSlotGroupTypes.OXYGEN_OUTPUT, MAX_OXYGEN, TankDisplay.create(31, 8), true)
                 .build();
     }
 

@@ -23,6 +23,8 @@
 package dev.galacticraft.mod;
 
 import com.google.common.base.Predicates;
+import dev.galacticraft.machinelib.api.storage.ResourceFilter;
+import dev.galacticraft.machinelib.api.storage.ResourceFilters;
 import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagExtractPredicate;
 import dev.galacticraft.mod.lookup.predicate.ItemResourceTagInsertPredicate;
@@ -42,8 +44,10 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import team.reborn.energy.api.EnergyStorage;
@@ -692,25 +696,25 @@ public interface Constant {
 
     }
 
-    interface ScreenHandler {
-        String COAL_GENERATOR_SCREEN_HANDLER = "coal_generator_screen_handler";
-        String BASIC_SOLAR_PANEL_SCREEN_HANDLER = "basic_solar_panel_screen_handler";
-        String ADVANCED_SOLAR_PANEL_SCREEN_HANDLER = "advanced_solar_panel_screen_handler";
-        String CIRCUIT_FABRICATOR_SCREEN_HANDLER = "circuit_fabricator_screen_handler";
-        String COMPRESSOR_SCREEN_HANDLER = "compressor_screen_handler";
-        String ELECTRIC_COMPRESSOR_SCREEN_HANDLER = "electric_compressor_screen_handler";
-        String PLAYER_INVENTORY_SCREEN_HANDLER = "player_inventory_screen_handler";
-        String ENERGY_STORAGE_MODULE_SCREEN_HANDLER = "energy_storage_module_screen_handler";
-        String REFINERY_SCREEN_HANDLER = "refinery_screen_handler";
-        String ELECTRIC_FURNACE_SCREEN_HANDLER = "electric_furnace_screen_handler";
-        String ELECTRIC_ARC_FURNACE_SCREEN_HANDLER = "electric_arc_furnace_screen_handler";
-        String OXYGEN_COLLECTOR_SCREEN_HANDLER = "oxygen_collector_screen_handler";
-        String BUBBLE_DISTRIBUTOR_SCREEN_HANDLER = "bubble_distributor_screen_handler";
-        String OXYGEN_COMPRESSOR_SCREEN_HANDLER = "oxygen_compressor_screen_handler";
-        String OXYGEN_DECOMPRESSOR_SCREEN_HANDLER = "oxygen_decompressor_screen_handler";
-        String OXYGEN_STORAGE_MODULE_SCREEN_HANDLER = "oxygen_storage_module_screen_handler";
-        String OXYGEN_SEALER_SCREEN_HANDLER = "oxygen_sealer_screen_handler";
-        String FUEL_LOADER_SCREEN_HANDLER = "fuel_loader_screen_handler";
+    interface Menu {
+        String COAL_GENERATOR_MENU = "coal_generator_menu";
+        String BASIC_SOLAR_PANEL_MENU = "basic_solar_panel_menu";
+        String ADVANCED_SOLAR_PANEL_MENU = "advanced_solar_panel_menu";
+        String CIRCUIT_FABRICATOR_MENU = "circuit_fabricator_menu";
+        String COMPRESSOR_MENU = "compressor_menu";
+        String ELECTRIC_COMPRESSOR_MENU = "electric_compressor_menu";
+        String PLAYER_INVENTORY_MENU = "player_inventory_menu";
+        String ENERGY_STORAGE_MODULE_MENU = "energy_storage_module_menu";
+        String REFINERY_MENU = "refinery_menu";
+        String ELECTRIC_FURNACE_MENU = "electric_furnace_menu";
+        String ELECTRIC_ARC_FURNACE_MENU = "electric_arc_furnace_menu";
+        String OXYGEN_COLLECTOR_MENU = "oxygen_collector_menu";
+        String BUBBLE_DISTRIBUTOR_MENU = "bubble_distributor_menu";
+        String OXYGEN_COMPRESSOR_MENU = "oxygen_compressor_menu";
+        String OXYGEN_DECOMPRESSOR_MENU = "oxygen_decompressor_menu";
+        String OXYGEN_STORAGE_MODULE_MENU = "oxygen_storage_module_menu";
+        String OXYGEN_SEALER_MENU = "oxygen_sealer_menu";
+        String FUEL_LOADER_MENU = "fuel_loader_menu";
         String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
     }
 
@@ -734,38 +738,10 @@ public interface Constant {
     }
 
     interface Filter {
-        static <T> @NotNull Predicate<T> any() {
-            return Predicates.alwaysTrue();
-        }
-
-        static <T> @NotNull Predicate<T> none() {
-            return Predicates.alwaysFalse();
-        }
-
         interface Item {
-            Predicate<ItemVariant> DIAMOND = v -> v.getItem() == Items.DIAMOND;
-            Predicate<ItemVariant> SILICON = v -> v.getItem() == GCItem.RAW_SILICON;
-            Predicate<ItemVariant> REDSTONE = v -> v.getItem() == Items.REDSTONE;
-
-            Predicate<ItemVariant> CAN_EXTRACT_ENERGY = stack -> {
-                EnergyStorage energyStorage = ContainerItemContext.withInitial(stack.toStack()).find(EnergyStorage.ITEM);
-                try (Transaction transaction = Transaction.openOuter()) {
-                    return energyStorage != null && energyStorage.supportsExtraction();
-                }
-            };
-            Predicate<ItemVariant> CAN_INSERT_ENERGY = stack -> {
-                EnergyStorage energyStorage = ContainerItemContext.withInitial(stack.toStack()).find(EnergyStorage.ITEM);
-                try (Transaction transaction = Transaction.openOuter()) {
-                    return energyStorage != null && energyStorage.supportsInsertion() && energyStorage.insert(Long.MAX_VALUE, transaction) > 0;
-                }
-            };
-
-            Predicate<ItemVariant> CAN_EXTRACT_OXYGEN = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.OXYGEN);
-            Predicate<ItemVariant> CAN_INSERT_OXYGEN = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.OXYGEN);
-
-            Predicate<ItemVariant> CAN_EXTRACT_OIL = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.OIL);
-            Predicate<ItemVariant> CAN_INSERT_FUEL = new ItemResourceTagInsertPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.FUEL);
-            Predicate<ItemVariant> CAN_EXTRACT_LOX = new ItemResourceTagExtractPredicate<>(FluidStorage.ITEM, Registry.FLUID, GCTags.LIQUID_OXYGEN);
+            ResourceFilter<net.minecraft.world.item.Item> DIAMOND = ResourceFilters.matchAnyNbt(Items.DIAMOND);
+            ResourceFilter<net.minecraft.world.item.Item> SILICON = ResourceFilters.matchAnyNbt(GCItem.RAW_SILICON);
+            ResourceFilter<net.minecraft.world.item.Item> REDSTONE = ResourceFilters.matchAnyNbt(Items.REDSTONE);
         }
 
         interface Gas {

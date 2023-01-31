@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.Minecraft;
@@ -111,8 +111,8 @@ public class RocketOverlay {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             poseStack.translate(var1 + 4, var2 + 6, 50F);
             poseStack.scale(5F, 5F, 5F);
-            poseStack.mulPose(Vector3f.XP.rotationDegrees(180F));
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(90F));
+            poseStack.mulPose(Axis.XP.rotationDegrees(180F));
+            poseStack.mulPose(Axis.YP.rotationDegrees(90F));
 
             try {
                 MultiBufferSource.BufferSource source = Minecraft.getInstance().renderBuffers().bufferSource();

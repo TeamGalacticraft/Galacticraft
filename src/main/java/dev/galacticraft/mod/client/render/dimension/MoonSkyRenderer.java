@@ -24,8 +24,7 @@ package dev.galacticraft.mod.client.render.dimension;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
@@ -35,6 +34,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
+import org.joml.Matrix4f;
 
 import java.util.Random;
 
@@ -108,9 +108,9 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
 
         context.profiler().push("stars");
         matrices.pushPose();
-        matrices.mulPose(Vector3f.YP.rotationDegrees(-90.0F));
-        matrices.mulPose(Vector3f.XP.rotationDegrees(context.world().getTimeOfDay(context.tickDelta()) * 360.0f));
-        matrices.mulPose(Vector3f.YP.rotationDegrees(-19.0F));
+        matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
+        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickDelta()) * 360.0f));
+        matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
         RenderSystem.setShaderColor(1.0F, 0.95F, 0.9F, starBrightness);
         RenderSystem.disableTexture();
 
@@ -125,8 +125,8 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         context.profiler().push("sun");
         matrices.pushPose();
 
-        matrices.mulPose(Vector3f.YP.rotationDegrees(-90.0F));
-        matrices.mulPose(Vector3f.XP.rotationDegrees(context.world().getTimeOfDay(context.tickDelta()) * 360.0f));
+        matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
+        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickDelta()) * 360.0f));
 
         Matrix4f matrix = matrices.last().pose();
         RenderSystem.enableTexture();
@@ -152,8 +152,8 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         assert Minecraft.getInstance().player != null;
         float earthRotation = (float) (context.world().getSharedSpawnPos().getZ() - Minecraft.getInstance().player.getZ()) * 0.01F;
         matrices.scale(0.6F, 0.6F, 0.6F);
-        matrices.mulPose(Vector3f.XP.rotationDegrees((context.world().getTimeOfDay(context.tickDelta()) * 360.0F) * 0.001F));
-        matrices.mulPose(Vector3f.XP.rotationDegrees(earthRotation + 200.0F));
+        matrices.mulPose(Axis.XP.rotationDegrees((context.world().getTimeOfDay(context.tickDelta()) * 360.0F) * 0.001F));
+        matrices.mulPose(Axis.XP.rotationDegrees(earthRotation + 200.0F));
 
         RenderSystem.setShaderTexture(0, EARTH_TEXTURE);
 

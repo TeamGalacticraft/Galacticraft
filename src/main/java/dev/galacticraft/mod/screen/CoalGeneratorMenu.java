@@ -22,55 +22,53 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.machinelib.api.screen.MachineMenu;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
+import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.CoalGeneratorBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.DataSlot;
-import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CoalGeneratorMenu extends MachineMenu<CoalGeneratorBlockEntity> {
-    public final DataSlot fuelTime = new DataSlot() {
-        @Override
-        public int get() {
-            return CoalGeneratorMenu.this.machine.getFuelTime();
-        }
+    private int fuelTime;
+    private int fuelLength;
 
-        @Override
-        public void set(int value) {
-            CoalGeneratorMenu.this.machine.setFuelTime(value);
-        }
-    };
-
-    public final DataSlot fuelLength = new DataSlot() {
-        @Override
-        public int get() {
-            return CoalGeneratorMenu.this.machine.getFuelLength();
-        }
-
-        @Override
-        public void set(int value) {
-            CoalGeneratorMenu.this.machine.setFuelLength(value);
-        }
-    };
-
-    public CoalGeneratorMenu(int syncId, Player player, CoalGeneratorBlockEntity machine) {
-        super(syncId, player, machine, null);
-        this.addDataSlot(this.fuelTime);
-        this.addDataSlot(this.fuelLength);
-        this.addPlayerInventorySlots(8, 84);
+    public CoalGeneratorMenu(int syncId, @NotNull ServerPlayer player, @NotNull CoalGeneratorBlockEntity machine) {
+        super(syncId, player, machine, GCMachineTypes.COAL_GENERATOR);
     }
 
-    public CoalGeneratorMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {
-        this(syncId, inv.player, (CoalGeneratorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
+    public CoalGeneratorMenu(int syncId, @NotNull Inventory inventory, @NotNull FriendlyByteBuf buf) {
+        super(syncId, inventory, buf, 8, 84, GCMachineTypes.COAL_GENERATOR);
     }
 
     @Override
-    public MenuType<?> getType() {
-        return GCMenuTypes.COAL_GENERATOR_HANDLER;
+    public void registerSyncHandlers(Consumer<MenuSyncHandler> consumer) {
+        super.registerSyncHandlers(consumer);
+
+        consumer.accept(MenuSyncHandler.simple(this.machine::getFuelTime, this::setFuelTime));
+        consumer.accept(MenuSyncHandler.simple(this.machine::getFuelLength, this::setFuelLength));
+    }
+
+    public int getFuelTime() {
+        return fuelTime;
+    }
+
+    public int getFuelLength() {
+        return fuelLength;
+    }
+
+    public void setFuelTime(int fuelTime) {
+        this.fuelTime = fuelTime;
+    }
+
+    public void setFuelLength(int fuelLength) {
+        this.fuelLength = fuelLength;
     }
 }

@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.api.entity.Rocket;
 import dev.galacticraft.api.rocket.LaunchStage;
+import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.mod.Constant;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -34,7 +34,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

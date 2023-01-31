@@ -25,14 +25,16 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.screen.MachineMenu;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import dev.galacticraft.mod.api.solarpanel.LightSource;
 import dev.galacticraft.mod.api.solarpanel.SolarPanelRegistry;
 import dev.galacticraft.mod.api.solarpanel.WorldLightSources;
+import dev.galacticraft.mod.screen.SolarPanelMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -40,7 +42,7 @@ import net.minecraft.world.entity.player.Inventory;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S extends MachineMenu<M>> extends MachineScreen<M, S> {
+public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S extends SolarPanelMenu<M>> extends MachineScreen<M, S> {
     private static final int DAY_SOURCE_U = 0;
     private static final int DAY_SOURCE_V = 0;
     private static final int OVERCAST_SOURCE_U = 32;
@@ -77,9 +79,9 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
     private final WorldLightSources lightSource;
 
     public SolarPanelScreen(S handler, Inventory inv, Component title) {
-        super(handler, inv, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
+        super(handler, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
         this.solarPanelTexture = SolarPanelRegistry.getSolarPanelTexture(handler.machine.getType());
-        this.lightSource = SolarPanelRegistry.getLightSource(handler.machine.getLevel().dimension());
+        this.lightSource = SolarPanelRegistry.getLightSource(this.menu.playerInventory.player.level.dimension());
     }
 
     @Override
@@ -88,7 +90,7 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
         RenderSystem.setShaderTexture(0, this.solarPanelTexture);
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                switch (this.machine.getSource()) {
+                switch (this.menu.getSource()) {
                     case DAY -> drawNormal(matrices, x, y, SOLAR_PANEL_U, SOLAR_PANEL_V);
                     case NIGHT, OVERCAST -> drawNormal(matrices, x, y, SOLAR_PANEL_NIGHT_U, SOLAR_PANEL_NIGHT_V);
                     case NO_LIGHT_SOURCE -> blit(matrices, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, this.getBlitOffset(), SOLAR_PANEL_BLOCKED_U, SOLAR_PANEL_BLOCKED_V, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT, 32, 32);
@@ -103,7 +105,7 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
             }
         }
         RenderSystem.setShaderTexture(0, this.lightSource.texture());
-        switch (this.machine.getSource()){
+        switch (this.menu.getSource()) {
             case DAY -> blit(matrices, this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, DAY_SOURCE_U, DAY_SOURCE_V, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 64, 64);
             case NIGHT -> blit(matrices, this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, NIGHT_SOURCE_U, NIGHT_SOURCE_V, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 64, 64);
             case OVERCAST -> blit(matrices, this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, OVERCAST_SOURCE_U, OVERCAST_SOURCE_V, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 64, 64);
@@ -117,10 +119,10 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT)) {
-                    if (this.machine.getBlockage()[y * 3 + x]) {
+                    if (this.menu.getBlockage()[y * 3 + x]) {
                         this.renderTooltip(matrices, Component.translatable("ui.galacticraft.machine.solar_panel.status").setStyle(Constant.Text.Color.GRAY_STYLE).append(BLOCKED), mouseX, mouseY);
                     } else {
-                        switch (this.machine.getSource()){
+                        switch (this.menu.getSource()){
                             case DAY -> this.renderTooltip(matrices, Component.translatable("ui.galacticraft.machine.solar_panel.status").setStyle(Constant.Text.Color.GRAY_STYLE).append(DAY), mouseX, mouseY);
                             case OVERCAST -> this.renderTooltip(matrices, Component.translatable("ui.galacticraft.machine.solar_panel.status").setStyle(Constant.Text.Color.GRAY_STYLE).append(OVERCAST), mouseX, mouseY);
                             case NIGHT -> this.renderTooltip(matrices, Component.translatable("ui.galacticraft.machine.solar_panel.status").setStyle(Constant.Text.Color.GRAY_STYLE).append(NIGHT), mouseX, mouseY);
@@ -134,7 +136,7 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
 
         if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT)) {
             List<Component> tooltip = new LinkedList<>();
-            LightSource source = switch (this.machine.getSource()) {
+            LightSource source = switch (this.menu.getSource()) {
                 case DAY -> this.lightSource.day();
                 case OVERCAST -> this.lightSource.overcast();
                 case NIGHT -> this.lightSource.night();
@@ -148,7 +150,7 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
     }
 
     private void drawNormal(PoseStack matrices, int x, int y, int normalU, int normalV) {
-        if (this.machine.getBlockage()[y * 3 + x]) {
+        if (this.menu.getBlockage()[y * 3 + x]) {
             blit(matrices, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, this.getBlitOffset(), SOLAR_PANEL_BLOCKED_U, SOLAR_PANEL_BLOCKED_V, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT, 32, 32);
         } else {
             blit(matrices, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, this.getBlitOffset(), normalU, normalV, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT, 32, 32);
@@ -157,8 +159,8 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
 
     @Override
     public void appendEnergyTooltip(List<Component> list) {
-        if (this.machine.getStatus().type().isActive()) {
-            list.add(Component.translatable("ui.galacticraft.machine.gj_per_t", this.machine.getCurrentEnergyGeneration()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+        if (this.menu.configuration.getStatus().type().isActive()) {
+            list.add(Component.translatable("ui.galacticraft.machine.gj_per_t", this.menu.getCurrentEnergyGeneration()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
         }
     }
 }

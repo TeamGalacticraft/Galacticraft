@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.model;
 
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.PipeWalkwayBlockEntity;
 import net.fabricmc.api.EnvType;
@@ -39,10 +39,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -85,7 +82,7 @@ public class PipeWalkwayBakedModel implements FabricBakedModel, BakedModel {
     private final Mesh west;
     private final Mesh east;
 
-    protected PipeWalkwayBakedModel(ModelBakery loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
+    protected PipeWalkwayBakedModel(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
         this.walkway = loader.getModel(WALKWAY_PLATFORM).bake(loader, textureGetter, rotationContainer, WALKWAY_PLATFORM);
         for (DyeColor color : DyeColor.values()) {
             this.colorSpriteMap.put(color, textureGetter.apply(COLOR_SPRITE_ID_MAP.get(color)));
@@ -158,7 +155,7 @@ public class PipeWalkwayBakedModel implements FabricBakedModel, BakedModel {
             }
         }
 
-        WalkwayBakedModel.Transform.INSTANCE.setQuaternions(Vector3f.XP.rotationDegrees(x), Vector3f.YP.rotationDegrees(y));
+        WalkwayBakedModel.Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
         context.pushTransform(WalkwayBakedModel.Transform.INSTANCE);
         context.fallbackConsumer().accept(this.walkway);
         context.popTransform();
@@ -244,7 +241,7 @@ public class PipeWalkwayBakedModel implements FabricBakedModel, BakedModel {
         return ItemOverrides.EMPTY;
     }
 
-    public static PipeWalkwayBakedModel getInstance(ModelBakery loader, Function<Material, TextureAtlasSprite> spriteFunction, ModelState rotationContainer) {
+    public static PipeWalkwayBakedModel getInstance(ModelBaker loader, Function<Material, TextureAtlasSprite> spriteFunction, ModelState rotationContainer) {
         if (instance == null) {
             return instance = new PipeWalkwayBakedModel(loader, spriteFunction, rotationContainer);
         }

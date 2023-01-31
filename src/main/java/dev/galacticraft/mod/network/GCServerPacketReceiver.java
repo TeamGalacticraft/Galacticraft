@@ -23,10 +23,10 @@
 package dev.galacticraft.mod.network;
 
 import dev.galacticraft.api.accessor.SatelliteAccessor;
-import dev.galacticraft.api.entity.Rocket;
 import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
