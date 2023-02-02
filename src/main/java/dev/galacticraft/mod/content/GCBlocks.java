@@ -28,7 +28,7 @@ import dev.galacticraft.mod.content.block.decoration.GratingBlock;
 import dev.galacticraft.mod.content.block.decoration.LightPanelBlock;
 import dev.galacticraft.mod.content.block.decoration.LunarCartographyTableBlock;
 import dev.galacticraft.mod.content.block.decoration.VacuumGlassBlock;
-import dev.galacticraft.mod.content.block.entity.*;
+import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.block.environment.*;
 import dev.galacticraft.mod.content.block.machine.*;
 import dev.galacticraft.mod.content.block.special.*;
@@ -46,6 +46,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FlattenableBlockRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
@@ -309,7 +310,7 @@ public class GCBlocks {
     public static final MachineBlock<RefineryBlockEntity> REFINERY = new RefineryBlock(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS));
     public static final MachineBlock<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR = new OxygenCollectorBlock(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS));
     public static final MachineBlock<OxygenSealerBlockEntity> OXYGEN_SEALER = SimpleMachineBlock.create(OxygenSealerBlockEntity::new);
-    public static final MachineBlock<OxygenBubbleDistributorBlockEntity> BUBBLE_DISTRIBUTOR = SimpleMachineBlock.create(OxygenBubbleDistributorBlockEntity::new);
+    public static final MachineBlock<OxygenBubbleDistributorBlockEntity> OXYGEN_BUBBLE_DISTRIBUTOR = SimpleMachineBlock.create(OxygenBubbleDistributorBlockEntity::new);
     public static final MachineBlock<OxygenDecompressorBlockEntity> OXYGEN_DECOMPRESSOR = SimpleMachineBlock.create(OxygenDecompressorBlockEntity::new);
     public static final MachineBlock<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR = SimpleMachineBlock.create(OxygenCompressorBlockEntity::new);
     public static final MachineBlock<OxygenStorageModuleBlockEntity> OXYGEN_STORAGE_MODULE = SimpleMachineBlock.create(OxygenStorageModuleBlockEntity::new);
@@ -325,259 +326,259 @@ public class GCBlocks {
         FlattenableBlockRegistry.register(MOON_DIRT, MOON_DIRT_PATH.defaultBlockState());
 
         // TORCHES
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.GLOWSTONE_TORCH), GLOWSTONE_TORCH);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.GLOWSTONE_WALL_TORCH), GLOWSTONE_WALL_TORCH);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.GLOWSTONE_LANTERN), GLOWSTONE_LANTERN);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.UNLIT_TORCH), UNLIT_TORCH);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.UNLIT_WALL_TORCH), UNLIT_WALL_TORCH);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.UNLIT_LANTERN), UNLIT_LANTERN);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GLOWSTONE_TORCH), GLOWSTONE_TORCH);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GLOWSTONE_WALL_TORCH), GLOWSTONE_WALL_TORCH);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GLOWSTONE_LANTERN), GLOWSTONE_LANTERN);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.UNLIT_TORCH), UNLIT_TORCH);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.UNLIT_WALL_TORCH), UNLIT_WALL_TORCH);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.UNLIT_LANTERN), UNLIT_LANTERN);
 
         // FLUIDS
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CRUDE_OIL), CRUDE_OIL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.FUEL), FUEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CRUDE_OIL), CRUDE_OIL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.FUEL), FUEL);
 
         // DECORATION BLOCKS
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION), ALUMINUM_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION_SLAB), ALUMINUM_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION_STAIRS), ALUMINUM_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION_WALL), ALUMINUM_DECORATION_WALL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION), DETAILED_ALUMINUM_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_SLAB), DETAILED_ALUMINUM_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_STAIRS), DETAILED_ALUMINUM_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_WALL), DETAILED_ALUMINUM_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION), ALUMINUM_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION_SLAB), ALUMINUM_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION_STAIRS), ALUMINUM_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION_WALL), ALUMINUM_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION), DETAILED_ALUMINUM_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_SLAB), DETAILED_ALUMINUM_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_STAIRS), DETAILED_ALUMINUM_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_WALL), DETAILED_ALUMINUM_DECORATION_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.BRONZE_DECORATION), BRONZE_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.BRONZE_DECORATION_SLAB), BRONZE_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.BRONZE_DECORATION_STAIRS), BRONZE_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.BRONZE_DECORATION_WALL), BRONZE_DECORATION_WALL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_BRONZE_DECORATION), DETAILED_BRONZE_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_BRONZE_DECORATION_SLAB), DETAILED_BRONZE_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_BRONZE_DECORATION_STAIRS), DETAILED_BRONZE_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_BRONZE_DECORATION_WALL), DETAILED_BRONZE_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.BRONZE_DECORATION), BRONZE_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.BRONZE_DECORATION_SLAB), BRONZE_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.BRONZE_DECORATION_STAIRS), BRONZE_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.BRONZE_DECORATION_WALL), BRONZE_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_BRONZE_DECORATION), DETAILED_BRONZE_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_BRONZE_DECORATION_SLAB), DETAILED_BRONZE_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_BRONZE_DECORATION_STAIRS), DETAILED_BRONZE_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_BRONZE_DECORATION_WALL), DETAILED_BRONZE_DECORATION_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.COPPER_DECORATION), COPPER_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.COPPER_DECORATION_SLAB), COPPER_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.COPPER_DECORATION_STAIRS), COPPER_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.COPPER_DECORATION_WALL), COPPER_DECORATION_WALL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_COPPER_DECORATION), DETAILED_COPPER_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_COPPER_DECORATION_SLAB), DETAILED_COPPER_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_COPPER_DECORATION_STAIRS), DETAILED_COPPER_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_COPPER_DECORATION_WALL), DETAILED_COPPER_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.COPPER_DECORATION), COPPER_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.COPPER_DECORATION_SLAB), COPPER_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.COPPER_DECORATION_STAIRS), COPPER_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.COPPER_DECORATION_WALL), COPPER_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_COPPER_DECORATION), DETAILED_COPPER_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_COPPER_DECORATION_SLAB), DETAILED_COPPER_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_COPPER_DECORATION_STAIRS), DETAILED_COPPER_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_COPPER_DECORATION_WALL), DETAILED_COPPER_DECORATION_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.IRON_DECORATION), IRON_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.IRON_DECORATION_SLAB), IRON_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.IRON_DECORATION_STAIRS), IRON_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.IRON_DECORATION_WALL), IRON_DECORATION_WALL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_IRON_DECORATION), DETAILED_IRON_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_IRON_DECORATION_SLAB), DETAILED_IRON_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_IRON_DECORATION_STAIRS), DETAILED_IRON_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_IRON_DECORATION_WALL), DETAILED_IRON_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.IRON_DECORATION), IRON_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.IRON_DECORATION_SLAB), IRON_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.IRON_DECORATION_STAIRS), IRON_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.IRON_DECORATION_WALL), IRON_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_IRON_DECORATION), DETAILED_IRON_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_IRON_DECORATION_SLAB), DETAILED_IRON_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_IRON_DECORATION_STAIRS), DETAILED_IRON_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_IRON_DECORATION_WALL), DETAILED_IRON_DECORATION_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.METEORIC_IRON_DECORATION), METEORIC_IRON_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.METEORIC_IRON_DECORATION_SLAB), METEORIC_IRON_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.METEORIC_IRON_DECORATION_STAIRS), METEORIC_IRON_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.METEORIC_IRON_DECORATION_WALL), METEORIC_IRON_DECORATION_WALL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_METEORIC_IRON_DECORATION), DETAILED_METEORIC_IRON_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_METEORIC_IRON_DECORATION_SLAB), DETAILED_METEORIC_IRON_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_METEORIC_IRON_DECORATION_STAIRS), DETAILED_METEORIC_IRON_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_METEORIC_IRON_DECORATION_WALL), DETAILED_METEORIC_IRON_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.METEORIC_IRON_DECORATION), METEORIC_IRON_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.METEORIC_IRON_DECORATION_SLAB), METEORIC_IRON_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.METEORIC_IRON_DECORATION_STAIRS), METEORIC_IRON_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.METEORIC_IRON_DECORATION_WALL), METEORIC_IRON_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_METEORIC_IRON_DECORATION), DETAILED_METEORIC_IRON_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_METEORIC_IRON_DECORATION_SLAB), DETAILED_METEORIC_IRON_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_METEORIC_IRON_DECORATION_STAIRS), DETAILED_METEORIC_IRON_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_METEORIC_IRON_DECORATION_WALL), DETAILED_METEORIC_IRON_DECORATION_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.STEEL_DECORATION), STEEL_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.STEEL_DECORATION_SLAB), STEEL_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.STEEL_DECORATION_STAIRS), STEEL_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.STEEL_DECORATION_WALL), STEEL_DECORATION_WALL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_STEEL_DECORATION), DETAILED_STEEL_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_STEEL_DECORATION_SLAB), DETAILED_STEEL_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_STEEL_DECORATION_STAIRS), DETAILED_STEEL_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_STEEL_DECORATION_WALL), DETAILED_STEEL_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.STEEL_DECORATION), STEEL_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.STEEL_DECORATION_SLAB), STEEL_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.STEEL_DECORATION_STAIRS), STEEL_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.STEEL_DECORATION_WALL), STEEL_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_STEEL_DECORATION), DETAILED_STEEL_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_STEEL_DECORATION_SLAB), DETAILED_STEEL_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_STEEL_DECORATION_STAIRS), DETAILED_STEEL_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_STEEL_DECORATION_WALL), DETAILED_STEEL_DECORATION_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.TIN_DECORATION), TIN_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.TIN_DECORATION_SLAB), TIN_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.TIN_DECORATION_STAIRS), TIN_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.TIN_DECORATION_WALL), TIN_DECORATION_WALL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_TIN_DECORATION), DETAILED_TIN_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_TIN_DECORATION_SLAB), DETAILED_TIN_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_TIN_DECORATION_STAIRS), DETAILED_TIN_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_TIN_DECORATION_WALL), DETAILED_TIN_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.TIN_DECORATION), TIN_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.TIN_DECORATION_SLAB), TIN_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.TIN_DECORATION_STAIRS), TIN_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.TIN_DECORATION_WALL), TIN_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_TIN_DECORATION), DETAILED_TIN_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_TIN_DECORATION_SLAB), DETAILED_TIN_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_TIN_DECORATION_STAIRS), DETAILED_TIN_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_TIN_DECORATION_WALL), DETAILED_TIN_DECORATION_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.TITANIUM_DECORATION), TITANIUM_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.TITANIUM_DECORATION_SLAB), TITANIUM_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.TITANIUM_DECORATION_STAIRS), TITANIUM_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.TITANIUM_DECORATION_WALL), TITANIUM_DECORATION_WALL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_TITANIUM_DECORATION), DETAILED_TITANIUM_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_TITANIUM_DECORATION_SLAB), DETAILED_TITANIUM_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_TITANIUM_DECORATION_STAIRS), DETAILED_TITANIUM_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_TITANIUM_DECORATION_WALL), DETAILED_TITANIUM_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.TITANIUM_DECORATION), TITANIUM_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.TITANIUM_DECORATION_SLAB), TITANIUM_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.TITANIUM_DECORATION_STAIRS), TITANIUM_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.TITANIUM_DECORATION_WALL), TITANIUM_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_TITANIUM_DECORATION), DETAILED_TITANIUM_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_TITANIUM_DECORATION_SLAB), DETAILED_TITANIUM_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_TITANIUM_DECORATION_STAIRS), DETAILED_TITANIUM_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_TITANIUM_DECORATION_WALL), DETAILED_TITANIUM_DECORATION_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DARK_DECORATION), DARK_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DARK_DECORATION_SLAB), DARK_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DARK_DECORATION_STAIRS), DARK_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DARK_DECORATION_WALL), DARK_DECORATION_WALL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_DARK_DECORATION), DETAILED_DARK_DECORATION);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_DARK_DECORATION_SLAB), DETAILED_DARK_DECORATION_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_DARK_DECORATION_STAIRS), DETAILED_DARK_DECORATION_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DETAILED_DARK_DECORATION_WALL), DETAILED_DARK_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DARK_DECORATION), DARK_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DARK_DECORATION_SLAB), DARK_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DARK_DECORATION_STAIRS), DARK_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DARK_DECORATION_WALL), DARK_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_DARK_DECORATION), DETAILED_DARK_DECORATION);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_DARK_DECORATION_SLAB), DETAILED_DARK_DECORATION_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_DARK_DECORATION_STAIRS), DETAILED_DARK_DECORATION_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_DARK_DECORATION_WALL), DETAILED_DARK_DECORATION_WALL);
 
         // MOON NATURAL
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_TURF), MOON_TURF);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_DIRT), MOON_DIRT);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_DIRT_PATH), MOON_DIRT_PATH);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_SURFACE_ROCK), MOON_SURFACE_ROCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_TURF), MOON_TURF);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_DIRT), MOON_DIRT);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_DIRT_PATH), MOON_DIRT_PATH);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_SURFACE_ROCK), MOON_SURFACE_ROCK);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_ROCK), MOON_ROCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_ROCK_SLAB), MOON_ROCK_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_ROCK_STAIRS), MOON_ROCK_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_ROCK_WALL), MOON_ROCK_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_ROCK), MOON_ROCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_ROCK_SLAB), MOON_ROCK_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_ROCK_STAIRS), MOON_ROCK_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_ROCK_WALL), MOON_ROCK_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.COBBLED_MOON_ROCK), COBBLED_MOON_ROCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.COBBLED_MOON_ROCK_SLAB), COBBLED_MOON_ROCK_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.COBBLED_MOON_ROCK_STAIRS), COBBLED_MOON_ROCK_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.COBBLED_MOON_ROCK_WALL), COBBLED_MOON_ROCK_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.COBBLED_MOON_ROCK), COBBLED_MOON_ROCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.COBBLED_MOON_ROCK_SLAB), COBBLED_MOON_ROCK_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.COBBLED_MOON_ROCK_STAIRS), COBBLED_MOON_ROCK_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.COBBLED_MOON_ROCK_WALL), COBBLED_MOON_ROCK_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.LUNASLATE), LUNASLATE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.LUNASLATE_SLAB), LUNASLATE_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.LUNASLATE_STAIRS), LUNASLATE_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.LUNASLATE_WALL), LUNASLATE_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LUNASLATE), LUNASLATE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LUNASLATE_SLAB), LUNASLATE_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LUNASLATE_STAIRS), LUNASLATE_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LUNASLATE_WALL), LUNASLATE_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.COBBLED_LUNASLATE), COBBLED_LUNASLATE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.COBBLED_LUNASLATE_SLAB), COBBLED_LUNASLATE_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.COBBLED_LUNASLATE_STAIRS), COBBLED_LUNASLATE_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.COBBLED_LUNASLATE_WALL), COBBLED_LUNASLATE_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.COBBLED_LUNASLATE), COBBLED_LUNASLATE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.COBBLED_LUNASLATE_SLAB), COBBLED_LUNASLATE_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.COBBLED_LUNASLATE_STAIRS), COBBLED_LUNASLATE_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.COBBLED_LUNASLATE_WALL), COBBLED_LUNASLATE_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_BASALT), MOON_BASALT);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_BASALT_SLAB), MOON_BASALT_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_BASALT_STAIRS), MOON_BASALT_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_BASALT_WALL), MOON_BASALT_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_BASALT), MOON_BASALT);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_BASALT_SLAB), MOON_BASALT_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_BASALT_STAIRS), MOON_BASALT_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_BASALT_WALL), MOON_BASALT_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_BASALT_BRICK), MOON_BASALT_BRICK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_BASALT_BRICK_SLAB), MOON_BASALT_BRICK_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_BASALT_BRICK_STAIRS), MOON_BASALT_BRICK_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_BASALT_BRICK_WALL), MOON_BASALT_BRICK_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_BASALT_BRICK), MOON_BASALT_BRICK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_BASALT_BRICK_SLAB), MOON_BASALT_BRICK_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_BASALT_BRICK_STAIRS), MOON_BASALT_BRICK_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_BASALT_BRICK_WALL), MOON_BASALT_BRICK_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK), CRACKED_MOON_BASALT_BRICK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_SLAB), CRACKED_MOON_BASALT_BRICK_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_STAIRS), CRACKED_MOON_BASALT_BRICK_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_WALL), CRACKED_MOON_BASALT_BRICK_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK), CRACKED_MOON_BASALT_BRICK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_SLAB), CRACKED_MOON_BASALT_BRICK_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_STAIRS), CRACKED_MOON_BASALT_BRICK_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_WALL), CRACKED_MOON_BASALT_BRICK_WALL);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.FALLEN_METEOR), FALLEN_METEOR);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.FALLEN_METEOR), FALLEN_METEOR);
 
         // MARS NATURAL
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MARS_SURFACE_ROCK), MARS_SURFACE_ROCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MARS_SUB_SURFACE_ROCK), MARS_SUB_SURFACE_ROCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MARS_STONE), MARS_STONE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MARS_COBBLESTONE), MARS_COBBLESTONE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MARS_COBBLESTONE_SLAB), MARS_COBBLESTONE_SLAB);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MARS_COBBLESTONE_STAIRS), MARS_COBBLESTONE_STAIRS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MARS_COBBLESTONE_WALL), MARS_COBBLESTONE_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_SURFACE_ROCK), MARS_SURFACE_ROCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_SUB_SURFACE_ROCK), MARS_SUB_SURFACE_ROCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_STONE), MARS_STONE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_COBBLESTONE), MARS_COBBLESTONE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_COBBLESTONE_SLAB), MARS_COBBLESTONE_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_COBBLESTONE_STAIRS), MARS_COBBLESTONE_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_COBBLESTONE_WALL), MARS_COBBLESTONE_WALL);
 
         // ASTEROID NATURAL
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ASTEROID_ROCK), ASTEROID_ROCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ASTEROID_ROCK_1), ASTEROID_ROCK_1);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ASTEROID_ROCK_2), ASTEROID_ROCK_2);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ASTEROID_ROCK), ASTEROID_ROCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ASTEROID_ROCK_1), ASTEROID_ROCK_1);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ASTEROID_ROCK_2), ASTEROID_ROCK_2);
 
         // VENUS NATURAL
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.SOFT_VENUS_ROCK), SOFT_VENUS_ROCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.HARD_VENUS_ROCK), HARD_VENUS_ROCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.SCORCHED_VENUS_ROCK), SCORCHED_VENUS_ROCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.VOLCANIC_ROCK), VOLCANIC_ROCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.PUMICE), PUMICE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.VAPOR_SPOUT), VAPOR_SPOUT);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.SOFT_VENUS_ROCK), SOFT_VENUS_ROCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.HARD_VENUS_ROCK), HARD_VENUS_ROCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.SCORCHED_VENUS_ROCK), SCORCHED_VENUS_ROCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.VOLCANIC_ROCK), VOLCANIC_ROCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.PUMICE), PUMICE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.VAPOR_SPOUT), VAPOR_SPOUT);
 
         // MISC DECOR
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.WALKWAY), WALKWAY);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.PIPE_WALKWAY), PIPE_WALKWAY);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.WIRE_WALKWAY), WIRE_WALKWAY);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.TIN_LADDER), TIN_LADDER);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.GRATING), GRATING);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.WALKWAY), WALKWAY);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.PIPE_WALKWAY), PIPE_WALKWAY);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.WIRE_WALKWAY), WIRE_WALKWAY);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.TIN_LADDER), TIN_LADDER);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GRATING), GRATING);
 
         // SPECIAL
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ALUMINUM_WIRE), ALUMINUM_WIRE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.SEALABLE_ALUMINUM_WIRE), SEALABLE_ALUMINUM_WIRE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE), HEAVY_SEALABLE_ALUMINUM_WIRE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.GLASS_FLUID_PIPE), GLASS_FLUID_PIPE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ROCKET_LAUNCH_PAD), ROCKET_LAUNCH_PAD);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.NASA_WORKBENCH), NASA_WORKBENCH);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_WIRE), ALUMINUM_WIRE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.SEALABLE_ALUMINUM_WIRE), SEALABLE_ALUMINUM_WIRE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE), HEAVY_SEALABLE_ALUMINUM_WIRE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GLASS_FLUID_PIPE), GLASS_FLUID_PIPE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ROCKET_LAUNCH_PAD), ROCKET_LAUNCH_PAD);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.NASA_WORKBENCH), NASA_WORKBENCH);
 
         // LIGHT PANELS
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.SQUARE_LIGHT_PANEL), SQUARE_LIGHT_PANEL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.SPOTLIGHT_LIGHT_PANEL), SPOTLIGHT_LIGHT_PANEL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.LINEAR_LIGHT_PANEL), LINEAR_LIGHT_PANEL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DASHED_LIGHT_PANEL), DASHED_LIGHT_PANEL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DIAGONAL_LIGHT_PANEL), DIAGONAL_LIGHT_PANEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.SQUARE_LIGHT_PANEL), SQUARE_LIGHT_PANEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.SPOTLIGHT_LIGHT_PANEL), SPOTLIGHT_LIGHT_PANEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LINEAR_LIGHT_PANEL), LINEAR_LIGHT_PANEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DASHED_LIGHT_PANEL), DASHED_LIGHT_PANEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DIAGONAL_LIGHT_PANEL), DIAGONAL_LIGHT_PANEL);
 
         // VACUUM GLASS
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.VACUUM_GLASS), VACUUM_GLASS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CLEAR_VACUUM_GLASS), CLEAR_VACUUM_GLASS);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.STRONG_VACUUM_GLASS), STRONG_VACUUM_GLASS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.VACUUM_GLASS), VACUUM_GLASS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CLEAR_VACUUM_GLASS), CLEAR_VACUUM_GLASS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.STRONG_VACUUM_GLASS), STRONG_VACUUM_GLASS);
 
         // ORES
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.SILICON_ORE), SILICON_ORE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DEEPSLATE_SILICON_ORE), DEEPSLATE_SILICON_ORE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.SILICON_ORE), SILICON_ORE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DEEPSLATE_SILICON_ORE), DEEPSLATE_SILICON_ORE);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_COPPER_ORE), MOON_COPPER_ORE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.LUNASLATE_COPPER_ORE), LUNASLATE_COPPER_ORE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_COPPER_ORE), MOON_COPPER_ORE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LUNASLATE_COPPER_ORE), LUNASLATE_COPPER_ORE);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.TIN_ORE), TIN_ORE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DEEPSLATE_TIN_ORE), DEEPSLATE_TIN_ORE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_TIN_ORE), MOON_TIN_ORE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.LUNASLATE_TIN_ORE), LUNASLATE_TIN_ORE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.TIN_ORE), TIN_ORE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DEEPSLATE_TIN_ORE), DEEPSLATE_TIN_ORE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_TIN_ORE), MOON_TIN_ORE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LUNASLATE_TIN_ORE), LUNASLATE_TIN_ORE);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ALUMINUM_ORE), ALUMINUM_ORE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DEEPSLATE_ALUMINUM_ORE), DEEPSLATE_ALUMINUM_ORE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_ORE), ALUMINUM_ORE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DEEPSLATE_ALUMINUM_ORE), DEEPSLATE_ALUMINUM_ORE);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DESH_ORE), DESH_ORE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DESH_ORE), DESH_ORE);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ILMENITE_ORE), ILMENITE_ORE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ILMENITE_ORE), ILMENITE_ORE);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.GALENA_ORE), GALENA_ORE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GALENA_ORE), GALENA_ORE);
 
         // COMPACT MINERAL BLOCKS
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_CHEESE_BLOCK), MOON_CHEESE_BLOCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.SILICON_BLOCK), SILICON_BLOCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.METEORIC_IRON_BLOCK), METEORIC_IRON_BLOCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.DESH_BLOCK), DESH_BLOCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.TITANIUM_BLOCK), TITANIUM_BLOCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.LEAD_BLOCK), LEAD_BLOCK);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.LUNAR_SAPPHIRE_BLOCK), LUNAR_SAPPHIRE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_CHEESE_BLOCK), MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.SILICON_BLOCK), SILICON_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.METEORIC_IRON_BLOCK), METEORIC_IRON_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DESH_BLOCK), DESH_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.TITANIUM_BLOCK), TITANIUM_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LEAD_BLOCK), LEAD_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LUNAR_SAPPHIRE_BLOCK), LUNAR_SAPPHIRE_BLOCK);
 
         // MOON VILLAGER SPECIAL
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.LUNAR_CARTOGRAPHY_TABLE), LUNAR_CARTOGRAPHY_TABLE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LUNAR_CARTOGRAPHY_TABLE), LUNAR_CARTOGRAPHY_TABLE);
 
         // MISC WORLD GEN
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CAVERNOUS_VINE), CAVERNOUS_VINE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.POISONOUS_CAVERNOUS_VINE), POISONOUS_CAVERNOUS_VINE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.MOON_BERRY_BUSH), MOON_BERRY_BUSH);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CAVERNOUS_VINE), CAVERNOUS_VINE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.POISONOUS_CAVERNOUS_VINE), POISONOUS_CAVERNOUS_VINE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_BERRY_BUSH), MOON_BERRY_BUSH);
 
         // DUMMY
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.SOLAR_PANEL_PART), SOLAR_PANEL_PART);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CRYOGENIC_CHAMBER_PART), CRYOGENIC_CHAMBER_PART);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.SOLAR_PANEL_PART), SOLAR_PANEL_PART);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CRYOGENIC_CHAMBER_PART), CRYOGENIC_CHAMBER_PART);
 
         // MISC MACHINES
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.PLAYER_TRANSPORT_TUBE), PLAYER_TRANSPORT_TUBE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.PLAYER_TRANSPORT_TUBE), PLAYER_TRANSPORT_TUBE);
 
         // MACHINES
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.CIRCUIT_FABRICATOR), CIRCUIT_FABRICATOR);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.COMPRESSOR), COMPRESSOR);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ELECTRIC_COMPRESSOR), ELECTRIC_COMPRESSOR);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.COAL_GENERATOR), COAL_GENERATOR);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.BASIC_SOLAR_PANEL), BASIC_SOLAR_PANEL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ADVANCED_SOLAR_PANEL), ADVANCED_SOLAR_PANEL);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ENERGY_STORAGE_MODULE), ENERGY_STORAGE_MODULE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ELECTRIC_FURNACE), ELECTRIC_FURNACE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.ELECTRIC_ARC_FURNACE), ELECTRIC_ARC_FURNACE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.REFINERY), REFINERY);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.OXYGEN_COLLECTOR), OXYGEN_COLLECTOR);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.OXYGEN_SEALER), OXYGEN_SEALER);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR), BUBBLE_DISTRIBUTOR);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR), OXYGEN_DECOMPRESSOR);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.OXYGEN_COMPRESSOR), OXYGEN_COMPRESSOR);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.FUEL_LOADER), FUEL_LOADER);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CIRCUIT_FABRICATOR), CIRCUIT_FABRICATOR);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.COMPRESSOR), COMPRESSOR);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ELECTRIC_COMPRESSOR), ELECTRIC_COMPRESSOR);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.COAL_GENERATOR), COAL_GENERATOR);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.BASIC_SOLAR_PANEL), BASIC_SOLAR_PANEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ADVANCED_SOLAR_PANEL), ADVANCED_SOLAR_PANEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ENERGY_STORAGE_MODULE), ENERGY_STORAGE_MODULE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ELECTRIC_FURNACE), ELECTRIC_FURNACE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ELECTRIC_ARC_FURNACE), ELECTRIC_ARC_FURNACE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.REFINERY), REFINERY);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.OXYGEN_COLLECTOR), OXYGEN_COLLECTOR);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.OXYGEN_SEALER), OXYGEN_SEALER);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR), OXYGEN_BUBBLE_DISTRIBUTOR);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR), OXYGEN_DECOMPRESSOR);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.OXYGEN_COMPRESSOR), OXYGEN_COMPRESSOR);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.FUEL_LOADER), FUEL_LOADER);
 
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.AIR_LOCK_FRAME), AIR_LOCK_FRAME);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIR_LOCK_CONTROLLER);
-        Registry.register(Registry.BLOCK, Constant.id(Constant.Block.AIR_LOCK_SEAL), AIR_LOCK_SEAL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.AIR_LOCK_FRAME), AIR_LOCK_FRAME);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIR_LOCK_CONTROLLER);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.AIR_LOCK_SEAL), AIR_LOCK_SEAL);
     }
 
     private static FabricBlockSettings oreSettings(float hardness, float resistance, boolean deepslate) {

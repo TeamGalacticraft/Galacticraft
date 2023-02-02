@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.entity;
+package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.google.common.annotations.VisibleForTesting;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;

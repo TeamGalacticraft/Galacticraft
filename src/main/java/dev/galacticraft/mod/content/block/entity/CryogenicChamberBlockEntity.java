@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;

@@ -24,6 +24,7 @@ package dev.galacticraft.mod.structure;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 
@@ -34,6 +35,6 @@ public class GCStructurePieceType {
     public static final StructurePieceType MOON_RUINS_PIECE = (StructurePieceType.StructureTemplateType)MoonRuinsGenerator.Piece::new;
 
     public static void register() {
-        Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Constant.MOD_ID, "moon_ruins_piece"), MOON_RUINS_PIECE);
+        Registry.register(BuiltInRegistries.STRUCTURE_PIECE, new ResourceLocation(Constant.MOD_ID, "moon_ruins_piece"), MOON_RUINS_PIECE);
     }
 }

@@ -60,7 +60,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
     @Override
     protected void renderTooltip(PoseStack matrices, int mouseX, int mouseY) {
         if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 129, this.topPos + 8, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
-            Storage<FluidVariant> storage = ContainerItemContext.withInitial(this.menu.inventory.getItem(GCPlayerInventoryMenu.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
+            Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCPlayerInventoryMenu.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
             if (storage != null) {
                 try (Transaction transaction = Transaction.openOuter()) {
                     StorageView<FluidVariant> exact = storage.exactView(FluidVariant.of(Gases.OXYGEN));
@@ -73,7 +73,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
                 }
             }
         } else if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 152, this.topPos + 8, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
-            Storage<FluidVariant> storage = ContainerItemContext.withInitial(this.menu.inventory.getItem(GCPlayerInventoryMenu.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
+            Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCPlayerInventoryMenu.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
             if (storage != null) {
                 try (Transaction transaction = Transaction.openOuter()) {
                     StorageView<FluidVariant> exact = storage.exactView(FluidVariant.of(Gases.OXYGEN));
@@ -117,14 +117,14 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.PLAYER_INVENTORY_SCREEN);
         this.blit(matrices, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-        Storage<FluidVariant> storage1 = ContainerItemContext.withInitial(this.menu.inventory.getItem(GCPlayerInventoryMenu.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
+        Storage<FluidVariant> storage1 = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCPlayerInventoryMenu.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
         if (storage1 != null) {
             StorageView<FluidVariant> exact = storage1.exactView(FluidVariant.of(Gases.OXYGEN));
             if (exact != null) {
                 DrawableUtil.drawOxygenBuffer(matrices, this.leftPos + 129, this.topPos + 8, exact.getAmount(), exact.getCapacity());
             }
         }
-        Storage<FluidVariant> storage2 = ContainerItemContext.withInitial(this.menu.inventory.getItem(GCPlayerInventoryMenu.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
+        Storage<FluidVariant> storage2 = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCPlayerInventoryMenu.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
         if (storage2 != null) {
             StorageView<FluidVariant> exact = storage2.exactView(FluidVariant.of(Gases.OXYGEN));
             if (exact != null) {

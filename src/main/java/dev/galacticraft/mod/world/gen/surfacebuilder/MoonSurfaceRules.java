@@ -93,6 +93,6 @@ public class MoonSurfaceRules {
     }
 
     public static void register() {
-        Registry.register(Registry.RULE, new ResourceLocation(Constant.MOD_ID, "moon"), Codec.unit(MOON));
+        Registry.register(BuiltInRegistries.RULE, new ResourceLocation(Constant.MOD_ID, "moon"), Codec.unit(MOON));
     }
 }

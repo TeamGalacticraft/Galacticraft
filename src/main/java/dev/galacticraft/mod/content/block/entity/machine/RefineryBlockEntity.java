@@ -20,26 +20,18 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.entity;
+package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
-import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
-import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
-import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
-import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
-import dev.galacticraft.machinelib.api.transfer.CachingItemApiProvider;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -53,7 +45,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
-import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -67,39 +58,8 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     public static final int FLUID_INPUT_SLOT = 1;
     public static final int FLUID_OUTPUT_SLOT = 2;
 
-    private final CachingItemApiProvider<EnergyStorage> chargeSlot = CachingItemApiProvider.create(this.itemStorage().getSlot(CHARGE_SLOT), EnergyStorage.ITEM);
-    private final CachingItemApiProvider<Storage<FluidVariant>> fluidInputSlot = CachingItemApiProvider.create(this.itemStorage().getSlot(FLUID_INPUT_SLOT), FluidStorage.ITEM);
-    private final CachingItemApiProvider<Storage<FluidVariant>> fluidOutputSlot = CachingItemApiProvider.create(this.itemStorage().getSlot(FLUID_OUTPUT_SLOT), FluidStorage.ITEM);
-
     public RefineryBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.REFINERY, pos, state);
-    }
-
-    @Override
-    public long getEnergyCapacity() {
-        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
-    }
-
-    @Override
-    public boolean canExposedInsertEnergy() {
-        return true;
-    }
-
-    @Override
-    protected @NotNull MachineItemStorage createItemStorage() {
-        return MachineItemStorage.Builder.create()
-                .addSlot(GCSlotGroupTypes.ENERGY_TO_SELF, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 7))
-                .addSlot(GCSlotGroupTypes.OIL_FILL, Constant.Filter.Item.CAN_EXTRACT_OIL, true, ItemSlotDisplay.create(123, 7))
-                .addSlot(GCSlotGroupTypes.FUEL_DRAIN, Constant.Filter.Item.CAN_INSERT_FUEL, true, ItemSlotDisplay.create(153, 7))
-                .build();
-    }
-
-    @Override
-    protected @NotNull MachineFluidStorage createFluidStorage() {
-        return MachineFluidStorage.Builder.create()
-                .addTank(GCSlotGroupTypes.OIL_INPUT, MAX_CAPACITY, TankDisplay.create(122, 28))
-                .addTank(GCSlotGroupTypes.FUEL_OUTPUT, MAX_CAPACITY, TankDisplay.create(152, 28))
-                .build();
     }
 
     @Override

@@ -28,6 +28,7 @@ package dev.galacticraft.mod.misc.banner;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
@@ -38,6 +39,6 @@ public class GCBannerPattern {
     public static final BannerPattern ROCKET = new BannerPattern("gc:r");
 
     public static void register() {
-        Registry.register(Registry.BANNER_PATTERN, new ResourceLocation(Constant.MOD_ID, "rocket"), ROCKET);
+        Registry.register(BuiltInRegistries.BANNER_PATTERN, new ResourceLocation(Constant.MOD_ID, "rocket"), ROCKET);
     }
 }

@@ -25,6 +25,7 @@ package dev.galacticraft.mod.world.gen.carver;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
 import net.minecraft.world.level.levelgen.carver.WorldCarver;
@@ -37,7 +38,7 @@ public class GCCarver {
     public static final WorldCarver<CraterCarverConfig> CRATERS = new CraterCarver(CraterCarverConfig.CRATER_CODEC);
 
     public static void register() {
-        Registry.register(Registry.CARVER, new ResourceLocation(Constant.MOD_ID, "lunar_cave"), LUNAR_CAVE);
-        Registry.register(Registry.CARVER, new ResourceLocation(Constant.MOD_ID, "craters"), CRATERS);
+        Registry.register(BuiltInRegistries.CARVER, new ResourceLocation(Constant.MOD_ID, "lunar_cave"), LUNAR_CAVE);
+        Registry.register(BuiltInRegistries.CARVER, new ResourceLocation(Constant.MOD_ID, "craters"), CRATERS);
     }
 }

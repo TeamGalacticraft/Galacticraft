@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
-import dev.galacticraft.mod.content.block.entity.CoalGeneratorBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;

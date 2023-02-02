@@ -20,22 +20,16 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.entity;
+package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
-import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
-import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
-import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.FuelLoaderMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -72,23 +66,8 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
         return connectionPos;
     }
 
-    @Override
-    protected @NotNull MachineItemStorage createItemStorage() {
-        return MachineItemStorage.builder()
-                .addSlot(GCSlotGroupTypes.ENERGY_TO_SELF, Constant.Filter.any(), true, ItemSlotDisplay.create(8, 61))
-                .addSlot(GCSlotGroupTypes.FUEL_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(80, 61))
-                .build();
-    }
-
-    @Override
-    protected @NotNull MachineFluidStorage createFluidStorage() {
-        return MachineFluidStorage.Builder.create()
-                .addTank(GCSlotGroupTypes.FUEL_INPUT, 0, TankDisplay.create(0, 0, 0))
-                .build();
-    }
-
 //    @Override
-//    public boolean canInsertEnergy() {
+//    public boolean canInsertEnergyf() {
 //        return true;
 //    }
 //

@@ -27,7 +27,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.ElectricCompressorBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;

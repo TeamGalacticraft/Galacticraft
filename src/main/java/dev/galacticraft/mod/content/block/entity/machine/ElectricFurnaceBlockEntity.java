@@ -20,18 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.entity;
+package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
-import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
-import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -59,27 +55,8 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Contain
     
     private final @NotNull Container craftingInv = this.itemStorage().subInv(INPUT_SLOT, 1);
 
-    @Override
-    protected @NotNull MachineItemStorage createItemStorage() {
-        return MachineItemStorage.Builder.create()
-                .addSlot(GCSlotGroupTypes.ENERGY_TO_SELF, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 61))
-                .addSlot(GCSlotGroupTypes.GENERIC_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(52, 35))
-                .addSlot(GCSlotGroupTypes.GENERIC_OUTPUT, Constant.Filter.any(), false, ItemSlotDisplay.create(113, 35))
-                .build();
-    }
-
     public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING);
-    }
-
-    @Override
-    public long getEnergyCapacity() {
-        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
-    }
-
-    @Override
-    public boolean canExposedInsertEnergy() {
-        return true;
     }
 
     @Override

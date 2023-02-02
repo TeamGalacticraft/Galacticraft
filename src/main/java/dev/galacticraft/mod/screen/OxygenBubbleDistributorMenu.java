@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.mod.content.block.entity.OxygenBubbleDistributorBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -31,14 +31,14 @@ import net.minecraft.world.entity.player.Player;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BubbleDistributorMenu extends MachineMenu<OxygenBubbleDistributorBlockEntity> {
-    public BubbleDistributorMenu(int syncId, Player player, OxygenBubbleDistributorBlockEntity machine) {
-        super(syncId, player, machine, GCMenuTypes.BUBBLE_DISTRIBUTOR);
+public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistributorBlockEntity> {
+    public OxygenBubbleDistributorMenu(int syncId, Player player, OxygenBubbleDistributorBlockEntity machine) {
+        super(syncId, player, machine, GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR);
 
         this.addPlayerInventorySlots(8, 84);
     }
 
-    public BubbleDistributorMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {
+    public OxygenBubbleDistributorMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {
         this(syncId, inv.player, (OxygenBubbleDistributorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
     }
 }

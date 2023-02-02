@@ -31,9 +31,9 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.OxygenBubbleDistributorBlockEntity;
-import dev.galacticraft.mod.screen.BubbleDistributorMenu;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
+import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -58,7 +58,7 @@ public class GCServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.BUBBLE_MAX, (server, player, handler, buf, responseSender) -> {
             byte max = buf.readByte();
             server.execute(() -> {
-                if (player.containerMenu instanceof BubbleDistributorMenu sHandler) {
+                if (player.containerMenu instanceof OxygenBubbleDistributorMenu sHandler) {
                     OxygenBubbleDistributorBlockEntity machine = sHandler.machine;
                     if (machine.getSecurity().hasAccess(player)) {
                         if (max > 0) {
@@ -72,7 +72,7 @@ public class GCServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.BUBBLE_VISIBLE, (server, player, handler, buf, responseSender) -> {
             boolean visible = buf.readBoolean();
             server.execute(() -> {
-                if (player.containerMenu instanceof BubbleDistributorMenu sHandler) {
+                if (player.containerMenu instanceof OxygenBubbleDistributorMenu sHandler) {
                     OxygenBubbleDistributorBlockEntity machine = sHandler.machine;
                     if (machine.getSecurity().hasAccess(player)) {
                         machine.bubbleVisible = visible;

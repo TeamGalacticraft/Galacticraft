@@ -24,6 +24,7 @@ package dev.galacticraft.mod.recipe;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeType;
 
@@ -39,10 +40,10 @@ public class GalacticraftRecipe {
     public static final ShapedCompressingRecipe.Serializer SHAPED_COMPRESSING_SERIALIZER = ShapedCompressingRecipe.Serializer.INSTANCE;
 
     public static void register() {
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.FABRICATION), FABRICATION_TYPE);
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.COMPRESSING), COMPRESSING_TYPE);
-        Registry.register(Registry.RECIPE_SERIALIZER, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.Serializer.FABRICATION), FABRICATION_SERIALIZER);
-        Registry.register(Registry.RECIPE_SERIALIZER, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPELESS), SHAPELESS_COMPRESSING_SERIALIZER);
-        Registry.register(Registry.RECIPE_SERIALIZER, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPED), SHAPED_COMPRESSING_SERIALIZER);
+        Registry.register(BuiltInRegistries.RECIPE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.FABRICATION), FABRICATION_TYPE);
+        Registry.register(BuiltInRegistries.RECIPE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.COMPRESSING), COMPRESSING_TYPE);
+        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.Serializer.FABRICATION), FABRICATION_SERIALIZER);
+        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPELESS), SHAPELESS_COMPRESSING_SERIALIZER);
+        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, new ResourceLocation(Constant.MOD_ID, Constant.Recipe.Serializer.COMPRESSING_SHAPED), SHAPED_COMPRESSING_SERIALIZER);
     }
 }

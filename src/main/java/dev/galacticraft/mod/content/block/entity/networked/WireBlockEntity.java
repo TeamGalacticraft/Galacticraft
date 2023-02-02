@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.block.entity;
+package dev.galacticraft.mod.content.block.entity.networked;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.wire.Wire;

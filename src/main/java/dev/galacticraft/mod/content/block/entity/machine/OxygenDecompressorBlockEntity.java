@@ -20,16 +20,23 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.entity;
+package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.gas.Gases;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
-import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
+import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
+import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
+import dev.galacticraft.mod.util.GenericStorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -43,25 +50,43 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
-    private static final int OXYGEN_TANK = 0;
+public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
+    public static final int CHARGE_SLOT = 0;
+    public static final int OXYGEN_TANK_SLOT = 1;
+    public static final int OXYGEN_TANK = 0;
 
-    public OxygenStorageModuleBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.OXYGEN_STORAGE_MODULE, pos, state);
+    public OxygenDecompressorBlockEntity(BlockPos pos, BlockState state) {
+        super(GCMachineTypes.OXYGEN_DECOMPRESSOR, pos, state);
     }
 
     @Override
-    protected @NotNull MachineFluidStorage createFluidStorage() {
-        return MachineFluidStorage.Builder.create()
-                .addTank(GCSlotGroupTypes.OXYGEN_TANK, MAX_OXYGEN, TankDisplay.create(31, 8), true)
-                .build();
+    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(world, pos, state, profiler);
+        this.attemptChargeFromStack(CHARGE_SLOT);
     }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        profiler.push("transfer");
         this.trySpreadFluids(world, state);
-        return MachineStatus.INVALID;
+        Storage<FluidVariant> fluidStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(FluidStorage.ITEM);
+        profiler.pop();
+        if (fluidStorage == null) return GCMachineStatus.MISSING_OXYGEN_TANK;
+        if (fluidStorage.simulateExtract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GCMachineStatus.EMPTY_OXYGEN_TANK;
+        profiler.push("transaction");
+
+        try (Transaction transaction = Transaction.openOuter()) {
+            if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenDecompressorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenDecompressorEnergyConsumptionRate()) {
+                GenericStorageUtil.move(FluidVariant.of(Gases.OXYGEN), fluidStorage, this.fluidStorage(), Long.MAX_VALUE, transaction);
+                transaction.commit();
+                return GCMachineStatus.DECOMPRESSING;
+            } else {
+                return MachineStatuses.NOT_ENOUGH_ENERGY;
+            }
+        } finally {
+            profiler.pop();
+        }
     }
 
     @Nullable
@@ -72,7 +97,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
                     syncId,
                     player,
                     this,
-                    GCMenuTypes.OXYGEN_STORAGE_MODULE
+                    GCMenuTypes.OXYGEN_DECOMPRESSOR
             );
         }
         return null;

@@ -20,23 +20,18 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.entity;
+package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.gas.Gases;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
-import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
-import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
-import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
-import dev.galacticraft.machinelib.api.storage.slot.display.TankDisplay;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.GenericStorageUtil;
@@ -85,31 +80,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.OXYGEN_SEALER, pos, state);
-    }
-
-    @Override
-    public long getEnergyCapacity() {
-        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
-    }
-
-    @Override
-    public boolean canExposedInsertEnergy() {
-        return true;
-    }
-
-    @Override
-    protected @NotNull MachineItemStorage createItemStorage() {
-        return MachineItemStorage.Builder.create()
-                .addSlot(GCSlotGroupTypes.ENERGY_TO_SELF, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 62))
-                .addSlot(GCSlotGroupTypes.OXYGEN_TANK_FILL, Constant.Filter.Item.CAN_EXTRACT_LOX, true, ItemSlotDisplay.create(31, 62))
-                .build();
-    }
-
-    @Override
-    protected @NotNull MachineFluidStorage createFluidStorage() {
-        return MachineFluidStorage.Builder.create()
-                .addTank(GCSlotGroupTypes.OXYGEN_INPUT, MAX_OXYGEN, TankDisplay.create(31, 8), true)
-                .build();
     }
 
     @Override

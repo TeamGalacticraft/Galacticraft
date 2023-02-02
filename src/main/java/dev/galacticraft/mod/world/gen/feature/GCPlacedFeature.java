@@ -48,7 +48,7 @@ public class GCPlacedFeature {
     )));
 
     public static Holder<PlacedFeature> register(ResourceKey<PlacedFeature> id, PlacedFeature placedFeature) {
-        return Registry.register(BuiltinRegistries.PLACED_FEATURE, id, placedFeature);
+        return Registry.register(BuiltInRegistries.PLACED_FEATURE, id, placedFeature);
     }
 
     public static void register() {

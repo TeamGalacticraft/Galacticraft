@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.api.block;
 
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.api.wire.Wire;
+import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

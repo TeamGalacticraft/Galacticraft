@@ -25,9 +25,9 @@ package dev.galacticraft.mod.lookup;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.block.entity.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.content.item.OxygenTankItem;
@@ -55,7 +55,7 @@ public class GCApiLookupProviders {
             GCBlocks.OXYGEN_COMPRESSOR,
             GCBlocks.OXYGEN_DECOMPRESSOR,
             GCBlocks.OXYGEN_SEALER,
-            GCBlocks.BUBBLE_DISTRIBUTOR,
+            GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR,
             GCBlocks.ENERGY_STORAGE_MODULE,
             GCBlocks.OXYGEN_STORAGE_MODULE
     };

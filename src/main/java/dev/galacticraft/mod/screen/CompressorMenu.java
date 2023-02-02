@@ -25,7 +25,7 @@ package dev.galacticraft.mod.screen;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.content.block.entity.CompressorBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;

@@ -30,6 +30,7 @@ import dev.galacticraft.mod.content.fluid.OxygenFluid;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -73,6 +74,6 @@ public class GCFluids {
     }
 
     private static void register(String id, Fluid fluid) {
-        Registry.register(Registry.FLUID, new ResourceLocation(Constant.MOD_ID, id), fluid);
+        Registry.register(BuiltInRegistries.FLUID, new ResourceLocation(Constant.MOD_ID, id), fluid);
     }
 }

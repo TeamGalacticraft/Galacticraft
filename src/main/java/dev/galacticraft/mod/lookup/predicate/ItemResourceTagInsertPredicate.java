@@ -39,7 +39,7 @@ public record ItemResourceTagInsertPredicate<R, V extends TransferVariant<R>>(
 
     @Override
     public boolean test(ItemVariant variant) {
-        Storage<V> storage = ContainerItemContext.withInitial(variant.toStack()).find(this.lookup);
+        Storage<V> storage = ContainerItemContext.withConstant(variant.toStack()).find(this.lookup);
         if (storage != null && storage.supportsInsertion()) {
             //noinspection OptionalGetWithoutIsPresent: We can call get as both items and fluids have intrusive holders
             V extractableContent = StorageUtil.findExtractableResource(storage, v -> this.registry.getHolder(this.registry.getId(v.getObject())).get().is(this.type), null);

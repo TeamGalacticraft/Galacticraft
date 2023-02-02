@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;

@@ -20,53 +20,58 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.entity;
+package dev.galacticraft.mod.content.block.entity.networked;
 
 import dev.galacticraft.mod.api.block.entity.Colored;
-import dev.galacticraft.mod.api.block.entity.Walkway;
+import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.api.block.entity.Pullable;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 
-public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, Colored {
-    private Direction direction;
+public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colored, Connected, Pullable {
+    private boolean awaitDirty = false;
+    private boolean pull = false;
 
-    public PipeWalkwayBlockEntity(BlockPos pos, BlockState state) {
-        super(GCBlockEntityTypes.PIPE_WALKWAY, pos, state, FluidConstants.BUCKET / 50);
-    }
-
-    @Override
-    public Direction getDirection() {
-        return this.direction;
-    }
-
-    @Override
-    public void setDirection(@NotNull Direction direction) {
-        this.direction = direction;
+    public GlassFluidPipeBlockEntity(BlockPos pos, BlockState state) {
+        super(GCBlockEntityTypes.GLASS_FLUID_PIPE, pos, state, FluidConstants.BUCKET / 50); //0.4B/s
     }
 
     @Override
     public void load(CompoundTag nbt) {
         super.load(nbt);
-        this.readWalkwayNbt(nbt);
-        assert this.level != null;
-        if (this.level.isClientSide) Minecraft.getInstance().levelRenderer.setSectionDirty(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ());
+        this.readPullNbt(nbt);
+
+        this.awaitDirty = true;
+    }
+
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        if (this.awaitDirty && level != null && level.isClientSide) {
+            this.awaitDirty = false;
+            Minecraft.getInstance().levelRenderer.setSectionDirty(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ());
+        }
     }
 
     @Override
     public void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
-        this.writeWalkwayNbt(nbt);
+        this.writePullNbt(nbt);
     }
 
     @Override
-    public boolean canConnect(Direction direction) {
-        if (this.direction == null) return false;
-        return direction != this.direction;
+    public boolean isPull() {
+        return this.pull;
+    }
+
+    @Override
+    public void setPull(boolean pull) {
+        this.pull = pull;
     }
 }

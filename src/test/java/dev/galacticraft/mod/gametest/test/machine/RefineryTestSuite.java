@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.gametest.test.machine;
 
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.block.entity.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.block.entity.RefineryBlockEntity;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.content.item.GCItem;

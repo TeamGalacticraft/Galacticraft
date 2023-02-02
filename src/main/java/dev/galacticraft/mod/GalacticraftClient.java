@@ -22,9 +22,7 @@
 
 package dev.galacticraft.mod;
 
-import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.client.gui.overlay.CountdownOverylay;
 import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
@@ -44,9 +42,11 @@ import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
 import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
 import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resource.GCResourceReloadListener;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.events.ClientEventHandler;
+import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.events.ClientEventHandler;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.particle.GCParticleType;
 import dev.galacticraft.mod.screen.GCMenuTypes;
@@ -58,11 +58,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
@@ -121,7 +117,7 @@ public class GalacticraftClient implements ClientModInitializer {
         MenuScreens.register(GCMenuTypes.OXYGEN_COMPRESSOR, OxygenCompressorScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_DECOMPRESSOR, OxygenDecompressorScreen::new);
         MenuScreens.register(GCMenuTypes.PLAYER_INV_GC, GCPlayerInventoryScreen::new);
-        MenuScreens.register(GCMenuTypes.BUBBLE_DISTRIBUTOR, BubbleDistributorScreen::new);
+        MenuScreens.register(GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR, BubbleDistributorScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_STORAGE_MODULE, OxygenStorageModuleScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_SEALER, OxygenSealerScreen::new);
         MenuScreens.register(GCMenuTypes.FUEL_LOADER, FuelLoaderScreen::new);

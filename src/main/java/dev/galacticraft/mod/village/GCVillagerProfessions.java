@@ -28,6 +28,7 @@ import dev.galacticraft.mod.data.GCTags;
 import dev.galacticraft.mod.world.poi.GCPointOfInterestType;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -55,7 +56,7 @@ public class GCVillagerProfessions {
     }
 
     public static void register() {
-        Registry.register(Registry.VILLAGER_PROFESSION, new ResourceLocation(Constant.MOD_ID, "lunar_cartographer"), LUNAR_CARTOGRAPHER);
+        Registry.register(BuiltInRegistries.VILLAGER_PROFESSION, new ResourceLocation(Constant.MOD_ID, "lunar_cartographer"), LUNAR_CARTOGRAPHER);
 
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 1, factories -> {
             factories.add(new GCVillagerTrades.BuyForOneEmeraldFactory(Items.PAPER, 24, 16, 2));

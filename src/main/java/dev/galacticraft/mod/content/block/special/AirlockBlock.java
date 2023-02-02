@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.content.block.special;
 
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.entity.AirlockControllerBlockEntity;
-import dev.galacticraft.mod.content.block.entity.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

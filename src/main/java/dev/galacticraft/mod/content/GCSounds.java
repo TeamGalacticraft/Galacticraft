@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
@@ -56,28 +57,28 @@ public class GCSounds {
     public static final SoundEvent MUSIC_LEGACY_SPACERACE = new SoundEvent(new ResourceLocation(Constant.MOD_ID, "music.legacy.spacerace"));
 
     public static void register() {
-        Registry.register(Registry.SOUND_EVENT, MUSIC_MOON.getLocation(), MUSIC_MOON);
-        Registry.register(Registry.SOUND_EVENT, MUSIC_CREDITS.getLocation(), MUSIC_CREDITS);
-        Registry.register(Registry.SOUND_EVENT, MUSIC_ORBIT.getLocation(), MUSIC_ORBIT);
-        Registry.register(Registry.SOUND_EVENT, MUSIC_MARS.getLocation(), MUSIC_MARS);
-        Registry.register(Registry.SOUND_EVENT, PLAYER_UNLOCKCHEST.getLocation(), PLAYER_UNLOCKCHEST);
-        Registry.register(Registry.SOUND_EVENT, PLAYER_PARACHUTE.getLocation(), PLAYER_PARACHUTE);
-        Registry.register(Registry.SOUND_EVENT, PLAYER_OPENAIRLOCK.getLocation(), PLAYER_OPENAIRLOCK);
-        Registry.register(Registry.SOUND_EVENT, PLAYER_CLOSEAIRLOCK.getLocation(), PLAYER_CLOSEAIRLOCK);
-        Registry.register(Registry.SOUND_EVENT, ENTITY_SLIME_DEATH.getLocation(), ENTITY_SLIME_DEATH);
-        Registry.register(Registry.SOUND_EVENT, ENTITY_OOH.getLocation(), ENTITY_OOH);
-        Registry.register(Registry.SOUND_EVENT, ENTITY_OUCH.getLocation(), ENTITY_OUCH);
-        Registry.register(Registry.SOUND_EVENT, ENTITY_BOSSLAUGH.getLocation(), ENTITY_BOSSLAUGH);
-        Registry.register(Registry.SOUND_EVENT, ENTITY_BOSSDEATH.getLocation(), ENTITY_BOSSDEATH);
-        Registry.register(Registry.SOUND_EVENT, ENTITY_ASTROMINER.getLocation(), ENTITY_ASTROMINER);
-        Registry.register(Registry.SOUND_EVENT, AMBIENCE_SINGLEDRIP.getLocation(), AMBIENCE_SINGLEDRIP);
-        Registry.register(Registry.SOUND_EVENT, AMBIENCE_SCARYSCAPE.getLocation(), AMBIENCE_SCARYSCAPE);
-        Registry.register(Registry.SOUND_EVENT, SHUTTLE_SHUTTLE.getLocation(), SHUTTLE_SHUTTLE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_MOON.getLocation(), MUSIC_MOON);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_CREDITS.getLocation(), MUSIC_CREDITS);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_ORBIT.getLocation(), MUSIC_ORBIT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_MARS.getLocation(), MUSIC_MARS);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PLAYER_UNLOCKCHEST.getLocation(), PLAYER_UNLOCKCHEST);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PLAYER_PARACHUTE.getLocation(), PLAYER_PARACHUTE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PLAYER_OPENAIRLOCK.getLocation(), PLAYER_OPENAIRLOCK);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PLAYER_CLOSEAIRLOCK.getLocation(), PLAYER_CLOSEAIRLOCK);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ENTITY_SLIME_DEATH.getLocation(), ENTITY_SLIME_DEATH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ENTITY_OOH.getLocation(), ENTITY_OOH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ENTITY_OUCH.getLocation(), ENTITY_OUCH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ENTITY_BOSSLAUGH.getLocation(), ENTITY_BOSSLAUGH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ENTITY_BOSSDEATH.getLocation(), ENTITY_BOSSDEATH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ENTITY_ASTROMINER.getLocation(), ENTITY_ASTROMINER);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, AMBIENCE_SINGLEDRIP.getLocation(), AMBIENCE_SINGLEDRIP);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, AMBIENCE_SCARYSCAPE.getLocation(), AMBIENCE_SCARYSCAPE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, SHUTTLE_SHUTTLE.getLocation(), SHUTTLE_SHUTTLE);
 
         // Legacy Discs
-        Registry.register(Registry.SOUND_EVENT, MUSIC_LEGACY_MARS.getLocation(), MUSIC_LEGACY_MARS);
-        Registry.register(Registry.SOUND_EVENT, MUSIC_LEGACY_MIMAS.getLocation(), MUSIC_LEGACY_MIMAS);
-        Registry.register(Registry.SOUND_EVENT, MUSIC_LEGACY_ORBIT.getLocation(), MUSIC_LEGACY_ORBIT);
-        Registry.register(Registry.SOUND_EVENT, MUSIC_LEGACY_SPACERACE.getLocation(), MUSIC_LEGACY_SPACERACE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_LEGACY_MARS.getLocation(), MUSIC_LEGACY_MARS);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_LEGACY_MIMAS.getLocation(), MUSIC_LEGACY_MIMAS);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_LEGACY_ORBIT.getLocation(), MUSIC_LEGACY_ORBIT);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_LEGACY_SPACERACE.getLocation(), MUSIC_LEGACY_SPACERACE);
     }
 }

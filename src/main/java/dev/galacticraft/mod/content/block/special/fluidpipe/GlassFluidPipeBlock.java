@@ -26,7 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidPipe;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.pipe.Pipe;
-import dev.galacticraft.mod.content.block.entity.GlassFluidPipeBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import dev.galacticraft.mod.content.item.StandardWrenchItem;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.FluidUtil;

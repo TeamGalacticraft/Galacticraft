@@ -28,6 +28,7 @@ import dev.galacticraft.mod.content.entity.*;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -55,22 +56,22 @@ public class GCEntityTypes {
     public static final EntityType<RocketEntity> ROCKET = FabricEntityTypeBuilder.create(MobCategory.MISC, RocketEntity::new).trackRangeBlocks(32).trackedUpdateRate(2).forceTrackedVelocityUpdates(false).dimensions(EntityDimensions.fixed(2.3F, 5.25F)).build(); //PLAYER VALUES
 
     public static void register() {
-        Registry.register(Registry.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_ZOMBIE), EVOLVED_ZOMBIE);
-        Registry.register(Registry.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_CREEPER), EVOLVED_CREEPER);
-        Registry.register(Registry.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_SKELETON), EVOLVED_SKELETON);
-        Registry.register(Registry.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_SPIDER), EVOLVED_SPIDER);
-        Registry.register(Registry.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_PILLAGER), EVOLVED_PILLAGER);
-        Registry.register(Registry.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_EVOKER), EVOLVED_EVOKER);
-        Registry.register(Registry.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_VINDICATOR), EVOLVED_VINDICATOR);
-        Registry.register(Registry.ENTITY_TYPE, Constant.id(Constant.Entity.GAZER), GAZER);
-        Registry.register(Registry.ENTITY_TYPE, Constant.id(Constant.Entity.RUMBLER), RUMBLER);
-        Registry.register(Registry.ENTITY_TYPE, Constant.id(Constant.Entity.COMET_CUBE), COMET_CUBE);
-        Registry.register(Registry.ENTITY_TYPE, Constant.id(Constant.Entity.OLI_GRUB), OLI_GRUB);
-        Registry.register(Registry.ENTITY_TYPE, Constant.id(Constant.Entity.GREY), GREY);
-        Registry.register(Registry.ENTITY_TYPE, Constant.id(Constant.Entity.ARCH_GREY), ARCH_GREY);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_ZOMBIE), EVOLVED_ZOMBIE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_CREEPER), EVOLVED_CREEPER);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_SKELETON), EVOLVED_SKELETON);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_SPIDER), EVOLVED_SPIDER);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_PILLAGER), EVOLVED_PILLAGER);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_EVOKER), EVOLVED_EVOKER);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_VINDICATOR), EVOLVED_VINDICATOR);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.GAZER), GAZER);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.RUMBLER), RUMBLER);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.COMET_CUBE), COMET_CUBE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.OLI_GRUB), OLI_GRUB);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.GREY), GREY);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.ARCH_GREY), ARCH_GREY);
 
-        Registry.register(Registry.ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Entity.BUBBLE), BUBBLE);
-        Registry.register(Registry.ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Entity.ROCKET), ROCKET);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Entity.BUBBLE), BUBBLE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Entity.ROCKET), ROCKET);
 
         FabricDefaultAttributeRegistry.register(EVOLVED_ZOMBIE, EvolvedZombieEntity.createAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D).add(Attributes.MOVEMENT_SPEED, 0.35D).add(Attributes.MAX_HEALTH, 30.0D));
         FabricDefaultAttributeRegistry.register(EVOLVED_CREEPER, EvolvedCreeperEntity.createAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D));

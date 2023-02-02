@@ -29,13 +29,7 @@ import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
-import net.minecraft.world.level.levelgen.placement.BiomeFilter;
-import net.minecraft.world.level.levelgen.placement.CountPlacement;
-import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
-import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraft.world.level.levelgen.placement.PlacementModifier;
-import net.minecraft.world.level.levelgen.placement.RarityFilter;
+import net.minecraft.world.level.levelgen.placement.*;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
@@ -75,7 +69,7 @@ public class GCOrePlacedFeature {
     }
 
     private static Holder<PlacedFeature> register(String id, PlacedFeature feature) {
-        return BuiltinRegistries.register(BuiltinRegistries.PLACED_FEATURE, Constant.id(id), feature);
+        return BuiltInRegistries.register(BuiltInRegistries.PLACED_FEATURE, Constant.id(id), feature);
     }
 
     private static @Unmodifiable List<PlacementModifier> modifiers(PlacementModifier countModifier, PlacementModifier heightModifier) {

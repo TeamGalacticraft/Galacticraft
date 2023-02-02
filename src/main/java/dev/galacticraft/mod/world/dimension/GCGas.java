@@ -25,6 +25,7 @@ package dev.galacticraft.mod.world.dimension;
 import dev.galacticraft.machinelib.api.gas.GasFluid;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
@@ -50,7 +51,7 @@ public class GCGas {
             );
 
     public static void register() {
-        Registry.register(Registry.FLUID, HYDROGEN_DEUTERIUM_OXYGEN_ID, HYDROGEN_DEUTERIUM_OXYGEN);
-        Registry.register(Registry.FLUID, NITROGEN_OXIDE_ID, NITROGEN_OXIDE);
+        Registry.register(BuiltInRegistries.FLUID, HYDROGEN_DEUTERIUM_OXYGEN_ID, HYDROGEN_DEUTERIUM_OXYGEN);
+        Registry.register(BuiltInRegistries.FLUID, NITROGEN_OXIDE_ID, NITROGEN_OXIDE);
     }
 }

@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.entity;
+package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -29,7 +29,6 @@ import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.Tier1EnergyMachine;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.machine.GCMachineStatus;
@@ -56,15 +55,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Container, FabricationRecipe> implements Tier1EnergyMachine {
-    public static final int CHARGE_SLOT = 0;
-    public static final int INPUT_SLOT_DIAMOND = 1;
-    public static final int INPUT_SLOT_SILICON = 2;
-    public static final int INPUT_SLOT_SILICON_2 = 3;
-    public static final int INPUT_SLOT_REDSTONE = 4;
-    public static final int INPUT_SLOT = 5;
-    public static final int OUTPUT_SLOT = 6;
-
+public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Container, FabricationRecipe> {
     private final Container craftingInv;
 
     public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {

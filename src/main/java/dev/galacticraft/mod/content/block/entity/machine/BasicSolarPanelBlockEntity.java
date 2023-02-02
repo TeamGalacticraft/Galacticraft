@@ -20,10 +20,9 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.entity;
+package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.block.face.BlockFace;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.mod.Galacticraft;
@@ -47,20 +46,20 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements SolarPanel {
+public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements SolarPanel {
+    private final boolean[] blockage = new boolean[9];
     private int blocked = 0;
     public long currentEnergyGeneration = 0;
-    private final boolean[] blockage = new boolean[9];
 
-    public AdvancedSolarPanelBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.ADVANCED_SOLAR_PANEL, pos, state);
+    public BasicSolarPanelBlockEntity(BlockPos pos, BlockState state) {
+        super(GCMachineTypes.BASIC_SOLAR_PANEL, pos, state);
     }
 
     @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("charge");
         this.attemptDrainPowerToStack(GCSlotGroupTypes.ENERGY_TO_ITEM);
-        profiler.popPush("blockage");
+        profiler.pop();
         this.blocked = 0;
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
@@ -70,19 +69,18 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
                 }
             }
         }
-        profiler.pop();
     }
 
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        profiler.push("push_energy");
+        profiler.push("transfer");
         this.trySpreadEnergy(world, state);
         profiler.pop();
-        if (this.blocked >= 9) return GCMachineStatus.BLOCKED;
+        if (this.blocked == 9) return GCMachineStatus.BLOCKED;
         if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
         MachineStatus status = null;
-        double multiplier = blocked == 0 ? 1 : this.blocked / 9.0;
-        if (this.blocked > 1) status = GCMachineStatus.PARTIALLY_BLOCKED;
+        double multiplier = this.blocked / 9.0;
+        if (this.blocked > 0) status = GCMachineStatus.PARTIALLY_BLOCKED;
         if (world.isRaining() || world.isThundering()) {
             if (status == null) status = GCMachineStatus.RAIN;
             multiplier *= 0.5;
@@ -90,20 +88,13 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
         if (!world.isDay()) status = GCMachineStatus.NIGHT;
         double time = world.getDayTime() % 24000;
         if (time > 6000) time = 12000L - time;
-
         profiler.push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
-            this.currentEnergyGeneration = (long) (Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * (time / 6000.0) * multiplier) * 4L;
-            this.energyStorage().insert(this.currentEnergyGeneration, transaction);
+            this.energyStorage().insert((long)(Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * (time / 6000.0) * multiplier) * 4L, transaction);
             transaction.commit();
         }
         profiler.pop();
         return status == null ? GCMachineStatus.COLLECTING : status;
-    }
-
-    @Override
-    public boolean isFaceLocked(BlockFace face) {
-        return face == BlockFace.TOP;
     }
 
     @Nullable
@@ -114,7 +105,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
                     syncId,
                     ((ServerPlayer) player),
                     this,
-                    GCMachineTypes.ADVANCED_SOLAR_PANEL
+                    GCMachineTypes.BASIC_SOLAR_PANEL
             );
         }
         return null;
@@ -127,7 +118,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
 
     @Override
     public boolean followsSun() {
-        return true;
+        return false;
     }
 
     @Override
@@ -137,7 +128,14 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
 
     @Override
     public SolarPanelSource getSource() {
-        return this.level.dimensionType().hasCeiling() ? SolarPanelSource.NO_LIGHT_SOURCE : this.level.isDay() ? this.level.isRaining() || this.level.isThundering() ? SolarPanelSource.OVERCAST : SolarPanelSource.DAY : SolarPanelSource.NIGHT;
+        assert this.level != null;
+        if (this.level.dimensionType().hasCeiling()) return SolarPanelSource.NO_LIGHT_SOURCE;
+        if (this.level.isDay()) {
+            if (this.level.isRaining()) return SolarPanelSource.OVERCAST;
+            return SolarPanelSource.DAY;
+        } else {
+            return SolarPanelSource.NIGHT;
+        }
     }
 
     @Override

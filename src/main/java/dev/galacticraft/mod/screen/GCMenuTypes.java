@@ -26,9 +26,9 @@ import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
-import dev.galacticraft.mod.content.block.entity.*;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -62,7 +62,7 @@ public class GCMenuTypes {
 
     public static final MenuType<MachineMenu<OxygenSealerBlockEntity>> OXYGEN_SEALER = MachineMenu.createSimple(() -> GCMachineTypes.OXYGEN_SEALER);
 
-    public static final MenuType<BubbleDistributorMenu> BUBBLE_DISTRIBUTOR = MachineMenu.createType(BubbleDistributorMenu::new);
+    public static final MenuType<OxygenBubbleDistributorMenu> OXYGEN_BUBBLE_DISTRIBUTOR = MachineMenu.createType(OxygenBubbleDistributorMenu::new);
 
     public static final MenuType<MachineMenu<OxygenStorageModuleBlockEntity>> OXYGEN_STORAGE_MODULE = MachineMenu.createSimple(() -> GCMachineTypes.OXYGEN_STORAGE_MODULE);
     public static final MenuType<MachineMenu<EnergyStorageModuleBlockEntity>> ENERGY_STORAGE_MODULE = MachineMenu.createSimple(() -> GCMachineTypes.ENERGY_STORAGE_MODULE);
@@ -90,7 +90,7 @@ public class GCMenuTypes {
         Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.OXYGEN_COLLECTOR_MENU), OXYGEN_COLLECTOR);
         Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.OXYGEN_COMPRESSOR_MENU), OXYGEN_COMPRESSOR);
         Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.OXYGEN_DECOMPRESSOR_MENU), OXYGEN_DECOMPRESSOR);
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.BUBBLE_DISTRIBUTOR_MENU), BUBBLE_DISTRIBUTOR);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.BUBBLE_DISTRIBUTOR_MENU), OXYGEN_BUBBLE_DISTRIBUTOR);
         Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.OXYGEN_SEALER_MENU), OXYGEN_SEALER);
 
         Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.ENERGY_STORAGE_MODULE_MENU), ENERGY_STORAGE_MODULE);

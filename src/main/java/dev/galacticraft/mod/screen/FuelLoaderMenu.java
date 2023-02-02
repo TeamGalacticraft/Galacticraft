@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.mod.content.block.entity.FuelLoaderBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.screen.data.BlockPosContainerData;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

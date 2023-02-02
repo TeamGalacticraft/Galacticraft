@@ -27,7 +27,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.OxygenStorageModuleBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenStorageModuleBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;

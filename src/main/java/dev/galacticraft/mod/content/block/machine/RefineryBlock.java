@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
-import dev.galacticraft.mod.content.block.entity.RefineryBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;

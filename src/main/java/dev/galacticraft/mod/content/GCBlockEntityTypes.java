@@ -20,15 +20,19 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.entity;
+package dev.galacticraft.mod.content;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
-import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.entity.*;
+import dev.galacticraft.mod.content.block.entity.machine.*;
+import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.PipeWalkwayBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 /**
@@ -61,7 +65,7 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR = FabricBlockEntityTypeBuilder.create(OxygenCompressorBlockEntity::new, GCBlocks.OXYGEN_COMPRESSOR).build();
     public static final BlockEntityType<OxygenDecompressorBlockEntity> OXYGEN_DECOMPRESSOR = FabricBlockEntityTypeBuilder.create(OxygenDecompressorBlockEntity::new, GCBlocks.OXYGEN_DECOMPRESSOR).build();
     public static final BlockEntityType<OxygenSealerBlockEntity> OXYGEN_SEALER = FabricBlockEntityTypeBuilder.create(OxygenSealerBlockEntity::new, GCBlocks.OXYGEN_SEALER).build();
-    public static final BlockEntityType<OxygenBubbleDistributorBlockEntity> OXYGEN_BUBBLE_DISTRIBUTOR = FabricBlockEntityTypeBuilder.create(OxygenBubbleDistributorBlockEntity::new, GCBlocks.BUBBLE_DISTRIBUTOR).build();
+    public static final BlockEntityType<OxygenBubbleDistributorBlockEntity> OXYGEN_BUBBLE_DISTRIBUTOR = FabricBlockEntityTypeBuilder.create(OxygenBubbleDistributorBlockEntity::new, GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR).build();
 
     // RESOURCE STORAGE
     public static final BlockEntityType<EnergyStorageModuleBlockEntity> ENERGY_STORAGE_MODULE = FabricBlockEntityTypeBuilder.create(EnergyStorageModuleBlockEntity::new, GCBlocks.ENERGY_STORAGE_MODULE).build();
@@ -69,7 +73,7 @@ public class GCBlockEntityTypes {
 
     // ROCKETS
     public static final BlockEntityType<RocketLaunchPadBlockEntity> LAUNCH_PAD_TYPE = FabricBlockEntityTypeBuilder.create(RocketLaunchPadBlockEntity::new, GCBlocks.ROCKET_LAUNCH_PAD).build();
-    public static final BlockEntityType<FuelLoaderBlockEntity> FUEL_LOADER_TYPE = FabricBlockEntityTypeBuilder.create(FuelLoaderBlockEntity::new, GCBlocks.FUEL_LOADER).build();
+    public static final BlockEntityType<FuelLoaderBlockEntity> FUEL_LOADER = FabricBlockEntityTypeBuilder.create(FuelLoaderBlockEntity::new, GCBlocks.FUEL_LOADER).build();
 
     // MISC
     public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = FabricBlockEntityTypeBuilder.create(SolarPanelPartBlockEntity::new, GCBlocks.SOLAR_PANEL_PART).build();
@@ -79,41 +83,41 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = FabricBlockEntityTypeBuilder.create(AirlockControllerBlockEntity::new, GCBlocks.AIR_LOCK_CONTROLLER).build();
 
     public static void register() {
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.COAL_GENERATOR), COAL_GENERATOR);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.BASIC_SOLAR_PANEL), BASIC_SOLAR_PANEL);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.ADVANCED_SOLAR_PANEL), ADVANCED_SOLAR_PANEL);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.COAL_GENERATOR), COAL_GENERATOR);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.BASIC_SOLAR_PANEL), BASIC_SOLAR_PANEL);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.ADVANCED_SOLAR_PANEL), ADVANCED_SOLAR_PANEL);
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.ALUMINUM_WIRE), WIRE_T1);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.HEAVY_ALUMINUM_WIRE), WIRE_T2);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.GLASS_FLUID_PIPE), GLASS_FLUID_PIPE);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.WALKWAY), WALKWAY);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.WIRE_WALKWAY), WIRE_WALKWAY);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.PIPE_WALKWAY), PIPE_WALKWAY);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.ALUMINUM_WIRE), WIRE_T1);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.HEAVY_ALUMINUM_WIRE), WIRE_T2);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.GLASS_FLUID_PIPE), GLASS_FLUID_PIPE);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.WALKWAY), WALKWAY);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.WIRE_WALKWAY), WIRE_WALKWAY);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.PIPE_WALKWAY), PIPE_WALKWAY);
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.CIRCUIT_FABRICATOR), CIRCUIT_FABRICATOR);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.COMPRESSOR), COMPRESSOR);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.ELECTRIC_COMPRESSOR), ELECTRIC_COMPRESSOR);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.ELECTRIC_FURNACE), ELECTRIC_FURNACE);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.ELECTRIC_ARC_FURNACE), ELECTRIC_ARC_FURNACE);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.REFINERY), REFINERY);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.ENERGY_STORAGE_MODULE), ENERGY_STORAGE_MODULE);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CIRCUIT_FABRICATOR), CIRCUIT_FABRICATOR);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.COMPRESSOR), COMPRESSOR);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.ELECTRIC_COMPRESSOR), ELECTRIC_COMPRESSOR);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.ELECTRIC_FURNACE), ELECTRIC_FURNACE);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.ELECTRIC_ARC_FURNACE), ELECTRIC_ARC_FURNACE);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.REFINERY), REFINERY);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.ENERGY_STORAGE_MODULE), ENERGY_STORAGE_MODULE);
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.OXYGEN_COLLECTOR), OXYGEN_COLLECTOR);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.OXYGEN_COMPRESSOR), OXYGEN_COMPRESSOR);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.OXYGEN_DECOMPRESSOR), OXYGEN_DECOMPRESSOR);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.OXYGEN_SEALER), OXYGEN_SEALER);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR), OXYGEN_BUBBLE_DISTRIBUTOR);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.FUEL_LOADER), FUEL_LOADER_TYPE);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_COLLECTOR), OXYGEN_COLLECTOR);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_COMPRESSOR), OXYGEN_COMPRESSOR);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR), OXYGEN_DECOMPRESSOR);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_SEALER), OXYGEN_SEALER);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR), OXYGEN_BUBBLE_DISTRIBUTOR);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.FUEL_LOADER), FUEL_LOADER);
 
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.ROCKET_LAUNCH_PAD), LAUNCH_PAD_TYPE);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Block.SOLAR_PANEL_PART), SOLAR_PANEL_PART);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CRYOGENIC_CHAMBER_PART), CRYOGENIC_CHAMBER_PART);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIRLOCK_CONTROLLER);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.ROCKET_LAUNCH_PAD), LAUNCH_PAD_TYPE);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.SOLAR_PANEL_PART), SOLAR_PANEL_PART);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CRYOGENIC_CHAMBER_PART), CRYOGENIC_CHAMBER_PART);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIRLOCK_CONTROLLER);
     }
 
     private static void register(String id, BlockEntityType<?> type) {
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, id), type);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(id), type);
     }
 }

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.mod.content.block.entity.OxygenCollectorBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenCollectorBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

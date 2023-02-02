@@ -162,6 +162,6 @@ public class GCBiome {
     }
 
     private static void registerBiome(ResourceKey<Biome> key, Biome biome) {
-        BuiltinRegistries.register(BuiltinRegistries.BIOME, key, biome);
+        BuiltInRegistries.register(BuiltInRegistries.BIOME, key, biome);
     }
 }

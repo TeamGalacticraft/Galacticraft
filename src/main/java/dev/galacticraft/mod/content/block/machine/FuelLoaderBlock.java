@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
-import dev.galacticraft.mod.content.block.entity.FuelLoaderBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

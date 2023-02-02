@@ -20,17 +20,11 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.entity;
+package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
-import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
-import dev.galacticraft.machinelib.api.transfer.CachingItemApiProvider;
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -41,7 +35,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -50,24 +43,8 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_TO_BATTERY_SLOT = 0;
     public static final int DRAIN_FROM_BATTERY_SLOT = 1;
 
-    private final CachingItemApiProvider<EnergyStorage> batteryChargeSlot = CachingItemApiProvider.create(this.itemStorage().getSlot(CHARGE_TO_BATTERY_SLOT), EnergyStorage.ITEM);
-    private final CachingItemApiProvider<EnergyStorage> batteryDrainSlot = CachingItemApiProvider.create(this.itemStorage().getSlot(DRAIN_FROM_BATTERY_SLOT), EnergyStorage.ITEM);
-
     public EnergyStorageModuleBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.ENERGY_STORAGE_MODULE, pos, state);
-    }
-
-    @Override
-    protected @NotNull MachineItemStorage createItemStorage() {
-        return MachineItemStorage.Builder.create()
-                .addSlot(GCSlotGroupTypes.ENERGY_TO_SELF, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(102, 24))
-                .addSlot(GCSlotGroupTypes.ENERGY_TO_ITEM, Constant.Filter.Item.CAN_INSERT_ENERGY, true, ItemSlotDisplay.create(102, 48))
-                .build();
-    }
-
-    @Override
-    public long getEnergyCapacity() {
-        return Galacticraft.CONFIG_MANAGER.get().energyStorageModuleStorageSize();
     }
 
     @Override
@@ -76,18 +53,8 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public long getEnergyInsertionRate() {
-        return super.getEnergyInsertionRate() * 2;
-    }
-
-    @Override
-    public boolean canExposedExtractEnergy() {
-        return true;
-    }
-
-    @Override
-    public boolean canExposedInsertEnergy() {
-        return true;
+    public long getEnergyItemInsertionRate() {
+        return super.getEnergyItemInsertionRate() * 2;
     }
 
     @Override

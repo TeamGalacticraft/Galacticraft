@@ -20,18 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.entity;
+package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
-import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
-import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.GCMenuTypes;
@@ -64,30 +60,6 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
 
     public ElectricCompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.ELECTRIC_COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE);
-    }
-
-    @Override
-    protected @NotNull MachineItemStorage createItemStorage() {
-        MachineItemStorage.Builder builder = MachineItemStorage.Builder.create();
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 3; x++) {
-                builder.addSlot(GCSlotGroupTypes.GENERIC_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(x * 18 + 30, y * 18 + 17));
-            }
-        }
-        return builder.addSlot(GCSlotGroupTypes.ENERGY_TO_SELF, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 61))
-                .addSlot(GCSlotGroupTypes.GENERIC_OUTPUT, Constant.Filter.any(), false, ItemSlotDisplay.create(148, 22))
-                .addSlot(GCSlotGroupTypes.GENERIC_OUTPUT, Constant.Filter.any(), false, ItemSlotDisplay.create(148, 48))
-                .build();
-    }
-
-    @Override
-    public long getEnergyCapacity() {
-        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
-    }
-
-    @Override
-    public boolean canExposedInsertEnergy() {
-        return true;
     }
 
     @Override

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
-import dev.galacticraft.mod.content.block.entity.OxygenCollectorBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenCollectorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.util.RandomSource;

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.AdvancedSolarPanelBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.AdvancedSolarPanelBlockEntity;
 import dev.galacticraft.mod.screen.SolarPanelMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

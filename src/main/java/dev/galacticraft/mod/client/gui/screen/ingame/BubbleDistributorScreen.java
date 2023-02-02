@@ -26,8 +26,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.OxygenBubbleDistributorBlockEntity;
-import dev.galacticraft.mod.screen.BubbleDistributorMenu;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
+import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -41,10 +41,10 @@ import net.minecraft.world.entity.player.Inventory;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BubbleDistributorScreen extends MachineScreen<OxygenBubbleDistributorBlockEntity, BubbleDistributorMenu> {
+public class BubbleDistributorScreen extends MachineScreen<OxygenBubbleDistributorBlockEntity, OxygenBubbleDistributorMenu> {
     private final EditBox textField;
 
-    public BubbleDistributorScreen(BubbleDistributorMenu handler, Inventory inv, Component title) {
+    public BubbleDistributorScreen(OxygenBubbleDistributorMenu handler, Inventory inv, Component title) {
         super(handler, inv, title, Constant.ScreenTexture.BUBBLE_DISTRIBUTOR_SCREEN);
         this.textField = new EditBox(Minecraft.getInstance().font, this.leftPos + 132, this.topPos + 59, 26, 20, Component.literal(String.valueOf(this.machine.getSize())));
         this.textField.setResponder((s -> {

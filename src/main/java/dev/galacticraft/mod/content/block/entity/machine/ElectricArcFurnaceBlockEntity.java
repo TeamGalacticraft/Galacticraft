@@ -20,14 +20,11 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.entity;
+package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
-import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
-import dev.galacticraft.machinelib.api.storage.slot.display.ItemSlotDisplay;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatus;
@@ -53,25 +50,16 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Container, BlastingRecipe> {
-    private final @NotNull Container craftingInv = this.itemStorage().subInv(INPUT_SLOT, 1);
+    private final @NotNull Container craftingInv;
 
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOT_1 = 2;
     public static final int OUTPUT_SLOT_2 = 3;
 
-    @Override
-    protected @NotNull MachineItemStorage createItemStorage() {
-        return MachineItemStorage.Builder.create()
-                .addSlot(GCSlotGroupTypes.ENERGY_TO_SELF, Constant.Filter.Item.CAN_EXTRACT_ENERGY, true, ItemSlotDisplay.create(8, 61))
-                .addSlot(GCSlotGroupTypes.GENERIC_INPUT, Constant.Filter.any(), true, ItemSlotDisplay.create(44, 35))
-                .addSlot(GCSlotGroupTypes.GENERIC_OUTPUT, Constant.Filter.any(), false, ItemSlotDisplay.create(108, 35))
-                .addSlot(GCSlotGroupTypes.GENERIC_OUTPUT, Constant.Filter.any(), false, ItemSlotDisplay.create(134, 35))
-                .build();
-    }
-
     public ElectricArcFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.ELECTRIC_ARC_FURNACE, pos, state, RecipeType.BLASTING);
+        craftingInv = this.itemStorage().getCraftingView(GCSlotGroupTypes.GENERIC_INPUT);
     }
 
     @Override
@@ -86,16 +74,6 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Cont
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
         this.attemptChargeFromStack(CHARGE_SLOT);
-    }
-
-    @Override
-    public long getEnergyCapacity() {
-        return Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize();
-    }
-
-    @Override
-    public boolean canExposedInsertEnergy() {
-        return true;
     }
 
     @Override

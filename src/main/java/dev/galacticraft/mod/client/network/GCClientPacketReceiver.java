@@ -25,15 +25,15 @@ package dev.galacticraft.mod.client.network;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.content.block.entity.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -54,7 +54,7 @@ public class GCClientPacketReceiver {
             client.execute(() -> {
                 int id = buffer.readVarInt();
                 UUID uuid = buffer.readUUID();
-                Entity entity = Registry.ENTITY_TYPE.byId(buffer.readVarInt()).create(Minecraft.getInstance().level);
+                Entity entity = BuiltInRegistries.ENTITY_TYPE.byId(buffer.readVarInt()).create(Minecraft.getInstance().level);
                 entity.setId(id);
                 entity.setUUID(uuid);
                 entity.syncPacketPositionCodec(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
@@ -92,7 +92,7 @@ public class GCClientPacketReceiver {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "rocket_spawn"), ((client, handler, buf, responseSender) -> {
-            EntityType<? extends RocketEntity> type = (EntityType<? extends RocketEntity>) Registry.ENTITY_TYPE.byId(buf.readVarInt());
+            EntityType<? extends RocketEntity> type = (EntityType<? extends RocketEntity>) BuiltInRegistries.ENTITY_TYPE.byId(buf.readVarInt());
 
             int entityID = buf.readVarInt();
             UUID entityUUID = buf.readUUID();

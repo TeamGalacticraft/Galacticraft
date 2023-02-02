@@ -24,7 +24,6 @@ package dev.galacticraft.mod.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
@@ -72,7 +71,7 @@ public abstract class GuiMixin extends GuiComponent {
             assert this.minecraft.player != null;
             Container inv = this.minecraft.player.getOxygenTanks();
             for (int i = 0; i < inv.getContainerSize(); i++) {
-                Storage<FluidVariant> storage = ContainerItemContext.withInitial(inv.getItem(i)).find(FluidStorage.ITEM);
+                Storage<FluidVariant> storage = ContainerItemContext.withConstant(inv.getItem(i)).find(FluidStorage.ITEM);
                 if (storage != null) {
                     StorageView<FluidVariant> exact = storage.exactView(FluidVariant.of(Gases.OXYGEN));
                     if (exact != null) {

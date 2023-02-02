@@ -27,7 +27,6 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.data.GCTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -35,6 +34,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
+
 import java.util.List;
 
 public class GCOreConfiguredFeature {
@@ -71,6 +71,6 @@ public class GCOreConfiguredFeature {
     public static void register() {}
 
     private static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<ConfiguredFeature<?, ?>> register(String id, ConfiguredFeature<FC, F> feature) {
-        return Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Constant.id(id), feature);
+        return Registry.register(BuiltInRegistries.CONFIGURED_FEATURE, Constant.id(id), feature);
     }
 }

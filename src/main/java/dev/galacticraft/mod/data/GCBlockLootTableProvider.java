@@ -294,7 +294,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(REFINERY);
         dropSelf(OXYGEN_COLLECTOR);
         dropSelf(OXYGEN_SEALER);
-        dropSelf(BUBBLE_DISTRIBUTOR);
+        dropSelf(OXYGEN_BUBBLE_DISTRIBUTOR);
         dropSelf(OXYGEN_DECOMPRESSOR);
         dropSelf(OXYGEN_COMPRESSOR);
         dropSelf(OXYGEN_STORAGE_MODULE);
