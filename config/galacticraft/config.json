@@ -1,0 +1,19 @@
+{
+  "debugLog": false,
+  "wireMaxTransferPerTick": 128,
+  "heavyWireMaxTransferPerTick": 256,
+  "coalGeneratorEnergyProductionRate": 120,
+  "solarPanelEnergyProductionRate": 44,
+  "circuitFabricatorEnergyConsumptionRate": 0,
+  "electricCompressorEnergyConsumptionRate": 0,
+  "electricArcFurnaceEnergyConsumptionRate": 0,
+  "oxygenCollectorEnergyConsumptionRate": 0,
+  "refineryEnergyConsumptionRate": 0,
+  "electricFurnaceEnergyConsumptionRate": 0,
+  "energyStorageModuleStorageSize": 300000,
+  "machineEnergyStorageSize": 30000,
+  "oxygenCompressorEnergyConsumptionRate": 0,
+  "oxygenDecompressorEnergyConsumptionRate": 0,
+  "hide_alpha_warning": false,
+  "moreMulticolorStars": false
+}
