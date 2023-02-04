@@ -25,9 +25,13 @@ package dev.galacticraft.mod.content.block.entity.machine;
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GalacticraftRecipe;
 import dev.galacticraft.mod.screen.GCMenuTypes;
@@ -36,6 +40,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -43,6 +48,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -52,20 +58,17 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Container, CompressingRecipe> {
-    public static final int CHARGE_SLOT = 9;
-    public static final int OUTPUT_SLOT = 10;
-    public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
-
-    private final Container craftingInv = this.itemStorage().subInv(CHARGE_SLOT);
+    private final Container craftingInv;
 
     public ElectricCompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.ELECTRIC_COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE);
+        this.craftingInv = this.itemStorage().getCraftingView(GCSlotGroupTypes.GENERIC_INPUT);
     }
 
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.attemptChargeFromStack(CHARGE_SLOT);
+        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
     }
 
     @Override
@@ -84,11 +87,13 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
     }
 
     @Override
-    protected @Nullable MachineStatus extractResourcesToWork(@NotNull TransactionContext context) {
-        if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate(), context) != Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate()) {
-            return MachineStatuses.NOT_ENOUGH_ENERGY;
-        }
-        return super.extractResourcesToWork(context);
+    protected @Nullable MachineStatus hasResourcesToWork() {
+        return this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
+    }
+
+    @Override
+    protected void extractResourcesToWork() {
+        this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate());
     }
 
     @Override
@@ -97,34 +102,30 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
     }
 
     @Override
-    protected boolean outputStacks(@NotNull CompressingRecipe recipe, TransactionContext transaction) {
-        ItemStack output = recipe.getResultItem();
-        ItemVariant variant = ItemVariant.of(output);
-        long count = output.getCount() * 2;
-        long outputted = this.itemStorage().insert(OUTPUT_SLOT, variant, count, transaction);
-        if (outputted == count) return true;
-        outputted += this.itemStorage().insert(SECOND_OUTPUT_SLOT, variant, count - outputted, transaction);
-        return outputted == count;
+    protected void outputStacks(@NotNull CompressingRecipe recipe) {
+        this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).insertStack(recipe.getResultItem());
     }
 
     @Override
-    protected boolean extractCraftingMaterials(@NotNull CompressingRecipe recipe, TransactionContext transaction) {
-        NonNullList<ItemStack> remainder = recipe.getRemainingItems(this.craftingInv);
-        for (int i = 0; i < 9; i++) {
-            ItemStack stack = remainder.get(i);
-            this.itemStorage().extract(i, 1, transaction);
+    protected boolean canOutputStacks(@NotNull CompressingRecipe recipe) {
+        return this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).canInsertStack(recipe.getResultItem());
+    }
 
-            if (!stack.isEmpty()) {
-                if (this.itemStorage().getAmount(i) == 0) {
-                    if (stack.getCount() == this.itemStorage().insert(i, ItemVariant.of(stack), stack.getCount(), transaction)) {
-                        return false;
-                    }
-                } else {
-                    return false;
+    @Override
+    protected void extractCraftingMaterials(@NotNull CompressingRecipe recipe) {
+        NonNullList<ItemStack> remainders = recipe.getRemainingItems(this.craftingInv);
+        SlotGroup<Item, ItemStack, ItemResourceSlot> group = this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_INPUT);
+
+        for (int i = 0; i < 9; i++) {
+            group.extract(i, 1);
+
+            ItemStack remainder = remainders.get(i);
+            if (!remainder.isEmpty()) {
+                if (group.getAmount(i) == 0) {
+                    group.insert(i, remainder.getItem(), remainder.getTag(), remainder.getCount());
                 }
             }
         }
-        return true;
     }
 
     @Override
@@ -136,11 +137,11 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) {
-            return RecipeMachineMenu.create(
+            return new RecipeMachineMenu<>(
                     syncId,
-                    player,
+                    (ServerPlayer) player,
                     this,
-                    GCMenuTypes.ELECTRIC_COMPRESSOR
+                    GCMachineTypes.ELECTRIC_COMPRESSOR
             );
         }
         return null;

@@ -32,6 +32,7 @@ import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.OxygenCollectorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -54,8 +55,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
-    public static final int CHARGE_SLOT = 0;
-    public static final int OXYGEN_TANK = 0;
 
     public int collectionAmount = 0;
     private boolean oxygenWorld = false;
@@ -105,7 +104,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.attemptChargeFromStack(CHARGE_SLOT);
+        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
     }
 
     @Override
@@ -113,16 +112,16 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         profiler.push("transfer");
         this.trySpreadFluids(world, state);
 
-        if (this.fluidStorage().isFull(OXYGEN_TANK)) return GCMachineStatus.OXYGEN_TANK_FULL;
+        if (this.fluidStorage().getGroup(GCSlotGroupTypes.OXYGEN_OUTPUT).isFull()) return GCMachineStatus.OXYGEN_TANK_FULL;
         profiler.popPush("transaction");
-        try (Transaction transaction = Transaction.openOuter()) {
-            if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate()) {
+        try {
+            if (this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate())) {
                 profiler.push("collect");
                 this.collectionAmount = collectOxygen(world, pos);
                 profiler.pop();
                 if (this.collectionAmount > 0) {
-                    this.fluidStorage().insert(OXYGEN_TANK, FluidVariant.of(Gases.OXYGEN), FluidUtil.bucketsToDroplets(this.collectionAmount), transaction);
-                    transaction.commit();
+                    this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate());
+                    this.fluidStorage().getGroup(GCSlotGroupTypes.OXYGEN_OUTPUT).insert(Gases.OXYGEN, FluidUtil.bucketsToDroplets(this.collectionAmount));
                     return GCMachineStatus.COLLECTING;
                 } else {
                     return GCMachineStatus.NOT_ENOUGH_OXYGEN;

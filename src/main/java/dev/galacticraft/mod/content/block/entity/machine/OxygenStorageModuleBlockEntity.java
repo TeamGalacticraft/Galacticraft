@@ -24,11 +24,13 @@ package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -41,7 +43,6 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
-    private static final int OXYGEN_TANK = 0;
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(100);
 
     public OxygenStorageModuleBlockEntity(BlockPos pos, BlockState state) {
@@ -58,11 +59,11 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) {
-            return SimpleMachineMenu.create(
+            return new MachineMenu<>(
                     syncId,
-                    player,
+                    (ServerPlayer) player,
                     this,
-                    GCMenuTypes.OXYGEN_STORAGE_MODULE
+                    GCMachineTypes.OXYGEN_STORAGE_MODULE
             );
         }
         return null;

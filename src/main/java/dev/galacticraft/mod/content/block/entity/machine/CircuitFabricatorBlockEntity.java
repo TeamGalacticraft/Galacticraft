@@ -67,7 +67,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
         profiler.push("charge");
-        this.attemptChargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
+        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
         profiler.pop();
     }
 
@@ -89,13 +89,13 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     @Override
     protected boolean canOutputStacks(@NotNull FabricationRecipe recipe) {
         ItemStack output = recipe.getResultItem();
-        return this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).canInsert(output.getItem(), output.getTag(), output.getCount());
+        return this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).canInsertStack(output);
     }
 
     @Override
     protected void outputStacks(@NotNull FabricationRecipe recipe) {
         ItemStack output = recipe.getResultItem();
-        this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).insert(output.getItem(), output.getTag(), output.getCount());
+        this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).insertStack(output);
     }
 
     @Override
@@ -114,7 +114,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
         if (input.isEmpty() && remainder.size() > 0) {
             ItemStack itemStack = remainder.get(0);
             if (!itemStack.isEmpty()) {
-                input.insert(itemStack.getItem(), itemStack.getTag(), itemStack.getCount());
+                input.insertStack(itemStack);
             }
         }
     }

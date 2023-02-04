@@ -48,9 +48,9 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements SolarPanel {
+    private final boolean[] blockage = new boolean[9];
     private int blocked = 0;
     public long currentEnergyGeneration = 0;
-    private final boolean[] blockage = new boolean[9];
 
     public AdvancedSolarPanelBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.ADVANCED_SOLAR_PANEL, pos, state);
@@ -59,7 +59,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
     @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("charge");
-        this.attemptDrainPowerToStack(GCSlotGroupTypes.ENERGY_TO_ITEM);
+        this.drainPowerToStack(GCSlotGroupTypes.ENERGY_TO_ITEM);
         profiler.popPush("blockage");
         this.blocked = 0;
         for (int x = -1; x < 2; x++) { //todo: cache?

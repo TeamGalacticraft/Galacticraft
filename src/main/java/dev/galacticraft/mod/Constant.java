@@ -22,13 +22,9 @@
 
 package dev.galacticraft.mod;
 
-import com.google.common.base.Predicates;
 import dev.galacticraft.machinelib.api.storage.ResourceFilter;
 import dev.galacticraft.machinelib.api.storage.ResourceFilters;
 import dev.galacticraft.mod.content.item.GCItem;
-import dev.galacticraft.mod.lookup.predicate.ItemResourceTagExtractPredicate;
-import dev.galacticraft.mod.lookup.predicate.ItemResourceTagInsertPredicate;
-import dev.galacticraft.mod.lookup.predicate.TagPredicate;
 import dev.galacticraft.mod.data.GCTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -51,8 +47,6 @@ import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import team.reborn.energy.api.EnergyStorage;
-
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -735,24 +729,6 @@ public interface Constant {
 
     interface LootTable {
         String BASIC_MOON_RUINS_CHEST = "chests/moon_ruins/basic_chest";
-    }
-
-    interface Filter {
-        interface Item {
-            ResourceFilter<net.minecraft.world.item.Item> DIAMOND = ResourceFilters.matchAnyNbt(Items.DIAMOND);
-            ResourceFilter<net.minecraft.world.item.Item> SILICON = ResourceFilters.matchAnyNbt(GCItem.RAW_SILICON);
-            ResourceFilter<net.minecraft.world.item.Item> REDSTONE = ResourceFilters.matchAnyNbt(Items.REDSTONE);
-        }
-
-        interface Gas {
-            Predicate<FluidVariant> OXYGEN = v -> v.getFluid().is(GCTags.OXYGEN);
-        }
-
-        interface Fluid {
-            Predicate<FluidVariant> LOX_ONLY = new TagPredicate<>(GCTags.LIQUID_OXYGEN, net.minecraft.world.level.material.Fluid::is);
-            Predicate<FluidVariant> OIL = new TagPredicate<>(GCTags.OIL, net.minecraft.world.level.material.Fluid::is);
-            Predicate<FluidVariant> FUEL = new TagPredicate<>(GCTags.FUEL, net.minecraft.world.level.material.Fluid::is);
-        }
     }
 
     interface Text {

@@ -23,27 +23,31 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.fluid.FluidStack;
 import dev.galacticraft.machinelib.api.gas.Gases;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
+import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.screen.GCMenuTypes;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.util.FluidUtil;
-import dev.galacticraft.mod.util.GenericStorageUtil;
-import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,9 +56,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
-    public static final int CHARGE_SLOT = 0;
-    public static final int OXYGEN_TANK_SLOT = 1;
-    public static final int OXYGEN_TANK = 0;
 
     public OxygenCompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.OXYGEN_COMPRESSOR, pos, state);
@@ -63,27 +64,29 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.attemptChargeFromStack(CHARGE_SLOT);
+        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
     }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        if (this.fluidStorage().isEmpty(OXYGEN_TANK)) return GCMachineStatus.NOT_ENOUGH_OXYGEN;
+        SlotGroup<Fluid, FluidStack, FluidResourceSlot> oxygenStorage = this.fluidStorage().getGroup(GCSlotGroupTypes.OXYGEN_INPUT);
+        if (oxygenStorage.isEmpty()) return GCMachineStatus.NOT_ENOUGH_OXYGEN;
         profiler.push("find_storage");
-        Storage<FluidVariant> fluidStorage = ContainerItemContext.ofSingleSlot(this.itemStorage().getSlot(OXYGEN_TANK_SLOT)).find(FluidStorage.ITEM);
+        Storage<FluidVariant> tank = this.itemStorage().getSlot(GCSlotGroupTypes.OXYGEN_TO_ITEM).find(FluidStorage.ITEM);
         profiler.pop();
-        if (fluidStorage == null) return GCMachineStatus.MISSING_OXYGEN_TANK;
-        if (!fluidStorage.supportsInsertion() || fluidStorage.simulateInsert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GCMachineStatus.OXYGEN_TANK_FULL;
+        if (tank == null) return GCMachineStatus.MISSING_OXYGEN_TANK;
+        long space = tank.simulateInsert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null);
+        if (!tank.supportsInsertion() || space == 0) return GCMachineStatus.OXYGEN_TANK_FULL;
         profiler.push("transaction");
-        try (Transaction transaction = Transaction.openOuter()) {
-            if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate(), transaction) == Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate()) {
-                FluidStack gasStack;
-                try (Transaction inner = Transaction.openNested(transaction)) {
-                    gasStack = this.fluidStorage().extract(OXYGEN_TANK, Long.MAX_VALUE, inner);
-                }
-                try (Transaction inner = Transaction.openNested(transaction)) {
-                    GenericStorageUtil.move(FluidVariant.of(gasStack.getFluid(), gasStack.getNbt()), this.fluidStorage(), fluidStorage, gasStack.getAmount(), inner);
-                    inner.commit();
+        try {
+            if (this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate())) {
+                long available = oxygenStorage.extract(Gases.OXYGEN, space);
+                if (available > 0) {
+                    this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate());
+                    try (Transaction transaction = Transaction.openOuter()) {
+                        tank.insert(FluidVariant.of(Gases.OXYGEN), available, transaction);
+                        transaction.commit();
+                    }
                 }
             } else {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
@@ -99,11 +102,11 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) {
-            return SimpleMachineMenu.create(
+            return new MachineMenu<>(
                     syncId,
-                    player,
+                    (ServerPlayer) player,
                     this,
-                    GCMenuTypes.OXYGEN_COMPRESSOR
+                    GCMachineTypes.OXYGEN_COMPRESSOR
             );
         }
         return null;

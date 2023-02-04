@@ -49,9 +49,9 @@ public class GCMenuTypes {
     public static final MenuType<RecipeMachineMenu<Container, FabricationRecipe, CircuitFabricatorBlockEntity>> CIRCUIT_FABRICATOR = RecipeMachineMenu.createType(() -> GCMachineTypes.CIRCUIT_FABRICATOR, 94);
     public static final MenuType<CompressorMenu> COMPRESSOR = MachineMenu.createType(CompressorMenu::new);
 
-    public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, CompressingRecipe, ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR = RecipeMachineMenu.createType(() -> GCMachineTypes.ELECTRIC_COMPRESSOR);
-    public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, SmeltingRecipe, ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE = RecipeMachineMenu.createType(() -> GCMachineTypes.ELECTRIC_FURNACE);
-    public static final ExtendedScreenHandlerType<RecipeMachineMenu<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity>> ELECTRIC_ARC_FURNACE = RecipeMachineMenu.createType(() -> GCMachineTypes.ELECTRIC_ARC_FURNACE);
+    public static final MenuType<RecipeMachineMenu<Container, CompressingRecipe, ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR = RecipeMachineMenu.createType(() -> GCMachineTypes.ELECTRIC_COMPRESSOR);
+    public static final MenuType<RecipeMachineMenu<Container, SmeltingRecipe, ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE = RecipeMachineMenu.createType(() -> GCMachineTypes.ELECTRIC_FURNACE);
+    public static final MenuType<RecipeMachineMenu<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity>> ELECTRIC_ARC_FURNACE = RecipeMachineMenu.createType(() -> GCMachineTypes.ELECTRIC_ARC_FURNACE);
 
     public static final MenuType<MachineMenu<RefineryBlockEntity>> REFINERY = MachineMenu.createSimple(() -> GCMachineTypes.REFINERY);
 

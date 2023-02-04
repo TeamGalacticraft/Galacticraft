@@ -25,14 +25,17 @@ package dev.galacticraft.mod.content.block.entity.machine;
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -52,17 +55,18 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Contain
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOT = 2;
-    
-    private final @NotNull Container craftingInv = this.itemStorage().subInv(INPUT_SLOT, 1);
+
+    private final @NotNull Container craftingInv;
 
     public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING);
+        this.craftingInv = this.itemStorage().getCraftingView(GCSlotGroupTypes.GENERIC_INPUT);
     }
 
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.attemptChargeFromStack(CHARGE_SLOT);
+        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
     }
 
     @Override
@@ -71,14 +75,18 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Contain
     }
 
     @Override
-    protected boolean outputStacks(@NotNull SmeltingRecipe recipe, TransactionContext transaction) {
-        ItemStack output = recipe.getResultItem();
-        return this.itemStorage().insert(OUTPUT_SLOT, ItemVariant.of(output), output.getCount(), transaction) == output.getCount();
+    protected void outputStacks(@NotNull SmeltingRecipe recipe) {
+        this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).insertStack(recipe.getResultItem());
     }
 
     @Override
-    protected boolean extractCraftingMaterials(@NotNull SmeltingRecipe recipe, TransactionContext transaction) {
-        return recipe.getIngredients().get(0).test(this.itemStorage().extract(INPUT_SLOT, 1, transaction));
+    protected boolean canOutputStacks(@NotNull SmeltingRecipe recipe) {
+        return this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).canInsertStack(recipe.getResultItem());
+    }
+
+    @Override
+    protected void extractCraftingMaterials(@NotNull SmeltingRecipe recipe) {
+        this.itemStorage().getSlot(GCSlotGroupTypes.GENERIC_INPUT).extractOne();
     }
 
     @Override
@@ -87,27 +95,29 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Contain
     }
 
     @Override
-    protected int getProcessTime(@NotNull SmeltingRecipe recipe) {
-        return recipe.getCookingTime();
+    protected @Nullable MachineStatus hasResourcesToWork() {
+        return this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
     }
 
     @Override
-    protected @Nullable MachineStatus extractResourcesToWork(@NotNull TransactionContext context) {
-        if (this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate(), context) != Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate()) {
-            return MachineStatuses.NOT_ENOUGH_ENERGY;
-        }
-        return super.extractResourcesToWork(context);
+    protected void extractResourcesToWork() {
+        this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate());
+    }
+
+    @Override
+    protected int getProcessTime(@NotNull SmeltingRecipe recipe) {
+        return recipe.getCookingTime();
     }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) {
-            return RecipeMachineMenu.create(
+            return new RecipeMachineMenu<>(
                     syncId,
-                    player,
+                    (ServerPlayer) player,
                     this,
-                    GCMenuTypes.ELECTRIC_FURNACE
+                    GCMachineTypes.ELECTRIC_FURNACE
             );
         }
         return null;

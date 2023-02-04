@@ -50,10 +50,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class FuelLoaderBlockEntity extends MachineBlockEntity {
-    private static final int CHARGE_SLOT = 0;
-    private static final int FUEL_INPUT_SLOT = 1;
-    private static final int FUEL = 0;
+public class FuelLoaderBlockEntity extends MachineBlockEntity { //todo: whats happening with this?
     private BlockPos connectionPos = BlockPos.ZERO;
     private Direction check = null;
 
@@ -74,7 +71,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
 //    @Override
 //    public void updateComponents() {
 //        super.updateComponents();
-//        this.attemptChargeFromStack(CHARGE_SLOT);
+//        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
 //    }
 
     @Override

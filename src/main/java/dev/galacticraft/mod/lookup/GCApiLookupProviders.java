@@ -40,7 +40,6 @@ import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
 public class GCApiLookupProviders {
-    @SuppressWarnings("rawtypes")
     private static final Block[] MACHINE_BLOCKS = new Block[]{
             GCBlocks.COAL_GENERATOR,
             GCBlocks.BASIC_SOLAR_PANEL,

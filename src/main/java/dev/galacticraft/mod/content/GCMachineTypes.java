@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content;
 
+import dev.galacticraft.machinelib.api.gas.Gases;
 import dev.galacticraft.machinelib.api.machine.MachineType;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
@@ -322,14 +323,14 @@ public class GCMachineTypes {
                     ).single(GCSlotGroupTypes.OXYGEN_TO_SELF, ItemResourceSlot.builder()
                             .pos(31, 62)
                             .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canExtractFluidStrict(GCFluids.LIQUID_OXYGEN))
+                            .strictFilter(ResourceFilters.canExtractFluidStrict(Gases.OXYGEN))
                             ::build
                     )::build,
             MachineFluidStorage.builder()
                     .single(GCSlotGroupTypes.OXYGEN_INPUT, FluidResourceSlot.builder()
                             .pos(31, 8)
                             .capacity(OxygenBubbleDistributorBlockEntity.MAX_OXYGEN)
-                            .filter(ResourceFilters.ofResource(GCFluids.LIQUID_OXYGEN))
+                            .filter(ResourceFilters.ofResource(Gases.OXYGEN))
                             ::build
                     )::build
     );
@@ -356,7 +357,7 @@ public class GCMachineTypes {
                     .single(GCSlotGroupTypes.OXYGEN_OUTPUT, FluidResourceSlot.builder()
                             .pos(31, 8)
                             .capacity(OxygenCollectorBlockEntity.MAX_OXYGEN)
-                            .filter(ResourceFilters.ofResource(GCFluids.LIQUID_OXYGEN))
+                            .filter(ResourceFilters.ofResource(Gases.OXYGEN))
                             ::build
                     )::build
     );
@@ -381,14 +382,14 @@ public class GCMachineTypes {
                     ).single(GCSlotGroupTypes.OXYGEN_TO_ITEM, ItemResourceSlot.builder()
                             .pos(80, 27)
                             .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canInsertFluidStrict(GCFluids.LIQUID_OXYGEN))
+                            .strictFilter(ResourceFilters.canInsertFluidStrict(Gases.OXYGEN))
                             ::build
                     )::build,
             MachineFluidStorage.builder()
                     .single(GCSlotGroupTypes.OXYGEN_INPUT, FluidResourceSlot.builder()
                             .pos(31, 8)
                             .capacity(OxygenCompressorBlockEntity.MAX_OXYGEN)
-                            .filter(ResourceFilters.ofResource(GCFluids.LIQUID_OXYGEN))
+                            .filter(ResourceFilters.ofResource(Gases.OXYGEN))
                             ::build
                     )::build
     );
@@ -413,14 +414,14 @@ public class GCMachineTypes {
                     ).single(GCSlotGroupTypes.OXYGEN_TO_SELF, ItemResourceSlot.builder()
                             .pos(80, 27)
                             .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canExtractFluidStrict(GCFluids.LIQUID_OXYGEN))
+                            .strictFilter(ResourceFilters.canExtractFluidStrict(Gases.OXYGEN))
                             ::build
                     )::build,
             MachineFluidStorage.builder()
                     .single(GCSlotGroupTypes.OXYGEN_OUTPUT, FluidResourceSlot.builder()
                             .pos(31, 8)
                             .capacity(OxygenDecompressorBlockEntity.MAX_OXYGEN)
-                            .filter(ResourceFilters.ofResource(GCFluids.LIQUID_OXYGEN))
+                            .filter(ResourceFilters.ofResource(Gases.OXYGEN))
                             ::build
                     )::build
     );
@@ -445,14 +446,14 @@ public class GCMachineTypes {
                     ).single(GCSlotGroupTypes.OXYGEN_TO_SELF, ItemResourceSlot.builder() // todo: drop for decompressor?
                             .pos(31, 62)
                             .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canExtractFluidStrict(GCFluids.LIQUID_OXYGEN))
+                            .strictFilter(ResourceFilters.canExtractFluidStrict(Gases.OXYGEN))
                             ::build
                     )::build,
             MachineFluidStorage.builder()
                     .single(GCSlotGroupTypes.OXYGEN_INPUT, FluidResourceSlot.builder()
                             .pos(31, 8)
                             .capacity(OxygenSealerBlockEntity.MAX_OXYGEN)
-                            .filter(ResourceFilters.ofResource(GCFluids.LIQUID_OXYGEN))
+                            .filter(ResourceFilters.ofResource(Gases.OXYGEN))
                             ::build
                     )::build
     );
@@ -467,7 +468,7 @@ public class GCMachineTypes {
                     .single(GCSlotGroupTypes.OXYGEN_TANK, FluidResourceSlot.builder()
                             .pos(31, 8)
                             .capacity(OxygenStorageModuleBlockEntity.MAX_OXYGEN)
-                            .filter(ResourceFilters.ofResource(GCFluids.LIQUID_OXYGEN))
+                            .filter(ResourceFilters.ofResource(Gases.OXYGEN))
                             ::build
                     )::build
     );

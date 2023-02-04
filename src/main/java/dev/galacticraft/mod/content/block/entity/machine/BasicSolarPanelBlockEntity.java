@@ -58,7 +58,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
     @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("charge");
-        this.attemptDrainPowerToStack(GCSlotGroupTypes.ENERGY_TO_ITEM);
+        this.drainPowerToStack(GCSlotGroupTypes.ENERGY_TO_ITEM);
         profiler.pop();
         this.blocked = 0;
         for (int x = -1; x < 2; x++) {

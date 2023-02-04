@@ -63,9 +63,6 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         map.put(Items.CHARCOAL, 310);
     });
 
-    public static final int CHARGE_SLOT = 0;
-    public static final int FUEL_SLOT = 1;
-
     private int fuelLength = 0;
     private long fuelSlotModCount = -1;
     private int fuelTime = 0;
@@ -90,7 +87,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
             }
         }
         profiler.push("charge");
-        this.attemptDrainPowerToStack(GCSlotGroupTypes.ENERGY_TO_ITEM);
+        this.drainPowerToStack(GCSlotGroupTypes.ENERGY_TO_ITEM);
         profiler.pop();
     }
 

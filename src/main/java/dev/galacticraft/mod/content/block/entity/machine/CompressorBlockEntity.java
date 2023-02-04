@@ -56,9 +56,6 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, CompressingRecipe> {
-    public static final int FUEL_INPUT_SLOT = 9;
-    public static final int OUTPUT_SLOT = 10;
-
     private final Container craftingInv;
     public int fuelTime;
     public int fuelLength;
@@ -103,7 +100,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
                         this.fuelTime = this.fuelLength = time;
                         ItemStack remainder = stack.getRecipeRemainder();
                         if (remainder != null && !remainder.isEmpty() && slot.isEmpty()) { // fixme
-                            slot.insert(stack.getItem(), stack.getTag(), stack.getCount());
+                            slot.insertStack(stack);
                         }
                     }
                 }
@@ -118,14 +115,12 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
 
     @Override
     protected void outputStacks(@NotNull CompressingRecipe recipe) {
-        ItemStack output = recipe.getResultItem();
-        this.itemStorage().getSlot(GCSlotGroupTypes.GENERIC_OUTPUT).insert(output.getItem(), output.getTag(), output.getCount());
+        this.itemStorage().getSlot(GCSlotGroupTypes.GENERIC_OUTPUT).insertStack(recipe.getResultItem());
     }
 
     @Override
     protected boolean canOutputStacks(@NotNull CompressingRecipe recipe) {
-        ItemStack output = recipe.getResultItem();
-        return this.itemStorage().getSlot(GCSlotGroupTypes.GENERIC_OUTPUT).canInsert(output.getItem(), output.getTag(), output.getCount());
+        return this.itemStorage().getSlot(GCSlotGroupTypes.GENERIC_OUTPUT).canInsertStack(recipe.getResultItem());
     }
 
     @Override
