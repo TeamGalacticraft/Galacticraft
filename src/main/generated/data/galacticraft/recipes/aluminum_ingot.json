@@ -1,17 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "NNN",
-    "NNN",
-    "NNN"
-  ],
   "key": {
-    "N": {
+    "#": {
       "item": "galacticraft:aluminum_nugget"
     }
   },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
   "result": {
-    "item": "galacticraft:aluminum_ingot",
-    "count": 1
+    "item": "galacticraft:aluminum_ingot"
   }
 }
