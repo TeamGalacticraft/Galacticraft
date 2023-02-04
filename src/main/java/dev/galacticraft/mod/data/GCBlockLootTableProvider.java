@@ -302,6 +302,10 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(FUEL_LOADER);
 
         add(AIR_LOCK_SEAL, noDrop());
+
+        dropSelf(NASA_WORKBENCH);
+        
+        dropSelf(PLAYER_TRANSPORT_TUBE);
     }
 
     public static LootTable.Builder siliconOreDrops(Block ore) {

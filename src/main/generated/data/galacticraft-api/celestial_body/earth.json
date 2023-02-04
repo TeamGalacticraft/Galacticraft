@@ -40,7 +40,7 @@
     },
     "galaxy": "galacticraft-api:milky_way",
     "gravity": 1.0,
-    "name": "planet.galacticraft-api.earth.name",
+    "name": "Earth",
     "night_temperature": 15,
     "position": {
       "type": "galacticraft-api:orbital",

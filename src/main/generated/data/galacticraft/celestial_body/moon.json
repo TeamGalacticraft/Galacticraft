@@ -9,7 +9,7 @@
       "temperature": 23.0
     },
     "day_temperature": 105,
-    "description": "planet.galacticraft.moon.desc",
+    "description": "",
     "display": {
       "type": "galacticraft-api:icon",
       "config": {
@@ -23,7 +23,7 @@
     },
     "galaxy": "galacticraft-api:milky_way",
     "gravity": 0.166,
-    "name": "planet.galacticraft.moon.name",
+    "name": "Moon",
     "night_temperature": -180,
     "position": {
       "type": "galacticraft-api:orbital",
