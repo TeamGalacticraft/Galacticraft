@@ -61,6 +61,13 @@ public class GCTags {
 
     public static final TagKey<Structure> MOON_RUINS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_ruins"));
 
+    // Ores
+    public static final TagKey<Item> SMELTABLE_ALUMINUM = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(Constant.MOD_ID, "smeltable_aluminum")); // MOD_ID or Namespace?
+    public static final TagKey<Item> SMELTABLE_DESH = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(Constant.MOD_ID, "smeltable_desh"));
+    public static final TagKey<Item> SMELTABLE_SILICON = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(Constant.MOD_ID, "smeltable_silicon"));
+    public static final TagKey<Item> SMELTABLE_TIN = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(Constant.MOD_ID, "smeltable_tin"));
+    public static final TagKey<Item> SMELTABLE_TITANIUM = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(Constant.MOD_ID, "smeltable_titanium"));
+
     public static void register() {
     }
 }

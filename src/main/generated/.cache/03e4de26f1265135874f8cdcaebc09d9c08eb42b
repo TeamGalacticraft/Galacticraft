@@ -1,2 +1,6 @@
-// 1.19.2	2023-02-04T16:39:38.371798	Tags for minecraft:item
+// 1.19.2	2023-02-04T18:25:17.030789	Tags for minecraft:item
+6fa1a494dd21db6c74b66796dd9196b568e84509 data/galacticraft/tags/items/smeltable_tin.json
+0752b145d105815911ce30c6ce09fa8e77b8b1f5 data/galacticraft/tags/items/smeltable_titanium.json
 2e607237d3334bfd4a3510d29e8cc92293c5ade7 data/galacticraft/tags/items/smeltable_aluminum.json
+46e8f265c01ba2a3d95f70694738c28df05df363 data/galacticraft/tags/items/smeltable_desh.json
+fe23b929953c53dd960ad36f89a9892743b70564 data/galacticraft/tags/items/smeltable_silicon.json

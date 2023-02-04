@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 100,
+  "experience": 0.05,
+  "ingredient": {
+    "tag": "galacticraft:smeltable_tin"
+  },
+  "result": "galacticraft:tin_ingot"
+}

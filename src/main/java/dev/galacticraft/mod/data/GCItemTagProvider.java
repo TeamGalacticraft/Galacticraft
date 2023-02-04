@@ -26,6 +26,8 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import org.jetbrains.annotations.Nullable;
 
+import dev.galacticraft.mod.content.item.GCItem;
+
 public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
     public GCItemTagProvider(FabricDataGenerator dataGenerator, @Nullable BlockTagProvider blockTagProvider) {
         super(dataGenerator, blockTagProvider);
@@ -33,6 +35,10 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     @Override
     protected void generateTags() {
-
+        this.tag(GCTags.SMELTABLE_ALUMINUM).add(GCItem.ALUMINUM_ORE, GCItem.DEEPSLATE_ALUMINUM_ORE, GCItem.RAW_ALUMINUM);
+        this.tag(GCTags.SMELTABLE_DESH).add(GCItem.DESH_ORE, GCItem.RAW_DESH);
+        this.tag(GCTags.SMELTABLE_SILICON).add(GCItem.SILICON_ORE, GCItem.DEEPSLATE_SILICON_ORE);
+        this.tag(GCTags.SMELTABLE_TIN).add(GCItem.TIN_ORE, GCItem.DEEPSLATE_TIN_ORE, GCItem.RAW_TIN, GCItem.MOON_TIN_ORE, GCItem.LUNASLATE_TIN_ORE);
+        this.tag(GCTags.SMELTABLE_TITANIUM).add(GCItem.RAW_TITANIUM, GCItem.ILMENITE_ORE);
     }
 }

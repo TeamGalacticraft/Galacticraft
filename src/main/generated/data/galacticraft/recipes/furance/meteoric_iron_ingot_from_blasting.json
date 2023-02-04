@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 100,
+  "experience": 0.05,
+  "ingredient": {
+    "item": "galacticraft:raw_meteoric_iron"
+  },
+  "result": "galacticraft:meteoric_iron_ingot"
+}

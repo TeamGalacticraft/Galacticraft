@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "tag": "galacticraft:smeltable_tin"
+  },
+  "result": "galacticraft:tin_ingot"
+}

@@ -75,23 +75,28 @@ public class GCRecipeProvider extends FabricRecipeProvider {
         RecipeProvider.nineBlockStorageRecipes(exporter, GCItem.TITANIUM_NUGGET, GCItem.TITANIUM_INGOT);
 
         // Ores
-        // this.ingotSmelting(exporter, Items.COPPER_INGOT, GCItem.MOON_COPPER_ORE, GCItem.LUNASLATE_COPPER_ORE); // tags would complicate things here
-        // this.ingotSmelting(exporter, GCItem.DESH_INGOT, null);
+        this.ingotSmelting(exporter, GCItem.ALUMINUM_INGOT, GCTags.SMELTABLE_ALUMINUM);
+        this.ingotSmelting(exporter, Items.COPPER_INGOT, GCItem.MOON_COPPER_ORE, GCItem.LUNASLATE_COPPER_ORE);
+        this.ingotSmelting(exporter, GCItem.DESH_INGOT, GCTags.SMELTABLE_DESH);
+        this.ingotSmelting(exporter, GCItem.RAW_SILICON, GCTags.SMELTABLE_SILICON);
+        this.ingotSmelting(exporter, GCItem.METEORIC_IRON_INGOT, GCItem.RAW_METEORIC_IRON);
+        this.ingotSmelting(exporter, GCItem.TIN_INGOT, GCTags.SMELTABLE_TIN);
+        this.ingotSmelting(exporter, GCItem.TITANIUM_INGOT, GCTags.SMELTABLE_TITANIUM);
     }
 
     private void ingotSmelting(Consumer<FinishedRecipe> exporter, Item ingot, TagKey<Item> tag) { // better than minecraft implementation since we can use tags
         Ingredient ingredient = Ingredient.of(tag);
         SimpleCookingRecipeBuilder.smelting(ingredient, ingot, (float)0.1, 200)
                 .unlockedBy("has_" + tag.location().getPath(), has(tag)) // fabric should extract the middle
-                .save(exporter, RecipeProvider.getSmeltingRecipeName(ingot));
-        SimpleCookingRecipeBuilder.smelting(ingredient, ingot, (float)0.05, 100)
+                .save(exporter, "furance/" + RecipeProvider.getSmeltingRecipeName(ingot));
+        SimpleCookingRecipeBuilder.blasting(ingredient, ingot, (float)0.05, 100)
                 .unlockedBy("has_" + tag.location().getPath(), has(tag))
-                .save(exporter, RecipeProvider.getBlastingRecipeName(ingot));
+                .save(exporter, "furance/" + RecipeProvider.getBlastingRecipeName(ingot));
     }
-    private void ingotSmelting(Consumer<FinishedRecipe> exporter, Item ingot, ItemLike... items) { // ItemLike or Items
+    private void ingotSmelting(Consumer<FinishedRecipe> exporter, Item ingot, ItemLike... items) {
         Ingredient ingredient = Ingredient.of(items);
         SimpleCookingRecipeBuilder smelt = SimpleCookingRecipeBuilder.smelting(ingredient, ingot, (float)0.1, 200);
-        SimpleCookingRecipeBuilder blast = SimpleCookingRecipeBuilder.smelting(ingredient, ingot, (float)0.05, 100);
+        SimpleCookingRecipeBuilder blast = SimpleCookingRecipeBuilder.blasting(ingredient, ingot, (float)0.05, 100);
         
         for (ItemLike item : items) {
             String hasName = getHasName(item);
@@ -100,7 +105,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
             blast.unlockedBy(hasName, hasTrigger);
         }
 
-        smelt.save(exporter, RecipeProvider.getSmeltingRecipeName(ingot));
-        blast.save(exporter, RecipeProvider.getBlastingRecipeName(ingot));
+        smelt.save(exporter, "furance/" + RecipeProvider.getSmeltingRecipeName(ingot));
+        blast.save(exporter, "furance/" + RecipeProvider.getBlastingRecipeName(ingot));
     }
 }

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 100,
+  "experience": 0.05,
+  "ingredient": {
+    "tag": "galacticraft:smeltable_desh"
+  },
+  "result": "galacticraft:desh_ingot"
+}

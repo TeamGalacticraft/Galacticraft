@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 100,
+  "experience": 0.05,
+  "ingredient": {
+    "tag": "galacticraft:smeltable_aluminum"
+  },
+  "result": "galacticraft:aluminum_ingot"
+}
