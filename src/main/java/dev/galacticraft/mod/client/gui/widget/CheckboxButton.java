@@ -41,17 +41,16 @@ public class CheckboxButton extends AbstractButton {
     public void renderButton(PoseStack poseStack, int i, int j, float f) {
         poseStack.pushPose();
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
-        blit(poseStack, this.x, this.y, checked ? Constant.TextureCoordinate.BUTTON_GREEN_X : Constant.TextureCoordinate.BUTTON_RED_X, isHoveredOrFocused() ? 115 : 102, getWidth(), getHeight());
+        blit(poseStack, this.getX(), this.getY(), checked ? Constant.TextureCoordinate.BUTTON_GREEN_X : Constant.TextureCoordinate.BUTTON_RED_X, isHoveredOrFocused() ? 115 : 102, getWidth(), getHeight());
         poseStack.popPose();
+    }
+
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 
     @Override
     public void onPress() {
         checked = !checked;
-    }
-
-    @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {
-
     }
 }

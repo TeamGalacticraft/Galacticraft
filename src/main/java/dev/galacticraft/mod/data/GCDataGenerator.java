@@ -22,23 +22,47 @@
 
 package dev.galacticraft.mod.data;
 
+import com.mojang.serialization.Lifecycle;
+import dev.galacticraft.mod.data.content.*;
+import dev.galacticraft.mod.data.model.GCModelProvider;
+import dev.galacticraft.mod.data.tag.*;
+import dev.galacticraft.mod.world.biome.GCBiomes;
+import dev.galacticraft.mod.world.gen.structure.GCStructures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.Registries;
 import org.jetbrains.annotations.NotNull;
 
 public class GCDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(@NotNull FabricDataGenerator generator) {
-        generator.addProvider(GCBiomeTagProvider::new);
-        generator.addProvider(GCBlockLootTableProvider::new);
-        GCBlockTagProvider provider = new GCBlockTagProvider(generator);
-        generator.addProvider(provider);
-        generator.addProvider(new GCItemTagProvider(generator, provider));
-        generator.addProvider(GCModelProvider::new);
-        generator.addProvider(GCRecipeProvider::new);
-        generator.addProvider(GCFluidTagProvider::new);
+        FabricDataGenerator.Pack pack = generator.createPack();
+        pack.addProvider(GCBlockLootTableProvider::new);
+        pack.addProvider(GCRecipeProvider::new);
 
-        generator.addProvider(GCCelestialBodyProvider::new);
-        generator.addProvider(GCBannerTagProvider::new);
+        // content
+        pack.addProvider(GCBiomeProvider::new);
+        pack.addProvider(GCCelestialBodyProvider::new);
+        pack.addProvider(GCStructureProvider::new);
+        pack.addProvider(GCStructureSetProvider::new);
+        pack.addProvider(GCStructureTemplatePoolProvider::new);
+
+        // models
+        pack.addProvider(GCModelProvider::new);
+
+        // tags
+        pack.addProvider(GCBannerTagProvider::new);
+        pack.addProvider(GCBiomeTagProvider::new);
+        pack.addProvider(GCBlockTagProvider::new);
+        pack.addProvider(GCItemTagProvider::new);
+        pack.addProvider(GCFluidTagProvider::new);
+    }
+
+    @Override
+    public void buildRegistry(RegistrySetBuilder registryBuilder) {
+        DataGeneratorEntrypoint.super.buildRegistry(registryBuilder);
+
+        registryBuilder.add(Registries.BIOME, Lifecycle.stable(), GCBiomes::bootstrapRegistries);
     }
 }

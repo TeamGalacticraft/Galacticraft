@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data;
+package dev.galacticraft.mod.data.model;
 
 import dev.galacticraft.mod.mixin.BlockFamilyProviderAccessor;
 import dev.galacticraft.mod.mixin.BlockModelGeneratorsAccessor;

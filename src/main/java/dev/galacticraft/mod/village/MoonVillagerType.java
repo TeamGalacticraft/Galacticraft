@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.village;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.world.biome.GCBiomeKey;
+import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerTypeHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.npc.VillagerType;
@@ -40,8 +40,8 @@ public class MoonVillagerType {
     public static final VillagerType MOON_HIGHLANDS_ROCKS = VillagerTypeHelper.register(new ResourceLocation(Constant.MOD_ID, "moon_highlands_edge"));
 
     public static void register() {
-        VillagerType.BY_BIOME.put(GCBiomeKey.Moon.HIGHLANDS, MOON_HIGHLANDS);
-        VillagerType.BY_BIOME.put(GCBiomeKey.Moon.HIGHLANDS_EDGE, MOON_HIGHLANDS_ROCKS);
+        VillagerType.BY_BIOME.put(GCBiomes.Moon.HIGHLANDS, MOON_HIGHLANDS);
+        VillagerType.BY_BIOME.put(GCBiomes.Moon.HIGHLANDS_EDGE, MOON_HIGHLANDS_ROCKS);
         MOON_VILLAGER_TYPE_REGISTRY.add(MOON_HIGHLANDS);
         MOON_VILLAGER_TYPE_REGISTRY.add(MOON_HIGHLANDS_ROCKS);
     }

@@ -24,7 +24,7 @@ package dev.galacticraft.mod.village;
 
 import com.google.common.collect.ImmutableSet;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.data.GCTags;
+import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.world.poi.GCPointOfInterestType;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.core.Registry;

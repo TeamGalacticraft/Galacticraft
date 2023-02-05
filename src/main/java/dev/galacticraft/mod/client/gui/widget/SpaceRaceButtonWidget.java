@@ -30,6 +30,8 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
+import java.util.function.Supplier;
+
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
@@ -39,7 +41,7 @@ public class SpaceRaceButtonWidget extends Button {
     private final int screenHeight;
 
     public SpaceRaceButtonWidget(Minecraft minecraft, int x, int y, int buttonWidth, int buttonHeight, int screenWidth, int screenHeight) {
-        super(x, y, buttonWidth, buttonHeight, Component.empty(), (button) -> minecraft.setScreen(new SpaceRaceScreen()));
+        super(x, y, buttonWidth, buttonHeight, Component.empty(), (button) -> minecraft.setScreen(new SpaceRaceScreen()), Supplier::get);
         this.textRenderer = minecraft.font;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;

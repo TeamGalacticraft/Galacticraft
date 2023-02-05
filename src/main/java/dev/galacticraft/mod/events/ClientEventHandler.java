@@ -34,7 +34,7 @@ public class ClientEventHandler {
     }
 
     public static void rocketLaunchSound(Rocket rocket, LaunchStage oldStage) {
-        if (rocket instanceof RocketEntity rocketEntity && rocket.getStage() == LaunchStage.IGNITED)
+        if (rocket instanceof RocketEntity rocketEntity && rocket.getLaunchStage() == LaunchStage.IGNITED)
             Minecraft.getInstance().getSoundManager().play(new RocketSound(rocketEntity));
     }
 }

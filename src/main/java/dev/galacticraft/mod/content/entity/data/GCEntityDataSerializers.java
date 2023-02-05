@@ -22,7 +22,10 @@
 
 package dev.galacticraft.mod.content.entity.data;
 
+import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.LaunchStage;
+import dev.galacticraft.api.rocket.part.RocketCone;
+import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -30,6 +33,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 public class GCEntityDataSerializers {
     public static final EntityDataSerializer<LaunchStage> LAUNCH_STAGE = new EntityDataSerializer<>() {
@@ -49,60 +54,58 @@ public class GCEntityDataSerializers {
         }
     };
 
-    public static final EntityDataSerializer<Double> DOUBLE = new EntityDataSerializer<>() {
+    public static final EntityDataSerializer<ResourceLocation> ROCKET_PART = new EntityDataSerializer<>() {
         @Override
-        public void write(FriendlyByteBuf buf, Double value) {
-            buf.writeDouble(value);
+        public void write(FriendlyByteBuf buf, ResourceLocation id) {
+            buf.writeResourceLocation(id);
         }
 
         @Override
-        public Double read(FriendlyByteBuf buf) {
-            return buf.readDouble();
+        public @NotNull ResourceLocation read(FriendlyByteBuf buf) {
+            return buf.readResourceLocation();
         }
 
+        @Contract(value = "_ -> param1", pure = true)
         @Override
-        public Double copy(Double value) {
-            return value;
-        }
-    };
-
-    public static final EntityDataSerializer<ResourceLocation[]> ROCKET_PART_IDS = new EntityDataSerializer<>() {
-        @Override
-        public void write(FriendlyByteBuf buf, ResourceLocation[] parts) {
-            for (byte i = 0; i < RocketPartType.values().length; i++) {
-                buf.writeBoolean(parts[i] != null);
-                if (parts[i] != null) {
-                    buf.writeResourceLocation(parts[i]);
-                }
-            }
-        }
-
-        @Override
-        public ResourceLocation[] read(FriendlyByteBuf buf) {
-            ResourceLocation[] array = new ResourceLocation[RocketPartType.values().length];
-            for (byte i = 0; i < RocketPartType.values().length; i++) {
-                if (buf.readBoolean()) {
-                    array[i] = buf.readResourceLocation();
-                }
-            }
-            return array;
-        }
-
-        @Override
-        public ResourceLocation[] copy(ResourceLocation[] buf) {
-            ResourceLocation[] parts = new ResourceLocation[RocketPartType.values().length];
-            System.arraycopy(buf, 0, parts, 0, buf.length);
-            return parts;
+        public @NotNull ResourceLocation copy(ResourceLocation id) {
+            return id;
         }
     };
 
     public static final EntityDataAccessor<Boolean> IS_IN_CRYO_SLEEP_ID = SynchedEntityData.defineId(
             Player.class, EntityDataSerializers.BOOLEAN
     );
+    public static final EntityDataSerializer<ResourceLocation[]> ROCKET_UPGRADES = new EntityDataSerializer<>() {
+        @Override
+        public void write(FriendlyByteBuf buf, ResourceLocation[] ids) {
+            buf.writeVarInt(ids.length);
+            for (ResourceLocation id : ids) {
+                buf.writeResourceLocation(id);
+            }
+        }
+
+        @Override
+        public ResourceLocation @NotNull [] read(FriendlyByteBuf buf) {
+            int s = buf.readVarInt();
+            ResourceLocation[] ids = new ResourceLocation[s];
+            for (int i = 0; i < s; i++) {
+                ids[i] = buf.readResourceLocation();
+            }
+            return ids;
+        }
+
+        @Contract(value = "_ -> param1", pure = true)
+        @Override
+        public @NotNull ResourceLocation[] copy(ResourceLocation[] id) {
+            ResourceLocation[] temp = new ResourceLocation[id.length];
+            System.arraycopy(id, 0, temp, 0, id.length);
+            return temp;
+        }
+    };
 
     public static void register() {
         EntityDataSerializers.registerSerializer(LAUNCH_STAGE);
-        EntityDataSerializers.registerSerializer(DOUBLE);
-        EntityDataSerializers.registerSerializer(ROCKET_PART_IDS);
+        EntityDataSerializers.registerSerializer(ROCKET_PART);
+        EntityDataSerializers.registerSerializer(ROCKET_UPGRADES);
     }
 }

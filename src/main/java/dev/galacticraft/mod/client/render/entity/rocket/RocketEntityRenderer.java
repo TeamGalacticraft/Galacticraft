@@ -51,7 +51,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         matrices.pushPose();
         Minecraft client = Minecraft.getInstance();
         matrices.translate(-0.5D, 1.6, -0.5D);
-        if (entity.getStage() == LaunchStage.IGNITED) {
+        if (entity.getLaunchStage() == LaunchStage.IGNITED) {
             matrices.translate((entity.level.random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level.random.nextDouble() - 0.5D) * 0.1D);
         }
         matrices.translate(0.5D, 0, 0.5D);
@@ -73,7 +73,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         matrices.translate(0.0D, -1.75D, 0.0D);
 
-        ResourceLocation part = entity.getPartForType(RocketPartType.BOTTOM);
+        ResourceLocation part = entity.bottom();
         if (part != null) {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
@@ -82,14 +82,14 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
 
         matrices.translate(0.0D, 0.5, 0.0D);
 
-        part = entity.getPartForType(RocketPartType.BOOSTER);
+        part = entity.booster();
         if (part != null) {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.popPose();
         }
 
-        part = entity.getPartForType(RocketPartType.FIN);
+        part = entity.fin();
         if (part != null) {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
@@ -98,7 +98,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
 
         matrices.translate(0.0D, 1.0D, 0.0D);
 
-        part = entity.getPartForType(RocketPartType.BODY);
+        part = entity.body();
         if (part != null) {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
@@ -107,7 +107,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
 
         matrices.translate(0.0D, 1.75, 0.0D);
 
-        part = entity.getPartForType(RocketPartType.CONE);
+        part = entity.cone();
         if (part != null) {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);

@@ -39,7 +39,7 @@ import net.minecraft.world.entity.player.Inventory;
 @Environment(EnvType.CLIENT)
 public class OxygenCollectorScreen extends MachineScreen<OxygenCollectorBlockEntity, OxygenCollectorMenu> {
     public OxygenCollectorScreen(OxygenCollectorMenu handler, Inventory inv, Component title) {
-        super(handler, inv, title, Constant.ScreenTexture.OXYGEN_COLLECTOR_SCREEN);
+        super(handler, title, Constant.ScreenTexture.OXYGEN_COLLECTOR_SCREEN);
         this.imageHeight = 181;
     }
 
@@ -52,7 +52,7 @@ public class OxygenCollectorScreen extends MachineScreen<OxygenCollectorBlockEnt
     @Override
     protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.renderBackground(matrices, mouseX, mouseY, delta);
-        this.font.draw(matrices, Component.translatable("ui.galacticraft.machine.collecting", this.machine.collectionAmount).getString(), this.leftPos + 55, this.topPos + 56, ChatFormatting.DARK_GRAY.getColor());
-        this.font.draw(matrices, Component.translatable("ui.galacticraft.machine.status").append(this.machine.getStatus().name()), this.leftPos + 32, this.topPos + 66, ChatFormatting.DARK_GRAY.getColor());
+        this.font.draw(matrices, Component.translatable("ui.galacticraft.machine.collecting", this.menu.collectionAmount).getString(), this.leftPos + 55, this.topPos + 56, ChatFormatting.DARK_GRAY.getColor());
+        this.font.draw(matrices, Component.translatable("ui.galacticraft.machine.status").append(this.menu.configuration.getStatus().name()), this.leftPos + 32, this.topPos + 66, ChatFormatting.DARK_GRAY.getColor());
     }
 }

@@ -25,6 +25,7 @@ package dev.galacticraft.mod.api.solarpanel;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -56,7 +57,7 @@ public class SolarPanelRegistry {
 
     public static <M extends BlockEntity & SolarPanel, T extends BlockEntityType<M>> void registerSolarPanelTexture(T type, ResourceLocation texture) {
         if (SOLAR_PANEL_TEXTURES.put(type, texture) != null) {
-            Galacticraft.LOGGER.warn("Replacing solar panel texture for {}", Objects.requireNonNull(Registry.BLOCK_ENTITY_TYPE.getKey(type)).toString());
+            Galacticraft.LOGGER.warn("Replacing solar panel texture for {}", Objects.requireNonNull(BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(type)).toString());
         }
     }
 

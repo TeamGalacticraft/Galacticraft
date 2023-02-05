@@ -23,22 +23,51 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
+import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistributorBlockEntity> {
-    public OxygenBubbleDistributorMenu(int syncId, Player player, OxygenBubbleDistributorBlockEntity machine) {
-        super(syncId, player, machine, GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR);
+    public boolean bubbleVisible;
+    public byte targetSize;
+    public double size;
 
-        this.addPlayerInventorySlots(8, 84);
+    public OxygenBubbleDistributorMenu(int syncId, ServerPlayer player, OxygenBubbleDistributorBlockEntity machine) {
+        super(syncId, player, machine, GCMachineTypes.OXYGEN_BUBBLE_DISTRIBUTOR);
     }
 
     public OxygenBubbleDistributorMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {
-        this(syncId, inv.player, (OxygenBubbleDistributorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
+        super(syncId, inv, buf, 8, 84, GCMachineTypes.OXYGEN_BUBBLE_DISTRIBUTOR);
+    }
+
+    @Override
+    public void registerSyncHandlers(Consumer<MenuSyncHandler> consumer) {
+        super.registerSyncHandlers(consumer);
+        consumer.accept(new MenuSyncHandler() { //fixme sync handler
+            @Override
+            public boolean needsSyncing() {
+                return false;
+            }
+
+            @Override
+            public void sync(@NotNull FriendlyByteBuf buf) {
+
+            }
+
+            @Override
+            public void read(@NotNull FriendlyByteBuf buf) {
+
+            }
+        });
     }
 }

@@ -45,7 +45,7 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
         this.stack = stack;
         this.model = model;
         if (model != null) {
-            this.layer = RenderType.entityTranslucent(model.getParticleIcon().getName());
+            this.layer = RenderType.entityTranslucent(model.getParticleIcon().atlasLocation());
         } else {
             this.layer = null;
         }
@@ -53,7 +53,7 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
 
     @Override
     public void renderGUI(ClientLevel world, PoseStack matrices, int mouseX, int mouseY, float delta) {
-        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, (int)matrices.last().pose().m03, (int)matrices.last().pose().m13);
+        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, (int)matrices.last().pose().m03(), (int)matrices.last().pose().m13());
     }
 
     @Override
@@ -62,9 +62,9 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
             PoseStack.Pose entry = matrices.last();
             VertexConsumer consumer = vertices.getBuffer(layer);
             for (BakedQuad quad : model.getQuads(null, null, world.random)) {
-                consumer.putBulkData(entry, quad, (((rocket.getColor() << 16) & 0xFF) / 255f) * (((rocket.getColor() << 24) & 0xFF) / 255f),
-                        (((rocket.getColor() << 8) & 0xFF) / 255f) * (((rocket.getColor() << 24) & 0xFF) / 255f),
-                        ((rocket.getColor() & 0xFF) / 255f) * (((rocket.getColor() << 24) & 0xFF) / 255f),
+                consumer.putBulkData(entry, quad, (rocket.red() / 255f) * (rocket.alpha() / 255f),
+                        (rocket.green() / 255f) * (rocket.alpha() / 255f),
+                        (rocket.blue() / 255f) * (rocket.alpha() / 255f),
                         light, OverlayTexture.NO_OVERLAY);
             }
         }

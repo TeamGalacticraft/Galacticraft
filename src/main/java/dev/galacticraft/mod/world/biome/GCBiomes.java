@@ -24,27 +24,33 @@ package dev.galacticraft.mod.world.biome;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public interface GCBiomeKey {
-    interface Moon {
-        ResourceKey<Biome> HIGHLANDS = key(Constant.Biome.Moon.HIGHLANDS);
-        ResourceKey<Biome> HIGHLANDS_FLAT = key(Constant.Biome.Moon.HIGHLANDS_FLAT);
-        ResourceKey<Biome> HIGHLANDS_HILLS = key(Constant.Biome.Moon.HIGHLANDS_HILLS);
-        ResourceKey<Biome> HIGHLANDS_EDGE = key(Constant.Biome.Moon.HIGHLANDS_EDGE);
-        ResourceKey<Biome> HIGHLANDS_VALLEY = key(Constant.Biome.Moon.HIGHLANDS_VALLEY);
-        ResourceKey<Biome> MARE = key(Constant.Biome.Moon.MARE);
-        ResourceKey<Biome> MARE_FLAT = key(Constant.Biome.Moon.MARE_FLAT);
-        ResourceKey<Biome> MARE_HILLS = key(Constant.Biome.Moon.MARE_HILLS);
-        ResourceKey<Biome> MARE_EDGE = key(Constant.Biome.Moon.MARE_EDGE);
-        ResourceKey<Biome> MARE_VALLEY = key(Constant.Biome.Moon.MARE_VALLEY);
+public final class GCBiomes {
+    public static final class Moon {
+        public static final ResourceKey<Biome> COMET_TUNDRA = key("comet_tundra");
+        public static final ResourceKey<Biome> BASALTIC_MARE = key("basaltic_mare");
+        public static final ResourceKey<Biome> LUNAR_HIGHLANDS = key("lunar_highlands");
+        public static final ResourceKey<Biome> OLIVINE_SPIKES = key("olivine_spikes");
     }
 
-    private static ResourceKey<Biome> key(String id) {
-        return ResourceKey.create(Registry.BIOME_REGISTRY, Constant.id(id));
+    public static void bootstrapRegistries(BootstapContext<Biome> context) { // moj-map typo :(
+        context.register(Moon.COMET_TUNDRA, MoonBiomes.createCometTundra());
+        context.register(Moon.BASALTIC_MARE, MoonBiomes.createBasalticMare());
+        context.register(Moon.LUNAR_HIGHLANDS, MoonBiomes.createLunarHighlands());
+        context.register(Moon.OLIVINE_SPIKES, MoonBiomes.createOlivineSpikes());
+    }
+
+    @Contract(pure = true)
+    public static @NotNull ResourceKey<Biome> key(String id) {
+        return Constant.key(Registries.BIOME, id);
     }
 }

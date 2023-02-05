@@ -39,6 +39,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -138,7 +139,11 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) return new OxygenCollectorMenu(syncId, player, this);
+        if (this.getSecurity().hasAccess(player)) return new OxygenCollectorMenu(syncId, (ServerPlayer) player, this);
         return null;
+    }
+
+    public int getCollectionAmount() {
+        return this.collectionAmount;
     }
 }

@@ -84,7 +84,7 @@ public class GCServerPacketReceiver {
         ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.ROCKET_JUMP, (server, player, handler, buf, responseSender) -> {
             server.execute(() -> {
                 if (player.isPassenger()) {
-                    if (player.getVehicle() instanceof Rocket rocket && rocket.getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
+                    if (player.getVehicle() instanceof Rocket rocket && rocket.getLaunchStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
                         rocket.onJump();
                     }
                 }
@@ -95,7 +95,7 @@ public class GCServerPacketReceiver {
             boolean input = buf.readBoolean();
             server.execute(() -> {
                 if (player.isPassenger()) {
-                    if (player.getVehicle() instanceof Rocket rocket && rocket.getStage() == LaunchStage.LAUNCHED) {
+                    if (player.getVehicle() instanceof Rocket rocket && rocket.getLaunchStage() == LaunchStage.LAUNCHED) {
                         if (input) {
                             player.getVehicle().setXRot((player.getVehicle().getXRot() + 2.0F) % 360.0f);
                         } else {
@@ -110,7 +110,7 @@ public class GCServerPacketReceiver {
             boolean input = buf.readBoolean();
             server.execute(() -> {
                 if (player.isPassenger()) {
-                    if (player.getVehicle() instanceof Rocket rocket && rocket.getStage() == LaunchStage.LAUNCHED) {
+                    if (player.getVehicle() instanceof Rocket rocket && rocket.getLaunchStage() == LaunchStage.LAUNCHED) {
                         if (input) {
                             player.getVehicle().setYRot((player.getVehicle().getYRot() + 2.0F) % 360.0f);
                         } else {

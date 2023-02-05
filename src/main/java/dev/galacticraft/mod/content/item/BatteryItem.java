@@ -61,19 +61,6 @@ public class BatteryItem extends Item implements SimpleBatteryItem {
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {
-        if (this.allowedIn(group)) {
-            ItemStack stack = new ItemStack(this);
-            setStoredEnergy(stack, this.getEnergyCapacity());
-            stacks.add(stack);
-
-            stack = new ItemStack(this);
-            setStoredEnergy(stack, 0);
-            stacks.add(stack);
-        }
-    }
-
-    @Override
     public boolean isBarVisible(ItemStack stack) {
         return true;
     }

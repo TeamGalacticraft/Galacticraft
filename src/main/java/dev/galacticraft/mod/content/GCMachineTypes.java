@@ -36,6 +36,7 @@ import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.block.entity.machine.*;
+import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
@@ -45,6 +46,7 @@ import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import org.jetbrains.annotations.NotNull;
@@ -136,12 +138,12 @@ public class GCMachineTypes {
                             .filter(ResourceFilters.itemTag(ConventionalItemTags.DIAMONDS))
                             ::build
                     ).group(GCSlotGroupTypes.SILICON_INPUT, SlotGroup.item()
-                            .add(ItemResourceSlot.builder().pos(62, 45).filter(Constant.Filter.Item.SILICON)::build)
-                            .add(ItemResourceSlot.builder().pos(62, 63).filter(Constant.Filter.Item.SILICON)::build)
+                            .add(ItemResourceSlot.builder().pos(62, 45).filter(ResourceFilters.ofResource(GCItem.RAW_SILICON))::build)
+                            .add(ItemResourceSlot.builder().pos(62, 63).filter(ResourceFilters.ofResource(GCItem.RAW_SILICON))::build)
                             ::build
                     ).single(GCSlotGroupTypes.REDSTONE_INPUT, ItemResourceSlot.builder()
                             .pos(107, 70)
-                            .filter(Constant.Filter.Item.REDSTONE)
+                            .filter(ResourceFilters.ofResource(Items.REDSTONE))
                             ::build
                     ).single(GCSlotGroupTypes.GENERIC_INPUT, ItemResourceSlot.builder()
                             .pos(134, 15)
@@ -278,7 +280,7 @@ public class GCMachineTypes {
             GCMenuTypes.FUEL_LOADER,
             () -> MachineEnergyStorage.of(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
-                    150 * 2, // todo
+                    150 * 2, // fixme
                     150 * 2,
                     true,
                     false
@@ -292,13 +294,13 @@ public class GCMachineTypes {
                     ).single(GCSlotGroupTypes.FUEL_INPUT, ItemResourceSlot.builder()
                             .pos(80, 61)
                             .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canExtractFluidStrict(GCFluids.FUEL)) // todo: tag?
+                            .strictFilter(ResourceFilters.canExtractFluidStrict(GCFluids.FUEL)) // fixme: tag?
                             ::build
                     )::build,
             MachineFluidStorage.builder()
                     .single(GCSlotGroupTypes.FUEL_INPUT, FluidResourceSlot.builder()
                             .height(0)
-                            .filter(ResourceFilters.ofResource(GCFluids.FUEL)) // todo: tag?
+                            .filter(ResourceFilters.ofResource(GCFluids.FUEL)) // fixme: tag?
                             ::build
                     )::build
     );
@@ -309,7 +311,7 @@ public class GCMachineTypes {
             GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR,
             () -> MachineEnergyStorage.of(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
-                    Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate() * 2, // todo
+                    Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate() * 2, // fixme
                     Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate() * 2,
                     true,
                     false
@@ -432,7 +434,7 @@ public class GCMachineTypes {
             GCMenuTypes.OXYGEN_SEALER,
             () -> MachineEnergyStorage.of(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
-                    Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate() * 2, // todo
+                    Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate() * 2, // fixme
                     Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate() * 2,
                     true,
                     false
@@ -493,12 +495,12 @@ public class GCMachineTypes {
                     ).single(GCSlotGroupTypes.OIL_FILL, ItemResourceSlot.builder()
                             .pos(123, 7)
                             .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canExtractFluidStrict(GCFluids.CRUDE_OIL)) // todo: tag?
+                            .strictFilter(ResourceFilters.canExtractFluidStrict(GCFluids.CRUDE_OIL)) // fixme: tag?
                             ::build
                     ).single(GCSlotGroupTypes.FUEL_DRAIN, ItemResourceSlot.builder()
                             .pos(153, 7)
                             .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canInsertFluidStrict(GCFluids.FUEL)) // todo: tag?
+                            .strictFilter(ResourceFilters.canInsertFluidStrict(GCFluids.FUEL)) // fixme: tag?
                             ::build
                     )::build,
             MachineFluidStorage.builder()

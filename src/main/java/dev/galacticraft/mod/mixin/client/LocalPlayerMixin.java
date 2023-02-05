@@ -56,12 +56,12 @@ public class LocalPlayerMixin {
         if (player.isPassenger()) {
             if (player.getVehicle() instanceof Rocket rocket) {
 
-                if (this.input.jumping && rocket.getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
+                if (this.input.jumping && rocket.getLaunchStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
                     rocket.onJump();
                     ClientPlayNetworking.send(Constant.Packet.ROCKET_JUMP, PacketByteBufs.create());
                 }
 
-                if (rocket.getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
+                if (rocket.getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
                     if (this.input.up) {
                         player.getVehicle().setXRot((player.getVehicle().getXRot() - 2.0F) % 360.0f);
                         ClientPlayNetworking.send(Constant.Packet.ROCKET_PITCH, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));

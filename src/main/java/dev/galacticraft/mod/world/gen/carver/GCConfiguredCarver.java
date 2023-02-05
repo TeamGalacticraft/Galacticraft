@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.world.gen.carver;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.data.GCTags;
+import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;

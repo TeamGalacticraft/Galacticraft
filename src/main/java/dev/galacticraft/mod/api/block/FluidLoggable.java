@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
@@ -59,9 +60,9 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
         @Override
         public Collection<ResourceLocation> getPossibleValues() {
             if (VALUES.isEmpty()) {
-                for (Fluid f : Registry.FLUID) {
+                for (Fluid f : BuiltInRegistries.FLUID) {
                     if (f instanceof FlowingFluid) {
-                        VALUES.add(Registry.FLUID.getKey(f));
+                        VALUES.add(BuiltInRegistries.FLUID.getKey(f));
                     }
                 }
                 VALUES.add(Constant.Misc.EMPTY);
@@ -95,12 +96,12 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
         if (this.isEmpty(state)) {
             if (!world.isClientSide()) {
                 world.setBlock(pos, state
-                        .setValue(FLUID, Registry.FLUID.getKey(fluidState.getType()))
+                        .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
                         .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)), 3);
                 world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
             }
             return true;
-        } else if (Registry.FLUID.getKey(fluidState.getType()).equals(state.getValue(FLUID))) {
+        } else if (BuiltInRegistries.FLUID.getKey(fluidState.getType()).equals(state.getValue(FLUID))) {
             if (!world.isClientSide()) {
                 world.setBlock(pos, state.setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)), 3);
                 world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
@@ -117,7 +118,7 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
         if (!this.isEmpty(state)) {
             world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY), 3);
             if (world.getFluidState(pos).isSource()) {
-                return new ItemStack(Registry.FLUID.get(state.getValue(FLUID)).getBucket());
+                return new ItemStack(BuiltInRegistries.FLUID.get(state.getValue(FLUID)).getBucket());
             }
         }
         return ItemStack.EMPTY;

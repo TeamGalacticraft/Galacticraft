@@ -25,7 +25,7 @@ package dev.galacticraft.mod.world.gen.surfacebuilder;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.world.biome.GCBiomeKey;
+import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -41,8 +41,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public class MoonSurfaceRules {
-    private static final ConditionSource IS_MARE = biome(GCBiomeKey.Moon.MARE, GCBiomeKey.Moon.MARE_EDGE, GCBiomeKey.Moon.MARE_FLAT, GCBiomeKey.Moon.MARE_HILLS, GCBiomeKey.Moon.MARE_VALLEY);
-    private static final ConditionSource IS_HIGHLANDS = biome(GCBiomeKey.Moon.HIGHLANDS, GCBiomeKey.Moon.HIGHLANDS_EDGE, GCBiomeKey.Moon.HIGHLANDS_FLAT, GCBiomeKey.Moon.HIGHLANDS_HILLS, GCBiomeKey.Moon.HIGHLANDS_VALLEY);
+    private static final ConditionSource IS_MARE = biome(GCBiomes.Moon.MARE, GCBiomes.Moon.MARE_EDGE, GCBiomes.Moon.MARE_FLAT, GCBiomes.Moon.MARE_HILLS, GCBiomes.Moon.MARE_VALLEY);
+    private static final ConditionSource IS_HIGHLANDS = biome(GCBiomes.Moon.HIGHLANDS, GCBiomes.Moon.HIGHLANDS_EDGE, GCBiomes.Moon.HIGHLANDS_FLAT, GCBiomes.Moon.HIGHLANDS_HILLS, GCBiomes.Moon.HIGHLANDS_VALLEY);
 
     private static final RuleSource BEDROCK = block(Blocks.BEDROCK);
     private static final RuleSource LUNASLATE = block(GCBlocks.LUNASLATE);

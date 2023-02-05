@@ -20,38 +20,32 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data;
+package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.mod.world.biome.GCBiomeKey;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import dev.galacticraft.machinelib.api.gas.Gases;
+import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.tag.GCTags;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.core.Registry;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.biome.Biome;
+import net.minecraft.core.HolderLookup;
 
-public class GCBiomeTagProvider extends FabricTagProvider.DynamicRegistryTagProvider<Biome> {
-    protected GCBiomeTagProvider(FabricDataGenerator dataGenerator) {
-        super(dataGenerator, Registry.BIOME_REGISTRY);
+import java.util.concurrent.CompletableFuture;
+
+public class GCFluidTagProvider extends FabricTagProvider.FluidTagProvider {
+    public GCFluidTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
+        super(output, completableFuture);
     }
 
     @Override
-    protected void generateTags() {
-        tag(GCTags.MOON_HIGHLANDS)
-                .add(GCBiomeKey.Moon.HIGHLANDS)
-                .add(GCBiomeKey.Moon.HIGHLANDS_HILLS)
-                .add(GCBiomeKey.Moon.HIGHLANDS_VALLEY)
-                .add(GCBiomeKey.Moon.HIGHLANDS_FLAT)
-                .add(GCBiomeKey.Moon.HIGHLANDS_EDGE);
-
-        tag(GCTags.MOON_MARE)
-                .add(GCBiomeKey.Moon.MARE)
-                .add(GCBiomeKey.Moon.MARE_HILLS)
-                .add(GCBiomeKey.Moon.MARE_VALLEY)
-                .add(GCBiomeKey.Moon.MARE_FLAT)
-                .add(GCBiomeKey.Moon.MARE_EDGE);
-    }
-
-    public FabricTagBuilder<Biome> tag(TagKey<Biome> tag) {
-        return getOrCreateTagBuilder(tag);
+    protected void addTags(HolderLookup.Provider arg) {
+        tag(GCTags.OIL)
+                .add(GCFluids.CRUDE_OIL.builtInRegistryHolder().key())
+                .add(GCFluids.FLOWING_CRUDE_OIL.builtInRegistryHolder().key());
+        tag(GCTags.FUEL)
+                .add(GCFluids.FUEL.builtInRegistryHolder().key())
+                .add(GCFluids.FLOWING_FUEL.builtInRegistryHolder().key());
+        tag(GCTags.LIQUID_OXYGEN)
+                .add(GCFluids.LIQUID_OXYGEN.builtInRegistryHolder().key());
+        tag(GCTags.OXYGEN).add(Gases.OXYGEN.builtInRegistryHolder().key());
     }
 }

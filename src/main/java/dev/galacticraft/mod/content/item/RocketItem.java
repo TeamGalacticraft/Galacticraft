@@ -24,7 +24,7 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
+import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
@@ -99,7 +99,7 @@ public class RocketItem extends Item {
 //            tag.putInt("tier", 1);
             tag.putInt("color", 0xFFFFFFFF);
             for (RocketPartType type : RocketPartType.values()) {
-                tag.putString(type.getSerializedName(), AddonRegistry.ROCKET_PART.getKey(GalacticraftRocketParts.getDefaultPartForType(type)).toString());
+                tag.putString(type.getSerializedName(), AddonRegistry.ROCKET_PART.getKey(GCRocketParts.getDefaultPartForType(type)).toString());
             }
             stack.setTag(tag);
             stacks.add(stack);
@@ -113,7 +113,7 @@ public class RocketItem extends Item {
         tag.putInt("tier", 1);
         tag.putInt("color", 0xFFFFFFFF);
         for (RocketPartType type : RocketPartType.values()) {
-            tag.putString(type.getSerializedName(), AddonRegistry.ROCKET_PART.getKey(GalacticraftRocketParts.getDefaultPartForType(type)).toString());
+            tag.putString(type.getSerializedName(), AddonRegistry.ROCKET_PART.getKey(GCRocketParts.getDefaultPartForType(type)).toString());
         }
         stack.setTag(tag);
         return stack;

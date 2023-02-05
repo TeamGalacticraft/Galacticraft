@@ -23,7 +23,7 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
-import dev.galacticraft.mod.client.gui.overlay.CountdownOverylay;
+import dev.galacticraft.mod.client.gui.overlay.CountdownOverlay;
 import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.*;
@@ -196,7 +196,7 @@ public class GalacticraftClient implements ClientModInitializer {
         BuiltinItemRendererRegistry.INSTANCE.register(GCItem.ROCKET, new RocketItemRenderer());
 
         HudRenderCallback.EVENT.register(RocketOverlay::onHudRender);
-        HudRenderCallback.EVENT.register(CountdownOverylay::renderCountdown);
+        HudRenderCallback.EVENT.register(CountdownOverlay::renderCountdown);
 
         Galacticraft.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

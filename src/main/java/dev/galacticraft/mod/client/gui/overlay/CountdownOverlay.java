@@ -28,10 +28,10 @@ import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.util.ColorUtil;
 import net.minecraft.client.Minecraft;
 
-public class CountdownOverylay {
+public class CountdownOverlay {
     public static void renderCountdown(PoseStack poseStack, float tickDelta) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player.getVehicle() instanceof RocketEntity rocket && rocket.getStage() == LaunchStage.IGNITED) {
+        if (mc.player.getVehicle() instanceof RocketEntity rocket && rocket.getLaunchStage() == LaunchStage.IGNITED) {
             int count = (int) Math.floor(((float) rocket.getTimeAsState()) / 20.0f);
 
             final int width = mc.getWindow().getGuiScaledWidth();

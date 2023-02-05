@@ -88,6 +88,6 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(BubbleEntity entity) {
-        return bubbleModel.getParticleIcon().getName();
+        return bubbleModel.getParticleIcon().atlasLocation();
     }
 }

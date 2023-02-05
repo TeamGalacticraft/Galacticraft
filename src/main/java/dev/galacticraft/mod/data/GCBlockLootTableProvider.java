@@ -23,9 +23,11 @@
 package dev.galacticraft.mod.data;
 
 import dev.galacticraft.mod.content.item.GCItem;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
@@ -38,20 +40,29 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
+import java.util.function.BiConsumer;
+
 import static dev.galacticraft.mod.content.GCBlocks.*;
 
 public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
-    protected GCBlockLootTableProvider(FabricDataGenerator dataGenerator) {
-        super(dataGenerator);
+    protected GCBlockLootTableProvider(FabricDataOutput output) {
+        super(output);
+    }
+
+    public LootTable.Builder siliconOreDrops(Block ore) {
+        return createSilkTouchDispatchTable(ore, applyExplosionDecay(ore, LootItem.lootTableItem(GCItem.RAW_SILICON)
+                .apply(SetItemCountFunction.setCount(UniformGenerator.between(4.0F, 6.0F)))
+                .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))
+        ));
     }
 
     @Override
-    protected void generateBlockLootTables() {
+    public void generate() {
         dropOther(GLOWSTONE_TORCH, GCItem.GLOWSTONE_TORCH);
         dropOther(GLOWSTONE_WALL_TORCH, GCItem.GLOWSTONE_TORCH);
         dropOther(UNLIT_TORCH, GCItem.UNLIT_TORCH);
         dropOther(UNLIT_WALL_TORCH, GCItem.UNLIT_TORCH);
-        
+
         dropSelf(GLOWSTONE_LANTERN);
         dropOther(UNLIT_LANTERN, Items.LANTERN);
 
@@ -243,12 +254,12 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(LEAD_BLOCK);
         dropSelf(LUNAR_SAPPHIRE_BLOCK);
 
-        add(FALLEN_METEOR, block -> BlockLoot.createSilkTouchDispatchTable(block, BlockLoot.applyExplosionDecay(block, LootItem.lootTableItem(GCItem.RAW_METEORIC_IRON).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));
+        add(FALLEN_METEOR, block -> BlockLootSubProvider.createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GCItem.RAW_METEORIC_IRON).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));
 
         dropSelf(LUNAR_CARTOGRAPHY_TABLE);
 
-        add(CAVERNOUS_VINE, BlockLoot::createShearsOnlyDrop);
-        add(POISONOUS_CAVERNOUS_VINE, BlockLoot::createShearsOnlyDrop);
+        add(CAVERNOUS_VINE, BlockLootSubProvider::createShearsOnlyDrop);
+        add(POISONOUS_CAVERNOUS_VINE, BlockLootSubProvider::createShearsOnlyDrop);
         add(
                 MOON_BERRY_BUSH,
                 blockx -> applyExplosionDecay(
@@ -303,10 +314,8 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         add(AIR_LOCK_SEAL, noDrop());
     }
 
-    public static LootTable.Builder siliconOreDrops(Block ore) {
-        return createSilkTouchDispatchTable(ore, applyExplosionDecay(ore, LootItem.lootTableItem(GCItem.RAW_SILICON)
-                .apply(SetItemCountFunction.setCount(UniformGenerator.between(4.0F, 6.0F)))
-                .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))
-        ));
+    @Override
+    public void accept(BiConsumer<ResourceLocation, LootTable.Builder> resourceLocationBuilderBiConsumer) {
+
     }
 }

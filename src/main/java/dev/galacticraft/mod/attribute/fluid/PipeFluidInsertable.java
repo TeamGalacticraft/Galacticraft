@@ -67,7 +67,7 @@ public class PipeFluidInsertable implements Storage<FluidVariant>, StorageView<F
     @Override
     public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
         if (this.network != null) {
-            return this.network.insert(this.pipe, new FluidStack(resource, maxAmount), direction, transaction);
+            return this.network.insert(this.pipe, FluidStack.create(resource.getFluid(), resource.getNbt(), maxAmount), direction, transaction);
         }
         return 0;
     }

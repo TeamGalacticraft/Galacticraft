@@ -55,6 +55,6 @@ public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, M
     protected void renderForeground(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.renderForeground(matrices, mouseX, mouseY, delta);
 
-        this.font.draw(matrices, Component.translatable("ui.galacticraft.machine.status").append(this.machine.getStatus().name()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor());
+        this.font.draw(matrices, Component.translatable("ui.galacticraft.machine.status").append(this.menu.configuration.getStatus().name()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor());
     }
 }

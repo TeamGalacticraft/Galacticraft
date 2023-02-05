@@ -28,6 +28,7 @@ import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.StringRepresentable;
@@ -66,7 +67,7 @@ public class GratingBlock extends Block implements FluidLoggable {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
         BlockState blockState = this.defaultBlockState()
                 .setValue(GRATING_STATE, GratingState.LOWER)
-                .setValue(FLUID, Registry.FLUID.getKey(fluidState.getType()))
+                .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
                 .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1));
         BlockPos blockPos = context.getClickedPos();
         Direction direction = context.getHorizontalDirection();
@@ -82,7 +83,7 @@ public class GratingBlock extends Block implements FluidLoggable {
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborBlockState, LevelAccessor world, BlockPos blockPos, BlockPos neighborBlockPos) {
         if (!this.isEmpty(state)) {
-            world.scheduleTick(blockPos, Registry.FLUID.get(state.getValue(FLUID)), Registry.FLUID.get(state.getValue(FLUID)).getTickDelay(world));
+            world.scheduleTick(blockPos, BuiltInRegistries.FLUID.get(state.getValue(FLUID)), BuiltInRegistries.FLUID.get(state.getValue(FLUID)).getTickDelay(world));
         }
 
         return super.updateShape(state, direction, neighborBlockState, world, blockPos, neighborBlockPos);
@@ -97,7 +98,7 @@ public class GratingBlock extends Block implements FluidLoggable {
     @Override
     public FluidState getFluidState(BlockState state) {
         if (this.isEmpty(state)) return EMPTY_STATE;
-        FluidState state1 = Registry.FLUID.get(state.getValue(FLUID)).defaultFluidState();
+        FluidState state1 = BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState();
         if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
             state1 = state1.setValue(FlowingFluid.LEVEL, state.getValue(FlowingFluid.LEVEL));
         }

@@ -58,27 +58,6 @@ public class OxygenTankItem extends Item {
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> list) {
-        if (this.allowedIn(group)) {
-            ItemStack charged = getDefaultInstance();
-            try (Transaction transaction = Transaction.openOuter()) {
-                Storage<FluidVariant> storage = ContainerItemContext.withConstant(charged).find(FluidStorage.ITEM);
-                storage.insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
-                transaction.commit();
-                charged.getOrCreateTag().putLong(Constant.Nbt.VALUE, storage.exactView(FluidVariant.of(Gases.OXYGEN)).getAmount());
-            }
-            list.add(charged);
-
-            ItemStack depleted = new ItemStack(this);
-            try (Transaction transaction = Transaction.openOuter()) {
-                ContainerItemContext.withConstant(charged).find(FluidStorage.ITEM).extract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
-                transaction.commit();
-            }
-            list.add(depleted);
-        }
-    }
-
-    @Override
     public boolean isBarVisible(ItemStack stack) {
         return true;
     }

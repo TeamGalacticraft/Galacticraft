@@ -207,7 +207,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) return new OxygenBubbleDistributorMenu(syncId, player, this);
+        if (this.getSecurity().hasAccess(player)) return new OxygenBubbleDistributorMenu(syncId, (ServerPlayer) player, this);
         return null;
     }
 }

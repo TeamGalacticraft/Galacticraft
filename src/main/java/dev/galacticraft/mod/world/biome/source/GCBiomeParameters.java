@@ -25,7 +25,7 @@ package dev.galacticraft.mod.world.biome.source;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.world.biome.GCBiomeKey;
+import dev.galacticraft.mod.world.biome.GCBiomes;
 import java.util.function.Consumer;
 
 import net.minecraft.core.Holder;
@@ -89,7 +89,7 @@ public class GCBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_H_MIXED, // weirdness
                 0.0F,
-                biomeRegistry.getHolder(GCBiomeKey.Moon.HIGHLANDS).orElseThrow());
+                biomeRegistry.getHolder(GCBiomes.Moon.HIGHLANDS).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -97,7 +97,7 @@ public class GCBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_H_PLAINS, // weirdness
                 0.0F,
-                biomeRegistry.getHolder(GCBiomeKey.Moon.HIGHLANDS_FLAT).orElseThrow());
+                biomeRegistry.getHolder(GCBiomes.Moon.HIGHLANDS_FLAT).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -105,7 +105,7 @@ public class GCBiomeParameters {
                 SOMEWHAT_ERODED, //erosion
                 WEIRDNESS_H_MOUNTAINS, // weirdness
                 0.0F,
-                biomeRegistry.getHolder(GCBiomeKey.Moon.HIGHLANDS_HILLS).orElseThrow());
+                biomeRegistry.getHolder(GCBiomes.Moon.HIGHLANDS_HILLS).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -113,7 +113,7 @@ public class GCBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_H_ADJ_RIVER, // weirdness
                 0.0F,
-                biomeRegistry.getHolder(GCBiomeKey.Moon.HIGHLANDS_VALLEY).orElseThrow());
+                biomeRegistry.getHolder(GCBiomes.Moon.HIGHLANDS_VALLEY).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -121,7 +121,7 @@ public class GCBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_RIVER, // weirdness
                 0.0F,
-                biomeRegistry.getHolder(GCBiomeKey.Moon.HIGHLANDS_EDGE).orElseThrow());
+                biomeRegistry.getHolder(GCBiomes.Moon.HIGHLANDS_EDGE).orElseThrow());
 
         // MARE
         writeBiomeParameters(builder::add,
@@ -131,7 +131,7 @@ public class GCBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_L_MIXED, // weirdness
                 0.0F,
-                biomeRegistry.getHolder(GCBiomeKey.Moon.MARE).orElseThrow());
+                biomeRegistry.getHolder(GCBiomes.Moon.MARE).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -139,7 +139,7 @@ public class GCBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_L_PLAINS, // weirdness
                 0.0F,
-                biomeRegistry.getHolder(GCBiomeKey.Moon.MARE_FLAT).orElseThrow());
+                biomeRegistry.getHolder(GCBiomes.Moon.MARE_FLAT).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -147,7 +147,7 @@ public class GCBiomeParameters {
                 SOMEWHAT_ERODED, //erosion
                 WEIRDNESS_L_MOUNTAINS, // weirdness
                 0.0F,
-                biomeRegistry.getHolder(GCBiomeKey.Moon.MARE_HILLS).orElseThrow());
+                biomeRegistry.getHolder(GCBiomes.Moon.MARE_HILLS).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -155,7 +155,7 @@ public class GCBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_L_ADJ_RIVER, // weirdness
                 0.0F,
-                biomeRegistry.getHolder(GCBiomeKey.Moon.MARE_VALLEY).orElseThrow());
+                biomeRegistry.getHolder(GCBiomes.Moon.MARE_VALLEY).orElseThrow());
         writeBiomeParameters(builder::add,
                 COLD, //temperature
                 DRY, //humidity
@@ -163,7 +163,7 @@ public class GCBiomeParameters {
                 MIN_EROSION, //erosion
                 WEIRDNESS_RIVER, // weirdness
                 0.0F,
-                biomeRegistry.getHolder(GCBiomeKey.Moon.MARE_EDGE).orElseThrow());
+                biomeRegistry.getHolder(GCBiomes.Moon.MARE_EDGE).orElseThrow());
         return new Climate.ParameterList<>(builder.build());
     });
 

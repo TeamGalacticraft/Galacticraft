@@ -22,31 +22,20 @@
 
 package dev.galacticraft.mod;
 
-import dev.galacticraft.machinelib.api.storage.ResourceFilter;
-import dev.galacticraft.machinelib.api.storage.ResourceFilters;
-import dev.galacticraft.mod.content.item.GCItem;
-import dev.galacticraft.mod.data.GCTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -56,8 +45,14 @@ public interface Constant {
     String ADDON_API_ID = "galacticraft-api";
     String COMMON_NAMESPACE = "c";
 
-    static ResourceLocation id(String id) {
+    @Contract(value = "_ -> new", pure = true)
+    static @NotNull ResourceLocation id(String id) {
         return new ResourceLocation(MOD_ID, id);  
+    }
+
+    @Contract(value = "_ -> new", pure = true)
+    static @NotNull <T> ResourceKey<T> key(ResourceKey<Registry<T>> registry, String id) {
+        return ResourceKey.create(registry, Constant.id(id));
     }
 
     interface Block {
@@ -710,21 +705,6 @@ public interface Constant {
         String OXYGEN_SEALER_MENU = "oxygen_sealer_menu";
         String FUEL_LOADER_MENU = "fuel_loader_menu";
         String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
-    }
-
-    interface Biome {
-        interface Moon {
-            String HIGHLANDS = "moon_highlands";
-            String HIGHLANDS_FLAT = "moon_highlands_flat";
-            String HIGHLANDS_HILLS = "moon_highlands_hills";
-            String HIGHLANDS_EDGE = "moon_highlands_edge";
-            String HIGHLANDS_VALLEY = "moon_highlands_valley";
-            String MARE = "moon_mare";
-            String MARE_FLAT = "moon_mare_flat";
-            String MARE_HILLS = "moon_mare_hills";
-            String MARE_EDGE = "moon_mare_edge";
-            String MARE_VALLEY = "moon_mare_valley";
-        }
     }
 
     interface LootTable {

@@ -45,15 +45,15 @@ public class BubbleDistributorScreen extends MachineScreen<OxygenBubbleDistribut
     private final EditBox textField;
 
     public BubbleDistributorScreen(OxygenBubbleDistributorMenu handler, Inventory inv, Component title) {
-        super(handler, inv, title, Constant.ScreenTexture.BUBBLE_DISTRIBUTOR_SCREEN);
-        this.textField = new EditBox(Minecraft.getInstance().font, this.leftPos + 132, this.topPos + 59, 26, 20, Component.literal(String.valueOf(this.machine.getSize())));
+        super(handler, title, Constant.ScreenTexture.BUBBLE_DISTRIBUTOR_SCREEN);
+        this.textField = new EditBox(Minecraft.getInstance().font, this.leftPos + 132, this.topPos + 59, 26, 20, Component.literal(String.valueOf(this.menu.size)));
         this.textField.setResponder((s -> {
             try {
                 if (Byte.parseByte(s) < 1) {
-                    textField.setValue(String.valueOf(this.machine.getTargetSize()));
+                    textField.setValue(String.valueOf(this.menu.targetSize));
                 }
             } catch (NumberFormatException ignore) {
-                textField.setValue(String.valueOf(this.machine.getTargetSize()));
+                textField.setValue(String.valueOf(this.menu.targetSize));
             }
         }));
 
@@ -76,7 +76,7 @@ public class BubbleDistributorScreen extends MachineScreen<OxygenBubbleDistribut
     protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
 
-        if (! this.machine.bubbleVisible) {
+        if (!this.menu.bubbleVisible) {
             if (!DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, 13, 13)) {
                 this.blit(matrices, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_RED_X, Constant.TextureCoordinate.BUTTON_RED_Y, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT);
             } else {
@@ -104,17 +104,17 @@ public class BubbleDistributorScreen extends MachineScreen<OxygenBubbleDistribut
     @Override
     protected void renderForeground(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.renderForeground(matrices, mouseX, mouseY, delta);
-        textField.setValue(String.valueOf(this.machine.getTargetSize()));
+        textField.setValue(String.valueOf(this.menu.targetSize));
 
-        this.font.draw(matrices, Component.translatable("ui.galacticraft.machine.status").append(this.machine.getStatus().name()), this.leftPos + 60, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor());
+        this.font.draw(matrices, Component.translatable("ui.galacticraft.machine.status").append(this.menu.configuration.getStatus().name()), this.leftPos + 60, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor());
 
         this.textField.render(matrices, mouseX, mouseY, delta);
 
-        this.textField.x = this.leftPos + 132;
-        this.textField.y = this.topPos + 59;
+        this.textField.setX(this.leftPos + 132);
+        this.textField.setY(this.topPos + 59);
 
-        if (this.machine.getStatus().type().isActive()) {
-            this.font.draw(matrices, Component.translatable("ui.galacticraft.bubble_distributor.current_size", String.valueOf((int) Math.floor(this.machine.getSize()))).setStyle(Constant.Text.Color.DARK_GRAY_STYLE), this.leftPos + 60, this.topPos + 42, ChatFormatting.DARK_GRAY.getColor());
+        if (this.menu.configuration.getStatus().type().isActive()) {
+            this.font.draw(matrices, Component.translatable("ui.galacticraft.bubble_distributor.current_size", String.valueOf((int) Math.floor(this.menu.size))).setStyle(Constant.Text.Color.DARK_GRAY_STYLE), this.leftPos + 60, this.topPos + 42, ChatFormatting.DARK_GRAY.getColor());
         }
     }
 
@@ -136,25 +136,25 @@ public class BubbleDistributorScreen extends MachineScreen<OxygenBubbleDistribut
     private boolean checkClick(double mouseX, double mouseY, int button) {
         if (button == 0) {
             if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT)) {
-                this.machine.bubbleVisible = ! this.machine.bubbleVisible;
-                ClientPlayNetworking.send(Constant.Packet.BUBBLE_VISIBLE, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(this.machine.bubbleVisible)));
+                this.menu.bubbleVisible = ! this.menu.bubbleVisible;
+                ClientPlayNetworking.send(Constant.Packet.BUBBLE_VISIBLE, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(this.menu.bubbleVisible)));
                 return true;
             }
 
             if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 158, this.topPos + 59, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
-                if (this.machine.getTargetSize() != Byte.MAX_VALUE) {
-                    this.machine.setTargetSize((byte) (this.machine.getTargetSize() + 1));
-                    textField.setValue(String.valueOf(this.machine.getTargetSize()));
-                    ClientPlayNetworking.send(Constant.Packet.BUBBLE_MAX, new FriendlyByteBuf(Unpooled.buffer().writeByte(this.machine.getTargetSize())));
+                if (this.menu.targetSize != Byte.MAX_VALUE) {
+                    this.menu.targetSize = ((byte) (this.menu.targetSize + 1));
+                    textField.setValue(String.valueOf(this.menu.targetSize));
+                    ClientPlayNetworking.send(Constant.Packet.BUBBLE_MAX, new FriendlyByteBuf(Unpooled.buffer().writeByte(this.menu.targetSize)));
                     return true;
                 }
             }
 
             if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 158, this.topPos + 69, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
-                if (this.machine.getTargetSize() > 1) {
-                    this.machine.setTargetSize((byte) (this.machine.getTargetSize() - 1));
-                    textField.setValue(String.valueOf(this.machine.getTargetSize()));
-                    ClientPlayNetworking.send(Constant.Packet.BUBBLE_MAX, new FriendlyByteBuf(Unpooled.buffer().writeByte(this.machine.getTargetSize())));
+                if (this.menu.targetSize > 1) {
+                    this.menu.targetSize = (byte) (this.menu.targetSize - 1);
+                    textField.setValue(String.valueOf(this.menu.targetSize));
+                    ClientPlayNetworking.send(Constant.Packet.BUBBLE_MAX, new FriendlyByteBuf(Unpooled.buffer().writeByte(this.menu.targetSize)));
                     return true;
                 }
             }

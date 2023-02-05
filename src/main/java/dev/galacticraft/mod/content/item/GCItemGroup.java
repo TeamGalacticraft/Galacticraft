@@ -24,28 +24,30 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class GCItemGroup {
-    public static final CreativeModeTab ITEMS_GROUP = FabricItemGroupBuilder.create(new ResourceLocation(Constant.MOD_ID, Constant.Item.ITEM_GROUP))
+    public static final CreativeModeTab ITEMS_GROUP = FabricItemGroup.builder(new ResourceLocation(Constant.MOD_ID, Constant.Item.ITEM_GROUP))
             .icon(() -> new ItemStack(GCItem.CANVAS))
-            .appendItems((itemStacks, creativeModeTab) -> {
+            .displayItems((featureFlagSet, output, bl) -> {
                 // todo: add rockets here
-                for (Item item : Registry.ITEM)
-                    item.fillItemCategory(creativeModeTab, (NonNullList<ItemStack>) itemStacks);
+                for (Item item : BuiltInRegistries.ITEM)
+                    item.fillItemCategory(creativeModeTab, (NonNullList<ItemStack>) itemStacks); //fixme
             })
             .build();
 
-    public static final CreativeModeTab BLOCKS_GROUP = FabricItemGroupBuilder.create(
+    public static final CreativeModeTab BLOCKS_GROUP = FabricItemGroup.builder(
             new ResourceLocation(Constant.MOD_ID, Constant.Block.ITEM_GROUP_BLOCKS))
             .icon(() -> new ItemStack(GCBlocks.MOON_TURF)).build();
 
-    public static final CreativeModeTab MACHINES_GROUP = FabricItemGroupBuilder.create(
+    public static final CreativeModeTab MACHINES_GROUP = FabricItemGroup.builder(
             new ResourceLocation(Constant.MOD_ID, Constant.Block.ITEM_GROUP_MACHINES))
             .icon(() -> new ItemStack(GCBlocks.COAL_GENERATOR)).build();
 }

@@ -20,34 +20,29 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data;
+package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.machinelib.api.gas.Gases;
-import dev.galacticraft.mod.content.GCFluids;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.world.biome.GCBiomes;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.material.Fluid;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.biome.Biome;
 
-public class GCFluidTagProvider extends FabricTagProvider.FluidTagProvider {
-    public GCFluidTagProvider(FabricDataGenerator dataGenerator) {
-        super(dataGenerator);
+import java.util.concurrent.CompletableFuture;
+
+public class GCBiomeTagProvider extends FabricTagProvider<Biome> {
+    public GCBiomeTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> future) {
+        super(output, Registries.BIOME, future);
     }
 
     @Override
-    protected void generateTags() {
-        tag(GCTags.OIL)
-                .add(GCFluids.CRUDE_OIL)
-                .add(GCFluids.FLOWING_CRUDE_OIL);
-        tag(GCTags.FUEL)
-                .add(GCFluids.FUEL)
-                .add(GCFluids.FLOWING_FUEL);
-        tag(GCTags.LIQUID_OXYGEN)
-                .add(GCFluids.LIQUID_OXYGEN);
-        tag(GCTags.OXYGEN).add(Gases.OXYGEN);
-    }
-
-    public FabricTagBuilder<Fluid> tag(TagKey<Fluid> tag) {
-        return getOrCreateTagBuilder(tag);
+    protected void addTags(HolderLookup.Provider arg) {
+        this.tag(GCTags.MOON)
+                .add(GCBiomes.Moon.COMET_TUNDRA)
+                .add(GCBiomes.Moon.BASALTIC_MARE)
+                .add(GCBiomes.Moon.LUNAR_HIGHLANDS)
+                .add(GCBiomes.Moon.OLIVINE_SPIKES);
     }
 }

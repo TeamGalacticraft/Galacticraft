@@ -24,21 +24,24 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.mod.content.item.GCItem;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.Items;
 
 import java.util.function.Consumer;
 
 public class GCRecipeProvider extends FabricRecipeProvider {
-    public GCRecipeProvider(FabricDataGenerator dataGenerator) {
-        super(dataGenerator);
+
+    public GCRecipeProvider(FabricDataOutput output) {
+        super(output);
     }
 
     @Override
-    protected void generateRecipes(Consumer<FinishedRecipe> exporter) {
-        ShapedRecipeBuilder.shaped(GCItem.ROCKET_LAUNCH_PAD, 9)
+    public void buildRecipes(Consumer<FinishedRecipe> exporter) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItem.ROCKET_LAUNCH_PAD, 9)
                 .define('C', GCItem.COMPRESSED_IRON)
                 .define('I', Items.IRON_BLOCK)
                 .pattern("CCC")

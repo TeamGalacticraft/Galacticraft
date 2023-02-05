@@ -25,9 +25,11 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenStorageModuleBlockEntity;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -49,8 +51,8 @@ public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModule
         super.renderBackground(matrices, mouseX, mouseY, delta);
         this.drawOxygenBufferBar(matrices);
 
-        drawCenteredString(matrices, font, I18n.get("ui.galacticraft.machine.current_oxygen", this.machine.fluidStorage().getAmount(0)), width / 2, topPos + 33, ChatFormatting.DARK_GRAY.getColor());
-        drawCenteredString(matrices, font, I18n.get("ui.galacticraft.machine.max_oxygen", this.machine.fluidStorage().getMaxCount(0)), width / 2, topPos + 45, ChatFormatting.DARK_GRAY.getColor());
+        drawCenteredString(matrices, font, I18n.get("ui.galacticraft.machine.current_oxygen", this.menu.fluidStorage.getSlot(GCSlotGroupTypes.OXYGEN_TANK).getAmount()), width / 2, topPos + 33, ChatFormatting.DARK_GRAY.getColor());
+        drawCenteredString(matrices, font, I18n.get("ui.galacticraft.machine.max_oxygen", this.menu.fluidStorage.getSlot(GCSlotGroupTypes.OXYGEN_TANK).getCapacity()), width / 2, topPos + 45, ChatFormatting.DARK_GRAY.getColor());
     }
 
     @Override
@@ -59,7 +61,8 @@ public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModule
     }
 
     private void drawOxygenBufferBar(PoseStack matrices) {
-        double oxygenScale = (double)this.menu.fluidStorage.getAmount(0) / (double)this.menu.fluidStorage.getMaxCount(0);
+        FluidResourceSlot slot = this.menu.fluidStorage.getSlot(GCSlotGroupTypes.OXYGEN_TANK);
+        double oxygenScale = (double)slot.getAmount() / (double)slot.getCapacity();
 
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
         this.blit(matrices, this.leftPos + 52, this.topPos + 57, 176, 0, (int) (72.0D * oxygenScale), 3);

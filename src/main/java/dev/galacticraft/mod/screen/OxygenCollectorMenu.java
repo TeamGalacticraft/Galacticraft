@@ -23,33 +23,38 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
+import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenCollectorBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.DataSlot;
+
+import java.util.function.Consumer;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenCollectorMenu extends MachineMenu<OxygenCollectorBlockEntity> {
-    public OxygenCollectorMenu(int syncId, Player player, OxygenCollectorBlockEntity blockEntity) {
-        super(syncId, player, blockEntity, GCMenuTypes.OXYGEN_COLLECTOR);
-        this.addDataSlot(new DataSlot() {
-            @Override
-            public int get() {
-                return machine.collectionAmount;
-            }
+    public int collectionAmount = 0;
 
-            @Override
-            public void set(int value) {
-                machine.collectionAmount = value;
-            }
-        });
-        this.addPlayerInventorySlots(8, 84);
+    public OxygenCollectorMenu(int syncId, ServerPlayer player, OxygenCollectorBlockEntity blockEntity) {
+        super(syncId, player, blockEntity, GCMachineTypes.OXYGEN_COLLECTOR);
     }
 
     public OxygenCollectorMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {
-        this(syncId, inv.player, (OxygenCollectorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
+        super(syncId, inv, buf, 8, 84, GCMachineTypes.OXYGEN_COLLECTOR);
+    }
+
+    @Override
+    public void registerSyncHandlers(Consumer<MenuSyncHandler> consumer) {
+        super.registerSyncHandlers(consumer);
+        consumer.accept(MenuSyncHandler.simple(this.machine::getCollectionAmount, this::setCollectionAmount));
+    }
+
+    public void setCollectionAmount(int collectionAmount) {
+        this.collectionAmount = collectionAmount;
     }
 }

@@ -42,7 +42,7 @@ public class RocketSound extends AbstractTickableSoundInstance {
 
     @Override
     public void tick() {
-        if (this.rocket.getStage() == LaunchStage.IGNITED) {
+        if (this.rocket.getLaunchStage() == LaunchStage.IGNITED) {
             if (!ignition) {
                 this.pitch = 0.0F;
                 ignition = true;
@@ -64,7 +64,7 @@ public class RocketSound extends AbstractTickableSoundInstance {
             this.pitch = 1.0F;
         }
 
-        if (this.rocket.getStage().ordinal() >= LaunchStage.IGNITED.ordinal())
+        if (this.rocket.getLaunchStage().ordinal() >= LaunchStage.IGNITED.ordinal())
         {
             if (this.rocket.getY() > 1000)
             {

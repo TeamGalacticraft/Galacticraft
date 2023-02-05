@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data;
+package dev.galacticraft.mod.data.content;
 
 import dev.galacticraft.api.data.ConfiguredCelestialBodyDataProvider;
 import dev.galacticraft.api.gas.GasComposition;
@@ -40,6 +40,7 @@ import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.world.dimension.GCDimensionType;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
@@ -57,7 +58,7 @@ import static dev.galacticraft.impl.universe.BuiltinObjects.SOL_KEY;
 public class GCCelestialBodyProvider extends ConfiguredCelestialBodyDataProvider {
     public static final Int2ObjectMap<Ingredient> EARTH_SATELLITE_RECIPE = new Int2ObjectArrayMap<>(new int[]{16, 32, 8, 1}, new Ingredient[]{Ingredient.of(GCItem.ALUMINUM_INGOT), Ingredient.of(GCItem.TIN_INGOT), Ingredient.of(Items.COPPER_INGOT), Ingredient.of(GCItem.ADVANCED_WAFER)});
 
-    public GCCelestialBodyProvider(PackOutput output) {
+    public GCCelestialBodyProvider(FabricDataOutput output) {
         super(output);
     }
 

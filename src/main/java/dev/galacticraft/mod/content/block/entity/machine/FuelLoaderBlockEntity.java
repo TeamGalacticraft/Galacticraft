@@ -37,6 +37,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -154,6 +155,6 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity { //todo: whats ha
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
-        return new FuelLoaderMenu(syncId, player, this);
+        return new FuelLoaderMenu(syncId, (ServerPlayer) player, this);
     }
 }

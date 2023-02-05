@@ -45,7 +45,7 @@ public class GalacticraftTestSuite implements GalacticraftGameTest {
         final var mutable = new BlockPos.MutableBlockPos();
         context.setBlock(pos2, GCBlocks.GRATING.defaultBlockState().setValue(GratingBlock.GRATING_STATE, GratingBlock.GratingState.LOWER));
         if (!context.getBlockState(pos2).getFluidState().isEmpty()) {
-            context.fail(String.format("Expected grating to not be filled with fluid but found %s instead!", Registry.FLUID.getKey(context.getBlockState(pos2).getFluidState().getType())), pos2);
+            context.fail(String.format("Expected grating to not be filled with fluid but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos2).getFluidState().getType())), pos2);
         } else {
             for (int x = -1; x < 2; x++) {
                 for (int z = -1; z < 2; z++) {
@@ -58,20 +58,20 @@ public class GalacticraftTestSuite implements GalacticraftGameTest {
             context.setBlock(pos4, Blocks.WATER);
             context.runAtTickTime(context.getTick() + 40L, () -> {
                 if (!context.getBlockState(pos3).getFluidState().is(FluidTags.WATER)) {
-                    context.fail(String.format("Expected water to flow downward but found %s instead!", Registry.FLUID.getKey(context.getBlockState(pos3).getFluidState().getType())), pos3);
+                    context.fail(String.format("Expected water to flow downward but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos3).getFluidState().getType())), pos3);
                 } else if (!context.getBlockState(pos2).getFluidState().is(FluidTags.WATER)) {
-                    context.fail(String.format("Expected grating to be filled with water but found %s instead!", Registry.FLUID.getKey(context.getBlockState(pos2).getFluidState().getType())), pos2);
+                    context.fail(String.format("Expected grating to be filled with water but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos2).getFluidState().getType())), pos2);
                 } else if (!context.getBlockState(pos1).getFluidState().is(FluidTags.WATER)) {
-                    context.fail(String.format("Expected water to be found below grating but found %s instead!", Registry.FLUID.getKey(context.getBlockState(pos1).getFluidState().getType())), pos1);
+                    context.fail(String.format("Expected water to be found below grating but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos1).getFluidState().getType())), pos1);
                 } else {
                     context.setBlock(pos4, Blocks.AIR);
                     context.runAtTickTime(context.getTick() + 50L, () -> context.succeedWhen(() -> {
                         if (!context.getBlockState(pos3).getFluidState().isEmpty()) {
-                            context.fail(String.format("Expected water to drain itself but found %s instead!", Registry.FLUID.getKey(context.getBlockState(pos3).getFluidState().getType())), pos3);
+                            context.fail(String.format("Expected water to drain itself but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos3).getFluidState().getType())), pos3);
                         } else if (!context.getBlockState(pos2).getFluidState().isEmpty()) {
-                            context.fail(String.format("Expected grating to not be filled with fluid but found %s instead!", Registry.FLUID.getKey(context.getBlockState(pos2).getFluidState().getType())), pos2);
+                            context.fail(String.format("Expected grating to not be filled with fluid but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos2).getFluidState().getType())), pos2);
                         } else if (!context.getBlockState(pos1).getFluidState().isEmpty()) {
-                            context.fail(String.format("Expected no fluid to be found below grating but found %s instead!", Registry.FLUID.getKey(context.getBlockState(pos1).getFluidState().getType())), pos1);
+                            context.fail(String.format("Expected no fluid to be found below grating but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos1).getFluidState().getType())), pos1);
                         }
                     }));
                 }

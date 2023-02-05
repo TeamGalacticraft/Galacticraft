@@ -20,16 +20,23 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.structure;
+package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.levelgen.structure.Structure;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.core.HolderLookup;
+import org.jetbrains.annotations.Nullable;
 
-public class GCStructureKeys {
-    public static final ResourceKey<Structure> MOON_PILLAGER_BASE = ResourceKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_pillager_base"));
-    public static final ResourceKey<Structure> MOON_RUINS = ResourceKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_ruins"));
-    public static final ResourceKey<Structure> MOON_VILLAGE_HIGHLANDS = ResourceKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_village_highlands"));
+import java.util.concurrent.CompletableFuture;
+
+public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
+    public GCItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
+        super(output, completableFuture, new GCBlockTagProvider(output, completableFuture));
+    }
+
+    @Override
+    protected void addTags(HolderLookup.Provider arg) {
+
+    }
 }

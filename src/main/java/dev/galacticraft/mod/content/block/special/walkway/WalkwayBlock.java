@@ -83,7 +83,7 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
         return this.defaultBlockState()
-                .setValue(FLUID, Registry.FLUID.getKey(fluidState.getType()))
+                .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
                 .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1));
     }
 
@@ -112,7 +112,7 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
     @Override
     public BlockState updateShape(BlockState state, Direction facing, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
         if (!this.isEmpty(state)) {
-            world.scheduleTick(pos, Registry.FLUID.get(state.getValue(FLUID)), Registry.FLUID.get(state.getValue(FLUID)).getTickDelay(world));
+            world.scheduleTick(pos, BuiltInRegistries.FLUID.get(state.getValue(FLUID)), BuiltInRegistries.FLUID.get(state.getValue(FLUID)).getTickDelay(world));
         }
         return state;
     }
@@ -146,7 +146,7 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
     @Override
     public FluidState getFluidState(BlockState state) {
         if (this.isEmpty(state)) return EMPTY_STATE;
-        FluidState state1 = Registry.FLUID.get(state.getValue(FLUID)).defaultFluidState();
+        FluidState state1 = BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState();
         if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
             state1 = state1.setValue(FlowingFluid.LEVEL, state.getValue(FlowingFluid.LEVEL));
         }

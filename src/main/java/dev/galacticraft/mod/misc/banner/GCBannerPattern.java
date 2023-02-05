@@ -22,23 +22,21 @@
 
 package dev.galacticraft.mod.misc.banner;
 
-//import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPattern;
-//import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPatterns;
-
-
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GCBannerPattern {
-    public static final BannerPattern ROCKET = new BannerPattern("gc:r");
+    public static final ResourceKey<BannerPattern> ROCKET_KEY = Constant.key(Registries.BANNER_PATTERN, "rocket");
+    public static final BannerPattern ROCKET = new BannerPattern(ROCKET_KEY.location().toString());
 
     public static void register() {
-        Registry.register(BuiltInRegistries.BANNER_PATTERN, new ResourceLocation(Constant.MOD_ID, "rocket"), ROCKET);
+        Registry.register(BuiltInRegistries.BANNER_PATTERN, ROCKET_KEY, ROCKET);
     }
 }

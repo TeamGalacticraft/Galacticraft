@@ -20,15 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.structure;
+package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.levelgen.structure.StructureSet;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.core.HolderLookup;
 
-public interface GCStructureSetKeys {
-    ResourceKey<StructureSet> MOON_PILLAGER_BASES = ResourceKey.create(Registry.STRUCTURE_SET_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_pillager_bases"));
-    ResourceKey<StructureSet> MOON_RUINS = ResourceKey.create(Registry.STRUCTURE_SET_REGISTRY, new ResourceLocation(Constant.MOD_ID, "moon_ruins"));
+import java.util.concurrent.CompletableFuture;
+
+public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
+    public GCBlockTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, registriesFuture);
+    }
+
+    @Override
+    protected void addTags(HolderLookup.Provider arg) {
+
+    }
 }
