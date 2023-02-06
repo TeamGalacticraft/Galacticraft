@@ -23,11 +23,14 @@
 package dev.galacticraft.mod.world.biome;
 
 import dev.galacticraft.mod.Constant;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,10 +46,12 @@ public final class GCBiomes {
     }
 
     public static void bootstrapRegistries(BootstapContext<Biome> context) { // moj-map typo :(
-        context.register(Moon.COMET_TUNDRA, MoonBiomes.createCometTundra());
-        context.register(Moon.BASALTIC_MARE, MoonBiomes.createBasalticMare());
-        context.register(Moon.LUNAR_HIGHLANDS, MoonBiomes.createLunarHighlands());
-        context.register(Moon.OLIVINE_SPIKES, MoonBiomes.createOlivineSpikes());
+        HolderGetter<PlacedFeature> featureLookup = context.lookup(Registries.PLACED_FEATURE);
+        HolderGetter<ConfiguredWorldCarver<?>> carverLookup = context.lookup(Registries.CONFIGURED_CARVER);
+        context.register(Moon.COMET_TUNDRA, MoonBiomes.createCometTundra(featureLookup, carverLookup));
+        context.register(Moon.BASALTIC_MARE, MoonBiomes.createBasalticMare(featureLookup, carverLookup));
+        context.register(Moon.LUNAR_HIGHLANDS, MoonBiomes.createLunarHighlands(featureLookup, carverLookup));
+        context.register(Moon.OLIVINE_SPIKES, MoonBiomes.createOlivineSpikes(featureLookup, carverLookup));
     }
 
     @Contract(pure = true)

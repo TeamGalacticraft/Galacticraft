@@ -61,6 +61,7 @@ public final class GCStructureTemplatePools {
         public static final class Village {
             public static final ResourceKey<StructureTemplatePool> STARTS = key("village/moon/highlands/starts");
             public static final ResourceKey<StructureTemplatePool> ANIMALS = key("village/moon/highlands/animals");
+            public static final ResourceKey<StructureTemplatePool> DECOR = key("village/moon/highlands/decor");
             public static final ResourceKey<StructureTemplatePool> HOUSES = key("village/moon/highlands/houses");
             public static final ResourceKey<StructureTemplatePool> TERMINATORS = key("village/moon/highlands/terminators");
             public static final ResourceKey<StructureTemplatePool> IRON_GOLEM = key("village/moon/highlands/iron_golem");
@@ -75,7 +76,7 @@ public final class GCStructureTemplatePools {
         return Constant.key(Registries.TEMPLATE_POOL, id);
     }
 
-    public static void boostrapRegistries(BootstapContext<StructureTemplatePool> context) {
+    public static void bootstrapRegistries(BootstapContext<StructureTemplatePool> context) {
         HolderGetter<StructureTemplatePool> templateLookup = context.lookup(Registries.TEMPLATE_POOL);
         Holder<StructureTemplatePool> empty = templateLookup.getOrThrow(EMPTY);
         Holder<StructureProcessorList> emptyList = context.lookup(Registries.PROCESSOR_LIST).getOrThrow(ProcessorLists.EMPTY);
@@ -98,6 +99,15 @@ public final class GCStructureTemplatePools {
                         Pair.of(single(Constant.id("moon_pillager_outpost/base/small_base_2t"), emptyList), 3),
                         Pair.of(single(Constant.id("moon_pillager_outpost/base/small_base_3"), emptyList), 2),
                         Pair.of(single(Constant.id("moon_pillager_outpost/base/small_base_4"), emptyList), 1)
+                ),
+                Projection.RIGID
+        ));
+        context.register(Moon.PillagerOutpost.BASE_TERMINATORS, new StructureTemplatePool(
+                empty,
+                ImmutableList.of(
+                        Pair.of(single(Constant.id("moon_pillager_outpost/terminator/terminator_base_1"), emptyList), 3),
+                        Pair.of(single(Constant.id("moon_pillager_outpost/terminator/terminator_base_2"), emptyList), 4),
+                        Pair.of(single(Constant.id("moon_pillager_outpost/terminator/terminator_base_3"), emptyList), 4)
                 ),
                 Projection.RIGID
         ));
@@ -165,143 +175,112 @@ public final class GCStructureTemplatePools {
                 ),
                 Projection.RIGID
         ));
-
+        
+        context.register(Moon.Village.STARTS, new StructureTemplatePool(
+                empty,
+                ImmutableList.of(
+                        Pair.of(single(Constant.id("village/moon/highlands/starts/start_1"), emptyList), 3),
+                        Pair.of(single(Constant.id("village/moon/highlands/starts/start_2"), emptyList), 4),
+                        Pair.of(single(Constant.id("village/moon/highlands/starts/start_3"), emptyList), 5),
+                        Pair.of(StructurePoolElement.empty(), 1)
+                ),
+                Projection.RIGID
+        ));
+        
+        context.register(Moon.Village.ANIMALS, new StructureTemplatePool(
+                empty,
+                ImmutableList.of(
+                        Pair.of(StructurePoolElement.empty(), 1)
+                ),
+                Projection.RIGID
+        ));
+        context.register(Moon.Village.DECOR, new StructureTemplatePool(
+                empty,
+                ImmutableList.of(
+                        Pair.of(single(Constant.id("village/moon/highlands/decor/lamp"), emptyList), 2),
+                        Pair.of(StructurePoolElement.empty(), 1)
+                ),
+                Projection.RIGID
+        ));
+        context.register(Moon.Village.HOUSES, new StructureTemplatePool(
+                templateLookup.getOrThrow(Moon.Village.TERMINATORS),
+                ImmutableList.of(
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/house_1"), emptyList), 4),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/greenhouse"), emptyList), 2),
+                        Pair.of(StructurePoolElement.empty(), 1)
+                ),
+                Projection.RIGID
+        ));
+        context.register(Moon.Village.IRON_GOLEM, new StructureTemplatePool(
+                empty,
+                ImmutableList.of(
+                        Pair.of(StructurePoolElement.empty(), 1)
+                ),
+                Projection.RIGID
+        ));
+        context.register(Moon.Village.SAPLINGS, new StructureTemplatePool(
+                empty,
+                ImmutableList.of(
+                        Pair.of(single(Constant.id("village/moon/highlands/misc/saplings/oak"), emptyList), 3),
+                        Pair.of(single(Constant.id("village/moon/highlands/misc/saplings/birch"), emptyList), 3),
+                        Pair.of(single(Constant.id("village/moon/highlands/misc/saplings/spruce"), emptyList), 3),
+                        Pair.of(single(Constant.id("village/moon/highlands/misc/saplings/dark_oak"), emptyList), 2),
+                        Pair.of(single(Constant.id("village/moon/highlands/misc/saplings/jungle"), emptyList), 2),
+                        Pair.of(single(Constant.id("village/moon/highlands/misc/saplings/acacia"), emptyList), 2),
+                        Pair.of(single(Constant.id("village/moon/highlands/misc/saplings/dead"), emptyList), 10)
+                ),
+                Projection.RIGID
+        ));
+        context.register(Moon.Village.STREETS, new StructureTemplatePool(
+                templateLookup.getOrThrow(Moon.Village.TERMINATORS),
+                ImmutableList.of(
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/corner_01"), emptyList), 2),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/corner_02"), emptyList), 2),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/corner_03"), emptyList), 2),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/straight_01"), emptyList), 4),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/straight_02"), emptyList), 4),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/straight_03"), emptyList), 7),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/straight_04"), emptyList), 7),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/straight_05"), emptyList), 3),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/straight_06"), emptyList), 4),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_01"), emptyList), 1),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_02"), emptyList), 2),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_03"), emptyList), 1),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_04"), emptyList), 2),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_05"), emptyList), 2),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_06"), emptyList), 2),
+                        Pair.of(single(Constant.id("village/moon/highlands/streets/turn_01"), emptyList), 3),
+                        Pair.of(StructurePoolElement.empty(), 3)
+                ),
+                Projection.TERRAIN_MATCHING
+        ));
+        context.register(Moon.Village.TERMINATORS, new StructureTemplatePool(
+                empty,
+                ImmutableList.of(
+                        Pair.of(single(Constant.id("village/moon/highlands/terminators/terminator_01"), emptyList), 1),
+                        Pair.of(single(Constant.id("village/moon/highlands/terminators/terminator_02"), emptyList), 1),
+                        Pair.of(single(Constant.id("village/moon/highlands/terminators/terminator_03"), emptyList), 1),
+                        Pair.of(single(Constant.id("village/moon/highlands/terminators/terminator_04"), emptyList), 1)
+                ),
+                Projection.TERRAIN_MATCHING
+        ));
+        context.register(Moon.Village.TREES, new StructureTemplatePool(
+                empty,
+                ImmutableList.of(
+                        Pair.of(StructurePoolElement.empty(), 1)
+                ),
+                Projection.RIGID
+        ));
+        context.register(Moon.Village.VILLAGERS, new StructureTemplatePool(
+                empty,
+                ImmutableList.of(
+                        Pair.of(single(Constant.id("village/moon/highlands/villagers/nitwit"), emptyList), 2),
+                        Pair.of(single(Constant.id("village/moon/highlands/villagers/baby"), emptyList), 1),
+                        Pair.of(single(Constant.id("village/moon/highlands/villagers/unemployed"), emptyList), 10)
+                ),
+                Projection.RIGID
+        ));
     }
-
-    //    public static final Holder<StructureTemplatePool> START_POOL = Pools.register(new StructureTemplatePool(
-    //            Constant.id("village/moon/highlands/starts"),
-    //            Constant.Misc.EMPTY,
-    //            ImmutableList.of(
-    //                    Pair.of(single(Constant.id("village/moon/highlands/starts/start_1")), 3),
-    //                    Pair.of(single(Constant.id("village/moon/highlands/starts/start_2")), 4),
-    //                    Pair.of(single(Constant.id("village/moon/highlands/starts/start_3")), 5),
-    //                    Pair.of(StructurePoolElement.empty(), 1)
-    //            ),
-    //            Projection.RIGID
-    //    ));
-    //
-    //    public static void register() {
-    //        Pools.register(
-    //                new StructureTemplatePool(
-    //                        Constant.id("village/moon/highlands/animals"),
-    //                        Constant.Misc.EMPTY,
-    //                        ImmutableList.of(
-    //                                Pair.of(single(Constant.Misc.EMPTY), 1)
-    //                        ),
-    //                        Projection.RIGID
-    //                )
-    //        );
-    //        Pools.register(
-    //                new StructureTemplatePool(
-    //                        Constant.id("village/moon/highlands/decor"),
-    //                        Constant.Misc.EMPTY,
-    //                        ImmutableList.of(
-    //                                Pair.of(single(Constant.id("village/moon/highlands/decor/lamp")), 2),
-    //                                Pair.of(single(Constant.Misc.EMPTY), 1)
-    //                        ),
-    //                        Projection.RIGID
-    //                )
-    //        );
-    //        Pools.register(
-    //                new StructureTemplatePool(
-    //                        Constant.id("village/moon/highlands/houses"),
-    //                        Constant.id("village/moon/highlands/terminators"),
-    //                        ImmutableList.of(
-    //                                Pair.of(single(Constant.id("village/moon/highlands/houses/house_1")), 4),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/houses/greenhouse")), 2),
-    //                                Pair.of(single(Constant.Misc.EMPTY), 1)
-    //                        ),
-    //                        Projection.RIGID
-    //                )
-    //        );
-    //        Pools.register(
-    //                new StructureTemplatePool(
-    //                        Constant.id("village/moon/highlands/iron_golem"),
-    //                        Constant.Misc.EMPTY,
-    //                        ImmutableList.of(
-    //                                Pair.of(single(Constant.Misc.EMPTY), 1)
-    //                        ),
-    //                        Projection.RIGID
-    //                )
-    //        );
-    //        Pools.register(
-    //                new StructureTemplatePool(
-    //                        Constant.id("village/moon/highlands/saplings"),
-    //                        Constant.Misc.EMPTY,
-    //                        ImmutableList.of(
-    //                                Pair.of(single(Constant.id("village/moon/highlands/misc/saplings/oak")), 3),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/misc/saplings/birch")), 3),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/misc/saplings/spruce")), 3),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/misc/saplings/dark_oak")), 2),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/misc/saplings/jungle")), 2),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/misc/saplings/acacia")), 2),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/misc/saplings/dead")), 10)
-    //                        ),
-    //                        Projection.RIGID
-    //                )
-    //        );
-    //        Pools.register(
-    //                new StructureTemplatePool(
-    //                        Constant.id("village/moon/highlands/streets"),
-    //                        Constant.id("village/moon/highlands/terminators"),
-    //                        ImmutableList.of(
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/corner_01")), 2),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/corner_02")), 2),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/corner_03")), 2),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/straight_01")), 4),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/straight_02")), 4),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/straight_03")), 7),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/straight_04")), 7),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/straight_05")), 3),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/straight_06")), 4),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_01")), 1),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_02")), 2),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_03")), 1),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_04")), 2),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_05")), 2),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_06")), 2),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/streets/turn_01")), 3),
-    //                                Pair.of(StructurePoolElement.empty(), 3)
-    //                        ),
-    //                        Projection.TERRAIN_MATCHING
-    //                )
-    //        );
-    //        Pools.register(
-    //                new StructureTemplatePool(
-    //                        Constant.id("village/moon/highlands/terminators"),
-    //                        Constant.Misc.EMPTY,
-    //                        ImmutableList.of(
-    //                                Pair.of(single(Constant.id("village/moon/highlands/terminators/terminator_01")), 1),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/terminators/terminator_02")), 1),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/terminators/terminator_03")), 1),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/terminators/terminator_04")), 1)
-    //                        ),
-    //                        Projection.TERRAIN_MATCHING
-    //                )
-    //        );
-    //        Pools.register(
-    //                new StructureTemplatePool(
-    //                        Constant.id("village/moon/highlands/trees"),
-    //                        Constant.Misc.EMPTY,
-    //                        ImmutableList.of(
-    //                                Pair.of(StructurePoolElement.empty(), 1)
-    //                        ),
-    //                        Projection.RIGID
-    //                )
-    //        );
-    //        Pools.register(
-    //                new StructureTemplatePool(
-    //                        Constant.id("village/moon/highlands/villagers"),
-    //                        Constant.Misc.EMPTY,
-    //                        ImmutableList.of(
-    //                                Pair.of(single(Constant.id("village/moon/highlands/villagers/nitwit")), 2),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/villagers/baby")), 1),
-    //                                Pair.of(single(Constant.id("village/moon/highlands/villagers/unemployed")), 10)
-    //                        ),
-    //                        Projection.RIGID
-    //                )
-    //        );
-    //    }
 
     public static Function<Projection, LegacySinglePoolElement> single(ResourceLocation id, Holder<StructureProcessorList> list) { // Legacy means that air CAN be replaced by worldgen.
         return projection -> new LegacySinglePoolElement(Either.left(id), list, projection);

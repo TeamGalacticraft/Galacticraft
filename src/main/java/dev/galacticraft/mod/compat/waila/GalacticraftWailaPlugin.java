@@ -39,7 +39,7 @@ public class GalacticraftWailaPlugin implements IWailaPlugin {
         public void appendTail(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
             if (Screen.hasShiftDown()) {
                 MachineConfiguration configuration = MachineConfiguration.create();
-                configuration.readNbt(accessor.getServerData(), null);
+                configuration.readTag(accessor.getServerData().getCompound("config"));
                 tooltip.addLine(Component.translatable("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneActivation().getName()).setStyle(Constant.Text.Color.RED_STYLE));
                 if (configuration.getSecurity().getOwner() != null) {
                     String username = configuration.getSecurity().getUsername();
@@ -51,7 +51,7 @@ public class GalacticraftWailaPlugin implements IWailaPlugin {
 
     @Override
     public void register(IRegistrar registrar) {
-        registrar.addBlockData((data, accessor, config) -> ((MachineBlockEntity) accessor.getTarget()).getConfiguration().writeNbt(data, null), MachineBlock.class);
+        registrar.addBlockData((data, accessor, config) -> data.put("config", ((MachineBlockEntity) accessor.getTarget()).getConfiguration().createTag()), MachineBlock.class);
         registrar.addComponent(COMPONENT_PROVIDER, TooltipPosition.TAIL, MachineBlock.class);
     }
 }

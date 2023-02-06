@@ -311,11 +311,14 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(OXYGEN_STORAGE_MODULE);
         dropSelf(FUEL_LOADER);
 
+        dropSelf(PLAYER_TRANSPORT_TUBE);
+        dropSelf(NASA_WORKBENCH);
+
         add(AIR_LOCK_SEAL, noDrop());
     }
 
     @Override
     public void accept(BiConsumer<ResourceLocation, LootTable.Builder> resourceLocationBuilderBiConsumer) {
-
+        this.generate(resourceLocationBuilderBiConsumer); // remapping bug??
     }
 }

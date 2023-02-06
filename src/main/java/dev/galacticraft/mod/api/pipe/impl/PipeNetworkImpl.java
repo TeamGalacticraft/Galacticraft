@@ -255,7 +255,7 @@ public class PipeNetworkImpl implements PipeNetwork {
             return stack.getAmount() + skipped;
         }
         var ref = new Object() {
-            FluidStack available = FluidStack.EMPTY;
+            FluidStack available = FluidStack.empty();
         };
         ref.available = stack;
         double ratio = Math.min((double)stack.getAmount() / (double)requested, 1.0);
@@ -310,7 +310,7 @@ public class PipeNetworkImpl implements PipeNetwork {
             for (ObjectIterator<Object2ObjectMap.Entry<BlockPos, Storage<FluidVariant>>> it = this.getInsertable().object2ObjectEntrySet().fastIterator(); it.hasNext(); ) {
                 Map.Entry<BlockPos, Storage<FluidVariant>> entry = it.next();
                 if (entry.getKey().equals(source)) continue;
-                long success = entry.getValue().simulateInsert(FluidVariant.of(stack.getFluid(), stack.getNbt()), stack.getAmount(), context);
+                long success = entry.getValue().simulateInsert(FluidVariant.of(stack.getFluid(), stack.getTag()), stack.getAmount(), context);
                 if (success > 0) {
                     requested = requested + success;
                     if (requested >= this.maxTransferRate - this.transferred) {

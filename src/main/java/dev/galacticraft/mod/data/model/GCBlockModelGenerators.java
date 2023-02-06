@@ -25,6 +25,7 @@ package dev.galacticraft.mod.data.model;
 import dev.galacticraft.mod.mixin.BlockFamilyProviderAccessor;
 import dev.galacticraft.mod.mixin.BlockModelGeneratorsAccessor;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.model.ModelTemplate;
@@ -61,7 +62,7 @@ public class GCBlockModelGenerators extends BlockModelGenerators {
         }
 
         public BlockModelGenerators.BlockFamilyProvider fullBlock(Block block, ModelTemplate modelTemplate) {
-            if (Registry.BLOCK.getKey(block).getPath().contains("detailed"))
+            if (BuiltInRegistries.BLOCK.getKey(block).getPath().contains("detailed"))
                 ((BlockFamilyProviderAccessor)this).setFullBlock(provider.get(block).getTemplate().create(block, ((BlockFamilyProviderAccessor)this).getMapping(), parent.modelOutput));
             else
                 ((BlockFamilyProviderAccessor)this).setFullBlock(modelTemplate.create(block, ((BlockFamilyProviderAccessor)this).getMapping(), parent.modelOutput));
@@ -125,7 +126,7 @@ public class GCBlockModelGenerators extends BlockModelGenerators {
             ResourceLocation resourceLocation3 = ModelTemplates.FENCE_GATE_WALL_OPEN.create(block, ((BlockFamilyProviderAccessor)this).getMapping(), parent.modelOutput);
             ResourceLocation resourceLocation4 = ModelTemplates.FENCE_GATE_WALL_CLOSED.create(block, ((BlockFamilyProviderAccessor)this).getMapping(), parent.modelOutput);
             parent.blockStateOutput
-                    .accept(BlockModelGenerators.createFenceGate(block, resourceLocation, resourceLocation2, resourceLocation3, resourceLocation4));
+                    .accept(BlockModelGenerators.createFenceGate(block, resourceLocation, resourceLocation2, resourceLocation3, resourceLocation4, true));
             return this;
         }
 

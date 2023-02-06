@@ -50,7 +50,7 @@ import dev.galacticraft.mod.events.ClientEventHandler;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.particle.GCParticleType;
 import dev.galacticraft.mod.screen.GCMenuTypes;
-import dev.galacticraft.mod.world.dimension.GCDimensionType;
+import dev.galacticraft.mod.world.dimension.GCDimensions;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -64,7 +64,6 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluids;
 
 /**
@@ -78,30 +77,6 @@ public class GalacticraftClient implements ClientModInitializer {
         Galacticraft.LOGGER.info("Starting client initialization.");
         ClientEventHandler.init();
         CapesLoader.load();
-
-        ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register((spriteAtlasTexture, registry) -> {
-            for (int i = 0; i <= 8; i++) {
-                registry.register(new ResourceLocation(Constant.MOD_ID, "block/energy_storage_module_" + i));
-                registry.register(new ResourceLocation(Constant.MOD_ID, "block/oxygen_storage_module_" + i));
-            }
-
-            registry.register(new ResourceLocation(Constant.MOD_ID, "block/oxygen_sealer_top"));
-            registry.register(new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_HEAD));
-            registry.register(new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_CHEST));
-            registry.register(new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_PANTS));
-            registry.register(new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_BOOTS));
-
-            registry.register(new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_MASK));
-            registry.register(new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_GEAR));
-            registry.register(new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_TANK));
-
-            registry.register(Constant.Fluid.getId(Constant.Fluid.CRUDE_OIL_STILL));
-            registry.register(Constant.Fluid.getId(Constant.Fluid.CRUDE_OIL_FLOWING));
-            registry.register(Constant.Fluid.getId(Constant.Fluid.FUEL_STILL));
-            registry.register(Constant.Fluid.getId(Constant.Fluid.FUEL_FLOWING));
-
-            registry.register(new ResourceLocation("galacticraft", "model/rocket"));
-        });
 
         MenuScreens.register(GCMenuTypes.BASIC_SOLAR_PANEL, BasicSolarPanelScreen::new);
         MenuScreens.register(GCMenuTypes.ADVANCED_SOLAR_PANEL, AdvancedSolarPanelScreen::new);
@@ -185,10 +160,10 @@ public class GalacticraftClient implements ClientModInitializer {
             return null;
         });
 
-        DimensionRenderingRegistry.registerDimensionEffects(GCDimensionType.MOON_KEY.location(), MoonDimensionEffects.INSTANCE);
-        DimensionRenderingRegistry.registerCloudRenderer(GCDimensionType.MOON_KEY, EmptyCloudRenderer.INSTANCE);
-        DimensionRenderingRegistry.registerWeatherRenderer(GCDimensionType.MOON_KEY, EmptyWeatherRenderer.INSTANCE);
-        DimensionRenderingRegistry.registerSkyRenderer(GCDimensionType.MOON_KEY, MoonSkyRenderer.INSTANCE);
+        DimensionRenderingRegistry.registerDimensionEffects(GCDimensions.MOON.location(), MoonDimensionEffects.INSTANCE);
+        DimensionRenderingRegistry.registerCloudRenderer(GCDimensions.MOON, EmptyCloudRenderer.INSTANCE);
+        DimensionRenderingRegistry.registerWeatherRenderer(GCDimensions.MOON, EmptyWeatherRenderer.INSTANCE);
+        DimensionRenderingRegistry.registerSkyRenderer(GCDimensions.MOON, MoonSkyRenderer.INSTANCE);
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
 

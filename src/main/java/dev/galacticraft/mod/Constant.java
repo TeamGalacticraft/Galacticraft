@@ -50,7 +50,7 @@ public interface Constant {
         return new ResourceLocation(MOD_ID, id);  
     }
 
-    @Contract(value = "_ -> new", pure = true)
+    @Contract(value = "_, _ -> new", pure = true)
     static @NotNull <T> ResourceKey<T> key(ResourceKey<Registry<T>> registry, String id) {
         return ResourceKey.create(registry, Constant.id(id));
     }

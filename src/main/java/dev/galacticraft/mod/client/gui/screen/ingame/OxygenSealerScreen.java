@@ -48,7 +48,7 @@ public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, M
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new Button(this.leftPos + 60, this.topPos + 50, 80, 15, Component.literal("Disable Seal"), button -> ClientPlayNetworking.send(Constant.Packet.DISABLE_SEAL, PacketByteBufs.create())));
+        addRenderableWidget(Button.builder(Component.literal("Disable Seal"), button -> ClientPlayNetworking.send(Constant.Packet.DISABLE_SEAL, PacketByteBufs.create())).pos(this.leftPos + 60, this.topPos + 50).size(80, 15).build());
     }
 
     @Override

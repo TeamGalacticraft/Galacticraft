@@ -42,8 +42,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
     @Override
     public void render(ItemStack stack, ItemTransforms.TransformType mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         RocketData data = RocketData.fromNbt(stack.getTag());
-        rocket.setParts(data.parts());
-        rocket.setColor(data.color());
+        rocket.setData(data);
         rocket.setOldPosAndRot();
         matrices.pushPose();
         if (mode == ItemTransforms.TransformType.GUI) {

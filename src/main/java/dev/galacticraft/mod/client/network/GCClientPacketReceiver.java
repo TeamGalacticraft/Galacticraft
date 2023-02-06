@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.network;
 
+import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
@@ -40,6 +41,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -81,14 +83,15 @@ public class GCClientPacketReceiver {
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "open_screen"), (client, handler, buf, responseSender) -> {
             String screen = buf.readUtf();
             switch (screen) {
-                case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(false, RocketData.empty(), true, fromBody)));
+                case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(false, RocketData.empty(), true, null)));
                 default -> Galacticraft.LOGGER.error("No screen found!");
             }
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "planet_menu_open"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-            RocketData rocketData = RocketData.fromNbt(packetByteBuf.readNbt());
-            minecraftClient.execute(() -> minecraftClient.setScreen(new CelestialSelectionScreen(false, rocketData, true, fromBody)));
+        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "planet_menu_open"), (minecraftClient, clientPlayNetworkHandler, buf, packetSender) -> {
+            RocketData rocketData = RocketData.fromNbt(Objects.requireNonNull(buf.readNbt()));
+            int cBody = buf.readInt();
+            minecraftClient.execute(() -> minecraftClient.setScreen(new CelestialSelectionScreen(false, rocketData, true, cBody == -1 ? null : clientPlayNetworkHandler.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getHolder(cBody).orElseThrow().value())));
         });
 
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "rocket_spawn"), ((client, handler, buf, responseSender) -> {
@@ -116,8 +119,7 @@ public class GCClientPacketReceiver {
                 entity.setId(entityID);
                 entity.setUUID(entityUUID);
 
-                entity.setColor(data.color());
-                entity.setParts(data.parts());
+                entity.setData(data);
 
                 Minecraft.getInstance().level.putNonPlayerEntity(entityID, entity);
             });

@@ -27,49 +27,74 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.*;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
 public class GCOrePlacedFeature {
     // OVERWORLD
-    public static final Holder<PlacedFeature> ORE_SILICON = register("ore_silicon", new PlacedFeature(GCOreConfiguredFeature.ORE_SILICON_SMALL, modifiersWithCount(5, HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-80), VerticalAnchor.aboveBottom(80))))); //todo actual ore numbers
-    public static final Holder<PlacedFeature> ORE_SILICON_LARGE = register("ore_silicon_large", new PlacedFeature(GCOreConfiguredFeature.ORE_SILICON_LARGE, modifiersWithRarity(11, HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-80), VerticalAnchor.aboveBottom(80)))));
+    public static final ResourceKey<PlacedFeature> ORE_SILICON = key("ore_silicon"); //todo actual ore numbers
+    public static final ResourceKey<PlacedFeature> ORE_SILICON_LARGE = key("ore_silicon_large");
     
-    public static final Holder<PlacedFeature> ORE_TIN_UPPER = register("ore_tin_upper", new PlacedFeature(GCOreConfiguredFeature.ORE_TIN, modifiersWithCount(99, HeightRangePlacement.triangle(VerticalAnchor.absolute(90), VerticalAnchor.absolute(384)))));
-    public static final Holder<PlacedFeature> ORE_TIN_MIDDLE = register("ore_tin_middle", new PlacedFeature(GCOreConfiguredFeature.ORE_TIN, modifiersWithCount(11, HeightRangePlacement.triangle(VerticalAnchor.absolute(-16), VerticalAnchor.absolute(56)))));
-    public static final Holder<PlacedFeature> ORE_TIN_SMALL = register("ore_tin_small", new PlacedFeature(GCOreConfiguredFeature.ORE_TIN_SMALL, modifiersWithCount(11, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(80)))));
+    public static final ResourceKey<PlacedFeature> ORE_TIN_UPPER = key("ore_tin_upper");
+    public static final ResourceKey<PlacedFeature> ORE_TIN_MIDDLE = key("ore_tin_middle");
+    public static final ResourceKey<PlacedFeature> ORE_TIN_SMALL = key("ore_tin_small");
 
-    public static final Holder<PlacedFeature> ORE_ALUMINUM_MIDDLE = register("ore_aluminum_middle", new PlacedFeature(GCOreConfiguredFeature.ORE_ALUMINUM, modifiersWithCount(10, HeightRangePlacement.triangle(VerticalAnchor.absolute(-96), VerticalAnchor.absolute(0)))));
-    public static final Holder<PlacedFeature> ORE_ALUMINUM_SMALL = register("ore_aluminum_small", new PlacedFeature(GCOreConfiguredFeature.ORE_ALUMINUM_SMALL, modifiersWithCount(10, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(16)))));
+    public static final ResourceKey<PlacedFeature> ORE_ALUMINUM_MIDDLE = key("ore_aluminum_middle");
+    public static final ResourceKey<PlacedFeature> ORE_ALUMINUM_SMALL = key("ore_aluminum_small");
 
     // MOON
-    public static final Holder<PlacedFeature> BASALT_DISK_MOON = register("disk_basalt_moon", new PlacedFeature(GCOreConfiguredFeature.BASALT_DISK_MOON, modifiersWithCount(14, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.top()))));
+    public static final ResourceKey<PlacedFeature> BASALT_DISK_MOON = key("disk_basalt_moon");
 
-    public static final Holder<PlacedFeature> ORE_COPPER_MOON = register("ore_copper_moon", new PlacedFeature(GCOreConfiguredFeature.ORE_COPPER_SMALL_MOON, modifiersWithCount(18, HeightRangePlacement.triangle(VerticalAnchor.absolute(0), VerticalAnchor.absolute(112)))));
-    public static final Holder<PlacedFeature> ORE_COPPER_LARGE_MOON = register("ore_copper_large_moon", new PlacedFeature(GCOreConfiguredFeature.ORE_COPPER_LARGE_MOON, modifiersWithCount(17, HeightRangePlacement.triangle(VerticalAnchor.absolute(0), VerticalAnchor.absolute(112)))));
+    public static final ResourceKey<PlacedFeature> ORE_COPPER_MOON = key("ore_copper_moon");
+    public static final ResourceKey<PlacedFeature> ORE_COPPER_LARGE_MOON = key("ore_copper_large_moon");
 
-    public static final Holder<PlacedFeature> ORE_TIN_UPPER_MOON = register("ore_tin_upper_moon", new PlacedFeature(GCOreConfiguredFeature.ORE_TIN_MOON, modifiersWithCount(54, HeightRangePlacement.triangle(VerticalAnchor.absolute(90), VerticalAnchor.absolute(384)))));
-    public static final Holder<PlacedFeature> ORE_TIN_MIDDLE_MOON = register("ore_tin_middle_moon", new PlacedFeature(GCOreConfiguredFeature.ORE_TIN_MOON, modifiersWithCount(6, HeightRangePlacement.triangle(VerticalAnchor.absolute(-16), VerticalAnchor.absolute(56)))));
-    public static final Holder<PlacedFeature> ORE_TIN_SMALL_MOON = register("ore_tin_small_moon", new PlacedFeature(GCOreConfiguredFeature.ORE_TIN_SMALL_MOON, modifiersWithCount(6, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(80)))));
+    public static final ResourceKey<PlacedFeature> ORE_TIN_UPPER_MOON = key("ore_tin_upper_moon");
+    public static final ResourceKey<PlacedFeature> ORE_TIN_MIDDLE_MOON = key("ore_tin_middle_moon");
+    public static final ResourceKey<PlacedFeature> ORE_TIN_SMALL_MOON = key("ore_tin_small_moon");
 
     public static void register() {
         BiomeModifications.create(Constant.id("ores")).add(ModificationPhase.ADDITIONS, BiomeSelectors.foundInOverworld(), context -> {
-            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_SILICON.value());
-            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_SILICON_LARGE.value());
-            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_TIN_UPPER.value());
-            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_TIN_MIDDLE.value());
-            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_TIN_SMALL.value());
-            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_ALUMINUM_MIDDLE.value());
-            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_ALUMINUM_SMALL.value());
+            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_SILICON);
+            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_SILICON_LARGE);
+            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_TIN_UPPER);
+            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_TIN_MIDDLE);
+            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_TIN_SMALL);
+            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_ALUMINUM_MIDDLE);
+            context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_ALUMINUM_SMALL);
         });
     }
 
-    private static Holder<PlacedFeature> register(String id, PlacedFeature feature) {
-        return BuiltInRegistries.register(BuiltInRegistries.PLACED_FEATURE, Constant.id(id), feature);
+    public static void bootstrapRegistries(BootstapContext<PlacedFeature> context) {
+        HolderGetter<ConfiguredFeature<?, ?>> lookup = context.lookup(Registries.CONFIGURED_FEATURE);
+        context.register(ORE_SILICON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_SILICON_SMALL), modifiersWithCount(5, HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-80), VerticalAnchor.aboveBottom(80)))));
+        context.register(ORE_SILICON_LARGE, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_SILICON_LARGE), modifiersWithRarity(11, HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-80), VerticalAnchor.aboveBottom(80)))));
+        context.register(ORE_TIN_UPPER, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN), modifiersWithCount(99, HeightRangePlacement.triangle(VerticalAnchor.absolute(90), VerticalAnchor.absolute(384)))));
+        context.register(ORE_TIN_MIDDLE, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN), modifiersWithCount(11, HeightRangePlacement.triangle(VerticalAnchor.absolute(-16), VerticalAnchor.absolute(56)))));
+        context.register(ORE_TIN_SMALL, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN_SMALL), modifiersWithCount(11, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(80)))));
+        context.register(ORE_ALUMINUM_MIDDLE, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_ALUMINUM), modifiersWithCount(10, HeightRangePlacement.triangle(VerticalAnchor.absolute(-96), VerticalAnchor.absolute(0)))));
+        context.register(ORE_ALUMINUM_SMALL, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_ALUMINUM_SMALL), modifiersWithCount(10, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(16)))));
+        context.register(BASALT_DISK_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.BASALT_DISK_MOON), modifiersWithCount(14, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.top()))));
+        context.register(ORE_COPPER_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_COPPER_SMALL_MOON), modifiersWithCount(18, HeightRangePlacement.triangle(VerticalAnchor.absolute(0), VerticalAnchor.absolute(112)))));
+        context.register(ORE_COPPER_LARGE_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_COPPER_LARGE_MOON), modifiersWithCount(17, HeightRangePlacement.triangle(VerticalAnchor.absolute(0), VerticalAnchor.absolute(112)))));
+        context.register(ORE_TIN_UPPER_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN_MOON), modifiersWithCount(54, HeightRangePlacement.triangle(VerticalAnchor.absolute(90), VerticalAnchor.absolute(384)))));
+        context.register(ORE_TIN_MIDDLE_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN_MOON), modifiersWithCount(6, HeightRangePlacement.triangle(VerticalAnchor.absolute(-16), VerticalAnchor.absolute(56)))));
+        context.register(ORE_TIN_SMALL_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN_SMALL_MOON), modifiersWithCount(6, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(80)))));
+    }
+
+    @Contract(pure = true)
+    private static @NotNull ResourceKey<PlacedFeature> key(String id) {
+        return Constant.key(Registries.PLACED_FEATURE, id);
     }
 
     private static @Unmodifiable List<PlacementModifier> modifiers(PlacementModifier countModifier, PlacementModifier heightModifier) {

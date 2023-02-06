@@ -46,6 +46,7 @@ public class GCFluidTagProvider extends FabricTagProvider.FluidTagProvider {
                 .add(GCFluids.FLOWING_FUEL.builtInRegistryHolder().key());
         tag(GCTags.LIQUID_OXYGEN)
                 .add(GCFluids.LIQUID_OXYGEN.builtInRegistryHolder().key());
-        tag(GCTags.OXYGEN).add(Gases.OXYGEN.builtInRegistryHolder().key());
+        tag(GCTags.OXYGEN)
+                .add(Gases.OXYGEN.builtInRegistryHolder().key());
     }
 }

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.network;
 
 import dev.galacticraft.api.accessor.SatelliteAccessor;
-import dev.galacticraft.api.registry.AddonRegistry;
+import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.entity.Rocket;
@@ -127,8 +127,9 @@ public class GCServerPacketReceiver {
                 server.execute(() -> {
                     ResourceLocation id = buffer.readResourceLocation();
                     CelestialBody<?, ?> body = ((SatelliteAccessor) server).getSatellites().get(id);
-                    if (body == null) body = server.registryAccess().registryOrThrow(AddonRegistry.CELESTIAL_BODY_KEY).get(id);
-                    if (body.type() instanceof Landable landable && (player.getCelestialScreenState().canTravelTo(server.registryAccess(), body) || player.getCelestialScreenState() == RocketData.empty())) {
+                    CelestialBody<?, ?> fromBody = CelestialBody.getByDimension(player.getLevel()).orElseThrow();
+                    if (body == null) body = server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(id);
+                    if (body.type() instanceof Landable landable && (player.getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body) || player.getCelestialScreenState() == RocketData.empty())) {
                         player.setCelestialScreenState(null);
                         player.teleportTo(server.getLevel(landable.world(body.config())), player.getX(), 500, player.getZ(), player.getYRot(), player.getXRot());
                     } else {
@@ -141,7 +142,7 @@ public class GCServerPacketReceiver {
         }));
 
         ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.CREATE_SATELLITE, (server, player, handler, buf, responseSender) -> {
-            SatelliteType.registerSatellite(server, player, Objects.requireNonNull(server.registryAccess().registryOrThrow(AddonRegistry.CELESTIAL_BODY_KEY).get(buf.readResourceLocation())), server.getStructureManager().get(Constant.Structure.SPACE_STATION).orElseThrow());
+            SatelliteType.registerSatellite(server, player, Objects.requireNonNull(server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(buf.readResourceLocation())), server.getStructureManager().get(Constant.Structure.SPACE_STATION).orElseThrow());
         });
     }
 }

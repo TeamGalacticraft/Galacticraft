@@ -62,7 +62,7 @@ public class GCStructures {
         return Constant.key(Registries.STRUCTURE, id);
     }
 
-    public static void boostrapRegistries(BootstapContext<Structure> context) {
+    public static void bootstrapRegistries(BootstapContext<Structure> context) {
         HolderGetter<Biome> biomeLookup = context.lookup(Registries.BIOME);
         HolderGetter<StructureTemplatePool> templatePoolLookup = context.lookup(Registries.TEMPLATE_POOL);
         context.register(Moon.RUINS, new MoonRuinsStructure(Structures.structure(biomeLookup.getOrThrow(GCTags.MOON_RUINS_HAS_STRUCTURE), TerrainAdjustment.BEARD_THIN)));
@@ -83,7 +83,7 @@ public class GCStructures {
                         Collections.emptyMap(),
                         GenerationStep.Decoration.SURFACE_STRUCTURES,
                         TerrainAdjustment.BEARD_THIN),
-                GCStructureTemplatePools.Moon.Village.STARTS,
+                templatePoolLookup.getOrThrow(GCStructureTemplatePools.Moon.Village.STARTS),
                 6,
                 ConstantHeight.of(VerticalAnchor.absolute(0)),
                 true,

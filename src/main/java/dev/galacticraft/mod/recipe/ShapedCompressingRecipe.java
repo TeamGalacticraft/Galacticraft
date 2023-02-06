@@ -30,6 +30,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -275,7 +276,7 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
 
    public static ItemStack getItemStack(JsonObject json) {
       String string = GsonHelper.getAsString(json, "item");
-      Item item = Registry.ITEM.getOptional(new ResourceLocation(string)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + string + "'"));
+      Item item = BuiltInRegistries.ITEM.getOptional(new ResourceLocation(string)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + string + "'"));
       if (json.has("data")) {
          throw new JsonParseException("Disallowed data tag found");
       } else {

@@ -25,6 +25,7 @@ package dev.galacticraft.mod.world.gen.surfacebuilder;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.biome.Biome;
@@ -35,7 +36,7 @@ public record BiomeTagRule(@NotNull TagKey<Biome> tag) implements SurfaceRules.C
     private static final Codec<BiomeTagRule> CODEC;
 
     static {
-        CODEC = RecordCodecBuilder.create(instance -> instance.group(TagKey.codec(Registry.BIOME_REGISTRY).fieldOf("tag").forGetter(rule -> rule.tag)).apply(instance, BiomeTagRule::new));
+        CODEC = RecordCodecBuilder.create(instance -> instance.group(TagKey.codec(Registries.BIOME).fieldOf("tag").forGetter(rule -> rule.tag)).apply(instance, BiomeTagRule::new));
     }
 
     @Override

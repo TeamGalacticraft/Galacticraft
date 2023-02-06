@@ -27,6 +27,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -41,8 +42,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public class MoonSurfaceRules {
-    private static final ConditionSource IS_MARE = biome(GCBiomes.Moon.MARE, GCBiomes.Moon.MARE_EDGE, GCBiomes.Moon.MARE_FLAT, GCBiomes.Moon.MARE_HILLS, GCBiomes.Moon.MARE_VALLEY);
-    private static final ConditionSource IS_HIGHLANDS = biome(GCBiomes.Moon.HIGHLANDS, GCBiomes.Moon.HIGHLANDS_EDGE, GCBiomes.Moon.HIGHLANDS_FLAT, GCBiomes.Moon.HIGHLANDS_HILLS, GCBiomes.Moon.HIGHLANDS_VALLEY);
+    private static final ConditionSource IS_MARE = biome(GCBiomes.Moon.BASALTIC_MARE);
+    private static final ConditionSource IS_HIGHLANDS = biome();
 
     private static final RuleSource BEDROCK = block(Blocks.BEDROCK);
     private static final RuleSource LUNASLATE = block(GCBlocks.LUNASLATE);
@@ -93,6 +94,6 @@ public class MoonSurfaceRules {
     }
 
     public static void register() {
-        Registry.register(BuiltInRegistries.RULE, new ResourceLocation(Constant.MOD_ID, "moon"), Codec.unit(MOON));
+        Registry.register(BuiltInRegistries.MATERIAL_RULE, new ResourceLocation(Constant.MOD_ID, "moon"), Codec.unit(MOON));
     }
 }

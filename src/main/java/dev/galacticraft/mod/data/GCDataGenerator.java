@@ -23,10 +23,22 @@
 package dev.galacticraft.mod.data;
 
 import com.mojang.serialization.Lifecycle;
+import dev.galacticraft.api.registry.AddonRegistries;
+import dev.galacticraft.mod.content.GCCelestialBodies;
 import dev.galacticraft.mod.data.content.*;
 import dev.galacticraft.mod.data.model.GCModelProvider;
 import dev.galacticraft.mod.data.tag.*;
+import dev.galacticraft.mod.structure.GCStructureSets;
+import dev.galacticraft.mod.structure.GCStructureTemplatePools;
 import dev.galacticraft.mod.world.biome.GCBiomes;
+import dev.galacticraft.mod.world.dimension.GCDimensionTypes;
+import dev.galacticraft.mod.world.dimension.GCLevelStems;
+import dev.galacticraft.mod.world.gen.GCNoiseGeneratorSettings;
+import dev.galacticraft.mod.world.gen.carver.GCConfiguredCarvers;
+import dev.galacticraft.mod.world.gen.feature.GCConfiguredFeature;
+import dev.galacticraft.mod.world.gen.feature.GCOreConfiguredFeature;
+import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeature;
+import dev.galacticraft.mod.world.gen.feature.GCPlacedFeature;
 import dev.galacticraft.mod.world.gen.structure.GCStructures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
@@ -41,22 +53,29 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(GCBlockLootTableProvider::new);
         pack.addProvider(GCRecipeProvider::new);
 
-        // content
-        pack.addProvider(GCBiomeProvider::new);
-        pack.addProvider(GCCelestialBodyProvider::new);
-        pack.addProvider(GCStructureProvider::new);
-        pack.addProvider(GCStructureSetProvider::new);
-        pack.addProvider(GCStructureTemplatePoolProvider::new);
-
-        // models
-        pack.addProvider(GCModelProvider::new);
-
         // tags
         pack.addProvider(GCBannerTagProvider::new);
         pack.addProvider(GCBiomeTagProvider::new);
         pack.addProvider(GCBlockTagProvider::new);
         pack.addProvider(GCItemTagProvider::new);
         pack.addProvider(GCFluidTagProvider::new);
+        pack.addProvider(GCStructureTagProvider::new);
+
+        // content
+        pack.addProvider(BootstrapDataProvider.create("Biomes", GCBiomes::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Celestial Bodies", GCCelestialBodies::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Dimension Types", GCDimensionTypes::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Noise Generator Settings", GCNoiseGeneratorSettings::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Structure Sets", GCStructureSets::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Structure Template Pools", GCStructureTemplatePools::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Configured Carvers", GCConfiguredCarvers::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Configured Features", GCConfiguredFeature::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Ore Configured Features", GCOreConfiguredFeature::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Ore Placed Features", GCOrePlacedFeature::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Placed Features", GCPlacedFeature::bootstrapRegistries));
+        pack.addProvider(GCLevelStemProvider::new);
+        // models
+        pack.addProvider(GCModelProvider::new);
     }
 
     @Override
@@ -64,5 +83,17 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         DataGeneratorEntrypoint.super.buildRegistry(registryBuilder);
 
         registryBuilder.add(Registries.BIOME, Lifecycle.stable(), GCBiomes::bootstrapRegistries);
+        registryBuilder.add(AddonRegistries.CELESTIAL_BODY, Lifecycle.stable(), GCCelestialBodies::bootstrapRegistries);
+        registryBuilder.add(Registries.DIMENSION_TYPE, Lifecycle.stable(), GCDimensionTypes::bootstrapRegistries);
+        registryBuilder.add(Registries.LEVEL_STEM, Lifecycle.stable(), GCLevelStems::bootstrapRegistries);
+        registryBuilder.add(Registries.NOISE_SETTINGS, Lifecycle.stable(), GCNoiseGeneratorSettings::bootstrapRegistries);
+        registryBuilder.add(Registries.STRUCTURE, Lifecycle.stable(), GCStructures::bootstrapRegistries);
+        registryBuilder.add(Registries.STRUCTURE_SET, Lifecycle.stable(), GCStructureSets::bootstrapRegistries);
+        registryBuilder.add(Registries.TEMPLATE_POOL, Lifecycle.stable(), GCStructureTemplatePools::bootstrapRegistries);
+        registryBuilder.add(Registries.CONFIGURED_CARVER, Lifecycle.stable(), GCConfiguredCarvers::bootstrapRegistries);
+        registryBuilder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCConfiguredFeature::bootstrapRegistries);
+        registryBuilder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCOreConfiguredFeature::bootstrapRegistries);
+        registryBuilder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCOrePlacedFeature::bootstrapRegistries);
+        registryBuilder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCPlacedFeature::bootstrapRegistries);
     }
 }

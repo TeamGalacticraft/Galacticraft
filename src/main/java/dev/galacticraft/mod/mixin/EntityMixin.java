@@ -24,7 +24,7 @@ package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.mod.content.entity.damage.GCDamageSources;
 import dev.galacticraft.mod.tag.GCTags;
-import dev.galacticraft.mod.world.dimension.GCDimensionType;
+import dev.galacticraft.mod.world.dimension.GCDimensions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,7 +38,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.Fluid;
@@ -65,7 +64,7 @@ public abstract class EntityMixin {
 
     @Inject(method = "findDimensionEntryPoint", at = @At("HEAD"), cancellable = true)
     private void getTeleportTargetGC(ServerLevel destination, CallbackInfoReturnable<PortalInfo> cir) {
-        if (destination.dimension().equals(GCDimensionType.MOON_KEY) || this.level.dimension().equals(GCDimensionType.MOON_KEY)) { //TODO lander/parachute stuff
+        if (destination.dimension().equals(GCDimensions.MOON) || this.level.dimension().equals(GCDimensions.MOON)) { //TODO lander/parachute stuff
             BlockPos pos = destination.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, destination.getSharedSpawnPos());
             cir.setReturnValue(new PortalInfo(new Vec3((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getDeltaMovement(), this.yRot, this.xRot));
         }
@@ -100,7 +99,7 @@ public abstract class EntityMixin {
         if (this.updateFluidHeightAndDoFluidPushing(GCTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCTags.FUEL, 0.0028d)) {
             if (this.isOnFire())
             {
-                level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Explosion.BlockInteraction.NONE);
+                level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
                 if ((this.isAlwaysTicking() && !level.getPlayerByUUID(uuid).isCreative()) || !this.isInvulnerable()) {
                     this.hurt(GCDamageSources.OIL_BOOM, 20.0f);
                 }

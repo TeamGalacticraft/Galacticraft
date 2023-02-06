@@ -43,8 +43,8 @@ public class PipeWalkwayUnbakedModel implements UnbakedModel {
     }
 
     @Override
-    public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        return PipeWalkwayBakedModel.COLOR_SPRITE_ID_MAP.values();
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> function) {
+
     }
 
     @Override

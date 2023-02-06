@@ -54,7 +54,7 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var electricFurnace = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_FURNACE, GCBlockEntityTypes.ELECTRIC_FURNACE);
         final var inv = electricFurnace.itemStorage();
-        electricFurnace.energyStorage().setEnergyUnsafe(electricFurnace.getEnergyCapacity());
+        electricFurnace.energyStorage().setEnergy(electricFurnace.energyStorage().getCapacity());
         fillElectricFurnaceSlots(inv);
         runFinalTaskAt(context, 200 + 1, () -> {
             ItemStack output = inv.getStack(ElectricFurnaceBlockEntity.OUTPUT_SLOT);
@@ -69,7 +69,7 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var electricFurnace = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_FURNACE, GCBlockEntityTypes.ELECTRIC_FURNACE);
         final var inv = electricFurnace.itemStorage();
-        electricFurnace.energyStorage().setEnergyUnsafe(electricFurnace.getEnergyCapacity());
+        electricFurnace.energyStorage().setEnergy(electricFurnace.energyStorage().getCapacity());
         fillElectricFurnaceSlots(inv);
         inv.setSlot(ElectricFurnaceBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
 

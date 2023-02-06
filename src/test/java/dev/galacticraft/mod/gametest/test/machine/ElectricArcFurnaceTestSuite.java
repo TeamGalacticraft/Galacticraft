@@ -54,7 +54,7 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var electricArcFurnace = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_ARC_FURNACE, GCBlockEntityTypes.ELECTRIC_ARC_FURNACE);
         final var inv = electricArcFurnace.itemStorage();
-        electricArcFurnace.energyStorage().setEnergyUnsafe(electricArcFurnace.getEnergyCapacity());
+        electricArcFurnace.energyStorage().setEnergy(electricArcFurnace.energyStorage().getCapacity());
         fillElectricArcFurnaceSlots(inv);
         runFinalTaskAt(context, 90 + 1, () -> {
             ItemStack output = inv.getStack(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1);
@@ -69,7 +69,7 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var electricArcFurnace = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_ARC_FURNACE, GCBlockEntityTypes.ELECTRIC_ARC_FURNACE);
         final var inv = electricArcFurnace.itemStorage();
-        electricArcFurnace.energyStorage().setEnergyUnsafe(electricArcFurnace.getEnergyCapacity());
+        electricArcFurnace.energyStorage().setEnergy(electricArcFurnace.energyStorage().getCapacity());
         inv.setSlot(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1, ItemVariant.of(Items.BARRIER), 1);
         inv.setSlot(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_2, ItemVariant.of(Items.BARRIER), 1);
         fillElectricArcFurnaceSlots(inv);

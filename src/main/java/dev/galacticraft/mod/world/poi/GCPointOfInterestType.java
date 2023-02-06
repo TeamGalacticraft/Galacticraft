@@ -27,6 +27,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
@@ -43,6 +44,6 @@ public class GCPointOfInterestType {
 
     private static ResourceKey<PoiType> register(ResourceLocation id, int ticketCount, int searchDistance, Iterable<BlockState> blocks) {
         PointOfInterestHelper.register(id, ticketCount, searchDistance, blocks);
-        return ResourceKey.create(Registry.POINT_OF_INTEREST_TYPE_REGISTRY, id);
+        return ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, id);
     }
 }

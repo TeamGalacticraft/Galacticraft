@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.entity;
 
 import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
@@ -37,6 +38,6 @@ public class EvolvedZombieEntity extends Zombie {
 
     @Override
     protected boolean isSunBurnTick() {
-        return super.isSunBurnTick() && this.level.getBiome(this.blockPosition()).is(GCTags.MOON_MARE);
+        return super.isSunBurnTick() && this.level.getBiome(this.blockPosition()).is(GCBiomes.Moon.BASALTIC_MARE);
     }
 }

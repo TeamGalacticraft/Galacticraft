@@ -24,12 +24,16 @@ package dev.galacticraft.mod.world.gen.feature;
 
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.features.MiscOverworldFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.BiomeFilter;
 import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -38,20 +42,19 @@ import net.minecraft.world.level.levelgen.placement.RarityFilter;
 import java.util.List;
 
 public class GCPlacedFeature {
-    public static final ResourceKey<PlacedFeature> OIL_LAKE_KEY = ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, new ResourceLocation(Constant.MOD_ID, "oil_lake"));
+    public static final ResourceKey<PlacedFeature> OIL_LAKE = ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(Constant.MOD_ID, "oil_lake"));
 
-    public static final Holder<PlacedFeature> OIL_LAKE = register(OIL_LAKE_KEY, new PlacedFeature(GCConfiguredFeature.OIL_LAKE, List.of(
-            PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
-            RarityFilter.onAverageOnceEvery(70),
-            InSquarePlacement.spread(),
-            BiomeFilter.biome()
-    )));
-
-    public static Holder<PlacedFeature> register(ResourceKey<PlacedFeature> id, PlacedFeature placedFeature) {
-        return Registry.register(BuiltInRegistries.PLACED_FEATURE, id, placedFeature);
+    public static void bootstrapRegistries(BootstapContext<PlacedFeature> context) {
+        HolderGetter<ConfiguredFeature<?, ?>> configuredFeatureLookup = context.lookup(Registries.CONFIGURED_FEATURE);
+        context.register(OIL_LAKE, new PlacedFeature(configuredFeatureLookup.getOrThrow(GCConfiguredFeature.OIL_LAKE), List.of(
+                PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
+                RarityFilter.onAverageOnceEvery(70),
+                InSquarePlacement.spread(),
+                BiomeFilter.biome()
+        )));
     }
 
     public static void register() {
-        BiomeModifications.addFeature(context -> context.hasFeature(ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, new ResourceLocation("lake_lava"))), GenerationStep.Decoration.LAKES, ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, GCConfiguredFeature.OIL_LAKE_KEY.location()));
+        BiomeModifications.addFeature(context -> context.hasFeature(MiscOverworldFeatures.LAKE_LAVA), GenerationStep.Decoration.LAKES, OIL_LAKE);
     }
 }

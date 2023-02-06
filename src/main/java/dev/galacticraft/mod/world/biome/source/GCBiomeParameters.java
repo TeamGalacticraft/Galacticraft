@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.Climate.Parameter;
 import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
@@ -38,7 +39,7 @@ import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GCBiomeParameters {
-    private static final Parameter DEFAULT = Parameter.span(-1.0F, 1.0F);
+    private static final Parameter FULL_RANGE = Parameter.span(-1.0F, 1.0F);
 
     private static final Parameter RIVER_CONTINENTALNESS = Parameter.span(-0.11F, 0.55F);
     private static final Parameter SHORE_CONTINENTALNESS = Parameter.span(-0.19F, -0.11F);
@@ -81,89 +82,40 @@ public class GCBiomeParameters {
 
     public static final MultiNoiseBiomeSource.Preset MOON = new MultiNoiseBiomeSource.Preset(Constant.id("moon"), (biomeRegistry) -> {
         ImmutableList.Builder<Pair<Climate.ParameterPoint, Holder<Biome>>> builder = ImmutableList.builder();
-        // HIGHLANDS
         writeBiomeParameters(builder::add,
-                COLD, //temperature
-                DRY, //humidity
-                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS), //continentalness
-                MIN_EROSION, //erosion
-                WEIRDNESS_H_MIXED, // weirdness
+                COLD,
+                DRY,
+                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
+                MIN_EROSION,
+                WEIRDNESS_H_MIXED,
                 0.0F,
-                biomeRegistry.getHolder(GCBiomes.Moon.HIGHLANDS).orElseThrow());
+                biomeRegistry.getOrThrow(GCBiomes.Moon.LUNAR_HIGHLANDS));
         writeBiomeParameters(builder::add,
-                COLD, //temperature
-                DRY, //humidity
-                Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), //continentalness
-                MIN_EROSION, //erosion
-                WEIRDNESS_H_PLAINS, // weirdness
+                COLD,
+                DRY,
+                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
+                MIN_EROSION,
+                WEIRDNESS_L_MIXED,
                 0.0F,
-                biomeRegistry.getHolder(GCBiomes.Moon.HIGHLANDS_FLAT).orElseThrow());
+                biomeRegistry.getOrThrow(GCBiomes.Moon.BASALTIC_MARE));
         writeBiomeParameters(builder::add,
-                COLD, //temperature
-                DRY, //humidity
-                Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), //continentalness
-                SOMEWHAT_ERODED, //erosion
-                WEIRDNESS_H_MOUNTAINS, // weirdness
+                COLD,
+                DRY,
+                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
+                MIN_EROSION,
+                WEIRDNESS_L_MIXED,
                 0.0F,
-                biomeRegistry.getHolder(GCBiomes.Moon.HIGHLANDS_HILLS).orElseThrow());
+                biomeRegistry.getOrThrow(GCBiomes.Moon.COMET_TUNDRA));
         writeBiomeParameters(builder::add,
-                COLD, //temperature
-                DRY, //humidity
-                Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), //continentalness
-                MIN_EROSION, //erosion
-                WEIRDNESS_H_ADJ_RIVER, // weirdness
+                FULL_RANGE,
+                FULL_RANGE,
+                Climate.Parameter.span(-1.2F, -1.05F),
+                FULL_RANGE,
+                FULL_RANGE,
                 0.0F,
-                biomeRegistry.getHolder(GCBiomes.Moon.HIGHLANDS_VALLEY).orElseThrow());
-        writeBiomeParameters(builder::add,
-                COLD, //temperature
-                DRY, //humidity
-                RIVER_CONTINENTALNESS, //continentalness
-                MIN_EROSION, //erosion
-                WEIRDNESS_RIVER, // weirdness
-                0.0F,
-                biomeRegistry.getHolder(GCBiomes.Moon.HIGHLANDS_EDGE).orElseThrow());
+                biomeRegistry.getOrThrow(GCBiomes.Moon.OLIVINE_SPIKES)
+        );
 
-        // MARE
-        writeBiomeParameters(builder::add,
-                COLD, //temperature
-                DRY, //humidity
-                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS), //continentalness
-                MIN_EROSION, //erosion
-                WEIRDNESS_L_MIXED, // weirdness
-                0.0F,
-                biomeRegistry.getHolder(GCBiomes.Moon.MARE).orElseThrow());
-        writeBiomeParameters(builder::add,
-                COLD, //temperature
-                DRY, //humidity
-                Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), //continentalness
-                MIN_EROSION, //erosion
-                WEIRDNESS_L_PLAINS, // weirdness
-                0.0F,
-                biomeRegistry.getHolder(GCBiomes.Moon.MARE_FLAT).orElseThrow());
-        writeBiomeParameters(builder::add,
-                COLD, //temperature
-                DRY, //humidity
-                Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), //continentalness
-                SOMEWHAT_ERODED, //erosion
-                WEIRDNESS_L_MOUNTAINS, // weirdness
-                0.0F,
-                biomeRegistry.getHolder(GCBiomes.Moon.MARE_HILLS).orElseThrow());
-        writeBiomeParameters(builder::add,
-                COLD, //temperature
-                DRY, //humidity
-                Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), //continentalness
-                MIN_EROSION, //erosion
-                WEIRDNESS_L_ADJ_RIVER, // weirdness
-                0.0F,
-                biomeRegistry.getHolder(GCBiomes.Moon.MARE_VALLEY).orElseThrow());
-        writeBiomeParameters(builder::add,
-                COLD, //temperature
-                DRY, //humidity
-                RIVER_CONTINENTALNESS, //continentalness
-                MIN_EROSION, //erosion
-                WEIRDNESS_RIVER, // weirdness
-                0.0F,
-                biomeRegistry.getHolder(GCBiomes.Moon.MARE_EDGE).orElseThrow());
         return new Climate.ParameterList<>(builder.build());
     });
 

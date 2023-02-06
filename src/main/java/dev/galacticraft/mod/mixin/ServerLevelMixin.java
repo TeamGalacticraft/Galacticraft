@@ -25,7 +25,7 @@ package dev.galacticraft.mod.mixin;
 import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
-import dev.galacticraft.mod.world.dimension.GCDimensionType;
+import dev.galacticraft.mod.world.dimension.GCDimensions;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -59,7 +59,7 @@ public abstract class ServerLevelMixin implements ServerLevelAccessor {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void setSpawnersGC(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, ChunkProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List spawners, boolean shouldTickTime, CallbackInfo ci) {
-        if (worldKey.equals(GCDimensionType.MOON_KEY)) {
+        if (worldKey.equals(GCDimensions.MOON)) {
             this.customSpawners = ImmutableList.<CustomSpawner>builder().add(new EvolvedPillagerSpawner()).build();
         }
     }

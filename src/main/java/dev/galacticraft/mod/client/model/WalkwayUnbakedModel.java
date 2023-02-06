@@ -43,8 +43,8 @@ public class WalkwayUnbakedModel implements UnbakedModel {
     }
 
     @Override
-    public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        return Collections.emptyList();
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> function) {
+
     }
 
     @Override

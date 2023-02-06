@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-import java.io.ByteArrayOutputStream
-import java.io.OutputStream
 import java.time.format.DateTimeFormatter
 
 // Minecraft, Mappings, Loader Versions
@@ -46,14 +44,15 @@ val jeiVersion             = project.property("jei.version").toString()
 val badpacketsVersion      = project.property("badpackets.version").toString()
 val wthitVersion           = project.property("wthit.version").toString()
 val portingLibVersion      = project.property("porting.lib.version").toString()
-val runtimeOptional        = project.property("optional_dependencies.enabled").toString().toBoolean()
+val runtimeOptional        = project.property("optional_dependencies.enabled").toString().toBoolean() && !net.fabricmc.loom.util.OperatingSystem.isCIBuild()
 
 plugins {
     java
     `maven-publish`
     id("fabric-loom") version("1.1-SNAPSHOT")
-    id("org.cadixdev.licenser") version("0.6.1")
     id("io.github.juuxel.loom-quiltflower") version("1.8.0")
+    id("org.cadixdev.licenser") version("0.6.1")
+    id("org.ajoberstar.grgit") version("5.0.0")
 }
 
 java {
@@ -85,13 +84,13 @@ loom {
             server()
             name("Data Generation")
             runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation=false")
+            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.modid=galacticraft", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation=false")
         }
         register("datagenClient") {
             client()
             name("Data Generation Client")
             runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation")
+            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.modid=galacticraft", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation")
         }
         register("gametest") {
             server()
@@ -184,7 +183,7 @@ dependencies {
         "constants",
         "common"
     ).forEach {
-        includedDependency("io.github.fabricators_of_create.Porting-Lib:$it:${portingLibVersion}+1.19.2") { isTransitive = false }
+        includedDependency("io.github.fabricators_of_create.Porting-Lib:$it:${portingLibVersion}") { isTransitive = false }
     }
     includedDependency("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion") {
         exclude(group = "net.fabricmc")
@@ -203,20 +202,21 @@ dependencies {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     }
+    includedDependency("lol.bai:badpackets:fabric-$badpacketsVersion") { isTransitive = false }
+
     // Optional Dependencies
-    optionalDependency("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
-    optionalDependency("lol.bai:badpackets:fabric-$badpacketsVersion") { isTransitive = false }
-    optionalDependency("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
+    optionalRuntime("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
+    optionalRuntime("mcp.mobius.waila:wthit:fabric-$wthitVersion") { isTransitive = false }
 //    optionalDependency("dev.architectury:architectury-fabric:${architecturyVersion}") { isTransitive = false }
-    optionalDependency("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
+    optionalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     }
-    modCompileOnlyApi("mezz.jei:jei-1.19.2-common-api:${jeiVersion}")
-    modCompileOnlyApi("mezz.jei:jei-1.19.2-fabric-api:${jeiVersion}")
+    modCompileOnly("mezz.jei:jei-1.19.2-common-api:${jeiVersion}")
+    modCompileOnly("mezz.jei:jei-1.19.2-fabric-api:${jeiVersion}")
     // at runtime, use the full JEI jar for Fabric
-    modRuntimeOnly("mezz.jei:jei-1.19.2-fabric:${jeiVersion}")
+    optionalRuntimeOnly("mezz.jei:jei-1.19.2-fabric:${jeiVersion}")
 
     // Runtime Dependencies
     modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
@@ -295,18 +295,18 @@ tasks.withType(JavaCompile::class) {
     options.release.set(17)
 }
 
-/**
- * From:
- * @see net.fabricmc.loom.configuration.FabricApiExtension.getDependencyNotation
- */
-fun getFabricApiModule(moduleName: String): String {
-    return "net.fabricmc.fabric-api:${moduleName}:${fabricApi.moduleVersion(moduleName, fabricVersion)}"
+fun DependencyHandler.optionalRuntime(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
+    if (runtimeOptional) {
+        modImplementation(dependencyNotation, dependencyConfiguration)
+    } else {
+        modCompileOnly(dependencyNotation, dependencyConfiguration)
+        modRuntimeOnly(dependencyNotation, dependencyConfiguration)
+    }
 }
 
-fun DependencyHandler.optionalDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
-    modCompileOnly(dependencyNotation, dependencyConfiguration)
+fun DependencyHandler.optionalRuntimeOnly(dependencyNotation: String) {
     if (!net.fabricmc.loom.util.OperatingSystem.isCIBuild() && runtimeOptional) {
-        modRuntimeOnly(dependencyNotation, dependencyConfiguration)
+        modRuntimeOnly(dependencyNotation)
     }
 }
 
@@ -319,61 +319,23 @@ fun getVersionDecoration(): String {
     if ((System.getenv("DISABLE_VERSION_DECORATION") ?: "false") == "true") return ""
     if (project.hasProperty("release")) return ""
 
-    var version = "+build"
-    if (!"git".testForProcess()) {
-        version += ".unknown"
+    var decoration = "+build"
+    if (grgit.head() == null) {
+        decoration += ".unknown"
     } else {
-        val branch = "git branch --show-current".execute()
-        if (branch.isNotEmpty() && branch != "main") {
-            version += ".${branch}"
+        val branch = grgit.branch.current()
+        if (branch != null && branch.name != "main") {
+            decoration += ".${branch.name}"
         }
-        val commitHashLines = "git rev-parse --short HEAD".execute()
-        if (commitHashLines.isNotEmpty()) {
-            version += ".${commitHashLines}"
+        val commitHashLines = grgit.head().abbreviatedId
+        if (commitHashLines != null && commitHashLines.isNotEmpty()) {
+            decoration += "-${commitHashLines}"
         }
-        val dirty = "git diff-index --quiet HEAD".exitValue()
-        if (dirty != 0) {
-            version += "-modified"
+
+        if (!grgit.status().isClean) {
+            decoration += "-modified"
         }
     }
-    return version
+    return decoration
 }
 
-// from https://discuss.gradle.org/t/how-to-run-execute-string-as-a-shell-command-in-kotlin-dsl/32235/9
-fun String.execute(): String {
-    val output = ByteArrayOutputStream()
-    rootProject.exec {
-        commandLine(split("\\s".toRegex()))
-        workingDir = rootProject.projectDir
-        isIgnoreExitValue = true
-        standardOutput = output
-        errorOutput = OutputStream.nullOutputStream()
-    }
-
-    return String(output.toByteArray()).trim()
-}
-
-fun String.testForProcess(): Boolean {
-    return try {
-        rootProject.exec {
-            commandLine(split("\\s".toRegex()))
-            workingDir = rootProject.projectDir
-            isIgnoreExitValue = true
-            standardOutput = OutputStream.nullOutputStream()
-            errorOutput = OutputStream.nullOutputStream()
-        }
-        true;
-    } catch (ex: Exception) {
-        false;
-    }
-}
-
-fun String.exitValue(): Int {
-    return rootProject.exec {
-        commandLine(split("\\s".toRegex()))
-        workingDir = rootProject.projectDir
-        isIgnoreExitValue = true
-        standardOutput = OutputStream.nullOutputStream()
-        errorOutput = OutputStream.nullOutputStream()
-    }.exitValue
-}

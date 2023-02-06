@@ -26,7 +26,9 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
@@ -43,424 +45,424 @@ public class GCItem {
 
     // === START BLOCKS ===
     // TORCHES
-    public static final Item GLOWSTONE_TORCH = new StandingAndWallBlockItem(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item UNLIT_TORCH = new StandingAndWallBlockItem(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item GLOWSTONE_TORCH = new StandingAndWallBlockItem(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH, new Item.Properties(), Direction.DOWN);
+    public static final Item UNLIT_TORCH = new StandingAndWallBlockItem(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH, new Item.Properties(), Direction.DOWN);
 
     // LANTERNS
-    public static final Item GLOWSTONE_LANTERN = new BlockItem(GCBlocks.GLOWSTONE_LANTERN, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item GLOWSTONE_LANTERN = new BlockItem(GCBlocks.GLOWSTONE_LANTERN, new Item.Properties());
 
     // DECORATION BLOCKS
-    public static final Item ALUMINUM_DECORATION = new BlockItem(GCBlocks.ALUMINUM_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item ALUMINUM_DECORATION_SLAB = new BlockItem(GCBlocks.ALUMINUM_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item ALUMINUM_DECORATION_STAIRS = new BlockItem(GCBlocks.ALUMINUM_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item ALUMINUM_DECORATION_WALL = new BlockItem(GCBlocks.ALUMINUM_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_ALUMINUM_DECORATION = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_ALUMINUM_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_ALUMINUM_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_ALUMINUM_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item ALUMINUM_DECORATION = new BlockItem(GCBlocks.ALUMINUM_DECORATION, new Item.Properties());
+    public static final Item ALUMINUM_DECORATION_SLAB = new BlockItem(GCBlocks.ALUMINUM_DECORATION_SLAB, new Item.Properties());
+    public static final Item ALUMINUM_DECORATION_STAIRS = new BlockItem(GCBlocks.ALUMINUM_DECORATION_STAIRS, new Item.Properties());
+    public static final Item ALUMINUM_DECORATION_WALL = new BlockItem(GCBlocks.ALUMINUM_DECORATION_WALL, new Item.Properties());
+    public static final Item DETAILED_ALUMINUM_DECORATION = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION, new Item.Properties());
+    public static final Item DETAILED_ALUMINUM_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION_SLAB, new Item.Properties());
+    public static final Item DETAILED_ALUMINUM_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION_STAIRS, new Item.Properties());
+    public static final Item DETAILED_ALUMINUM_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION_WALL, new Item.Properties());
 
-    public static final Item BRONZE_DECORATION = new BlockItem(GCBlocks.BRONZE_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item BRONZE_DECORATION_SLAB = new BlockItem(GCBlocks.BRONZE_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item BRONZE_DECORATION_STAIRS = new BlockItem(GCBlocks.BRONZE_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item BRONZE_DECORATION_WALL = new BlockItem(GCBlocks.BRONZE_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_BRONZE_DECORATION = new BlockItem(GCBlocks.DETAILED_BRONZE_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_BRONZE_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_BRONZE_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_BRONZE_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_BRONZE_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_BRONZE_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_BRONZE_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item BRONZE_DECORATION = new BlockItem(GCBlocks.BRONZE_DECORATION, new Item.Properties());
+    public static final Item BRONZE_DECORATION_SLAB = new BlockItem(GCBlocks.BRONZE_DECORATION_SLAB, new Item.Properties());
+    public static final Item BRONZE_DECORATION_STAIRS = new BlockItem(GCBlocks.BRONZE_DECORATION_STAIRS, new Item.Properties());
+    public static final Item BRONZE_DECORATION_WALL = new BlockItem(GCBlocks.BRONZE_DECORATION_WALL, new Item.Properties());
+    public static final Item DETAILED_BRONZE_DECORATION = new BlockItem(GCBlocks.DETAILED_BRONZE_DECORATION, new Item.Properties());
+    public static final Item DETAILED_BRONZE_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_BRONZE_DECORATION_SLAB, new Item.Properties());
+    public static final Item DETAILED_BRONZE_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_BRONZE_DECORATION_STAIRS, new Item.Properties());
+    public static final Item DETAILED_BRONZE_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_BRONZE_DECORATION_WALL, new Item.Properties());
 
-    public static final Item COPPER_DECORATION = new BlockItem(GCBlocks.COPPER_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item COPPER_DECORATION_SLAB = new BlockItem(GCBlocks.COPPER_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item COPPER_DECORATION_STAIRS = new BlockItem(GCBlocks.COPPER_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item COPPER_DECORATION_WALL = new BlockItem(GCBlocks.COPPER_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_COPPER_DECORATION = new BlockItem(GCBlocks.DETAILED_COPPER_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_COPPER_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_COPPER_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_COPPER_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_COPPER_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_COPPER_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_COPPER_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item COPPER_DECORATION = new BlockItem(GCBlocks.COPPER_DECORATION, new Item.Properties());
+    public static final Item COPPER_DECORATION_SLAB = new BlockItem(GCBlocks.COPPER_DECORATION_SLAB, new Item.Properties());
+    public static final Item COPPER_DECORATION_STAIRS = new BlockItem(GCBlocks.COPPER_DECORATION_STAIRS, new Item.Properties());
+    public static final Item COPPER_DECORATION_WALL = new BlockItem(GCBlocks.COPPER_DECORATION_WALL, new Item.Properties());
+    public static final Item DETAILED_COPPER_DECORATION = new BlockItem(GCBlocks.DETAILED_COPPER_DECORATION, new Item.Properties());
+    public static final Item DETAILED_COPPER_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_COPPER_DECORATION_SLAB, new Item.Properties());
+    public static final Item DETAILED_COPPER_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_COPPER_DECORATION_STAIRS, new Item.Properties());
+    public static final Item DETAILED_COPPER_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_COPPER_DECORATION_WALL, new Item.Properties());
 
-    public static final Item IRON_DECORATION = new BlockItem(GCBlocks.IRON_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item IRON_DECORATION_SLAB = new BlockItem(GCBlocks.IRON_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item IRON_DECORATION_STAIRS = new BlockItem(GCBlocks.IRON_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item IRON_DECORATION_WALL = new BlockItem(GCBlocks.IRON_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_IRON_DECORATION = new BlockItem(GCBlocks.DETAILED_IRON_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_IRON_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_IRON_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_IRON_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_IRON_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_IRON_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_IRON_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item IRON_DECORATION = new BlockItem(GCBlocks.IRON_DECORATION, new Item.Properties());
+    public static final Item IRON_DECORATION_SLAB = new BlockItem(GCBlocks.IRON_DECORATION_SLAB, new Item.Properties());
+    public static final Item IRON_DECORATION_STAIRS = new BlockItem(GCBlocks.IRON_DECORATION_STAIRS, new Item.Properties());
+    public static final Item IRON_DECORATION_WALL = new BlockItem(GCBlocks.IRON_DECORATION_WALL, new Item.Properties());
+    public static final Item DETAILED_IRON_DECORATION = new BlockItem(GCBlocks.DETAILED_IRON_DECORATION, new Item.Properties());
+    public static final Item DETAILED_IRON_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_IRON_DECORATION_SLAB, new Item.Properties());
+    public static final Item DETAILED_IRON_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_IRON_DECORATION_STAIRS, new Item.Properties());
+    public static final Item DETAILED_IRON_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_IRON_DECORATION_WALL, new Item.Properties());
 
-    public static final Item METEORIC_IRON_DECORATION = new BlockItem(GCBlocks.METEORIC_IRON_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item METEORIC_IRON_DECORATION_SLAB = new BlockItem(GCBlocks.METEORIC_IRON_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item METEORIC_IRON_DECORATION_STAIRS = new BlockItem(GCBlocks.METEORIC_IRON_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item METEORIC_IRON_DECORATION_WALL = new BlockItem(GCBlocks.METEORIC_IRON_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_METEORIC_IRON_DECORATION = new BlockItem(GCBlocks.DETAILED_METEORIC_IRON_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_METEORIC_IRON_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_METEORIC_IRON_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_METEORIC_IRON_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item METEORIC_IRON_DECORATION = new BlockItem(GCBlocks.METEORIC_IRON_DECORATION, new Item.Properties());
+    public static final Item METEORIC_IRON_DECORATION_SLAB = new BlockItem(GCBlocks.METEORIC_IRON_DECORATION_SLAB, new Item.Properties());
+    public static final Item METEORIC_IRON_DECORATION_STAIRS = new BlockItem(GCBlocks.METEORIC_IRON_DECORATION_STAIRS, new Item.Properties());
+    public static final Item METEORIC_IRON_DECORATION_WALL = new BlockItem(GCBlocks.METEORIC_IRON_DECORATION_WALL, new Item.Properties());
+    public static final Item DETAILED_METEORIC_IRON_DECORATION = new BlockItem(GCBlocks.DETAILED_METEORIC_IRON_DECORATION, new Item.Properties());
+    public static final Item DETAILED_METEORIC_IRON_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_SLAB, new Item.Properties());
+    public static final Item DETAILED_METEORIC_IRON_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_STAIRS, new Item.Properties());
+    public static final Item DETAILED_METEORIC_IRON_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_WALL, new Item.Properties());
 
-    public static final Item STEEL_DECORATION = new BlockItem(GCBlocks.STEEL_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item STEEL_DECORATION_SLAB = new BlockItem(GCBlocks.STEEL_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item STEEL_DECORATION_STAIRS = new BlockItem(GCBlocks.STEEL_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item STEEL_DECORATION_WALL = new BlockItem(GCBlocks.STEEL_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_STEEL_DECORATION = new BlockItem(GCBlocks.DETAILED_STEEL_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_STEEL_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_STEEL_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_STEEL_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_STEEL_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_STEEL_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_STEEL_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item STEEL_DECORATION = new BlockItem(GCBlocks.STEEL_DECORATION, new Item.Properties());
+    public static final Item STEEL_DECORATION_SLAB = new BlockItem(GCBlocks.STEEL_DECORATION_SLAB, new Item.Properties());
+    public static final Item STEEL_DECORATION_STAIRS = new BlockItem(GCBlocks.STEEL_DECORATION_STAIRS, new Item.Properties());
+    public static final Item STEEL_DECORATION_WALL = new BlockItem(GCBlocks.STEEL_DECORATION_WALL, new Item.Properties());
+    public static final Item DETAILED_STEEL_DECORATION = new BlockItem(GCBlocks.DETAILED_STEEL_DECORATION, new Item.Properties());
+    public static final Item DETAILED_STEEL_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_STEEL_DECORATION_SLAB, new Item.Properties());
+    public static final Item DETAILED_STEEL_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_STEEL_DECORATION_STAIRS, new Item.Properties());
+    public static final Item DETAILED_STEEL_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_STEEL_DECORATION_WALL, new Item.Properties());
 
-    public static final Item TIN_DECORATION = new BlockItem(GCBlocks.TIN_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item TIN_DECORATION_SLAB = new BlockItem(GCBlocks.TIN_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item TIN_DECORATION_STAIRS = new BlockItem(GCBlocks.TIN_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item TIN_DECORATION_WALL = new BlockItem(GCBlocks.TIN_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_TIN_DECORATION = new BlockItem(GCBlocks.DETAILED_TIN_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_TIN_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_TIN_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_TIN_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_TIN_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_TIN_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_TIN_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item TIN_DECORATION = new BlockItem(GCBlocks.TIN_DECORATION, new Item.Properties());
+    public static final Item TIN_DECORATION_SLAB = new BlockItem(GCBlocks.TIN_DECORATION_SLAB, new Item.Properties());
+    public static final Item TIN_DECORATION_STAIRS = new BlockItem(GCBlocks.TIN_DECORATION_STAIRS, new Item.Properties());
+    public static final Item TIN_DECORATION_WALL = new BlockItem(GCBlocks.TIN_DECORATION_WALL, new Item.Properties());
+    public static final Item DETAILED_TIN_DECORATION = new BlockItem(GCBlocks.DETAILED_TIN_DECORATION, new Item.Properties());
+    public static final Item DETAILED_TIN_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_TIN_DECORATION_SLAB, new Item.Properties());
+    public static final Item DETAILED_TIN_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_TIN_DECORATION_STAIRS, new Item.Properties());
+    public static final Item DETAILED_TIN_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_TIN_DECORATION_WALL, new Item.Properties());
 
-    public static final Item TITANIUM_DECORATION = new BlockItem(GCBlocks.TITANIUM_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item TITANIUM_DECORATION_SLAB = new BlockItem(GCBlocks.TITANIUM_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item TITANIUM_DECORATION_STAIRS = new BlockItem(GCBlocks.TITANIUM_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item TITANIUM_DECORATION_WALL = new BlockItem(GCBlocks.TITANIUM_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_TITANIUM_DECORATION = new BlockItem(GCBlocks.DETAILED_TITANIUM_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_TITANIUM_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_TITANIUM_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_TITANIUM_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_TITANIUM_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_TITANIUM_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_TITANIUM_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item TITANIUM_DECORATION = new BlockItem(GCBlocks.TITANIUM_DECORATION, new Item.Properties());
+    public static final Item TITANIUM_DECORATION_SLAB = new BlockItem(GCBlocks.TITANIUM_DECORATION_SLAB, new Item.Properties());
+    public static final Item TITANIUM_DECORATION_STAIRS = new BlockItem(GCBlocks.TITANIUM_DECORATION_STAIRS, new Item.Properties());
+    public static final Item TITANIUM_DECORATION_WALL = new BlockItem(GCBlocks.TITANIUM_DECORATION_WALL, new Item.Properties());
+    public static final Item DETAILED_TITANIUM_DECORATION = new BlockItem(GCBlocks.DETAILED_TITANIUM_DECORATION, new Item.Properties());
+    public static final Item DETAILED_TITANIUM_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_TITANIUM_DECORATION_SLAB, new Item.Properties());
+    public static final Item DETAILED_TITANIUM_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_TITANIUM_DECORATION_STAIRS, new Item.Properties());
+    public static final Item DETAILED_TITANIUM_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_TITANIUM_DECORATION_WALL, new Item.Properties());
 
-    public static final Item DARK_DECORATION = new BlockItem(GCBlocks.DARK_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DARK_DECORATION_SLAB = new BlockItem(GCBlocks.DARK_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DARK_DECORATION_STAIRS = new BlockItem(GCBlocks.DARK_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DARK_DECORATION_WALL = new BlockItem(GCBlocks.DARK_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_DARK_DECORATION = new BlockItem(GCBlocks.DETAILED_DARK_DECORATION, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_DARK_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_DARK_DECORATION_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_DARK_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_DARK_DECORATION_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DETAILED_DARK_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_DARK_DECORATION_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item DARK_DECORATION = new BlockItem(GCBlocks.DARK_DECORATION, new Item.Properties());
+    public static final Item DARK_DECORATION_SLAB = new BlockItem(GCBlocks.DARK_DECORATION_SLAB, new Item.Properties());
+    public static final Item DARK_DECORATION_STAIRS = new BlockItem(GCBlocks.DARK_DECORATION_STAIRS, new Item.Properties());
+    public static final Item DARK_DECORATION_WALL = new BlockItem(GCBlocks.DARK_DECORATION_WALL, new Item.Properties());
+    public static final Item DETAILED_DARK_DECORATION = new BlockItem(GCBlocks.DETAILED_DARK_DECORATION, new Item.Properties());
+    public static final Item DETAILED_DARK_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_DARK_DECORATION_SLAB, new Item.Properties());
+    public static final Item DETAILED_DARK_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_DARK_DECORATION_STAIRS, new Item.Properties());
+    public static final Item DETAILED_DARK_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_DARK_DECORATION_WALL, new Item.Properties());
 
     // MOON NATURAL
-    public static final Item MOON_TURF = new BlockItem(GCBlocks.MOON_TURF, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MOON_DIRT = new BlockItem(GCBlocks.MOON_DIRT, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MOON_DIRT_PATH = new BlockItem(GCBlocks.MOON_DIRT_PATH, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MOON_SURFACE_ROCK = new BlockItem(GCBlocks.MOON_SURFACE_ROCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item MOON_TURF = new BlockItem(GCBlocks.MOON_TURF, new Item.Properties());
+    public static final Item MOON_DIRT = new BlockItem(GCBlocks.MOON_DIRT, new Item.Properties());
+    public static final Item MOON_DIRT_PATH = new BlockItem(GCBlocks.MOON_DIRT_PATH, new Item.Properties());
+    public static final Item MOON_SURFACE_ROCK = new BlockItem(GCBlocks.MOON_SURFACE_ROCK, new Item.Properties());
 
-    public static final Item MOON_ROCK = new BlockItem(GCBlocks.MOON_ROCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MOON_ROCK_SLAB = new BlockItem(GCBlocks.MOON_ROCK_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MOON_ROCK_STAIRS = new BlockItem(GCBlocks.MOON_ROCK_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MOON_ROCK_WALL = new BlockItem(GCBlocks.MOON_ROCK_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item MOON_ROCK = new BlockItem(GCBlocks.MOON_ROCK, new Item.Properties());
+    public static final Item MOON_ROCK_SLAB = new BlockItem(GCBlocks.MOON_ROCK_SLAB, new Item.Properties());
+    public static final Item MOON_ROCK_STAIRS = new BlockItem(GCBlocks.MOON_ROCK_STAIRS, new Item.Properties());
+    public static final Item MOON_ROCK_WALL = new BlockItem(GCBlocks.MOON_ROCK_WALL, new Item.Properties());
 
-    public static final Item COBBLED_MOON_ROCK = new BlockItem(GCBlocks.COBBLED_MOON_ROCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item COBBLED_MOON_ROCK_SLAB = new BlockItem(GCBlocks.COBBLED_MOON_ROCK_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item COBBLED_MOON_ROCK_STAIRS = new BlockItem(GCBlocks.COBBLED_MOON_ROCK_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item COBBLED_MOON_ROCK_WALL = new BlockItem(GCBlocks.COBBLED_MOON_ROCK_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item COBBLED_MOON_ROCK = new BlockItem(GCBlocks.COBBLED_MOON_ROCK, new Item.Properties());
+    public static final Item COBBLED_MOON_ROCK_SLAB = new BlockItem(GCBlocks.COBBLED_MOON_ROCK_SLAB, new Item.Properties());
+    public static final Item COBBLED_MOON_ROCK_STAIRS = new BlockItem(GCBlocks.COBBLED_MOON_ROCK_STAIRS, new Item.Properties());
+    public static final Item COBBLED_MOON_ROCK_WALL = new BlockItem(GCBlocks.COBBLED_MOON_ROCK_WALL, new Item.Properties());
 
-    public static final Item LUNASLATE = new BlockItem(GCBlocks.LUNASLATE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item LUNASLATE_SLAB = new BlockItem(GCBlocks.LUNASLATE_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item LUNASLATE_STAIRS = new BlockItem(GCBlocks.LUNASLATE_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item LUNASLATE_WALL = new BlockItem(GCBlocks.LUNASLATE_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item LUNASLATE = new BlockItem(GCBlocks.LUNASLATE, new Item.Properties());
+    public static final Item LUNASLATE_SLAB = new BlockItem(GCBlocks.LUNASLATE_SLAB, new Item.Properties());
+    public static final Item LUNASLATE_STAIRS = new BlockItem(GCBlocks.LUNASLATE_STAIRS, new Item.Properties());
+    public static final Item LUNASLATE_WALL = new BlockItem(GCBlocks.LUNASLATE_WALL, new Item.Properties());
 
-    public static final Item COBBLED_LUNASLATE = new BlockItem(GCBlocks.COBBLED_LUNASLATE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item COBBLED_LUNASLATE_SLAB = new BlockItem(GCBlocks.COBBLED_LUNASLATE_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item COBBLED_LUNASLATE_STAIRS = new BlockItem(GCBlocks.COBBLED_LUNASLATE_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item COBBLED_LUNASLATE_WALL = new BlockItem(GCBlocks.COBBLED_LUNASLATE_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item COBBLED_LUNASLATE = new BlockItem(GCBlocks.COBBLED_LUNASLATE, new Item.Properties());
+    public static final Item COBBLED_LUNASLATE_SLAB = new BlockItem(GCBlocks.COBBLED_LUNASLATE_SLAB, new Item.Properties());
+    public static final Item COBBLED_LUNASLATE_STAIRS = new BlockItem(GCBlocks.COBBLED_LUNASLATE_STAIRS, new Item.Properties());
+    public static final Item COBBLED_LUNASLATE_WALL = new BlockItem(GCBlocks.COBBLED_LUNASLATE_WALL, new Item.Properties());
 
-    public static final Item MOON_BASALT = new BlockItem(GCBlocks.MOON_BASALT, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MOON_BASALT_SLAB = new BlockItem(GCBlocks.MOON_BASALT_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MOON_BASALT_STAIRS = new BlockItem(GCBlocks.MOON_BASALT_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MOON_BASALT_WALL = new BlockItem(GCBlocks.MOON_BASALT_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item MOON_BASALT = new BlockItem(GCBlocks.MOON_BASALT, new Item.Properties());
+    public static final Item MOON_BASALT_SLAB = new BlockItem(GCBlocks.MOON_BASALT_SLAB, new Item.Properties());
+    public static final Item MOON_BASALT_STAIRS = new BlockItem(GCBlocks.MOON_BASALT_STAIRS, new Item.Properties());
+    public static final Item MOON_BASALT_WALL = new BlockItem(GCBlocks.MOON_BASALT_WALL, new Item.Properties());
 
-    public static final Item MOON_BASALT_BRICK = new BlockItem(GCBlocks.MOON_BASALT_BRICK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MOON_BASALT_BRICK_SLAB = new BlockItem(GCBlocks.MOON_BASALT_BRICK_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MOON_BASALT_BRICK_STAIRS = new BlockItem(GCBlocks.MOON_BASALT_BRICK_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MOON_BASALT_BRICK_WALL = new BlockItem(GCBlocks.MOON_BASALT_BRICK_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item MOON_BASALT_BRICK = new BlockItem(GCBlocks.MOON_BASALT_BRICK, new Item.Properties());
+    public static final Item MOON_BASALT_BRICK_SLAB = new BlockItem(GCBlocks.MOON_BASALT_BRICK_SLAB, new Item.Properties());
+    public static final Item MOON_BASALT_BRICK_STAIRS = new BlockItem(GCBlocks.MOON_BASALT_BRICK_STAIRS, new Item.Properties());
+    public static final Item MOON_BASALT_BRICK_WALL = new BlockItem(GCBlocks.MOON_BASALT_BRICK_WALL, new Item.Properties());
 
-    public static final Item CRACKED_MOON_BASALT_BRICK = new BlockItem(GCBlocks.CRACKED_MOON_BASALT_BRICK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item CRACKED_MOON_BASALT_BRICK_SLAB = new BlockItem(GCBlocks.CRACKED_MOON_BASALT_BRICK_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item CRACKED_MOON_BASALT_BRICK_STAIRS = new BlockItem(GCBlocks.CRACKED_MOON_BASALT_BRICK_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item CRACKED_MOON_BASALT_BRICK_WALL = new BlockItem(GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item CRACKED_MOON_BASALT_BRICK = new BlockItem(GCBlocks.CRACKED_MOON_BASALT_BRICK, new Item.Properties());
+    public static final Item CRACKED_MOON_BASALT_BRICK_SLAB = new BlockItem(GCBlocks.CRACKED_MOON_BASALT_BRICK_SLAB, new Item.Properties());
+    public static final Item CRACKED_MOON_BASALT_BRICK_STAIRS = new BlockItem(GCBlocks.CRACKED_MOON_BASALT_BRICK_STAIRS, new Item.Properties());
+    public static final Item CRACKED_MOON_BASALT_BRICK_WALL = new BlockItem(GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL, new Item.Properties());
 
     // MARS NATURAL
-    public static final Item MARS_SURFACE_ROCK = new BlockItem(GCBlocks.MARS_SURFACE_ROCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MARS_SUB_SURFACE_ROCK = new BlockItem(GCBlocks.MARS_SUB_SURFACE_ROCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MARS_STONE = new BlockItem(GCBlocks.MARS_STONE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MARS_COBBLESTONE = new BlockItem(GCBlocks.MARS_COBBLESTONE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MARS_COBBLESTONE_SLAB = new BlockItem(GCBlocks.MARS_COBBLESTONE_SLAB, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MARS_COBBLESTONE_STAIRS = new BlockItem(GCBlocks.MARS_COBBLESTONE_STAIRS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MARS_COBBLESTONE_WALL = new BlockItem(GCBlocks.MARS_COBBLESTONE_WALL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item MARS_SURFACE_ROCK = new BlockItem(GCBlocks.MARS_SURFACE_ROCK, new Item.Properties());
+    public static final Item MARS_SUB_SURFACE_ROCK = new BlockItem(GCBlocks.MARS_SUB_SURFACE_ROCK, new Item.Properties());
+    public static final Item MARS_STONE = new BlockItem(GCBlocks.MARS_STONE, new Item.Properties());
+    public static final Item MARS_COBBLESTONE = new BlockItem(GCBlocks.MARS_COBBLESTONE, new Item.Properties());
+    public static final Item MARS_COBBLESTONE_SLAB = new BlockItem(GCBlocks.MARS_COBBLESTONE_SLAB, new Item.Properties());
+    public static final Item MARS_COBBLESTONE_STAIRS = new BlockItem(GCBlocks.MARS_COBBLESTONE_STAIRS, new Item.Properties());
+    public static final Item MARS_COBBLESTONE_WALL = new BlockItem(GCBlocks.MARS_COBBLESTONE_WALL, new Item.Properties());
 
     // ASTEROID NATURAL
-    public static final Item ASTEROID_ROCK = new BlockItem(GCBlocks.ASTEROID_ROCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item ASTEROID_ROCK_1 = new BlockItem(GCBlocks.ASTEROID_ROCK_1, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item ASTEROID_ROCK_2 = new BlockItem(GCBlocks.ASTEROID_ROCK_2, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item ASTEROID_ROCK = new BlockItem(GCBlocks.ASTEROID_ROCK, new Item.Properties());
+    public static final Item ASTEROID_ROCK_1 = new BlockItem(GCBlocks.ASTEROID_ROCK_1, new Item.Properties());
+    public static final Item ASTEROID_ROCK_2 = new BlockItem(GCBlocks.ASTEROID_ROCK_2, new Item.Properties());
 
     // VENUS NATURAL
-    public static final Item SOFT_VENUS_ROCK = new BlockItem(GCBlocks.SOFT_VENUS_ROCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item HARD_VENUS_ROCK = new BlockItem(GCBlocks.HARD_VENUS_ROCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item SCORCHED_VENUS_ROCK = new BlockItem(GCBlocks.SCORCHED_VENUS_ROCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item VOLCANIC_ROCK = new BlockItem(GCBlocks.VOLCANIC_ROCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item PUMICE = new BlockItem(GCBlocks.PUMICE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item VAPOR_SPOUT = new BlockItem(GCBlocks.VAPOR_SPOUT, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item SOFT_VENUS_ROCK = new BlockItem(GCBlocks.SOFT_VENUS_ROCK, new Item.Properties());
+    public static final Item HARD_VENUS_ROCK = new BlockItem(GCBlocks.HARD_VENUS_ROCK, new Item.Properties());
+    public static final Item SCORCHED_VENUS_ROCK = new BlockItem(GCBlocks.SCORCHED_VENUS_ROCK, new Item.Properties());
+    public static final Item VOLCANIC_ROCK = new BlockItem(GCBlocks.VOLCANIC_ROCK, new Item.Properties());
+    public static final Item PUMICE = new BlockItem(GCBlocks.PUMICE, new Item.Properties());
+    public static final Item VAPOR_SPOUT = new BlockItem(GCBlocks.VAPOR_SPOUT, new Item.Properties());
 
     // MISC DECOR
-    public static final Item WALKWAY = new BlockItem(GCBlocks.WALKWAY, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item PIPE_WALKWAY = new BlockItem(GCBlocks.PIPE_WALKWAY, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item WIRE_WALKWAY = new BlockItem(GCBlocks.WIRE_WALKWAY, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item TIN_LADDER = new BlockItem(GCBlocks.TIN_LADDER, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item GRATING = new BlockItem(GCBlocks.GRATING, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item WALKWAY = new BlockItem(GCBlocks.WALKWAY, new Item.Properties());
+    public static final Item PIPE_WALKWAY = new BlockItem(GCBlocks.PIPE_WALKWAY, new Item.Properties());
+    public static final Item WIRE_WALKWAY = new BlockItem(GCBlocks.WIRE_WALKWAY, new Item.Properties());
+    public static final Item TIN_LADDER = new BlockItem(GCBlocks.TIN_LADDER, new Item.Properties());
+    public static final Item GRATING = new BlockItem(GCBlocks.GRATING, new Item.Properties());
 
     // SPECIAL
-    public static final Item ALUMINUM_WIRE = new BlockItem(GCBlocks.ALUMINUM_WIRE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item SEALABLE_ALUMINUM_WIRE = new BlockItem(GCBlocks.SEALABLE_ALUMINUM_WIRE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item HEAVY_SEALABLE_ALUMINUM_WIRE = new BlockItem(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item GLASS_FLUID_PIPE = new BlockItem(GCBlocks.GLASS_FLUID_PIPE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item ROCKET_LAUNCH_PAD = new BlockItem(GCBlocks.ROCKET_LAUNCH_PAD, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item ALUMINUM_WIRE = new BlockItem(GCBlocks.ALUMINUM_WIRE, new Item.Properties());
+    public static final Item SEALABLE_ALUMINUM_WIRE = new BlockItem(GCBlocks.SEALABLE_ALUMINUM_WIRE, new Item.Properties());
+    public static final Item HEAVY_SEALABLE_ALUMINUM_WIRE = new BlockItem(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE, new Item.Properties());
+    public static final Item GLASS_FLUID_PIPE = new BlockItem(GCBlocks.GLASS_FLUID_PIPE, new Item.Properties());
+    public static final Item ROCKET_LAUNCH_PAD = new BlockItem(GCBlocks.ROCKET_LAUNCH_PAD, new Item.Properties());
 
     // LIGHT PANELS
-    public static final Item SQUARE_LIGHT_PANEL = new BlockItem(GCBlocks.SQUARE_LIGHT_PANEL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item SPOTLIGHT_LIGHT_PANEL = new BlockItem(GCBlocks.SPOTLIGHT_LIGHT_PANEL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item LINEAR_LIGHT_PANEL = new BlockItem(GCBlocks.LINEAR_LIGHT_PANEL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DASHED_LIGHT_PANEL = new BlockItem(GCBlocks.DASHED_LIGHT_PANEL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DIAGONAL_LIGHT_PANEL = new BlockItem(GCBlocks.DIAGONAL_LIGHT_PANEL, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item SQUARE_LIGHT_PANEL = new BlockItem(GCBlocks.SQUARE_LIGHT_PANEL, new Item.Properties());
+    public static final Item SPOTLIGHT_LIGHT_PANEL = new BlockItem(GCBlocks.SPOTLIGHT_LIGHT_PANEL, new Item.Properties());
+    public static final Item LINEAR_LIGHT_PANEL = new BlockItem(GCBlocks.LINEAR_LIGHT_PANEL, new Item.Properties());
+    public static final Item DASHED_LIGHT_PANEL = new BlockItem(GCBlocks.DASHED_LIGHT_PANEL, new Item.Properties());
+    public static final Item DIAGONAL_LIGHT_PANEL = new BlockItem(GCBlocks.DIAGONAL_LIGHT_PANEL, new Item.Properties());
 
     // VACUUM GLASS
-    public static final Item VACUUM_GLASS = new BlockItem(GCBlocks.VACUUM_GLASS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item CLEAR_VACUUM_GLASS = new BlockItem(GCBlocks.CLEAR_VACUUM_GLASS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item STRONG_VACUUM_GLASS = new BlockItem(GCBlocks.STRONG_VACUUM_GLASS, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item VACUUM_GLASS = new BlockItem(GCBlocks.VACUUM_GLASS, new Item.Properties());
+    public static final Item CLEAR_VACUUM_GLASS = new BlockItem(GCBlocks.CLEAR_VACUUM_GLASS, new Item.Properties());
+    public static final Item STRONG_VACUUM_GLASS = new BlockItem(GCBlocks.STRONG_VACUUM_GLASS, new Item.Properties());
 
     // ORES
-    public static final Item SILICON_ORE = new BlockItem(GCBlocks.SILICON_ORE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DEEPSLATE_SILICON_ORE = new BlockItem(GCBlocks.DEEPSLATE_SILICON_ORE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item SILICON_ORE = new BlockItem(GCBlocks.SILICON_ORE, new Item.Properties());
+    public static final Item DEEPSLATE_SILICON_ORE = new BlockItem(GCBlocks.DEEPSLATE_SILICON_ORE, new Item.Properties());
 
-    public static final Item MOON_COPPER_ORE = new BlockItem(GCBlocks.MOON_COPPER_ORE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item LUNASLATE_COPPER_ORE = new BlockItem(GCBlocks.LUNASLATE_COPPER_ORE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item MOON_COPPER_ORE = new BlockItem(GCBlocks.MOON_COPPER_ORE, new Item.Properties());
+    public static final Item LUNASLATE_COPPER_ORE = new BlockItem(GCBlocks.LUNASLATE_COPPER_ORE, new Item.Properties());
 
-    public static final Item TIN_ORE = new BlockItem(GCBlocks.TIN_ORE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DEEPSLATE_TIN_ORE = new BlockItem(GCBlocks.DEEPSLATE_TIN_ORE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MOON_TIN_ORE = new BlockItem(GCBlocks.MOON_TIN_ORE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item LUNASLATE_TIN_ORE = new BlockItem(GCBlocks.LUNASLATE_TIN_ORE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item TIN_ORE = new BlockItem(GCBlocks.TIN_ORE, new Item.Properties());
+    public static final Item DEEPSLATE_TIN_ORE = new BlockItem(GCBlocks.DEEPSLATE_TIN_ORE, new Item.Properties());
+    public static final Item MOON_TIN_ORE = new BlockItem(GCBlocks.MOON_TIN_ORE, new Item.Properties());
+    public static final Item LUNASLATE_TIN_ORE = new BlockItem(GCBlocks.LUNASLATE_TIN_ORE, new Item.Properties());
 
-    public static final Item ALUMINUM_ORE = new BlockItem(GCBlocks.ALUMINUM_ORE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DEEPSLATE_ALUMINUM_ORE = new BlockItem(GCBlocks.DEEPSLATE_ALUMINUM_ORE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item ALUMINUM_ORE = new BlockItem(GCBlocks.ALUMINUM_ORE, new Item.Properties());
+    public static final Item DEEPSLATE_ALUMINUM_ORE = new BlockItem(GCBlocks.DEEPSLATE_ALUMINUM_ORE, new Item.Properties());
 
-    public static final Item DESH_ORE = new BlockItem(GCBlocks.DESH_ORE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item DESH_ORE = new BlockItem(GCBlocks.DESH_ORE, new Item.Properties());
 
-    public static final Item ILMENITE_ORE = new BlockItem(GCBlocks.ILMENITE_ORE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item ILMENITE_ORE = new BlockItem(GCBlocks.ILMENITE_ORE, new Item.Properties());
 
-    public static final Item GALENA_ORE = new BlockItem(GCBlocks.GALENA_ORE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item GALENA_ORE = new BlockItem(GCBlocks.GALENA_ORE, new Item.Properties());
 
     // COMPACT MINERAL BLOCKS
-    public static final Item MOON_CHEESE_BLOCK = new BlockItem(GCBlocks.MOON_CHEESE_BLOCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item SILICON_BLOCK = new BlockItem(GCBlocks.SILICON_BLOCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item METEORIC_IRON_BLOCK = new BlockItem(GCBlocks.METEORIC_IRON_BLOCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item DESH_BLOCK = new BlockItem(GCBlocks.DESH_BLOCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item TITANIUM_BLOCK = new BlockItem(GCBlocks.TITANIUM_BLOCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item LEAD_BLOCK = new BlockItem(GCBlocks.LEAD_BLOCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item LUNAR_SAPPHIRE_BLOCK = new BlockItem(GCBlocks.LUNAR_SAPPHIRE_BLOCK, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item MOON_CHEESE_BLOCK = new BlockItem(GCBlocks.MOON_CHEESE_BLOCK, new Item.Properties());
+    public static final Item SILICON_BLOCK = new BlockItem(GCBlocks.SILICON_BLOCK, new Item.Properties());
+    public static final Item METEORIC_IRON_BLOCK = new BlockItem(GCBlocks.METEORIC_IRON_BLOCK, new Item.Properties());
+    public static final Item DESH_BLOCK = new BlockItem(GCBlocks.DESH_BLOCK, new Item.Properties());
+    public static final Item TITANIUM_BLOCK = new BlockItem(GCBlocks.TITANIUM_BLOCK, new Item.Properties());
+    public static final Item LEAD_BLOCK = new BlockItem(GCBlocks.LEAD_BLOCK, new Item.Properties());
+    public static final Item LUNAR_SAPPHIRE_BLOCK = new BlockItem(GCBlocks.LUNAR_SAPPHIRE_BLOCK, new Item.Properties());
 
     // MOON VILLAGER SPECIAL
-    public static final Item LUNAR_CARTOGRAPHY_TABLE = new BlockItem(GCBlocks.LUNAR_CARTOGRAPHY_TABLE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item LUNAR_CARTOGRAPHY_TABLE = new BlockItem(GCBlocks.LUNAR_CARTOGRAPHY_TABLE, new Item.Properties());
 
     // MISC WORLD GEN
-    public static final Item CAVERNOUS_VINE = new BlockItem(GCBlocks.CAVERNOUS_VINE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item POISONOUS_CAVERNOUS_VINE = new BlockItem(GCBlocks.POISONOUS_CAVERNOUS_VINE, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
-    public static final Item MOON_BERRY_BUSH = new BlockItem(GCBlocks.MOON_BERRY_BUSH, new Item.Properties().tab(GCItemGroup.BLOCKS_GROUP));
+    public static final Item CAVERNOUS_VINE = new BlockItem(GCBlocks.CAVERNOUS_VINE, new Item.Properties());
+    public static final Item POISONOUS_CAVERNOUS_VINE = new BlockItem(GCBlocks.POISONOUS_CAVERNOUS_VINE, new Item.Properties());
+    public static final Item MOON_BERRY_BUSH = new BlockItem(GCBlocks.MOON_BERRY_BUSH, new Item.Properties());
 
     // MISC MACHINES
-    public static final Item CRYOGENIC_CHAMBER = new BlockItem(GCBlocks.CRYOGENIC_CHAMBER, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item PLAYER_TRANSPORT_TUBE = new BlockItem(GCBlocks.PLAYER_TRANSPORT_TUBE, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
+    public static final Item CRYOGENIC_CHAMBER = new BlockItem(GCBlocks.CRYOGENIC_CHAMBER, new Item.Properties());
+    public static final Item PLAYER_TRANSPORT_TUBE = new BlockItem(GCBlocks.PLAYER_TRANSPORT_TUBE, new Item.Properties());
 
     // MACHINES
-    public static final Item CIRCUIT_FABRICATOR = new BlockItem(GCBlocks.CIRCUIT_FABRICATOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item COMPRESSOR = new BlockItem(GCBlocks.COMPRESSOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item ELECTRIC_COMPRESSOR = new BlockItem(GCBlocks.ELECTRIC_COMPRESSOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item COAL_GENERATOR = new BlockItem(GCBlocks.COAL_GENERATOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item BASIC_SOLAR_PANEL = new BlockItem(GCBlocks.BASIC_SOLAR_PANEL, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item ADVANCED_SOLAR_PANEL = new BlockItem(GCBlocks.ADVANCED_SOLAR_PANEL, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item ENERGY_STORAGE_MODULE = new BlockItem(GCBlocks.ENERGY_STORAGE_MODULE, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item ELECTRIC_FURNACE = new BlockItem(GCBlocks.ELECTRIC_FURNACE, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item ELECTRIC_ARC_FURNACE = new BlockItem(GCBlocks.ELECTRIC_ARC_FURNACE, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item REFINERY = new BlockItem(GCBlocks.REFINERY, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item OXYGEN_COLLECTOR = new BlockItem(GCBlocks.OXYGEN_COLLECTOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item OXYGEN_SEALER = new BlockItem(GCBlocks.OXYGEN_SEALER, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item OXYGEN_BUBBLE_DISTRIBUTOR = new BlockItem(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item OXYGEN_DECOMPRESSOR = new BlockItem(GCBlocks.OXYGEN_DECOMPRESSOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item OXYGEN_COMPRESSOR = new BlockItem(GCBlocks.OXYGEN_COMPRESSOR, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item OXYGEN_STORAGE_MODULE = new BlockItem(GCBlocks.OXYGEN_STORAGE_MODULE, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
-    public static final Item FUEL_LOADER = new BlockItem(GCBlocks.FUEL_LOADER, new Item.Properties().tab(GCItemGroup.MACHINES_GROUP));
+    public static final Item CIRCUIT_FABRICATOR = new BlockItem(GCBlocks.CIRCUIT_FABRICATOR, new Item.Properties());
+    public static final Item COMPRESSOR = new BlockItem(GCBlocks.COMPRESSOR, new Item.Properties());
+    public static final Item ELECTRIC_COMPRESSOR = new BlockItem(GCBlocks.ELECTRIC_COMPRESSOR, new Item.Properties());
+    public static final Item COAL_GENERATOR = new BlockItem(GCBlocks.COAL_GENERATOR, new Item.Properties());
+    public static final Item BASIC_SOLAR_PANEL = new BlockItem(GCBlocks.BASIC_SOLAR_PANEL, new Item.Properties());
+    public static final Item ADVANCED_SOLAR_PANEL = new BlockItem(GCBlocks.ADVANCED_SOLAR_PANEL, new Item.Properties());
+    public static final Item ENERGY_STORAGE_MODULE = new BlockItem(GCBlocks.ENERGY_STORAGE_MODULE, new Item.Properties());
+    public static final Item ELECTRIC_FURNACE = new BlockItem(GCBlocks.ELECTRIC_FURNACE, new Item.Properties());
+    public static final Item ELECTRIC_ARC_FURNACE = new BlockItem(GCBlocks.ELECTRIC_ARC_FURNACE, new Item.Properties());
+    public static final Item REFINERY = new BlockItem(GCBlocks.REFINERY, new Item.Properties());
+    public static final Item OXYGEN_COLLECTOR = new BlockItem(GCBlocks.OXYGEN_COLLECTOR, new Item.Properties());
+    public static final Item OXYGEN_SEALER = new BlockItem(GCBlocks.OXYGEN_SEALER, new Item.Properties());
+    public static final Item OXYGEN_BUBBLE_DISTRIBUTOR = new BlockItem(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, new Item.Properties());
+    public static final Item OXYGEN_DECOMPRESSOR = new BlockItem(GCBlocks.OXYGEN_DECOMPRESSOR, new Item.Properties());
+    public static final Item OXYGEN_COMPRESSOR = new BlockItem(GCBlocks.OXYGEN_COMPRESSOR, new Item.Properties());
+    public static final Item OXYGEN_STORAGE_MODULE = new BlockItem(GCBlocks.OXYGEN_STORAGE_MODULE, new Item.Properties());
+    public static final Item FUEL_LOADER = new BlockItem(GCBlocks.FUEL_LOADER, new Item.Properties());
     // === END BLOCKS ===
     
     // MATERIALS
-    public static final Item RAW_SILICON = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item RAW_SILICON = new Item(new Item.Properties());
     
-    public static final Item RAW_METEORIC_IRON = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item METEORIC_IRON_INGOT = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item METEORIC_IRON_NUGGET = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item COMPRESSED_METEORIC_IRON = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item RAW_METEORIC_IRON = new Item(new Item.Properties());
+    public static final Item METEORIC_IRON_INGOT = new Item(new Item.Properties());
+    public static final Item METEORIC_IRON_NUGGET = new Item(new Item.Properties());
+    public static final Item COMPRESSED_METEORIC_IRON = new Item(new Item.Properties());
 
-    public static final Item RAW_DESH = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item DESH_INGOT = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item DESH_NUGGET = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item COMPRESSED_DESH = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item RAW_DESH = new Item(new Item.Properties());
+    public static final Item DESH_INGOT = new Item(new Item.Properties());
+    public static final Item DESH_NUGGET = new Item(new Item.Properties());
+    public static final Item COMPRESSED_DESH = new Item(new Item.Properties());
 
-    public static final Item RAW_LEAD = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item LEAD_INGOT = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item LEAD_NUGGET = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item RAW_LEAD = new Item(new Item.Properties());
+    public static final Item LEAD_INGOT = new Item(new Item.Properties());
+    public static final Item LEAD_NUGGET = new Item(new Item.Properties());
     
-    public static final Item RAW_ALUMINUM = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item ALUMINUM_INGOT = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item ALUMINUM_NUGGET = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item COMPRESSED_ALUMINUM = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item RAW_ALUMINUM = new Item(new Item.Properties());
+    public static final Item ALUMINUM_INGOT = new Item(new Item.Properties());
+    public static final Item ALUMINUM_NUGGET = new Item(new Item.Properties());
+    public static final Item COMPRESSED_ALUMINUM = new Item(new Item.Properties());
 
-    public static final Item RAW_TIN = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item TIN_INGOT = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item TIN_NUGGET = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item COMPRESSED_TIN = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item RAW_TIN = new Item(new Item.Properties());
+    public static final Item TIN_INGOT = new Item(new Item.Properties());
+    public static final Item TIN_NUGGET = new Item(new Item.Properties());
+    public static final Item COMPRESSED_TIN = new Item(new Item.Properties());
 
-    public static final Item RAW_TITANIUM = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item TITANIUM_INGOT = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item TITANIUM_NUGGET = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item COMPRESSED_TITANIUM = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item RAW_TITANIUM = new Item(new Item.Properties());
+    public static final Item TITANIUM_INGOT = new Item(new Item.Properties());
+    public static final Item TITANIUM_NUGGET = new Item(new Item.Properties());
+    public static final Item COMPRESSED_TITANIUM = new Item(new Item.Properties());
 
-    public static final Item COMPRESSED_BRONZE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item COMPRESSED_COPPER = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item COMPRESSED_IRON = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item COMPRESSED_STEEL = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item COMPRESSED_BRONZE = new Item(new Item.Properties());
+    public static final Item COMPRESSED_COPPER = new Item(new Item.Properties());
+    public static final Item COMPRESSED_IRON = new Item(new Item.Properties());
+    public static final Item COMPRESSED_STEEL = new Item(new Item.Properties());
     
-    public static final Item LUNAR_SAPPHIRE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item DESH_STICK = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item CARBON_FRAGMENTS = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item IRON_SHARD = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item SOLAR_DUST = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item BASIC_WAFER = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item ADVANCED_WAFER = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item BEAM_CORE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item CANVAS = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item LUNAR_SAPPHIRE = new Item(new Item.Properties());
+    public static final Item DESH_STICK = new Item(new Item.Properties());
+    public static final Item CARBON_FRAGMENTS = new Item(new Item.Properties());
+    public static final Item IRON_SHARD = new Item(new Item.Properties());
+    public static final Item SOLAR_DUST = new Item(new Item.Properties());
+    public static final Item BASIC_WAFER = new Item(new Item.Properties());
+    public static final Item ADVANCED_WAFER = new Item(new Item.Properties());
+    public static final Item BEAM_CORE = new Item(new Item.Properties());
+    public static final Item CANVAS = new Item(new Item.Properties());
     
-    public static final Item FLUID_MANIPULATOR = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item OXYGEN_CONCENTRATOR = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item OXYGEN_FAN = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item OXYGEN_VENT = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item SENSOR_LENS = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item BLUE_SOLAR_WAFER = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item SINGLE_SOLAR_MODULE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item FULL_SOLAR_PANEL = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item SOLAR_ARRAY_WAFER = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item STEEL_POLE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item COPPER_CANISTER = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item TIN_CANISTER = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item THERMAL_CLOTH = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item ISOTHERMAL_FABRIC = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item ORION_DRIVE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item ATMOSPHERIC_VALVE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item AMBIENT_THERMAL_CONTROLLER = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item FLUID_MANIPULATOR = new Item(new Item.Properties());
+    public static final Item OXYGEN_CONCENTRATOR = new Item(new Item.Properties());
+    public static final Item OXYGEN_FAN = new Item(new Item.Properties());
+    public static final Item OXYGEN_VENT = new Item(new Item.Properties());
+    public static final Item SENSOR_LENS = new Item(new Item.Properties());
+    public static final Item BLUE_SOLAR_WAFER = new Item(new Item.Properties());
+    public static final Item SINGLE_SOLAR_MODULE = new Item(new Item.Properties());
+    public static final Item FULL_SOLAR_PANEL = new Item(new Item.Properties());
+    public static final Item SOLAR_ARRAY_WAFER = new Item(new Item.Properties());
+    public static final Item STEEL_POLE = new Item(new Item.Properties());
+    public static final Item COPPER_CANISTER = new Item(new Item.Properties());
+    public static final Item TIN_CANISTER = new Item(new Item.Properties());
+    public static final Item THERMAL_CLOTH = new Item(new Item.Properties());
+    public static final Item ISOTHERMAL_FABRIC = new Item(new Item.Properties());
+    public static final Item ORION_DRIVE = new Item(new Item.Properties());
+    public static final Item ATMOSPHERIC_VALVE = new Item(new Item.Properties());
+    public static final Item AMBIENT_THERMAL_CONTROLLER = new Item(new Item.Properties());
     
     // FOOD
-    public static final Item MOON_BERRIES = new Item(new Item.Properties().food(GCFoodComponent.MOON_BERRIES).tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item CHEESE_CURD = new Item(new Item.Properties().food(GCFoodComponent.CHEESE_CURD).tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item MOON_BERRIES = new Item(new Item.Properties().food(GCFoodComponent.MOON_BERRIES));
+    public static final Item CHEESE_CURD = new Item(new Item.Properties().food(GCFoodComponent.CHEESE_CURD));
     
-    public static final Item CHEESE_SLICE = new Item(new Item.Properties().food(GCFoodComponent.CHEESE_SLICE).tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item BURGER_BUN = new Item(new Item.Properties().food(GCFoodComponent.BURGER_BUN).tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item GROUND_BEEF = new Item(new Item.Properties().food(GCFoodComponent.GROUND_BEEF).tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item BEEF_PATTY = new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY).tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item CHEESEBURGER = new Item(new Item.Properties().food(GCFoodComponent.CHEESEBURGER).tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item CHEESE_SLICE = new Item(new Item.Properties().food(GCFoodComponent.CHEESE_SLICE));
+    public static final Item BURGER_BUN = new Item(new Item.Properties().food(GCFoodComponent.BURGER_BUN));
+    public static final Item GROUND_BEEF = new Item(new Item.Properties().food(GCFoodComponent.GROUND_BEEF));
+    public static final Item BEEF_PATTY = new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY));
+    public static final Item CHEESEBURGER = new Item(new Item.Properties().food(GCFoodComponent.CHEESEBURGER));
     
-    public static final Item CANNED_DEHYDRATED_APPLE = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_APPLE).tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item CANNED_DEHYDRATED_CARROT = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_CARROT).tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item CANNED_DEHYDRATED_MELON = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_MELON).tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item CANNED_DEHYDRATED_POTATO = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_POTATO).tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item CANNED_BEEF = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.CANNED_BEEF).tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item CANNED_DEHYDRATED_APPLE = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_APPLE));
+    public static final Item CANNED_DEHYDRATED_CARROT = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_CARROT));
+    public static final Item CANNED_DEHYDRATED_MELON = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_MELON));
+    public static final Item CANNED_DEHYDRATED_POTATO = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_POTATO));
+    public static final Item CANNED_BEEF = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.CANNED_BEEF));
     
     // ROCKET PLATES
-    public static final Item TIER_1_HEAVY_DUTY_PLATE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item TIER_2_HEAVY_DUTY_PLATE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item TIER_3_HEAVY_DUTY_PLATE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item TIER_1_HEAVY_DUTY_PLATE = new Item(new Item.Properties());
+    public static final Item TIER_2_HEAVY_DUTY_PLATE = new Item(new Item.Properties());
+    public static final Item TIER_3_HEAVY_DUTY_PLATE = new Item(new Item.Properties());
 
     // ARMOR
-    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, EquipmentSlot.HEAD, (new Item.Properties().tab(GCItemGroup.ITEMS_GROUP)));
-    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, EquipmentSlot.CHEST, (new Item.Properties().tab(GCItemGroup.ITEMS_GROUP)));
-    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, EquipmentSlot.LEGS, (new Item.Properties().tab(GCItemGroup.ITEMS_GROUP)));
-    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, EquipmentSlot.FEET, (new Item.Properties().tab(GCItemGroup.ITEMS_GROUP)));
+    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, EquipmentSlot.HEAD, (new Item.Properties()));
+    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, EquipmentSlot.CHEST, (new Item.Properties()));
+    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, EquipmentSlot.LEGS, (new Item.Properties()));
+    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, EquipmentSlot.FEET, (new Item.Properties()));
 
-    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterial.DESH, EquipmentSlot.HEAD, (new Item.Properties().tab(GCItemGroup.ITEMS_GROUP)));
-    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterial.DESH, EquipmentSlot.CHEST, (new Item.Properties().tab(GCItemGroup.ITEMS_GROUP)));
-    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterial.DESH, EquipmentSlot.LEGS, (new Item.Properties().tab(GCItemGroup.ITEMS_GROUP)));
-    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterial.DESH, EquipmentSlot.FEET, (new Item.Properties().tab(GCItemGroup.ITEMS_GROUP)));
+    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterial.DESH, EquipmentSlot.HEAD, (new Item.Properties()));
+    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterial.DESH, EquipmentSlot.CHEST, (new Item.Properties()));
+    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterial.DESH, EquipmentSlot.LEGS, (new Item.Properties()));
+    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterial.DESH, EquipmentSlot.FEET, (new Item.Properties()));
 
-    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterial.TITANIUM, EquipmentSlot.HEAD, (new Item.Properties().tab(GCItemGroup.ITEMS_GROUP)));
-    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterial.TITANIUM, EquipmentSlot.CHEST, (new Item.Properties().tab(GCItemGroup.ITEMS_GROUP)));
-    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterial.TITANIUM, EquipmentSlot.LEGS, (new Item.Properties().tab(GCItemGroup.ITEMS_GROUP)));
-    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterial.TITANIUM, EquipmentSlot.FEET, (new Item.Properties().tab(GCItemGroup.ITEMS_GROUP)));
+    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterial.TITANIUM, EquipmentSlot.HEAD, (new Item.Properties()));
+    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterial.TITANIUM, EquipmentSlot.CHEST, (new Item.Properties()));
+    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterial.TITANIUM, EquipmentSlot.LEGS, (new Item.Properties()));
+    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterial.TITANIUM, EquipmentSlot.FEET, (new Item.Properties()));
 
-    public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterial.SENSOR_GLASSES, EquipmentSlot.HEAD, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterial.SENSOR_GLASSES, EquipmentSlot.HEAD, new Item.Properties());
 
     // TOOLS + WEAPONS
-    public static final Item HEAVY_DUTY_SWORD = new BrittleSwordItem(GCToolMaterial.STEEL, 3, -2.4F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item HEAVY_DUTY_SHOVEL = new ShovelItem(GCToolMaterial.STEEL, -1.5F, -3.0F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item HEAVY_DUTY_PICKAXE = new PickaxeItem(GCToolMaterial.STEEL, 1, -2.8F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item HEAVY_DUTY_AXE = new AxeItem(GCToolMaterial.STEEL, 6.0F, -3.1F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item HEAVY_DUTY_HOE = new HoeItem(GCToolMaterial.STEEL, -2, -1.0F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item HEAVY_DUTY_SWORD = new BrittleSwordItem(GCToolMaterial.STEEL, 3, -2.4F, new Item.Properties());
+    public static final Item HEAVY_DUTY_SHOVEL = new ShovelItem(GCToolMaterial.STEEL, -1.5F, -3.0F, new Item.Properties());
+    public static final Item HEAVY_DUTY_PICKAXE = new PickaxeItem(GCToolMaterial.STEEL, 1, -2.8F, new Item.Properties());
+    public static final Item HEAVY_DUTY_AXE = new AxeItem(GCToolMaterial.STEEL, 6.0F, -3.1F, new Item.Properties());
+    public static final Item HEAVY_DUTY_HOE = new HoeItem(GCToolMaterial.STEEL, -2, -1.0F, new Item.Properties());
 
-    public static final Item DESH_SWORD = new SwordItem(GCToolMaterial.DESH, 3, -2.4F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item DESH_SHOVEL = new ShovelItem(GCToolMaterial.DESH, -1.5F, -3.0F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item DESH_PICKAXE = new PickaxeItem(GCToolMaterial.DESH, 1, -2.8F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item DESH_AXE = new AxeItem(GCToolMaterial.DESH, 6.0F, -3.1F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item DESH_HOE = new HoeItem(GCToolMaterial.DESH, -3, -1.0F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item DESH_SWORD = new SwordItem(GCToolMaterial.DESH, 3, -2.4F, new Item.Properties());
+    public static final Item DESH_SHOVEL = new ShovelItem(GCToolMaterial.DESH, -1.5F, -3.0F, new Item.Properties());
+    public static final Item DESH_PICKAXE = new PickaxeItem(GCToolMaterial.DESH, 1, -2.8F, new Item.Properties());
+    public static final Item DESH_AXE = new AxeItem(GCToolMaterial.DESH, 6.0F, -3.1F, new Item.Properties());
+    public static final Item DESH_HOE = new HoeItem(GCToolMaterial.DESH, -3, -1.0F, new Item.Properties());
 
-    public static final Item TITANIUM_SWORD = new BrittleSwordItem(GCToolMaterial.TITANIUM, 3, -2.4F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item TITANIUM_SHOVEL = new ShovelItem(GCToolMaterial.TITANIUM, -1.5F, -3.0F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item TITANIUM_PICKAXE = new PickaxeItem(GCToolMaterial.TITANIUM, 1, -2.8F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item TITANIUM_AXE = new AxeItem(GCToolMaterial.TITANIUM, 6.0F, -3.1F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item TITANIUM_HOE = new HoeItem(GCToolMaterial.TITANIUM, -3, -1.0F, new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item TITANIUM_SWORD = new BrittleSwordItem(GCToolMaterial.TITANIUM, 3, -2.4F, new Item.Properties());
+    public static final Item TITANIUM_SHOVEL = new ShovelItem(GCToolMaterial.TITANIUM, -1.5F, -3.0F, new Item.Properties());
+    public static final Item TITANIUM_PICKAXE = new PickaxeItem(GCToolMaterial.TITANIUM, 1, -2.8F, new Item.Properties());
+    public static final Item TITANIUM_AXE = new AxeItem(GCToolMaterial.TITANIUM, 6.0F, -3.1F, new Item.Properties());
+    public static final Item TITANIUM_HOE = new HoeItem(GCToolMaterial.TITANIUM, -3, -1.0F, new Item.Properties());
 
-    public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Properties());
 
     // BATTERIES
-    public static final Item BATTERY = new BatteryItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP), 15000, 500);
-    public static final Item INFINITE_BATTERY = new InfiniteBatteryItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).rarity(Rarity.EPIC));
+    public static final Item BATTERY = new BatteryItem(new Item.Properties(), 15000, 500);
+    public static final Item INFINITE_BATTERY = new InfiniteBatteryItem(new Item.Properties().rarity(Rarity.EPIC));
 
     //FLUID BUCKETS
-    public static final Item CRUDE_OIL_BUCKET = new BucketItem(GCFluids.CRUDE_OIL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item FUEL_BUCKET = new BucketItem(GCFluids.FUEL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item CRUDE_OIL_BUCKET = new BucketItem(GCFluids.CRUDE_OIL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
+    public static final Item FUEL_BUCKET = new BucketItem(GCFluids.FUEL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //GALACTICRAFT INVENTORY
-    public static final Item PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item ORANGE_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item MAGENTA_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item LIGHT_BLUE_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item YELLOW_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item LIME_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item PINK_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item GRAY_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item LIGHT_GRAY_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item CYAN_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item PURPLE_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item BLUE_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item BROWN_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item GREEN_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item RED_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
-    public static final Item BLACK_PARACHUTE = new Item(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP).stacksTo(1));
+    public static final Item PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item ORANGE_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item MAGENTA_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item LIGHT_BLUE_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item YELLOW_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item LIME_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item PINK_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item GRAY_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item LIGHT_GRAY_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item CYAN_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item PURPLE_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item BLUE_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item BROWN_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item GREEN_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item RED_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final Item BLACK_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
 
-    public static final Item OXYGEN_MASK = new OxygenMaskItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item OXYGEN_GEAR = new OxygenGearItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item OXYGEN_MASK = new OxygenMaskItem(new Item.Properties());
+    public static final Item OXYGEN_GEAR = new OxygenGearItem(new Item.Properties());
 
-    public static final Item SMALL_OXYGEN_TANK = new OxygenTankItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP), 1620 * 10); // 16200 ticks
-    public static final Item MEDIUM_OXYGEN_TANK = new OxygenTankItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP), 1620 * 20); //32400 ticks
-    public static final Item LARGE_OXYGEN_TANK = new OxygenTankItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP), 1620 * 30); //48600 ticks
-    public static final Item INFINITE_OXYGEN_TANK = new InfiniteOxygenTankItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item SMALL_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 10); // 16200 ticks
+    public static final Item MEDIUM_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 20); //32400 ticks
+    public static final Item LARGE_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 30); //48600 ticks
+    public static final Item INFINITE_OXYGEN_TANK = new InfiniteOxygenTankItem(new Item.Properties());
 
-    public static final Item SHIELD_CONTROLLER = new AccessoryItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item FREQUENCY_MODULE = new FrequencyModuleItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item SHIELD_CONTROLLER = new AccessoryItem(new Item.Properties());
+    public static final Item FREQUENCY_MODULE = new FrequencyModuleItem(new Item.Properties());
 
-    public static final Item THERMAL_PADDING_HELMET = new ThermalArmorItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP), EquipmentSlot.HEAD);
-    public static final Item THERMAL_PADDING_CHESTPIECE = new ThermalArmorItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP), EquipmentSlot.CHEST);
-    public static final Item THERMAL_PADDING_LEGGINGS = new ThermalArmorItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP), EquipmentSlot.LEGS);
-    public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP), EquipmentSlot.FEET);
+    public static final Item THERMAL_PADDING_HELMET = new ThermalArmorItem(new Item.Properties(), EquipmentSlot.HEAD);
+    public static final Item THERMAL_PADDING_CHESTPIECE = new ThermalArmorItem(new Item.Properties(), EquipmentSlot.CHEST);
+    public static final Item THERMAL_PADDING_LEGGINGS = new ThermalArmorItem(new Item.Properties(), EquipmentSlot.LEGS);
+    public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem(new Item.Properties(), EquipmentSlot.FEET);
     // ROCKETS
-    public static final Item ROCKET = new RocketItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item ROCKET = new RocketItem(new Item.Properties());
 
     // SCHEMATICS
-    public static final Item TIER_2_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item CARGO_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item MOON_BUGGY_SCHEMATIC = new SchematicItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
-    public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem(new Item.Properties().tab(GCItemGroup.ITEMS_GROUP));
+    public static final Item TIER_2_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
+    public static final Item CARGO_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
+    public static final Item MOON_BUGGY_SCHEMATIC = new SchematicItem(new Item.Properties());
+    public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
+    public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem(new Item.Properties());
 
-    public static final BlockItem AIR_LOCK_FRAME = new BlockItem(GCBlocks.AIR_LOCK_FRAME, new FabricItemSettings().tab(GCItemGroup.ITEMS_GROUP));
-    public static final BlockItem AIR_LOCK_CONTROLLER = new BlockItem(GCBlocks.AIR_LOCK_CONTROLLER, new FabricItemSettings().tab(GCItemGroup.ITEMS_GROUP));
-    public static final BlockItem AIR_LOCK_SEAL = new BlockItem(GCBlocks.AIR_LOCK_SEAL, new FabricItemSettings().tab(GCItemGroup.ITEMS_GROUP));
+    public static final BlockItem AIR_LOCK_FRAME = new BlockItem(GCBlocks.AIR_LOCK_FRAME, new FabricItemSettings());
+    public static final BlockItem AIR_LOCK_CONTROLLER = new BlockItem(GCBlocks.AIR_LOCK_CONTROLLER, new FabricItemSettings());
+    public static final BlockItem AIR_LOCK_SEAL = new BlockItem(GCBlocks.AIR_LOCK_SEAL, new FabricItemSettings());
 
     
     public static void register() {

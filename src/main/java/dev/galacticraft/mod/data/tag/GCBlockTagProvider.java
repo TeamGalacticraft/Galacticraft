@@ -22,9 +22,15 @@
 
 package dev.galacticraft.mod.data.tag;
 
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -35,6 +41,54 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
+        this.tag(GCTags.INFINIBURN_MOON)
+                .add(this.reverseLookup(GCBlocks.MOON_BASALT_BRICK));
+        this.tag(GCTags.BASE_STONE_MOON)
+                .add(this.reverseLookup(GCBlocks.MOON_ROCK));
+        this.tag(GCTags.MOON_CARVER_REPLACEABLES)
+                .add(this.reverseLookup(GCBlocks.MOON_ROCK))
+                .add(this.reverseLookup(GCBlocks.MOON_SURFACE_ROCK))
+                .add(this.reverseLookup(GCBlocks.MOON_BASALT))
+                .add(this.reverseLookup(GCBlocks.MOON_DIRT))
+                .add(this.reverseLookup(GCBlocks.MOON_TURF));
+        this.tag(GCTags.MOON_CRATER_CARVER_REPLACEABLES)
+                .add(this.reverseLookup(GCBlocks.MOON_ROCK))
+                .add(this.reverseLookup(GCBlocks.MOON_SURFACE_ROCK))
+                .add(this.reverseLookup(GCBlocks.MOON_BASALT))
+                .add(this.reverseLookup(GCBlocks.MOON_DIRT))
+                .add(this.reverseLookup(GCBlocks.MOON_TURF));
+        this.tag(GCTags.MOON_STONE_ORE_REPLACABLES)
+                .add(this.reverseLookup(GCBlocks.MOON_ROCK))
+                .add(this.reverseLookup(GCBlocks.MOON_BASALT));
+        this.tag(GCTags.LUNASLATE_ORE_REPLACABLES)
+                .add(this.reverseLookup(GCBlocks.LUNASLATE));
 
+        this.tag(BlockTags.CLIMBABLE)
+                .add(this.reverseLookup(GCBlocks.TIN_LADDER));
+
+        this.tag(BlockTags.WALLS)
+                .add(this.reverseLookup(GCBlocks.TIN_DECORATION_WALL))
+                .add(this.reverseLookup(GCBlocks.COPPER_DECORATION_WALL))
+                .add(this.reverseLookup(GCBlocks.BRONZE_DECORATION_WALL))
+                .add(this.reverseLookup(GCBlocks.STEEL_DECORATION_WALL))
+                .add(this.reverseLookup(GCBlocks.TITANIUM_DECORATION_WALL))
+                .add(this.reverseLookup(GCBlocks.IRON_DECORATION_WALL))
+                .add(this.reverseLookup(GCBlocks.ALUMINUM_DECORATION_WALL))
+                .add(this.reverseLookup(GCBlocks.METEORIC_IRON_DECORATION_WALL))
+
+                .add(this.reverseLookup(GCBlocks.DETAILED_TIN_DECORATION_WALL))
+                .add(this.reverseLookup(GCBlocks.DETAILED_COPPER_DECORATION_WALL))
+                .add(this.reverseLookup(GCBlocks.DETAILED_BRONZE_DECORATION_WALL))
+                .add(this.reverseLookup(GCBlocks.DETAILED_STEEL_DECORATION_WALL))
+                .add(this.reverseLookup(GCBlocks.DETAILED_TITANIUM_DECORATION_WALL))
+                .add(this.reverseLookup(GCBlocks.DETAILED_IRON_DECORATION_WALL))
+                .add(this.reverseLookup(GCBlocks.DETAILED_ALUMINUM_DECORATION_WALL))
+                .add(this.reverseLookup(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_WALL))
+
+                .add(this.reverseLookup(GCBlocks.MOON_ROCK_WALL))
+                .add(this.reverseLookup(GCBlocks.COBBLED_MOON_ROCK_WALL))
+                .add(this.reverseLookup(GCBlocks.MOON_BASALT_WALL))
+                .add(this.reverseLookup(GCBlocks.MOON_BASALT_BRICK_WALL));
+        ;
     }
 }

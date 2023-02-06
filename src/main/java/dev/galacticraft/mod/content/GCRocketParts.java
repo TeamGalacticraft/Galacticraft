@@ -22,29 +22,13 @@
 
 package dev.galacticraft.mod.content;
 
-import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
-import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
-import dev.galacticraft.api.registry.AddonRegistry;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.*;
-import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
-import dev.galacticraft.impl.rocket.travelpredicate.config.AccessWeightTravelPredicateConfig;
-import dev.galacticraft.impl.rocket.travelpredicate.type.ConstantTravelPredicateType;
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.worldgen.BootstapContext;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class GCRocketParts {
     public static final ResourceKey<RocketCone<?, ?>> TIER_1_CONE = cone("tier_1");

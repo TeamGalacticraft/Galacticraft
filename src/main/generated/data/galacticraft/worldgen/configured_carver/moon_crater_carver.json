@@ -1,0 +1,35 @@
+{
+  "type": "galacticraft:craters",
+  "config": {
+    "debug_settings": {
+      "barrier_state": {
+        "Name": "minecraft:glass"
+      },
+      "lava_state": {
+        "Name": "minecraft:orange_stained_glass"
+      },
+      "water_state": {
+        "Name": "minecraft:candle",
+        "Properties": {
+          "candles": "1",
+          "lit": "false",
+          "waterlogged": "false"
+        }
+      }
+    },
+    "ideal_range_offset": 8,
+    "max_radius": 27,
+    "min_radius": 8,
+    "probability": 0.05,
+    "y": {
+      "absolute": 128
+    },
+    "y_scale": {
+      "type": "minecraft:uniform",
+      "value": {
+        "max_exclusive": 0.6,
+        "min_inclusive": 0.4
+      }
+    }
+  }
+}

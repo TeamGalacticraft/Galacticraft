@@ -56,7 +56,7 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
         final var electricCompressor = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_COMPRESSOR, GCBlockEntityTypes.ELECTRIC_COMPRESSOR);
         final var inv = electricCompressor.itemStorage();
         fillElectricCompressorSlots(inv);
-        electricCompressor.energyStorage().setEnergyUnsafe(electricCompressor.getEnergyCapacity());
+        electricCompressor.energyStorage().setEnergy(electricCompressor.energyStorage().getCapacity());
         runFinalTaskAt(context, 200 + 1, () -> {
             ItemStack output = inv.getStack(ElectricCompressorBlockEntity.OUTPUT_SLOT);
             if (output.getItem() != GCItem.COMPRESSED_IRON) {
@@ -70,7 +70,7 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var electricCompressor = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_COMPRESSOR, GCBlockEntityTypes.ELECTRIC_COMPRESSOR);
         final var inv = electricCompressor.itemStorage();
-        electricCompressor.energyStorage().setEnergyUnsafe(electricCompressor.getEnergyCapacity());
+        electricCompressor.energyStorage().setEnergy(electricCompressor.energyStorage().getCapacity());
         inv.setSlot(ElectricCompressorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
         inv.setSlot(ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
         fillElectricCompressorSlots(inv);

@@ -24,6 +24,7 @@ package dev.galacticraft.mod.gametest.test;
 
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 
@@ -55,7 +56,7 @@ public interface GalacticraftGameTest extends FabricGameTest {
         } else if (stack.isEmpty()) {
             return "empty";
         } else {
-            return String.format("%s %s", stack.getCount(), Registry.ITEM.getKey(stack.getItem()));
+            return String.format("%s %s", stack.getCount(), BuiltInRegistries.ITEM.getKey(stack.getItem()));
         }
     }
 }

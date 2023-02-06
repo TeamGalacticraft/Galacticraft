@@ -46,8 +46,7 @@ public class WireWalkwayUnbakedModel implements UnbakedModel {
     }
 
     @Override
-    public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        return Arrays.asList(new Material(InventoryMenu.BLOCK_ATLAS, WireWalkwayBakedModel.ALUMINUM_WIRE), new Material(InventoryMenu.BLOCK_ATLAS, WireWalkwayBakedModel.WALKWAY_TEX));
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> function) {
     }
 
     @Override

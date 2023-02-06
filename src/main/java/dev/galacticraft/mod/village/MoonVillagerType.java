@@ -37,12 +37,11 @@ public class MoonVillagerType {
     public static final List<VillagerType> MOON_VILLAGER_TYPE_REGISTRY = new LinkedList<>();
 
     public static final VillagerType MOON_HIGHLANDS = VillagerTypeHelper.register(new ResourceLocation(Constant.MOD_ID, "moon_highlands"));
-    public static final VillagerType MOON_HIGHLANDS_ROCKS = VillagerTypeHelper.register(new ResourceLocation(Constant.MOD_ID, "moon_highlands_edge"));
+//    public static final VillagerType MOON_HIGHLANDS_ROCKS = VillagerTypeHelper.register(new ResourceLocation(Constant.MOD_ID, "moon_highlands_edge"));
 
     public static void register() {
-        VillagerType.BY_BIOME.put(GCBiomes.Moon.HIGHLANDS, MOON_HIGHLANDS);
-        VillagerType.BY_BIOME.put(GCBiomes.Moon.HIGHLANDS_EDGE, MOON_HIGHLANDS_ROCKS);
+        VillagerType.BY_BIOME.put(GCBiomes.Moon.LUNAR_HIGHLANDS, MOON_HIGHLANDS);
         MOON_VILLAGER_TYPE_REGISTRY.add(MOON_HIGHLANDS);
-        MOON_VILLAGER_TYPE_REGISTRY.add(MOON_HIGHLANDS_ROCKS);
+//        MOON_VILLAGER_TYPE_REGISTRY.add(MOON_HIGHLANDS_ROCKS);
     }
 }

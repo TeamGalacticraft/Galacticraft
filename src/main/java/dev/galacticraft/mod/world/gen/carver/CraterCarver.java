@@ -28,6 +28,7 @@ import dev.galacticraft.mod.world.gen.structure.GCStructures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
@@ -36,6 +37,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Aquifer;
 import net.minecraft.world.level.levelgen.carver.CarvingContext;
 import net.minecraft.world.level.levelgen.carver.WorldCarver;
+import net.minecraft.world.level.levelgen.structure.Structure;
 
 import java.util.function.Function;
 
@@ -53,7 +55,7 @@ public class CraterCarver extends WorldCarver<CraterCarverConfig> {
         //pos = center chunk pos
         BlockPos craterCenter = pos.getBlockAt(random.nextInt(16), y, random.nextInt(16));
 
-        if (!chunk.getReferencesForStructure(GCStructures.MOON_VILLAGE_HIGHLANDS.value()).isEmpty()) {
+        if (!chunk.getReferencesForStructure(context.registryAccess().registryOrThrow(Registries.STRUCTURE).getOrThrow(GCStructures.Moon.VILLAGE)).isEmpty()) {
             return false;
         }
 
