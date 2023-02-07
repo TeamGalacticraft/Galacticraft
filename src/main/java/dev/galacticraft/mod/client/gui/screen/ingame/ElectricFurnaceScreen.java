@@ -52,7 +52,7 @@ public class ElectricFurnaceScreen extends MachineScreen<ElectricFurnaceBlockEnt
     protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
         super.renderBackground(matrices, mouseX, mouseY, delta);
         if (this.menu.getMaxProgress() > 0 && this.menu.getProgress() != 0) {
-            double scale = ((double)menu.machine.getProgress()) / ((double)menu.machine.getMaxProgress());
+            double scale = ((double)menu.getProgress()) / ((double)menu.getMaxProgress());
 
             DrawableUtil.drawProgressTexture(matrices, this.leftPos + ARROW_X, this.topPos + ARROW_Y, ARROW_U, ARROW_V, (float)(((double)ARROW_WIDTH) * scale), ARROW_HEIGHT);
         }

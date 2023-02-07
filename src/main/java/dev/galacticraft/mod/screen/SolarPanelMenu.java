@@ -42,8 +42,8 @@ public class SolarPanelMenu<Machine extends MachineBlockEntity & SolarPanel> ext
     private @NotNull SolarPanel.SolarPanelSource source;
     private long energyGeneration;
 
-    public SolarPanelMenu(int syncId, @NotNull ServerPlayer player, @NotNull Machine machine, @NotNull MachineType<Machine, ? extends MachineMenu<Machine>> type) {
-        super(syncId, player, machine, type);
+    public SolarPanelMenu(int syncId, @NotNull ServerPlayer player, @NotNull Machine machine) {
+        super(syncId, player, machine);
 
         this.followsSun = machine.followsSun();
         this.nightCollection = machine.nightCollection();

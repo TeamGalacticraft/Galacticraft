@@ -22,20 +22,33 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
+import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenCollectorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.joml.Vector3f;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class OxygenCollectorBlock extends SimpleMachineBlock<OxygenCollectorBlockEntity> {
+public class OxygenCollectorBlock extends MachineBlock<OxygenCollectorBlockEntity> {
+    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
+
     public OxygenCollectorBlock(Properties settings) {
         super(settings, OxygenCollectorBlockEntity::new);
+        this.registerDefaultState(this.defaultBlockState().setValue(ACTIVE, false));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(ACTIVE);
     }
 
     @Override

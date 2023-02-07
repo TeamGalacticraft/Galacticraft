@@ -43,7 +43,7 @@ public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistrib
     public double size;
 
     public OxygenBubbleDistributorMenu(int syncId, ServerPlayer player, OxygenBubbleDistributorBlockEntity machine) {
-        super(syncId, player, machine, GCMachineTypes.OXYGEN_BUBBLE_DISTRIBUTOR);
+        super(syncId, player, machine);
     }
 
     public OxygenBubbleDistributorMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {

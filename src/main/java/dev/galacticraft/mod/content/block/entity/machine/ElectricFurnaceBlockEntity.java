@@ -116,8 +116,7 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Contain
             return new RecipeMachineMenu<>(
                     syncId,
                     (ServerPlayer) player,
-                    this,
-                    GCMachineTypes.ELECTRIC_FURNACE
+                    this
             );
         }
         return null;

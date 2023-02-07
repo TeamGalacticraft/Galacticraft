@@ -140,8 +140,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
             return new RecipeMachineMenu<>(
                     syncId,
                     (ServerPlayer) player,
-                    this,
-                    GCMachineTypes.ELECTRIC_COMPRESSOR
+                    this
             );
         }
         return null;

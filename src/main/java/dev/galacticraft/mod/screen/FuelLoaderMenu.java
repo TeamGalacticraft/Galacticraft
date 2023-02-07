@@ -54,7 +54,7 @@ public class FuelLoaderMenu extends MachineMenu<FuelLoaderBlockEntity> {
     public long fluidCapacity = 0;
 
     public FuelLoaderMenu(int syncId, ServerPlayer player, FuelLoaderBlockEntity machine) {
-        super(syncId, player, machine, GCMachineTypes.FUEL_LOADER);
+        super(syncId, player, machine);
     }
 
     public FuelLoaderMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {

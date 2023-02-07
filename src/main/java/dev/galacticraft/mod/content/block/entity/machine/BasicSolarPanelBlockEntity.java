@@ -104,8 +104,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
             return new SolarPanelMenu<>(
                     syncId,
                     ((ServerPlayer) player),
-                    this,
-                    GCMachineTypes.BASIC_SOLAR_PANEL
+                    this
             );
         }
         return null;

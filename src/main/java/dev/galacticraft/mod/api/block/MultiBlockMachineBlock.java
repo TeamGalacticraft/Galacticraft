@@ -39,8 +39,8 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public abstract class MultiBlockMachineBlock<T extends MachineBlockEntity> extends MachineBlock<T> implements MultiBlockBase {
-    protected MultiBlockMachineBlock(Properties settings) {
-        super(settings);
+    protected MultiBlockMachineBlock(Properties settings, MachineBlockEntityFactory<T> factory) {
+        super(settings, factory);
     }
 
     @Override

@@ -31,6 +31,7 @@ import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.content.block.machine.OxygenCollectorBlock;
 import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.OxygenCollectorMenu;
@@ -134,6 +135,14 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         } finally {
             profiler.pop();
         }
+    }
+
+    @Override
+    public void setStatus(@NotNull MachineStatus status) {
+        if (this.getStatus() != status) {
+            this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(OxygenCollectorBlock.ACTIVE, status.type().isActive()));
+        }
+        super.setStatus(status);
     }
 
     @Nullable

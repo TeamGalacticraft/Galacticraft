@@ -1,6 +1,5 @@
 {
-  "machine": "galacticraft:compressor",
-  "sprite_provider": "machinelib:front_face",
+  "machinelib:generated": "machinelib:front_face",
   "sprite_info": {
     "sprite": "galacticraft:block/compressor"
   }

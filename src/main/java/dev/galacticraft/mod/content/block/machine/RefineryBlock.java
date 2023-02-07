@@ -22,24 +22,32 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
+import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class RefineryBlock extends SimpleMachineBlock<RefineryBlockEntity> {
+public class RefineryBlock extends MachineBlock<RefineryBlockEntity> {
+    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
+
     public RefineryBlock(Properties settings) {
         super(settings, RefineryBlockEntity::new);
+        this.registerDefaultState(this.defaultBlockState().setValue(ACTIVE, false));
     }
 
     @Override
-    public RefineryBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new RefineryBlockEntity(pos, state);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(ACTIVE);
     }
 
     @Override

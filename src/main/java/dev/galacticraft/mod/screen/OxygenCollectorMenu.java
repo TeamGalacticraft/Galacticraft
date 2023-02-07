@@ -40,8 +40,8 @@ import java.util.function.Consumer;
 public class OxygenCollectorMenu extends MachineMenu<OxygenCollectorBlockEntity> {
     public int collectionAmount = 0;
 
-    public OxygenCollectorMenu(int syncId, ServerPlayer player, OxygenCollectorBlockEntity blockEntity) {
-        super(syncId, player, blockEntity, GCMachineTypes.OXYGEN_COLLECTOR);
+    public OxygenCollectorMenu(int syncId, ServerPlayer player, OxygenCollectorBlockEntity machine) {
+        super(syncId, player, machine);
     }
 
     public OxygenCollectorMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {

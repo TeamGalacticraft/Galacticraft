@@ -42,7 +42,7 @@ public class CompressorMenu extends RecipeMachineMenu<Container, CompressingReci
     private int fuelLength = 0;
 
     public CompressorMenu(int syncId, ServerPlayer player, CompressorBlockEntity machine) {
-        super(syncId, player, machine, GCMachineTypes.COMPRESSOR);
+        super(syncId, player, machine);
     }
 
     public CompressorMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {

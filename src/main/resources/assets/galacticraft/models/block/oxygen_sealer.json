@@ -1,6 +1,5 @@
 {
-  "machine": "galacticraft:oxygen_sealer",
-  "sprite_provider": "galacticraft:oxygen_sealer",
+  "machinelib:generated": "galacticraft:oxygen_sealer",
   "sprite_info": {
     "right": "galacticraft:block/machine_power_input",
     "left": "galacticraft:block/machine_fluid_input",

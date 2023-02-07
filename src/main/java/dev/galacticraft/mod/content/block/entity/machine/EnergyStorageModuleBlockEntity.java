@@ -77,8 +77,7 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
             return new MachineMenu<>(
                     syncId,
                     (ServerPlayer) player,
-                    this,
-                    GCMachineTypes.ENERGY_STORAGE_MODULE
+                    this
             );
         }
         return null;

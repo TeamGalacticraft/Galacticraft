@@ -148,8 +148,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
             return new RecipeMachineMenu<>(
                     syncId,
                     ((ServerPlayer) player),
-                    this,
-                    GCMachineTypes.CIRCUIT_FABRICATOR
+                    this
             );
         }
         return null;

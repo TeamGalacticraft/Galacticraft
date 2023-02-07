@@ -41,7 +41,7 @@ public class CoalGeneratorMenu extends MachineMenu<CoalGeneratorBlockEntity> {
     private int fuelLength;
 
     public CoalGeneratorMenu(int syncId, @NotNull ServerPlayer player, @NotNull CoalGeneratorBlockEntity machine) {
-        super(syncId, player, machine, GCMachineTypes.COAL_GENERATOR);
+        super(syncId, player, machine);
     }
 
     public CoalGeneratorMenu(int syncId, @NotNull Inventory inventory, @NotNull FriendlyByteBuf buf) {

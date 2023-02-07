@@ -113,8 +113,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
             return new SolarPanelMenu<>(
                     syncId,
                     ((ServerPlayer) player),
-                    this,
-                    GCMachineTypes.ADVANCED_SOLAR_PANEL
+                    this
             );
         }
         return null;

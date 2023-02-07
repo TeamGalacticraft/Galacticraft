@@ -51,8 +51,6 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 
-import static dev.galacticraft.mod.content.block.machine.SimpleMachineBlock.MACHINE_DEFAULT_SETTINGS;
-
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
@@ -294,27 +292,27 @@ public class GCBlocks {
     public static final BaseEntityBlock CRYOGENIC_CHAMBER_PART = new CryogenicChamberPart(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).noLootTable().sound(SoundType.METAL));
 
     // MISC MACHINES
-    public static final Block CRYOGENIC_CHAMBER = new CryogenicChamberBlock(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS));
-    public static final Block PLAYER_TRANSPORT_TUBE = new TransportTube(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS).noCollission());
+    public static final Block CRYOGENIC_CHAMBER = new CryogenicChamberBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL));
+    public static final Block PLAYER_TRANSPORT_TUBE = new TransportTube(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL).noCollission());
 
     // MACHINES
-    public static final MachineBlock<CircuitFabricatorBlockEntity> CIRCUIT_FABRICATOR = SimpleMachineBlock.create(CircuitFabricatorBlockEntity::new);
-    public static final MachineBlock<CompressorBlockEntity> COMPRESSOR = SimpleMachineBlock.create(CompressorBlockEntity::new);
-    public static final MachineBlock<ElectricCompressorBlockEntity> ELECTRIC_COMPRESSOR = SimpleMachineBlock.create(ElectricCompressorBlockEntity::new);
-    public static final MachineBlock<CoalGeneratorBlockEntity> COAL_GENERATOR = new CoalGeneratorBlock(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS).lightLevel(state -> state.getValue(MachineBlock.ACTIVE) ? 13 : 0));
-    public static final MachineBlock<BasicSolarPanelBlockEntity> BASIC_SOLAR_PANEL = SimpleMultiBlockMachineBlock.create(BasicSolarPanelBlockEntity::new, MultiBlockUtil.generateSolarPanelParts(), GCBlocks.SOLAR_PANEL_PART);
-    public static final MachineBlock<AdvancedSolarPanelBlockEntity> ADVANCED_SOLAR_PANEL = SimpleMultiBlockMachineBlock.create(AdvancedSolarPanelBlockEntity::new, MultiBlockUtil.generateSolarPanelParts(), GCBlocks.SOLAR_PANEL_PART);
-    public static final MachineBlock<EnergyStorageModuleBlockEntity> ENERGY_STORAGE_MODULE = SimpleMachineBlock.create(EnergyStorageModuleBlockEntity::new);
-    public static final MachineBlock<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE = SimpleMachineBlock.create(ElectricFurnaceBlockEntity::new);
-    public static final MachineBlock<ElectricArcFurnaceBlockEntity> ELECTRIC_ARC_FURNACE = SimpleMachineBlock.create(ElectricArcFurnaceBlockEntity::new);
-    public static final MachineBlock<RefineryBlockEntity> REFINERY = new RefineryBlock(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS));
-    public static final MachineBlock<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR = new OxygenCollectorBlock(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS));
-    public static final MachineBlock<OxygenSealerBlockEntity> OXYGEN_SEALER = SimpleMachineBlock.create(OxygenSealerBlockEntity::new);
-    public static final MachineBlock<OxygenBubbleDistributorBlockEntity> OXYGEN_BUBBLE_DISTRIBUTOR = SimpleMachineBlock.create(OxygenBubbleDistributorBlockEntity::new);
-    public static final MachineBlock<OxygenDecompressorBlockEntity> OXYGEN_DECOMPRESSOR = SimpleMachineBlock.create(OxygenDecompressorBlockEntity::new);
-    public static final MachineBlock<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR = SimpleMachineBlock.create(OxygenCompressorBlockEntity::new);
-    public static final MachineBlock<OxygenStorageModuleBlockEntity> OXYGEN_STORAGE_MODULE = SimpleMachineBlock.create(OxygenStorageModuleBlockEntity::new);
-    public static final MachineBlock<FuelLoaderBlockEntity> FUEL_LOADER = new FuelLoaderBlock(FabricBlockSettings.copyOf(MACHINE_DEFAULT_SETTINGS));
+    public static final Block CIRCUIT_FABRICATOR = new MachineBlock<>(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL), CircuitFabricatorBlockEntity::new);
+    public static final Block COMPRESSOR = new MachineBlock<>(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL), CompressorBlockEntity::new);
+    public static final Block ELECTRIC_COMPRESSOR = new MachineBlock<>(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL), ElectricCompressorBlockEntity::new);
+    public static final Block COAL_GENERATOR = new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL).luminance(state -> state.getValue(CoalGeneratorBlock.ACTIVE) ? 13 : 0));
+    public static final Block BASIC_SOLAR_PANEL = SimpleMultiBlockMachineBlock.create(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL), BasicSolarPanelBlockEntity::new, MultiBlockUtil.generateSolarPanelParts(), GCBlocks.SOLAR_PANEL_PART);
+    public static final Block ADVANCED_SOLAR_PANEL = SimpleMultiBlockMachineBlock.create(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL), AdvancedSolarPanelBlockEntity::new, MultiBlockUtil.generateSolarPanelParts(), GCBlocks.SOLAR_PANEL_PART);
+    public static final Block ENERGY_STORAGE_MODULE = new MachineBlock<>(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL), EnergyStorageModuleBlockEntity::new);
+    public static final Block ELECTRIC_FURNACE = new MachineBlock<>(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL), ElectricFurnaceBlockEntity::new);
+    public static final Block ELECTRIC_ARC_FURNACE = new MachineBlock<>(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL), ElectricArcFurnaceBlockEntity::new);
+    public static final Block REFINERY = new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL));
+    public static final Block OXYGEN_COLLECTOR = new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL));
+    public static final Block OXYGEN_SEALER = new MachineBlock<>(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL), OxygenSealerBlockEntity::new);
+    public static final Block OXYGEN_BUBBLE_DISTRIBUTOR = new MachineBlock<>(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL), OxygenBubbleDistributorBlockEntity::new);
+    public static final Block OXYGEN_DECOMPRESSOR = new MachineBlock<>(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL), OxygenDecompressorBlockEntity::new);
+    public static final Block OXYGEN_COMPRESSOR = new MachineBlock<>(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL), OxygenCompressorBlockEntity::new);
+    public static final Block OXYGEN_STORAGE_MODULE = new MachineBlock<>(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL), OxygenStorageModuleBlockEntity::new);
+    public static final Block FUEL_LOADER = new FuelLoaderBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL));
 
     public static final AirlockBlock AIR_LOCK_FRAME = new AirlockBlock(false, FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));
     public static final AirlockBlock AIR_LOCK_CONTROLLER = new AirlockBlock(true, FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));

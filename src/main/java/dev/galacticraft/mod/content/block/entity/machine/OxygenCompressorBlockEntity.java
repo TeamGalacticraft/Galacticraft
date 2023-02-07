@@ -105,8 +105,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
             return new MachineMenu<>(
                     syncId,
                     (ServerPlayer) player,
-                    this,
-                    GCMachineTypes.OXYGEN_COMPRESSOR
+                    this
             );
         }
         return null;

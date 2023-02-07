@@ -31,6 +31,7 @@ import dev.galacticraft.machinelib.api.util.GenericApiUtil;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.content.block.machine.RefineryBlock;
 import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -104,6 +105,14 @@ public class RefineryBlockEntity extends MachineBlockEntity {
         }
     }
 
+    @Override
+    public void setStatus(@NotNull MachineStatus status) {
+        if (this.getStatus() != status) {
+            this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(RefineryBlock.ACTIVE, status.type().isActive()));
+        }
+        super.setStatus(status);
+    }
+
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
@@ -111,8 +120,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
             return new MachineMenu<>(
                     syncId,
                     (ServerPlayer) player,
-                    this,
-                    GCMachineTypes.REFINERY
+                    this
             );
         }
         return null;

@@ -812,6 +812,7 @@ public interface Constant {
     @ApiStatus.Internal
     interface Mixin {
         String STRUCTURE_POOL_DEBUG = "StructurePoolGeneratorMixin";
+        String DATAGEN_COMPRESSION = "DataProviderMixin";
     }
 
     interface Recipe {

@@ -201,8 +201,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
             return new MachineMenu<>(
                     syncId,
                     (ServerPlayer) player,
-                    this,
-                    GCMachineTypes.OXYGEN_SEALER
+                    this
             );
         }
         return null;

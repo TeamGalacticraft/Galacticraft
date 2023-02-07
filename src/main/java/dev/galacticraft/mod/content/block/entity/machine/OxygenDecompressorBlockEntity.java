@@ -93,8 +93,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
             return new MachineMenu<>(
                     syncId,
                     (ServerPlayer) player,
-                    this,
-                    GCMachineTypes.OXYGEN_DECOMPRESSOR
+                    this
             );
         }
         return null;

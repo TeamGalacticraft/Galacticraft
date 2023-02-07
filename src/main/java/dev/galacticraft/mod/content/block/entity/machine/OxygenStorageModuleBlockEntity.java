@@ -62,8 +62,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
             return new MachineMenu<>(
                     syncId,
                     (ServerPlayer) player,
-                    this,
-                    GCMachineTypes.OXYGEN_STORAGE_MODULE
+                    this
             );
         }
         return null;

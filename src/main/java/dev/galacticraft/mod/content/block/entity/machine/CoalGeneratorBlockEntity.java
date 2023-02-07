@@ -30,6 +30,7 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.content.block.machine.CoalGeneratorBlock;
 import dev.galacticraft.mod.machine.GCMachineStatus;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.CoalGeneratorMenu;
@@ -123,6 +124,14 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         } else {
             return GCMachineStatus.GENERATING;
         }
+    }
+
+    @Override
+    public void setStatus(@NotNull MachineStatus status) {
+        if (this.getStatus() != status) {
+            this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(CoalGeneratorBlock.ACTIVE, status.type().isActive()));
+        }
+        super.setStatus(status);
     }
 
     private boolean consumeFuel() {
