@@ -23,9 +23,11 @@
 package dev.galacticraft.mod.gametest.test.machine;
 
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.EnergyStorageModuleBlockEntity;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -41,11 +43,11 @@ public class EnergyStorageModuleTestSuite implements MachineGameTest {
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void energyStorageModuleChargingTest(GameTestHelper context) {
-        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.ENERGY_STORAGE_MODULE, GCBlockEntityTypes.ENERGY_STORAGE_MODULE, EnergyStorageModuleBlockEntity.DRAIN_FROM_BATTERY_SLOT);
+        this.testItemCharging(context, new BlockPos(0, 0, 0), GCMachineTypes.ENERGY_STORAGE_MODULE, GCSlotGroupTypes.ENERGY_TO_SELF);
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void energyStorageModuleDrainingTest(GameTestHelper context) {
-        this.testItemDraining(context, new BlockPos(0, 0, 0), GCBlocks.ENERGY_STORAGE_MODULE, GCBlockEntityTypes.ENERGY_STORAGE_MODULE, EnergyStorageModuleBlockEntity.CHARGE_TO_BATTERY_SLOT);
+        this.testItemDraining(context, new BlockPos(0, 0, 0), GCMachineTypes.ENERGY_STORAGE_MODULE, GCSlotGroupTypes.ENERGY_TO_ITEM);
     }
 }

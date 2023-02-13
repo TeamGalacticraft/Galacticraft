@@ -174,16 +174,16 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 
     // Mandatory Dependencies (Included with Jar-In-Jar)
-    listOf(
-        "model_loader",
-        "extensions",
-        "obj_loader",
-        "accessors",
-        "constants",
-        "common"
-    ).forEach {
-        includedDependency("io.github.fabricators_of_create.Porting-Lib:$it:${portingLibVersion}") { isTransitive = false }
-    }
+//    listOf(
+//        "model_loader",
+//        "extensions",
+//        "obj_loader",
+//        "accessors",
+//        "constants",
+//        "common"
+//    ).forEach {
+//        includedRuntimeDependency("io.github.fabricators_of_create.Porting-Lib:$it:${portingLibVersion}") { isTransitive = false }
+//    }
     includedDependency("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
@@ -307,6 +307,10 @@ fun DependencyHandler.optionalRuntimeOnly(dependencyNotation: String) {
 
 fun DependencyHandler.includedDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
     include(modApi(dependencyNotation, dependencyConfiguration), dependencyConfiguration)
+}
+
+fun DependencyHandler.includedRuntimeDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
+    include(runtimeOnly(dependencyNotation, dependencyConfiguration), dependencyConfiguration)
 }
 
 // inspired by https://github.com/TerraformersMC/GradleScripts/blob/2.0/ferry.gradle

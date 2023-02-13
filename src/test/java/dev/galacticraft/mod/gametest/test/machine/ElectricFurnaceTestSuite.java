@@ -23,10 +23,13 @@
 package dev.galacticraft.mod.gametest.test.machine;
 
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricFurnaceBlockEntity;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
@@ -46,7 +49,7 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void electricFurnaceChargeTest(GameTestHelper context) {
-        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.ELECTRIC_FURNACE, GCBlockEntityTypes.ELECTRIC_FURNACE, ElectricFurnaceBlockEntity.CHARGE_SLOT);
+        this.testItemCharging(context, new BlockPos(0, 0, 0), GCMachineTypes.ELECTRIC_FURNACE, GCSlotGroupTypes.ENERGY_TO_SELF);
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 201)
@@ -57,9 +60,9 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
         electricFurnace.energyStorage().setEnergy(electricFurnace.energyStorage().getCapacity());
         fillElectricFurnaceSlots(inv);
         runFinalTaskAt(context, 200 + 1, () -> {
-            ItemStack output = inv.getStack(ElectricFurnaceBlockEntity.OUTPUT_SLOT);
-            if (output.getItem() != Items.COOKED_PORKCHOP) {
-                context.fail(String.format("Expected electric furnace to have made a cooked porkchop but found %s instead!", formatItemStack(output)), pos);
+            ItemResourceSlot slot = inv.getSlot(GCSlotGroupTypes.GENERIC_OUTPUT);
+            if (slot.getResource() != Items.COOKED_PORKCHOP) {
+                context.fail(String.format("Expected electric furnace to have made a cooked porkchop but found %s instead!", formatItem(slot.getResource(), slot.getAmount())), pos);
             }
         });
     }
@@ -71,7 +74,8 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
         final var inv = electricFurnace.itemStorage();
         electricFurnace.energyStorage().setEnergy(electricFurnace.energyStorage().getCapacity());
         fillElectricFurnaceSlots(inv);
-        inv.setSlot(ElectricFurnaceBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
+        ItemResourceSlot slot = inv.getSlot(GCSlotGroupTypes.GENERIC_OUTPUT);
+        slot.set(Items.BARRIER, null, 1);
 
         runFinalTaskNext(context, () -> {
             if (electricFurnace.getMaxProgress() != 0) {
@@ -81,6 +85,6 @@ public class ElectricFurnaceTestSuite implements MachineGameTest {
     }
 
     private static void fillElectricFurnaceSlots(@NotNull MachineItemStorage inv) {
-        inv.setSlot(ElectricFurnaceBlockEntity.INPUT_SLOT, ItemVariant.of(Items.PORKCHOP), 1);
+        inv.getSlot(GCSlotGroupTypes.GENERIC_INPUT).set(Items.PORKCHOP, null, 1);
     }
 }

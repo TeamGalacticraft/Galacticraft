@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod;
 
+import dev.galacticraft.api.registry.BuiltInRocketRegistries;
+import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.mod.api.config.ConfigManager;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.command.GCCommand;
@@ -54,6 +56,7 @@ import dev.galacticraft.mod.world.gen.structure.GCStructureTypes;
 import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
 import dev.galacticraft.mod.world.poi.GCPointOfInterestType;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.core.WritableRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,7 +102,7 @@ public class Galacticraft implements ModInitializer {
         GCMachineStatus.register();
         GCBannerPattern.register();
         GCEventHandler.init();
-
+        WritableRegistry<TravelPredicateType<?>> travelPredicateType = BuiltInRocketRegistries.TRAVEL_PREDICATE_TYPE;
         LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

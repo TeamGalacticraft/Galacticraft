@@ -22,15 +22,15 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 /**
@@ -46,20 +46,19 @@ public class CoalGeneratorTestSuite implements MachineGameTest {
     public void coalGeneratorFuelingTest(GameTestHelper context) {
         final var pos = new BlockPos(0, 0, 0);
         final var coalGenerator = this.createBlockEntity(context, pos, GCBlocks.COAL_GENERATOR, GCBlockEntityTypes.COAL_GENERATOR);
-        coalGenerator.itemStorage().setSlot(CoalGeneratorBlockEntity.FUEL_SLOT, ItemVariant.of(Items.COAL), 2);
+        ItemResourceSlot slot = coalGenerator.itemStorage().getSlot(GCSlotGroupTypes.COAL);
+        slot.set(Items.COAL, null, 2);
         runNext(context, () -> {
-            ItemStack stack = coalGenerator.itemStorage().getStack(CoalGeneratorBlockEntity.FUEL_SLOT);
-            if (stack.isEmpty() || stack.getItem() != Items.COAL || stack.getCount() != 1) {
-                context.fail(String.format("Expected coal generator inventory to be have 1 coal but found %s!", formatItemStack(stack)), pos);
+            if (slot.isEmpty() || slot.getResource() != Items.COAL || slot.getAmount() != 1) {
+                context.fail(String.format("Expected coal generator inventory to be have 1 coal but found %s!", formatItem(slot.getResource(), slot.getAmount())), pos);
             }
+
             if (coalGenerator.getFuelLength() == 0) {
                 context.fail("Expected coal generator inventory to be burning fuel!", pos);
             }
             runFinalTaskAt(context, 320 + 1, () -> {
-                ItemStack stack1 = coalGenerator.itemStorage().getStack(CoalGeneratorBlockEntity.FUEL_SLOT);
-
-                if (!stack1.isEmpty()) {
-                    context.fail(String.format("Expected coal generator inventory to be empty but found %s!", formatItemStack(stack1)), pos);
+                if (!slot.isEmpty()) {
+                    context.fail(String.format("Expected coal generator inventory to be empty but found %s!", formatItem(slot.getResource(), slot.getAmount())), pos);
                 }
             });
         });

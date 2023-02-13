@@ -27,10 +27,13 @@ import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.structure.GCStructureTemplatePools;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderOwner;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.Structures;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
@@ -44,6 +47,8 @@ import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Map;
@@ -65,9 +70,9 @@ public class GCStructures {
     public static void bootstrapRegistries(BootstapContext<Structure> context) {
         HolderGetter<Biome> biomeLookup = context.lookup(Registries.BIOME);
         HolderGetter<StructureTemplatePool> templatePoolLookup = context.lookup(Registries.TEMPLATE_POOL);
-        context.register(Moon.RUINS, new MoonRuinsStructure(Structures.structure(biomeLookup.getOrThrow(GCTags.MOON_RUINS_HAS_STRUCTURE), TerrainAdjustment.BEARD_THIN)));
+        context.register(Moon.RUINS, new MoonRuinsStructure(Structures.structure(biomeLookup.get(GCTags.MOON_RUINS_HAS_STRUCTURE).orElseGet(() -> createEmptyTag(GCTags.MOON_RUINS_HAS_STRUCTURE)), TerrainAdjustment.BEARD_THIN)));
         context.register(Moon.PILLAGER_BASE, new JigsawStructure(
-                new Structure.StructureSettings(biomeLookup.getOrThrow(GCTags.MOON_PILLAGER_BASE_HAS_STRUCTURE), Map.of(MobCategory.MONSTER,
+                new Structure.StructureSettings(biomeLookup.get(GCTags.MOON_PILLAGER_BASE_HAS_STRUCTURE).orElseGet(() -> createEmptyTag(GCTags.MOON_PILLAGER_BASE_HAS_STRUCTURE)), Map.of(MobCategory.MONSTER,
                         new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.STRUCTURE,
                                 WeightedRandomList.create(new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_PILLAGER, 1, 1, 1))
                         )),
@@ -79,7 +84,7 @@ public class GCStructures {
                 Heightmap.Types.WORLD_SURFACE_WG
         ));
         context.register(Moon.VILLAGE, new JigsawStructure(
-                new Structure.StructureSettings(biomeLookup.getOrThrow(GCTags.MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE),
+                new Structure.StructureSettings(biomeLookup.get(GCTags.MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE).orElseGet(() -> createEmptyTag(GCTags.MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE)),
                         Collections.emptyMap(),
                         GenerationStep.Decoration.SURFACE_STRUCTURES,
                         TerrainAdjustment.BEARD_THIN),
@@ -89,5 +94,15 @@ public class GCStructures {
                 true,
                 Heightmap.Types.WORLD_SURFACE_WG
         ));
+    }
+
+    @Contract("_ -> new")
+    private static <T> HolderSet.@NotNull Named<T> createEmptyTag(@NotNull TagKey<T> tagKey) {
+        return HolderSet.emptyNamed(new HolderOwner<>() {
+            @Override
+            public boolean canSerializeIn(HolderOwner<T> holderOwner) {
+                return true;
+            }
+        }, tagKey);
     }
 }

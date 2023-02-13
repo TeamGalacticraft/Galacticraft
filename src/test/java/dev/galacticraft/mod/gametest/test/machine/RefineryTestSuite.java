@@ -22,12 +22,16 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
+import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -48,7 +52,7 @@ public class RefineryTestSuite implements MachineGameTest {
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void refineryChargingTest(GameTestHelper context) {
-        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.REFINERY, GCBlockEntityTypes.REFINERY, RefineryBlockEntity.CHARGE_SLOT);
+        this.testItemCharging(context, new BlockPos(0, 0, 0), GCMachineTypes.REFINERY, GCSlotGroupTypes.ENERGY_TO_SELF);
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
@@ -56,12 +60,12 @@ public class RefineryTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GCBlocks.REFINERY, GCBlockEntityTypes.REFINERY);
         final var inv = refinery.itemStorage();
-        inv.setSlot(RefineryBlockEntity.FLUID_INPUT_SLOT, ItemVariant.of(GCItem.CRUDE_OIL_BUCKET), 1);
+        ItemResourceSlot slot = inv.getSlot(GCSlotGroupTypes.OIL_FILL);
+        slot.set(GCItem.CRUDE_OIL_BUCKET, null, 1);
         refinery.energyStorage().setEnergy(refinery.energyStorage().getCapacity());
         runFinalTaskNext(context, () -> {
-            ItemStack inputStack = inv.getStack(RefineryBlockEntity.FLUID_INPUT_SLOT);
-            if (inputStack.getItem() != Items.BUCKET) {
-                context.fail(String.format("Expected refinery to return a bucket from fluid transaction but found %s instead!", formatItemStack(inputStack)), pos);
+            if (slot.getResource() != Items.BUCKET || slot.getAmount() != 1) {
+                context.fail(String.format("Expected refinery to return a bucket from fluid transaction but found %s instead!", formatItem(slot.getResource(), slot.getAmount())), pos);
             }
         });
     }
@@ -71,10 +75,12 @@ public class RefineryTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GCBlocks.REFINERY, GCBlockEntityTypes.REFINERY);
         refinery.energyStorage().setEnergy(refinery.energyStorage().getCapacity());
-        refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, FluidVariant.of(GCFluids.CRUDE_OIL), FluidConstants.BUCKET);
+        FluidResourceSlot oilInput = refinery.fluidStorage().getSlot(GCSlotGroupTypes.OIL_INPUT);
+        FluidResourceSlot fuelOutput = refinery.fluidStorage().getSlot(GCSlotGroupTypes.FUEL_OUTPUT);
+        oilInput.set(GCFluids.CRUDE_OIL, null, FluidConstants.BUCKET);
         runFinalTaskAt(context, 200 + 1, () -> {
-            long oil = refinery.fluidStorage().getAmount(RefineryBlockEntity.OIL_TANK);
-            long fuel = refinery.fluidStorage().getAmount(RefineryBlockEntity.FUEL_TANK);
+            long oil = oilInput.getAmount();
+            long fuel = fuelOutput.getAmount();
             if (oil != 0) {
                 context.fail(String.format("Expected refinery to refine all of the oil but found %s remaining!", oil), pos);
             }
@@ -89,10 +95,12 @@ public class RefineryTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var refinery = this.createBlockEntity(context, pos, GCBlocks.REFINERY, GCBlockEntityTypes.REFINERY);
         refinery.energyStorage().setEnergy(refinery.energyStorage().getCapacity());
-        refinery.fluidStorage().setSlot(RefineryBlockEntity.OIL_TANK, FluidVariant.of(GCFluids.CRUDE_OIL), FluidConstants.BUCKET);
-        refinery.fluidStorage().setSlot(RefineryBlockEntity.FUEL_TANK, FluidVariant.of(GCFluids.FUEL), RefineryBlockEntity.MAX_CAPACITY);
+        FluidResourceSlot oilInput = refinery.fluidStorage().getSlot(GCSlotGroupTypes.OIL_INPUT);
+        FluidResourceSlot fuelOutput = refinery.fluidStorage().getSlot(GCSlotGroupTypes.FUEL_OUTPUT);
+        oilInput.set(GCFluids.CRUDE_OIL, null, FluidConstants.BUCKET);
+        fuelOutput.set(GCFluids.FUEL, null, RefineryBlockEntity.MAX_CAPACITY);
         runFinalTaskNext(context, () -> {
-            if (refinery.fluidStorage().getAmount(RefineryBlockEntity.OIL_TANK) != FluidConstants.BUCKET) {
+            if (oilInput.getAmount() != FluidConstants.BUCKET) {
                 context.fail("Expected refinery to be unable to refine oil as the fuel tank was full!", pos);
             }
         });

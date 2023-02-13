@@ -66,6 +66,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Celestial Bodies", GCCelestialBodies::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Dimension Types", GCDimensionTypes::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Noise Generator Settings", GCNoiseGeneratorSettings::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Structures", GCStructures::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Structure Sets", GCStructureSets::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Structure Template Pools", GCStructureTemplatePools::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Configured Carvers", GCConfiguredCarvers::bootstrapRegistries));
@@ -74,6 +75,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Ore Placed Features", GCOrePlacedFeature::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Placed Features", GCPlacedFeature::bootstrapRegistries));
         pack.addProvider(GCLevelStemProvider::new);
+
         // models
         pack.addProvider(GCModelProvider::new);
     }

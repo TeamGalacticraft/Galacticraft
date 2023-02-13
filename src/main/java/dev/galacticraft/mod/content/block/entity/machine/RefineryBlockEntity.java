@@ -57,11 +57,6 @@ import org.jetbrains.annotations.VisibleForTesting;
 public class RefineryBlockEntity extends MachineBlockEntity {
     @VisibleForTesting
     public static final long MAX_CAPACITY = FluidUtil.bucketsToDroplets(8);
-    public static final int OIL_TANK = 0;
-    public static final int FUEL_TANK = 1;
-    public static final int CHARGE_SLOT = 0;
-    public static final int FLUID_INPUT_SLOT = 1;
-    public static final int FLUID_OUTPUT_SLOT = 2;
 
     public RefineryBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.REFINERY, pos, state);
@@ -86,7 +81,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         FluidResourceSlot oilTank = this.fluidStorage().getSlot(GCSlotGroupTypes.OIL_INPUT);
         if (oilTank.isEmpty()) return GCMachineStatus.MISSING_OIL;
-        FluidResourceSlot fuelTank = this.fluidStorage().getSlot(GCSlotGroupTypes.FUEL_INPUT);
+        FluidResourceSlot fuelTank = this.fluidStorage().getSlot(GCSlotGroupTypes.FUEL_OUTPUT);
         if (fuelTank.isFull()) return GCMachineStatus.FUEL_TANK_FULL;
         profiler.push("transaction");
         try {

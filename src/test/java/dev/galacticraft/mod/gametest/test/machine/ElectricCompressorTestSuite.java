@@ -23,15 +23,20 @@
 package dev.galacticraft.mod.gametest.test.machine;
 
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +52,7 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void electricCompressorChargingTest(GameTestHelper context) {
-        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.ELECTRIC_COMPRESSOR, GCBlockEntityTypes.ELECTRIC_COMPRESSOR, ElectricCompressorBlockEntity.CHARGE_SLOT);
+        this.testItemCharging(context, new BlockPos(0, 0, 0), GCMachineTypes.ELECTRIC_COMPRESSOR, GCSlotGroupTypes.ENERGY_TO_SELF);
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 201)
@@ -58,9 +63,9 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
         fillElectricCompressorSlots(inv);
         electricCompressor.energyStorage().setEnergy(electricCompressor.energyStorage().getCapacity());
         runFinalTaskAt(context, 200 + 1, () -> {
-            ItemStack output = inv.getStack(ElectricCompressorBlockEntity.OUTPUT_SLOT);
-            if (output.getItem() != GCItem.COMPRESSED_IRON) {
-                context.fail(String.format("Expected electric compressor to have made compressed iron but found %s instead!", formatItemStack(output)), pos);
+            ItemResourceSlot slot = inv.getSlot(GCSlotGroupTypes.GENERIC_OUTPUT);
+            if (slot.isEmpty() || slot.getResource() != GCItem.COMPRESSED_IRON) {
+                context.fail(String.format("Expected electric compressor to have made compressed iron but found %s instead!", formatItem(slot.getResource(), slot.getAmount())), pos);
             }
         });
     }
@@ -71,8 +76,9 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
         final var electricCompressor = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_COMPRESSOR, GCBlockEntityTypes.ELECTRIC_COMPRESSOR);
         final var inv = electricCompressor.itemStorage();
         electricCompressor.energyStorage().setEnergy(electricCompressor.energyStorage().getCapacity());
-        inv.setSlot(ElectricCompressorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
-        inv.setSlot(ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
+        SlotGroup<Item, ItemStack, ItemResourceSlot> group = inv.getGroup(GCSlotGroupTypes.GENERIC_OUTPUT);
+        group.getSlot(0).set(Items.BARRIER, null, 1);
+        group.getSlot(1).set(Items.BARRIER, null, 1);
         fillElectricCompressorSlots(inv);
         runFinalTaskNext(context, () -> {
             if (electricCompressor.getMaxProgress() != 0) {
@@ -82,7 +88,8 @@ public class ElectricCompressorTestSuite implements MachineGameTest {
     }
 
     private static void fillElectricCompressorSlots(@NotNull MachineItemStorage inv) {
-        inv.setSlot(0, ItemVariant.of(Items.IRON_INGOT), 1);
-        inv.setSlot(1, ItemVariant.of(Items.IRON_INGOT), 1);
+        SlotGroup<Item, ItemStack, ItemResourceSlot> group = inv.getGroup(GCSlotGroupTypes.GENERIC_INPUT);
+        group.getSlot(0).set(Items.IRON_INGOT, null, 1);
+        group.getSlot(1).set(Items.IRON_INGOT, null, 1);
     }
 }

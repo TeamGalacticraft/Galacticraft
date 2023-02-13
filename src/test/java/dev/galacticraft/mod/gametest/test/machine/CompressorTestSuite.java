@@ -23,15 +23,19 @@
 package dev.galacticraft.mod.gametest.test.machine;
 
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
@@ -50,13 +54,14 @@ public class CompressorTestSuite implements MachineGameTest {
         final var pos = new BlockPos(0, 0, 0);
         final var compressor = this.createBlockEntity(context, pos, GCBlocks.COMPRESSOR, GCBlockEntityTypes.COMPRESSOR);
         final var inv = compressor.itemStorage();
-        inv.setSlot(CompressorBlockEntity.FUEL_INPUT_SLOT, ItemVariant.of(Items.COAL), 1);
+        ItemResourceSlot slot = inv.getSlot(GCSlotGroupTypes.SOLID_FUEL);
+        slot.set(Items.COAL, null, 1);
         runNext(context, () -> {
-            ItemStack stack = inv.getStack(CompressorBlockEntity.FUEL_INPUT_SLOT);
-            if (stack.isEmpty() || stack.getItem() != Items.COAL || stack.getCount() != 1) {
-                context.fail(String.format("Expected compressor inventory to be have 1 coal but found %s!", formatItemStack(stack)), pos);
+            if (slot.isEmpty() || slot.getResource() != Items.COAL || slot.getAmount() != 1) {
+                context.fail(String.format("Expected compressor inventory to be have 1 coal but found %s!", formatItem(slot.getResource(), slot.getAmount())), pos);
             }
             fillCompressorSlots(inv);
+            inv.markModified();
             runFinalTaskNext(context, () -> {
                 if (compressor.fuelLength == 0) {
                     context.fail("Expected compressor inventory to be burning fuel!", pos);
@@ -73,9 +78,9 @@ public class CompressorTestSuite implements MachineGameTest {
         fillCompressorSlots(inv);
         compressor.fuelTime = compressor.fuelLength = 1000;
         runFinalTaskAt(context, 200 + 1, () -> {
-            ItemStack output = inv.getStack(CompressorBlockEntity.OUTPUT_SLOT);
-            if (output.getItem() != GCItem.COMPRESSED_IRON) {
-                context.fail(String.format("Expected compressor to have made compressed iron but found %s instead!", formatItemStack(output)), pos);
+            ItemResourceSlot slot = inv.getSlot(GCSlotGroupTypes.GENERIC_OUTPUT);
+            if (slot.getResource() != GCItem.COMPRESSED_IRON) {
+                context.fail(String.format("Expected compressor to have made compressed iron but found %s instead!", formatItem(slot.getResource(), slot.getAmount())), pos);
             }
         });
     }
@@ -86,7 +91,7 @@ public class CompressorTestSuite implements MachineGameTest {
         final var compressor = this.createBlockEntity(context, pos, GCBlocks.COMPRESSOR, GCBlockEntityTypes.COMPRESSOR);
         final var inv = compressor.itemStorage();
         compressor.fuelTime = compressor.fuelLength = 1000;
-        inv.setSlot(CompressorBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
+        inv.getSlot(GCSlotGroupTypes.GENERIC_OUTPUT).set(Items.BARRIER, null, 1);
         fillCompressorSlots(inv);
         runFinalTaskNext(context, () -> {
             if (compressor.getMaxProgress() != 0) {
@@ -96,7 +101,8 @@ public class CompressorTestSuite implements MachineGameTest {
     }
 
     private static void fillCompressorSlots(@NotNull MachineItemStorage inv) {
-        inv.setSlot(0, ItemVariant.of(Items.IRON_INGOT), 1);
-        inv.setSlot(1, ItemVariant.of(Items.IRON_INGOT), 1);
+        SlotGroup<Item, ItemStack, ItemResourceSlot> group = inv.getGroup(GCSlotGroupTypes.GENERIC_INPUT);
+        group.getSlot(0).set(Items.IRON_INGOT, null, 1);
+        group.getSlot(1).set(Items.IRON_INGOT, null, 1);
     }
 }

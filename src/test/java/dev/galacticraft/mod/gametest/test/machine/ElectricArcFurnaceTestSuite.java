@@ -23,14 +23,19 @@
 package dev.galacticraft.mod.gametest.test.machine;
 
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +51,7 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
     public void electricArcFurnaceChargeTest(GameTestHelper context) {
-        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.ELECTRIC_ARC_FURNACE, GCBlockEntityTypes.ELECTRIC_ARC_FURNACE, ElectricArcFurnaceBlockEntity.CHARGE_SLOT);
+        this.testItemCharging(context, new BlockPos(0, 0, 0), GCMachineTypes.ELECTRIC_ARC_FURNACE, GCSlotGroupTypes.ENERGY_TO_SELF);
     }
 
     @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 90 + 1)
@@ -57,9 +62,9 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         electricArcFurnace.energyStorage().setEnergy(electricArcFurnace.energyStorage().getCapacity());
         fillElectricArcFurnaceSlots(inv);
         runFinalTaskAt(context, 90 + 1, () -> {
-            ItemStack output = inv.getStack(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1);
-            if (output.getItem() != Items.IRON_INGOT && output.getCount() != 2) {
-                context.fail(String.format("Expected electric arc furnace to have made two iron ingots but found %s instead!", formatItemStack(output)), pos);
+            ItemResourceSlot slot = inv.getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).getSlot(0);
+            if (slot.getResource() != Items.IRON_INGOT || slot.getAmount() != 2) {
+                context.fail(String.format("Expected electric arc furnace to have made two iron ingots but found %s instead!", formatItem(slot.getResource(), slot.getAmount())), pos);
             }
         });
     }
@@ -70,8 +75,9 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
         final var electricArcFurnace = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_ARC_FURNACE, GCBlockEntityTypes.ELECTRIC_ARC_FURNACE);
         final var inv = electricArcFurnace.itemStorage();
         electricArcFurnace.energyStorage().setEnergy(electricArcFurnace.energyStorage().getCapacity());
-        inv.setSlot(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1, ItemVariant.of(Items.BARRIER), 1);
-        inv.setSlot(ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_2, ItemVariant.of(Items.BARRIER), 1);
+        SlotGroup<Item, ItemStack, ItemResourceSlot> group = inv.getGroup(GCSlotGroupTypes.GENERIC_OUTPUT);
+        group.getSlot(0).set(Items.BARRIER, null, 1);
+        group.getSlot(1).set(Items.BARRIER, null, 1);
         fillElectricArcFurnaceSlots(inv);
         runFinalTaskNext(context, () -> {
             if (electricArcFurnace.getMaxProgress() != 0) {
@@ -81,6 +87,6 @@ public class ElectricArcFurnaceTestSuite implements MachineGameTest {
     }
 
     private static void fillElectricArcFurnaceSlots(@NotNull MachineItemStorage inv) {
-        inv.setSlot(ElectricArcFurnaceBlockEntity.INPUT_SLOT, ItemVariant.of(Items.RAW_IRON), 1);
+        inv.getSlot(GCSlotGroupTypes.GENERIC_INPUT).set(Items.RAW_IRON, null, 1);
     }
 }

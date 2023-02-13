@@ -18,6 +18,6 @@ public record GeneratingBootstrapContext<T>(HolderLookup.Provider registries, Fa
 
     @Override
     public <S> @NotNull HolderGetter<S> lookup(ResourceKey<? extends Registry<? extends S>> resourceKey) {
-        return this.registries.lookupOrThrow(resourceKey);
+        return this.entries.getLookups().lookupOrThrow(resourceKey);
     }
 }
