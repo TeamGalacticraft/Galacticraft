@@ -33,7 +33,6 @@ import dev.galacticraft.machinelib.api.storage.ResourceFilters;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.item.GCItem;
@@ -492,12 +491,12 @@ public class GCMachineTypes {
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT)
                             ::build
-                    ).single(GCSlotGroupTypes.OIL_FILL, ItemResourceSlot.builder()
+                    ).single(GCSlotGroupTypes.OIL_FROM_ITEM, ItemResourceSlot.builder()
                             .pos(123, 7)
                             .filter(ResourceFilters.isFluidStorage())
                             .strictFilter(ResourceFilters.canExtractFluidStrict(GCFluids.CRUDE_OIL)) // fixme: tag?
                             ::build
-                    ).single(GCSlotGroupTypes.FUEL_DRAIN, ItemResourceSlot.builder()
+                    ).single(GCSlotGroupTypes.FUEL_TO_ITEM, ItemResourceSlot.builder()
                             .pos(153, 7)
                             .filter(ResourceFilters.isFluidStorage())
                             .strictFilter(ResourceFilters.canInsertFluidStrict(GCFluids.FUEL)) // fixme: tag?

@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface GalacticraftGameTest extends FabricGameTest {
-    String SINGLE_BLOCK = "gc-test:single_block";
+    String SINGLE_BLOCK = "galacticraft-test:single_block";
 
     default void runNext(GameTestHelper context, Runnable runnable) {
         context.runAtTickTime(context.getTick() + 1, runnable);

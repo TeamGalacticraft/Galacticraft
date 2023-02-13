@@ -22,71 +22,63 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
+import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
+import dev.galacticraft.machinelib.api.gametest.annotation.container.DefaultedMetadata;
+import dev.galacticraft.machinelib.api.machine.MachineType;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
+import dev.galacticraft.machinelib.api.storage.slot.SlotGroupType;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.gametest.framework.TestFunction;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.BlastingRecipe;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricArcFurnaceTestSuite implements MachineGameTest {
-    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
-    public void electricArcFurnacePlacementTest(GameTestHelper context) {
-        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GCBlocks.ELECTRIC_ARC_FURNACE, GCBlockEntityTypes.ELECTRIC_ARC_FURNACE));
+@DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
+public final class ElectricArcFurnaceTestSuite extends RecipeGameTest<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity> {
+    public ElectricArcFurnaceTestSuite() {
+        super(GCMachineTypes.ELECTRIC_ARC_FURNACE, GCSlotGroupTypes.GENERIC_INPUT, GCSlotGroupTypes.GENERIC_OUTPUT);
     }
 
-    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
-    public void electricArcFurnaceChargeTest(GameTestHelper context) {
-        this.testItemCharging(context, new BlockPos(0, 0, 0), GCMachineTypes.ELECTRIC_ARC_FURNACE, GCSlotGroupTypes.ENERGY_TO_SELF);
+    @Override
+    public @NotNull List<TestFunction> generateTests() {
+        List<TestFunction> functions = super.generateTests();
+        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_ITEM, GCItem.INFINITE_BATTERY));
+        return functions;
     }
 
-    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 90 + 1)
-    public void electricArcFurnaceBlastingTest(GameTestHelper context) {
-        final var pos = new BlockPos(0, 0, 0);
-        final var electricArcFurnace = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_ARC_FURNACE, GCBlockEntityTypes.ELECTRIC_ARC_FURNACE);
-        final var inv = electricArcFurnace.itemStorage();
-        electricArcFurnace.energyStorage().setEnergy(electricArcFurnace.energyStorage().getCapacity());
-        fillElectricArcFurnaceSlots(inv);
-        runFinalTaskAt(context, 90 + 1, () -> {
-            ItemResourceSlot slot = inv.getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).getSlot(0);
-            if (slot.getResource() != Items.IRON_INGOT || slot.getAmount() != 2) {
-                context.fail(String.format("Expected electric arc furnace to have made two iron ingots but found %s instead!", formatItem(slot.getResource(), slot.getAmount())), pos);
-            }
-        });
+    @Override
+    protected void fulfillRunRequirements(@NotNull ElectricArcFurnaceBlockEntity machine) {
+        machine.energyStorage().setEnergy(machine.energyStorage().getCapacity());
     }
 
-    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
-    public void electricArcFurnaceCraftingFullTest(GameTestHelper context) {
-        final var pos = new BlockPos(0, 0, 0);
-        final var electricArcFurnace = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_ARC_FURNACE, GCBlockEntityTypes.ELECTRIC_ARC_FURNACE);
-        final var inv = electricArcFurnace.itemStorage();
-        electricArcFurnace.energyStorage().setEnergy(electricArcFurnace.energyStorage().getCapacity());
-        SlotGroup<Item, ItemStack, ItemResourceSlot> group = inv.getGroup(GCSlotGroupTypes.GENERIC_OUTPUT);
-        group.getSlot(0).set(Items.BARRIER, null, 1);
-        group.getSlot(1).set(Items.BARRIER, null, 1);
-        fillElectricArcFurnaceSlots(inv);
-        runFinalTaskNext(context, () -> {
-            if (electricArcFurnace.getMaxProgress() != 0) {
-                context.fail("Expected electric arc furnace to be unable to craft as the output was full!", pos);
-            }
-        });
+    @Override
+    protected int getRecipeRuntime() {
+        return 100;
     }
 
-    private static void fillElectricArcFurnaceSlots(@NotNull MachineItemStorage inv) {
-        inv.getSlot(GCSlotGroupTypes.GENERIC_INPUT).set(Items.RAW_IRON, null, 1);
+    @Override
+    protected void createValidRecipe(@NotNull MachineItemStorage storage) {
+        storage.getSlot(GCSlotGroupTypes.GENERIC_INPUT).set(Items.RAW_IRON, 1);
     }
 }

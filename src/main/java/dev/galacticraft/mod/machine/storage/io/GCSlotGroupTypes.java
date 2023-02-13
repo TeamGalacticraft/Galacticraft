@@ -36,8 +36,8 @@ public class GCSlotGroupTypes {
     public static final SlotGroupType OXYGEN_TO_ITEM = SlotGroupType.create(TextColor.fromRgb(0x41dcd7), Component.translatable("slot_type.galacticraft.oxygen_tank_fill"), InputType.TRANSFER);
     public static final SlotGroupType OXYGEN_TO_SELF = SlotGroupType.create(TextColor.fromRgb(0x41aadc), Component.translatable("slot_type.galacticraft.oxygen_tank_drain"), InputType.TRANSFER);
 
-    public static final SlotGroupType OIL_FILL = SlotGroupType.create(TextColor.fromRgb(0x41dcd7), Component.translatable("slot_type.galacticraft.oil_fill"), InputType.TRANSFER);
-    public static final SlotGroupType FUEL_DRAIN = SlotGroupType.create(TextColor.fromRgb(0x41aadc), Component.translatable("slot_type.galacticraft.fuel_drain"), InputType.TRANSFER);
+    public static final SlotGroupType OIL_FROM_ITEM = SlotGroupType.create(TextColor.fromRgb(0x41dcd7), Component.translatable("slot_type.galacticraft.oil_fill"), InputType.TRANSFER);
+    public static final SlotGroupType FUEL_TO_ITEM = SlotGroupType.create(TextColor.fromRgb(0x41aadc), Component.translatable("slot_type.galacticraft.fuel_drain"), InputType.TRANSFER);
 
     public static final SlotGroupType GENERIC_INPUT = SlotGroupType.create(TextColor.fromRgb(0x44d844), Component.translatable("slot_type.galacticraft.item_input"), InputType.INPUT);
     public static final SlotGroupType GENERIC_OUTPUT = SlotGroupType.create(TextColor.fromRgb(0xc32727), Component.translatable("slot_type.galacticraft.item_output"), InputType.OUTPUT);

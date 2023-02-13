@@ -54,7 +54,7 @@ import org.jetbrains.annotations.VisibleForTesting;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class RefineryBlockEntity extends MachineBlockEntity {
+public class RefineryBlockEntity extends MachineBlockEntity { //fixme
     @VisibleForTesting
     public static final long MAX_CAPACITY = FluidUtil.bucketsToDroplets(8);
 
@@ -67,13 +67,13 @@ public class RefineryBlockEntity extends MachineBlockEntity {
         super.tickConstant(world, pos, state, profiler);
         this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
 
-        Storage<FluidVariant> storage = this.itemStorage().getSlot(GCSlotGroupTypes.OIL_FILL).find(FluidStorage.ITEM);
-        if (storage != null) {
-            GenericApiUtil.move(FluidVariant.of(GCFluids.CRUDE_OIL), storage, this.fluidStorage().getSlot(GCSlotGroupTypes.OIL_INPUT), Long.MAX_VALUE, null);
+        Storage<FluidVariant> storage = this.itemStorage().getSlot(GCSlotGroupTypes.OIL_FROM_ITEM).find(FluidStorage.ITEM);
+        if (storage != null && storage.supportsExtraction()) {
+            GenericApiUtil.move(FluidVariant.of(GCFluids.CRUDE_OIL), storage, this.fluidStorage().getSlot(GCSlotGroupTypes.OIL_INPUT), FluidConstants.BUCKET * 64, null);
         }
-        storage = this.itemStorage().getSlot(GCSlotGroupTypes.FUEL_DRAIN).find(FluidStorage.ITEM);
-        if (storage != null) {
-            GenericApiUtil.move(FluidVariant.of(GCFluids.FUEL), this.fluidStorage().getSlot(GCSlotGroupTypes.FUEL_OUTPUT), storage, Long.MAX_VALUE, null);
+        storage = this.itemStorage().getSlot(GCSlotGroupTypes.FUEL_TO_ITEM).find(FluidStorage.ITEM);
+        if (storage != null && storage.supportsInsertion()) {
+            GenericApiUtil.move(FluidVariant.of(GCFluids.FUEL), this.fluidStorage().getSlot(GCSlotGroupTypes.FUEL_OUTPUT), storage, FluidConstants.BUCKET * 64, null);
         }
     }
 

@@ -22,32 +22,40 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
+import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
+import dev.galacticraft.machinelib.api.gametest.annotation.container.DefaultedMetadata;
+import dev.galacticraft.machinelib.api.machine.MachineType;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.EnergyStorageModuleBlockEntity;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.gametest.framework.TestFunction;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class EnergyStorageModuleTestSuite implements MachineGameTest {
-    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
-    public void energyStorageModulePlacementTest(GameTestHelper context) {
-        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GCBlocks.ENERGY_STORAGE_MODULE, GCBlockEntityTypes.ENERGY_STORAGE_MODULE));
+@DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
+public final class EnergyStorageModuleTestSuite extends MachineGameTest<EnergyStorageModuleBlockEntity> {
+    public EnergyStorageModuleTestSuite() {
+        super(GCMachineTypes.ENERGY_STORAGE_MODULE);
     }
 
-    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
-    public void energyStorageModuleChargingTest(GameTestHelper context) {
-        this.testItemCharging(context, new BlockPos(0, 0, 0), GCMachineTypes.ENERGY_STORAGE_MODULE, GCSlotGroupTypes.ENERGY_TO_SELF);
-    }
-
-    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
-    public void energyStorageModuleDrainingTest(GameTestHelper context) {
-        this.testItemDraining(context, new BlockPos(0, 0, 0), GCMachineTypes.ENERGY_STORAGE_MODULE, GCSlotGroupTypes.ENERGY_TO_ITEM);
+    @Override
+    @GameTestGenerator
+    public @NotNull List<TestFunction> generateTests() {
+        List<TestFunction> functions = super.generateTests();
+        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_SELF, GCItem.INFINITE_BATTERY));
+        functions.add(this.createDrainToEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_ITEM, GCItem.BATTERY));
+        return functions;
     }
 }
