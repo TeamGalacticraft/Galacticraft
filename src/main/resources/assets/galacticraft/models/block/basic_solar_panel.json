@@ -3,7 +3,6 @@
   "sprite_provider": "galacticraft:solar_panel",
   "sprite_info": {
     "front": "galacticraft:block/basic_solar_panel",
-    "back": "galacticraft:block/machine_power_output",
     "top": "galacticraft:block/solar_panel"
   }
 }

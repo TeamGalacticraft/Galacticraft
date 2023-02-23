@@ -38,13 +38,11 @@ import java.util.function.Function;
 
 public class SolarPanelSpriteProvider implements MachineModelRegistry.SpriteProvider {
     private ResourceLocation front;
-    private ResourceLocation back;
     private ResourceLocation top;
 
     @Override
     public @NotNull TextureAtlasSprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<ResourceLocation, TextureAtlasSprite> atlas) {
         if (face == BlockFace.FRONT) return atlas.apply(this.front);
-        if (face == BlockFace.BACK) return atlas.apply(this.back);
         if (face == BlockFace.TOP) return atlas.apply(this.top);
         if (face.side()) return atlas.apply(MachineModelRegistry.MACHINE_SIDE);
         return atlas.apply(MachineModelRegistry.MACHINE);
@@ -53,10 +51,8 @@ public class SolarPanelSpriteProvider implements MachineModelRegistry.SpriteProv
     @Override
     public void fromJson(JsonObject jsonObject, Set<ResourceLocation> textureDependencies) {
         this.front = new ResourceLocation(GsonHelper.getAsString(jsonObject, "front"));
-        this.back = new ResourceLocation(GsonHelper.getAsString(jsonObject, "back"));
         this.top = new ResourceLocation(GsonHelper.getAsString(jsonObject, "top"));
         textureDependencies.add(this.front);
-        textureDependencies.add(this.back);
         textureDependencies.add(this.top);
     }
 }
