@@ -269,8 +269,9 @@ publishing {
     }
     repositories {
         val isSnapshot: Boolean = System.getenv("SNAPSHOT")?.equals("true") ?: true
-        val mavenBase = "https://maven.galacticraft.dev/"
-        maven(if(isSnapshot) "$mavenBase/snapshots" else mavenBase) {
+        val mavenRelease = "https://maven.galacticraft.dev/repository/maven-releases/"
+        val mavenSnapshot = "https://maven.galacticraft.dev/repository/maven-snapshots/"
+        maven(if(isSnapshot) mavenSnapshot else mavenRelease) {
             name = "maven"
             credentials(PasswordCredentials::class)
             authentication {
