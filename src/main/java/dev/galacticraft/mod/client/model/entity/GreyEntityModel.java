@@ -25,9 +25,11 @@ package dev.galacticraft.mod.client.model.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 
 public class GreyEntityModel<T extends Entity> extends EntityModel<T> {
@@ -69,8 +71,19 @@ public class GreyEntityModel<T extends Entity> extends EntityModel<T> {
 
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		// Calculate the angle to swing the legs based on the limb swing amount
+		float legSwingAngle = (float) (Math.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount);
 
+		// Rotate the legs around the hip joints
+		Left_Leg.xRot = legSwingAngle;
+		Right_Leg.xRot = -legSwingAngle;
+
+		// "borrowed" from vanilla minecraft HumanoidModel.class
+		float armSwingScale = 1.0F;
+		Right_Arm.xRot = Mth.cos(limbSwing * 0.6662F + Mth.PI) * 2.0F * limbSwingAmount * 0.5F / armSwingScale;
+		Left_Arm.xRot = Mth.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F / armSwingScale;
 	}
+
 
 	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
