@@ -85,6 +85,8 @@ public class RocketEntity extends Entity implements Rocket {
 
     private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
 
+    private static final EntityDataAccessor<Integer> TIME_AS_STATE = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
+
     public static final EntityDataAccessor<Integer> DAMAGE_WOBBLE_TICKS = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> DAMAGE_WOBBLE_SIDE = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> DAMAGE_WOBBLE_STRENGTH = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.FLOAT);
@@ -96,7 +98,6 @@ public class RocketEntity extends Entity implements Rocket {
 
     private BlockPos linkedPad = BlockPos.ZERO;
     private final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets(100), () -> {});
-    private int timeAsState = 0;
     private int timeBeforeLaunch;
     private int lerpSteps;
     private double lerpX;
@@ -114,7 +115,11 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     public int getTimeAsState() {
-        return timeAsState;
+        return this.entityData.get(TIME_AS_STATE);
+    }
+
+    public void setTimeAsState(int time) {
+        this.entityData.set(TIME_AS_STATE, time);
     }
 
     @Override
@@ -143,7 +148,7 @@ public class RocketEntity extends Entity implements Rocket {
         LaunchStage oldStage = getStage();
         if (oldStage != launchStage) {
             this.entityData.set(STAGE, launchStage);
-            timeAsState = 0;
+            setTimeAsState(0);
             RocketEvents.STAGE_CHANGED.invoker().onStageChanged(this, oldStage);
         }
     }
@@ -353,6 +358,7 @@ public class RocketEntity extends Entity implements Rocket {
         this.entityData.define(COLOR, -1);
         this.entityData.define(SPEED, 0.0D);
 
+        this.entityData.define(TIME_AS_STATE, 0);
         this.entityData.define(DAMAGE_WOBBLE_TICKS, 0);
         this.entityData.define(DAMAGE_WOBBLE_SIDE, 0);
         this.entityData.define(DAMAGE_WOBBLE_STRENGTH, 0.0F);
@@ -394,7 +400,7 @@ public class RocketEntity extends Entity implements Rocket {
     @Override
     public void tick() {
         this.noPhysics = false;
-        timeAsState++;
+        setTimeAsState(getTimeAsState() + 1);
 
         super.tick();
         tickLerp();
@@ -440,7 +446,7 @@ public class RocketEntity extends Entity implements Rocket {
                     this.getTank().extract(FluidVariant.of(GCFluids.FUEL), FluidConstants.NUGGET, t); //todo find balanced values
                     t.commit();
                 }
-                if (timeAsState >= 400) {
+                if (getTimeAsState() >= 400) {
                     this.setStage(LaunchStage.LAUNCHED);
                     if (this.getLinkedPad() != BlockPos.ZERO) {
                         for (int x = -1; x <= 1; x++) {
