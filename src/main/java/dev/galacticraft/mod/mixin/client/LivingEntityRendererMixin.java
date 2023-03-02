@@ -64,9 +64,9 @@ public abstract class LivingEntityRendererMixin {
     private void rotateToMatchRocket(LivingEntity entity, float f, float tickDelta, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
         if (entity.isPassenger()) {
             if (entity.getVehicle() instanceof RocketEntity) {
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(entity.getVehicle().getViewYRot(tickDelta)));
+                poseStack.mulPose(Vector3f.YN.rotationDegrees(entity.getVehicle().getViewYRot(tickDelta)));
                 poseStack.translate(0, 0.5D, 0);
-                poseStack.mulPose(Vector3f.XP.rotationDegrees(entity.getVehicle().getViewXRot(tickDelta)));
+                poseStack.mulPose(Vector3f.XN.rotationDegrees(entity.getVehicle().getViewXRot(tickDelta)));
                 poseStack.translate(0, -0.5D, 0);
             }
         }
