@@ -32,31 +32,17 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.npc.Npc;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
 
-    static class ForcePlayerLookGoal extends Goal {
+    @Nullable
+    private FollowPlayerGoal followPlayerGoal;
+    @Nullable
+    private GreyAvoidEntityGoal greyAvoidEntityGoal;
 
-        Mob mob;
-        public ForcePlayerLookGoal(Mob mob) {
-            this.mob = mob;
-        }
-
-        @Override
-        public void tick() {
-            try {
-                mob.lookAt(mob.level.getNearestPlayer(mob, 20), 90F, 90F);
-            } catch (NullPointerException ignored) {
-
-            }
-        }
-
-        @Override
-        public boolean canUse() {
-            return true;
-        }
-    }
     public GreyEntity(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
     }
@@ -64,16 +50,42 @@ public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
     @Override
     protected void registerGoals() {
         // this.goalSelector.addGoal(0, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(0, new ForcePlayerLookGoal(this));
-        this.goalSelector.addGoal(1, new FollowPlayerGoal(this, 7.0F, 0.8));
+        this.followPlayerGoal = new FollowPlayerGoal(this, 10.0F, 0.8);
+        this.greyAvoidEntityGoal = new GreyAvoidEntityGoal<>(this, Player.class, 3.0f, 0.8, 1);
+        this.goalSelector.addGoal(0, new LookAtPlayerGoal(this, Player.class, 15F));
+        this.goalSelector.addGoal(0, this.followPlayerGoal);
 
     }
 
+
+    boolean isNearbyPlayer;
+    boolean allowedToRemoveFollowingGoal = true;
+    int tickAgeNearOrAwayFromPlayer = 0;
     @Override
     public void tick() {
         super.tick();
-    }
+        if (!level.isClientSide && allowedToRemoveFollowingGoal) {
+            Player nearestPlayer = this.level.getNearestPlayer(this, 2.5D);
+            isNearbyPlayer = nearestPlayer != null;
+            tickAgeNearOrAwayFromPlayer = isNearbyPlayer ? tickAgeNearOrAwayFromPlayer + 1 : 0;
+            if (tickAgeNearOrAwayFromPlayer >= 50) {
+                goalSelector.removeGoal(followPlayerGoal);
+                goalSelector.addGoal(1, greyAvoidEntityGoal);
+                allowedToRemoveFollowingGoal = false;
+                tickAgeNearOrAwayFromPlayer = 0;
+            }
+        }
+        if (!level.isClientSide && !allowedToRemoveFollowingGoal) {
+            tickAgeNearOrAwayFromPlayer++;
+            if (tickAgeNearOrAwayFromPlayer >= 80) {
+                goalSelector.removeGoal(greyAvoidEntityGoal);
+                goalSelector.addGoal(0,followPlayerGoal);
+                allowedToRemoveFollowingGoal = true;
+                tickAgeNearOrAwayFromPlayer = 0;
+            }
+        }
 
+    }
 
     @Override
     public SimpleContainer getInventory() {
@@ -89,4 +101,16 @@ public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
                 .add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D)
                 .add(GcApiEntityAttributes.LOCAL_GRAVITY_LEVEL, 0.9F);
     }
+
+    static class GreyAvoidEntityGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
+
+        private final GreyEntity greyEntity;
+
+        public GreyAvoidEntityGoal(GreyEntity greyEntity, Class<T> class_, float maxDist, double walkSpeedModifier, double sprintSpeedModifier) {
+            super(greyEntity, class_, maxDist, walkSpeedModifier, sprintSpeedModifier, EntitySelector.NO_CREATIVE_OR_SPECTATOR::test);
+            this.greyEntity = greyEntity;
+        }
+
+    }
+
 }
