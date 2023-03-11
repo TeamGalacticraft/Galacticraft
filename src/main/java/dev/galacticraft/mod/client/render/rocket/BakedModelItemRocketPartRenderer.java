@@ -53,7 +53,7 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
 
     @Override
     public void renderGUI(ClientLevel world, PoseStack matrices, int mouseX, int mouseY, float delta) {
-        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, (int)matrices.last().pose().m03(), (int)matrices.last().pose().m13());
+        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(matrices, stack, (int)matrices.last().pose().m03(), (int)matrices.last().pose().m13());
     }
 
     @Override

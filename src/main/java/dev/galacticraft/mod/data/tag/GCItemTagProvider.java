@@ -41,23 +41,23 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        this.tag(ConventionalItemTags.AXES)
+        this.tag(ItemTags.AXES)
                 .add(this.reverseLookup(GCItem.HEAVY_DUTY_AXE))
                 .add(this.reverseLookup(GCItem.DESH_AXE))
                 .add(this.reverseLookup(GCItem.TITANIUM_AXE));
-        this.tag(ConventionalItemTags.HOES)
+        this.tag(ItemTags.HOES)
                 .add(this.reverseLookup(GCItem.HEAVY_DUTY_HOE))
                 .add(this.reverseLookup(GCItem.DESH_HOE))
                 .add(this.reverseLookup(GCItem.TITANIUM_HOE));
-        this.tag(ConventionalItemTags.PICKAXES)
+        this.tag(ItemTags.PICKAXES)
                 .add(this.reverseLookup(GCItem.HEAVY_DUTY_PICKAXE))
                 .add(this.reverseLookup(GCItem.DESH_PICKAXE))
                 .add(this.reverseLookup(GCItem.TITANIUM_PICKAXE));
-        this.tag(ConventionalItemTags.SHOVELS)
+        this.tag(ItemTags.SHOVELS)
                 .add(this.reverseLookup(GCItem.HEAVY_DUTY_SHOVEL))
                 .add(this.reverseLookup(GCItem.DESH_SHOVEL))
                 .add(this.reverseLookup(GCItem.TITANIUM_SHOVEL));
-        this.tag(ConventionalItemTags.SWORDS)
+        this.tag(ItemTags.SWORDS)
                 .add(this.reverseLookup(GCItem.HEAVY_DUTY_SWORD))
                 .add(this.reverseLookup(GCItem.DESH_SWORD))
                 .add(this.reverseLookup(GCItem.TITANIUM_SWORD));

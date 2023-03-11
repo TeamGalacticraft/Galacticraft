@@ -27,18 +27,22 @@ import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
-import net.minecraft.core.Holder;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biomes;
-import net.minecraft.world.level.biome.Climate;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.biome.Climate.Parameter;
-import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GCBiomeParameters {
+public class GCMultiNoiseBiomeSourceParameterLists {
     private static final Parameter FULL_RANGE = Parameter.span(-1.0F, 1.0F);
 
     private static final Parameter RIVER_CONTINENTALNESS = Parameter.span(-0.11F, 0.55F);
@@ -80,8 +84,15 @@ public class GCBiomeParameters {
     private static final Parameter WEIRDNESS_H_PLAINS = Parameter.span(0.4F, 0.56666666F);
     private static final Parameter WEIRDNESS_H_MOUNTAINS = Parameter.span(0.56666666F, 0.7666667F);
 
-    public static final MultiNoiseBiomeSource.Preset MOON = new MultiNoiseBiomeSource.Preset(Constant.id("moon"), (biomeRegistry) -> {
-        ImmutableList.Builder<Pair<Climate.ParameterPoint, Holder<Biome>>> builder = ImmutableList.builder();
+    public static final MultiNoiseBiomeSourceParameterList.Preset MOON_PRESET = new MultiNoiseBiomeSourceParameterList.Preset(
+            Constant.id("moon"), GCMultiNoiseBiomeSourceParameterLists::generateMoon
+    );
+
+    public static final ResourceKey<MultiNoiseBiomeSourceParameterList> MOON = Constant.key(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, "moon");
+
+    @Contract("_ -> new")
+    private static <T> Climate.@NotNull ParameterList<T> generateMoon(Function<ResourceKey<Biome>, T> biomeRegistry) {
+        ImmutableList.Builder<Pair<Climate.ParameterPoint, T>> builder = ImmutableList.builder();
         writeBiomeParameters(builder::add,
                 COLD,
                 DRY,
@@ -89,7 +100,7 @@ public class GCBiomeParameters {
                 MIN_EROSION,
                 WEIRDNESS_H_MIXED,
                 0.0F,
-                biomeRegistry.getOrThrow(GCBiomes.Moon.LUNAR_HIGHLANDS));
+                biomeRegistry.apply(GCBiomes.Moon.LUNAR_HIGHLANDS));
         writeBiomeParameters(builder::add,
                 COLD,
                 DRY,
@@ -97,7 +108,7 @@ public class GCBiomeParameters {
                 MIN_EROSION,
                 WEIRDNESS_L_MIXED,
                 0.0F,
-                biomeRegistry.getOrThrow(GCBiomes.Moon.BASALTIC_MARE));
+                biomeRegistry.apply(GCBiomes.Moon.BASALTIC_MARE));
         writeBiomeParameters(builder::add,
                 COLD,
                 DRY,
@@ -105,7 +116,7 @@ public class GCBiomeParameters {
                 MIN_EROSION,
                 WEIRDNESS_L_MIXED,
                 0.0F,
-                biomeRegistry.getOrThrow(GCBiomes.Moon.COMET_TUNDRA));
+                biomeRegistry.apply(GCBiomes.Moon.COMET_TUNDRA));
         writeBiomeParameters(builder::add,
                 FULL_RANGE,
                 FULL_RANGE,
@@ -113,21 +124,21 @@ public class GCBiomeParameters {
                 FULL_RANGE,
                 FULL_RANGE,
                 0.0F,
-                biomeRegistry.getOrThrow(GCBiomes.Moon.OLIVINE_SPIKES)
+                biomeRegistry.apply(GCBiomes.Moon.OLIVINE_SPIKES)
         );
 
         return new Climate.ParameterList<>(builder.build());
-    });
+    }
 
-    private static void writeBiomeParameters(
-            Consumer<Pair<Climate.ParameterPoint, Holder<Biome>>> parameters,
+    private static <T> void writeBiomeParameters(
+            Consumer<Pair<Climate.ParameterPoint, T>> parameters,
             Parameter temperature,
             Parameter humidity,
             Parameter continentalness,
             Parameter erosion,
             Parameter weirdness,
             float offset,
-            Holder<Biome> biome
+            T biome
     ) {
         parameters.accept(
                 Pair.of(
@@ -143,6 +154,9 @@ public class GCBiomeParameters {
         );
     }
 
-    public static void register() {}
+    public static void bootstrapRegistries(BootstapContext<MultiNoiseBiomeSourceParameterList> context) {
+        HolderGetter<Biome> lookup = context.lookup(Registries.BIOME);
+        context.register(MOON, new MultiNoiseBiomeSourceParameterList(MOON_PRESET, lookup));
+    }
 }
 

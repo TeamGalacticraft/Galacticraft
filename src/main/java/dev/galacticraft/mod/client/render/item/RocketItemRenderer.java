@@ -35,17 +35,18 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
     private final RocketEntity rocket = new RocketEntity(GCEntityTypes.ROCKET, Minecraft.getInstance().level); // Fake rocket entity for rendering
     @Override
-    public void render(ItemStack stack, ItemTransforms.TransformType mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+    public void render(ItemStack stack, ItemDisplayContext mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         RocketData data = RocketData.fromNbt(stack.getTag());
         rocket.setData(data);
         rocket.setOldPosAndRot();
         matrices.pushPose();
-        if (mode == ItemTransforms.TransformType.GUI) {
+        if (mode == ItemDisplayContext.GUI) {
             matrices.scale(0.25f, 0.25f, 0.25f);
             matrices.translate(1.5, 2, 2);
             matrices.mulPose(Axis.ZP.rotationDegrees(55));
@@ -53,7 +54,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
             matrices.translate(0.5D, 0, 0.5D);
             matrices.mulPose(Axis.YP.rotation((float) (((Minecraft.getInstance().level.getGameTime() * 66.666666666666)) / 1000.0F)));
             matrices.translate(-0.5D, 0, -0.5D);
-        } else if (mode == ItemTransforms.TransformType.GROUND) {
+        } else if (mode == ItemDisplayContext.GROUND) {
             matrices.scale(0.2f, 0.2f, 0.2f);
             matrices.translate(2, 3, 2);
         } else {

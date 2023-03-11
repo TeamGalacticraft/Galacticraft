@@ -96,8 +96,8 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
         this.renderTooltip(matrices, mouseX, mouseY);
 
         Lighting.setupFor3DItems();
-        this.itemRenderer.renderAndDecorateItem(Items.CRAFTING_TABLE.getDefaultInstance(), this.leftPos + 6, this.topPos - 20);
-        this.itemRenderer.renderAndDecorateItem(GCItem.OXYGEN_MASK.getDefaultInstance(), this.leftPos + 35, this.topPos - 20);
+        this.itemRenderer.renderAndDecorateItem(matrices, Items.CRAFTING_TABLE.getDefaultInstance(), this.leftPos + 6, this.topPos - 20);
+        this.itemRenderer.renderAndDecorateItem(matrices, GCItem.OXYGEN_MASK.getDefaultInstance(), this.leftPos + 35, this.topPos - 20);
     }
 
     @Override
@@ -132,7 +132,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
             }
         }
 
-        InventoryScreen.renderEntityInInventory(this.leftPos + 51, this.topPos + 75, 30, (float) (this.leftPos + 51) - mouseX, (float) (this.topPos + 75 - 50) - mouseY, this.minecraft.player);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(matrices, this.leftPos + 51, this.topPos + 75, 30, (float) (this.leftPos + 51) - mouseX, (float) (this.topPos + 75 - 50) - mouseY, this.minecraft.player);
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.PLAYER_INVENTORY_TABS);
         this.blit(matrices, this.leftPos, this.topPos - 28, 0, 32, 57, 62);
     }

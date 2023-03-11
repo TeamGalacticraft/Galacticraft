@@ -67,6 +67,6 @@ public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CompressingRecipe recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.OUTPUT, 120, 21)
-                .addItemStack(recipe.getResultItem());
+                .addItemStack(recipe.getResultItem(null)); //fixme
     }
 }

@@ -84,7 +84,7 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
             matrices.pushPose();
             TextureAtlasSprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(slot.getResource()).getFluidSprites(null, null, slot.getResource().defaultFluidState())[0];
             RenderSystem.setShaderTexture(0, sprite.atlasLocation());
-            blit(matrices, this.leftPos + 106, this.topPos + 46, getBlitOffset(), -TANK_OVERLAY_WIDTH, (int) -(((double) TANK_OVERLAY_HEIGHT) * ((float) slot.getAmount() / (float) slot.getCapacity())), sprite);
+            blit(matrices, this.leftPos + 106, this.topPos + 46, 0, -TANK_OVERLAY_WIDTH, (int) -(((double) TANK_OVERLAY_HEIGHT) * ((float) slot.getAmount() / (float) slot.getCapacity())), sprite);
             matrices.popPose();
             RenderSystem.setShaderTexture(0, Constant.ScreenTexture.FUEL_LOADER_SCREEN);
             blit(matrices, this.leftPos + 68, this.topPos + 8, TANK_OVERLAY_U, TANK_OVERLAY_V, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
@@ -100,7 +100,7 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
                 matrices.pushPose();
                 TextureAtlasSprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(menu.fluid).getFluidSprites(null, null, menu.fluid.defaultFluidState())[0];
                 RenderSystem.setShaderTexture(0, sprite.atlasLocation());
-                GuiComponent.blit(matrices, this.leftPos + 158, this.topPos + 72, getBlitOffset(), -ROCKET_FACE_WIDTH, (int) -(((double) ROCKET_FACE_HEIGHT) * ((float) menu.fluidAmount / (float) menu.fluidCapacity)), sprite);
+                GuiComponent.blit(matrices, this.leftPos + 158, this.topPos + 72, 0, -ROCKET_FACE_WIDTH, (int) -(((double) ROCKET_FACE_HEIGHT) * ((float) menu.fluidAmount / (float) menu.fluidCapacity)), sprite);
                 matrices.popPose();
             }
         } else {

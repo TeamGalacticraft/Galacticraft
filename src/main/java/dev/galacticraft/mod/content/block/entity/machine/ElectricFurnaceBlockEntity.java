@@ -76,12 +76,12 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Contain
 
     @Override
     protected void outputStacks(@NotNull SmeltingRecipe recipe) {
-        this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).insertStack(recipe.getResultItem());
+        this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).insertStack(recipe.getResultItem(this.level.registryAccess()));
     }
 
     @Override
     protected boolean canOutputStacks(@NotNull SmeltingRecipe recipe) {
-        return this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).canInsertStack(recipe.getResultItem());
+        return this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).canInsertStack(recipe.getResultItem(this.level.registryAccess()));
     }
 
     @Override

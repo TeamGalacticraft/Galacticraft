@@ -371,22 +371,22 @@ public class GCItem {
     public static final Item TIER_3_HEAVY_DUTY_PLATE = new Item(new Item.Properties());
 
     // ARMOR
-    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, EquipmentSlot.HEAD, (new Item.Properties()));
-    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, EquipmentSlot.CHEST, (new Item.Properties()));
-    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, EquipmentSlot.LEGS, (new Item.Properties()));
-    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, EquipmentSlot.FEET, (new Item.Properties()));
+    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.HELMET, (new Item.Properties()));
+    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, (new Item.Properties()));
+    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, (new Item.Properties()));
+    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.BOOTS, (new Item.Properties()));
 
-    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterial.DESH, EquipmentSlot.HEAD, (new Item.Properties()));
-    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterial.DESH, EquipmentSlot.CHEST, (new Item.Properties()));
-    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterial.DESH, EquipmentSlot.LEGS, (new Item.Properties()));
-    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterial.DESH, EquipmentSlot.FEET, (new Item.Properties()));
+    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.HELMET, (new Item.Properties()));
+    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.CHESTPLATE, (new Item.Properties()));
+    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.LEGGINGS, (new Item.Properties()));
+    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.BOOTS, (new Item.Properties()));
 
-    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterial.TITANIUM, EquipmentSlot.HEAD, (new Item.Properties()));
-    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterial.TITANIUM, EquipmentSlot.CHEST, (new Item.Properties()));
-    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterial.TITANIUM, EquipmentSlot.LEGS, (new Item.Properties()));
-    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterial.TITANIUM, EquipmentSlot.FEET, (new Item.Properties()));
+    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.HELMET, (new Item.Properties()));
+    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.CHESTPLATE, (new Item.Properties()));
+    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.LEGGINGS, (new Item.Properties()));
+    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.BOOTS, (new Item.Properties()));
 
-    public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterial.SENSOR_GLASSES, EquipmentSlot.HEAD, new Item.Properties());
+    public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterial.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties());
 
     // TOOLS + WEAPONS
     public static final Item HEAVY_DUTY_SWORD = new BrittleSwordItem(GCToolMaterial.STEEL, 3, -2.4F, new Item.Properties());
@@ -446,10 +446,10 @@ public class GCItem {
     public static final Item SHIELD_CONTROLLER = new AccessoryItem(new Item.Properties());
     public static final Item FREQUENCY_MODULE = new FrequencyModuleItem(new Item.Properties());
 
-    public static final Item THERMAL_PADDING_HELMET = new ThermalArmorItem(new Item.Properties(), EquipmentSlot.HEAD);
-    public static final Item THERMAL_PADDING_CHESTPIECE = new ThermalArmorItem(new Item.Properties(), EquipmentSlot.CHEST);
-    public static final Item THERMAL_PADDING_LEGGINGS = new ThermalArmorItem(new Item.Properties(), EquipmentSlot.LEGS);
-    public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem(new Item.Properties(), EquipmentSlot.FEET);
+    public static final Item THERMAL_PADDING_HELMET = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.HELMET);
+    public static final Item THERMAL_PADDING_CHESTPIECE = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.CHESTPLATE);
+    public static final Item THERMAL_PADDING_LEGGINGS = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.LEGGINGS);
+    public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.BOOTS);
     // ROCKETS
     public static final Item ROCKET = new RocketItem(new Item.Properties());
 

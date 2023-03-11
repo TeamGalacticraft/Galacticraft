@@ -1085,10 +1085,10 @@ public class CelestialSelectionScreen extends Screen {
         float width1 = invertX ? 0 : uWidth;
         BufferBuilder buffer = Tesselator.getInstance().getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        buffer.vertex(model, x, y + height, this.getBlitOffset()).uv((u + width0) * texModX, (v + height0) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        buffer.vertex(model, x + width, y + height, this.getBlitOffset()).uv((u + width1) * texModX, (v + height0) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        buffer.vertex(model, x + width, y, this.getBlitOffset()).uv((u + width1) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        buffer.vertex(model, x, y, this.getBlitOffset()).uv((u + width0) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
+        buffer.vertex(model, x, y + height, 0).uv((u + width0) * texModX, (v + height0) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
+        buffer.vertex(model, x + width, y + height, 0).uv((u + width1) * texModX, (v + height0) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
+        buffer.vertex(model, x + width, y, 0).uv((u + width1) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
+        buffer.vertex(model, x, y, 0).uv((u + width0) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
         BufferUploader.drawWithShader(buffer.end());
     }
 
@@ -1123,7 +1123,6 @@ public class CelestialSelectionScreen extends Screen {
 
     public void drawCelestialBodies(PoseStack matrices, double mouseX, double mouseY, float delta) {
         this.planetPosMap.clear();
-        RenderSystem.enableTexture();
 
         for (CelestialBody<?, ?> body : this.bodiesToRender) {
             boolean moon = isChildBody(body);
@@ -1168,7 +1167,6 @@ public class CelestialSelectionScreen extends Screen {
     }
 
     public void drawButtons(PoseStack matrices, int mousePosX, int mousePosY) {
-        this.setBlitOffset(0);
         boolean handledSliderPos = false;
 
         final int LHS = CelestialSelectionScreen.BORDER_SIZE + CelestialSelectionScreen.BORDER_EDGE_SIZE;
@@ -1429,8 +1427,8 @@ public class CelestialSelectionScreen extends Screen {
                             int amount = getAmountInInventory(ingredient);
                             Lighting.setupFor3DItems();
                             ItemStack stack = ingredient.getItems()[(int) (minecraft.level.getGameTime() % (20 * ingredient.getItems().length) / 20)];
-                            this.itemRenderer.renderGuiItem(stack, xPos, yPos);
-                            this.itemRenderer.renderGuiItemDecorations(font, stack, xPos, yPos, null);
+                            this.itemRenderer.renderGuiItem(matrices, stack, xPos, yPos);
+                            this.itemRenderer.renderGuiItemDecorations(matrices, font, stack, xPos, yPos, null);
                             Lighting.setupForFlatItems();
                             RenderSystem.enableBlend();
 
@@ -1794,10 +1792,10 @@ public class CelestialSelectionScreen extends Screen {
         float width1 = invertX ? 0 : uWidth;
         BufferBuilder buffer = Tesselator.getInstance().getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        buffer.vertex(x, y + height, this.getBlitOffset()).uv((u + width0) * texModX, (v + height0) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        buffer.vertex(x + width, y + height, this.getBlitOffset()).uv((u + width1) * texModX, (v + height0) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        buffer.vertex(x + width, y, this.getBlitOffset()).uv((u + width1) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        buffer.vertex(x, y, this.getBlitOffset()).uv((u + width0) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
+        buffer.vertex(x, y + height, 0).uv((u + width0) * texModX, (v + height0) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
+        buffer.vertex(x + width, y + height, 0).uv((u + width1) * texModX, (v + height0) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
+        buffer.vertex(x + width, y, 0).uv((u + width1) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
+        buffer.vertex(x, y, 0).uv((u + width0) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
         BufferUploader.drawWithShader(buffer.end());
     }
 
@@ -1805,7 +1803,6 @@ public class CelestialSelectionScreen extends Screen {
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
         RenderSystem.disableBlend();
-        RenderSystem.disableTexture();
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
         resetShader(GameRenderer::getPositionColorShader);
@@ -1818,7 +1815,6 @@ public class CelestialSelectionScreen extends Screen {
         tessellator.end();
         RenderSystem.depthMask(true);
         RenderSystem.disableDepthTest();
-        RenderSystem.enableTexture();
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShader(() -> null);

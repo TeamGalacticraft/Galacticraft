@@ -75,8 +75,8 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
     @Inject(method = "render", at = @At("TAIL"))
     public void render(PoseStack matrices, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         Lighting.setupFor3DItems();
-        this.itemRenderer.renderAndDecorateItem(Items.CRAFTING_TABLE.getDefaultInstance(), this.leftPos + 6, this.topPos - 20);
-        this.itemRenderer.renderAndDecorateItem(GCItem.OXYGEN_MASK.getDefaultInstance(), this.leftPos + 35, this.topPos - 20);
+        this.itemRenderer.renderAndDecorateItem(matrices, Items.CRAFTING_TABLE.getDefaultInstance(), this.leftPos + 6, this.topPos - 20);
+        this.itemRenderer.renderAndDecorateItem(matrices, GCItem.OXYGEN_MASK.getDefaultInstance(), this.leftPos + 35, this.topPos - 20);
         Lighting.setupForFlatItems();
     }
 }

@@ -89,7 +89,7 @@ public class BubbleEntity extends Entity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source == DamageSource.OUT_OF_WORLD) {
+        if (damageSources().outOfWorld() == source) {
             this.remove(RemovalReason.DISCARDED);
             return true;
         } else {
@@ -117,8 +117,8 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public boolean rideableUnderWater() {
-        return false;
+    public boolean dismountsUnderwater() {
+        return true;
     }
 
     @Override

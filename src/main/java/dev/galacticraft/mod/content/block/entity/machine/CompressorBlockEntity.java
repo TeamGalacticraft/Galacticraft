@@ -115,12 +115,12 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
 
     @Override
     protected void outputStacks(@NotNull CompressingRecipe recipe) {
-        this.itemStorage().getSlot(GCSlotGroupTypes.GENERIC_OUTPUT).insertStack(recipe.getResultItem());
+        this.itemStorage().getSlot(GCSlotGroupTypes.GENERIC_OUTPUT).insertStack(recipe.getResultItem(this.level.registryAccess()));
     }
 
     @Override
     protected boolean canOutputStacks(@NotNull CompressingRecipe recipe) {
-        return this.itemStorage().getSlot(GCSlotGroupTypes.GENERIC_OUTPUT).canInsertStack(recipe.getResultItem());
+        return this.itemStorage().getSlot(GCSlotGroupTypes.GENERIC_OUTPUT).canInsertStack(recipe.getResultItem(this.level.registryAccess()));
     }
 
     @Override

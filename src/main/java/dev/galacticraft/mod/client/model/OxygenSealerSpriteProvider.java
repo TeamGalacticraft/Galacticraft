@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.model;
 
 import com.google.gson.JsonObject;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.block.face.BlockFace;
+import dev.galacticraft.machinelib.api.machine.configuration.face.BlockFace;
 import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
 import dev.galacticraft.machinelib.client.impl.model.MachineBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -32,19 +32,17 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
 import java.util.function.Function;
 
 public class OxygenSealerSpriteProvider implements MachineModelRegistry.SpriteProvider {
-    private TextureAtlasSprite left;
-    private TextureAtlasSprite right;
-    private TextureAtlasSprite top;
-    private TextureAtlasSprite machineSide;
-    private TextureAtlasSprite machine;
+    private final TextureAtlasSprite left;
+    private final TextureAtlasSprite right;
+    private final TextureAtlasSprite top;
+    private final TextureAtlasSprite machineSide;
+    private final TextureAtlasSprite machine;
 
     public OxygenSealerSpriteProvider(JsonObject json, Function<net.minecraft.client.resources.model.Material, TextureAtlasSprite> function) {
         this.right = function.apply(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(GsonHelper.getAsString(json, "right"))));

@@ -98,7 +98,6 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
             VertexBuffer.unbind();
         }
         context.profiler().push("moon_sky_render");
-        RenderSystem.disableTexture();
         RenderSystem.disableBlend();
         RenderSystem.depthMask(false);
 
@@ -112,7 +111,6 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickDelta()) * 360.0f));
         matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
         RenderSystem.setShaderColor(1.0F, 0.95F, 0.9F, starBrightness);
-        RenderSystem.disableTexture();
 
         FogRenderer.setupNoFog();
         this.starBuffer.bind();
@@ -129,8 +127,7 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickDelta()) * 360.0f));
 
         Matrix4f matrix = matrices.last().pose();
-        RenderSystem.enableTexture();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         float size = 15.0F;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, SUN_TEXTURE);
@@ -167,7 +164,6 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         context.profiler().pop();
         matrices.popPose();
 
-        RenderSystem.disableTexture();
         RenderSystem.depthMask(true);
         context.profiler().pop();
     }

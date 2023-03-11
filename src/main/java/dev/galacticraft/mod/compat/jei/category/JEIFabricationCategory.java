@@ -81,6 +81,6 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
                 .addIngredients(recipe.getIngredients().get(0));
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 145, 65)
-                .addItemStack(recipe.getResultItem());
+                .addItemStack(recipe.getResultItem(null)); //fixme
     }
 }

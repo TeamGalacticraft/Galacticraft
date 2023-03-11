@@ -87,7 +87,6 @@ public class OverworldRenderer {
         float theta = Mth.sqrt(((float) (player.getY()) - 200) / 1000.0F);
         final float var21 = Math.max(1.0F - theta * 4.0F, 0.0F);
 
-        RenderSystem.disableTexture();
         final Vec3 var2 = this.minecraft.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), partialTicks);
         float i = (float) var2.x * var21;
         float x = (float) var2.y * var21;
@@ -112,7 +111,6 @@ public class OverworldRenderer {
             final float sunsetModInv = Math.min(1.0F, Math.max(1.0F - theta * 50.0F, 0.0F));
 
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            RenderSystem.disableTexture();
             poseStack.pushPose();
             poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
             poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.sin(this.minecraft.level.getSunAngle(partialTicks)) < 0.0F ? 180.0F : 0.0F));
@@ -138,7 +136,6 @@ public class OverworldRenderer {
             poseStack.popPose();
         }
 
-        RenderSystem.enableTexture();
         RenderSystem.blendFuncSeparate(
                 GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
         );
@@ -157,7 +154,6 @@ public class OverworldRenderer {
 
         // Draw stars
         RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        RenderSystem.disableTexture();
 
         float threshold;
         Vec3 vec = getFogColor(this.minecraft.level, camera, partialTicks);
@@ -191,8 +187,7 @@ public class OverworldRenderer {
         VertexBuffer.unbind();
 
         // Draw sun
-        RenderSystem.enableTexture();
-        RenderSystem.blendFuncSeparate(
+                RenderSystem.blendFuncSeparate(
                 GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
         );
         r = 30.0F;
@@ -223,12 +218,10 @@ public class OverworldRenderer {
         worldRenderer.vertex(matrix4f1, r, -100.0F, -r).uv(yy, rand7).endVertex();
         worldRenderer.vertex(matrix4f1, -r, -100.0F, -r).uv(zz, rand7).endVertex();
         var23.end();
-        RenderSystem.disableTexture();
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.disableBlend();
         poseStack.popPose();
-        RenderSystem.disableTexture();
         RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
 
         double heightOffset = playerHeight - 64;
@@ -239,8 +232,7 @@ public class OverworldRenderer {
             final float sinth = Math.max(Math.min(theta / 100.0F - 0.2F, 0.5F), 0.0F);
 
             poseStack.pushPose();
-            RenderSystem.enableTexture();
-            float scale = 850 * (0.25F - theta / 10000.0F);
+                        float scale = 850 * (0.25F - theta / 10000.0F);
             scale = Math.max(scale, 0.2F);
             poseStack.scale(scale, 1.0F, scale);
             poseStack.translate(0.0F, -(float) player.getY(), 0.0F);
@@ -260,14 +252,12 @@ public class OverworldRenderer {
             worldRenderer.vertex(matrix4f2, size, 0, -size).uv(cornerB, zoomIn).endVertex();
             worldRenderer.vertex(matrix4f2, -size, 0, -size).uv(zoomIn, zoomIn).endVertex();
             var23.end();
-            RenderSystem.disableTexture();
             poseStack.popPose();
         }
 
         RenderSystem.setShaderColor(0.0f, 0.0f, 0.0f, 1.0F);
 
-        RenderSystem.enableTexture();
-        RenderSystem.depthMask(true);
+                RenderSystem.depthMask(true);
 
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.disableBlend();

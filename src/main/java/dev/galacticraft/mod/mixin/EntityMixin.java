@@ -22,9 +22,10 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.content.entity.damage.GCDamageSources;
+import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
+import net.minecraft.core.registries.Registries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -97,11 +98,10 @@ public abstract class EntityMixin {
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"), cancellable = true)
     private void checkWaterStateGC(CallbackInfo ci) {
         if (this.updateFluidHeightAndDoFluidPushing(GCTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCTags.FUEL, 0.0028d)) {
-            if (this.isOnFire())
-            {
+            if (this.isOnFire()) {
                 level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
                 if ((this.isAlwaysTicking() && !level.getPlayerByUUID(uuid).isCreative()) || !this.isInvulnerable()) {
-                    this.hurt(GCDamageSources.OIL_BOOM, 20.0f);
+                    this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.OIL_BOOM)), 20.0f);
                 }
             }
         }

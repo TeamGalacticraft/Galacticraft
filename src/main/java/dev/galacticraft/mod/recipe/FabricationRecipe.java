@@ -25,6 +25,7 @@ package dev.galacticraft.mod.recipe;
 import com.google.gson.JsonObject;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -56,13 +57,13 @@ public class FabricationRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container inventory) {
-        return this.output.copy();
+    public boolean canCraftInDimensions(int width, int height) {
+        return width * height > 0;
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return width * height > 0;
+    public ItemStack getResultItem(RegistryAccess registryAccess) {
+        return this.output;
     }
 
     @Override
@@ -73,6 +74,11 @@ public class FabricationRecipe implements Recipe<Container> {
     @Override
     public boolean matches(Container inventory, Level world) {
         return this.input.get(0).test(inventory.getItem(0));
+    }
+
+    @Override
+    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+        return this.getResultItem(registryAccess).copy();
     }
 
     @Override
@@ -88,11 +94,6 @@ public class FabricationRecipe implements Recipe<Container> {
     @Override
     public RecipeSerializer<?> getSerializer() {
         return GalacticraftRecipe.FABRICATION_SERIALIZER;
-    }
-
-    @Override
-    public ItemStack getResultItem() {
-        return this.output;
     }
 
     @Override

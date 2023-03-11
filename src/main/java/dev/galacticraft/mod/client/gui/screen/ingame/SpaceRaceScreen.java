@@ -79,7 +79,7 @@ public class SpaceRaceScreen extends Screen {
             private String prevText;
 
             @Override
-            protected void setFocused(boolean focused) {
+            public void setFocused(boolean focused) {
                 if (this.isFocused() != focused) {
                     if (focused) {
                         this.prevText = this.getValue();
@@ -119,7 +119,6 @@ public class SpaceRaceScreen extends Screen {
         float g = (float) (color >> 8 & 255) / 255.0F;
         float b = (float) (color & 255) / 255.0F;
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        RenderSystem.disableTexture();
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         bufferBuilder.vertex(matrix, (float) x1, (float) y2, 0.0F).color(r, g, b, a).endVertex();
         bufferBuilder.vertex(matrix, (float) x2, (float) y2, 0.0F).color(r, g, b, a).endVertex();

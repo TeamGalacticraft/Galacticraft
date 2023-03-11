@@ -48,7 +48,7 @@ public class DefaultFabricationDisplay extends BasicDisplay {
     }
 
     public DefaultFabricationDisplay(@Nullable FabricationRecipe recipe) {
-        super(getInputs(recipe), recipe == null ? Collections.emptyList() : Collections.singletonList(EntryIngredients.of(recipe.getResultItem())));
+        super(getInputs(recipe), recipe == null ? Collections.emptyList() : Collections.singletonList(EntryIngredients.of(recipe.getResultItem(null)))); //fixme
     }
 
 

@@ -30,6 +30,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -83,11 +84,6 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
    }
 
    @Override
-   public ItemStack getResultItem() {
-      return this.output;
-   }
-
-   @Override
    public NonNullList<Ingredient> getIngredients() {
       return this.inputs;
    }
@@ -95,6 +91,11 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
    @Override
    public boolean canCraftInDimensions(int width, int height) {
       return width >= this.width && height >= this.height;
+   }
+
+   @Override
+   public ItemStack getResultItem(RegistryAccess registryAccess) {
+      return this.output;
    }
 
    @Override
@@ -113,6 +114,11 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
       }
 
       return false;
+   }
+
+   @Override
+   public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+      return this.getResultItem(registryAccess).copy();
    }
 
    private boolean matchesSmall(Container inv, int offsetX, int offsetY, boolean bl) {
@@ -137,11 +143,6 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
       }
 
       return true;
-   }
-
-   @Override
-   public ItemStack assemble(Container Inventory) {
-      return this.getResultItem().copy();
    }
 
    public int getWidth() {

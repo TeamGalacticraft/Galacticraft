@@ -55,7 +55,7 @@ public class CoalGeneratorScreen extends MachineScreen<CoalGeneratorBlockEntity,
         super.renderBackground(matrices, mouseX, mouseY, delta);
         if (this.menu.getFuelLength() > 0) {
             double scale = 1.0 - ((double)this.menu.getFuelTime()) / (double)this.menu.getFuelLength();
-            DrawableUtil.drawProgressTexture(matrices, this.leftPos + FIRE_X, this.topPos + FIRE_Y + FIRE_HEIGHT - (float) (FIRE_HEIGHT * scale), this.getBlitOffset(), FIRE_U, FIRE_V + FIRE_HEIGHT - (float) (FIRE_HEIGHT * scale), FIRE_WIDTH, (float) (FIRE_HEIGHT * scale));
+            DrawableUtil.drawProgressTexture(matrices, this.leftPos + FIRE_X, this.topPos + FIRE_Y + FIRE_HEIGHT - (float) (FIRE_HEIGHT * scale), 0, FIRE_U, FIRE_V + FIRE_HEIGHT - (float) (FIRE_HEIGHT * scale), FIRE_WIDTH, (float) (FIRE_HEIGHT * scale));
         }
     }
 }

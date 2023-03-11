@@ -24,7 +24,7 @@ package dev.galacticraft.mod.compat.waila;
 
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.machine.MachineConfiguration;
+import dev.galacticraft.machinelib.api.machine.configuration.MachineConfiguration;
 import dev.galacticraft.mod.Constant;
 import mcp.mobius.waila.api.*;
 import net.minecraft.client.gui.screens.Screen;

@@ -36,7 +36,7 @@ import net.minecraft.world.item.ItemStack;
 public class GCItemGroup {
     public static final CreativeModeTab ITEMS_GROUP = FabricItemGroup.builder(new ResourceLocation(Constant.MOD_ID, Constant.Item.ITEM_GROUP))
             .icon(() -> new ItemStack(GCItem.CANVAS))
-            .displayItems((featureFlagSet, output, bl) -> { // fixme
+            .displayItems((parameters, output) -> { // fixme
                 // todo: add rockets here
             })
             .build();

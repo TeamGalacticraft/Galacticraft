@@ -72,7 +72,7 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Cont
 
     @Override
     protected void outputStacks(@NotNull BlastingRecipe recipe) {
-        ItemStack output = recipe.getResultItem();
+        ItemStack output = recipe.getResultItem(this.level.registryAccess());
         if (!output.isEmpty()) {
             this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).insert(output.getItem(), output.getTag(), output.getCount() * 2L);
         }
@@ -80,7 +80,7 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Cont
 
     @Override
     protected boolean canOutputStacks(@NotNull BlastingRecipe recipe) {
-        ItemStack output = recipe.getResultItem();
+        ItemStack output = recipe.getResultItem(this.level.registryAccess());
         return output.isEmpty() || this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).canInsert(output.getItem(), output.getTag(), output.getCount() * 2L);
     }
 

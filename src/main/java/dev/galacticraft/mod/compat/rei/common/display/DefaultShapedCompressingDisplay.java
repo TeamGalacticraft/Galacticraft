@@ -49,7 +49,7 @@ public class DefaultShapedCompressingDisplay implements DefaultCompressingDispla
                 input.add(EntryIngredients.of(stack));
             }
         });
-        this.output = Collections.singletonList(EntryIngredients.of(recipe.getResultItem()));
+        this.output = Collections.singletonList(EntryIngredients.of(recipe.getResultItem(null))); //fixme
     }
 
     @Override

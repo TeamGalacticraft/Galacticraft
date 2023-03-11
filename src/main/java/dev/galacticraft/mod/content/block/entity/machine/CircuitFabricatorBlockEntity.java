@@ -88,13 +88,13 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
 
     @Override
     protected boolean canOutputStacks(@NotNull FabricationRecipe recipe) {
-        ItemStack output = recipe.getResultItem();
+        ItemStack output = recipe.getResultItem(this.level.registryAccess());
         return this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).canInsertStack(output);
     }
 
     @Override
     protected void outputStacks(@NotNull FabricationRecipe recipe) {
-        ItemStack output = recipe.getResultItem();
+        ItemStack output = recipe.getResultItem(this.level.registryAccess());
         this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).insertStack(output);
     }
 

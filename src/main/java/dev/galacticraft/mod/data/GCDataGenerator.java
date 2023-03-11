@@ -74,7 +74,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Ore Configured Features", GCOreConfiguredFeature::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Ore Placed Features", GCOrePlacedFeature::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Placed Features", GCPlacedFeature::bootstrapRegistries));
-        pack.addProvider(GCLevelStemProvider::new);
+        pack.addProvider(BootstrapDataProvider.create("Level Stems", GCLevelStems::bootstrapRegistries));
 
         // models
         pack.addProvider(GCModelProvider::new);

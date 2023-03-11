@@ -127,7 +127,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
     private EquipmentSlot getPreferredEquipmentSlot(ItemStack stack) {
         Item item_1 = stack.getItem();
         if (item_1 instanceof ThermalArmorItem thermalArmorItem)
-            return thermalArmorItem.getSlotGroup();
+            return thermalArmorItem.getSlotGroup().getSlot();
         return LivingEntity.getEquipmentSlotForItem(stack);
     }
 
