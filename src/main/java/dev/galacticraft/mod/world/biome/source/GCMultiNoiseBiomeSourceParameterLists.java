@@ -25,6 +25,7 @@ package dev.galacticraft.mod.world.biome.source;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.mixin.MultiNoiseBiomeSourceParameterListPresetAccessor;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -84,8 +85,9 @@ public class GCMultiNoiseBiomeSourceParameterLists {
     private static final Parameter WEIRDNESS_H_PLAINS = Parameter.span(0.4F, 0.56666666F);
     private static final Parameter WEIRDNESS_H_MOUNTAINS = Parameter.span(0.56666666F, 0.7666667F);
 
+    public static final ResourceLocation MOON_PRESET_ID = Constant.id("moon");
     public static final MultiNoiseBiomeSourceParameterList.Preset MOON_PRESET = new MultiNoiseBiomeSourceParameterList.Preset(
-            Constant.id("moon"), GCMultiNoiseBiomeSourceParameterLists::generateMoon
+            MOON_PRESET_ID, GCMultiNoiseBiomeSourceParameterLists::generateMoon
     );
 
     public static final ResourceKey<MultiNoiseBiomeSourceParameterList> MOON = Constant.key(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, "moon");
@@ -152,6 +154,10 @@ public class GCMultiNoiseBiomeSourceParameterLists {
                         biome
                 )
         );
+    }
+
+    public static void register() {
+        MultiNoiseBiomeSourceParameterListPresetAccessor.getByName().put(MOON_PRESET_ID, MOON_PRESET);
     }
 
     public static void bootstrapRegistries(BootstapContext<MultiNoiseBiomeSourceParameterList> context) {

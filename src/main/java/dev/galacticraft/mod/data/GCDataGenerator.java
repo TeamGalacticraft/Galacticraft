@@ -31,6 +31,7 @@ import dev.galacticraft.mod.data.tag.*;
 import dev.galacticraft.mod.structure.GCStructureSets;
 import dev.galacticraft.mod.structure.GCStructureTemplatePools;
 import dev.galacticraft.mod.world.biome.GCBiomes;
+import dev.galacticraft.mod.world.biome.source.GCMultiNoiseBiomeSourceParameterLists;
 import dev.galacticraft.mod.world.dimension.GCDimensionTypes;
 import dev.galacticraft.mod.world.dimension.GCLevelStems;
 import dev.galacticraft.mod.world.gen.GCNoiseGeneratorSettings;
@@ -60,6 +61,8 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(GCItemTagProvider::new);
         pack.addProvider(GCFluidTagProvider::new);
         pack.addProvider(GCStructureTagProvider::new);
+        pack.addProvider((output, registriesFuture) -> new GCLevelStemProvider(output, registriesFuture,
+                GCLevelStems::bootstrapRegistries)); // level stems are special
 
         // content
         pack.addProvider(BootstrapDataProvider.create("Biomes", GCBiomes::bootstrapRegistries));
@@ -74,7 +77,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Ore Configured Features", GCOreConfiguredFeature::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Ore Placed Features", GCOrePlacedFeature::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Placed Features", GCPlacedFeature::bootstrapRegistries));
-        pack.addProvider(BootstrapDataProvider.create("Level Stems", GCLevelStems::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Multi Noise Biome Source Parameter Lists", GCMultiNoiseBiomeSourceParameterLists::bootstrapRegistries));
 
         // models
         pack.addProvider(GCModelProvider::new);
@@ -85,6 +88,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         DataGeneratorEntrypoint.super.buildRegistry(registryBuilder);
 
         registryBuilder.add(Registries.BIOME, Lifecycle.stable(), GCBiomes::bootstrapRegistries);
+        registryBuilder.add(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, Lifecycle.stable(), GCMultiNoiseBiomeSourceParameterLists::bootstrapRegistries);
         registryBuilder.add(AddonRegistries.CELESTIAL_BODY, Lifecycle.stable(), GCCelestialBodies::bootstrapRegistries);
         registryBuilder.add(Registries.DIMENSION_TYPE, Lifecycle.stable(), GCDimensionTypes::bootstrapRegistries);
         registryBuilder.add(Registries.LEVEL_STEM, Lifecycle.stable(), GCLevelStems::bootstrapRegistries);

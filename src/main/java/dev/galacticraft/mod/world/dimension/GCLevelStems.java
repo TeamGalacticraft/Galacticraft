@@ -26,7 +26,7 @@ public class GCLevelStems {
         HolderGetter<NoiseGeneratorSettings> noiseLookup = context.lookup(Registries.NOISE_SETTINGS);
         HolderGetter<MultiNoiseBiomeSourceParameterList> biomeNoiseLookup = context.lookup(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST);
 
-        // entries must also be added to GCLevelStemProvider
+        // the returned reference may be null
         context.register(MOON, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.MOON), new NoiseBasedChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.MOON)), noiseLookup.getOrThrow(GCNoiseGeneratorSettings.MOON))));
     }
 

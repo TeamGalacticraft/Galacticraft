@@ -84,6 +84,7 @@ public class Galacticraft implements ModInitializer {
         GCStructureTypes.register();
         GCCarver.register();
         MoonSurfaceRules.register();
+        GCMultiNoiseBiomeSourceParameterLists.register();
         GCMenuTypes.register();
         GCParticleType.register();
         GCCommand.register();
