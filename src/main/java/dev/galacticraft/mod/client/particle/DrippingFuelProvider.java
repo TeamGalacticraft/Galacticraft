@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.particle;
 
 import dev.galacticraft.mod.content.GCFluids;
-import dev.galacticraft.mod.particle.GCParticleType;
+import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -41,7 +41,7 @@ import org.jetbrains.annotations.NotNull;
 public record DrippingFuelProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
     @Override
     public @NotNull Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-        DripParticle particle = new DripParticle.DripHangParticle(world, x, y, z, GCFluids.FUEL, GCParticleType.DRIPPING_FUEL_PARTICLE);
+        DripParticle particle = new DripParticle.DripHangParticle(world, x, y, z, GCFluids.FUEL, GCParticleTypes.DRIPPING_FUEL_PARTICLE);
         particle.setColor(146f / 255f, 140f / 255f, 74f / 255f);
         particle.pickSprite(this.spriteProvider);
         return particle;

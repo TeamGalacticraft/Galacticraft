@@ -29,7 +29,7 @@ import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.RocketEntity;
-import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.FuelLoaderMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -77,21 +77,21 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity { //todo: whats ha
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        if (this.connectionPos == BlockPos.ZERO) return GCMachineStatus.NO_ROCKET;
+        if (this.connectionPos == BlockPos.ZERO) return GCMachineStatuses.NO_ROCKET;
         BlockEntity be = this.getLevel().getBlockEntity(connectionPos);
         Entity entity;
         if (be instanceof RocketLaunchPadBlockEntity launchPad) {
-            if (!launchPad.hasRocket()) return GCMachineStatus.NO_ROCKET;
+            if (!launchPad.hasRocket()) return GCMachineStatuses.NO_ROCKET;
             entity = level.getEntity(launchPad.getRocketEntityId());
-            if (!(entity instanceof RocketEntity)) return GCMachineStatus.NO_ROCKET;
+            if (!(entity instanceof RocketEntity)) return GCMachineStatuses.NO_ROCKET;
         } else {
-            return GCMachineStatus.NO_ROCKET;
+            return GCMachineStatuses.NO_ROCKET;
         }
 //        if (((RocketEntity) entity).getTank().getAmount().compareTo(((RocketEntity) entity).getTank().getMaxAmount_F(0)) >= 0) return GCMachineStatus.ROCKET_IS_FULL;
 
 //        if (this.fluidInv().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.ONE, Simulation.SIMULATE).isEmpty()) return Status.NOT_ENOUGH_FUEL;
 //        if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        return GCMachineStatus.LOADING;
+        return GCMachineStatuses.LOADING;
     }
 
     @Override

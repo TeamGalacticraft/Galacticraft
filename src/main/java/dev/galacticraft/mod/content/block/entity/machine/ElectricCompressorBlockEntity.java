@@ -30,13 +30,10 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
-import dev.galacticraft.mod.recipe.GalacticraftRecipe;
-import dev.galacticraft.mod.screen.GCMenuTypes;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import dev.galacticraft.mod.recipe.GCRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
@@ -61,7 +58,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
     private final Container craftingInv;
 
     public ElectricCompressorBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.ELECTRIC_COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE);
+        super(GCMachineTypes.ELECTRIC_COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE);
         this.craftingInv = this.itemStorage().getCraftingView(GCSlotGroupTypes.GENERIC_INPUT);
     }
 
@@ -83,7 +80,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
 
     @Override
     protected @NotNull MachineStatus workingStatus() {
-        return GCMachineStatus.COMPRESSING;
+        return GCMachineStatuses.COMPRESSING;
     }
 
     @Override

@@ -32,12 +32,10 @@ import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.machine.OxygenCollectorBlock;
-import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.OxygenCollectorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -114,7 +112,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         profiler.push("transfer");
         this.trySpreadFluids(world, state);
 
-        if (this.fluidStorage().getGroup(GCSlotGroupTypes.OXYGEN_OUTPUT).isFull()) return GCMachineStatus.OXYGEN_TANK_FULL;
+        if (this.fluidStorage().getGroup(GCSlotGroupTypes.OXYGEN_OUTPUT).isFull()) return GCMachineStatuses.OXYGEN_TANK_FULL;
         profiler.popPush("transaction");
         try {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate())) {
@@ -124,9 +122,9 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 if (this.collectionAmount > 0) {
                     this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate());
                     this.fluidStorage().getGroup(GCSlotGroupTypes.OXYGEN_OUTPUT).insert(Gases.OXYGEN, FluidUtil.bucketsToDroplets(this.collectionAmount));
-                    return GCMachineStatus.COLLECTING;
+                    return GCMachineStatuses.COLLECTING;
                 } else {
-                    return GCMachineStatus.NOT_ENOUGH_OXYGEN;
+                    return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
                 }
             } else {
                 this.collectionAmount = 0;

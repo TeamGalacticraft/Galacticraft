@@ -31,7 +31,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.machine.CoalGeneratorBlock;
-import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.CoalGeneratorMenu;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
@@ -104,9 +104,9 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         if (this.fuelLength == 0) {
             if (!this.consumeFuel()) {
                 if (this.heat > 0) {
-                    return GCMachineStatus.COOLING_DOWN;
+                    return GCMachineStatuses.COOLING_DOWN;
                 } else {
-                    return GCMachineStatus.NO_FUEL;
+                    return GCMachineStatuses.NO_FUEL;
                 }
             }
         }
@@ -120,9 +120,9 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         if (this.energyStorage().isFull()) {
             return MachineStatuses.CAPACITOR_FULL;
         } else if (this.heat < 1.0) {
-            return GCMachineStatus.WARMING_UP;
+            return GCMachineStatuses.WARMING_UP;
         } else {
-            return GCMachineStatus.GENERATING;
+            return GCMachineStatuses.GENERATING;
         }
     }
 

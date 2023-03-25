@@ -38,8 +38,8 @@ import dev.galacticraft.mod.world.gen.GCNoiseGeneratorSettings;
 import dev.galacticraft.mod.world.gen.carver.GCConfiguredCarvers;
 import dev.galacticraft.mod.world.gen.feature.GCConfiguredFeature;
 import dev.galacticraft.mod.world.gen.feature.GCOreConfiguredFeature;
-import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeature;
-import dev.galacticraft.mod.world.gen.feature.GCPlacedFeature;
+import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeatures;
+import dev.galacticraft.mod.world.gen.feature.GCPlacedFeatures;
 import dev.galacticraft.mod.world.gen.structure.GCStructures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
@@ -75,8 +75,8 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Configured Carvers", GCConfiguredCarvers::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Configured Features", GCConfiguredFeature::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Ore Configured Features", GCOreConfiguredFeature::bootstrapRegistries));
-        pack.addProvider(BootstrapDataProvider.create("Ore Placed Features", GCOrePlacedFeature::bootstrapRegistries));
-        pack.addProvider(BootstrapDataProvider.create("Placed Features", GCPlacedFeature::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Ore Placed Features", GCOrePlacedFeatures::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Placed Features", GCPlacedFeatures::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Multi Noise Biome Source Parameter Lists", GCMultiNoiseBiomeSourceParameterLists::bootstrapRegistries));
 
         // models
@@ -99,7 +99,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         registryBuilder.add(Registries.CONFIGURED_CARVER, Lifecycle.stable(), GCConfiguredCarvers::bootstrapRegistries);
         registryBuilder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCConfiguredFeature::bootstrapRegistries);
         registryBuilder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCOreConfiguredFeature::bootstrapRegistries);
-        registryBuilder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCOrePlacedFeature::bootstrapRegistries);
-        registryBuilder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCPlacedFeature::bootstrapRegistries);
+        registryBuilder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCOrePlacedFeatures::bootstrapRegistries);
+        registryBuilder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCPlacedFeatures::bootstrapRegistries);
     }
 }

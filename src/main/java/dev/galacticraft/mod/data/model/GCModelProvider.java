@@ -22,260 +22,439 @@
 
 package dev.galacticraft.mod.data.model;
 
+import dev.galacticraft.mod.accessor.BlockModelGeneratorsAccessor;
+import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.mixin.BlockModelGeneratorsMixin;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.ItemModelGenerators;
+import net.minecraft.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.data.models.blockstates.PropertyDispatch;
+import net.minecraft.data.models.blockstates.Variant;
+import net.minecraft.data.models.blockstates.VariantProperties;
+import net.minecraft.data.models.model.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-import static dev.galacticraft.mod.content.GCBlocks.*;
+import java.util.HashMap;
 
 public class GCModelProvider extends FabricModelProvider {
+    public static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::createDetailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);
+
     public GCModelProvider(FabricDataOutput output) {
         super(output);
     }
 
     @Override
-    public void generateBlockStateModels(BlockModelGenerators gen) {
-        GCBlockModelGenerators generator = new GCBlockModelGenerators(gen);
-//        generator.createAirLikeBlock(GLOWSTONE_TORCH, GCItem.GLOWSTONE_TORCH);
-//        generator.createAirLikeBlock(GLOWSTONE_WALL_TORCH, GCItem.GLOWSTONE_TORCH);
-//        generator.createAirLikeBlock(UNLIT_TORCH, GCItem.UNLIT_TORCH);
-//        generator.createAirLikeBlock(UNLIT_WALL_TORCH, GCItem.UNLIT_TORCH);
-//
-//        generator.family(ALUMINUM_DECORATION)
-//                .slab(ALUMINUM_DECORATION_SLAB)
-//                .stairs(ALUMINUM_DECORATION_STAIRS)
-//                .wall(ALUMINUM_DECORATION_WALL);
-//        generator.family(DETAILED_ALUMINUM_DECORATION, TexturedModel.CUBE_TOP)
-//                .slab(DETAILED_ALUMINUM_DECORATION_SLAB)
-//                .stairs(DETAILED_ALUMINUM_DECORATION_STAIRS)
-//                .wall(DETAILED_ALUMINUM_DECORATION_WALL);
-//
-//        generator.family(COPPER_DECORATION)
-//                .slab(COPPER_DECORATION_SLAB)
-//                .stairs(COPPER_DECORATION_STAIRS)
-//                .wall(COPPER_DECORATION_WALL);
-//        generator.family(DETAILED_COPPER_DECORATION, TexturedModel.CUBE_TOP)
-//                .slab(DETAILED_COPPER_DECORATION_SLAB)
-//                .stairs(DETAILED_COPPER_DECORATION_STAIRS)
-//                .wall(DETAILED_COPPER_DECORATION_WALL);
-//
-//        generator.family(IRON_DECORATION)
-//                .slab(IRON_DECORATION_SLAB)
-//                .stairs(IRON_DECORATION_STAIRS)
-//                .wall(IRON_DECORATION_WALL);
-//        generator.family(DETAILED_IRON_DECORATION, TexturedModel.CUBE_TOP)
-//                .slab(DETAILED_IRON_DECORATION_SLAB)
-//                .stairs(DETAILED_IRON_DECORATION_STAIRS)
-//                .wall(DETAILED_IRON_DECORATION_WALL);
-//
-//        generator.family(METEORIC_IRON_DECORATION)
-//                .slab(METEORIC_IRON_DECORATION_SLAB)
-//                .stairs(METEORIC_IRON_DECORATION_STAIRS)
-//                .wall(METEORIC_IRON_DECORATION_WALL);
-//        generator.family(DETAILED_METEORIC_IRON_DECORATION, TexturedModel.CUBE_TOP)
-//                .slab(DETAILED_METEORIC_IRON_DECORATION_SLAB)
-//                .stairs(DETAILED_METEORIC_IRON_DECORATION_STAIRS)
-//                .wall(DETAILED_METEORIC_IRON_DECORATION_WALL);
-//
-//        generator.family(STEEL_DECORATION)
-//                .slab(STEEL_DECORATION_SLAB)
-//                .stairs(STEEL_DECORATION_STAIRS)
-//                .wall(STEEL_DECORATION_WALL);
-//        generator.family(DETAILED_STEEL_DECORATION, TexturedModel.CUBE_TOP)
-//                .slab(DETAILED_STEEL_DECORATION_SLAB)
-//                .stairs(DETAILED_STEEL_DECORATION_STAIRS)
-//                .wall(DETAILED_STEEL_DECORATION_WALL);
-//
-//        generator.family(TIN_DECORATION)
-//                .slab(TIN_DECORATION_SLAB)
-//                .stairs(TIN_DECORATION_STAIRS)
-//                .wall(TIN_DECORATION_WALL);
-//        generator.family(DETAILED_TIN_DECORATION, TexturedModel.CUBE_TOP)
-//                .slab(DETAILED_TIN_DECORATION_SLAB)
-//                .stairs(DETAILED_TIN_DECORATION_STAIRS)
-//                .wall(DETAILED_TIN_DECORATION_WALL);
-//
-//        generator.family(TITANIUM_DECORATION)
-//                .slab(TITANIUM_DECORATION_SLAB)
-//                .stairs(TITANIUM_DECORATION_STAIRS)
-//                .wall(TITANIUM_DECORATION_WALL);
-//        generator.family(DETAILED_TITANIUM_DECORATION, TexturedModel.CUBE_TOP)
-//                .slab(DETAILED_TITANIUM_DECORATION_SLAB)
-//                .stairs(DETAILED_TITANIUM_DECORATION_STAIRS)
-//                .wall(DETAILED_TITANIUM_DECORATION_WALL);
-//
-//
-//        generator.family(DARK_DECORATION)
-//                .slab(DARK_DECORATION_SLAB)
-//                .stairs(DARK_DECORATION_STAIRS)
-//                .wall(DARK_DECORATION_WALL);
-//        generator.family(DETAILED_DARK_DECORATION, TexturedModel.CUBE_TOP)
-//                .slab(DETAILED_DARK_DECORATION_SLAB)
-//                .stairs(DETAILED_DARK_DECORATION_STAIRS)
-//                .wall(DETAILED_DARK_DECORATION_WALL);
-//
-//        generator.family(BRONZE_DECORATION)
-//                .slab(BRONZE_DECORATION_SLAB)
-//                .stairs(BRONZE_DECORATION_STAIRS)
-//                .wall(BRONZE_DECORATION_WALL);
-//        generator.family(DETAILED_BRONZE_DECORATION, TexturedModel.CUBE_TOP)
-//                .slab(DETAILED_BRONZE_DECORATION_SLAB)
-//                .stairs(DETAILED_BRONZE_DECORATION_STAIRS)
-//                .wall(DETAILED_BRONZE_DECORATION_WALL);
-//
-//        generator.family(MOON_ROCK)
-//                .slab(MOON_ROCK_SLAB)
-//                .stairs(MOON_ROCK_STAIRS)
-//                .wall(MOON_ROCK_WALL);
-//        generator.family(COBBLED_MOON_ROCK)
-//                .slab(COBBLED_MOON_ROCK_SLAB)
-//                .stairs(COBBLED_MOON_ROCK_STAIRS)
-//                .wall(COBBLED_MOON_ROCK_WALL);
-//
-//        generator.family(LUNASLATE)
-//                .slab(LUNASLATE_SLAB)
-//                .stairs(LUNASLATE_STAIRS)
-//                .wall(LUNASLATE_WALL);
-//        generator.family(COBBLED_LUNASLATE)
-//                .slab(COBBLED_LUNASLATE_SLAB)
-//                .stairs(COBBLED_LUNASLATE_STAIRS)
-//                .wall(COBBLED_LUNASLATE_WALL);
-//
-//        generator.family(MOON_BASALT)
-//                .slab(MOON_BASALT_SLAB)
-//                .stairs(MOON_BASALT_STAIRS)
-//                .wall(MOON_BASALT_WALL);
-//        generator.family(MOON_BASALT_BRICK)
-//                .slab(MOON_BASALT_BRICK_SLAB)
-//                .stairs(MOON_BASALT_BRICK_STAIRS)
-//                .wall(MOON_BASALT_BRICK_WALL);
-//        generator.family(CRACKED_MOON_BASALT_BRICK)
-//                .slab(CRACKED_MOON_BASALT_BRICK_SLAB)
-//                .stairs(CRACKED_MOON_BASALT_BRICK_STAIRS)
-//                .wall(CRACKED_MOON_BASALT_BRICK_WALL);
-//
-//        generator.family(MARS_COBBLESTONE)
-//                .slab(MARS_COBBLESTONE_SLAB)
-//                .stairs(MARS_COBBLESTONE_STAIRS)
-//                .wall(MARS_COBBLESTONE_WALL);
-//
-//        generator.createTrivialCube(MOON_TURF);
-//        generator.createTrivialCube(MOON_DIRT);
-//        generator.createTrivialCube(MOON_SURFACE_ROCK);
-//        for (Block decor : MOON_ROCKS) generator.registerSimpleState(decor);
-//        for (Block decor : COBBLED_MOON_ROCKS) generator.registerSimpleState(decor);
-//        for (Block decor : LUNASLATES) generator.registerSimpleState(decor);
-//        for (Block decor : COBBLED_LUNASLATES) generator.registerSimpleState(decor);
-//        for (Block decor : MOON_BASALTS) generator.registerSimpleState(decor);
-//        for (Block decor : MOON_BASALT_BRICKS) generator.registerSimpleState(decor);
-//        for (Block decor : CRACKED_MOON_BASALT_BRICKS) generator.registerSimpleState(decor);
+    public void generateBlockStateModels(BlockModelGenerators generator) {
+        ((BlockModelGeneratorsAccessor)generator).setTexturedModels(new HashMap<>(((BlockModelGeneratorsAccessor)generator).getTexturedModels()));
+        // TORCHES
+        generator.createNormalTorch(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH);
+        generator.createNormalTorch(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH);
+
+        // LANTERNS
+        generator.createLantern(GCBlocks.GLOWSTONE_LANTERN);
+        generator.createLantern(GCBlocks.UNLIT_LANTERN);
+
+        // DECORATIONS
+        generator.family(GCBlocks.ALUMINUM_DECORATION).generateFor(GCBlockFamilies.ALUMINUM_DECORATIONS);
+        generateDetailedTexture(generator, GCBlocks.DETAILED_ALUMINUM_DECORATION, GCBlocks.ALUMINUM_DECORATION);
+        generator.family(GCBlocks.DETAILED_ALUMINUM_DECORATION).generateFor(GCBlockFamilies.DETAILED_ALUMINUM_DECORATIONS);
+
+        generator.family(GCBlocks.BRONZE_DECORATION).generateFor(GCBlockFamilies.BRONZE_DECORATIONS);
+        generateDetailedTexture(generator, GCBlocks.DETAILED_BRONZE_DECORATION, GCBlocks.BRONZE_DECORATION);
+        generator.family(GCBlocks.DETAILED_BRONZE_DECORATION).generateFor(GCBlockFamilies.DETAILED_BRONZE_DECORATIONS);
+
+        generator.family(GCBlocks.COPPER_DECORATION).generateFor(GCBlockFamilies.COPPER_DECORATIONS);
+        generateDetailedTexture(generator, GCBlocks.DETAILED_COPPER_DECORATION, GCBlocks.COPPER_DECORATION);
+        generator.family(GCBlocks.DETAILED_COPPER_DECORATION).generateFor(GCBlockFamilies.DETAILED_COPPER_DECORATIONS);
+
+        generator.family(GCBlocks.IRON_DECORATION).generateFor(GCBlockFamilies.IRON_DECORATIONS);
+        generateDetailedTexture(generator, GCBlocks.DETAILED_IRON_DECORATION, GCBlocks.IRON_DECORATION);
+        generator.family(GCBlocks.DETAILED_IRON_DECORATION).generateFor(GCBlockFamilies.DETAILED_IRON_DECORATIONS);
+
+        generator.family(GCBlocks.METEORIC_IRON_DECORATION).generateFor(GCBlockFamilies.METEORIC_IRON_DECORATIONS);
+        generateDetailedTexture(generator, GCBlocks.DETAILED_METEORIC_IRON_DECORATION, GCBlocks.METEORIC_IRON_DECORATION);
+        generator.family(GCBlocks.DETAILED_METEORIC_IRON_DECORATION).generateFor(GCBlockFamilies.DETAILED_METEORIC_IRON_DECORATIONS);
+
+        generator.family(GCBlocks.STEEL_DECORATION).generateFor(GCBlockFamilies.STEEL_DECORATIONS);
+        generateDetailedTexture(generator, GCBlocks.DETAILED_STEEL_DECORATION, GCBlocks.STEEL_DECORATION);
+        generator.family(GCBlocks.DETAILED_STEEL_DECORATION).generateFor(GCBlockFamilies.DETAILED_STEEL_DECORATIONS);
+
+        generator.family(GCBlocks.TIN_DECORATION).generateFor(GCBlockFamilies.TIN_DECORATIONS);
+        generateDetailedTexture(generator, GCBlocks.DETAILED_TIN_DECORATION, GCBlocks.TIN_DECORATION);
+        generator.family(GCBlocks.DETAILED_TIN_DECORATION).generateFor(GCBlockFamilies.DETAILED_TIN_DECORATIONS);
+
+        generator.family(GCBlocks.TITANIUM_DECORATION).generateFor(GCBlockFamilies.TITANIUM_DECORATIONS);
+        generateDetailedTexture(generator, GCBlocks.DETAILED_TITANIUM_DECORATION, GCBlocks.TITANIUM_DECORATION);
+        generator.family(GCBlocks.DETAILED_TITANIUM_DECORATION).generateFor(GCBlockFamilies.DETAILED_TITANIUM_DECORATIONS);
+
+        generator.family(GCBlocks.DARK_DECORATION).generateFor(GCBlockFamilies.DARK_DECORATIONS);
+        generateDetailedTexture(generator, GCBlocks.DETAILED_DARK_DECORATION, GCBlocks.DARK_DECORATION);
+        generator.family(GCBlocks.DETAILED_DARK_DECORATION).generateFor(GCBlockFamilies.DETAILED_DARK_DECORATIONS);
+
+        // MOON NAUTRAL
+        TextureMapping textureMapping = new TextureMapping()
+                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(GCBlocks.MOON_DIRT))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(GCBlocks.MOON_TURF))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(GCBlocks.MOON_TURF, "_side"));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(GCBlocks.MOON_TURF, ModelTemplates.CUBE_BOTTOM_TOP.create(GCBlocks.MOON_TURF, textureMapping, generator.modelOutput)));
+
+        generator.createTrivialCube(GCBlocks.MOON_DIRT);
+        createRotatedDelegate(generator, GCBlocks.MOON_DIRT_PATH);
+        generator.createTrivialCube(GCBlocks.MOON_SURFACE_ROCK);
+
+        generator.family(GCBlocks.MOON_ROCK).generateFor(GCBlockFamilies.MOON_ROCKS);
+        generator.family(GCBlocks.COBBLED_MOON_ROCK).generateFor(GCBlockFamilies.COBBLED_MOON_ROCKS);
+        generator.family(GCBlocks.LUNASLATE).generateFor(GCBlockFamilies.LUNASLATES);
+        generator.family(GCBlocks.COBBLED_LUNASLATE).generateFor(GCBlockFamilies.COBBLED_LUNASLATES);
+        generator.family(GCBlocks.MOON_BASALT).generateFor(GCBlockFamilies.MOON_BASALTS);
+        generator.family(GCBlocks.MOON_BASALT_BRICK).generateFor(GCBlockFamilies.MOON_BASALT_BRICKS);
+        generator.family(GCBlocks.CRACKED_MOON_BASALT_BRICK).generateFor(GCBlockFamilies.CRACKED_MOON_BASALT_BRICKS);
+
+        generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
+
+        // MARS NATURAL
+        generator.createTrivialCube(GCBlocks.MARS_SURFACE_ROCK);
+        generator.createTrivialCube(GCBlocks.MARS_SUB_SURFACE_ROCK);
+        generator.family(GCBlocks.MARS_STONE).generateFor(GCBlockFamilies.MARS_STONES);
+        generator.family(GCBlocks.MARS_COBBLESTONE).generateFor(GCBlockFamilies.MARS_COBBLESTONES);
+
+        // ASTEROID NATURAL
+        generator.createTrivialCube(GCBlocks.ASTEROID_ROCK);
+        generator.createTrivialCube(GCBlocks.ASTEROID_ROCK_1);
+        generator.createTrivialCube(GCBlocks.ASTEROID_ROCK_2);
+
+        // VENUS NATURAL
+        generator.createTrivialCube(GCBlocks.SOFT_VENUS_ROCK);
+        generator.createTrivialCube(GCBlocks.HARD_VENUS_ROCK);
+        generator.createTrivialCube(GCBlocks.SCORCHED_VENUS_ROCK);
+        generator.createTrivialCube(GCBlocks.VOLCANIC_ROCK);
+        generator.createTrivialCube(GCBlocks.PUMICE);
+        generator.createNonTemplateModelBlock(GCBlocks.VAPOR_SPOUT);
+
+        // MISC DECOR
+//        generator.createNonTemplateModelBlock(GCBlocks.WALKWAY);
+//        generator.createNonTemplateModelBlock(GCBlocks.PIPE_WALK WAY); // todo: autogenerated models
+//        generator.createNonTemplateModelBlock(GCBlocks.WIRE_WALKWAY);
+        generator.createNonTemplateModelBlock(GCBlocks.TIN_LADDER);
+//        generator.createNonTemplateModelBlock(GCBlocks.GRATING);
+
+        // SPECIAL
+//        generator.createNonTemplateModelBlock(GCBlocks.ALUMINUM_WIRE);
+        generator.createTrivialCube(GCBlocks.SEALABLE_ALUMINUM_WIRE);
+        generator.createTrivialCube(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
+//        generator.createNonTemplateModelBlock(GCBlocks.GLASS_FLUID_PIPE);
+//        generator.createNonTemplateModelBlock(GCBlocks.ROCKET_LAUNCH_PAD);
+        generator.createNonTemplateModelBlock(GCBlocks.NASA_WORKBENCH);
+
+        // LIGHT PANELS
+        generator.createNonTemplateModelBlock(GCBlocks.SQUARE_LIGHT_PANEL); //todo
+        generator.createNonTemplateModelBlock(GCBlocks.SPOTLIGHT_LIGHT_PANEL);
+        generator.createNonTemplateModelBlock(GCBlocks.LINEAR_LIGHT_PANEL);
+        generator.createNonTemplateModelBlock(GCBlocks.DASHED_LIGHT_PANEL);
+        generator.createNonTemplateModelBlock(GCBlocks.DIAGONAL_LIGHT_PANEL);
+
+        // VACUUM GLASS
+        generator.createNonTemplateModelBlock(GCBlocks.VACUUM_GLASS); //todo
+        generator.createNonTemplateModelBlock(GCBlocks.CLEAR_VACUUM_GLASS);
+        generator.createNonTemplateModelBlock(GCBlocks.STRONG_VACUUM_GLASS);
 
         // ORES
-        generator.createTrivialCube(SILICON_ORE);
-        generator.createTrivialCube(DEEPSLATE_SILICON_ORE);
-        generator.createTrivialCube(MOON_COPPER_ORE);
-        generator.createTrivialCube(LUNASLATE_COPPER_ORE);
-        generator.createTrivialCube(TIN_ORE);
-        generator.createTrivialCube(DEEPSLATE_TIN_ORE);
-        generator.createTrivialCube(MOON_TIN_ORE);
-        generator.createTrivialCube(LUNASLATE_TIN_ORE);
-        generator.createTrivialCube(ALUMINUM_ORE);
-        generator.createTrivialCube(DEEPSLATE_ALUMINUM_ORE);
-        generator.createTrivialCube(DESH_ORE);
-        generator.createTrivialCube(ILMENITE_ORE);
-        generator.createTrivialCube(GALENA_ORE);
-//
-//        generator.createTrivialCube(MARS_SURFACE_ROCK);
-//        generator.createTrivialCube(MARS_SUB_SURFACE_ROCK);
-//        generator.createTrivialCube(MARS_STONE);
-//
-//        generator.createTrivialCube(ASTEROID_ROCK);
-//        generator.createTrivialCube(ASTEROID_ROCK_1);
-//        generator.createTrivialCube(ASTEROID_ROCK_2);
-//
-//        generator.createTrivialCube(SOFT_VENUS_ROCK);
-//        generator.createTrivialCube(HARD_VENUS_ROCK);
-//        generator.createTrivialCube(SCORCHED_VENUS_ROCK);
-//        generator.createTrivialCube(VOLCANIC_ROCK);
-//        generator.createTrivialCube(PUMICE);
-//        generator.createNonTemplateModelBlock(VAPOR_SPOUT);
-//
-//        generator.createNonTemplateModelBlock(WALKWAY);
-//        generator.createNonTemplateModelBlock(PIPE_WALKWAY);
-//        generator.createNonTemplateModelBlock(WIRE_WALKWAY);
-//        generator.createNonTemplateModelBlock(TIN_LADDER);
-//        generator.createNonTemplateModelBlock(GRATING);
-//
-//        generator.createNonTemplateModelBlock(ALUMINUM_WIRE);
-//        generator.createNonTemplateModelBlock(SEALABLE_ALUMINUM_WIRE);
-//        generator.createNonTemplateModelBlock(HEAVY_SEALABLE_ALUMINUM_WIRE);
-//        generator.createNonTemplateModelBlock(GLASS_FLUID_PIPE);
-//
-//        generator.createNonTemplateModelBlock(SQUARE_LIGHT_PANEL);
-//        generator.createNonTemplateModelBlock(SPOTLIGHT_LIGHT_PANEL);
-//        generator.createNonTemplateModelBlock(LINEAR_LIGHT_PANEL);
-//        generator.createNonTemplateModelBlock(DASHED_LIGHT_PANEL);
-//        generator.createNonTemplateModelBlock(DIAGONAL_LIGHT_PANEL);
-//
-//        generator.createNonTemplateModelBlock(VACUUM_GLASS);
-//        generator.createNonTemplateModelBlock(CLEAR_VACUUM_GLASS);
-//        generator.createNonTemplateModelBlock(STRONG_VACUUM_GLASS);
-//
-//        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(MOON_CHEESE_BLOCK).with(
-//                PropertyDispatch.property(BlockStateProperties.BITES)
-//                        .select(0, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(MOON_CHEESE_BLOCK)))
-//                        .select(1, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(MOON_CHEESE_BLOCK, "_slice1")))
-//                        .select(2, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(MOON_CHEESE_BLOCK, "_slice2")))
-//                        .select(3, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(MOON_CHEESE_BLOCK, "_slice3")))
-//                        .select(4, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(MOON_CHEESE_BLOCK, "_slice4")))
-//                        .select(5, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(MOON_CHEESE_BLOCK, "_slice5")))
-//                        .select(6, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(MOON_CHEESE_BLOCK, "_slice6")))
-//        ));
-//        generator.createTrivialCube(SILICON_BLOCK);
-//        generator.createTrivialCube(METEORIC_IRON_BLOCK);
-//        generator.createTrivialCube(DESH_BLOCK);
-//        generator.createTrivialCube(TITANIUM_BLOCK);
-//        generator.createTrivialCube(LEAD_BLOCK);
-//        generator.createTrivialCube(LUNAR_SAPPHIRE_BLOCK);
-//
-//        generator.createTrivialCube(SOLAR_PANEL_PART);
-//
-//        generator.createNonTemplateModelBlock(LUNAR_CARTOGRAPHY_TABLE);
-//
-//        generator.createNonTemplateModelBlock(CAVERNOUS_VINE);
-//        generator.createNonTemplateModelBlock(POISONOUS_CAVERNOUS_VINE);
-//        generator.createNonTemplateModelBlock(MOON_BERRY_BUSH);
-//
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(CIRCUIT_FABRICATOR, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(ELECTRIC_COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(COAL_GENERATOR, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(BASIC_SOLAR_PANEL, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(ADVANCED_SOLAR_PANEL, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(ENERGY_STORAGE_MODULE, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(ELECTRIC_FURNACE, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(ELECTRIC_ARC_FURNACE, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(REFINERY, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(OXYGEN_COLLECTOR, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(OXYGEN_SEALER, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(BUBBLE_DISTRIBUTOR, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(OXYGEN_DECOMPRESSOR, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(OXYGEN_COMPRESSOR, MachineUnbakedModel.MACHINE_MARKER));
-//        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(OXYGEN_STORAGE_MODULE, MachineUnbakedModel.MACHINE_MARKER));
-//
-//        generator.createLantern(GLOWSTONE_LANTERN);
-//        generator.createLantern(UNLIT_LANTERN);
-//
-//        generator.createNonTemplateModelBlock(CRUDE_OIL);
-//        generator.createNonTemplateModelBlock(FUEL);
-//
-//        generator.blockStateOutput.accept(createRotatedVariant(MOON_DIRT_PATH, ModelLocationUtils.getModelLocation(MOON_DIRT_PATH)));
-        generator.createTrivialCube(LUNASLATE);
+        generator.createTrivialCube(GCBlocks.SILICON_ORE);
+        generator.createTrivialCube(GCBlocks.DEEPSLATE_SILICON_ORE);
+
+        generator.createTrivialCube(GCBlocks.MOON_COPPER_ORE);
+        generator.createTrivialCube(GCBlocks.LUNASLATE_COPPER_ORE);
+
+        generator.createTrivialCube(GCBlocks.TIN_ORE);
+        generator.createTrivialCube(GCBlocks.DEEPSLATE_TIN_ORE);
+        generator.createTrivialCube(GCBlocks.MOON_TIN_ORE);
+        generator.createTrivialCube(GCBlocks.LUNASLATE_TIN_ORE);
+
+        generator.createTrivialCube(GCBlocks.ALUMINUM_ORE);
+        generator.createTrivialCube(GCBlocks.DEEPSLATE_ALUMINUM_ORE);
+
+        generator.createTrivialCube(GCBlocks.DESH_ORE);
+
+        generator.createTrivialCube(GCBlocks.ILMENITE_ORE);
+
+        generator.createTrivialCube(GCBlocks.GALENA_ORE);
+
+        createSlicedEdibleBlock(generator, GCBlocks.MOON_CHEESE_BLOCK); //fixme cat
+
+        // COMPACT MINERAL BLOCKS
+        generator.createTrivialCube(GCBlocks.SILICON_BLOCK);
+        generator.createTrivialCube(GCBlocks.METEORIC_IRON_BLOCK);
+        generator.createTrivialCube(GCBlocks.DESH_BLOCK);
+        generator.createTrivialCube(GCBlocks.TITANIUM_BLOCK);
+        generator.createTrivialCube(GCBlocks.LEAD_BLOCK);
+        generator.createTrivialCube(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
+
+        // MOON VILLAGER SPECIAL
+        generator.copyModel(Blocks.CARTOGRAPHY_TABLE, GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
+
+        // MISC WORLD GEN
+//        generator.createNonTemplateModelBlock(GCBlocks.CAVERNOUS_VINE);
+//        generator.createNonTemplateModelBlock(GCBlocks.POISONOUS_CAVERNOUS_VINE);
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(GCBlocks.MOON_BERRY_BUSH)
+                        .with(PropertyDispatch.property(BlockStateProperties.AGE_3)
+                                        .generate(integer -> Variant.variant().with(VariantProperties.MODEL, generator.createSuffixedVariant(GCBlocks.MOON_BERRY_BUSH, "_stage" + integer, ModelTemplates.CROSS, TextureMapping::cross)))
+                        )
+        );
+
+        // DUMMY
+        generator.createAirLikeBlock(GCBlocks.SOLAR_PANEL_PART, GCItems.BLUE_SOLAR_WAFER);
+//        generator.createAirLikeBlock(GCBlocks.CRYOGENIC_CHAMBER_PART, GCItems.DARK_DECORATION); //todo
+
+        // MISC MACHINES
+//        generator.createNonTemplateModelBlock(GCBlocks.CRYOGENIC_CHAMBER);
+        generator.createNonTemplateModelBlock(GCBlocks.PLAYER_TRANSPORT_TUBE);
+
+        //todo gen models (not just blockstates)
+        createMachineDelegate(generator, GCBlocks.CIRCUIT_FABRICATOR);
+        createMachineDelegate(generator, GCBlocks.COMPRESSOR);
+        createMachineDelegate(generator, GCBlocks.ELECTRIC_COMPRESSOR);
+        createMachineDelegate(generator, GCBlocks.COAL_GENERATOR);
+        createMachineDelegate(generator, GCBlocks.BASIC_SOLAR_PANEL);
+        createMachineDelegate(generator, GCBlocks.ADVANCED_SOLAR_PANEL);
+        createMachineDelegate(generator, GCBlocks.ENERGY_STORAGE_MODULE);
+        createMachineDelegate(generator, GCBlocks.ELECTRIC_FURNACE);
+        createMachineDelegate(generator, GCBlocks.ELECTRIC_ARC_FURNACE);
+        createMachineDelegate(generator, GCBlocks.REFINERY);
+        createMachineDelegate(generator, GCBlocks.OXYGEN_COLLECTOR);
+        createMachineDelegate(generator, GCBlocks.OXYGEN_SEALER);
+        createMachineDelegate(generator, GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR);
+        createMachineDelegate(generator, GCBlocks.OXYGEN_DECOMPRESSOR);
+        createMachineDelegate(generator, GCBlocks.OXYGEN_COMPRESSOR);
+        createMachineDelegate(generator, GCBlocks.OXYGEN_STORAGE_MODULE);
+        createMachineDelegate(generator, GCBlocks.FUEL_LOADER);
+
+        generator.createNonTemplateModelBlock(GCBlocks.CRUDE_OIL);
+        generator.createNonTemplateModelBlock(GCBlocks.FUEL);
+
+        generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
+        generator.createNonTemplateModelBlock(GCBlocks.AIR_LOCK_CONTROLLER);
+        generator.createNonTemplateModelBlock(GCBlocks.AIR_LOCK_SEAL);
+    }
+
+    private static void generateDetailedTexture(BlockModelGenerators generator, Block detailedBlock, Block baseBlock) { //todo use base block to gen (AW the model constructor?)
+        ((BlockModelGeneratorsAccessor)generator).getTexturedModels().put(detailedBlock, DETAILED_DECORATION.get(detailedBlock));
+    }
+
+    private static void createRotatedDelegate(BlockModelGenerators generator, Block block) {
+        generator.blockStateOutput.accept(BlockModelGenerators.createRotatedVariant(block, ModelLocationUtils.getModelLocation(block)));
+    }
+
+    private static void createSlicedEdibleBlock(BlockModelGenerators generator, Block block) {
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(
+                PropertyDispatch.property(BlockStateProperties.BITES)
+                        .select(0, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block)))
+                        .select(1, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice1")))
+                        .select(2, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice2")))
+                        .select(3, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice3")))
+                        .select(4, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice4")))
+                        .select(5, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice5")))
+                        .select(6, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice6")))
+        ));
+    }
+
+    private static void createMachineDelegate(BlockModelGenerators generator, Block block) { //todo: look into why we need this prefix
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, ModelLocationUtils.getModelLocation(block).withPrefix("models/")));
     }
 
     @Override
-    public void generateItemModels(ItemModelGenerators itemModelGenerator) {
+    public void generateItemModels(ItemModelGenerators generator) {
+        // MATERIALS
+        generator.generateFlatItem(GCItems.RAW_SILICON, ModelTemplates.FLAT_ITEM);
 
+        generator.generateFlatItem(GCItems.RAW_METEORIC_IRON, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.METEORIC_IRON_INGOT, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.METEORIC_IRON_NUGGET, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.COMPRESSED_METEORIC_IRON, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.RAW_DESH, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.DESH_INGOT, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.DESH_NUGGET, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.COMPRESSED_DESH, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.RAW_LEAD, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.LEAD_INGOT, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.LEAD_NUGGET, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.RAW_ALUMINUM, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ALUMINUM_INGOT, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ALUMINUM_NUGGET, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.COMPRESSED_ALUMINUM, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.RAW_TIN, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.TIN_INGOT, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.TIN_NUGGET, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.COMPRESSED_TIN, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.RAW_TITANIUM, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.TITANIUM_INGOT, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.TITANIUM_NUGGET, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.COMPRESSED_TITANIUM, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.COMPRESSED_BRONZE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.COMPRESSED_COPPER, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.COMPRESSED_IRON, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.COMPRESSED_STEEL, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.LUNAR_SAPPHIRE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.DESH_STICK, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.CARBON_FRAGMENTS, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.IRON_SHARD, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.SOLAR_DUST, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BASIC_WAFER, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ADVANCED_WAFER, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BEAM_CORE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.CANVAS, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.FLUID_MANIPULATOR, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.OXYGEN_CONCENTRATOR, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.OXYGEN_FAN, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.OXYGEN_VENT, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.SENSOR_LENS, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BLUE_SOLAR_WAFER, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.SINGLE_SOLAR_MODULE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.FULL_SOLAR_PANEL, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.SOLAR_ARRAY_WAFER, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.STEEL_POLE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.COPPER_CANISTER, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.TIN_CANISTER, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.THERMAL_CLOTH, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ISOTHERMAL_FABRIC, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ORION_DRIVE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ATMOSPHERIC_VALVE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.AMBIENT_THERMAL_CONTROLLER, ModelTemplates.FLAT_ITEM);
+
+        // FOOD
+        generator.generateFlatItem(GCItems.MOON_BERRIES, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.CHEESE_CURD, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.CHEESE_SLICE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BURGER_BUN, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.GROUND_BEEF, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BEEF_PATTY, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.CHEESEBURGER, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_APPLE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_CARROT, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_MELON, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_POTATO, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.CANNED_BEEF, ModelTemplates.FLAT_ITEM);
+
+        // ROCKET PLATES
+        generator.generateFlatItem(GCItems.TIER_1_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.TIER_2_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.TIER_3_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);
+
+        // ARMOR
+        generator.generateFlatItem(GCItems.HEAVY_DUTY_HELMET, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.HEAVY_DUTY_CHESTPLATE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.HEAVY_DUTY_LEGGINGS, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.HEAVY_DUTY_BOOTS, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.DESH_HELMET, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.DESH_CHESTPLATE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.DESH_LEGGINGS, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.DESH_BOOTS, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.TITANIUM_HELMET, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.TITANIUM_CHESTPLATE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.TITANIUM_LEGGINGS, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.TITANIUM_BOOTS, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.SENSOR_GLASSES, ModelTemplates.FLAT_ITEM);
+
+        // TOOLS + WEAPONS
+        generator.generateFlatItem(GCItems.HEAVY_DUTY_SWORD, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(GCItems.HEAVY_DUTY_SHOVEL, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(GCItems.HEAVY_DUTY_PICKAXE, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(GCItems.HEAVY_DUTY_AXE, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(GCItems.HEAVY_DUTY_HOE, ModelTemplates.FLAT_HANDHELD_ITEM);
+
+        generator.generateFlatItem(GCItems.DESH_SWORD, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(GCItems.DESH_SHOVEL, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(GCItems.DESH_PICKAXE, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(GCItems.DESH_AXE, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(GCItems.DESH_HOE, ModelTemplates.FLAT_HANDHELD_ITEM);
+
+        generator.generateFlatItem(GCItems.TITANIUM_SWORD, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(GCItems.TITANIUM_SHOVEL, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(GCItems.TITANIUM_PICKAXE, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(GCItems.TITANIUM_AXE, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(GCItems.TITANIUM_HOE, ModelTemplates.FLAT_HANDHELD_ITEM);
+
+        generator.generateFlatItem(GCItems.STANDARD_WRENCH, ModelTemplates.FLAT_HANDHELD_ITEM);
+
+        // BATTERIES
+        generator.generateFlatItem(GCItems.BATTERY, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.INFINITE_BATTERY, GCItems.BATTERY, ModelTemplates.FLAT_ITEM);
+
+        //FLUID BUCKETS
+        generator.generateFlatItem(GCItems.CRUDE_OIL_BUCKET, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.FUEL_BUCKET, ModelTemplates.FLAT_ITEM);
+
+        //GALACTICRAFT INVENTORY
+        generator.generateFlatItem(GCItems.PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ORANGE_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.MAGENTA_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.LIGHT_BLUE_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.YELLOW_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.LIME_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.PINK_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.GRAY_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.LIGHT_GRAY_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.CYAN_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.PURPLE_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BLUE_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BROWN_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.GREEN_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.RED_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BLACK_PARACHUTE, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.OXYGEN_MASK, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.OXYGEN_GEAR, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.SMALL_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.MEDIUM_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.LARGE_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.INFINITE_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.SHIELD_CONTROLLER, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.FREQUENCY_MODULE, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.THERMAL_PADDING_HELMET, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.THERMAL_PADDING_CHESTPIECE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.THERMAL_PADDING_LEGGINGS, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.THERMAL_PADDING_BOOTS, ModelTemplates.FLAT_ITEM);
+        // ROCKETS
+//        generator.generateFlatItem(GCItems.ROCKET, ModelTemplates.FLAT_ITEM);
+
+        // SCHEMATICS
+        generator.generateFlatItem(GCItems.TIER_2_ROCKET_SCHEMATIC, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.CARGO_ROCKET_SCHEMATIC, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.MOON_BUGGY_SCHEMATIC, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.TIER_3_ROCKET_SCHEMATIC, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ASTRO_MINER_SCHEMATIC, ModelTemplates.FLAT_ITEM);
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull TextureMapping createDetailedTexture(@NotNull Block block) {
+        ResourceLocation side = TextureMapping.getBlockTexture(block, "_side");
+        return new TextureMapping()
+                .put(TextureSlot.WALL, side)
+                .put(TextureSlot.SIDE, side)
+                .put(TextureSlot.TOP, new ResourceLocation(TextureMapping.getBlockTexture(block).toString().replace("detailed_", "")))
+                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block, "_top"));
     }
 }

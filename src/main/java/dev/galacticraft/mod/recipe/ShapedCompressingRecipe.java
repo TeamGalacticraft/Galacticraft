@@ -26,10 +26,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.gson.*;
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -75,7 +72,7 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
 
    @Override
    public RecipeSerializer<?> getSerializer() {
-      return GalacticraftRecipe.SHAPED_COMPRESSING_SERIALIZER;
+      return GCRecipes.SHAPED_COMPRESSING_SERIALIZER;
    }
 
    @Override

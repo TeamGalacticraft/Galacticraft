@@ -29,7 +29,7 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.gametest.framework.GameTestAssertException;
@@ -52,14 +52,14 @@ public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity
     @GameTestGenerator
     public @NotNull List<TestFunction> generateTests() {
         List<TestFunction> functions = super.generateTests();
-        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_ITEM, GCItem.INFINITE_BATTERY));
+        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_ITEM, GCItems.INFINITE_BATTERY));
         return functions;
     }
 
     @InstantTest
     public Runnable oilItemExtraction(RefineryBlockEntity machine) {
         ItemResourceSlot slot = machine.itemStorage().getSlot(GCSlotGroupTypes.OIL_FROM_ITEM);
-        slot.set(GCItem.CRUDE_OIL_BUCKET, 1);
+        slot.set(GCItems.CRUDE_OIL_BUCKET, 1);
         return () -> {
             if (machine.fluidStorage().getSlot(GCSlotGroupTypes.OIL_INPUT).getAmount() != FluidConstants.BUCKET) {
                 throw new GameTestAssertException("Expected refinery to take 1 bucket of oil from the input slot.");
@@ -70,7 +70,7 @@ public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity
     @InstantTest
     public Runnable oilItemRemainder(RefineryBlockEntity machine) {
         ItemResourceSlot slot = machine.itemStorage().getSlot(GCSlotGroupTypes.OIL_FROM_ITEM);
-        slot.set(GCItem.CRUDE_OIL_BUCKET, 1);
+        slot.set(GCItems.CRUDE_OIL_BUCKET, 1);
         return () -> {
             if (slot.getResource() != Items.BUCKET) {
                 throw new GameTestAssertException("Expected refinery to leave 1 empty bucket in the input slot.");
@@ -98,7 +98,7 @@ public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity
         ItemResourceSlot slot = machine.itemStorage().getSlot(GCSlotGroupTypes.FUEL_TO_ITEM);
         slot.set(Items.BUCKET, 1);
         return () -> {
-            if (slot.getResource() != GCItem.FUEL_BUCKET) {
+            if (slot.getResource() != GCItems.FUEL_BUCKET) {
                 throw new GameTestAssertException("Expected refinery to create a fuel bucket in the output slot.");
             }
         };

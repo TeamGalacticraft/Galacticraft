@@ -30,9 +30,8 @@ import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.util.GenericApiUtil;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
-import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -70,14 +69,14 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
         this.trySpreadFluids(world, state);
         Storage<FluidVariant> tank = this.itemStorage().getSlot(GCSlotGroupTypes.OXYGEN_TO_ITEM).find(FluidStorage.ITEM);
         profiler.pop();
-        if (tank == null) return GCMachineStatus.MISSING_OXYGEN_TANK;
-        if (tank.simulateExtract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GCMachineStatus.EMPTY_OXYGEN_TANK;
+        if (tank == null) return GCMachineStatuses.MISSING_OXYGEN_TANK;
+        if (tank.simulateExtract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GCMachineStatuses.EMPTY_OXYGEN_TANK;
         profiler.push("transaction");
 
         try {
             if (this.energyStorage().extractExact(Galacticraft.CONFIG_MANAGER.get().oxygenDecompressorEnergyConsumptionRate())) {
                 GenericApiUtil.move(FluidVariant.of(Gases.OXYGEN), tank, this.fluidStorage().getSlot(GCSlotGroupTypes.OXYGEN_OUTPUT), Long.MAX_VALUE, null);
-                return GCMachineStatus.DECOMPRESSING;
+                return GCMachineStatuses.DECOMPRESSING;
             } else {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
             }

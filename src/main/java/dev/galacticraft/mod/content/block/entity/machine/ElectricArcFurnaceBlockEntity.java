@@ -28,11 +28,8 @@ import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
-import dev.galacticraft.mod.screen.GCMenuTypes;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -91,7 +88,7 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Cont
 
     @Override
     protected @NotNull MachineStatus workingStatus() {
-        return GCMachineStatus.ACTIVE;
+        return GCMachineStatuses.ACTIVE;
     }
 
     @Override

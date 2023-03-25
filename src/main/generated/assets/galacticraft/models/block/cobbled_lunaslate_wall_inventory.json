@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "galacticraft:block/cobbled_lunaslate"
+  }
+}

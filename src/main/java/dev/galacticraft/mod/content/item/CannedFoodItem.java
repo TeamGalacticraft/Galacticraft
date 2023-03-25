@@ -40,7 +40,7 @@ public class CannedFoodItem extends Item {
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
         if (entity instanceof Player player) {
             player.eat(world, stack);
-            player.spawnAtLocation(new ItemStack(GCItem.TIN_CANISTER));
+            player.spawnAtLocation(new ItemStack(GCItems.TIN_CANISTER));
         }
         stack.shrink(1);
         return stack;

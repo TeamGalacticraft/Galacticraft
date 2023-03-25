@@ -22,14 +22,11 @@
 
 package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.mod.misc.banner.GCBannerPattern;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import dev.galacticraft.mod.misc.banner.GCBannerPatterns;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BannerPatternTags;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
@@ -43,6 +40,6 @@ public class GCBannerTagProvider extends FabricTagProvider<BannerPattern> {
     @Override
     protected void addTags(HolderLookup.Provider arg) {
         this.tag(BannerPatternTags.NO_ITEM_REQUIRED)
-                .add(GCBannerPattern.ROCKET_KEY);
+                .add(GCBannerPatterns.ROCKET_KEY);
     }
 }

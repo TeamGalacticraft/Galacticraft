@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.data;
 
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
@@ -50,7 +50,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
     }
 
     public LootTable.Builder siliconOreDrops(Block ore) {
-        return createSilkTouchDispatchTable(ore, applyExplosionDecay(ore, LootItem.lootTableItem(GCItem.RAW_SILICON)
+        return createSilkTouchDispatchTable(ore, applyExplosionDecay(ore, LootItem.lootTableItem(GCItems.RAW_SILICON)
                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(4.0F, 6.0F)))
                 .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))
         ));
@@ -58,10 +58,10 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
     @Override
     public void generate() {
-        dropOther(GLOWSTONE_TORCH, GCItem.GLOWSTONE_TORCH);
-        dropOther(GLOWSTONE_WALL_TORCH, GCItem.GLOWSTONE_TORCH);
-        dropOther(UNLIT_TORCH, GCItem.UNLIT_TORCH);
-        dropOther(UNLIT_WALL_TORCH, GCItem.UNLIT_TORCH);
+        dropOther(GLOWSTONE_TORCH, GCItems.GLOWSTONE_TORCH);
+        dropOther(GLOWSTONE_WALL_TORCH, GCItems.GLOWSTONE_TORCH);
+        dropOther(UNLIT_TORCH, GCItems.UNLIT_TORCH);
+        dropOther(UNLIT_WALL_TORCH, GCItems.UNLIT_TORCH);
 
         dropSelf(GLOWSTONE_LANTERN);
         dropOther(UNLIT_LANTERN, Items.LANTERN);
@@ -149,7 +149,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         dropSelf(MOON_TURF);
         dropSelf(MOON_DIRT);
-        dropOther(MOON_DIRT_PATH, GCItem.MOON_DIRT);
+        dropOther(MOON_DIRT_PATH, GCItems.MOON_DIRT);
         dropSelf(MOON_SURFACE_ROCK);
 
         add(MOON_ROCK, createSingleItemTableWithSilkTouch(MOON_ROCK, COBBLED_MOON_ROCK));
@@ -189,7 +189,12 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         dropSelf(MARS_SURFACE_ROCK);
         dropSelf(MARS_SUB_SURFACE_ROCK);
+
         add(MARS_STONE, createSingleItemTableWithSilkTouch(MARS_STONE, MARS_COBBLESTONE));
+        dropSelf(MARS_STONE_SLAB);
+        dropSelf(MARS_STONE_STAIRS);
+        dropSelf(MARS_STONE_WALL);
+
         dropSelf(MARS_COBBLESTONE);
         dropSelf(MARS_COBBLESTONE_SLAB);
         dropSelf(MARS_COBBLESTONE_STAIRS);
@@ -232,19 +237,19 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         add(MOON_COPPER_ORE, createCopperOreDrops(MOON_COPPER_ORE));
         add(LUNASLATE_COPPER_ORE, createCopperOreDrops(MOON_COPPER_ORE));
 
-        add(TIN_ORE, createOreDrop(TIN_ORE, GCItem.RAW_TIN));
-        add(DEEPSLATE_TIN_ORE, createOreDrop(DEEPSLATE_TIN_ORE, GCItem.RAW_TIN));
-        add(MOON_TIN_ORE, createOreDrop(MOON_TIN_ORE, GCItem.RAW_TIN));
-        add(LUNASLATE_TIN_ORE, createOreDrop(LUNASLATE_TIN_ORE, GCItem.RAW_TIN));
+        add(TIN_ORE, createOreDrop(TIN_ORE, GCItems.RAW_TIN));
+        add(DEEPSLATE_TIN_ORE, createOreDrop(DEEPSLATE_TIN_ORE, GCItems.RAW_TIN));
+        add(MOON_TIN_ORE, createOreDrop(MOON_TIN_ORE, GCItems.RAW_TIN));
+        add(LUNASLATE_TIN_ORE, createOreDrop(LUNASLATE_TIN_ORE, GCItems.RAW_TIN));
 
-        add(ALUMINUM_ORE, createOreDrop(ALUMINUM_ORE, GCItem.RAW_ALUMINUM));
-        add(DEEPSLATE_ALUMINUM_ORE, createOreDrop(ALUMINUM_ORE, GCItem.RAW_ALUMINUM));
+        add(ALUMINUM_ORE, createOreDrop(ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
+        add(DEEPSLATE_ALUMINUM_ORE, createOreDrop(ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
 
-        add(DESH_ORE, createOreDrop(DESH_ORE, GCItem.RAW_DESH));
+        add(DESH_ORE, createOreDrop(DESH_ORE, GCItems.RAW_DESH));
 
-        add(ILMENITE_ORE, createOreDrop(ILMENITE_ORE, GCItem.RAW_TITANIUM));
+        add(ILMENITE_ORE, createOreDrop(ILMENITE_ORE, GCItems.RAW_TITANIUM));
 
-        add(GALENA_ORE, createOreDrop(GALENA_ORE, GCItem.RAW_LEAD));
+        add(GALENA_ORE, createOreDrop(GALENA_ORE, GCItems.RAW_LEAD));
 
         add(MOON_CHEESE_BLOCK, noDrop());
         dropSelf(SILICON_BLOCK);
@@ -254,7 +259,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(LEAD_BLOCK);
         dropSelf(LUNAR_SAPPHIRE_BLOCK);
 
-        add(FALLEN_METEOR, block -> BlockLootSubProvider.createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GCItem.RAW_METEORIC_IRON).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));
+        add(FALLEN_METEOR, block -> BlockLootSubProvider.createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GCItems.RAW_METEORIC_IRON).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));
 
         dropSelf(LUNAR_CARTOGRAPHY_TABLE);
 
@@ -270,7 +275,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
                                                 .when(
                                                         LootItemBlockStatePropertyCondition.hasBlockStateProperties(MOON_BERRY_BUSH).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 3))
                                                 )
-                                                .add(LootItem.lootTableItem(GCItem.MOON_BERRIES))
+                                                .add(LootItem.lootTableItem(GCItems.MOON_BERRIES))
                                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 3.0F)))
                                                 .apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE))
                                 )
@@ -279,7 +284,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
                                                 .when(
                                                         LootItemBlockStatePropertyCondition.hasBlockStateProperties(MOON_BERRY_BUSH).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 2))
                                                 )
-                                                .add(LootItem.lootTableItem(GCItem.MOON_BERRIES))
+                                                .add(LootItem.lootTableItem(GCItems.MOON_BERRIES))
                                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F)))
                                                 .apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE))
                                 )

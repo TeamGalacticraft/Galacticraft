@@ -27,7 +27,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.screen.ingame.GCPlayerInventoryScreen;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -76,7 +76,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
     public void render(PoseStack matrices, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         Lighting.setupFor3DItems();
         this.itemRenderer.renderAndDecorateItem(matrices, Items.CRAFTING_TABLE.getDefaultInstance(), this.leftPos + 6, this.topPos - 20);
-        this.itemRenderer.renderAndDecorateItem(matrices, GCItem.OXYGEN_MASK.getDefaultInstance(), this.leftPos + 35, this.topPos - 20);
+        this.itemRenderer.renderAndDecorateItem(matrices, GCItems.OXYGEN_MASK.getDefaultInstance(), this.leftPos + 35, this.topPos - 20);
         Lighting.setupForFlatItems();
     }
 }

@@ -203,7 +203,12 @@ public class GCBlocks {
     // MARS NATURAL
     public static final Block MARS_SURFACE_ROCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.DIRT).destroyTime(2.2F));
     public static final Block MARS_SUB_SURFACE_ROCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_RED).destroyTime(2.6F));
+
     public static final Block MARS_STONE = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_RED).destroyTime(3.0F));
+    public static final Block MARS_STONE_SLAB = new SlabBlock(FabricBlockSettings.copyOf(MARS_STONE).strength(3.5F, 6.0F));
+    public static final Block MARS_STONE_STAIRS = new StairBlock(MARS_STONE.defaultBlockState(), FabricBlockSettings.copyOf(MARS_STONE));
+    public static final Block MARS_STONE_WALL = new WallBlock(FabricBlockSettings.copyOf(MARS_STONE));
+
     public static final Block MARS_COBBLESTONE = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_RED).destroyTime(3.0F));
     public static final Block MARS_COBBLESTONE_SLAB = new SlabBlock(FabricBlockSettings.copyOf(MARS_COBBLESTONE).strength(3.5F, 6.0F));
     public static final Block MARS_COBBLESTONE_STAIRS = new StairBlock(MARS_COBBLESTONE.defaultBlockState(), FabricBlockSettings.copyOf(MARS_COBBLESTONE));
@@ -211,7 +216,7 @@ public class GCBlocks {
 
     // ASTEROID NATURAL
     public static final Block ASTEROID_ROCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_BROWN).destroyTime(3.0F));
-    public static final Block ASTEROID_ROCK_1 = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_BROWN).destroyTime(3.0F));
+    public static final Block ASTEROID_ROCK_1 = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_BROWN).destroyTime(3.0F)); // todo naming
     public static final Block ASTEROID_ROCK_2 = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.COLOR_BROWN).destroyTime(3.0F));
 
     // VENUS NATURAL
@@ -463,7 +468,12 @@ public class GCBlocks {
         // MARS NATURAL
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_SURFACE_ROCK), MARS_SURFACE_ROCK);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_SUB_SURFACE_ROCK), MARS_SUB_SURFACE_ROCK);
+
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_STONE), MARS_STONE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_STONE_SLAB), MARS_STONE_SLAB);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_STONE_STAIRS), MARS_STONE_STAIRS);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_STONE_WALL), MARS_STONE_WALL);
+
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_COBBLESTONE), MARS_COBBLESTONE);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_COBBLESTONE_SLAB), MARS_COBBLESTONE_SLAB);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MARS_COBBLESTONE_STAIRS), MARS_COBBLESTONE_STAIRS);

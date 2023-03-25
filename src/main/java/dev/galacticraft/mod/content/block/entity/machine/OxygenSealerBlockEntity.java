@@ -32,7 +32,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
@@ -106,7 +106,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                     BlockPos pos1 = pos.relative(Direction.UP);
                     if (this.oxygenWorld || (this.breathablePositions.isEmpty() && world.isBreathable(pos1))) {
                         profiler.pop();
-                        return GCMachineStatus.ALREADY_SEALED;
+                        return GCMachineStatuses.ALREADY_SEALED;
                     }
                     for (BlockPos pos2 : this.breathablePositions) {
                         world.setBreathable(pos2, false);
@@ -133,7 +133,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                                 this.updateQueued = true;
                                 this.sealCheckTime = SEAL_CHECK_TIME * 5;
                                 profiler.pop();
-                                return GCMachineStatus.AREA_TOO_LARGE;
+                                return GCMachineStatuses.AREA_TOO_LARGE;
                             }
                             added.add(pos1);
                             final BlockPos finalPos = pos1;
@@ -159,10 +159,10 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                 this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate());
                 this.fluidStorage().getGroup(GCSlotGroupTypes.OXYGEN_INPUT).extract(Gases.OXYGEN, breathablePositions.size() * 2L);
                 profiler.pop();
-                return GCMachineStatus.SEALED;
+                return GCMachineStatuses.SEALED;
             } else {
                 this.sealCheckTime = 0;
-                return GCMachineStatus.NOT_ENOUGH_OXYGEN;
+                return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
             }
         } else {
             this.sealCheckTime = 0;

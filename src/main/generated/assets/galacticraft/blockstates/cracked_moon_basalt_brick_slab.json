@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "galacticraft:block/cracked_moon_basalt_brick_slab"
+    },
+    "type=double": {
+      "model": "galacticraft:block/cracked_moon_basalt_brick"
+    },
+    "type=top": {
+      "model": "galacticraft:block/cracked_moon_basalt_brick_slab_top"
+    }
+  }
+}

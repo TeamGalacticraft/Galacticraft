@@ -25,7 +25,7 @@ package dev.galacticraft.mod.village;
 import com.google.common.collect.ImmutableSet;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.tag.GCTags;
-import dev.galacticraft.mod.world.poi.GCPointOfInterestType;
+import dev.galacticraft.mod.world.poi.GCPointOfInterestTypes;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -45,7 +45,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GCVillagerProfessions {
-    public static final VillagerProfession LUNAR_CARTOGRAPHER = register(new ResourceLocation(Constant.MOD_ID, "lunar_cartographer"), GCPointOfInterestType.LUNAR_CARTOGRAPHER, SoundEvents.VILLAGER_WORK_CARTOGRAPHER);
+    public static final VillagerProfession LUNAR_CARTOGRAPHER = register(new ResourceLocation(Constant.MOD_ID, "lunar_cartographer"), GCPointOfInterestTypes.LUNAR_CARTOGRAPHER, SoundEvents.VILLAGER_WORK_CARTOGRAPHER);
 
     public static VillagerProfession register(ResourceLocation id, ResourceKey<PoiType> resourceKey, @Nullable SoundEvent soundEvent) {
         return new VillagerProfession(id.toString(), (holder) -> {

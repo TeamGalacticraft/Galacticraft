@@ -24,18 +24,12 @@ package dev.galacticraft.mod.gametest.test.machine;
 
 import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.container.DefaultedMetadata;
-import dev.galacticraft.machinelib.api.machine.MachineType;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.EnergyStorageModuleBlockEntity;
-import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
-import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestGenerator;
-import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.TestFunction;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,8 +48,8 @@ public final class EnergyStorageModuleTestSuite extends MachineGameTest<EnergySt
     @GameTestGenerator
     public @NotNull List<TestFunction> generateTests() {
         List<TestFunction> functions = super.generateTests();
-        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_SELF, GCItem.INFINITE_BATTERY));
-        functions.add(this.createDrainToEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_ITEM, GCItem.BATTERY));
+        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_SELF, GCItems.INFINITE_BATTERY));
+        functions.add(this.createDrainToEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_ITEM, GCItems.BATTERY));
         return functions;
     }
 }

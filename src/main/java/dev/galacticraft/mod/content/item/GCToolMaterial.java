@@ -33,9 +33,9 @@ import net.minecraft.world.item.crafting.Ingredient;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public enum GCToolMaterial implements Tier {
-    STEEL(Tiers.IRON.getLevel(), 768, Tiers.IRON.getSpeed(), Tiers.IRON.getAttackDamageBonus(), Tiers.IRON.getEnchantmentValue(), () -> Ingredient.of(new ItemStack(GCItem.COMPRESSED_STEEL))),
-    DESH(3, 1024, 5.0F, 2.5F, 10, () -> Ingredient.of(new ItemStack(GCItem.DESH_INGOT))),
-    TITANIUM(4, 760, 14.0F, 4.0F, 16, () -> Ingredient.of(new ItemStack(GCItem.TITANIUM_INGOT)));
+    STEEL(Tiers.IRON.getLevel(), 768, Tiers.IRON.getSpeed(), Tiers.IRON.getAttackDamageBonus(), Tiers.IRON.getEnchantmentValue(), () -> Ingredient.of(new ItemStack(GCItems.COMPRESSED_STEEL))),
+    DESH(3, 1024, 5.0F, 2.5F, 10, () -> Ingredient.of(new ItemStack(GCItems.DESH_INGOT))),
+    TITANIUM(4, 760, 14.0F, 4.0F, 16, () -> Ingredient.of(new ItemStack(GCItems.TITANIUM_INGOT)));
 
     private final int miningLevel;
     private final int durability;

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.village;
 
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
@@ -63,7 +63,7 @@ public class GCVillagerTrades {
 
         public MerchantOffer getOffer(Entity entity, RandomSource random) {
             ItemStack itemStack = new ItemStack(this.buy, this.price);
-            return new MerchantOffer(itemStack, new ItemStack(GCItem.LUNAR_SAPPHIRE), this.maxUses, this.experience, this.multiplier);
+            return new MerchantOffer(itemStack, new ItemStack(GCItems.LUNAR_SAPPHIRE), this.maxUses, this.experience, this.multiplier);
         }
     }
 
@@ -93,7 +93,7 @@ public class GCVillagerTrades {
                     MapItem.renderBiomePreviewMap(world, itemStack);
                     MapItemSavedData.addTargetDecoration(itemStack, blockPos, "+", this.iconType);
 //                    itemStack.setCustomName(Text.translatable("filled_map." + this.structure.getName().toLowerCase(Locale.ROOT))); port
-                    return new MerchantOffer(new ItemStack(GCItem.LUNAR_SAPPHIRE, this.price), new ItemStack(Items.COMPASS), itemStack, this.maxUses, this.experience, 0.2F);
+                    return new MerchantOffer(new ItemStack(GCItems.LUNAR_SAPPHIRE, this.price), new ItemStack(Items.COMPASS), itemStack, this.maxUses, this.experience, 0.2F);
                 } else {
                     return null;
                 }
@@ -135,7 +135,7 @@ public class GCVillagerTrades {
         }
 
         public MerchantOffer getOffer(Entity entity, RandomSource random) {
-            return new MerchantOffer(new ItemStack(GCItem.LUNAR_SAPPHIRE, this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
+            return new MerchantOffer(new ItemStack(GCItems.LUNAR_SAPPHIRE, this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
         }
     }
 }

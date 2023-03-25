@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.mixin.client;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.village.MoonVillagerType;
+import dev.galacticraft.mod.village.MoonVillagerTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
@@ -45,7 +45,7 @@ public abstract class VillagerRendererMixin {
 
     @Inject(method = "getTextureLocation", at = @At("HEAD"), cancellable = true)
     private void getMoonTexture_gc(Villager villagerEntity, CallbackInfoReturnable<ResourceLocation> cir) {
-        if (MoonVillagerType.MOON_VILLAGER_TYPE_REGISTRY.contains(villagerEntity.getVillagerData().getType())) {
+        if (MoonVillagerTypes.MOON_VILLAGER_TYPE_REGISTRY.contains(villagerEntity.getVillagerData().getType())) {
             cir.setReturnValue(MOON_TEXTURE);
         }
     }

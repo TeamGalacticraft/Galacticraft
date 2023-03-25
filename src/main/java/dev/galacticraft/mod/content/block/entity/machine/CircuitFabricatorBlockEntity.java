@@ -30,11 +30,11 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.content.item.GCItem;
-import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
-import dev.galacticraft.mod.recipe.GalacticraftRecipe;
+import dev.galacticraft.mod.recipe.GCRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
@@ -59,7 +59,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     private final Container craftingInv;
 
     public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.CIRCUIT_FABRICATOR, pos, state, GalacticraftRecipe.FABRICATION_TYPE);
+        super(GCMachineTypes.CIRCUIT_FABRICATOR, pos, state, GCRecipes.FABRICATION_TYPE);
         this.craftingInv = this.itemStorage().getCraftingView(GCSlotGroupTypes.GENERIC_INPUT);
     }
 
@@ -120,14 +120,14 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
 
     @Override
     protected @NotNull MachineStatus workingStatus() {
-        return GCMachineStatus.FABRICATING;
+        return GCMachineStatuses.FABRICATING;
     }
 
     @Override
     protected @Nullable FabricationRecipe findValidRecipe(@NotNull Level world) {
             if (this.itemStorage().getSlot(GCSlotGroupTypes.DIAMOND_INPUT).contains(Items.DIAMOND)
-                    && this.itemStorage().getGroup(GCSlotGroupTypes.SILICON_INPUT).getSlot(0).contains(GCItem.RAW_SILICON)
-                    && this.itemStorage().getGroup(GCSlotGroupTypes.SILICON_INPUT).getSlot(1).contains(GCItem.RAW_SILICON)
+                    && this.itemStorage().getGroup(GCSlotGroupTypes.SILICON_INPUT).getSlot(0).contains(GCItems.RAW_SILICON)
+                    && this.itemStorage().getGroup(GCSlotGroupTypes.SILICON_INPUT).getSlot(1).contains(GCItems.RAW_SILICON)
                     && this.itemStorage().getSlot(GCSlotGroupTypes.REDSTONE_INPUT).contains(Items.REDSTONE)) {
                 return super.findValidRecipe(world);
             }

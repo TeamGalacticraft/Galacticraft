@@ -83,7 +83,7 @@ public class FabricationRecipe implements Recipe<Container> {
 
     @Override
     public RecipeType<?> getType() {
-        return GalacticraftRecipe.FABRICATION_TYPE;
+        return GCRecipes.FABRICATION_TYPE;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class FabricationRecipe implements Recipe<Container> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return GalacticraftRecipe.FABRICATION_SERIALIZER;
+        return GCRecipes.FABRICATION_SERIALIZER;
     }
 
     @Override

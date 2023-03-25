@@ -24,30 +24,18 @@ package dev.galacticraft.mod.gametest.test.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.container.DefaultedMetadata;
-import dev.galacticraft.machinelib.api.machine.MachineType;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
-import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
-import dev.galacticraft.machinelib.api.storage.slot.SlotGroupType;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricFurnaceBlockEntity;
-import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestGenerator;
-import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.Container;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -64,7 +52,7 @@ public final class ElectricFurnaceTestSuite extends RecipeGameTest<Container, Sm
     @GameTestGenerator
     public @NotNull List<TestFunction> generateTests() {
         List<TestFunction> functions = super.generateTests();
-        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_SELF, GCItem.INFINITE_BATTERY));
+        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_SELF, GCItems.INFINITE_BATTERY));
         return functions;
     }
 

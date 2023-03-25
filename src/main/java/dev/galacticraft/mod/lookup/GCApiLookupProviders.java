@@ -29,7 +29,7 @@ import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.OxygenTankItem;
 import dev.galacticraft.mod.storage.SingleTypeStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -93,7 +93,7 @@ public class GCApiLookupProviders {
                     itemStack.getOrCreateTag().putLong(Constant.Nbt.VALUE, this.getAmount());
                 }
             };
-        }, GCItem.SMALL_OXYGEN_TANK, GCItem.MEDIUM_OXYGEN_TANK, GCItem.LARGE_OXYGEN_TANK);
-        FluidStorage.ITEM.registerSelf(GCItem.INFINITE_OXYGEN_TANK);
+        }, GCItems.SMALL_OXYGEN_TANK, GCItems.MEDIUM_OXYGEN_TANK, GCItems.LARGE_OXYGEN_TANK);
+        FluidStorage.ITEM.registerSelf(GCItems.INFINITE_OXYGEN_TANK);
     }
 }

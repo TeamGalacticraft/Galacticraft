@@ -95,6 +95,9 @@ public interface Constant {
         String MARS_SURFACE_ROCK = "mars_surface_rock";
         String MARS_SUB_SURFACE_ROCK = "mars_sub_surface_rock";
         String MARS_STONE = "mars_stone";
+        String MARS_STONE_SLAB = "mars_stone_slab";
+        String MARS_STONE_STAIRS = "mars_stone_stairs";
+        String MARS_STONE_WALL = "mars_stone_wall";
         String MARS_COBBLESTONE = "mars_cobblestone";
         String MARS_COBBLESTONE_SLAB = "mars_cobblestone_slab";
         String MARS_COBBLESTONE_STAIRS = "mars_cobblestone_stairs";

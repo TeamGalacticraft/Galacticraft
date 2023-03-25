@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "galacticraft:block/meteoric_iron_decoration",
+    "side": "galacticraft:block/meteoric_iron_decoration",
+    "top": "galacticraft:block/meteoric_iron_decoration"
+  }
+}

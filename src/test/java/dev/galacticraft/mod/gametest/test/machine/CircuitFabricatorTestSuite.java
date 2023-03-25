@@ -27,7 +27,7 @@ import dev.galacticraft.machinelib.api.gametest.annotation.container.DefaultedMe
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.CircuitFabricatorBlockEntity;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
@@ -52,7 +52,7 @@ public final class CircuitFabricatorTestSuite extends RecipeGameTest<Container, 
     @GameTestGenerator
     public @NotNull List<TestFunction> generateTests() {
         List<TestFunction> functions = super.generateTests();
-        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_SELF, GCItem.INFINITE_BATTERY));
+        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_SELF, GCItems.INFINITE_BATTERY));
         return functions;
     }
 
@@ -61,7 +61,7 @@ public final class CircuitFabricatorTestSuite extends RecipeGameTest<Container, 
         machine.energyStorage().setEnergy(machine.energyStorage().getCapacity());
         machine.itemStorage().getSlot(GCSlotGroupTypes.DIAMOND_INPUT).set(Items.DIAMOND, 1);
         machine.itemStorage().getSlot(GCSlotGroupTypes.REDSTONE_INPUT).set(Items.REDSTONE, 1);
-        machine.itemStorage().getGroup(GCSlotGroupTypes.SILICON_INPUT).forEach(slot -> slot.set(GCItem.RAW_SILICON, 1));
+        machine.itemStorage().getGroup(GCSlotGroupTypes.SILICON_INPUT).forEach(slot -> slot.set(GCItems.RAW_SILICON, 1));
     }
 
     @Override

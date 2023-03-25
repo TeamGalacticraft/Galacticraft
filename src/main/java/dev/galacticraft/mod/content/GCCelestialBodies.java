@@ -35,7 +35,7 @@ import dev.galacticraft.impl.universe.position.config.OrbitalCelestialPositionCo
 import dev.galacticraft.impl.universe.position.type.OrbitalCelestialPositionType;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -52,7 +52,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class GCCelestialBodies {
-    private static final Int2ObjectMap<Ingredient> EARTH_SATELLITE_RECIPE = new Int2ObjectArrayMap<>(new int[]{16, 32, 8, 1}, new Ingredient[]{Ingredient.of(GCItem.ALUMINUM_INGOT), Ingredient.of(GCItem.TIN_INGOT), Ingredient.of(Items.COPPER_INGOT), Ingredient.of(GCItem.ADVANCED_WAFER)});
+    private static final Int2ObjectMap<Ingredient> EARTH_SATELLITE_RECIPE = new Int2ObjectArrayMap<>(new int[]{16, 32, 8, 1}, new Ingredient[]{Ingredient.of(GCItems.ALUMINUM_INGOT), Ingredient.of(GCItems.TIN_INGOT), Ingredient.of(Items.COPPER_INGOT), Ingredient.of(GCItems.ADVANCED_WAFER)});
     public static final ResourceKey<CelestialBody<?, ?>> EARTH = BuiltinObjects.EARTH_KEY;
     public static final ResourceKey<CelestialBody<?, ?>> MOON = key("moon");
 

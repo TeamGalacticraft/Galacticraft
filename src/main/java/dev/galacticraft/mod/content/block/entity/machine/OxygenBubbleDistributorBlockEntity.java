@@ -32,7 +32,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.entity.BubbleEntity;
-import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -122,9 +122,9 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                     }
                     profiler.pop();
                     distributeOxygenToArea(this.size, true);
-                    return GCMachineStatus.DISTRIBUTING;
+                    return GCMachineStatuses.DISTRIBUTING;
                 } else {
-                    status = GCMachineStatus.NOT_ENOUGH_OXYGEN;
+                    status = GCMachineStatuses.NOT_ENOUGH_OXYGEN;
                     profiler.pop();
                 }
             } else {

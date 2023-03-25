@@ -26,8 +26,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
@@ -55,7 +53,7 @@ public record ShapelessCompressingRecipe(ResourceLocation id, String group,
 
    @Override
    public RecipeSerializer<?> getSerializer() {
-      return GalacticraftRecipe.SHAPELESS_COMPRESSING_SERIALIZER;
+      return GCRecipes.SHAPELESS_COMPRESSING_SERIALIZER;
    }
 
    @Override

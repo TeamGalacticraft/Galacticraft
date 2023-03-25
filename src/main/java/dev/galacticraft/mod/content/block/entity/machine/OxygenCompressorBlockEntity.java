@@ -32,7 +32,7 @@ import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -70,13 +70,13 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         SlotGroup<Fluid, FluidStack, FluidResourceSlot> oxygenStorage = this.fluidStorage().getGroup(GCSlotGroupTypes.OXYGEN_INPUT);
-        if (oxygenStorage.isEmpty()) return GCMachineStatus.NOT_ENOUGH_OXYGEN;
+        if (oxygenStorage.isEmpty()) return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
         profiler.push("find_storage");
         Storage<FluidVariant> tank = this.itemStorage().getSlot(GCSlotGroupTypes.OXYGEN_TO_ITEM).find(FluidStorage.ITEM);
         profiler.pop();
-        if (tank == null) return GCMachineStatus.MISSING_OXYGEN_TANK;
+        if (tank == null) return GCMachineStatuses.MISSING_OXYGEN_TANK;
         long space = tank.simulateInsert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null);
-        if (!tank.supportsInsertion() || space == 0) return GCMachineStatus.OXYGEN_TANK_FULL;
+        if (!tank.supportsInsertion() || space == 0) return GCMachineStatuses.OXYGEN_TANK_FULL;
         profiler.push("transaction");
         try {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate())) {
@@ -95,7 +95,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
             profiler.pop();
         }
 
-        return GCMachineStatus.COMPRESSING;
+        return GCMachineStatuses.COMPRESSING;
     }
 
     @Nullable

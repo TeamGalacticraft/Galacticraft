@@ -28,10 +28,10 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.machine.GCMachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
-import dev.galacticraft.mod.recipe.GalacticraftRecipe;
+import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.CompressorMenu;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.core.BlockPos;
@@ -62,13 +62,13 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
     private long fuelSlotModification = -1;
 
     public CompressorBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.COMPRESSOR, pos, state, GalacticraftRecipe.COMPRESSING_TYPE);
+        super(GCMachineTypes.COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE);
         this.craftingInv = this.itemStorage().getCraftingView(GCSlotGroupTypes.GENERIC_INPUT);
     }
 
     @Override
     protected @NotNull MachineStatus workingStatus() {
-        return GCMachineStatus.COMPRESSING;
+        return GCMachineStatuses.COMPRESSING;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
                     return null;
                 }
             }
-            return GCMachineStatus.NO_FUEL;
+            return GCMachineStatuses.NO_FUEL;
         }
 
         return null;

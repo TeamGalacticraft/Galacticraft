@@ -35,13 +35,14 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.block.entity.machine.*;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.screen.*;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -137,8 +138,8 @@ public class GCMachineTypes {
                             .filter(ResourceFilters.itemTag(ConventionalItemTags.DIAMONDS))
                             ::build
                     ).group(GCSlotGroupTypes.SILICON_INPUT, SlotGroup.item()
-                            .add(ItemResourceSlot.builder().pos(62, 45).filter(ResourceFilters.ofResource(GCItem.RAW_SILICON))::build)
-                            .add(ItemResourceSlot.builder().pos(62, 63).filter(ResourceFilters.ofResource(GCItem.RAW_SILICON))::build)
+                            .add(ItemResourceSlot.builder().pos(62, 45).filter(ResourceFilters.ofResource(GCItems.RAW_SILICON))::build)
+                            .add(ItemResourceSlot.builder().pos(62, 63).filter(ResourceFilters.ofResource(GCItems.RAW_SILICON))::build)
                             ::build
                     ).single(GCSlotGroupTypes.REDSTONE_INPUT, ItemResourceSlot.builder()
                             .pos(107, 70)
@@ -299,6 +300,7 @@ public class GCMachineTypes {
             MachineFluidStorage.builder()
                     .single(GCSlotGroupTypes.FUEL_INPUT, FluidResourceSlot.builder()
                             .height(0)
+                            .capacity(FluidConstants.BUCKET * 50)
                             .filter(ResourceFilters.ofResource(GCFluids.FUEL)) // fixme: tag?
                             ::build
                     )::build

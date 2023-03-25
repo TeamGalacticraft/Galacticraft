@@ -6,7 +6,7 @@
   "mixins": [
     "AbstractSkeletonEntityAccessor",
     "BlockFamilyProviderAccessor",
-    "BlockModelGeneratorsAccessor",
+    "BlockModelGeneratorsMixin",
     "BucketItemAccessor",
     "BuiltInLootTablesAccessor",
     "DimensionTypeMixin",

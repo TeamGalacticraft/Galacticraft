@@ -26,16 +26,12 @@ import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.InstantTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.ProcessingTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.container.DefaultedMetadata;
-import dev.galacticraft.machinelib.api.machine.MachineType;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
-import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
-import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.*;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
@@ -115,7 +111,7 @@ public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorB
     @GameTestGenerator
     public @NotNull List<TestFunction> generateTests() {
         List<TestFunction> functions = super.generateTests();
-        functions.add(this.createDrainToEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_ITEM, GCItem.BATTERY));
+        functions.add(this.createDrainToEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_ITEM, GCItems.BATTERY));
         return functions;
     }
 }

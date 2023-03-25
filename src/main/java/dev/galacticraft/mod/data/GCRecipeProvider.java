@@ -22,8 +22,7 @@
 
 package dev.galacticraft.mod.data;
 
-import dev.galacticraft.mod.content.item.GCItem;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -41,8 +40,8 @@ public class GCRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void buildRecipes(Consumer<FinishedRecipe> exporter) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItem.ROCKET_LAUNCH_PAD, 9)
-                .define('C', GCItem.COMPRESSED_IRON)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.ROCKET_LAUNCH_PAD, 9)
+                .define('C', GCItems.COMPRESSED_IRON)
                 .define('I', Items.IRON_BLOCK)
                 .pattern("CCC")
                 .pattern("III")

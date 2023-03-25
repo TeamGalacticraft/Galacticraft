@@ -27,7 +27,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -97,7 +97,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
 
         Lighting.setupFor3DItems();
         this.itemRenderer.renderAndDecorateItem(matrices, Items.CRAFTING_TABLE.getDefaultInstance(), this.leftPos + 6, this.topPos - 20);
-        this.itemRenderer.renderAndDecorateItem(matrices, GCItem.OXYGEN_MASK.getDefaultInstance(), this.leftPos + 35, this.topPos - 20);
+        this.itemRenderer.renderAndDecorateItem(matrices, GCItems.OXYGEN_MASK.getDefaultInstance(), this.leftPos + 35, this.topPos - 20);
     }
 
     @Override

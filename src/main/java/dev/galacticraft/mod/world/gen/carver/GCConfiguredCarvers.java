@@ -68,7 +68,7 @@ public class GCConfiguredCarvers {
                         1.0f,
                         0.0f)
         )));
-        context.register(MOON_CRATER_CARVER, GCCarver.CRATERS.configured(new CraterCarverConfig(
+        context.register(MOON_CRATER_CARVER, GCCarvers.CRATERS.configured(new CraterCarverConfig(
                 0.05f,
                 ConstantHeight.of(VerticalAnchor.absolute(128)),
                 UniformFloat.of(0.4f, 0.6f),
@@ -77,7 +77,7 @@ public class GCConfiguredCarvers {
                 8,
                 8
         )));
-        context.register(MOON_HIGHLANDS_CAVE_CARVER, GCCarver.LUNAR_CAVE.configured(new CaveCarverConfiguration(
+        context.register(MOON_HIGHLANDS_CAVE_CARVER, GCCarvers.LUNAR_CAVE.configured(new CaveCarverConfiguration(
                 0.15f,
                 UniformHeight.of(VerticalAnchor.aboveBottom(8), VerticalAnchor.absolute(180)),
                 UniformFloat.of(0.1f, 0.9f),
@@ -87,7 +87,7 @@ public class GCConfiguredCarvers {
                 UniformFloat.of(0.8f, 1.3f),
                 UniformFloat.of(-1.0f, -0.4f)
         )));
-        context.register(MOON_MARE_CAVE_CARVER, GCCarver.LUNAR_CAVE.configured(new CaveCarverConfiguration(
+        context.register(MOON_MARE_CAVE_CARVER, GCCarvers.LUNAR_CAVE.configured(new CaveCarverConfiguration(
                 0.18f,
                 UniformHeight.of(VerticalAnchor.aboveBottom(8), VerticalAnchor.absolute(180)),
                 UniformFloat.of(0.1f, 0.9f),

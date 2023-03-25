@@ -46,10 +46,10 @@ import dev.galacticraft.mod.client.resource.GCResourceReloadListener;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.ClientEventHandler;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
-import dev.galacticraft.mod.particle.GCParticleType;
+import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import net.fabricmc.api.ClientModInitializer;
@@ -139,9 +139,9 @@ public class GalacticraftClient implements ClientModInitializer {
 
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new GCResourceReloadListener());
 
-        ParticleFactoryRegistry.getInstance().register(GCParticleType.DRIPPING_FUEL_PARTICLE, DrippingFuelProvider::new);
-        ParticleFactoryRegistry.getInstance().register(GCParticleType.DRIPPING_CRUDE_OIL_PARTICLE, DrippingOilProvider::new);
-        ParticleFactoryRegistry.getInstance().register(GCParticleType.CRYOGENIC_PARTICLE, CryoFreezeParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_FUEL_PARTICLE, DrippingFuelProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_CRUDE_OIL_PARTICLE, DrippingOilProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.CRYOGENIC_PARTICLE, CryoFreezeParticle.Provider::new);
 
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "solar_panel"), SolarPanelSpriteProvider::new);
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "oxygen_sealer"), OxygenSealerSpriteProvider::new);
@@ -169,7 +169,7 @@ public class GalacticraftClient implements ClientModInitializer {
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
 
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> FallenMeteorBlock.colorMultiplier(state, world, pos), GCBlocks.FALLEN_METEOR);
-        BuiltinItemRendererRegistry.INSTANCE.register(GCItem.ROCKET, new RocketItemRenderer());
+        BuiltinItemRendererRegistry.INSTANCE.register(GCItems.ROCKET, new RocketItemRenderer());
 
         HudRenderCallback.EVENT.register(OxygenOverlay::onHudRender);
         HudRenderCallback.EVENT.register(RocketOverlay::onHudRender);

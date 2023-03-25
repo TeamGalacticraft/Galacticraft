@@ -27,7 +27,7 @@ import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberBlockEntity;
-import dev.galacticraft.mod.particle.GCParticleType;
+import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -152,12 +152,12 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
     @Override
     public void animateTick(BlockState blockState, Level level, BlockPos pos, RandomSource rand) {
-        level.addParticle(GCParticleType.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, 0.05 + rand.nextDouble() * 0.01, 0.0);
-        level.addParticle(GCParticleType.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, 0.05 + rand.nextDouble() * 0.01, 0.0);
-        level.addParticle(GCParticleType.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, 0.05 + rand.nextDouble() * 0.01, 0.0);
+        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, 0.05 + rand.nextDouble() * 0.01, 0.0);
+        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, 0.05 + rand.nextDouble() * 0.01, 0.0);
+        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, 0.05 + rand.nextDouble() * 0.01, 0.0);
 
-        level.addParticle(GCParticleType.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -(0.05 + rand.nextDouble() * 0.01), 0.0);
-        level.addParticle(GCParticleType.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -(0.05 + rand.nextDouble() * 0.01), 0.0);
-        level.addParticle(GCParticleType.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -(0.05 + rand.nextDouble() * 0.01), 0.0);
+        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -(0.05 + rand.nextDouble() * 0.01), 0.0);
+        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -(0.05 + rand.nextDouble() * 0.01), 0.0);
+        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -(0.05 + rand.nextDouble() * 0.01), 0.0);
     }
 }
