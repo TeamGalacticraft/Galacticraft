@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content;
 
-import dev.galacticraft.machinelib.api.gas.Gases;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.machine.MachineType;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;

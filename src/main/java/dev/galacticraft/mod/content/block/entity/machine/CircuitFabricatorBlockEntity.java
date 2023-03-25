@@ -106,7 +106,6 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
         siliconGroup.getSlot(0).extractOne();
         siliconGroup.getSlot(1).extractOne();
         this.itemStorage().getSlot(GCSlotGroupTypes.REDSTONE_INPUT).extractOne();
-        this.itemStorage().getSlot(GCSlotGroupTypes.REDSTONE_INPUT).extractOne();
 
         ItemResourceSlot input = this.itemStorage().getSlot(GCSlotGroupTypes.GENERIC_INPUT);
         input.extractOne();

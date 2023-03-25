@@ -28,7 +28,7 @@ import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
-import dev.galacticraft.machinelib.api.gas.Gases;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.util.ColorUtil;

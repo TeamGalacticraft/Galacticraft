@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.world.dimension;
 
-import dev.galacticraft.machinelib.api.gas.GasFluid;
+import dev.galacticraft.api.gas.GasFluid;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;

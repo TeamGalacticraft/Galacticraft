@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.api.gas.Gases;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;

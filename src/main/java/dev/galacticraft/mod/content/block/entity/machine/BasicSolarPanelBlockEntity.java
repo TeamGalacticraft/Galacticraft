@@ -33,6 +33,7 @@ import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.SolarPanelMenu;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -108,6 +109,16 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
             );
         }
         return null;
+    }
+
+    @Override
+    public void writeScreenOpeningData(ServerPlayer player, @NotNull FriendlyByteBuf buf) {
+        super.writeScreenOpeningData(player, buf);
+
+        buf.writeBoolean(this.followsSun());
+        buf.writeBoolean(this.nightCollection());
+        buf.writeByte(this.getSource().ordinal());
+        buf.writeVarLong(this.getCurrentEnergyGeneration());
     }
 
     @Override

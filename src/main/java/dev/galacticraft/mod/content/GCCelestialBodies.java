@@ -33,7 +33,7 @@ import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
 import dev.galacticraft.impl.universe.display.type.IconCelestialDisplayType;
 import dev.galacticraft.impl.universe.position.config.OrbitalCelestialPositionConfig;
 import dev.galacticraft.impl.universe.position.type.OrbitalCelestialPositionType;
-import dev.galacticraft.machinelib.api.gas.Gases;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.GCItem;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
