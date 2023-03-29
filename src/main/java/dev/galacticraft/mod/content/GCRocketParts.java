@@ -37,6 +37,10 @@ public class GCRocketParts {
     public static final ResourceKey<RocketBooster<?, ?>> TIER_1_BOOSTER = booster("tier_1");
     public static final ResourceKey<RocketBottom<?, ?>> TIER_1_BOTTOM = bottom("tier_1");
 
+    public static final ResourceKey<RocketCone<?, ?>> ADVANCED_CONE = cone("advanced_cone"); //todo implement these again
+    public static final ResourceKey<RocketCone<?, ?>> SLOPED_CONE = cone("sloped_cone");
+
+    public static final ResourceKey<RocketBooster<?, ?>> TIER_2_BOOSTER = booster("tier_2");
     public static final ResourceKey<RocketUpgrade<?, ?>> STORAGE_UPGRADE = upgrade("storage");
 
     public static void bootstrapCone(BootstapContext<RocketCone<?, ?>> context) {

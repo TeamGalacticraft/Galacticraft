@@ -26,6 +26,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
+import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.RocketEntity;
@@ -33,6 +34,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -52,7 +54,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
             matrices.mulPose(Axis.ZP.rotationDegrees(55));
             matrices.mulPose(Axis.XP.rotationDegrees(45));
             matrices.translate(0.5D, 0, 0.5D);
-            matrices.mulPose(Axis.YP.rotation((float) (((Minecraft.getInstance().level.getGameTime() * 66.666666666666)) / 1000.0F)));
+            matrices.mulPose(Axis.YP.rotation((float) (Minecraft.getInstance().level.getGameTime() * 66.666666666666 / 1000.0F)));
             matrices.translate(-0.5D, 0, -0.5D);
         } else if (mode == ItemDisplayContext.GROUND) {
             matrices.scale(0.2f, 0.2f, 0.2f);
@@ -66,7 +68,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         ResourceLocation part = data.bottom();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(ResourceKey.create(RocketRegistries.ROCKET_BOTTOM, part)).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
             matrices.popPose();
         }
 
@@ -75,14 +77,14 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         part = data.booster();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, part)).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
             matrices.popPose();
         }
 
         part = data.fin();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(ResourceKey.create(RocketRegistries.ROCKET_FIN, part)).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
             matrices.popPose();
         }
 
@@ -91,7 +93,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         part = data.body();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(ResourceKey.create(RocketRegistries.ROCKET_BODY, part)).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
             matrices.popPose();
         }
 
@@ -100,7 +102,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         part = data.cone();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(ResourceKey.create(RocketRegistries.ROCKET_CONE, part)).render(Minecraft.getInstance().level, matrices, rocket, vertexConsumers, 0, light);
             matrices.popPose();
         }
 

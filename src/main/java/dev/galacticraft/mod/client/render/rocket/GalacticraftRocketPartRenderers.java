@@ -25,7 +25,9 @@ package dev.galacticraft.mod.client.render.rocket;
 import com.google.common.base.Suppliers;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.impl.client.rocket.render.BakedModelRocketPartRenderer;
+import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCRocketParts;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -98,17 +100,17 @@ public class GalacticraftRocketPartRenderers {
     };
 
     public static void register() {
-        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "default_cone"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(DEFAULT_CONE))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
-        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "advanced_cone"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(ADVANCED_CONE))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
-        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "sloped_cone"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(SLOPED_CONE))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
-        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "default_body"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(DEFAULT_BODY))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
-        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "default_fin"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(DEFAULT_FIN))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
-        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "default_upgrade"), new BakedModelItemRocketPartRenderer(Items.BARRIER.getDefaultInstance(), null));
-        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "default_bottom"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(DEFAULT_BOTTOM))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
-        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "default_booster"), new BakedModelItemRocketPartRenderer(Items.BARRIER.getDefaultInstance(), null));
-        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "storage_upgrade"), new BakedModelItemRocketPartRenderer(Items.CHEST.getDefaultInstance(), null));
-        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "booster_1"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(BOOSTER_TIER_1))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
-        RocketPartRendererRegistry.INSTANCE.register(new ResourceLocation(Constant.MOD_ID, "booster_2"), new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(BOOSTER_TIER_2))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(DEFAULT_CONE))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.ADVANCED_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(ADVANCED_CONE))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.SLOPED_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(SLOPED_CONE))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BODY, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(DEFAULT_BODY))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_FIN, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(DEFAULT_FIN))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
+        RocketPartRendererRegistry.INSTANCE.register(BuiltinObjects.INVALID_ROCKET_UPGRADE, new BakedModelItemRocketPartRenderer(Items.BARRIER.getDefaultInstance(), null)); //fixme
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BOTTOM, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(DEFAULT_BOTTOM))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
+        RocketPartRendererRegistry.INSTANCE.register(BuiltinObjects.INVALID_ROCKET_BOOSTER, new BakedModelItemRocketPartRenderer(Items.BARRIER.getDefaultInstance(), null));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.STORAGE_UPGRADE, new BakedModelItemRocketPartRenderer(Items.CHEST.getDefaultInstance(), null));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BOOSTER, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(BOOSTER_TIER_1))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_2_BOOSTER, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().bakedRegistry.get(BOOSTER_TIER_2))), () -> RenderType.entityTranslucent(new ResourceLocation("galacticraft:textures/model/rocket.png"), true)));
     }
 
     public static void registerModelLoader() {
