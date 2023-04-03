@@ -428,7 +428,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.SMALL_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.MEDIUM_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.LARGE_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.INFINITE_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.INFINITE_OXYGEN_TANK, GCItems.LARGE_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
 
         generator.generateFlatItem(GCItems.SHIELD_CONTROLLER, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.FREQUENCY_MODULE, ModelTemplates.FLAT_ITEM);

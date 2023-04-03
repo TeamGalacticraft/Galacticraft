@@ -38,7 +38,7 @@ public class SolarPanelMenu<Machine extends MachineBlockEntity & SolarPanel> ext
     private final boolean followsSun;
     private final boolean nightCollection;
 
-    private final boolean @NotNull [] blockage = new boolean[9];
+    private boolean[] blockage;
     private @NotNull SolarPanel.SolarPanelSource source;
     private long energyGeneration;
 
@@ -70,6 +70,7 @@ public class SolarPanelMenu<Machine extends MachineBlockEntity & SolarPanel> ext
 
         consumer.accept(MenuSyncHandler.simple(this.machine::getCurrentEnergyGeneration, this::setEnergyGeneration));
         consumer.accept(MenuSyncHandler.simple(this.machine::getSource, this::setSource, SolarPanel.SolarPanelSource.values()));
+        this.blockage = new boolean[9];
         consumer.accept(MenuSyncHandler.booleans(this.machine.getBlockage(), this.blockage));
     }
 

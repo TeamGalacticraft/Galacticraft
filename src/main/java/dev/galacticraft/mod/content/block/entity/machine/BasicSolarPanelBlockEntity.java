@@ -80,7 +80,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
         if (this.blocked == 9) return GCMachineStatuses.BLOCKED;
         if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
         MachineStatus status = null;
-        double multiplier = this.blocked / 9.0;
+        double multiplier = (9.0 - this.blocked) / 9.0;
         if (this.blocked > 0) status = GCMachineStatuses.PARTIALLY_BLOCKED;
         if (world.isRaining() || world.isThundering()) {
             if (status == null) status = GCMachineStatuses.RAIN;
