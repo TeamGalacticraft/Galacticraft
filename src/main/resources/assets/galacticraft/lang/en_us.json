@@ -374,6 +374,7 @@
   "item.galacticraft.throwable_meteor_chunk": "Throwable Meteor Chunk",
   "item.galacticraft.hot_throwable_meteor_chunk": "Hot Throwable Meteor Chunk",
   "entity.galacticraft.rocket": "Rocket",
+  "entity.galacticraft.grey": "Grey",
   "entity.galacticraft.evolved_creeper": "Evolved Creeper",
   "tooltip.galacticraft.press_shift": "Press LSHIFT for more info",
   "info.galacticraft.amount": "%s GJ",
