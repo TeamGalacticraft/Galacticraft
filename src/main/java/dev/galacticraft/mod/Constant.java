@@ -293,7 +293,7 @@ public interface Constant {
         // Space Base
         String HYDRAULIC_PLATFORM = "hydraulic_platform";
         String MAGNETIC_CRAFTING_TABLE = "magnetic_crafting_table";
-        String NASA_WORKBENCH = "nasa_workbench";
+        String ROCKET_WORKBENCH = "rocket_workbench";
         String AIR_LOCK_FRAME = "air_lock_frame";
         String AIR_LOCK_CONTROLLER = "air_lock_controller";
         String AIR_LOCK_SEAL = "air_lock_seal";
@@ -528,6 +528,12 @@ public interface Constant {
         String LEGACY_MUSIC_DISC_MIMAS = "legacy_music_disc_mimas";
         String LEGACY_MUSIC_DISC_ORBIT = "legacy_music_disc_orbit";
         String LEGACY_MUSIC_DISC_SPACERACE = "legacy_music_disc_spacerace";
+        String ROCKET_FINS = "rocket_fins";
+        String ROCKET_ENGINE = "rocket_engine";
+        String BASIC_ROCKET_CONE_SCHEMATIC = "basic_rocket_cone_schematic";
+        String BASIC_ROCKET_BODY_SCHEMATIC = "basic_rocket_body_schematic";
+        String BASIC_ROCKET_FINS_SCHEMATIC = "basic_rocket_fins_schematic";
+        String BASIC_ROCKET_BOTTOM_SCHEMATIC = "basic_rocket_bottom_schematic";
     }
 
     interface Particle {
@@ -579,6 +585,7 @@ public interface Constant {
         ResourceLocation ELECTRIC_COMPRESSOR_SCREEN = id("textures/gui/electric_compressor_screen.png");
         ResourceLocation ENERGY_STORAGE_MODULE_SCREEN = id("textures/gui/energy_storage_module_screen.png");
         ResourceLocation OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
+        ResourceLocation ROCKET_WORKBENCH_SCREEN = id("textures/gui/rocket_workbench.png");
 
         ResourceLocation MACHINE_CONFIG_PANELS = id("textures/gui/machine_config.png");
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
@@ -708,6 +715,7 @@ public interface Constant {
         String OXYGEN_SEALER_MENU = "oxygen_sealer_menu";
         String FUEL_LOADER_MENU = "fuel_loader_menu";
         String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
+        String ROCKET_WORKBENCH_MENU = "rocket_workbench_menu";
     }
 
     interface LootTable {

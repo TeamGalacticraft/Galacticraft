@@ -23,7 +23,17 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.item.Schematic;
+import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -31,5 +41,16 @@ import net.minecraft.world.item.Item;
 public class SchematicItem extends Item implements Schematic {
     public SchematicItem(Properties settings) {
         super(settings);
+    }
+
+    @Override
+    public @Nullable RocketPartRecipe<?, ?> getRecipe(Registry<RocketPartRecipe<?, ?>> registry, @NotNull ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if (tag != null) {
+            if (tag.contains("recipe", Tag.TAG_STRING)) {
+                return registry.get(new ResourceLocation(tag.getString("recipe")));
+            }
+        }
+        return null;
     }
 }

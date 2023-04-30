@@ -158,7 +158,7 @@ repositories {
             includeGroup("lol.bai")
         }
     }
-    maven("https://dvs1.progwml6.com/files/maven/") {
+    maven("https://maven.blamejared.com/") {
         content {
             includeGroup("mezz.jei")
         }
@@ -209,10 +209,10 @@ dependencies {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     }
-    modCompileOnly("mezz.jei:jei-1.19.2-common-api:${jeiVersion}")
-    modCompileOnly("mezz.jei:jei-1.19.2-fabric-api:${jeiVersion}")
+    modCompileOnly("mezz.jei:jei-1.19.4-common-api:${jeiVersion}")
+    modCompileOnly("mezz.jei:jei-1.19.4-fabric-api:${jeiVersion}")
     // at runtime, use the full JEI jar for Fabric
-    optionalRuntimeOnly("mezz.jei:jei-1.19.2-fabric:${jeiVersion}")
+    optionalRuntimeOnly("mezz.jei:jei-1.19.4-fabric:${jeiVersion}")
 
     // Runtime Dependencies
     modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricVersion")

@@ -25,7 +25,6 @@ package dev.galacticraft.mod.data.model;
 import dev.galacticraft.mod.accessor.BlockModelGeneratorsAccessor;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.mixin.BlockModelGeneratorsMixin;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.models.BlockModelGenerators;
@@ -152,7 +151,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
 //        generator.createNonTemplateModelBlock(GCBlocks.GLASS_FLUID_PIPE);
 //        generator.createNonTemplateModelBlock(GCBlocks.ROCKET_LAUNCH_PAD);
-        generator.createNonTemplateModelBlock(GCBlocks.NASA_WORKBENCH);
+        generator.createNonTemplateModelBlock(GCBlocks.ROCKET_WORKBENCH);
 
         // LIGHT PANELS
         generator.createNonTemplateModelBlock(GCBlocks.SQUARE_LIGHT_PANEL); //todo
