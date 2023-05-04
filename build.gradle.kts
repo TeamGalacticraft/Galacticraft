@@ -107,7 +107,6 @@ loom {
 }
 
 repositories {
-    mavenLocal()
     maven("https://maven.galacticraft.net/repository/maven-releases/") {
         content {
             includeGroup("dev.galacticraft")
@@ -178,10 +177,8 @@ dependencies {
         "obj_loader",
         "model_loader",
         "extensions",
-        "attributes",
         "accessors",
-        "constants",
-        "common"
+        "constants"
     ).forEach {
         includedRuntimeDependency("io.github.fabricators_of_create.Porting-Lib:$it:${portingLibVersion}") { isTransitive = false }
     }

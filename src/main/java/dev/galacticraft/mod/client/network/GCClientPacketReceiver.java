@@ -80,7 +80,7 @@ public class GCClientPacketReceiver {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "open_screen"), (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(Constant.Packet.OPEN_SCREEN, (client, handler, buf, responseSender) -> {
             String screen = buf.readUtf();
             switch (screen) {
                 case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(false, RocketData.empty(), true, null)));

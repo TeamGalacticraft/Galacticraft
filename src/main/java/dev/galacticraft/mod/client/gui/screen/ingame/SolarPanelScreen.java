@@ -79,7 +79,7 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
     private final WorldLightSources lightSource;
 
     public SolarPanelScreen(S handler, Inventory inv, Component title) {
-        super(handler, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
+        super(handler, title, new ResourceLocation("galacticraft:textures/model/rocket.png"));
         this.solarPanelTexture = SolarPanelRegistry.getSolarPanelTexture(handler.machine.getType());
         this.lightSource = SolarPanelRegistry.getLightSource(this.menu.playerInventory.player.level.dimension());
     }

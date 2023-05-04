@@ -20,26 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data.tag;
+package dev.galacticraft.mod.content;
 
-import dev.galacticraft.mod.tag.GCTags;
-import dev.galacticraft.mod.world.gen.structure.GCStructures;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.levelgen.structure.Structure;
+import dev.galacticraft.api.registry.BuiltInAddonRegistries;
+import dev.galacticraft.api.universe.celestialbody.landable.CelestialTeleporter;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.teleporters.LanderCelestialTeleporter;
+import net.minecraft.core.Registry;
 
-import java.util.concurrent.CompletableFuture;
-
-public class GCStructureTagProvider extends FabricTagProvider<Structure> {
-    public GCStructureTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
-        super(output, Registries.STRUCTURE, registriesFuture);
-    }
-
-    @Override
-    protected void addTags(HolderLookup.Provider arg) {
-        tag(GCTags.MOON_RUINS)
-                .add(GCStructures.Moon.RUINS);
-    }
+public class GCTeleporters {
+    public static final CelestialTeleporter LANDER = Registry.register(BuiltInAddonRegistries.CELESTIAL_TELEPORTER, Constant.id("lander"), new LanderCelestialTeleporter());
 }

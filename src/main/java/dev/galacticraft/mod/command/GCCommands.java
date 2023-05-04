@@ -83,7 +83,7 @@ public class GCCommands {
     }
 
     private static int openCelestialScreen(CommandContext<CommandSourceStack> context) {
-        ServerPlayNetworking.send(context.getSource().getPlayer(), Constant.id("open_screen"), PacketByteBufs.create().writeUtf("celestial"));
+        ServerPlayNetworking.send(context.getSource().getPlayer(), Constant.Packet.OPEN_SCREEN, PacketByteBufs.create().writeUtf("celestial"));
         return Command.SINGLE_SUCCESS;
     }
 

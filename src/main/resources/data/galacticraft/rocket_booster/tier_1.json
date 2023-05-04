@@ -1,0 +1,14 @@
+{
+  "type": "galacticraft-api:basic",
+  "config": {
+    "predicate": {
+      "type": "galacticraft-api:access_weight",
+      "config": {
+        "weight": 1
+      }
+    },
+    "fuel_usage": 0,
+    "max_velocity": 0,
+    "acceleration": 0
+  }
+}

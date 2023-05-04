@@ -20,26 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data.tag;
+package dev.galacticraft.mod.content.teleporters;
 
-import dev.galacticraft.mod.tag.GCTags;
-import dev.galacticraft.mod.world.gen.structure.GCStructures;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.levelgen.structure.Structure;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.api.universe.celestialbody.landable.CelestialTeleporter;
+import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.content.entity.LanderEntity;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 
-import java.util.concurrent.CompletableFuture;
-
-public class GCStructureTagProvider extends FabricTagProvider<Structure> {
-    public GCStructureTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
-        super(output, Registries.STRUCTURE, registriesFuture);
-    }
-
+public class LanderCelestialTeleporter implements CelestialTeleporter {
     @Override
-    protected void addTags(HolderLookup.Provider arg) {
-        tag(GCTags.MOON_RUINS)
-                .add(GCStructures.Moon.RUINS);
+    public void onEnterAtmosphere(ServerLevel level, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody) {
+        LanderEntity lander = GCEntityTypes.LANDER.create(level);
+        lander.setPos(player.getX(), 500, player.getZ());
+        player.teleportTo(level, player.getX(), 500, player.getZ(), player.getYRot(), player.getXRot());
+        player.startRiding(lander);
     }
 }

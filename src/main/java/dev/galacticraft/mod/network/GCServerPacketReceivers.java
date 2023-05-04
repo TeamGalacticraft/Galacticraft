@@ -131,7 +131,7 @@ public class GCServerPacketReceivers {
                     if (body == null) body = server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(id);
                     if (body.type() instanceof Landable landable && (player.getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body) || player.getCelestialScreenState() == RocketData.empty())) {
                         player.setCelestialScreenState(null);
-                        player.teleportTo(server.getLevel(landable.world(body.config())), player.getX(), 500, player.getZ(), player.getYRot(), player.getXRot());
+                        landable.teleporter(body.config()).onEnterAtmosphere(server.getLevel(landable.world(body.config())), player, body, fromBody);
                     } else {
                         player.connection.disconnect(Component.literal("Invalid planet teleport packet received."));
                     }

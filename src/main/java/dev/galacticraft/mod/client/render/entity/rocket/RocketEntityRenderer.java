@@ -30,6 +30,7 @@ import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -72,7 +73,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
             matrices.mulPose(Axis.XP.rotationDegrees(Mth.sin(wobbleTicks) * wobbleTicks * wobbleStrength / 10.0F * (float) entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_SIDE)));
         }
 
-        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+//        RenderSystem.setShaderTexture(0, getTextureLocation(entity));
         matrices.translate(0.0D, -1.75D, 0.0D);
 
         ResourceLocation part = entity.bottom();

@@ -621,6 +621,7 @@ public interface Constant {
         String EVOLVED_CREEPER = "evolved_creeper";
         String T1_ROCKET = "t1_rocket";
         String ROCKET = "rocket";
+        String LANDER = "lander";
         String BUBBLE = "bubble";
         String EVOLVED_SKELETON = "evolved_skeleton";
         String EVOLVED_SPIDER = "evolved_spider";
@@ -642,6 +643,7 @@ public interface Constant {
         String OLI_GRUB = "textures/entity/oli_grub.png";
         String COMET_CUBE = "textures/entity/comet_cube.png";
         String GAZER = "textures/entity/gazer.png";
+        String LANDER = "textures/entity/lander.png";
     }
 
     interface TextureCoordinate {
@@ -871,6 +873,7 @@ public interface Constant {
         ResourceLocation ROCKET_JUMP = id("rocket_jump");
         ResourceLocation ROCKET_PITCH = id("rocket_pitch");
         ResourceLocation ROCKET_YAW = id("rocket_yaw");
+        ResourceLocation OPEN_SCREEN = id("open_screen");
     }
 
     interface Structure {
