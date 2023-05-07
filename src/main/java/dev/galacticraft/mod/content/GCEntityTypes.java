@@ -54,7 +54,7 @@ public class GCEntityTypes {
     public static final EntityType<ArchGreyEntity> ARCH_GREY = FabricEntityTypeBuilder.create(MobCategory.CREATURE, ArchGreyEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.55F)).build();
     public static final EntityType<BubbleEntity> BUBBLE = FabricEntityTypeBuilder.create(MobCategory.MISC, BubbleEntity::new).fireImmune().dimensions(EntityDimensions.fixed(0, 0)).disableSaving().disableSummon().build();
     public static final EntityType<RocketEntity> ROCKET = FabricEntityTypeBuilder.create(MobCategory.MISC, RocketEntity::new).trackRangeBlocks(32).trackedUpdateRate(2).forceTrackedVelocityUpdates(false).dimensions(EntityDimensions.fixed(2.3F, 5.25F)).build(); //PLAYER VALUES
-    public static final EntityType<LanderEntity> LANDER = FabricEntityTypeBuilder.create(MobCategory.MISC, LanderEntity::new).trackRangeBlocks(32).dimensions(EntityDimensions.fixed(10, 10)).fireImmune().build();
+    public static final EntityType<LanderEntity> LANDER = FabricEntityTypeBuilder.create(MobCategory.MISC, LanderEntity::new).trackRangeBlocks(32).dimensions(EntityDimensions.fixed(2.5F, 4F)).fireImmune().build();
 
     public static void register() {
         Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_ZOMBIE), EVOLVED_ZOMBIE);

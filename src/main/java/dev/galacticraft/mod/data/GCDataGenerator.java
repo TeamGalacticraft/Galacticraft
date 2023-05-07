@@ -24,7 +24,11 @@ package dev.galacticraft.mod.data;
 
 import com.mojang.serialization.Lifecycle;
 import dev.galacticraft.api.registry.AddonRegistries;
+import dev.galacticraft.api.registry.RocketRegistries;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCCelestialBodies;
+import dev.galacticraft.mod.content.GCRocketParts;
+import dev.galacticraft.mod.content.GCTeleporterTypes;
 import dev.galacticraft.mod.data.content.*;
 import dev.galacticraft.mod.data.model.GCModelProvider;
 import dev.galacticraft.mod.data.tag.*;
@@ -67,6 +71,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         // content
         pack.addProvider(BootstrapDataProvider.create("Biomes", GCBiomes::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Celestial Bodies", GCCelestialBodies::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Celestial Teleporters", GCTeleporterTypes::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Dimension Types", GCDimensionTypes::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Noise Generator Settings", GCNoiseGeneratorSettings::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Structures", GCStructures::bootstrapRegistries));
@@ -79,8 +84,21 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Placed Features", GCPlacedFeatures::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Multi Noise Biome Source Parameter Lists", GCMultiNoiseBiomeSourceParameterLists::bootstrapRegistries));
 
+        // rocket parts
+        pack.addProvider(BootstrapDataProvider.create("Rocket Cones", GCRocketParts::bootstrapCone));
+        pack.addProvider(BootstrapDataProvider.create("Rocket Bodies", GCRocketParts::bootstrapBody));
+        pack.addProvider(BootstrapDataProvider.create("Rocket Fins", GCRocketParts::bootstrapFin));
+        pack.addProvider(BootstrapDataProvider.create("Rocket Boosters", GCRocketParts::bootstrapBooster));
+        pack.addProvider(BootstrapDataProvider.create("Rocket Bottoms", GCRocketParts::bootstrapBottom));
+        pack.addProvider(BootstrapDataProvider.create("Rocket Upgrades", GCRocketParts::bootstrapUpgrade));
+
         // models
         pack.addProvider(GCModelProvider::new);
+    }
+
+    @Override
+    public String getEffectiveModId() {
+        return Constant.MOD_ID;
     }
 
     @Override
@@ -90,6 +108,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         registryBuilder.add(Registries.BIOME, Lifecycle.stable(), GCBiomes::bootstrapRegistries);
         registryBuilder.add(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, Lifecycle.stable(), GCMultiNoiseBiomeSourceParameterLists::bootstrapRegistries);
         registryBuilder.add(AddonRegistries.CELESTIAL_BODY, Lifecycle.stable(), GCCelestialBodies::bootstrapRegistries);
+        registryBuilder.add(AddonRegistries.CELESTIAL_TELEPORTER, Lifecycle.stable(), GCTeleporterTypes::bootstrapRegistries);
         registryBuilder.add(Registries.DIMENSION_TYPE, Lifecycle.stable(), GCDimensionTypes::bootstrapRegistries);
         registryBuilder.add(Registries.LEVEL_STEM, Lifecycle.stable(), GCLevelStems::bootstrapRegistries);
         registryBuilder.add(Registries.NOISE_SETTINGS, Lifecycle.stable(), GCNoiseGeneratorSettings::bootstrapRegistries);
@@ -101,5 +120,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         registryBuilder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCOreConfiguredFeature::bootstrapRegistries);
         registryBuilder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCOrePlacedFeatures::bootstrapRegistries);
         registryBuilder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCPlacedFeatures::bootstrapRegistries);
+
+        registryBuilder.add(RocketRegistries.ROCKET_PART_RECIPE, Lifecycle.experimental(), bootstapContext -> {});
     }
 }

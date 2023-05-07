@@ -24,6 +24,7 @@ package dev.galacticraft.mod;
 
 import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
 import dev.galacticraft.mod.client.gui.overlay.CountdownOverlay;
+import dev.galacticraft.mod.client.gui.overlay.LanderOverlay;
 import dev.galacticraft.mod.client.gui.overlay.OxygenOverlay;
 import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
@@ -32,6 +33,7 @@ import dev.galacticraft.mod.client.network.GCClientPacketReceiver;
 import dev.galacticraft.mod.client.particle.CryoFreezeParticle;
 import dev.galacticraft.mod.client.particle.DrippingFuelProvider;
 import dev.galacticraft.mod.client.particle.DrippingOilProvider;
+import dev.galacticraft.mod.client.particle.LanderParticle;
 import dev.galacticraft.mod.client.render.block.entity.GCBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.dimension.EmptyCloudRenderer;
 import dev.galacticraft.mod.client.render.dimension.EmptyWeatherRenderer;
@@ -56,6 +58,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
@@ -145,6 +148,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_FUEL_PARTICLE, DrippingFuelProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_CRUDE_OIL_PARTICLE, DrippingOilProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.CRYOGENIC_PARTICLE, CryoFreezeParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LANDER_FLAME_PARTICLE, LanderParticle.Provider::new);
 
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "solar_panel"), SolarPanelSpriteProvider::new);
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "oxygen_sealer"), OxygenSealerSpriteProvider::new);
@@ -176,7 +180,9 @@ public class GalacticraftClient implements ClientModInitializer {
 
         HudRenderCallback.EVENT.register(OxygenOverlay::onHudRender);
         HudRenderCallback.EVENT.register(RocketOverlay::onHudRender);
+        HudRenderCallback.EVENT.register(LanderOverlay::onRenderHud);
         HudRenderCallback.EVENT.register(CountdownOverlay::renderCountdown);
+        ClientTickEvents.END_CLIENT_TICK.register(LanderOverlay::clientTick);
 
         Galacticraft.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

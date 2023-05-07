@@ -67,7 +67,7 @@
         }
       }
     },
-    "teleporter": "galacticraft-api:fallback",
+    "teleporter": "galacticraft-api:direct",
     "world": "minecraft:overworld"
   }
 }

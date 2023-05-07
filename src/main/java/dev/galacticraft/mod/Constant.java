@@ -540,6 +540,7 @@ public interface Constant {
         String DRIPPING_FUEL_PARTICLE = "dripping_fuel_particle";
         String DRIPPING_CRUDE_OIL_PARTICLE = "dripping_crude_oil_particle";
         String CRYOGENIC_PARTICLE = "cryogenic_particle";
+        String LANDER_FLAME = "lander_flame_particle";
     }
 
     interface Config {
@@ -874,6 +875,11 @@ public interface Constant {
         ResourceLocation ROCKET_PITCH = id("rocket_pitch");
         ResourceLocation ROCKET_YAW = id("rocket_yaw");
         ResourceLocation OPEN_SCREEN = id("open_screen");
+
+        ResourceLocation LANDER_PITCH = id("lander_pitch");
+        ResourceLocation LANDER_YAW = id("lander_yaw");
+        ResourceLocation LANDER_ACCERLERATE = id("lander_accelerate");
+        ResourceLocation ENTITY_UPDATE = id("entity_update");
     }
 
     interface Structure {

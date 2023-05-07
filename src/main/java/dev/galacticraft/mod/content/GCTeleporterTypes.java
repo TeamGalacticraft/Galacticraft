@@ -22,12 +22,26 @@
 
 package dev.galacticraft.mod.content;
 
+import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.BuiltInAddonRegistries;
-import dev.galacticraft.api.universe.celestialbody.landable.CelestialTeleporter;
+import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
+import dev.galacticraft.api.universe.celestialbody.landable.teleporter.type.CelestialTeleporterType;
+import dev.galacticraft.impl.universe.celestialbody.landable.teleporter.config.DefaultCelestialTeleporterConfig;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.teleporters.LanderCelestialTeleporter;
+import dev.galacticraft.mod.content.teleporters.LanderCelestialTeleporterType;
 import net.minecraft.core.Registry;
+import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.resources.ResourceKey;
 
-public class GCTeleporters {
-    public static final CelestialTeleporter LANDER = Registry.register(BuiltInAddonRegistries.CELESTIAL_TELEPORTER, Constant.id("lander"), new LanderCelestialTeleporter());
+public class GCTeleporterTypes {
+    public static final ResourceKey<CelestialTeleporter<?, ?>> LANDER_CELESTIAL_TELEPORTER = ResourceKey.create(AddonRegistries.CELESTIAL_TELEPORTER, Constant.id("lander"));
+    public static final CelestialTeleporterType<DefaultCelestialTeleporterConfig> LANDER = Registry.register(BuiltInAddonRegistries.CELESTIAL_TELEPORTER_TYPE, Constant.id("lander"), LanderCelestialTeleporterType.INSTANCE);
+
+    public static void register() {
+
+    }
+
+    public static void bootstrapRegistries(BootstapContext<CelestialTeleporter<?, ?>> context) {
+        context.register(LANDER_CELESTIAL_TELEPORTER, new CelestialTeleporter<>(LANDER, DefaultCelestialTeleporterConfig.INSTANCE));
+    }
 }

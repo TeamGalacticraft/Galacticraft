@@ -22,11 +22,25 @@
 
 package dev.galacticraft.mod.content;
 
+import dev.galacticraft.api.registry.BuiltInRocketRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.*;
+import dev.galacticraft.api.rocket.part.type.RocketConeType;
+import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
+import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
+import dev.galacticraft.impl.rocket.part.RocketConeImpl;
+import dev.galacticraft.impl.rocket.part.config.*;
+import dev.galacticraft.impl.rocket.part.type.*;
+import dev.galacticraft.impl.rocket.travelpredicate.config.AccessWeightTravelPredicateConfig;
+import dev.galacticraft.impl.rocket.travelpredicate.type.AccessWeightTravelPredicateType;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.rocket.part.config.StorageUpgradeConfig;
+import dev.galacticraft.mod.content.rocket.part.type.StorageUpgradeType;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Ingredient;
+import org.apache.http.config.Registry;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,27 +58,83 @@ public class GCRocketParts {
     public static final ResourceKey<RocketUpgrade<?, ?>> STORAGE_UPGRADE = upgrade("storage");
 
     public static void bootstrapCone(BootstapContext<RocketCone<?, ?>> context) {
-
+        context.register(TIER_1_CONE,
+                RocketCone.create(
+                        new BasicRocketConeConfig(
+                                new ConfiguredTravelPredicate<>(
+                                        new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS),
+                                        AccessWeightTravelPredicateType.INSTANCE
+                                )
+                        ),
+                        BasicRocketConeType.INSTANCE
+                )
+        );
     }
 
-    public static void bootstrapBody(BootstapContext<RocketCone<?, ?>> context) {
-
+    public static void bootstrapBody(BootstapContext<RocketBody<?, ?>> context) {
+        context.register(TIER_1_BODY,
+                RocketBody.create(
+                        new BasicRocketBodyConfig(
+                                new ConfiguredTravelPredicate<>(
+                                        new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS),
+                                        AccessWeightTravelPredicateType.INSTANCE
+                                )
+                                , 1, 1
+                        ),
+                        BasicRocketBodyType.INSTANCE
+                )
+        );
     }
 
-    public static void bootstrapFin(BootstapContext<RocketCone<?, ?>> context) {
-
+    public static void bootstrapFin(BootstapContext<RocketFin<?, ?>> context) {
+        context.register(TIER_1_FIN,
+                RocketFin.create(
+                        new BasicRocketFinConfig(
+                                new ConfiguredTravelPredicate<>(
+                                        new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS),
+                                        AccessWeightTravelPredicateType.INSTANCE
+                                ),
+                                false
+                        ),
+                        BasicRocketFinType.INSTANCE
+                )
+        );
     }
 
-    public static void bootstrapBooster(BootstapContext<RocketCone<?, ?>> context) {
-
+    public static void bootstrapBooster(BootstapContext<RocketBooster<?, ?>> context) {
+        context.register(TIER_1_BOOSTER,
+                RocketBooster.create(
+                        new BasicRocketBoosterConfig(
+                                new ConfiguredTravelPredicate<>(
+                                        new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS),
+                                        AccessWeightTravelPredicateType.INSTANCE
+                                ),
+                                0, 0, 0
+                        ),
+                        BasicRocketBoosterType.INSTANCE
+                )
+        );
     }
 
-    public static void bootstrapBottom(BootstapContext<RocketCone<?, ?>> context) {
-
+    public static void bootstrapBottom(BootstapContext<RocketBottom<?, ?>> context) {
+        context.register(TIER_1_BOTTOM,
+                RocketBottom.create(
+                        new BasicRocketBottomConfig(
+                                new ConfiguredTravelPredicate<>(
+                                        new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS),
+                                        AccessWeightTravelPredicateType.INSTANCE
+                                ),
+                                1296000
+                        ),
+                        BasicRocketBottomType.INSTANCE
+                )
+        );
     }
 
-    public static void bootstrapUpgrade(BootstapContext<RocketCone<?, ?>> context) {
-
+    public static void bootstrapUpgrade(BootstapContext<RocketUpgrade<?, ?>> context) {
+//        context.register(STORAGE_UPGRADE,
+//                RocketUpgrade.create(new StorageUpgradeConfig(Ingredient.EMPTY), null)
+//        );
     }
 
     @Contract(pure = true)

@@ -33,6 +33,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class LanderEntityRenderer extends EntityRenderer<LanderEntity> {
     protected final LanderModel model;
@@ -48,10 +49,14 @@ public class LanderEntityRenderer extends EntityRenderer<LanderEntity> {
     }
 
     @Override
-    public void render(LanderEntity entity, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int light) {
+    public void render(LanderEntity lander, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int light) {
         poseStack.pushPose();
         poseStack.mulPose(Axis.ZP.rotationDegrees(180));
-        this.model.renderToBuffer(poseStack, multiBufferSource.getBuffer(this.model.renderType(getTextureLocation(entity))), light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        poseStack.translate(0, -1.5, 0);
+        final float pitch = lander.xRotO + (lander.getXRot() - lander.xRotO) * partialTicks;
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - entityYaw));
+        poseStack.mulPose(Axis.ZN.rotationDegrees(pitch));
+        this.model.renderToBuffer(poseStack, multiBufferSource.getBuffer(this.model.renderType(getTextureLocation(lander))), light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
         poseStack.popPose();
     }
 }

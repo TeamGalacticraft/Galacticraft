@@ -1,13 +1,13 @@
 {
   "type": "galacticraft-api:basic",
   "config": {
+    "max_passengers": 1,
     "predicate": {
       "type": "galacticraft-api:access_weight",
       "config": {
         "weight": 1
       }
     },
-    "max_passengers": 1,
     "upgrade_capacity": 1
   }
 }

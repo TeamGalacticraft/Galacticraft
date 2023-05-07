@@ -29,6 +29,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.content.entity.RocketEntity;
+import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -83,7 +84,7 @@ public class GCClientPacketReceiver {
         ClientPlayNetworking.registerGlobalReceiver(Constant.Packet.OPEN_SCREEN, (client, handler, buf, responseSender) -> {
             String screen = buf.readUtf();
             switch (screen) {
-                case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(false, RocketData.empty(), true, null)));
+                case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(false, RocketData.fromNbt(GCItems.ROCKET.getDefaultInstance().getTag()), true, null)));
                 default -> Galacticraft.LOGGER.error("No screen found!");
             }
         });

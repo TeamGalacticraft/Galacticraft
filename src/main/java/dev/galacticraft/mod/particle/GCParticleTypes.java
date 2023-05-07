@@ -36,10 +36,12 @@ public class GCParticleTypes {
     public static final SimpleParticleType DRIPPING_FUEL_PARTICLE = FabricParticleTypes.simple();
     public static final SimpleParticleType DRIPPING_CRUDE_OIL_PARTICLE = FabricParticleTypes.simple();
     public static final SimpleParticleType CRYOGENIC_PARTICLE = FabricParticleTypes.simple();
+    public static final SimpleParticleType LANDER_FLAME_PARTICLE = FabricParticleTypes.simple();
 
     public static void register() {
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Particle.DRIPPING_CRUDE_OIL_PARTICLE), DRIPPING_FUEL_PARTICLE);
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Particle.DRIPPING_FUEL_PARTICLE), DRIPPING_CRUDE_OIL_PARTICLE);
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.CRYOGENIC_PARTICLE), CRYOGENIC_PARTICLE);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.LANDER_FLAME), LANDER_FLAME_PARTICLE);
     }
 }

@@ -22,19 +22,28 @@
 
 package dev.galacticraft.mod.content.teleporters;
 
+import com.mojang.serialization.Codec;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.api.universe.celestialbody.landable.CelestialTeleporter;
+import dev.galacticraft.api.universe.celestialbody.landable.teleporter.type.CelestialTeleporterType;
+import dev.galacticraft.impl.universe.celestialbody.landable.teleporter.config.DefaultCelestialTeleporterConfig;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.LanderEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
-public class LanderCelestialTeleporter implements CelestialTeleporter {
+public class LanderCelestialTeleporterType extends CelestialTeleporterType<DefaultCelestialTeleporterConfig> {
+    public static final LanderCelestialTeleporterType INSTANCE = new LanderCelestialTeleporterType();
+
+    public LanderCelestialTeleporterType() {
+        super(DefaultCelestialTeleporterConfig.CODEC);
+    }
+
     @Override
-    public void onEnterAtmosphere(ServerLevel level, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody) {
+    public void onEnterAtmosphere(ServerLevel level, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody, DefaultCelestialTeleporterConfig config) {
         LanderEntity lander = GCEntityTypes.LANDER.create(level);
-        lander.setPos(player.getX(), 500, player.getZ());
-        player.teleportTo(level, player.getX(), 500, player.getZ(), player.getYRot(), player.getXRot());
+        level.addFreshEntity(lander);
+        lander.setPos(player.getX(), 1100, player.getZ());
+        player.teleportTo(level, player.getX(), 1100, player.getZ(), player.getYRot(), player.getXRot());
         player.startRiding(lander);
     }
 }
