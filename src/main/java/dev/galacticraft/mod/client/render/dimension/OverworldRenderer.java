@@ -41,7 +41,6 @@ import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
 
 // TODO: Allow support for more planets
 public class OverworldRenderer {
@@ -87,16 +86,16 @@ public class OverworldRenderer {
         float theta = Mth.sqrt(((float) (player.getY()) - 200) / 1000.0F);
         final float var21 = Math.max(1.0F - theta * 4.0F, 0.0F);
 
-        final Vec3 var2 = this.minecraft.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), partialTicks);
-        float i = (float) var2.x * var21;
-        float x = (float) var2.y * var21;
-        float var5 = (float) var2.z * var21;
+        final Vec3 skyColor = this.minecraft.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), partialTicks);
+        float i = (float) skyColor.x * var21;
+        float x = (float) skyColor.y * var21;
+        float var5 = (float) skyColor.z * var21;
         float z;
 
         FogRenderer.levelFogColor();
         RenderSystem.setShaderColor(i, x, var5, 1.0F);
-        final Tesselator var23 = Tesselator.getInstance();
-        BufferBuilder worldRenderer = var23.getBuilder();
+        final Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder worldRenderer = tesselator.getBuilder();
         RenderSystem.depthMask(false);
         RenderSystem.setShaderColor(i, x, var5, 1.0F);
         RenderSystem.enableBlend();
@@ -132,7 +131,7 @@ public class OverworldRenderer {
                 worldRenderer.vertex(xx * 120.0F, rand5 * 120.0F, -rand5 * 40.0F * sunriseColors[3]).color(sunriseColors[0] * sunsetModInv, sunriseColors[1] * sunsetModInv, sunriseColors[2] * sunsetModInv, 0.0F).endVertex();
             }
 
-            var23.end();
+            tesselator.end();
             poseStack.popPose();
         }
 
@@ -153,7 +152,7 @@ public class OverworldRenderer {
         double playerHeight = player.getY();
 
         // Draw stars
-        RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         float threshold;
         Vec3 vec = getFogColor(this.minecraft.level, camera, partialTicks);
@@ -187,8 +186,8 @@ public class OverworldRenderer {
         VertexBuffer.unbind();
 
         // Draw sun
-                RenderSystem.blendFuncSeparate(
-                GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
+        RenderSystem.blendFuncSeparate(
+            GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
         );
         r = 30.0F;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -200,7 +199,7 @@ public class OverworldRenderer {
         worldRenderer.vertex(matrix4f1, r, 100.0F, -r).uv(1.0F, 0.0F).endVertex();
         worldRenderer.vertex(matrix4f1, r, 100.0F, r).uv(1.0F, 1.0F).endVertex();
         worldRenderer.vertex(matrix4f1, -r, 100.0F, r).uv(0.0F, 1.0F).endVertex();
-        var23.end();
+        tesselator.end();
 
         // Draw moon
         r = 40.0F;
@@ -217,7 +216,7 @@ public class OverworldRenderer {
         worldRenderer.vertex(matrix4f1, r, -100.0F, r).uv(yy, rand9).endVertex();
         worldRenderer.vertex(matrix4f1, r, -100.0F, -r).uv(yy, rand7).endVertex();
         worldRenderer.vertex(matrix4f1, -r, -100.0F, -r).uv(zz, rand7).endVertex();
-        var23.end();
+        tesselator.end();
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.disableBlend();
@@ -251,7 +250,7 @@ public class OverworldRenderer {
             worldRenderer.vertex(matrix4f2, size, 0, size).uv(cornerB, cornerB).endVertex();
             worldRenderer.vertex(matrix4f2, size, 0, -size).uv(cornerB, zoomIn).endVertex();
             worldRenderer.vertex(matrix4f2, -size, 0, -size).uv(zoomIn, zoomIn).endVertex();
-            var23.end();
+            tesselator.end();
             poseStack.popPose();
         }
 
