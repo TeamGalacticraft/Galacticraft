@@ -34,9 +34,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -45,6 +48,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -97,7 +101,8 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
         final Walkway blockEntity = (Walkway) world.getBlockEntity(pos);
         assert placer != null;
         assert blockEntity != null;
-        blockEntity.setDirection(Direction.orderedByNearest(placer)[0].getOpposite());
+        BlockHitResult blockHitResult = Item.getPlayerPOVHitResult(world, (Player) placer, ClipContext.Fluid.SOURCE_ONLY);
+        blockEntity.setDirection(blockHitResult.getDirection());
         for (Direction direction : Direction.values()) {
             if (blockEntity.getDirection() != direction) {
                 final BlockEntity blockEntity1 = world.getBlockEntity(pos.relative(direction));

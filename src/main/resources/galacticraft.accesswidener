@@ -24,6 +24,7 @@ extendable class net/minecraft/world/SimpleMenuProvider
 # static methods
 accessible method net/minecraft/data/worldgen/Structures structure (Lnet/minecraft/core/HolderSet;Lnet/minecraft/world/level/levelgen/structure/TerrainAdjustment;)Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;
 accessible method net/minecraft/world/level/levelgen/NoiseRouterData overworld (Lnet/minecraft/core/HolderGetter;Lnet/minecraft/core/HolderGetter;ZZ)Lnet/minecraft/world/level/levelgen/NoiseRouter;
+accessible method net/minecraft/world/item/Item getPlayerPOVHitResult (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/ClipContext$Fluid;)Lnet/minecraft/world/phys/BlockHitResult;
 
 # private fields
 accessible field net/minecraft/client/resources/model/ModelManager bakedRegistry Ljava/util/Map;

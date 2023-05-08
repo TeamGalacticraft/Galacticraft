@@ -39,9 +39,11 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -126,7 +128,8 @@ public class PipeWalkway extends FluidPipe implements FluidLoggable {
                 placer.setItemInHand(hand, copy);
             }
         }
-        blockEntity.setDirection(Direction.orderedByNearest(placer)[0].getOpposite());
+        BlockHitResult blockHitResult = Item.getPlayerPOVHitResult(world, (Player) placer, ClipContext.Fluid.SOURCE_ONLY);
+        blockEntity.setDirection(blockHitResult.getDirection());
         for (Direction direction : Direction.values()) {
             if (blockEntity.getDirection() != direction) {
                 if (world.getBlockEntity(pos.relative(direction)) instanceof Pipe pipe) {
