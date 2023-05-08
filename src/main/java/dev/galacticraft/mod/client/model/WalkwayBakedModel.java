@@ -48,7 +48,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaterniond;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -129,46 +128,47 @@ public class WalkwayBakedModel implements FabricBakedModel, BakedModel {
     public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         Walkway walkway = ((Walkway) blockView.getBlockEntity(pos));
         Consumer<Mesh> meshConsumer = context.meshConsumer();
-        assert walkway != null;
 
-        int x = 0;
-        int y = 0;
-        switch (walkway.getDirection()) {
-            case DOWN -> x = 180;
-            case NORTH -> x = 270;
-            case SOUTH -> x = 90;
-            case EAST -> {
-                x = 90;
-                y = 90;
+        if (walkway != null && walkway.getDirection() != null) {
+            int x = 0;
+            int y = 0;
+            switch (walkway.getDirection()) {
+                case DOWN -> x = 180;
+                case NORTH -> x = 270;
+                case SOUTH -> x = 90;
+                case EAST -> {
+                    x = 90;
+                    y = 90;
+                }
+                case WEST -> {
+                    x = 90;
+                    y = 270;
+                }
             }
-            case WEST -> {
-                x = 90;
-                y = 270;
+
+            Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
+            context.pushTransform(Transform.INSTANCE);
+            context.bakedModelConsumer().accept(this.platform);
+            context.popTransform();
+
+            if (walkway.getConnections()[0]) {
+                meshConsumer.accept(this.down);
             }
-        }
-
-        Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
-        context.pushTransform(Transform.INSTANCE);
-        context.fallbackConsumer().accept(this.platform);
-        context.popTransform();
-
-        if (walkway.getConnections()[0]) {
-            meshConsumer.accept(this.down);
-        }
-        if (walkway.getConnections()[1]) {
-            meshConsumer.accept(this.up);
-        }
-        if (walkway.getConnections()[2]) {
-            meshConsumer.accept(this.north);
-        }
-        if (walkway.getConnections()[3]) {
-            meshConsumer.accept(this.south);
-        }
-        if (walkway.getConnections()[4]) {
-            meshConsumer.accept(this.west);
-        }
-        if (walkway.getConnections()[5]) {
-            meshConsumer.accept(this.east);
+            if (walkway.getConnections()[1]) {
+                meshConsumer.accept(this.up);
+            }
+            if (walkway.getConnections()[2]) {
+                meshConsumer.accept(this.north);
+            }
+            if (walkway.getConnections()[3]) {
+                meshConsumer.accept(this.south);
+            }
+            if (walkway.getConnections()[4]) {
+                meshConsumer.accept(this.west);
+            }
+            if (walkway.getConnections()[5]) {
+                meshConsumer.accept(this.east);
+            }
         }
     }
 
@@ -247,7 +247,7 @@ public class WalkwayBakedModel implements FabricBakedModel, BakedModel {
         public boolean transform(MutableQuadView quad) {
             for (int i = 0; i < 4; i++) {
                 quad.copyPos(i, this.vec);
-                this.vec.set(vec.x() - 0.5f, this.vec.y() - 0.5f, this.vec.z() - 0.5f);
+                this.vec.set(this.vec.x() - 0.5f, this.vec.y() - 0.5f, this.vec.z() - 0.5f);
                 this.quaternionX.transform(this.vec);
                 this.quaternionY.transform(this.vec);
                 this.vec.set(this.vec.x() + 0.5f, this.vec.y() + 0.5f, this.vec.z() + 0.5f);
