@@ -32,7 +32,6 @@ import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -65,6 +64,10 @@ public class PipeWalkway extends FluidPipe implements FluidLoggable {
 
     public PipeWalkway(Properties settings) {
         super(settings);
+        this.registerDefaultState(this.getStateDefinition().any()
+                .setValue(FLUID, INVALID)
+                .setValue(FlowingFluid.LEVEL, 8)
+                .setValue(FlowingFluid.FALLING, false));
     }
 
     private static int getFacingMask(Direction dir) {
@@ -88,7 +91,8 @@ public class PipeWalkway extends FluidPipe implements FluidLoggable {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
         return this.defaultBlockState()
                 .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
-                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1));
+                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1))
+                .setValue(FlowingFluid.FALLING, fluidState.hasProperty(FlowingFluid.FALLING) ? fluidState.getValue(FlowingFluid.FALLING) : false);
     }
 
     @Override
@@ -182,7 +186,7 @@ public class PipeWalkway extends FluidPipe implements FluidLoggable {
     @Override
     public FluidState getFluidState(BlockState state) {
         if (this.isEmpty(state)) return EMPTY_STATE;
-        FluidState state1 = BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState();
+        FluidState state1 = BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState().setValue(FlowingFluid.FALLING, state.getValue(FlowingFluid.FALLING));
         if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
             state1 = state1.setValue(FlowingFluid.LEVEL, state.getValue(FlowingFluid.LEVEL));
         }
@@ -191,7 +195,7 @@ public class PipeWalkway extends FluidPipe implements FluidLoggable {
 
     @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(FLUID, FlowingFluid.LEVEL);
+        stateBuilder.add(FLUID, FlowingFluid.LEVEL, FlowingFluid.FALLING);
     }
 
     @Override
