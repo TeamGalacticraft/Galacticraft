@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -93,7 +92,7 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
     @Override
     default boolean placeLiquid(LevelAccessor world, BlockPos pos, BlockState state, FluidState fluidState) {
         if (!(fluidState.getType() instanceof FlowingFluid)) return false;
-        if (this.isEmpty(state)) {
+        if (this.isEmpty(state) || state.getValue(FlowingFluid.LEVEL) != FluidState.AMOUNT_FULL) {
             if (!world.isClientSide()) {
                 world.setBlock(pos, state
                         .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
@@ -110,6 +109,16 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
         } else if (fluidState.getType() == Fluids.EMPTY) {
             world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1), 3);
         }
+        // replace current fluid into source
+        else {
+            if (!world.isClientSide()) {
+                world.setBlock(pos, state
+                        .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
+                        .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)), 3);
+                world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
+            }
+            return true;
+        }
         return false;
     }
 
@@ -117,18 +126,19 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
     default ItemStack pickupBlock(LevelAccessor world, BlockPos pos, BlockState state) {
         if (!this.isEmpty(state)) {
             world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY), 3);
-            if (world.getFluidState(pos).isSource()) {
-                return new ItemStack(BuiltInRegistries.FLUID.get(state.getValue(FLUID)).getBucket());
+            var fluidState = BuiltInRegistries.FLUID.get(state.getValue(FLUID));
+            if (fluidState.defaultFluidState().isSource()) {
+                return new ItemStack(fluidState.getBucket());
             }
         }
         return ItemStack.EMPTY;
     }
-    
+
     default boolean isEmpty(BlockState state) {
         return state.getValue(FLUID).equals(Constant.Misc.EMPTY) || state.getValue(FLUID).equals(INVALID);
     }
 
-
+    //TODO Correct fluid pickup sound
     @Override
     default Optional<SoundEvent> getPickupSound() {
         return Fluids.WATER.getPickupSound();

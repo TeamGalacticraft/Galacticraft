@@ -8,6 +8,7 @@
     "BlockFamilyProviderAccessor",
     "BlockModelGeneratorsMixin",
     "BucketItemAccessor",
+    "BucketItemMixin",
     "BuiltInLootTablesAccessor",
     "DimensionTypeMixin",
     "EntityMixin",
