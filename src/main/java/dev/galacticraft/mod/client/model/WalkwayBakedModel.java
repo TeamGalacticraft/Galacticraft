@@ -152,6 +152,8 @@ public class WalkwayBakedModel implements FabricBakedModel, BakedModel {
         context.fallbackConsumer().accept(this.platform);
         context.popTransform();
 
+        walkway.calculateConnections();
+
         if (walkway.getConnections()[0]) {
             meshConsumer.accept(this.down);
         }

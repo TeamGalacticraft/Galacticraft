@@ -40,6 +40,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -128,6 +129,13 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     @Override
     public boolean[] getConnections() {
         return this.connections;
+    }
+
+    @Override
+    public void calculateConnections() {
+        for (Direction dir : Constant.Misc.DIRECTIONS) {
+            getConnections()[dir.ordinal()] = canConnect(dir) && EnergyStorage.SIDED.find(level, getBlockPos().relative(dir), dir.getOpposite()) != null;
+        }
     }
 
     @Override

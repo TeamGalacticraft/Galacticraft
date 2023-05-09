@@ -100,6 +100,8 @@ public class AluminumWireBlock extends WireBlock {
         for (Direction dir : Constant.Misc.DIRECTIONS) {
             b |= (wire.getConnections()[dir.ordinal()] = wire.canConnect(dir) && EnergyStorage.SIDED.find(world, pos.relative(dir), dir.getOpposite()) != null);
         }
+        if (b)
+            wire.setChanged();
         if (!world.isClientSide && b) ((ServerLevel) world).getChunkSource().blockChanged(pos);
     }
 
@@ -113,6 +115,7 @@ public class AluminumWireBlock extends WireBlock {
         if (!world.isClientSide && wire.getConnections()[dir.ordinal()] != (wire.getConnections()[dir.ordinal()] = wire.canConnect(dir) && EnergyStorage.SIDED.find(world, fromPos, dir.getOpposite()) != null)) {
             ((ServerLevel) world).getChunkSource().blockChanged(pos);
         }
+        wire.setChanged();
     }
 
     @Override

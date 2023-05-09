@@ -154,6 +154,8 @@ public class WireWalkwayBakedModel implements FabricBakedModel, BakedModel {
         context.fallbackConsumer().accept(this.walkway);
         context.popTransform();
 
+        wire.calculateConnections();
+
         if (wire.getConnections()[0]) {
             meshConsumer.accept(this.down);
         } else {

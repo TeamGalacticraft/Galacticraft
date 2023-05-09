@@ -126,6 +126,8 @@ public class WireBakedModel implements FabricBakedModel, BakedModel {
         QuadEmitter emitter = context.getEmitter();
         assert wire != null;
 
+        wire.calculateConnections();
+
         if (wire.getConnections()[0]) {
             meshConsumer.accept(this.down);
         } else {

@@ -139,6 +139,7 @@ public class PipeBakedModel implements FabricBakedModel, BakedModel {
 
         ColorTransform.INSTANCE.setSprite(this.colorSpriteMap.get(wire.getColor()));
         context.pushTransform(ColorTransform.INSTANCE);
+        wire.calculateConnections();
         if (wire.getConnections()[0]) {
             meshConsumer.accept(this.down);
         } else {
