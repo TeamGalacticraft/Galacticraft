@@ -25,7 +25,6 @@ package dev.galacticraft.mod.gametest.test;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.GratingBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -34,23 +33,27 @@ import net.minecraft.world.level.block.Blocks;
 
 /**
  * Miscellaneous tests.
+ *
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftTestSuite implements GalacticraftGameTest {
-	@GameTest(template = EMPTY_STRUCTURE)
-	public void gratingWaterFlowTest(GameTestHelper context) {
-        final var pos4 = new BlockPos(0, 4, 0);
-        final var pos3 = new BlockPos(0, 3, 0);
-        final var pos2 = new BlockPos(0, 2, 0);
-        final var pos1 = new BlockPos(0, 1, 0);
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void gratingFlowingWaterTest(GameTestHelper context) {
+        final var xz = 4;
+        final var pos4 = new BlockPos(xz, 4, xz);
+        final var pos3 = new BlockPos(xz, 3, xz);
+        final var pos2 = new BlockPos(xz, 2, xz);
+        final var pos1 = new BlockPos(xz, 1, xz);
         final var mutable = new BlockPos.MutableBlockPos();
         context.setBlock(pos2, GCBlocks.GRATING.defaultBlockState().setValue(GratingBlock.GRATING_STATE, GratingBlock.GratingState.LOWER));
+
         if (!context.getBlockState(pos2).getFluidState().isEmpty()) {
             context.fail(String.format("Expected grating to not be filled with fluid but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos2).getFluidState().getType())), pos2);
-        } else {
-            for (int x = -1; x < 2; x++) {
-                for (int z = -1; z < 2; z++) {
-                    if (mutable.set(x, 4, z).equals(pos4)) {
+        }
+        else {
+            for (var x = -1; x < 2; x++) {
+                for (var z = -1; z < 2; z++) {
+                    if (mutable.set(xz + x, 4, xz + z).equals(pos4)) {
                         continue;
                     }
                     context.setBlock(mutable, Blocks.GLASS);
@@ -60,18 +63,23 @@ public class GalacticraftTestSuite implements GalacticraftGameTest {
             context.runAtTickTime(context.getTick() + 40L, () -> {
                 if (!context.getBlockState(pos3).getFluidState().is(FluidTags.WATER)) {
                     context.fail(String.format("Expected water to flow downward but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos3).getFluidState().getType())), pos3);
-                } else if (!context.getBlockState(pos2).getFluidState().is(FluidTags.WATER)) {
+                }
+                else if (!context.getBlockState(pos2).getFluidState().is(FluidTags.WATER)) {
                     context.fail(String.format("Expected grating to be filled with water but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos2).getFluidState().getType())), pos2);
-                } else if (!context.getBlockState(pos1).getFluidState().is(FluidTags.WATER)) {
+                }
+                else if (!context.getBlockState(pos1).getFluidState().is(FluidTags.WATER)) {
                     context.fail(String.format("Expected water to be found below grating but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos1).getFluidState().getType())), pos1);
-                } else {
+                }
+                else {
                     context.setBlock(pos4, Blocks.AIR);
                     context.runAtTickTime(context.getTick() + 50L, () -> context.succeedWhen(() -> {
                         if (!context.getBlockState(pos3).getFluidState().isEmpty()) {
                             context.fail(String.format("Expected water to drain itself but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos3).getFluidState().getType())), pos3);
-                        } else if (!context.getBlockState(pos2).getFluidState().isEmpty()) {
+                        }
+                        else if (!context.getBlockState(pos2).getFluidState().isEmpty()) {
                             context.fail(String.format("Expected grating to not be filled with fluid but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos2).getFluidState().getType())), pos2);
-                        } else if (!context.getBlockState(pos1).getFluidState().isEmpty()) {
+                        }
+                        else if (!context.getBlockState(pos1).getFluidState().isEmpty()) {
                             context.fail(String.format("Expected no fluid to be found below grating but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos1).getFluidState().getType())), pos1);
                         }
                     }));

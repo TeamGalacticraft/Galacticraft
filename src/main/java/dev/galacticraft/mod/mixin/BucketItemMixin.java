@@ -33,12 +33,16 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 
 /**
@@ -73,5 +77,16 @@ public abstract class BucketItemMixin {
         var blockState = level.getBlockState(blockPos);
         var block = blockState.getBlock();
         return defaultValue || block instanceof FluidLoggable && ((FluidLoggable) block).canPlaceLiquid(level, blockPos, blockState, this.content);
+    }
+
+    @ModifyVariable(method = "use", at = @At("STORE"),
+            slice = @Slice(
+                    from = @At(value = "FIELD", target = "net/minecraft/world/level/material/Fluids.WATER:Lnet/minecraft/world/level/material/FlowingFluid;")),
+            index = 10, ordinal = 2)
+    private BlockPos checkIfFluidLoggableOnUse_gc(BlockPos defaultValue, Level level, Player player, InteractionHand interactionHand) {
+        var blockHitResult = Item.getPlayerPOVHitResult(level, player, this.content == Fluids.EMPTY ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE);
+        var blockPos = blockHitResult.getBlockPos();
+        var blockState = level.getBlockState(blockPos);
+        return blockState.getBlock() instanceof FluidLoggable ? blockPos : defaultValue;
     }
 }

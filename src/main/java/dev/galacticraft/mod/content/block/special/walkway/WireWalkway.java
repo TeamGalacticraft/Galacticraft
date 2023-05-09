@@ -163,9 +163,12 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
     @Override
     public FluidState getFluidState(BlockState state) {
         if (this.isEmpty(state)) return EMPTY_STATE;
-        FluidState state1 = BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState().setValue(FlowingFluid.FALLING, state.getValue(FlowingFluid.FALLING));
+        FluidState state1 = BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState();
         if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
             state1 = state1.setValue(FlowingFluid.LEVEL, state.getValue(FlowingFluid.LEVEL));
+        }
+        if (state1.getValues().containsKey(FlowingFluid.FALLING)) {
+            state1 = state1.setValue(FlowingFluid.FALLING, state.getValue(FlowingFluid.FALLING));
         }
         return state1;
     }

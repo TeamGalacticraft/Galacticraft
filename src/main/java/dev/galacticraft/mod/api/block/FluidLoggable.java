@@ -59,9 +59,9 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
         @Override
         public Collection<ResourceLocation> getPossibleValues() {
             if (VALUES.isEmpty()) {
-                for (Fluid f : BuiltInRegistries.FLUID) {
-                    if (f instanceof FlowingFluid) {
-                        VALUES.add(BuiltInRegistries.FLUID.getKey(f));
+                for (var fluid : BuiltInRegistries.FLUID) {
+                    if (fluid instanceof FlowingFluid) {
+                        VALUES.add(BuiltInRegistries.FLUID.getKey(fluid));
                     }
                 }
                 VALUES.add(Constant.Misc.EMPTY);
@@ -85,50 +85,48 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
 
     @Override
     default boolean canPlaceLiquid(BlockGetter view, BlockPos pos, BlockState state, Fluid fluid) {
-        if (!(fluid instanceof FlowingFluid)) return false;
-        return this.isEmpty(state);
+        return fluid instanceof FlowingFluid;
     }
 
     @Override
     default boolean placeLiquid(LevelAccessor world, BlockPos pos, BlockState state, FluidState fluidState) {
-        if (!(fluidState.getType() instanceof FlowingFluid)) return false;
-        if (this.isEmpty(state) || state.getValue(FlowingFluid.LEVEL) != FluidState.AMOUNT_FULL) {
+        if (!(fluidState.getType() instanceof FlowingFluid))
+            return false;
+        if (this.isEmpty(state)) {
             if (!world.isClientSide()) {
-                world.setBlock(pos, state
-                        .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
-                        .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)), 3);
+                world.setBlock(pos, state.setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType())).setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)).setValue(FlowingFluid.FALLING, fluidState.getValue(FlowingFluid.FALLING)), 3);
                 world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
             }
             return true;
-        } else if (BuiltInRegistries.FLUID.getKey(fluidState.getType()).equals(state.getValue(FLUID))) {
-            if (!world.isClientSide()) {
-                world.setBlock(pos, state.setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)), 3);
-                world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
-            }
-            return true;
-        } else if (fluidState.getType() == Fluids.EMPTY) {
-            world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1), 3);
         }
-        // replace current fluid into source
-        else {
+        else if (BuiltInRegistries.FLUID.getKey(fluidState.getType()).equals(state.getValue(FLUID))) {
             if (!world.isClientSide()) {
-                world.setBlock(pos, state
-                        .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
-                        .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)), 3);
+                world.setBlock(pos, state.setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)).setValue(FlowingFluid.FALLING, fluidState.getValue(FlowingFluid.FALLING)), 3);
                 world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
             }
             return true;
+        }
+        // replace current grating fluid or make it contains source block
+        else if (!BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState().isSource() || !BuiltInRegistries.FLUID.getKey(fluidState.getType()).equals(state.getValue(FLUID))) {
+            if (!world.isClientSide()) {
+                world.setBlock(pos, state.setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType())).setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)), 3);
+                world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
+            }
+            return true;
+        }
+        else if (fluidState.getType() == Fluids.EMPTY) {
+            world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1).setValue(FlowingFluid.FALLING, false), 3);
         }
         return false;
     }
 
     @Override
     default ItemStack pickupBlock(LevelAccessor world, BlockPos pos, BlockState state) {
-        var fluidState = BuiltInRegistries.FLUID.get(state.getValue(FLUID));
-
-        if (!this.isEmpty(state) && fluidState.defaultFluidState().isSource()) {
-            world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY), 3);
-            return new ItemStack(fluidState.getBucket());
+        if (!this.isEmpty(state)) {
+            if (BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState().isSource()) {
+                world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1), 3);
+                return new ItemStack(BuiltInRegistries.FLUID.get(state.getValue(FLUID)).getBucket());
+            }
         }
         return ItemStack.EMPTY;
     }
@@ -137,7 +135,7 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
         return state.getValue(FLUID).equals(Constant.Misc.EMPTY) || state.getValue(FLUID).equals(INVALID);
     }
 
-    //TODO Correct fluid pickup sound
+    //TODO Correct fluid pickup sound, probably unfixable unless mojang added "BlockState" argument into this method
     @Override
     default Optional<SoundEvent> getPickupSound() {
         return Fluids.WATER.getPickupSound();
