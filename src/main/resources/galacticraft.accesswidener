@@ -29,3 +29,4 @@ accessible method net/minecraft/world/item/Item getPlayerPOVHitResult (Lnet/mine
 # private fields
 accessible field net/minecraft/client/resources/model/ModelManager bakedRegistry Ljava/util/Map;
 accessible field net/minecraft/data/worldgen/ProcessorLists EMPTY Lnet/minecraft/resources/ResourceKey;
+accessible field net/minecraft/world/level/block/DispenserBlock DISPENSER_REGISTRY Ljava/util/Map;
