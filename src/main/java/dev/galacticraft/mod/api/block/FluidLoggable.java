@@ -124,12 +124,11 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
 
     @Override
     default ItemStack pickupBlock(LevelAccessor world, BlockPos pos, BlockState state) {
-        if (!this.isEmpty(state)) {
+        var fluidState = BuiltInRegistries.FLUID.get(state.getValue(FLUID));
+
+        if (!this.isEmpty(state) && fluidState.defaultFluidState().isSource()) {
             world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY), 3);
-            var fluidState = BuiltInRegistries.FLUID.get(state.getValue(FLUID));
-            if (fluidState.defaultFluidState().isSource()) {
-                return new ItemStack(fluidState.getBucket());
-            }
+            return new ItemStack(fluidState.getBucket());
         }
         return ItemStack.EMPTY;
     }
