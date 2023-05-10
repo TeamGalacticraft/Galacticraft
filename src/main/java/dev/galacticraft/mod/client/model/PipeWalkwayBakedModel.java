@@ -162,9 +162,11 @@ public class PipeWalkwayBakedModel implements FabricBakedModel, BakedModel {
             context.pushTransform(WalkwayBakedModel.Transform.INSTANCE);
             context.bakedModelConsumer().accept(this.walkway);
             context.popTransform();
+            walkway.calculateConnections();
 
             ColorTransform.INSTANCE.setSprite(this.colorSpriteMap.get(walkway.getColor()));
             context.pushTransform(ColorTransform.INSTANCE);
+
             if (walkway.getConnections()[0]) {
                 meshConsumer.accept(this.down);
             }

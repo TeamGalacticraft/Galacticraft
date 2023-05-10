@@ -24,8 +24,10 @@ package dev.galacticraft.mod.content.block.entity.networked;
 
 import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Walkway;
+import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
+import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -70,5 +72,23 @@ public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, 
     public boolean canConnect(Direction direction) {
         if (this.direction == null) return false;
         return direction != this.direction;
+    }
+
+    @Override
+    public void calculateConnections() {
+        for (Direction direction : Direction.values()) {
+            if (getDirection() != direction) {
+                if (level.getBlockEntity(this.worldPosition.relative(direction)) instanceof Pipe pipe) {
+                    if (pipe.canConnect(direction.getOpposite())) {
+                        getConnections()[direction.ordinal()] = true;
+                        continue;
+                    }
+                } else if (FluidUtil.canAccessFluid(level, this.worldPosition.relative(direction), direction)) {
+                    getConnections()[direction.ordinal()] = true;
+                    continue;
+                }
+            }
+            getConnections()[direction.ordinal()] = false;
+        }
     }
 }

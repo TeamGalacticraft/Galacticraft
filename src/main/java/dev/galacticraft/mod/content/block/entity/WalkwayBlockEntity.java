@@ -69,6 +69,22 @@ public class WalkwayBlockEntity extends BlockEntity implements Walkway {
     }
 
     @Override
+    public void calculateConnections() {
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+        for (Direction direction : Direction.values()) {
+            if (getDirection() != direction) {
+                if (level.getBlockEntity(mutable.set(getBlockPos()).move(direction)) instanceof Walkway walkway) {
+                    if (walkway.getDirection() != direction.getOpposite()) {
+                        getConnections()[direction.ordinal()] = true;
+                        continue;
+                    }
+                }
+            }
+            getConnections()[direction.ordinal()] = false;
+        }
+    }
+
+    @Override
     public void setDirection(@NotNull Direction direction) {
         this.direction = direction;
     }
