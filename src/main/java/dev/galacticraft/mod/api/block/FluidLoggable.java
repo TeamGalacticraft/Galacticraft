@@ -135,9 +135,8 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
         return state.getValue(FLUID).equals(Constant.Misc.EMPTY) || state.getValue(FLUID).equals(INVALID);
     }
 
-    //TODO Correct fluid pickup sound, probably unfixable unless mojang added "BlockState" argument into this method
     @Override
     default Optional<SoundEvent> getPickupSound() {
-        return Fluids.WATER.getPickupSound();
+        return Optional.empty();
     }
 }
