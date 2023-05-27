@@ -34,15 +34,25 @@ import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.content.entity.LanderEntity;
+import dev.galacticraft.mod.content.entity.RocketEntity;
+import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
+import dev.galacticraft.mod.screen.RocketMenu;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -53,6 +63,29 @@ import java.util.Objects;
 public class GCServerPacketReceivers {
     public static void register() {
         ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.OPEN_GC_INVENTORY, (server, player, handler, buf, responseSender) -> server.execute(() -> player.openMenu(new SimpleMenuProvider(GCPlayerInventoryMenu::new, Component.empty()) {
+            @Override
+            public boolean shouldCloseCurrentScreen() {
+                return false;
+            }
+        })));
+        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.OPEN_GC_ROCKET, (server, player, handler, buf, responseSender) -> server.execute(() -> player.openMenu(new ExtendedScreenHandlerFactory() {
+            @Override
+            public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
+                return new RocketMenu(syncId, inventory, player, (RocketEntity) player.getVehicle());
+            }
+
+            @Override
+            public Component getDisplayName() {
+                return Component.empty();
+            }
+
+            @Override
+            public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
+                assert player.getVehicle() instanceof RocketEntity;
+                RocketEntity rocket = (RocketEntity) player.getVehicle();
+                buf.writeInt(rocket.getId());
+            }
+
             @Override
             public boolean shouldCloseCurrentScreen() {
                 return false;

@@ -31,10 +31,10 @@
     "client.ClientPacketListenerMixin",
     "client.FogRendererMixin",
     "client.HumanoidModelMixin",
-    "client.InventoryScreenMixin",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
+    "client.ModelManagerMixin",
     "client.PauseMenuScreenMixin",
     "client.VillagerModelMixin",
     "client.VillagerRendererMixin"

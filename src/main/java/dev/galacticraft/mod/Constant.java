@@ -590,7 +590,7 @@ public interface Constant {
 
         ResourceLocation MACHINE_CONFIG_PANELS = id("textures/gui/machine_config.png");
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
-        ResourceLocation PLAYER_INVENTORY_TABS = id("textures/gui/player_inventory_switch_tabs.png");
+        ResourceLocation ROCKET_INVENTORY = id("textures/gui/rocket.png");
         ResourceLocation OVERLAY = id("textures/gui/overlay.png");
 
         ResourceLocation MAP_SCREEN = id("textures/gui/map.png");
@@ -719,6 +719,7 @@ public interface Constant {
         String FUEL_LOADER_MENU = "fuel_loader_menu";
         String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
         String ROCKET_WORKBENCH_MENU = "rocket_workbench_menu";
+        String ROCKET = "rocket";
     }
 
     interface LootTable {
@@ -869,6 +870,7 @@ public interface Constant {
         ResourceLocation BUBBLE_VISIBLE = id("bubble_visible");
         ResourceLocation DISABLE_SEAL = id("toggle_seal");
         ResourceLocation OPEN_GC_INVENTORY = id("open_gc_inv");
+        ResourceLocation OPEN_GC_ROCKET = id("open_gc_rocket");
         ResourceLocation ENTITY_SPAWN = id("entity_spawn");
         ResourceLocation CREATE_SATELLITE = id("create_satellite");
         ResourceLocation ROCKET_JUMP = id("rocket_jump");

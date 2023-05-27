@@ -36,6 +36,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -56,6 +57,19 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
             matrices.translate(0.5D, 0, 0.5D);
             matrices.mulPose(Axis.YP.rotation((float) (Minecraft.getInstance().level.getGameTime() * 66.666666666666 / 1000.0F)));
             matrices.translate(-0.5D, 0, -0.5D);
+        } else if (mode == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || mode == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND) {
+            matrices.mulPose(Axis.YP.rotationDegrees(45));
+            matrices.scale(2F, 2F, 2F);
+            matrices.mulPose(Axis.XP.rotation(Mth.HALF_PI));
+            matrices.mulPose(Axis.ZN.rotation(0.65F));
+            matrices.translate(0.5F, -0.5F, -2.6);
+        } else if (mode == ItemDisplayContext.THIRD_PERSON_LEFT_HAND || mode == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND) {
+            matrices.mulPose(Axis.ZN.rotation(Mth.HALF_PI));
+            matrices.mulPose(Axis.YP.rotation(Mth.HALF_PI));
+            matrices.mulPose(Axis.XP.rotation(0.2F));
+            matrices.mulPose(Axis.ZP.rotation(0.3F));
+            matrices.mulPose(Axis.ZN.rotation(0.65F));
+            matrices.translate(-.5, -.8F, -.8F);
         } else if (mode == ItemDisplayContext.GROUND) {
             matrices.scale(0.2f, 0.2f, 0.2f);
             matrices.translate(2, 3, 2);

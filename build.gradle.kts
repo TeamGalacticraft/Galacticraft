@@ -79,6 +79,9 @@ loom {
     mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
 
     runs {
+        runConfigs.forEach {
+            it.property("mixin.hotSwap", "true")
+        }
         register("datagen") {
             server()
             name("Data Generation")
@@ -287,6 +290,19 @@ quiltflower {
 tasks.withType(JavaCompile::class) {
     options.encoding = "UTF-8"
     options.release.set(17)
+}
+
+
+
+afterEvaluate {
+    loom {
+        runs {
+            configureEach {
+                val mixinJarFile = configurations.compileClasspath.get().files { it.group == "net.fabricmc" && it.name == "sponge-mixin" }.first()
+                vmArg("-javaagent:$mixinJarFile")
+            }
+        }
+    }
 }
 
 fun DependencyHandler.optionalRuntime(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {

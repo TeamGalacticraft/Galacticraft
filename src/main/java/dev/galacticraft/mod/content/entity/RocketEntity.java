@@ -123,10 +123,6 @@ public class RocketEntity extends Entity implements Rocket {
 
     public RocketEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
-        try (Transaction t = Transaction.openOuter()) { // TODO: remove when fuel loader is fully implemented
-            getTank().insert(FluidVariant.of(GCFluids.FUEL), getTank().getCapacity(), t);
-            t.commit();
-        }
     }
 
     public int getTimeAsState() {
@@ -301,7 +297,7 @@ public class RocketEntity extends Entity implements Rocket {
 
     @Override
     public long getFuelTankAmount() {
-        return this.tank.amount;
+        return this.tank.getAmount();
     }
 
     @Override

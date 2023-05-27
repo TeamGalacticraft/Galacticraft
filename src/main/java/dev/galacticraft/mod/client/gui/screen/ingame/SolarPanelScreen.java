@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
@@ -34,7 +33,6 @@ import dev.galacticraft.mod.api.solarpanel.SolarPanelRegistry;
 import dev.galacticraft.mod.api.solarpanel.WorldLightSources;
 import dev.galacticraft.mod.screen.SolarPanelMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -79,7 +77,7 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
     private final WorldLightSources lightSource;
 
     public SolarPanelScreen(S handler, Inventory inv, Component title) {
-        super(handler, title, new ResourceLocation("galacticraft:textures/model/rocket.png"));
+        super(handler, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
         this.solarPanelTexture = SolarPanelRegistry.getSolarPanelTexture(handler.machine.getType());
         this.lightSource = SolarPanelRegistry.getLightSource(this.menu.playerInventory.player.level.dimension());
     }
