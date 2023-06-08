@@ -22,12 +22,13 @@
 
 package dev.galacticraft.mod.content.block.decoration;
 
+import java.util.Optional;
+
+import org.jetbrains.annotations.Nullable;
 import com.google.common.annotations.VisibleForTesting;
 import dev.galacticraft.mod.api.block.FluidLoggable;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -59,20 +60,18 @@ public class GratingBlock extends Block implements FluidLoggable {
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(FLUID, new ResourceLocation("invalid"))
                 .setValue(FlowingFluid.LEVEL, 8)
-                .setValue(GRATING_STATE, GratingState.UPPER));
+                .setValue(GRATING_STATE, GratingState.UPPER)
+                .setValue(FlowingFluid.FALLING, false));
     }
 
+    @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
-        BlockState blockState = this.defaultBlockState()
-                .setValue(GRATING_STATE, GratingState.LOWER)
-                .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
-                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1));
-        BlockPos blockPos = context.getClickedPos();
-        Direction direction = context.getHorizontalDirection();
-
-        return direction != Direction.DOWN && (direction == Direction.UP || context.getClickedPos().getY() - (double) blockPos.getY() <= 0.5D) ? blockState : blockState.setValue(GRATING_STATE, GratingState.UPPER);
+    public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
+        FluidState fluidState = blockPlaceContext.getLevel().getFluidState(blockPlaceContext.getClickedPos());
+        BlockPos blockPos = blockPlaceContext.getClickedPos();
+        BlockState blockState = this.defaultBlockState().setValue(GRATING_STATE, GratingState.LOWER).setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType())).setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)).setValue(FlowingFluid.FALLING, fluidState.hasProperty(FlowingFluid.FALLING) ? fluidState.getValue(FlowingFluid.FALLING) : false);
+        Direction direction = blockPlaceContext.getClickedFace();
+        return direction != Direction.DOWN && (direction == Direction.UP || !(blockPlaceContext.getClickLocation().y - (double) blockPos.getY() > 0.5)) ? blockState : blockState.setValue(GRATING_STATE, GratingState.UPPER);
     }
 
     @Override
@@ -91,8 +90,7 @@ public class GratingBlock extends Block implements FluidLoggable {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
-        builder.add(FLUID).add(GRATING_STATE).add(FlowingFluid.LEVEL);
+        builder.add(FLUID, GRATING_STATE, FlowingFluid.LEVEL, FlowingFluid.FALLING);
     }
 
     @Override
@@ -101,6 +99,9 @@ public class GratingBlock extends Block implements FluidLoggable {
         FluidState state1 = BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState();
         if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
             state1 = state1.setValue(FlowingFluid.LEVEL, state.getValue(FlowingFluid.LEVEL));
+        }
+        if (state1.getValues().containsKey(FlowingFluid.FALLING)) {
+            state1 = state1.setValue(FlowingFluid.FALLING, state.getValue(FlowingFluid.FALLING));
         }
         return state1;
     }

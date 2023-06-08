@@ -131,60 +131,66 @@ public class WireWalkwayBakedModel implements FabricBakedModel, BakedModel {
         WireWalkwayBlockEntity wire = ((WireWalkwayBlockEntity) blockView.getBlockEntity(pos));
         Consumer<Mesh> meshConsumer = context.meshConsumer();
         QuadEmitter emitter = context.getEmitter();
-        assert wire != null;
 
-        int x = 0;
-        int y = 0;
-        switch (wire.getDirection()) {
-            case DOWN -> x = 180;
-            case NORTH -> x = 270;
-            case SOUTH -> x = 90;
-            case EAST -> {
-                x = 90;
-                y = 90;
+        if (wire != null && wire.getDirection() != null) {
+            int x = 0;
+            int y = 0;
+            switch (wire.getDirection()) {
+                case DOWN -> x = 180;
+                case NORTH -> x = 270;
+                case SOUTH -> x = 90;
+                case EAST -> {
+                    x = 90;
+                    y = 90;
+                }
+                case WEST -> {
+                    x = 90;
+                    y = 270;
+                }
             }
-            case WEST -> {
-                x = 90;
-                y = 270;
+
+            WalkwayBakedModel.Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
+            context.pushTransform(WalkwayBakedModel.Transform.INSTANCE);
+            context.bakedModelConsumer().accept(this.walkway);
+            context.popTransform();
+            wire.calculateConnections();
+
+            if (wire.getConnections()[0]) {
+                meshConsumer.accept(this.down);
             }
-        }
-
-        WalkwayBakedModel.Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
-        context.pushTransform(WalkwayBakedModel.Transform.INSTANCE);
-        context.fallbackConsumer().accept(this.walkway);
-        context.popTransform();
-
-        wire.calculateConnections();
-
-        if (wire.getConnections()[0]) {
-            meshConsumer.accept(this.down);
-        } else {
-            emitter.square(Direction.DOWN, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, 0/*MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV*/).emit();
-        }
-        if (wire.getConnections()[1]) {
-            meshConsumer.accept(this.up);
-        } else {
-            emitter.square(Direction.UP, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        }
-        if (wire.getConnections()[2]) {
-            meshConsumer.accept(this.north);
-        } else {
-            emitter.square(Direction.NORTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        }
-        if (wire.getConnections()[3]) {
-            meshConsumer.accept(this.south);
-        } else {
-            emitter.square(Direction.SOUTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        }
-        if (wire.getConnections()[4]) {
-            meshConsumer.accept(this.west);
-        } else {
-            emitter.square(Direction.WEST, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        }
-        if (wire.getConnections()[5]) {
-            meshConsumer.accept(this.east);
-        } else {
-            emitter.square(Direction.EAST, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+            else {
+                emitter.square(Direction.DOWN, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, 0/*MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV*/).emit();
+            }
+            if (wire.getConnections()[1]) {
+                meshConsumer.accept(this.up);
+            }
+            else {
+                emitter.square(Direction.UP, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+            }
+            if (wire.getConnections()[2]) {
+                meshConsumer.accept(this.north);
+            }
+            else {
+                emitter.square(Direction.NORTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+            }
+            if (wire.getConnections()[3]) {
+                meshConsumer.accept(this.south);
+            }
+            else {
+                emitter.square(Direction.SOUTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+            }
+            if (wire.getConnections()[4]) {
+                meshConsumer.accept(this.west);
+            }
+            else {
+                emitter.square(Direction.WEST, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+            }
+            if (wire.getConnections()[5]) {
+                meshConsumer.accept(this.east);
+            }
+            else {
+                emitter.square(Direction.EAST, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).spriteBake(0, this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+            }
         }
     }
 

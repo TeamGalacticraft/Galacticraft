@@ -29,6 +29,7 @@ import dev.galacticraft.mod.attribute.fluid.PipeFluidInsertable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -67,19 +68,19 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe {
             if (!this.level.isClientSide()) {
                 for (Direction direction : Constant.Misc.DIRECTIONS) {
                     if (this.canConnect(direction)) {
-                        BlockEntity entity = level.getBlockEntity(worldPosition.relative(direction));
+                        BlockEntity entity = this.level.getBlockEntity(this.worldPosition.relative(direction));
                         if (entity instanceof Pipe pipe && pipe.getNetwork() != null) {
                             if (pipe.canConnect(direction.getOpposite())) {
                                 if (pipe.getOrCreateNetwork().isCompatibleWith(this)) {
-                                    pipe.getNetwork().addPipe(worldPosition, this);
+                                    pipe.getNetwork().addPipe(this.worldPosition, this);
                                 }
                             }
                         }
                     }
                 }
                 if (this.network == null) {
-                    this.setNetwork(PipeNetwork.create((ServerLevel) level, this.getMaxTransferRate()));
-                    this.network.addPipe(worldPosition, this);
+                    this.setNetwork(PipeNetwork.create((ServerLevel) this.level, this.getMaxTransferRate()));
+                    this.network.addPipe(this.worldPosition, this);
                 }
             }
         }
@@ -103,7 +104,7 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe {
 
     @Override
     public long getMaxTransferRate() {
-        return maxTransferRate;
+        return this.maxTransferRate;
     }
 
     @Override
@@ -141,5 +142,15 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe {
         if (this.getNetwork() != null) {
             this.getNetwork().removePipe(this, this.worldPosition);
         }
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
     }
 }

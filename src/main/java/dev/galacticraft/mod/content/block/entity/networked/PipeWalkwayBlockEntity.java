@@ -29,14 +29,15 @@ import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, Colored {
+    @Nullable
     private Direction direction;
 
     public PipeWalkwayBlockEntity(BlockPos pos, BlockState state) {
@@ -44,6 +45,20 @@ public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, 
     }
 
     @Override
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
+        this.writeWalkwayNbt(nbt);
+    }
+
+    @Override
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
+        this.readWalkwayNbt(nbt);
+        this.setSectionDirty(this.level, this.worldPosition);
+    }
+
+    @Override
+    @Nullable
     public Direction getDirection() {
         return this.direction;
     }
@@ -51,20 +66,6 @@ public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, 
     @Override
     public void setDirection(@NotNull Direction direction) {
         this.direction = direction;
-    }
-
-    @Override
-    public void load(CompoundTag nbt) {
-        super.load(nbt);
-        this.readWalkwayNbt(nbt);
-        assert this.level != null;
-        if (this.level.isClientSide) Minecraft.getInstance().levelRenderer.setSectionDirty(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ());
-    }
-
-    @Override
-    public void saveAdditional(CompoundTag nbt) {
-        super.saveAdditional(nbt);
-        this.writeWalkwayNbt(nbt);
     }
 
     @Override

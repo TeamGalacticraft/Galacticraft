@@ -22,19 +22,17 @@
 
 package dev.galacticraft.mod.content.block.entity.networked;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
+import org.jetbrains.annotations.Nullable;
 
 public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
+    @Nullable
     private Direction direction = null;
 
     public WireWalkwayBlockEntity(BlockPos pos, BlockState state) {
@@ -44,19 +42,18 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     @Override
     public void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
-        nbt.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.direction, Direction.UP).ordinal());
-        nbt.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.direction, Direction.UP).ordinal());
+        this.writeWalkwayNbt(nbt);
     }
 
     @Override
     public void load(CompoundTag nbt) {
-        this.direction = Constant.Misc.DIRECTIONS[nbt.getByte(Constant.Nbt.DIRECTION)];
         super.load(nbt);
-        assert this.level != null;
-        if (this.level.isClientSide) Minecraft.getInstance().levelRenderer.setSectionDirty(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ());
+        this.readWalkwayNbt(nbt);
+        this.setSectionDirty(this.level, this.worldPosition);
     }
 
     @Override
+    @Nullable
     public Direction getDirection() {
         return this.direction;
     }
@@ -65,7 +62,10 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     public void setDirection(@NotNull Direction direction) {
         this.direction = direction;
         this.getConnections()[direction.ordinal()] = false;
-        level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock());
+
+        if (this.hasLevel()) {
+            this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock());
+        }
     }
 
     @Override

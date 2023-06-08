@@ -140,63 +140,71 @@ public class PipeWalkwayBakedModel implements FabricBakedModel, BakedModel {
         PipeWalkwayBlockEntity walkway = ((PipeWalkwayBlockEntity) blockView.getBlockEntity(pos));
         Consumer<Mesh> meshConsumer = context.meshConsumer();
         QuadEmitter emitter = context.getEmitter();
-        assert walkway != null;
 
-        int x = 0;
-        int y = 0;
-        switch (walkway.getDirection()) {
-            case DOWN -> x = 180;
-            case NORTH -> x = 270;
-            case SOUTH -> x = 90;
-            case EAST -> {
-                x = 90;
-                y = 90;
+        if (walkway != null && walkway.getDirection() != null) {
+            int x = 0;
+            int y = 0;
+            switch (walkway.getDirection()) {
+                case DOWN -> x = 180;
+                case NORTH -> x = 270;
+                case SOUTH -> x = 90;
+                case EAST -> {
+                    x = 90;
+                    y = 90;
+                }
+                case WEST -> {
+                    x = 90;
+                    y = 270;
+                }
             }
-            case WEST -> {
-                x = 90;
-                y = 270;
+
+            WalkwayBakedModel.Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
+            context.pushTransform(WalkwayBakedModel.Transform.INSTANCE);
+            context.bakedModelConsumer().accept(this.walkway);
+            context.popTransform();
+            walkway.calculateConnections();
+
+            ColorTransform.INSTANCE.setSprite(this.colorSpriteMap.get(walkway.getColor()));
+            context.pushTransform(ColorTransform.INSTANCE);
+
+            if (walkway.getConnections()[0]) {
+                meshConsumer.accept(this.down);
             }
+            else {
+                emitter.square(Direction.DOWN, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).emit();
+            }
+            if (walkway.getConnections()[1]) {
+                meshConsumer.accept(this.up);
+            }
+            else {
+                emitter.square(Direction.UP, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).emit();
+            }
+            if (walkway.getConnections()[2]) {
+                meshConsumer.accept(this.north);
+            }
+            else {
+                emitter.square(Direction.NORTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).emit();
+            }
+            if (walkway.getConnections()[3]) {
+                meshConsumer.accept(this.south);
+            }
+            else {
+                emitter.square(Direction.SOUTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).emit();
+            }
+            if (walkway.getConnections()[4]) {
+                meshConsumer.accept(this.west);
+            }
+            else {
+                emitter.square(Direction.WEST, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).emit();
+            }
+            if (walkway.getConnections()[5]) {
+                meshConsumer.accept(this.east);
+            }
+            else {
+                emitter.square(Direction.EAST, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).emit();
+            }
+            context.popTransform();
         }
-
-        WalkwayBakedModel.Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
-        context.pushTransform(WalkwayBakedModel.Transform.INSTANCE);
-        context.fallbackConsumer().accept(this.walkway);
-        context.popTransform();
-
-        ColorTransform.INSTANCE.setSprite(this.colorSpriteMap.get(walkway.getColor()));
-        context.pushTransform(ColorTransform.INSTANCE);
-        walkway.calculateConnections();
-        if (walkway.getConnections()[0]) {
-            meshConsumer.accept(this.down);
-        } else {
-            emitter.square(Direction.DOWN, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).emit();
-        }
-        if (walkway.getConnections()[1]) {
-            meshConsumer.accept(this.up);
-        } else {
-            emitter.square(Direction.UP, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).emit();
-        }
-        if (walkway.getConnections()[2]) {
-            meshConsumer.accept(this.north);
-        } else {
-            emitter.square(Direction.NORTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).emit();
-        }
-        if (walkway.getConnections()[3]) {
-            meshConsumer.accept(this.south);
-        } else {
-            emitter.square(Direction.SOUTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).emit();
-        }
-        if (walkway.getConnections()[4]) {
-            meshConsumer.accept(this.west);
-        } else {
-            emitter.square(Direction.WEST, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).emit();
-        }
-        if (walkway.getConnections()[5]) {
-            meshConsumer.accept(this.east);
-        } else {
-            emitter.square(Direction.EAST, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).spriteColor(0, -1, -1, -1, -1).sprite(0, 0, 12, 0).sprite(1, 0, 16, 0).sprite(2, 0, 16, 4).sprite(3, 0, 12, 4).emit();
-        }
-        context.popTransform();
     }
 
     @Override
