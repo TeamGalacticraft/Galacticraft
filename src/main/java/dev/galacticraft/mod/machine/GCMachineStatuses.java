@@ -55,12 +55,12 @@ public final class GCMachineStatuses {
     /**
      * The fuel loader is loading fuel into the rocket.
      */
-    public static final MachineStatus LOADING = MachineStatus.createAndRegister(Constant.id("loading"), Component.translatable("ui.galacticraft.machinestatus.loading").withStyle(ChatFormatting.GREEN), MachineStatus.Type.WORKING);
+    public static final MachineStatus LOADING = MachineStatus.createAndRegister(Constant.id("loading"), Component.translatable("machine_status.galacticraft.loading").withStyle(ChatFormatting.GREEN), MachineStatus.Type.WORKING);
 
     /**
      * The fuel loader has enough fuel to load but not enough energy.
      */
-    public static final MachineStatus NOT_ENOUGH_ENERGY = MachineStatus.createAndRegister(Constant.id("not_enough_energy"), Component.translatable("ui.galacticraft.machinestatus.not_enough_energy").withStyle(ChatFormatting.RED), MachineStatus.Type.MISSING_ENERGY);
+    public static final MachineStatus NOT_ENOUGH_ENERGY = MachineStatus.createAndRegister(Constant.id("not_enough_energy"), Component.translatable("machine_status.galacticraft.not_enough_energy").withStyle(ChatFormatting.RED), MachineStatus.Type.MISSING_ENERGY);
 
     /**
      * The fuel loader doesn't have any fuel.
@@ -70,12 +70,12 @@ public final class GCMachineStatuses {
     /**
      * The fuel loader doesn't have a rocket
      */
-    public static final MachineStatus NO_ROCKET = MachineStatus.createAndRegister(Constant.id("no_rocket"), Component.translatable("ui.galacticraft.machinestatus.no_rocket").withStyle(ChatFormatting.RED), MachineStatus.Type.MISSING_RESOURCE);
+    public static final MachineStatus NO_ROCKET = MachineStatus.createAndRegister(Constant.id("no_rocket"), Component.translatable("machine_status.galacticraft.no_rocket").withStyle(ChatFormatting.RED), MachineStatus.Type.MISSING_RESOURCE);
 
     /**
      * The sun is not visible.
      */
-    public static final MachineStatus ROCKET_IS_FULL = MachineStatus.createAndRegister(Constant.id("rocket_is_full"), Component.translatable("ui.galacticraft.machinestatus.rocket_is_full").withStyle(ChatFormatting.GOLD), MachineStatus.Type.OUTPUT_FULL);
+    public static final MachineStatus ROCKET_IS_FULL = MachineStatus.createAndRegister(Constant.id("rocket_is_full"), Component.translatable("machine_status.galacticraft.rocket_is_full").withStyle(ChatFormatting.GOLD), MachineStatus.Type.OUTPUT_FULL);
 
     public static void register() {}
 }
