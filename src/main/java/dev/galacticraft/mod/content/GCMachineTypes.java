@@ -160,7 +160,7 @@ public class GCMachineTypes {
             GCMenuTypes.COMPRESSOR,
             MachineEnergyStorage::empty,
             MachineItemStorage.builder()
-                    .single(GCSlotGroupTypes.SOLID_FUEL, ItemResourceSlot.builder().pos(8, 70).filter((item, tag) -> FuelRegistry.INSTANCE.get(item) > 0)::build)
+                    .single(GCSlotGroupTypes.SOLID_FUEL, ItemResourceSlot.builder().pos(83, 47).filter((item, tag) -> FuelRegistry.INSTANCE.get(item) > 0)::build)
                     .group(GCSlotGroupTypes.GENERIC_INPUT,
                             generate3x3Grid(17, 17)::build
                     ).single(GCSlotGroupTypes.GENERIC_OUTPUT, ItemResourceSlot.builder()
