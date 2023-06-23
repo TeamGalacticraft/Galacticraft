@@ -89,6 +89,47 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(this.reverseLookup(GCBlocks.COBBLED_MOON_ROCK_WALL))
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_WALL))
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_BRICK_WALL));
-        ;
+
+        // MINING TAGS
+
+        this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(this.reverseLookup(GCBlocks.SILICON_ORE))
+                .add(this.reverseLookup(GCBlocks.DEEPSLATE_SILICON_ORE))
+
+                .add(this.reverseLookup(GCBlocks.MOON_COPPER_ORE))
+                .add(this.reverseLookup(GCBlocks.LUNASLATE_COPPER_ORE))
+
+                .add(this.reverseLookup(GCBlocks.TIN_ORE))
+                .add(this.reverseLookup(GCBlocks.DEEPSLATE_TIN_ORE))
+                .add(this.reverseLookup(GCBlocks.MOON_TIN_ORE))
+                .add(this.reverseLookup(GCBlocks.LUNASLATE_TIN_ORE))
+
+                .add(this.reverseLookup(GCBlocks.ALUMINUM_ORE))
+                .add(this.reverseLookup(GCBlocks.DEEPSLATE_ALUMINUM_ORE))
+
+                .add(this.reverseLookup(GCBlocks.DESH_ORE))
+
+                .add(this.reverseLookup(GCBlocks.ILMENITE_ORE))
+
+                .add(this.reverseLookup(GCBlocks.GALENA_ORE));
+        this.tag(BlockTags.NEEDS_STONE_TOOL)
+                .add(this.reverseLookup(GCBlocks.MOON_COPPER_ORE))
+                .add(this.reverseLookup(GCBlocks.LUNASLATE_COPPER_ORE))
+
+                .add(this.reverseLookup(GCBlocks.TIN_ORE))
+                .add(this.reverseLookup(GCBlocks.DEEPSLATE_TIN_ORE))
+                .add(this.reverseLookup(GCBlocks.MOON_TIN_ORE))
+                .add(this.reverseLookup(GCBlocks.LUNASLATE_TIN_ORE))
+
+                .add(this.reverseLookup(GCBlocks.ALUMINUM_ORE))
+                .add(this.reverseLookup(GCBlocks.DEEPSLATE_ALUMINUM_ORE))
+
+                .add(this.reverseLookup(GCBlocks.GALENA_ORE));
+        this.tag(BlockTags.NEEDS_IRON_TOOL)
+                .add(this.reverseLookup(GCBlocks.SILICON_ORE))
+                .add(this.reverseLookup(GCBlocks.DEEPSLATE_SILICON_ORE));
+        this.tag(BlockTags.NEEDS_DIAMOND_TOOL)
+                .add(this.reverseLookup(GCBlocks.DESH_ORE))
+                .add(this.reverseLookup(GCBlocks.ILMENITE_ORE));
     }
 }
