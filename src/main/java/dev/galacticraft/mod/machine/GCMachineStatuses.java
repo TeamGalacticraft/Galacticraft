@@ -65,7 +65,7 @@ public final class GCMachineStatuses {
     /**
      * The fuel loader doesn't have any fuel.
      */
-    public static final MachineStatus NOT_ENOUGH_FUEL = MachineStatus.createAndRegister(Constant.id("not_enough_fuel"), Component.translatable("ui.galacticraft.machinestatus.not_enough_fuel").withStyle(ChatFormatting.GOLD), MachineStatus.Type.MISSING_FLUIDS);
+    public static final MachineStatus NOT_ENOUGH_FUEL = MachineStatus.createAndRegister(Constant.id("not_enough_fuel"), Component.translatable("machine_status.galacticraft.not_enough_fuel").withStyle(ChatFormatting.GOLD), MachineStatus.Type.MISSING_FLUIDS);
 
     /**
      * The fuel loader doesn't have a rocket
