@@ -317,7 +317,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(FUEL_LOADER);
 
         dropSelf(PLAYER_TRANSPORT_TUBE);
-        dropSelf(NASA_WORKBENCH);
+        dropSelf(ROCKET_WORKBENCH);
 
         add(AIR_LOCK_SEAL, noDrop());
     }

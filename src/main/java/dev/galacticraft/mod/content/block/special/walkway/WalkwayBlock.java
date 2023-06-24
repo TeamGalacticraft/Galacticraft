@@ -32,12 +32,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -47,6 +49,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -61,7 +64,8 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
 
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(FLUID, INVALID)
-                .setValue(FlowingFluid.LEVEL, 8));
+                .setValue(FlowingFluid.LEVEL, 8)
+                .setValue(FlowingFluid.FALLING, false));
     }
 
     private static int getFacingMask(Direction dir) {
@@ -85,7 +89,8 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
         return this.defaultBlockState()
                 .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
-                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1));
+                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1))
+                .setValue(FlowingFluid.FALLING, fluidState.hasProperty(FlowingFluid.FALLING) ? fluidState.getValue(FlowingFluid.FALLING) : false);
     }
 
     @Override
@@ -94,7 +99,8 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
         final Walkway blockEntity = (Walkway) world.getBlockEntity(pos);
         assert placer != null;
         assert blockEntity != null;
-        blockEntity.setDirection(Direction.orderedByNearest(placer)[0].getOpposite());
+        BlockHitResult blockHitResult = Item.getPlayerPOVHitResult(world, (Player) placer, ClipContext.Fluid.SOURCE_ONLY);
+        blockEntity.setDirection(blockHitResult.getDirection());
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         for (Direction direction : Direction.values()) {
             if (blockEntity.getDirection() != direction) {
@@ -151,12 +157,15 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
         if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
             state1 = state1.setValue(FlowingFluid.LEVEL, state.getValue(FlowingFluid.LEVEL));
         }
+        if (state1.getValues().containsKey(FlowingFluid.FALLING)) {
+            state1 = state1.setValue(FlowingFluid.FALLING, state.getValue(FlowingFluid.FALLING));
+        }
         return state1;
     }
 
     @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(FLUID, FlowingFluid.LEVEL);
+        stateBuilder.add(FLUID, FlowingFluid.LEVEL, FlowingFluid.FALLING);
     }
 
     @Nullable

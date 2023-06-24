@@ -1,0 +1,12 @@
+{
+  "type": "galacticraft-api:basic",
+  "config": {
+    "fuel_capacity": 1296000,
+    "predicate": {
+      "type": "galacticraft-api:access_weight",
+      "config": {
+        "weight": 1
+      }
+    }
+  }
+}

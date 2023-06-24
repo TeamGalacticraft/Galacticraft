@@ -1,9 +1,9 @@
 {
-  "loader": "forge:obj",
+  "loader": "porting_lib:obj",
   "model": "galacticraft:models/block/transport_tube/player_transport_tube.obj",
   "mtl_override": "galacticraft:models/block/transport_tube/player_transport_tube.mtl",
   "textures": {
-    "0": "galacticraft:block/aluminum_decoration"
+    "0": "galacticraft:block/oxygen_compressor"
   },
   "automatic_culling": false,
   "flip_v": true

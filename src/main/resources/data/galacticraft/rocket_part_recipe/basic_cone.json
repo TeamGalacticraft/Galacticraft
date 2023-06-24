@@ -1,0 +1,23 @@
+{
+  "type": "galacticraft-api:slotted_default",
+  "config": {
+    "key": {
+      ".": 9,
+      "T": {
+        "item": "minecraft:redstone_torch"
+      },
+      "D": {
+        "item": "galacticraft:heavy_plating"
+      }
+    },
+    "pattern": [
+      ".T.",
+      ".D.",
+      "DD"
+    ],
+    "result": {
+      "type": "galacticraft-api:rocket_cone",
+      "id": "galacticraft:tier_1"
+    }
+  }
+}

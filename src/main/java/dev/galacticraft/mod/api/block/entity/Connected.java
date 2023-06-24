@@ -29,6 +29,8 @@ import net.minecraft.nbt.CompoundTag;
 public interface Connected {
     boolean[/*6*/] getConnections();
 
+    void calculateConnections();
+
     default void writeConnectionNbt(CompoundTag nbt) {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             nbt.putBoolean(direction.getSerializedName(), this.getConnections()[direction.ordinal()]);

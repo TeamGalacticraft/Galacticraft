@@ -204,7 +204,7 @@ public class GCCreativeModeTabs {
                 output.accept(THERMAL_PADDING_LEGGINGS);
                 output.accept(THERMAL_PADDING_BOOTS);
                 // ROCKETS
-                output.accept(ROCKET);
+                output.accept(ROCKET.getDefaultInstance());
 
                 // SCHEMATICS
                 output.accept(TIER_2_ROCKET_SCHEMATIC);

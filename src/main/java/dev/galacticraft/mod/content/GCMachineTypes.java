@@ -294,7 +294,7 @@ public class GCMachineTypes {
                     ).single(GCSlotGroupTypes.FUEL_INPUT, ItemResourceSlot.builder()
                             .pos(80, 61)
                             .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canExtractFluidStrict(GCFluids.FUEL)) // fixme: tag?
+                            .strictFilter(ResourceFilters.canExtractFluidStrict(GCFluids.FUEL)) // fixme: fuel api?
                             ::build
                     )::build,
             MachineFluidStorage.builder()

@@ -43,6 +43,7 @@ public class GCEntityModelLayer {
     public static final ModelLayerLocation GREY = new ModelLayerLocation(Constant.id("grey"), "main");
     public static final ModelLayerLocation ARCH_GREY = new ModelLayerLocation(Constant.id("arch_grey"), "main");
     public static final ModelLayerLocation SOLAR_PANEL = new ModelLayerLocation(new ResourceLocation(Constant.MOD_ID, "solar_panel"), "main");
+    public static final ModelLayerLocation LANDER = new ModelLayerLocation(new ResourceLocation(Constant.MOD_ID, "lander"), "main");
 
     public static void register() {
         EntityModelLayerRegistry.registerModelLayer(EVOLVED_CREEPER, () -> EvolvedCreeperEntityModel.getTexturedModelData(CubeDeformation.NONE));
@@ -53,6 +54,7 @@ public class GCEntityModelLayer {
         EntityModelLayerRegistry.registerModelLayer(OLI_GRUB, OliGrubEntityModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(GREY, GreyEntityModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(ARCH_GREY, ArchGreyEntityModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(LANDER, LanderModel::createBodyLayer);
 
         EntityModelLayerRegistry.registerModelLayer(SOLAR_PANEL, BasicSolarPanelBlockEntityRenderer::getTexturedModelData);
     }

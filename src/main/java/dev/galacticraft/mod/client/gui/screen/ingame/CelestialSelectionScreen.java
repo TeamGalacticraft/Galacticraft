@@ -28,6 +28,7 @@ import com.ibm.icu.text.ArabicShapingException;
 import com.ibm.icu.text.Bidi;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
@@ -966,24 +967,27 @@ public class CelestialSelectionScreen extends Screen {
         }
 
         matrices.pushPose();
+        Window window = this.minecraft.getWindow();
+        RenderSystem.backupProjectionMatrix();
+        Matrix4f projectionMatrix = new Matrix4f();
+        projectionMatrix.setOrtho(0, (float)((double)window.getWidth() / window.getGuiScale()), (float)((double)window.getHeight() / window.getGuiScale()), 0, 1000, 9000.0F);
+        RenderSystem.setProjectionMatrix(projectionMatrix);
         modelViewStack.pushPose();
         {
             RenderSystem.enableBlend();
 
             modelViewStack.setIdentity();
-            modelViewStack.translate(0.0F, 0.0F, -9000.0F);
+            modelViewStack.translate(0.0F, 0.0F, -8000.0F);
             RenderSystem.applyModelViewMatrix();
-            RenderSystem.backupProjectionMatrix();
-            Matrix4f projectionMatrix = new Matrix4f();
-            projectionMatrix.m00(2.0F / width);
-            projectionMatrix.m11(2.0F / -height);
-            projectionMatrix.m22(-2.0F / 9000.0F);
-            projectionMatrix.m03(-1.0F);
-            projectionMatrix.m13(1.0F);
-            projectionMatrix.m23(-2.0F);
 
-            RenderSystem.setProjectionMatrix(projectionMatrix);
-            RenderSystem.applyModelViewMatrix();
+//            projectionMatrix.m00(2.0F / width);
+//            projectionMatrix.m11(2.0F / -height);
+//            projectionMatrix.m22(-2.0F / 9000.0F);
+//            projectionMatrix.m03(-1.0F);
+//            projectionMatrix.m13(1.0F);
+//            projectionMatrix.m23(-2.0F);
+
+
             resetShader(GameRenderer::getPositionColorShader);
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -1003,16 +1007,16 @@ public class CelestialSelectionScreen extends Screen {
 //
 //                for (Map.Entry<CelestialBody<?, ?>, Matrix4f> e : this.matrixMap.entrySet()) {
 //                    Matrix4f planetMatrix = e.getValue();
-//                    planetMatrix.multiply(projectionMatrix);
+//                    planetMatrix.mul(projectionMatrix);
 //                    assert this.minecraft != null;
-//                    int x = (int) Math.floor((planetMatrix.m03 * 0.5 + 0.5) * this.minecraft.getWindow().getWidth());
-//                    int y = (int) Math.floor(this.minecraft.getWindow().getHeight() - (planetMatrix.m13 * 0.5 + 0.5) * this.minecraft.getWindow().getHeight());
+//                    int x = (int) Math.floor((planetMatrix.m03() * 0.5 + 0.5) * this.minecraft.getWindow().getWidth());
+//                    int y = (int) Math.floor(this.minecraft.getWindow().getHeight() - (planetMatrix.m13() * 0.5 + 0.5) * this.minecraft.getWindow().getHeight());
 //                    double mx = (x * (this.minecraft.getWindow().getGuiScaledWidth() / (double) this.minecraft.getWindow().getWidth()));
 //                    double my = (y * (this.minecraft.getWindow().getGuiScaledHeight() / (double) this.minecraft.getWindow().getHeight()));
 //                    Vec2 vec = new Vec2((float) mx, (float) my);
 //
 //                    Vector4f newVec = new Vector4f(2, -2, 0, 0);
-//                    newVec.transform(Matrix4f.createScaleMatrix(planetMatrix.m00, planetMatrix.m11, planetMatrix.m22));
+//                    newVec.mul(Matrix4f.createScaleMatrix(planetMatrix.m00(), planetMatrix.m11(), planetMatrix.m22()));
 //                    float iconSize = (newVec.y() * (this.minecraft.getWindow().getHeight() / 2.0F)) * (isStar(e.getKey()) ? 2 : 1) * (e.getKey() == this.selectedBody ? 1.5F : 1.0F);
 //
 //                    this.planetPosMap.put(e.getKey(), new Vec3(vec.x, vec.y, iconSize)); // Store size on-screen in Z-value for ease
@@ -1134,7 +1138,7 @@ public class CelestialSelectionScreen extends Screen {
                 this.setupMatrix(body, matrices, moon ? 0.25F : 1.0F, delta);
                 CelestialDisplay<?, ?> display = body.display();
                 Vector4f vector4f = display.render(matrices, Tesselator.getInstance().getBuilder(), this.getWidthForCelestialBody(body), mouseX, mouseY, delta, s -> resetAlphaShader(alpha, s));
-                matrices.translate(vector4f.x(), vector4f.y(), 0);
+                matrices.translate(vector4f.x(), vector4f.z(), 0);
                 Matrix4f model = matrices.last().pose();
                 planetPosMap.put(body, new Vec3(model.m03(), model.m13(), vector4f.z() * model.m00()));
                 matrices.popPose();

@@ -24,17 +24,20 @@ package dev.galacticraft.mod.content.block.entity.networked;
 
 import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Walkway;
+import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
+import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, Colored {
+    @Nullable
     private Direction direction;
 
     public PipeWalkwayBlockEntity(BlockPos pos, BlockState state) {
@@ -42,6 +45,20 @@ public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, 
     }
 
     @Override
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
+        this.writeWalkwayNbt(nbt);
+    }
+
+    @Override
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
+        this.readWalkwayNbt(nbt);
+        this.setSectionDirty(this.level, this.worldPosition);
+    }
+
+    @Override
+    @Nullable
     public Direction getDirection() {
         return this.direction;
     }
@@ -52,22 +69,26 @@ public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, 
     }
 
     @Override
-    public void load(CompoundTag nbt) {
-        super.load(nbt);
-        this.readWalkwayNbt(nbt);
-        assert this.level != null;
-        if (this.level.isClientSide) Minecraft.getInstance().levelRenderer.setSectionDirty(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ());
-    }
-
-    @Override
-    public void saveAdditional(CompoundTag nbt) {
-        super.saveAdditional(nbt);
-        this.writeWalkwayNbt(nbt);
-    }
-
-    @Override
     public boolean canConnect(Direction direction) {
         if (this.direction == null) return false;
         return direction != this.direction;
+    }
+
+    @Override
+    public void calculateConnections() {
+        for (Direction direction : Direction.values()) {
+            if (getDirection() != direction) {
+                if (level.getBlockEntity(this.worldPosition.relative(direction)) instanceof Pipe pipe) {
+                    if (pipe.canConnect(direction.getOpposite())) {
+                        getConnections()[direction.ordinal()] = true;
+                        continue;
+                    }
+                } else if (FluidUtil.canAccessFluid(level, this.worldPosition.relative(direction), direction)) {
+                    getConnections()[direction.ordinal()] = true;
+                    continue;
+                }
+            }
+            getConnections()[direction.ordinal()] = false;
+        }
     }
 }

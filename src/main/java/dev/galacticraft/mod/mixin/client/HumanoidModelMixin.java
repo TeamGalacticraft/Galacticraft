@@ -22,11 +22,18 @@
 
 package dev.galacticraft.mod.mixin.client;
 
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.accessor.LivingEntityAccessor;
 import dev.galacticraft.mod.content.entity.RocketEntity;
+import dev.galacticraft.mod.content.item.RocketItem;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Math;
+import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -50,6 +57,8 @@ public class HumanoidModelMixin<T extends LivingEntity> {
 
     @Shadow @Final public ModelPart hat;
 
+    @Shadow public HumanoidModel.ArmPose rightArmPose;
+
     @Inject(at = @At("HEAD"), method = "setupAnim")
     private void standInRocketGC(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo ci) {
         if (((HumanoidModel<T>) (Object) this).riding) {
@@ -60,7 +69,39 @@ public class HumanoidModelMixin<T extends LivingEntity> {
     }
 
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
-    private void gc$setCryoSleepAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
+    private void gc$modifyPlayerAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
+
+        CelestialBody.getByDimension(entity.getLevel()).ifPresent(celestialBody -> {
+            if (celestialBody.gravity() > .8)
+                return;
+            float speedModifier = 0.1162F * 2;
+
+            final float floatPI = 3.1415927F;
+
+            float angularSwingArm = Mth.cos(f * (speedModifier / 2));
+            float rightMod = this.rightArmPose == HumanoidModel.ArmPose.ITEM ? 1 : 2;
+            this.rightArm.xRot -= Mth.cos(f * 0.6662F + floatPI) * rightMod * g * 0.5F;
+            this.leftArm.xRot -= Mth.cos(f * 0.6662F) * 2.0F * g * 0.5F;
+            this.rightArm.xRot += -angularSwingArm * 4.0F * g * 0.5F;
+            this.leftArm.xRot += angularSwingArm * 4.0F * g * 0.5F;
+            this.leftLeg.xRot -= Mth.cos(f * 0.6662F + floatPI) * 1.4F * g;
+            this.leftLeg.xRot += Mth.cos(f * 0.1162F * 2 + floatPI) * 1.4F * g;
+            this.rightLeg.xRot -= Mth.cos(f * 0.6662F) * 1.4F * g;
+            this.rightLeg.xRot += Mth.cos(f * 0.1162F * 2) * 1.4F * g;
+        });
+
+        if (entity.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof RocketItem || entity.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof RocketItem) {
+            float armXRot = Mth.PI + 0.3F;
+            this.leftArm.xRot = armXRot;
+            this.leftArm.yRot = 0.0F;
+            this.leftArm.zRot = Mth.PI / 10.0F;
+
+            this.rightArm.xRot = armXRot;
+            this.rightArm.yRot = 0.0F;
+            this.rightArm.zRot = (float) -Math.PI / 10.0F;
+        }
+        
+        
         if (((LivingEntityAccessor)entity).isInCryoSleep()) { // TODO: possibly cleaner way of doing this?
             this.hat.xRot = 0;
             this.hat.yRot = 0;
@@ -76,24 +117,6 @@ public class HumanoidModelMixin<T extends LivingEntity> {
             this.rightLeg.yRot = 0;
             this.body.xRot = 0;
             this.body.yRot = 0;
-        }
-
-        if (entity.isPassenger()) {
-            if (entity.getVehicle() instanceof RocketEntity) {
-//                this.head.xRot = 0.0F; TODO: rework this
-//                this.leftArm.xRot = 0.0F;
-//                this.leftArm.yRot = entity.getVehicle().getYRot() * -1.0F;
-//                this.rightArm.xRot = 0.0F;
-//                this.rightArm.yRot = entity.getVehicle().getYRot() * -1.0F;
-//                this.leftLeg.xRot = 0.0F;
-//                this.leftLeg.yRot = entity.getVehicle().getYRot() * -1.0F;
-//                this.rightLeg.xRot = 0.0F;
-//                this.rightLeg.yRot = entity.getVehicle().getYRot() * -1.0F;
-//                this.hat.xRot = 0.0F;
-//                this.hat.yRot = entity.getVehicle().getYRot() * -1.0F;
-//                this.body.xRot = 0.0F;
-//                this.body.yRot = entity.getVehicle().getYRot() * -1.0F;
-            }
         }
     }
 }

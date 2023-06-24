@@ -31,6 +31,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.DispenserBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -286,6 +287,7 @@ public class GCItems {
     public static final Item OXYGEN_COMPRESSOR = new BlockItem(GCBlocks.OXYGEN_COMPRESSOR, new Item.Properties());
     public static final Item OXYGEN_STORAGE_MODULE = new BlockItem(GCBlocks.OXYGEN_STORAGE_MODULE, new Item.Properties());
     public static final Item FUEL_LOADER = new BlockItem(GCBlocks.FUEL_LOADER, new Item.Properties());
+    public static final Item ROCKET_WORKBENCH = new BlockItem(GCBlocks.ROCKET_WORKBENCH, new Item.Properties());
     // === END BLOCKS ===
     
     // MATERIALS
@@ -457,7 +459,16 @@ public class GCItems {
     // ROCKETS
     public static final Item ROCKET = new RocketItem(new Item.Properties());
 
+    // ROCKET PIECES
+    public static final Item ROCKET_FINS = new Item(new Item.Properties());
+    public static final Item ROCKET_ENGINE = new Item(new Item.Properties());
+
     // SCHEMATICS
+    public static final Item BASIC_ROCKET_CONE_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), Constant.id("basic_cone"));
+    public static final Item BASIC_ROCKET_BODY_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), Constant.id("basic_body"));
+    public static final Item BASIC_ROCKET_FINS_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), Constant.id("basic_fins"));
+    public static final Item BASIC_ROCKET_BOTTOM_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), Constant.id("basic_bottom"));
+
     public static final Item TIER_2_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item CARGO_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item MOON_BUGGY_SCHEMATIC = new SchematicItem(new Item.Properties());
@@ -706,6 +717,8 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.OXYGEN_COMPRESSOR), OXYGEN_COMPRESSOR);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.FUEL_LOADER), FUEL_LOADER);
+
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ROCKET_WORKBENCH), ROCKET_WORKBENCH);
         // === END BLOCKS ===
 
         // MATERIALS
@@ -878,7 +891,16 @@ public class GCItems {
         // ROCKETS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.ROCKET), ROCKET);
 
+        // ROCKET PIECES
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.ROCKET_FINS), ROCKET_FINS);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.ROCKET_ENGINE), ROCKET_ENGINE);
+
         // SCHEMATICS
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BASIC_ROCKET_CONE_SCHEMATIC), BASIC_ROCKET_CONE_SCHEMATIC);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BASIC_ROCKET_BODY_SCHEMATIC), BASIC_ROCKET_BODY_SCHEMATIC);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BASIC_ROCKET_FINS_SCHEMATIC), BASIC_ROCKET_FINS_SCHEMATIC);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BASIC_ROCKET_BOTTOM_SCHEMATIC), BASIC_ROCKET_BOTTOM_SCHEMATIC);
+
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.TIER_2_ROCKET_SCHEMATIC), TIER_2_ROCKET_SCHEMATIC);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CARGO_ROCKET_SCHEMATIC), CARGO_ROCKET_SCHEMATIC);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.MOON_BUGGY_SCHEMATIC), MOON_BUGGY_SCHEMATIC);
@@ -888,5 +910,8 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.AIR_LOCK_FRAME), AIR_LOCK_FRAME);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIR_LOCK_CONTROLLER);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.AIR_LOCK_SEAL), AIR_LOCK_SEAL);
+
+        DispenserBlock.registerBehavior(FUEL_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));
+        DispenserBlock.registerBehavior(CRUDE_OIL_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));
     }
 }

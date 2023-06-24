@@ -79,6 +79,9 @@ loom {
     mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
 
     runs {
+        runConfigs.forEach {
+            it.property("mixin.hotSwap", "true")
+        }
         register("datagen") {
             server()
             name("Data Generation")
@@ -95,19 +98,20 @@ loom {
             server()
             name("Game Test")
             source(sourceSets.test.get())
+            property("mixin.hotSwap", "true")
             vmArg("-Dfabric-api.gametest")
         }
         register("gametestClient") {
             client()
             name("Game Test Client")
             source(sourceSets.test.get())
+            property("mixin.hotSwap", "true")
             vmArg("-Dfabric-api.gametest")
         }
     }
 }
 
 repositories {
-    mavenLocal()
     maven("https://maven.galacticraft.net/repository/maven-releases/") {
         content {
             includeGroup("dev.galacticraft")
@@ -158,7 +162,7 @@ repositories {
             includeGroup("lol.bai")
         }
     }
-    maven("https://dvs1.progwml6.com/files/maven/") {
+    maven("https://maven.blamejared.com/") {
         content {
             includeGroup("mezz.jei")
         }
@@ -178,10 +182,8 @@ dependencies {
         "obj_loader",
         "model_loader",
         "extensions",
-        "attributes",
         "accessors",
-        "constants",
-        "common"
+        "constants"
     ).forEach {
         includedRuntimeDependency("io.github.fabricators_of_create.Porting-Lib:$it:${portingLibVersion}") { isTransitive = false }
     }
@@ -209,10 +211,10 @@ dependencies {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     }
-    modCompileOnly("mezz.jei:jei-1.19.2-common-api:${jeiVersion}")
-    modCompileOnly("mezz.jei:jei-1.19.2-fabric-api:${jeiVersion}")
+    modCompileOnly("mezz.jei:jei-1.19.4-common-api:${jeiVersion}")
+    modCompileOnly("mezz.jei:jei-1.19.4-fabric-api:${jeiVersion}")
     // at runtime, use the full JEI jar for Fabric
-    optionalRuntimeOnly("mezz.jei:jei-1.19.2-fabric:${jeiVersion}")
+    optionalRuntimeOnly("mezz.jei:jei-1.19.4-fabric:${jeiVersion}")
 
     // Runtime Dependencies
     modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
@@ -265,8 +267,9 @@ publishing {
     }
     repositories {
         val isSnapshot: Boolean = System.getenv("SNAPSHOT")?.equals("true") ?: true
-        val mavenBase = "https://maven.galacticraft.dev/"
-        maven(if(isSnapshot) "$mavenBase/snapshots" else mavenBase) {
+        val mavenRelease = "https://maven.galacticraft.dev/repository/maven-releases/"
+        val mavenSnapshot = "https://maven.galacticraft.dev/repository/maven-snapshots/"
+        maven(if(isSnapshot) mavenSnapshot else mavenRelease) {
             name = "maven"
             credentials(PasswordCredentials::class)
             authentication {
@@ -289,6 +292,17 @@ quiltflower {
 tasks.withType(JavaCompile::class) {
     options.encoding = "UTF-8"
     options.release.set(17)
+}
+
+afterEvaluate {
+    loom {
+        runs {
+            configureEach {
+                val mixinJarFile = configurations.compileClasspath.get().files { it.group == "net.fabricmc" && it.name == "sponge-mixin" }.first()
+                vmArg("-javaagent:$mixinJarFile")
+            }
+        }
+    }
 }
 
 fun DependencyHandler.optionalRuntime(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {

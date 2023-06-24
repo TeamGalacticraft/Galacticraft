@@ -23,9 +23,11 @@
 package dev.galacticraft.mod.content;
 
 import dev.galacticraft.api.gas.GasComposition;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.satellite.SatelliteRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.impl.universe.celestialbody.config.PlanetConfig;
 import dev.galacticraft.impl.universe.celestialbody.type.PlanetType;
@@ -33,12 +35,12 @@ import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
 import dev.galacticraft.impl.universe.display.type.IconCelestialDisplayType;
 import dev.galacticraft.impl.universe.position.config.OrbitalCelestialPositionConfig;
 import dev.galacticraft.impl.universe.position.type.OrbitalCelestialPositionType;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -57,6 +59,7 @@ public class GCCelestialBodies {
     public static final ResourceKey<CelestialBody<?, ?>> MOON = key("moon");
 
     public static void bootstrapRegistries(BootstapContext<CelestialBody<?, ?>> context) {
+        HolderGetter<CelestialTeleporter<?, ?>> lookup = context.lookup(AddonRegistries.CELESTIAL_TELEPORTER);
         context.register(EARTH, PlanetType.INSTANCE.configure(
                 new PlanetConfig(
                         Component.translatable("planet.galacticraft-api.earth.name"),
@@ -66,6 +69,7 @@ public class GCCelestialBodies {
                         OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1536000.0, 1.0, 0.0F, true)),
                         IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(new ResourceLocation(dev.galacticraft.impl.Constant.MOD_ID, "textures/body_icons.png"), 0, 16, 16, 16, 1)),
                         Level.OVERWORLD,
+                        lookup.getOrThrow(BuiltinObjects.DIRECT_CELESTIAL_TELEPORTER),
                         new GasComposition.Builder()
                                 .pressure(1.0f)
                                 .temperature(15.0f)
@@ -102,6 +106,7 @@ public class GCCelestialBodies {
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(655200, 20.0, 0.2667, false)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(new ResourceLocation(Constant.MOD_ID, "textures/gui/celestialbodies/moon.png"), 0, 0, 8, 8, 1)),
                 GCDimensions.MOON,
+                lookup.getOrThrow(GCTeleporterTypes.LANDER_CELESTIAL_TELEPORTER),
                 new GasComposition.Builder()
                         .temperature(23.0)
                         .pressure(3.0E-15F)

@@ -30,6 +30,7 @@ import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -57,8 +58,8 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
             matrices.translate((entity.level.random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level.random.nextDouble() - 0.5D) * 0.1D);
         }
         matrices.translate(0.5D, 0, 0.5D);
-        matrices.mulPose(Axis.YP.rotationDegrees(entity.getViewYRot(tickDelta)));
-        matrices.mulPose(Axis.XP.rotationDegrees(entity.getViewXRot(tickDelta)));
+        matrices.mulPose(Axis.YN.rotationDegrees(entity.getViewYRot(tickDelta)));
+        matrices.mulPose(Axis.XN.rotationDegrees(entity.getViewXRot(tickDelta)));
         matrices.translate(-0.5D, 0, -0.5D);
 
         float wobbleTicks = (float) entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - tickDelta;
@@ -72,7 +73,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
             matrices.mulPose(Axis.XP.rotationDegrees(Mth.sin(wobbleTicks) * wobbleTicks * wobbleStrength / 10.0F * (float) entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_SIDE)));
         }
 
-        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+//        RenderSystem.setShaderTexture(0, getTextureLocation(entity));
         matrices.translate(0.0D, -1.75D, 0.0D);
 
         ResourceLocation part = entity.bottom();

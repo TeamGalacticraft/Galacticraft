@@ -31,9 +31,10 @@ import dev.galacticraft.mod.content.entity.GreyEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
-public class GreyEntityRenderer extends LivingEntityRenderer<GreyEntity, EntityModel<GreyEntity>> {
+public class GreyEntityRenderer extends MobRenderer<GreyEntity, EntityModel<GreyEntity>> {
     public GreyEntityRenderer(EntityRendererProvider.Context context, EntityModel<GreyEntity> model) {
         super(context, model, 0.4f);
     }

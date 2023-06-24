@@ -156,8 +156,8 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
         level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, 0.05 + rand.nextDouble() * 0.01, 0.0);
         level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, 0.05 + rand.nextDouble() * 0.01, 0.0);
 
-        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -(0.05 + rand.nextDouble() * 0.01), 0.0);
-        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -(0.05 + rand.nextDouble() * 0.01), 0.0);
-        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -(0.05 + rand.nextDouble() * 0.01), 0.0);
+        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -0.05 - rand.nextDouble() * 0.01, 0.0);
+        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -0.05 - rand.nextDouble() * 0.01, 0.0);
+        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -0.05 - rand.nextDouble() * 0.01, 0.0);
     }
 }

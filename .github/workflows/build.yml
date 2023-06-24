@@ -35,13 +35,6 @@ jobs:
 #      - name: Copy GameTest Results
 #        run: cp run/TEST-gametest.xml build/test-results/test/
 
-      - name: Notify Discord
-        uses: TeamGalacticraft/discord-reporter@main
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          outcome: ${{ steps.build.outcome }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Capture build artifacts
         uses: actions/upload-artifact@v3
         with:

@@ -71,7 +71,7 @@ public class RocketItem extends Item {
 
             if (context.getLevel() instanceof ServerLevel) {
                 RocketEntity rocket = new RocketEntity(GCEntityTypes.ROCKET, context.getLevel());
-                RocketData data = RocketData.fromNbt(context.getPlayer().getItemInHand(context.getHand()).getTag());
+                RocketData data = RocketData.fromNbt(context.getItemInHand().getTag());
                 rocket.setData(data);
                 rocket.setLinkedPad(pos);
                 rocket.setOldPosAndRot();
@@ -95,14 +95,14 @@ public class RocketItem extends Item {
     public ItemStack getDefaultInstance() {
         ItemStack stack = new ItemStack(this);
         CompoundTag tag = new CompoundTag();
-        tag.putInt("tier", 1);
-        tag.putInt("color", 0xFFFFFFFF);
-        tag.putString("cone", BuiltinObjects.INVALID_ROCKET_CONE.location().toString());
-        tag.putString("body", BuiltinObjects.INVALID_ROCKET_BODY.location().toString());
-        tag.putString("fin", BuiltinObjects.INVALID_ROCKET_FIN.location().toString());
-        tag.putString("booster", BuiltinObjects.INVALID_ROCKET_BOOSTER.location().toString());
-        tag.putString("bottom", BuiltinObjects.INVALID_ROCKET_BOTTOM.location().toString());
-        tag.put("upgrades", new ListTag());
+        tag.putInt("Tier", 1);
+        tag.putInt("Color", 0xFFFFFFFF);
+        tag.putString("Cone", GCRocketParts.TIER_1_CONE.location().toString());
+        tag.putString("Body", GCRocketParts.TIER_1_BODY.location().toString());
+        tag.putString("Fin", GCRocketParts.TIER_1_FIN.location().toString());
+        tag.putString("Booster", GCRocketParts.TIER_1_BOOSTER.location().toString());
+        tag.putString("Bottom", GCRocketParts.TIER_1_BOTTOM.location().toString());
+        tag.put("Upgrade", new ListTag());
         stack.setTag(tag);
         return stack;
     }

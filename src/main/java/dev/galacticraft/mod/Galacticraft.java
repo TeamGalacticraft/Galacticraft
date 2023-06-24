@@ -25,13 +25,7 @@ package dev.galacticraft.mod;
 import dev.galacticraft.mod.api.config.ConfigManager;
 import dev.galacticraft.mod.command.GCCommands;
 import dev.galacticraft.mod.config.ConfigManagerImpl;
-import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.GCFluids;
-import dev.galacticraft.mod.content.GCLightSources;
-import dev.galacticraft.mod.content.GCLootTables;
-import dev.galacticraft.mod.content.GCSounds;
+import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCCreativeModeTabs;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -72,8 +66,8 @@ public class Galacticraft implements ModInitializer {
         long startInitTime = System.currentTimeMillis();
         LOGGER.info("Starting initialization.");
         GCTags.register();
-        GCBlocks.register();
         GCFluids.register();
+        GCBlocks.register();
         GCBlockEntityTypes.register();
         GCItems.register();
         GCCreativeModeTabs.register();
@@ -101,6 +95,7 @@ public class Galacticraft implements ModInitializer {
         GCVillagerProfessions.register();
         GCMachineStatuses.register();
         GCBannerPatterns.register();
+        GCTeleporterTypes.register();
         GCEventHandlers.init();
         LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

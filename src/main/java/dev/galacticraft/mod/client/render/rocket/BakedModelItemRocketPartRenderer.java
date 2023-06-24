@@ -30,7 +30,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
@@ -61,12 +60,10 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
         if (this.model != null) {
             PoseStack.Pose entry = matrices.last();
             VertexConsumer consumer = vertices.getBuffer(layer);
-            for (BakedQuad quad : model.getQuads(null, null, world.random)) {
-                consumer.putBulkData(entry, quad, (rocket.red() / 255f) * (rocket.alpha() / 255f),
-                        (rocket.green() / 255f) * (rocket.alpha() / 255f),
-                        (rocket.blue() / 255f) * (rocket.alpha() / 255f),
-                        light, OverlayTexture.NO_OVERLAY);
-            }
+            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, consumer, null, model, (rocket.red() / 255f) * (rocket.alpha() / 255f),
+                    (rocket.green() / 255f) * (rocket.alpha() / 255f),
+                    (rocket.blue() / 255f) * (rocket.alpha() / 255f),
+                    light, OverlayTexture.NO_OVERLAY);
         }
     }
 }

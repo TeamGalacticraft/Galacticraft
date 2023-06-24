@@ -24,15 +24,27 @@ package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.storage.slot.ResourceSlot;
+import dev.galacticraft.machinelib.api.util.GenericApiUtil;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.FuelLoaderMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -63,17 +75,6 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity { //todo: whats ha
     public BlockPos getConnectionPos() {
         return connectionPos;
     }
-
-//    @Override
-//    public boolean canInsertEnergyf() {
-//        return true;
-//    }
-//
-//    @Override
-//    public void updateComponents() {
-//        super.updateComponents();
-//        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
-//    }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
@@ -109,15 +110,9 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity { //todo: whats ha
             check = null;
         }
 
-//        if (!this.isTankFull(0)) {
-//            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.getFirstOrNull(this.itemInv().getSlot(FUEL_INPUT_SLOT));
-//            if (extractable != null) {
-//                if (!extractable.attemptExtraction(key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidAmount.of(1, 20), Simulation.ACTION).isEmpty()) {
-//                    this.fluidInv().insertFluid(0, extractable.extract(key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidAmount.of(1, 20)), Simulation.ACTION);
-//                }
-//            }
-//        }
-//
+        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
+        takeFluidFromStack(GCSlotGroupTypes.FUEL_INPUT, GCSlotGroupTypes.FUEL_INPUT, GCFluids.FUEL);
+
 //        if (this.getStatus().type().isActive()) {
 //            SimpleFixedFluidInv inv = ((RocketEntity) this.world.getEntityById(((RocketLaunchPadBlockEntity) world.getBlockEntity(connectionPos)).getRocketEntityId())).getTank();
 //            this.fluidInv().insertFluid(0, inv.insertFluid(0, this.fluidInv().extractFluid(0, key -> GalacticraftTag.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 50), Simulation.ACTION), Simulation.ACTION), Simulation.ACTION);

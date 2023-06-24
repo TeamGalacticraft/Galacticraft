@@ -147,12 +147,12 @@
     }
   },
   "depends": {
-    "minecraft": ">=1.18.1",
-    "fabricloader": ">=0.12.12",
-    "galacticraft-api": ">=0.4.0-prealpha.25"
+    "minecraft": ">=1.19.4",
+    "fabricloader": ">=0.14.17",
+    "galacticraft-api": "*"
   },
   "suggests": {
-    "modmenu": ">=3.0.0",
-    "waila": ">=2.0.0"
+    "modmenu": "*",
+    "waila": "*"
   }
 }
