@@ -129,15 +129,14 @@ public class SpaceRaceScreen extends Screen {
 
     @Override
     public void renderBackground(PoseStack stack) {
-        // 5% of width
-        int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
+        int maxWidth = (int) (this.width - (getXMargins() * 0.5D));
         if (backgroundWidth < maxWidth) {
-            backgroundWidth += Math.min(3, maxWidth - backgroundWidth);
+            backgroundWidth += Math.min(10, maxWidth - backgroundWidth);
         }
 
-        int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
+        int maxHeight = (int) (this.height - (getYMargins() * 0.5D));
         if (backgroundHeight < maxHeight) {
-            backgroundHeight += Math.min(2, maxHeight - backgroundHeight);
+            backgroundHeight += Math.min(7, maxHeight - backgroundHeight);
         }
 
         fill(stack, getLeft(), getTop(), getLeft() + backgroundWidth, getTop() + backgroundHeight, 0x80000000);
@@ -326,8 +325,8 @@ public class SpaceRaceScreen extends Screen {
     }
 
     private boolean isAnimationComplete() {
-        int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
-        int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
+        int maxWidth = (int) (this.width - (getXMargins() * 0.5D));
+        int maxHeight = (int) (this.height - (getYMargins() * 0.5D));
 
         return backgroundWidth >= maxWidth && backgroundHeight >= maxHeight;
     }

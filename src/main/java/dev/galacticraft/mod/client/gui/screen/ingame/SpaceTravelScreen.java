@@ -52,6 +52,7 @@ public class SpaceTravelScreen extends Screen {
         this.planet = I18n.get(planetKey);
         this.target = target;
         this.text = (int) (System.currentTimeMillis() % 3);
+
     }
 
     @Override

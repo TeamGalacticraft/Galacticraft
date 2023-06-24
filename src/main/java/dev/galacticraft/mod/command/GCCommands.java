@@ -48,6 +48,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -83,7 +84,7 @@ public class GCCommands {
     }
 
     private static int openCelestialScreen(CommandContext<CommandSourceStack> context) {
-        ServerPlayNetworking.send(context.getSource().getPlayer(), Constant.Packet.OPEN_SCREEN, PacketByteBufs.create().writeUtf("celestial"));
+        ServerPlayNetworking.send(Objects.requireNonNull(context.getSource().getPlayer()), Constant.Packet.OPEN_SCREEN, PacketByteBufs.create().writeUtf("celestial"));
         return Command.SINGLE_SUCCESS;
     }
 
