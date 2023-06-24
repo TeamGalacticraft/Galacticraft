@@ -182,7 +182,7 @@ public class GCMachineTypes {
             ),
             MachineItemStorage.builder()
                     .single(GCSlotGroupTypes.ENERGY_TO_SELF, ItemResourceSlot.builder()
-                            .pos(8, 61)
+                            .pos(8, 62)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT)
                             ::build
@@ -235,7 +235,7 @@ public class GCMachineTypes {
             ),
             MachineItemStorage.builder()
                     .single(GCSlotGroupTypes.ENERGY_TO_SELF, ItemResourceSlot.builder()
-                            .pos(8, 61)
+                            .pos(8, 62)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT)
                             ::build
@@ -262,12 +262,12 @@ public class GCMachineTypes {
             ),
             MachineItemStorage.builder()
                     .single(GCSlotGroupTypes.ENERGY_TO_SELF, ItemResourceSlot.builder()
-                            .pos(102, 24)
+                            .pos(102, 48)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT)
                             ::build
                     ).single(GCSlotGroupTypes.ENERGY_TO_ITEM, ItemResourceSlot.builder()
-                            .pos(102, 48)
+                            .pos(102, 24)
                             .filter(ResourceFilters.CAN_INSERT_ENERGY)
                             .strictFilter(ResourceFilters.CAN_INSERT_ENERGY_STRICT)
                             ::build
@@ -287,12 +287,12 @@ public class GCMachineTypes {
             ),
             MachineItemStorage.builder()
                     .single(GCSlotGroupTypes.ENERGY_TO_SELF, ItemResourceSlot.builder()
-                            .pos(8, 61)
+                            .pos(8, 62)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT)
                             ::build
                     ).single(GCSlotGroupTypes.FUEL_INPUT, ItemResourceSlot.builder()
-                            .pos(80, 61)
+                            .pos(80, 62)
                             .filter(ResourceFilters.isFluidStorage())
                             .strictFilter(ResourceFilters.canExtractFluidStrict(GCFluids.FUEL)) // fixme: fuel api?
                             ::build
