@@ -271,7 +271,7 @@ public class CelestialSelectionScreen extends Screen {
         }
 
         if (!this.doneZooming) {
-            float f = lerp(this.zoom, 12, Math.max(0.0F, Math.min((this.ticksSinceSelectionF - 20) / 40.0F, 1.0F)));
+            float f = lerp(this.zoom, 10, Math.max(0.0F, Math.min((this.ticksSinceSelectionF - 20) / 40.0F, 1.0F)));
 
             if (f >= 11.95F) {
                 this.doneZooming = true;
@@ -472,20 +472,8 @@ public class CelestialSelectionScreen extends Screen {
     @Override
     public boolean mouseDragged(double x, double y, int activeButton, double relOffsetX, double relOffsetY) {
         if (mouseDragging && lastMovePosX != -1 && activeButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            float scrollMultiplier = /*-Math.abs(this.zoom)*/ -1;
-//            if (this.zoom == -1.0F) {
-//                scrollMultiplier = -1.5F;
-//            }
-//
-//            if (this.zoom >= -0.25F && this.zoom <= 0.15F) {
-//                scrollMultiplier = -0.2F;
-//            }
-//
-//            if (this.zoom >= 0.15F) {
-//                scrollMultiplier = -0.15F;
-//            }
-            this.translationX = (float) ((relOffsetX - relOffsetY) * scrollMultiplier * 0.2F);
-            this.translationY = (float) ((relOffsetY + relOffsetX) * scrollMultiplier * 0.2F);
+            this.translationX = (float) -((relOffsetX) * 0.2F);
+            this.translationY = (float) -((relOffsetY) * 0.2F);
         }
 
         lastMovePosX = relOffsetX;
