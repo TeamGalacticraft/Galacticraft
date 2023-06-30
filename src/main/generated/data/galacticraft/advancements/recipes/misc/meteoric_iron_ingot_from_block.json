@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_lead_ingot": {
+    "has_meteoric_iron_block": {
       "conditions": {
         "items": [
           {
             "items": [
-              "galacticraft:lead_ingot"
+              "galacticraft:meteoric_iron_block"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:lead_nugget"
+        "recipe": "galacticraft:meteoric_iron_ingot_from_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_lead_ingot",
+      "has_meteoric_iron_block",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:lead_nugget"
+      "galacticraft:meteoric_iron_ingot_from_block"
     ]
   },
   "sends_telemetry_event": false

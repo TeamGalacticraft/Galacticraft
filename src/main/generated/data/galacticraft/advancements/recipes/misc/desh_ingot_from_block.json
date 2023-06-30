@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_desh_nugget": {
+    "has_desh_block": {
       "conditions": {
         "items": [
           {
             "items": [
-              "galacticraft:desh_nugget"
+              "galacticraft:desh_block"
             ]
           }
         ]
@@ -15,20 +15,21 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:desh_ingot"
+        "recipe": "galacticraft:desh_ingot_from_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_desh_nugget",
+      "has_desh_block",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:desh_ingot"
+      "galacticraft:desh_ingot_from_block"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

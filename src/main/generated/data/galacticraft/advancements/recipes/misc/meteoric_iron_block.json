@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_aluminum_nugget": {
+    "has_meteoric_iron_ingot": {
       "conditions": {
         "items": [
           {
             "items": [
-              "galacticraft:aluminum_nugget"
+              "galacticraft:meteoric_iron_ingot"
             ]
           }
         ]
@@ -15,20 +15,21 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:aluminum_ingot"
+        "recipe": "galacticraft:meteoric_iron_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_aluminum_nugget",
+      "has_meteoric_iron_ingot",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:aluminum_ingot"
+      "galacticraft:meteoric_iron_block"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

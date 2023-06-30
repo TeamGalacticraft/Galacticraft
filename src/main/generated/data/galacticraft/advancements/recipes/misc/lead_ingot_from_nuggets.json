@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_lead_ingot": {
+    "has_lead_nugget": {
       "conditions": {
         "items": [
           {
             "items": [
-              "galacticraft:lead_ingot"
+              "galacticraft:lead_nugget"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:lead_nugget"
+        "recipe": "galacticraft:lead_ingot_from_nuggets"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_lead_ingot",
+      "has_lead_nugget",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:lead_nugget"
+      "galacticraft:lead_ingot_from_nuggets"
     ]
   },
   "sends_telemetry_event": false

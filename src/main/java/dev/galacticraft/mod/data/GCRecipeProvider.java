@@ -31,12 +31,10 @@ import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -188,44 +186,55 @@ public class GCRecipeProvider extends FabricRecipeProvider {
         CircuitFabricatorRecipeBuilder.create(GCItems.SOLAR_ARRAY_WAFER, 3)
                 .requires(GCItems.SOLAR_DUST)
                 .save(exporter);
-
-        // Nuggets to Ingots
-        build3x3Compression(exporter, GCItems.METEORIC_IRON_NUGGET, GCItems.METEORIC_IRON_INGOT);
-        build3x3Compression(exporter, GCItems.DESH_NUGGET, GCItems.DESH_INGOT);
-        build3x3Compression(exporter, GCItems.LEAD_NUGGET, GCItems.LEAD_INGOT);
-        build3x3Compression(exporter, GCItems.ALUMINUM_NUGGET, GCItems.ALUMINUM_INGOT);
-        build3x3Compression(exporter, GCItems.TIN_NUGGET, GCItems.TIN_INGOT);
-        build3x3Compression(exporter, GCItems.TITANIUM_NUGGET, GCItems.TITANIUM_INGOT);
         
         // Nuggets <-> Ingots
-        buildExpansionCompressionPair(exporter, GCItems.METEORIC_IRON_NUGGET, GCItems.METEORIC_IRON_INGOT);
-        buildExpansionCompressionPair(exporter, GCItems.DESH_NUGGET, GCItems.DESH_INGOT);
-        buildExpansionCompressionPair(exporter, GCItems.LEAD_NUGGET, GCItems.LEAD_INGOT);
-        buildExpansionCompressionPair(exporter, GCItems.ALUMINUM_NUGGET, GCItems.ALUMINUM_INGOT);
-        buildExpansionCompressionPair(exporter, GCItems.TIN_NUGGET, GCItems.TIN_INGOT);
-        buildExpansionCompressionPair(exporter, GCItems.TITANIUM_NUGGET, GCItems.TITANIUM_INGOT);
+        buildExpansionCompressionPair(exporter, GCItems.METEORIC_IRON_NUGGET, GCItems.METEORIC_IRON_INGOT, null, "_from_nuggets");
+        buildExpansionCompressionPair(exporter, GCItems.DESH_NUGGET, GCItems.DESH_INGOT, null, "_from_nuggets");
+        buildExpansionCompressionPair(exporter, GCItems.LEAD_NUGGET, GCItems.LEAD_INGOT, null, "_from_nuggets");
+        buildExpansionCompressionPair(exporter, GCItems.ALUMINUM_NUGGET, GCItems.ALUMINUM_INGOT, null, "_from_nuggets");
+        buildExpansionCompressionPair(exporter, GCItems.TIN_NUGGET, GCItems.TIN_INGOT, null, "_from_nuggets");
+        buildExpansionCompressionPair(exporter, GCItems.TITANIUM_NUGGET, GCItems.TITANIUM_INGOT, null, "_from_nuggets");
+
+        // Ingots <-> Blocks
+        buildExpansionCompressionPair(exporter, GCItems.METEORIC_IRON_INGOT, GCItems.METEORIC_IRON_BLOCK, "_from_block", null);
+        buildExpansionCompressionPair(exporter, GCItems.DESH_INGOT, GCItems.DESH_BLOCK, "_from_block", null);
+        buildExpansionCompressionPair(exporter, GCItems.LEAD_INGOT, GCItems.LEAD_BLOCK, "_from_block", null);
+        // skips aluminum and tin blocks
+        buildExpansionCompressionPair(exporter, GCItems.TITANIUM_INGOT, GCItems.TITANIUM_BLOCK, "_from_block", null);
     }
 
-    private void build3x3Compression(Consumer<FinishedRecipe> exporter, Item input, Item result) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, result, 1)
+    private void build3x3Compression(Consumer<FinishedRecipe> exporter, Item input, Item result,
+                                     @Nullable String suffix) {
+        ShapedRecipeBuilder recipe = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, result, 1)
                 .define('I', input)
                 .pattern("III")
                 .pattern("III")
                 .pattern("III")
-                .unlockedBy(getHasName(input), has(input))
-                .save(exporter);
+                .unlockedBy(getHasName(input), has(input));
+        if (suffix != null) {
+            recipe.save(exporter, RecipeBuilder.getDefaultRecipeId(result).withSuffix(suffix));
+        } else {
+            recipe.save(exporter);
+        }
     }
 
-    private void build9Expansion(Consumer<FinishedRecipe> exporter, Item input, Item result) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, result, 9)
+    private void build9Expansion(Consumer<FinishedRecipe> exporter, Item input, Item result,
+                                 @Nullable String suffix) {
+        ShapelessRecipeBuilder recipe = ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, result, 9)
                 .requires(input, 1)
-                .unlockedBy(getHasName(input), has(input))
-                .save(exporter);
+                .unlockedBy(getHasName(input), has(input));
+        if (suffix != null) {
+            recipe.save(exporter, RecipeBuilder.getDefaultRecipeId(result).withSuffix(suffix));
+        } else {
+            recipe.save(exporter);
+        }
     }
 
-    private void buildExpansionCompressionPair(Consumer<FinishedRecipe> exporter, Item expansionVariant, Item compressedVariant) {
-        build3x3Compression(exporter, expansionVariant, compressedVariant);
-        build9Expansion(exporter, compressedVariant, expansionVariant);
+    private void buildExpansionCompressionPair(Consumer<FinishedRecipe> exporter, Item expansionVariant,
+                                               Item compressedVariant, @Nullable String suffixExpansion,
+                                               @Nullable String suffixCompressed) {
+        build3x3Compression(exporter, expansionVariant, compressedVariant, suffixCompressed);
+        build9Expansion(exporter, compressedVariant, expansionVariant, suffixExpansion);
     }
 
 }

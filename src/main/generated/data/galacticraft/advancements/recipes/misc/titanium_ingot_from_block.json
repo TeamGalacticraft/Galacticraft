@@ -3,16 +3,16 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:tin_ingot"
+        "recipe": "galacticraft:titanium_ingot_from_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
-    "has_tin_nugget": {
+    "has_titanium_block": {
       "conditions": {
         "items": [
           {
             "items": [
-              "galacticraft:tin_nugget"
+              "galacticraft:titanium_block"
             ]
           }
         ]
@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_tin_nugget",
+      "has_titanium_block",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:tin_ingot"
+      "galacticraft:titanium_ingot_from_block"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }
