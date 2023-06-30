@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+<<<<<<<< HEAD:src/main/resources/dissabled/recipes/crafting_table/tin_nugget.json
+========
+  "category": "misc",
+>>>>>>>> dcda8882 (refactor: Generate nugget recipes via data gen):src/main/generated/data/galacticraft/recipes/tin_nugget.json
+  "ingredients": [
+    {
+      "item": "galacticraft:tin_ingot"
+    }
+  ],
+  "result": {
+<<<<<<<< HEAD:src/main/resources/dissabled/recipes/crafting_table/tin_nugget.json
+    "item": "galacticraft:tin_nugget",
+    "count": 9
+========
+    "count": 9,
+    "item": "galacticraft:tin_nugget"
+>>>>>>>> dcda8882 (refactor: Generate nugget recipes via data gen):src/main/generated/data/galacticraft/recipes/tin_nugget.json
+  }
+}
