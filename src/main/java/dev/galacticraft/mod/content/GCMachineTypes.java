@@ -390,7 +390,7 @@ public class GCMachineTypes {
                     )::build,
             MachineFluidStorage.builder()
                     .single(GCSlotGroupTypes.OXYGEN_INPUT, FluidResourceSlot.builder()
-                            .pos(31, 8)
+                            .pos(30, 8)
                             .capacity(OxygenCompressorBlockEntity.MAX_OXYGEN)
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))
                             ::build
@@ -447,14 +447,14 @@ public class GCMachineTypes {
                             .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT)
                             ::build
                     ).single(GCSlotGroupTypes.OXYGEN_TO_SELF, ItemResourceSlot.builder() // todo: drop for decompressor?
-                            .pos(31, 62)
+                            .pos(30, 62)
                             .filter(ResourceFilters.isFluidStorage())
                             .strictFilter(ResourceFilters.canExtractFluidStrict(Gases.OXYGEN))
                             ::build
                     )::build,
             MachineFluidStorage.builder()
                     .single(GCSlotGroupTypes.OXYGEN_INPUT, FluidResourceSlot.builder()
-                            .pos(31, 8)
+                            .pos(30, 8)
                             .capacity(OxygenSealerBlockEntity.MAX_OXYGEN)
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))
                             ::build
@@ -506,13 +506,15 @@ public class GCMachineTypes {
                     )::build,
             MachineFluidStorage.builder()
                     .single(GCSlotGroupTypes.OIL_INPUT, FluidResourceSlot.builder()
-                            .pos(122, 28)
+                            .pos(123, 29)
+                            .height(47)
                             .capacity(RefineryBlockEntity.MAX_CAPACITY)
                             .filter(ResourceFilters.ofResource(GCFluids.CRUDE_OIL))
                             ::build
                     )
                     .single(GCSlotGroupTypes.FUEL_OUTPUT, FluidResourceSlot.builder()
-                            .pos(152, 28)
+                            .pos(153, 29)
+                            .height(47)
                             .capacity(RefineryBlockEntity.MAX_CAPACITY)
                             .filter(ResourceFilters.ofResource(GCFluids.FUEL))
                             ::build
