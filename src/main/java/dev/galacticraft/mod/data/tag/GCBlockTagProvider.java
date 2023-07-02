@@ -27,6 +27,7 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -91,7 +92,26 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_BRICK_WALL));
 
         // MINING TAGS
+        this.tag(ConventionalBlockTags.ORES)
+                .add(this.reverseLookup(GCBlocks.SILICON_ORE))
+                .add(this.reverseLookup(GCBlocks.DEEPSLATE_SILICON_ORE))
 
+                .add(this.reverseLookup(GCBlocks.MOON_COPPER_ORE))
+                .add(this.reverseLookup(GCBlocks.LUNASLATE_COPPER_ORE))
+
+                .add(this.reverseLookup(GCBlocks.TIN_ORE))
+                .add(this.reverseLookup(GCBlocks.DEEPSLATE_TIN_ORE))
+                .add(this.reverseLookup(GCBlocks.MOON_TIN_ORE))
+                .add(this.reverseLookup(GCBlocks.LUNASLATE_TIN_ORE))
+
+                .add(this.reverseLookup(GCBlocks.ALUMINUM_ORE))
+                .add(this.reverseLookup(GCBlocks.DEEPSLATE_ALUMINUM_ORE))
+
+                .add(this.reverseLookup(GCBlocks.DESH_ORE))
+
+                .add(this.reverseLookup(GCBlocks.ILMENITE_ORE))
+
+                .add(this.reverseLookup(GCBlocks.GALENA_ORE));
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(this.reverseLookup(GCBlocks.SILICON_ORE))
                 .add(this.reverseLookup(GCBlocks.DEEPSLATE_SILICON_ORE))
