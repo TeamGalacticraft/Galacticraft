@@ -64,8 +64,8 @@ public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
     @Override
     public void tick() {
         super.tick();
-        if (!level.isClientSide && allowedToRemoveFollowingGoal) {
-            Player nearestPlayer = this.level.getNearestPlayer(this, 2.5D);
+        if (!level().isClientSide && allowedToRemoveFollowingGoal) {
+            Player nearestPlayer = this.level().getNearestPlayer(this, 2.5D);
             isNearbyPlayer = nearestPlayer != null;
             tickAgeNearOrAwayFromPlayer = isNearbyPlayer ? tickAgeNearOrAwayFromPlayer + 1 : 0;
             if (tickAgeNearOrAwayFromPlayer >= 50) {
@@ -75,7 +75,7 @@ public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
                 tickAgeNearOrAwayFromPlayer = 0;
             }
         }
-        if (!level.isClientSide && !allowedToRemoveFollowingGoal) {
+        if (!level().isClientSide && !allowedToRemoveFollowingGoal) {
             tickAgeNearOrAwayFromPlayer++;
             if (tickAgeNearOrAwayFromPlayer >= 80) {
                 goalSelector.removeGoal(greyAvoidEntityGoal);

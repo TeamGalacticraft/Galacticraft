@@ -46,7 +46,7 @@ import team.reborn.energy.api.EnergyStorage;
  */
 public abstract class WireBlock extends Block implements EntityBlock {
     public WireBlock(Properties settings) {
-        super(settings);
+        super(settings.pushReaction(PushReaction.BLOCK));
     }
 
     @Override
@@ -69,14 +69,15 @@ public abstract class WireBlock extends Block implements EntityBlock {
             Wire wire = (Wire) blockEntity;
             assert wire != null;
             final BlockEntity blockEntityAdj = world.getBlockEntity(fromPos);
-            if (wire.canConnect(Direction.fromNormal(fromPos.subtract(pos)))) {
+            BlockPos delta = fromPos.subtract(pos);
+            if (wire.canConnect(Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ()))) {
                 if (blockEntityAdj instanceof Wire wire1) {
-                    if (wire1.canConnect(Direction.fromNormal(fromPos.subtract(pos)).getOpposite())) {
+                    if (wire1.canConnect(Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ()).getOpposite())) {
                         wire.getOrCreateNetwork().addWire(fromPos, wire1);
                     }
                 } else {
 
-                    if (EnergyStorage.SIDED.find(world, fromPos, Direction.fromNormal(fromPos.subtract(pos)).getOpposite()) != null) {
+                    if (EnergyStorage.SIDED.find(world, fromPos, Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ()).getOpposite()) != null) {
                         wire.getOrCreateNetwork().updateConnection(pos, fromPos);
                     } else if (wire.getNetwork() != null) {
                         wire.getNetwork().updateConnection(pos, fromPos);
@@ -84,11 +85,6 @@ public abstract class WireBlock extends Block implements EntityBlock {
                 }
             }
         }
-    }
-
-    @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.BLOCK;
     }
 
     @Nullable

@@ -22,12 +22,6 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
-import net.minecraft.world.level.storage.loot.LootContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Collections;
-import java.util.List;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -40,7 +34,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collections;
+import java.util.List;
 
 public class VolcanicRockBlock extends Block {
     private static final ItemPredicate HAS_SILK_TOUCH = ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1))).build();
@@ -58,7 +58,7 @@ public class VolcanicRockBlock extends Block {
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.@NotNull Builder builder) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.@NotNull Builder builder) {
         ItemStack itemStack = builder.getParameter(LootContextParams.TOOL);
         if (itemStack != null) {
             if (HAS_SILK_TOUCH.matches(itemStack)) {

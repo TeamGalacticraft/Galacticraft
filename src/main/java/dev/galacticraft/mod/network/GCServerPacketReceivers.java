@@ -211,7 +211,7 @@ public class GCServerPacketReceivers {
             float rotationYaw = buffer.readFloat();
             float rotationPitch = buffer.readFloat();
             Vec3 motion = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-            Entity entity = player.getLevel().getEntity(entityID);
+            Entity entity = player.level().getEntity(entityID);
             entity.setPos(position);
             entity.setXRot(rotationPitch);
             entity.setYRot(rotationYaw);
@@ -224,7 +224,7 @@ public class GCServerPacketReceivers {
                 server.execute(() -> {
                     ResourceLocation id = buffer.readResourceLocation();
                     CelestialBody<?, ?> body = ((SatelliteAccessor) server).getSatellites().get(id);
-                    CelestialBody<?, ?> fromBody = CelestialBody.getByDimension(player.getLevel()).orElseThrow();
+                    CelestialBody<?, ?> fromBody = CelestialBody.getByDimension(player.level()).orElseThrow();
                     if (body == null) body = server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(id);
                     if (body.type() instanceof Landable landable && (player.getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body) || player.getCelestialScreenState() == RocketData.empty())) {
                         player.setCelestialScreenState(null);

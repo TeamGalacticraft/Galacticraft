@@ -32,6 +32,7 @@ import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -85,9 +86,9 @@ public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBloc
     }
 
     @Override
-    protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
-        super.renderBackground(matrices, mouseX, mouseY, delta);
-        this.drawProgressBar(matrices);
+    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderBackground(graphics, mouseX, mouseY, delta);
+        this.drawProgressBar(graphics.pose());
     }
 
     //24 + 19 + 18 + 65 + 14 = 140

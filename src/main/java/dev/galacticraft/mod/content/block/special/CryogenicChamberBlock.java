@@ -123,7 +123,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         for (BlockPos otherPart : this.getOtherParts(state)) {
             otherPart = otherPart.immutable().offset(pos);
-            if (!world.getBlockState(otherPart).getMaterial().isReplaceable()) {
+            if (!world.getBlockState(otherPart).canBeReplaced()) {
                 return false;
             }
         }

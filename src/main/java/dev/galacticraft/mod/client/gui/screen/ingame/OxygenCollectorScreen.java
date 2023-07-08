@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenCollectorBlockEntity;
@@ -30,6 +29,7 @@ import dev.galacticraft.mod.screen.OxygenCollectorMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -50,9 +50,9 @@ public class OxygenCollectorScreen extends MachineScreen<OxygenCollectorBlockEnt
     }
 
     @Override
-    protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
-        super.renderBackground(matrices, mouseX, mouseY, delta);
-        this.font.draw(matrices, Component.translatable("ui.galacticraft.machine.collecting", this.menu.collectionAmount).getString(), this.leftPos + 55, this.topPos + 56, ChatFormatting.DARK_GRAY.getColor());
-        this.font.draw(matrices, Component.translatable("ui.galacticraft.machine.status").append(this.menu.configuration.getStatus().name()), this.leftPos + 32, this.topPos + 66, ChatFormatting.DARK_GRAY.getColor());
+    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderBackground(graphics, mouseX, mouseY, delta);
+        graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.collecting", this.menu.collectionAmount).getString(), this.leftPos + 55, this.topPos + 56, ChatFormatting.DARK_GRAY.getColor(), false);
+        graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.status").append(this.menu.configuration.getStatus().name()), this.leftPos + 32, this.topPos + 66, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 }

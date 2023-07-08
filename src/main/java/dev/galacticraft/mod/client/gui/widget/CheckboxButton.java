@@ -22,9 +22,8 @@
 
 package dev.galacticraft.mod.client.gui.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.mod.Constant;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -38,12 +37,11 @@ public class CheckboxButton extends AbstractButton {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int i, int j, float f) {
-        super.renderWidget(poseStack, i, j, f);
-        poseStack.pushPose();
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
-        blit(poseStack, this.getX(), this.getY(), checked ? Constant.TextureCoordinate.BUTTON_GREEN_X : Constant.TextureCoordinate.BUTTON_RED_X, isHoveredOrFocused() ? 115 : 102, getWidth(), getHeight());
-        poseStack.popPose();
+    public void renderWidget(GuiGraphics graphics, int i, int j, float f) {
+        super.renderWidget(graphics, i, j, f);
+        graphics.pose().pushPose();
+        graphics.blit(Constant.ScreenTexture.OVERLAY, this.getX(), this.getY(), checked ? Constant.TextureCoordinate.BUTTON_GREEN_X : Constant.TextureCoordinate.BUTTON_RED_X, isHoveredOrFocused() ? 115 : 102, getWidth(), getHeight());
+        graphics.pose().popPose();
     }
 
     @Override

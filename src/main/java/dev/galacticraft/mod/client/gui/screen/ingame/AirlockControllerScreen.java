@@ -22,13 +22,12 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.widget.CheckboxButton;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -50,15 +49,14 @@ public class AirlockControllerScreen extends AbstractContainerScreen<AirlockCont
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        blit(poseStack, this.leftPos, this.topPos, 0, 0, 256, 256);
-        this.font.draw(poseStack, Component.translatable("ui.galacticraft.airlock.redstone_signal"), this.leftPos + 25, this.topPos + 23, ChatFormatting.DARK_GRAY.getColor());
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+        graphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, 256, 256);
+        graphics.drawString(this.font, Component.translatable("ui.galacticraft.airlock.redstone_signal"), this.leftPos + 25, this.topPos + 23, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int i, int j) {
-        this.font.draw(poseStack, Component.literal(Minecraft.getInstance().player.getGameProfile().getName() + "'s Air Lock Controller"), (float)this.titleLabelX, (float)this.titleLabelY, 4210752);
+    protected void renderLabels(GuiGraphics graphics, int i, int j) {
+        graphics.drawString(this.font, Component.literal(Minecraft.getInstance().player.getGameProfile().getName() + "'s Air Lock Controller"), this.titleLabelX, this.titleLabelY, 4210752, false);
     }
 
     @Override

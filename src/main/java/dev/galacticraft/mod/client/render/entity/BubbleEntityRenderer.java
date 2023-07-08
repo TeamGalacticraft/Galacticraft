@@ -61,9 +61,9 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
             bubbleModel = Minecraft.getInstance().getModelManager().bakedRegistry.get(MODEL);
             assert bubbleModel != null;
         }
-        BlockEntity blockEntity = entity.level.getBlockEntity(entity.blockPosition());
+        BlockEntity blockEntity = entity.level().getBlockEntity(entity.blockPosition());
         if (!(blockEntity instanceof OxygenBubbleDistributorBlockEntity machine) || entity.isRemoved()) {
-            ((ClientLevel) entity.level).removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
+            ((ClientLevel) entity.level()).removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
             return;
         }
         if (!machine.bubbleVisible) {
@@ -75,7 +75,7 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
         matrices.translate(0.5F, 1.0F, 0.5F);
         matrices.scale((float) size, (float) size, (float) size);
         VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.entityTranslucentEmissive(new ResourceLocation(Constant.MOD_ID, "textures/model/sphere.png")));
-        for (BakedQuad quad : bubbleModel.getQuads(null, null, entity.level.random)) {
+        for (BakedQuad quad : bubbleModel.getQuads(null, null, entity.level().random)) {
             consumer.putBulkData(matrices.last(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.NO_OVERLAY);
         }
         matrices.popPose();

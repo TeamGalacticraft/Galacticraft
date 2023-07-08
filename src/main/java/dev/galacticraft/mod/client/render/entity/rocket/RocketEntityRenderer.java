@@ -55,7 +55,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         Minecraft client = Minecraft.getInstance();
         matrices.translate(-0.5D, 1.6, -0.5D);
         if (entity.getLaunchStage() == LaunchStage.IGNITED) {
-            matrices.translate((entity.level.random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level.random.nextDouble() - 0.5D) * 0.1D);
+            matrices.translate((entity.level().random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level().random.nextDouble() - 0.5D) * 0.1D);
         }
         matrices.translate(0.5D, 0, 0.5D);
         matrices.mulPose(Axis.YN.rotationDegrees(entity.getViewYRot(tickDelta)));

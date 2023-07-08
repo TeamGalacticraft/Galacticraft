@@ -27,6 +27,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -51,8 +52,8 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
     }
 
     @Override
-    public void renderGUI(ClientLevel world, PoseStack matrices, int mouseX, int mouseY, float delta) {
-        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(matrices, stack, (int)matrices.last().pose().m03(), (int)matrices.last().pose().m13());
+    public void renderGUI(ClientLevel world, GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        graphics.renderItem(stack, (int)graphics.pose().last().pose().m03(), (int)graphics.pose().last().pose().m13());
     }
 
     @Override

@@ -64,13 +64,13 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
         this.bottom.setListener(this::onSizeChange);
         this.upgrades.setListener(this::onSizeChange);
         
-        this.recipeRegistry = playerInventory.player.level.registryAccess().registryOrThrow(RocketRegistries.ROCKET_PART_RECIPE);
+        this.recipeRegistry = playerInventory.player.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_PART_RECIPE);
         
         this.onSizeChange();
     }
 
     public RocketWorkbenchMenu(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
-        this(syncId, (RocketWorkbenchBlockEntity) playerInventory.player.level.getBlockEntity(buf.readBlockPos()), playerInventory);
+        this(syncId, (RocketWorkbenchBlockEntity) playerInventory.player.level().getBlockEntity(buf.readBlockPos()), playerInventory);
     }
 
     public static int calculateAdditionalHeight(RocketPartRecipe<?, ?> cone, RocketPartRecipe<?, ?> body, RocketPartRecipe<?, ?> fins, RocketPartRecipe<?, ?> booster, RocketPartRecipe<?, ?> bottom, int upgradeCapacity) {
@@ -103,7 +103,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
         this.bottomRecipe = this.getRecipe(RocketRegistries.ROCKET_BOTTOM);
 
         this.upgradeCapacity = bodyRecipe != null ? bodyRecipe.output().cast(RocketRegistries.ROCKET_BODY)
-                .flatMap(key -> this.playerInventory.player.level.registryAccess().registryOrThrow(RocketRegistries.ROCKET_BODY).getOptional(key))
+                .flatMap(key -> this.playerInventory.player.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_BODY).getOptional(key))
                 .map(RocketBody::getUpgradeCapacity).orElse(0) : 0;
 
 

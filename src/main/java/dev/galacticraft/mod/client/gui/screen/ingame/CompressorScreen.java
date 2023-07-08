@@ -31,6 +31,7 @@ import dev.galacticraft.mod.screen.CompressorMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -58,10 +59,10 @@ public class CompressorScreen extends MachineScreen<CompressorBlockEntity, Compr
     }
 
     @Override
-    protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
-        super.renderBackground(matrices, mouseX, mouseY, delta);
-        this.drawFuelProgressBar(matrices);
-        this.drawCraftProgressBar(matrices);
+    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderBackground(graphics, mouseX, mouseY, delta);
+        this.drawFuelProgressBar(graphics.pose());
+        this.drawCraftProgressBar(graphics.pose());
     }
 
     protected void drawFuelProgressBar(PoseStack matrices) {

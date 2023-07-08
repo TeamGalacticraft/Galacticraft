@@ -181,9 +181,7 @@ dependencies {
     listOf(
         "obj_loader",
         "model_loader",
-        "extensions",
-        "accessors",
-        "constants"
+        "core"
     ).forEach {
         includedRuntimeDependency("io.github.fabricators_of_create.Porting-Lib:$it:${portingLibVersion}") { isTransitive = false }
     }
@@ -211,10 +209,10 @@ dependencies {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     }
-    modCompileOnly("mezz.jei:jei-1.19.4-common-api:${jeiVersion}")
-    modCompileOnly("mezz.jei:jei-1.19.4-fabric-api:${jeiVersion}")
+    modCompileOnly("mezz.jei:jei-$minecraftVersion-common-api:${jeiVersion}")
+    modCompileOnly("mezz.jei:jei-$minecraftVersion-fabric-api:${jeiVersion}")
     // at runtime, use the full JEI jar for Fabric
-    optionalRuntimeOnly("mezz.jei:jei-1.19.4-fabric:${jeiVersion}")
+    optionalRuntimeOnly("mezz.jei:jei-$minecraftVersion-fabric:${jeiVersion}")
 
     // Runtime Dependencies
     modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricVersion")

@@ -83,7 +83,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         EntitySleepEvents.STOP_SLEEPING.invoker().onStopSleeping((Player) (Object) this, getSleepingPos().get());
         clearSleepingPos();
         this.entityData.set(GCEntityDataSerializers.IS_IN_CRYO_SLEEP_ID, false);
-        if (this.level instanceof ServerLevel serverLevel && sync) {
+        if (this.level() instanceof ServerLevel serverLevel && sync) {
             serverLevel.updateSleepingPlayerList();
         }
     }

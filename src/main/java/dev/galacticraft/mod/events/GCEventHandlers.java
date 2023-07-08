@@ -58,7 +58,7 @@ public class GCEventHandlers {
 
     public static Direction changeSleepPosition(LivingEntity entity, BlockPos sleepingPos, @Nullable Direction sleepingDirection) {
         if (((LivingEntityAccessor)entity).isInCryoSleep()) {
-            BlockState state = entity.getLevel().getBlockState(sleepingPos);
+            BlockState state = entity.level().getBlockState(sleepingPos);
             if (state.getBlock() instanceof CryogenicChamberBlock)
                 return state.getValue(CryogenicChamberBlock.FACING);
         }
@@ -67,7 +67,7 @@ public class GCEventHandlers {
     }
 
     public static Player.BedSleepingProblem sleepInSpace(Player player, BlockPos sleepingPos) {
-        Level level = player.getLevel();
+        Level level = player.level();
         CelestialBody body = CelestialBody.getByDimension(level).orElse(null);
         if (body != null && level.getBlockState(sleepingPos).getBlock() instanceof BedBlock && !body.atmosphere().breathable()) {
             player.sendSystemMessage(Component.translatable("chat.galacticraft.bed_fail"));
@@ -84,7 +84,7 @@ public class GCEventHandlers {
     }
 
     public static void onWakeFromCryoSleep(LivingEntity entity, BlockPos sleepingPos) {
-        Level level = entity.getLevel();
+        Level level = entity.level();
         if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
             entity.heal(5.0F);
             ((LivingEntityAccessor)entity).setCryogenicChamberCooldown(6000);

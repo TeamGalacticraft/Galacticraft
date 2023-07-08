@@ -321,9 +321,4 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         add(AIR_LOCK_SEAL, noDrop());
     }
-
-    @Override
-    public void accept(BiConsumer<ResourceLocation, LootTable.Builder> resourceLocationBuilderBiConsumer) {
-        this.generate(resourceLocationBuilderBiConsumer); // remapping bug??
-    }
 }

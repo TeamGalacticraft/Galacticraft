@@ -82,8 +82,8 @@ public class LanderEntity extends Entity {
 
 
 
-        if (this.level.isClientSide()) {
-            if (!this.onGround) {
+        if (this.level().isClientSide()) {
+            if (!this.onGround()) {
                 this.addDeltaMovement(new Vec3(0, -0.008D, 0));
             }
 
@@ -111,18 +111,18 @@ public class LanderEntity extends Entity {
         this.yo = getY();
         this.zo = getZ();
 
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             var particlePos = getParticlePosition();
             final Vec3 posVec = particlePos.getFirst();
             final Vec3 motionVec = particlePos.getSecond();
-            level.addParticle(GCParticleTypes.LANDER_FLAME_PARTICLE, posVec.x(), posVec.y(), posVec.z(), motionVec.x(), motionVec.y(), motionVec.z());
+            level().addParticle(GCParticleTypes.LANDER_FLAME_PARTICLE, posVec.x(), posVec.y(), posVec.z(), motionVec.x(), motionVec.y(), motionVec.z());
         }
     }
 
     @Override
     public Vec3 getDeltaMovement() {
-        if (this.level.isClientSide()) {
-            if (this.onGround) {
+        if (this.level().isClientSide()) {
+            if (this.onGround()) {
                 return Vec3.ZERO;
             }
 

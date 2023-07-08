@@ -38,7 +38,7 @@ public class RocketMenu extends AbstractContainerMenu {
     public final Player player;
     public final RocketEntity rocket;
     protected RocketMenu(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
-        this(syncId, playerInventory, playerInventory.player, (RocketEntity) playerInventory.player.getLevel().getEntity(buf.readInt()));
+        this(syncId, playerInventory, playerInventory.player, (RocketEntity) playerInventory.player.level().getEntity(buf.readInt()));
     }
 
     public RocketMenu(int syncId, Inventory playerInventory, Player player, RocketEntity rocket) {

@@ -82,14 +82,14 @@ public class BubbleEntity extends Entity {
         this.xRotO = 0;
         this.yRotO = 0;
 
-        if (this.getY() < this.level.dimensionType().minY()) {
+        if (this.getY() < this.level().dimensionType().minY()) {
             this.discard();
         }
     }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (damageSources().outOfWorld() == source) {
+        if (damageSources().fellOutOfWorld() == source) {
             this.remove(RemovalReason.DISCARDED);
             return true;
         } else {
@@ -227,7 +227,7 @@ public class BubbleEntity extends Entity {
 
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
-        BlockEntity entity = level.getBlockEntity(blockPosition());
+        BlockEntity entity = level().getBlockEntity(blockPosition());
         if (entity instanceof OxygenBubbleDistributorBlockEntity machine) {
             double d = Math.abs(machine.getSize() * 2D + 1D);
             if (Double.isNaN(d)) {

@@ -56,14 +56,14 @@ public class EvolvedSkeletonEntity extends Skeleton {
     public void reassessWeaponGoal() {
         RangedBowAttackGoal<?> bowAttackGoal = ((AbstractSkeletonEntityAccessor) this).getBowAttackGoal();
         MeleeAttackGoal meleeAttackGoal = ((AbstractSkeletonEntityAccessor) this).getMeleeAttackGoal();
-        if (this.level != null && !this.level.isClientSide && bowAttackGoal != null) {
+        if (this.level() != null && !this.level().isClientSide && bowAttackGoal != null) {
             this.goalSelector.removeGoal(meleeAttackGoal);
             this.goalSelector.removeGoal(bowAttackGoal);
             ItemStack main = this.getItemInHand(InteractionHand.MAIN_HAND);
             ItemStack off = this.getItemInHand(InteractionHand.OFF_HAND);
             if (main.getItem() == Items.BOW || off.getItem() == Items.BOW) {
                 int i = 35 - (main.getItem() == Items.BOW ? 10 : 0) - (off.getItem() == Items.BOW ? 10 : 0);
-                if (this.level.getDifficulty() != Difficulty.HARD) {
+                if (this.level().getDifficulty() != Difficulty.HARD) {
                     i = 25;
                 }
 
@@ -77,6 +77,6 @@ public class EvolvedSkeletonEntity extends Skeleton {
 
     @Override
     protected boolean isSunBurnTick() {
-        return super.isSunBurnTick() && this.level.getBiome(this.blockPosition()).is(GCBiomes.Moon.BASALTIC_MARE);
+        return super.isSunBurnTick() && this.level().getBiome(this.blockPosition()).is(GCBiomes.Moon.BASALTIC_MARE);
     }
 }

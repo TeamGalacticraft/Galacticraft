@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
@@ -30,6 +29,7 @@ import dev.galacticraft.mod.content.block.entity.machine.OxygenCompressorBlockEn
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -49,13 +49,13 @@ public class OxygenCompressorScreen extends MachineScreen<OxygenCompressorBlockE
     }
 
     @Override
-    protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
-        super.renderBackground(matrices, mouseX, mouseY, delta);
+    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderBackground(graphics, mouseX, mouseY, delta);
         if (this.menu.configuration.getStatus().type().isActive()) {
             double height = (System.currentTimeMillis() % 2250);
             if (height == 0) return; //prevent dividing by zero
             height /= -125.0;
-            DrawableUtil.drawProgressTexture(matrices, this.leftPos + 93, this.topPos + 64, 187, 18, -11, (float) height);
+            DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + 93, this.topPos + 64, 187, 18, -11, (float) height);
         }
     }
 }

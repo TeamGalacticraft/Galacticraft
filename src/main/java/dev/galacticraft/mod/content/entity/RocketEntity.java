@@ -155,33 +155,33 @@ public class RocketEntity extends Entity implements Rocket {
 
     @Override
     public RocketCone<?, ?> getCone() {
-        return this.level.registryAccess().registryOrThrow(RocketRegistries.ROCKET_CONE).get(this.cone());
+        return this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_CONE).get(this.cone());
     }
 
     @Override
     public RocketBody<?, ?> getBody() {
-        return this.level.registryAccess().registryOrThrow(RocketRegistries.ROCKET_BODY).get(this.body());
+        return this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_BODY).get(this.body());
     }
 
     @Override
     public RocketFin<?, ?> getFin() {
-        return this.level.registryAccess().registryOrThrow(RocketRegistries.ROCKET_FIN).get(this.fin());
+        return this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_FIN).get(this.fin());
     }
 
     @Override
     public RocketBooster<?, ?> getBooster() {
-        return this.level.registryAccess().registryOrThrow(RocketRegistries.ROCKET_BOOSTER).get(this.booster());
+        return this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_BOOSTER).get(this.booster());
     }
 
     @Override
     public RocketBottom<?, ?> getBottom() {
-        return this.level.registryAccess().registryOrThrow(RocketRegistries.ROCKET_BOTTOM).get(this.bottom());
+        return this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_BOTTOM).get(this.bottom());
     }
 
     @Override
     public RocketUpgrade<?, ?>[] getUpgrades() {
         ResourceLocation[] keys = this.upgrades();
-        Registry<RocketUpgrade<?, ?>> registry = this.level.registryAccess().registryOrThrow(RocketRegistries.ROCKET_UPGRADE);
+        Registry<RocketUpgrade<?, ?>> registry = this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_UPGRADE);
         RocketUpgrade[] upgrades = new RocketUpgrade[keys.length];
         for (int i = 0; i < keys.length; i++) {
             upgrades[i] = registry.get(keys[i]);
@@ -201,7 +201,7 @@ public class RocketEntity extends Entity implements Rocket {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (!this.level.isClientSide && !this.isRemoved()) {
+        if (!this.level().isClientSide && !this.isRemoved()) {
             if (this.isInvulnerableTo(source)) {
                 return false;
             } else {
@@ -229,7 +229,7 @@ public class RocketEntity extends Entity implements Rocket {
     public void remove(RemovalReason reason) {
         super.remove(reason);
         if (this.linkedPad != null) {
-            BlockEntity blockEntity = this.level.getBlockEntity(this.linkedPad);
+            BlockEntity blockEntity = this.level().getBlockEntity(this.linkedPad);
             if (blockEntity instanceof RocketLaunchPadBlockEntity pad){
                 pad.setRocketEntityId(Integer.MIN_VALUE);
                 pad.setRocketEntityUUID(null);
@@ -323,7 +323,7 @@ public class RocketEntity extends Entity implements Rocket {
 
     @Override
     public void move(MoverType type, Vec3 vec3d) {
-        if (onGround) vec3d.multiply(1.0D, 0.0D, 1.0D);
+        if (onGround()) vec3d.multiply(1.0D, 0.0D, 1.0D);
         super.move(type, vec3d);
         this.getPassengers().forEach(this::positionRider);
     }
@@ -404,9 +404,9 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public void positionRider(Entity passenger) {
+    public void positionRider(Entity passenger, Entity.MoveFunction moveFunction) {
         if (this.hasPassenger(passenger)) {
-            passenger.setPos(this.getX(), this.getY() + this.getPassengersRidingOffset() + passenger.getMyRidingOffset() - 2.5, this.getZ());
+            moveFunction.accept(passenger, this.getX(), this.getY() + this.getPassengersRidingOffset() + passenger.getMyRidingOffset() - 2.5, this.getZ());
         }
     }
 
@@ -418,7 +418,7 @@ public class RocketEntity extends Entity implements Rocket {
         super.tick();
         tickLerp();
 
-        if (!level.isClientSide()) {
+        if (!level().isClientSide()) {
             if (this.getPassengers().isEmpty()) {
                 if (getLaunchStage() != LaunchStage.FAILED) {
                     if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
@@ -438,11 +438,11 @@ public class RocketEntity extends Entity implements Rocket {
                 this.removePassenger(this.getFirstPassenger());
             }
 
-            if (isOnFire() && !level.isClientSide) {
-                level.explode(this, this.position().x + (level.random.nextDouble() - 0.5 * 4), this.position().y + (level.random.nextDouble() * 3), this.position().z + (level.random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
-                level.explode(this, this.position().x + (level.random.nextDouble() - 0.5 * 4), this.position().y + (level.random.nextDouble() * 3), this.position().z + (level.random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
-                level.explode(this, this.position().x + (level.random.nextDouble() - 0.5 * 4), this.position().y + (level.random.nextDouble() * 3), this.position().z + (level.random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
-                level.explode(this, this.position().x + (level.random.nextDouble() - 0.5 * 4), this.position().y + (level.random.nextDouble() * 3), this.position().z + (level.random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
+            if (isOnFire() && !level().isClientSide) {
+                level().explode(this, this.position().x + (level().random.nextDouble() - 0.5 * 4), this.position().y + (level().random.nextDouble() * 3), this.position().z + (level().random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
+                level().explode(this, this.position().x + (level().random.nextDouble() - 0.5 * 4), this.position().y + (level().random.nextDouble() * 3), this.position().z + (level().random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
+                level().explode(this, this.position().x + (level().random.nextDouble() - 0.5 * 4), this.position().y + (level().random.nextDouble() * 3), this.position().z + (level().random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
+                level().explode(this, this.position().x + (level().random.nextDouble() - 0.5 * 4), this.position().y + (level().random.nextDouble() * 3), this.position().z + (level().random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
                 this.remove(RemovalReason.KILLED);
             }
 
@@ -464,9 +464,9 @@ public class RocketEntity extends Entity implements Rocket {
                     if (this.getLinkedPad() != BlockPos.ZERO) {
                         for (int x = -1; x <= 1; x++) {
                             for (int z = -1; z <= 1; z++) {
-                                if (level.getBlockState(getLinkedPad().offset(x, 0, z)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
-                                        && level.getBlockState(getLinkedPad().offset(x, 0, z)).getValue(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
-                                    level.setBlock(getLinkedPad().offset(x, 0, z), Blocks.AIR.defaultBlockState(), 4);
+                                if (level().getBlockState(getLinkedPad().offset(x, 0, z)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
+                                        && level().getBlockState(getLinkedPad().offset(x, 0, z)).getValue(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
+                                    level().setBlock(getLinkedPad().offset(x, 0, z), Blocks.AIR.defaultBlockState(), 4);
                                 }
                             }
                         }
@@ -481,8 +481,8 @@ public class RocketEntity extends Entity implements Rocket {
                         this.getTank().extract(FluidVariant.of(GCFluids.FUEL), FluidConstants.NUGGET, t); //todo find balanced values
                         t.commit();
                     }
-                    for (int i = 0; i < 4; i++) ((ServerLevel) level).sendParticles(ParticleTypes.FLAME, this.getX() + (level.random.nextDouble() - 0.5), this.getY() - 7, this.getZ() + (level.random.nextDouble() - 0.5), 0, (level.random.nextDouble() - 0.5), -1, level.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    for (int i = 0; i < 4; i++) ((ServerLevel) level).sendParticles(ParticleTypes.CLOUD, this.getX() + (level.random.nextDouble() - 0.5), this.getY() - 7, this.getZ() + (level.random.nextDouble() - 0.5), 0, (level.random.nextDouble() - 0.5), -1, level.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    for (int i = 0; i < 4; i++) ((ServerLevel) level()).sendParticles(ParticleTypes.FLAME, this.getX() + (level().random.nextDouble() - 0.5), this.getY() - 7, this.getZ() + (level().random.nextDouble() - 0.5), 0, (level().random.nextDouble() - 0.5), -1, level().random.nextDouble() - 0.5, 0.12000000596046448D);
+                    for (int i = 0; i < 4; i++) ((ServerLevel) level()).sendParticles(ParticleTypes.CLOUD, this.getX() + (level().random.nextDouble() - 0.5), this.getY() - 7, this.getZ() + (level().random.nextDouble() - 0.5), 0, (level().random.nextDouble() - 0.5), -1, level().random.nextDouble() - 0.5, 0.12000000596046448D);
 
                     this.setSpeed(Math.min(0.75f, this.getSpeed() + 0.05f));
 
@@ -504,10 +504,10 @@ public class RocketEntity extends Entity implements Rocket {
                 }
 
                 if (this.position().y() >= 1200.0F) {
-                    CelestialBody<CelestialBodyConfig, ? extends CelestialBodyType<CelestialBodyConfig>> body = CelestialBody.getByDimension(this.getLevel()).orElse(null);
+                    CelestialBody<CelestialBodyConfig, ? extends CelestialBodyType<CelestialBodyConfig>> body = CelestialBody.getByDimension(this.level()).orElse(null);
                     int id;
                     if (body != null) {
-                        id = level.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getId(body);
+                        id = level().registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getId(body);
                     } else {
                         id = -1;
                     }
@@ -522,7 +522,7 @@ public class RocketEntity extends Entity implements Rocket {
                         }
                     }
                 }
-            } else if (!onGround) {
+            } else if (!onGround()) {
                 this.setSpeed(Math.max(-1.5f, this.getSpeed() - 0.05f));
 
                 double velX = -Mth.sin(this.getYRot() / 180.0F * (float) Math.PI) * Mth.cos((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
@@ -535,12 +535,12 @@ public class RocketEntity extends Entity implements Rocket {
             this.move(MoverType.SELF, this.getDeltaMovement());
 
             if (getLaunchStage() == LaunchStage.FAILED) {
-                setRot((this.getYRot() + level.random.nextFloat() - 0.5F * 8.0F) % 360.0F, (this.getXRot() + level.random.nextFloat() - 0.5F * 8.0F) % 360.0F);
+                setRot((this.getYRot() + level().random.nextFloat() - 0.5F * 8.0F) % 360.0F, (this.getXRot() + level().random.nextFloat() - 0.5F * 8.0F) % 360.0F);
 
-                for (int i = 0; i < 4; i++) ((ServerLevel) level).sendParticles(ParticleTypes.FLAME, this.getX() + (level.random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (level.random.nextDouble() - 0.5), 0, level.random.nextDouble() - 0.5, 1, level.random.nextDouble() - 0.5, 0.12000000596046448D);
+                for (int i = 0; i < 4; i++) ((ServerLevel) level()).sendParticles(ParticleTypes.FLAME, this.getX() + (level().random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (level().random.nextDouble() - 0.5), 0, level().random.nextDouble() - 0.5, 1, level().random.nextDouble() - 0.5, 0.12000000596046448D);
 
-                if (this.onGround) {
-                    for (int i = 0; i < 4; i++) level.explode(this, this.position().x + (level.random.nextDouble() - 0.5 * 4), this.position().y + (level.random.nextDouble() * 3), this.position().z + (level.random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
+                if (this.onGround()) {
+                    for (int i = 0; i < 4; i++) level().explode(this, this.position().x + (level().random.nextDouble() - 0.5 * 4), this.position().y + (level().random.nextDouble() * 3), this.position().z + (level().random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
                     this.remove(RemovalReason.KILLED);
                 }
             }

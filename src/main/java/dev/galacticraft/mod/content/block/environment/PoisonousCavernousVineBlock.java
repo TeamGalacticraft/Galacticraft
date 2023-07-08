@@ -49,7 +49,7 @@ public class PoisonousCavernousVineBlock extends CavernousVineBlock {
     @Override
     public void onCollided(LivingEntity entity) {
         super.onCollided(entity);
-        entity.hurt(new DamageSource(entity.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.VINE_POISON)), 5.0f);
+        entity.hurt(new DamageSource(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.VINE_POISON)), 5.0f);
         entity.setYRot(entity.getYRot() + 0.4F); // Spin the player
     }
 

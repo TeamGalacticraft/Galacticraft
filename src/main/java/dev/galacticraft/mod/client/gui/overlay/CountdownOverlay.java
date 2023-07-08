@@ -22,14 +22,14 @@
 
 package dev.galacticraft.mod.client.gui.overlay;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.util.ColorUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class CountdownOverlay {
-    public static void renderCountdown(PoseStack poseStack, float tickDelta) {
+    public static void renderCountdown(GuiGraphics graphics, float tickDelta) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player.getVehicle() instanceof RocketEntity rocket && rocket.getLaunchStage() == LaunchStage.IGNITED) {
             int count = (int) Math.floor(((float) rocket.getTimeAsState()) / 20.0f);
@@ -37,19 +37,19 @@ public class CountdownOverlay {
             final int width = mc.getWindow().getGuiScaledWidth();
             final int height = mc.getWindow().getGuiScaledHeight();
 
-            poseStack.pushPose();
+            graphics.pose().pushPose();
 
             count = 20 - count;
 
             if (count <= 10) {
-                poseStack.scale(4.0F, 4.0F, 0.0F);
-                mc.font.draw(poseStack, String.valueOf(count), width / 8 - mc.font.width(String.valueOf(count)) / 2, height / 20, ColorUtil.to32BitColor(255, 255, 0, 0));
+                graphics.pose().scale(4.0F, 4.0F, 0.0F);
+                graphics.drawString(mc.font, String.valueOf(count), width / 8 - mc.font.width(String.valueOf(count)) / 2, height / 20, ColorUtil.to32BitColor(255, 255, 0, 0), false);
             } else {
-                poseStack.scale(2.0F, 2.0F, 0.0F);
-                mc.font.draw(poseStack, String.valueOf(count), width / 4 - mc.font.width(String.valueOf(count)) / 2, height / 8, ColorUtil.to32BitColor(255, 255, 0, 0));
+                graphics.pose().scale(2.0F, 2.0F, 0.0F);
+                graphics.drawString(mc.font, String.valueOf(count), width / 4 - mc.font.width(String.valueOf(count)) / 2, height / 8, ColorUtil.to32BitColor(255, 255, 0, 0), false);
             }
 
-            poseStack.popPose();
+            graphics.pose().popPose();
         }
     }
 }
