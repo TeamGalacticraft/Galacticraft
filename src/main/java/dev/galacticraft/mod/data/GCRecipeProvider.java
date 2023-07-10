@@ -22,9 +22,13 @@
 
 package dev.galacticraft.mod.data;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.data.recipes.ShapelessCompressorRecipeBuilder;
+import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -46,6 +50,71 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("CCC")
                 .pattern("III")
                 .unlockedBy(getHasName(Items.IRON_BLOCK), has(Items.IRON_BLOCK))
+                .save(exporter);
+
+        // Compressing
+        ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_ALUMINUM)
+                .requires(GCTags.ALUMINUM_INGOTS)
+                .requires(GCTags.ALUMINUM_INGOTS)
+                .save(exporter);
+        ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_BRONZE)
+                .requires(GCItems.COMPRESSED_COPPER)
+                .requires(GCItems.COMPRESSED_TIN)
+                .save(exporter);
+        ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_COPPER)
+                .requires(ConventionalItemTags.COPPER_INGOTS)
+                .requires(ConventionalItemTags.COPPER_INGOTS)
+                .save(exporter);
+        ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_DESH)
+                .requires(GCItems.DESH_INGOT)
+                .save(exporter);
+        ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_IRON)
+                .requires(ConventionalItemTags.IRON_INGOTS)
+                .requires(ConventionalItemTags.IRON_INGOTS)
+                .save(exporter);
+        ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_METEORIC_IRON)
+                .requires(GCItems.METEORIC_IRON_INGOT)
+                .save(exporter);
+        ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_STEEL)
+                .requires(ConventionalItemTags.COAL)
+                .requires(GCItems.COMPRESSED_IRON)
+                .requires(ConventionalItemTags.COAL)
+                .save(exporter);
+        ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_STEEL)
+                .requires(GCTags.STEEL_INGOTS)
+                .requires(GCTags.STEEL_INGOTS)
+                .save(exporter, Constant.id("compressed_steel_from_ingots"));
+        ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_TIN)
+                .requires(GCTags.TIN_INGOTS)
+                .requires(GCTags.TIN_INGOTS)
+                .save(exporter);
+        ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_TITANIUM)
+                .requires(GCItems.TITANIUM_INGOT)
+                .requires(GCItems.TITANIUM_INGOT)
+                .save(exporter);
+
+        // Machines
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.CIRCUIT_FABRICATOR)
+                .define('A', GCItems.ALUMINUM_INGOT)
+                .define('L', Items.LEVER)
+                .define('B', Items.STONE_BUTTON)
+                .define('F', Items.FURNACE)
+                .define('W', GCItems.ALUMINUM_WIRE)
+                .define('R', Items.REDSTONE_TORCH)
+                .pattern("ALA")
+                .pattern("BFB")
+                .pattern("WRW")
+                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
+                .save(exporter);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_BUBBLE_DISTRIBUTOR)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('F', GCItems.OXYGEN_FAN)
+                .define('V', GCItems.OXYGEN_VENT)
+                .define('A', GCItems.COMPRESSED_ALUMINUM)
+                .pattern("SFS")
+                .pattern("VAV")
+                .pattern("SFS")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(exporter);
     }
 }
