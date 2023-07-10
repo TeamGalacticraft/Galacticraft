@@ -24,6 +24,8 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.data.recipes.CircuitFabricatorRecipeBuilder;
+import dev.galacticraft.mod.data.recipes.ShapedCompressorRecipeBuilder;
 import dev.galacticraft.mod.data.recipes.ShapelessCompressorRecipeBuilder;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -93,6 +95,14 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .requires(GCItems.TITANIUM_INGOT)
                 .save(exporter);
 
+        ShapedCompressorRecipeBuilder.create(GCItems.TIER_1_HEAVY_DUTY_PLATE, 2)
+                .define('B', GCItems.COMPRESSED_BRONZE)
+                .define('A', GCItems.COMPRESSED_ALUMINUM)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .pattern("BAS")
+                .pattern("BAS")
+                .save(exporter);
+
         // Machines
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.CIRCUIT_FABRICATOR)
                 .define('A', GCItems.ALUMINUM_INGOT)
@@ -106,6 +116,38 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("WRW")
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
                 .save(exporter);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.COMPRESSOR)
+                .define('I', GCItems.ALUMINUM_INGOT)
+                .define('A', Items.ANVIL)
+                .define('C', ConventionalItemTags.COPPER_INGOTS)
+                .define('W', GCItems.BASIC_WAFER)
+                .pattern("IAI")
+                .pattern("ICI")
+                .pattern("IWI")
+                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
+                .save(exporter);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ELECTRIC_COMPRESSOR)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('A', Items.ANVIL)
+                .define('B', GCItems.COMPRESSED_BRONZE)
+                .define('W', GCItems.ADVANCED_WAFER)
+                .define('I', GCItems.ALUMINUM_WIRE)
+                .pattern("SAS")
+                .pattern("SBS")
+                .pattern("IWI")
+                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
+                .save(exporter);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ELECTRIC_COMPRESSOR)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('T', GCItems.COMPRESSED_TIN)
+                .define('C', GCItems.COMPRESSOR)
+                .define('W', GCItems.ADVANCED_WAFER)
+                .define('I', GCItems.ALUMINUM_WIRE)
+                .pattern("STS")
+                .pattern("SCS")
+                .pattern("IWI")
+                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
+                .save(exporter, Constant.id("electric_compressor_alt"));
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_BUBBLE_DISTRIBUTOR)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('F', GCItems.OXYGEN_FAN)
@@ -115,6 +157,34 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("VAV")
                 .pattern("SFS")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .save(exporter);
+
+        // Rockets
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_WORKBENCH)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('C', Items.CRAFTING_TABLE)
+                .define('L', Items.LEVER)
+                .define('W', GCItems.ADVANCED_WAFER)
+                .define('R', Items.REDSTONE_TORCH)
+                .pattern("SCS")
+                .pattern("LWL")
+                .pattern("SRS")
+                .unlockedBy(getHasName(GCItems.ADVANCED_WAFER), has(GCItems.ADVANCED_WAFER))
+                .save(exporter);
+
+        // Fabricator
+        CircuitFabricatorRecipeBuilder.create(GCItems.BASIC_WAFER, 3)
+                .requires(Items.REDSTONE_TORCH)
+                .save(exporter);
+        CircuitFabricatorRecipeBuilder.create(GCItems.ADVANCED_WAFER)
+                .requires(Items.REPEATER)
+                .save(exporter);
+
+        CircuitFabricatorRecipeBuilder.create(GCItems.BLUE_SOLAR_WAFER, 9)
+                .requires(Items.LAPIS_LAZULI)
+                .save(exporter);
+        CircuitFabricatorRecipeBuilder.create(GCItems.SOLAR_ARRAY_WAFER, 3)
+                .requires(GCItems.SOLAR_DUST)
                 .save(exporter);
     }
 }
