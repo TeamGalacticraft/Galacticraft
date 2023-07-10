@@ -1,9 +1,9 @@
 {
-  "type": "galacticraft-api:basic",
+  "type": "galacticraft:basic",
   "config": {
     "can_maneuver": false,
     "predicate": {
-      "type": "galacticraft-api:access_weight",
+      "type": "galacticraft:access_weight",
       "config": {
         "weight": 1
       }
