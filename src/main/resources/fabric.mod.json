@@ -120,7 +120,7 @@
     "main": [ "dev.galacticraft.mod.Galacticraft" ],
     "client": [ "dev.galacticraft.mod.GalacticraftClient" ],
     "fabric-datagen": [
-      "dev.galacticraft.mod.data.GCDataGenerator"
+      "dev.galacticraft.mod.data.gen.GCDataGenerator"
     ],
     "modmenu": [ "dev.galacticraft.mod.compat.modmenu.ModMenuApiImpl" ],
     "rei_client": [

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.data.model.GCModelProvider;
+import dev.galacticraft.mod.data.gen.model.GCModelProvider;
 import net.minecraft.data.models.ModelProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -20,26 +20,42 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data.content;
+package dev.galacticraft.mod.data.gen.content;
 
-import com.mojang.serialization.Lifecycle;
+import dev.galacticraft.impl.data.GeneratingBootstrapContext;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.BootstapContext;
-import net.minecraft.resources.ResourceKey;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public record GeneratingBootstrapContext<T>(HolderLookup.Provider registries, FabricDynamicRegistryProvider.Entries entries) implements BootstapContext<T> {
-    @Override
-    public Holder.Reference<T> register(ResourceKey<T> resourceKey, T object, Lifecycle lifecycle) {
-        return (Holder.Reference<T>) this.entries.add(resourceKey, object);
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+
+public class BootstrapDataProvider<T> extends FabricDynamicRegistryProvider {
+    private final String name;
+    private final Consumer<BootstapContext<T>> consumer;
+
+    @Contract(pure = true)
+    public static <T> FabricDataGenerator.Pack.@NotNull RegistryDependentFactory<BootstrapDataProvider<T>> create(String name, Consumer<BootstapContext<T>> bootstrap) {
+        return (output, registriesFuture) -> new BootstrapDataProvider<>(output, registriesFuture, name, bootstrap);
+    }
+
+    private BootstrapDataProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> future, String name, Consumer<BootstapContext<T>> consumer) {
+        super(output, future);
+        this.name = name;
+        this.consumer = consumer;
     }
 
     @Override
-    public <S> @NotNull HolderGetter<S> lookup(ResourceKey<? extends Registry<? extends S>> resourceKey) {
-        return this.entries.getLookups().lookupOrThrow(resourceKey);
+    protected void configure(HolderLookup.Provider registries, Entries entries) {
+        consumer.accept(new GeneratingBootstrapContext<>(registries, entries));
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 }

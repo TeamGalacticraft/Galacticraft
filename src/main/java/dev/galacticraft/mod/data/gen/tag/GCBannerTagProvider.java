@@ -20,33 +20,26 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data.tag;
+package dev.galacticraft.mod.data.gen.tag;
 
-import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.mod.content.GCFluids;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.misc.banner.GCBannerPatterns;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.BannerPatternTags;
+import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.concurrent.CompletableFuture;
 
-public class GCFluidTagProvider extends FabricTagProvider.FluidTagProvider {
-    public GCFluidTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
-        super(output, completableFuture);
+public class GCBannerTagProvider extends FabricTagProvider<BannerPattern> {
+    public GCBannerTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, Registries.BANNER_PATTERN, registriesFuture);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        tag(GCTags.OIL)
-                .add(GCFluids.CRUDE_OIL.builtInRegistryHolder().key())
-                .add(GCFluids.FLOWING_CRUDE_OIL.builtInRegistryHolder().key());
-        tag(GCTags.FUEL)
-                .add(GCFluids.FUEL.builtInRegistryHolder().key())
-                .add(GCFluids.FLOWING_FUEL.builtInRegistryHolder().key());
-        tag(GCTags.LIQUID_OXYGEN)
-                .add(GCFluids.LIQUID_OXYGEN.builtInRegistryHolder().key());
-        tag(GCTags.OXYGEN)
-                .add(Gases.OXYGEN.builtInRegistryHolder().key());
+        this.tag(BannerPatternTags.NO_ITEM_REQUIRED)
+                .add(GCBannerPatterns.ROCKET_KEY);
     }
 }

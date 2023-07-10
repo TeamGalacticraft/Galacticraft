@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data.content;
+package dev.galacticraft.mod.data.gen.content;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;

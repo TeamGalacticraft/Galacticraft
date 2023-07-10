@@ -20,36 +20,26 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data.tag;
+package dev.galacticraft.mod.data.gen.tag;
 
 import dev.galacticraft.mod.tag.GCTags;
-import dev.galacticraft.mod.world.biome.GCBiomes;
+import dev.galacticraft.mod.world.gen.structure.GCStructures;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.structure.Structure;
 
 import java.util.concurrent.CompletableFuture;
 
-public class GCBiomeTagProvider extends FabricTagProvider<Biome> {
-    public GCBiomeTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> future) {
-        super(output, Registries.BIOME, future);
+public class GCStructureTagProvider extends FabricTagProvider<Structure> {
+    public GCStructureTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, Registries.STRUCTURE, registriesFuture);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        this.tag(GCTags.MOON)
-                .add(GCBiomes.Moon.COMET_TUNDRA)
-                .add(GCBiomes.Moon.BASALTIC_MARE)
-                .add(GCBiomes.Moon.LUNAR_HIGHLANDS)
-                .add(GCBiomes.Moon.OLIVINE_SPIKES);
-
-        this.tag(GCTags.MOON_PILLAGER_BASE_HAS_STRUCTURE)
-                .add(GCBiomes.Moon.BASALTIC_MARE);
-        this.tag(GCTags.MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE)
-                .add(GCBiomes.Moon.LUNAR_HIGHLANDS);
-        this.tag(GCTags.MOON_RUINS_HAS_STRUCTURE)
-                .add(GCBiomes.Moon.BASALTIC_MARE);
+        tag(GCTags.MOON_RUINS)
+                .add(GCStructures.Moon.RUINS);
     }
 }

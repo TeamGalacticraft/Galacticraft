@@ -29,6 +29,7 @@ import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCCreativeModeTabs;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.data.fixer.fixes.GCLegacyBlockStateData;
 import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.lookup.GCApiLookupProviders;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
@@ -97,6 +98,7 @@ public class Galacticraft implements ModInitializer {
         GCBannerPatterns.register();
         GCTeleporterTypes.register();
         GCEventHandlers.init();
+        GCLegacyBlockStateData.init();
         LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

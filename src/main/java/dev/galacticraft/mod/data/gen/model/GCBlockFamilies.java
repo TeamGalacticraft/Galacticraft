@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data.model;
+package dev.galacticraft.mod.data.gen.model;
 
 import net.minecraft.data.BlockFamily;
 import net.minecraft.world.level.block.Block;

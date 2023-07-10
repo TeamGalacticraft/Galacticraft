@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data.model;
+package dev.galacticraft.mod.data.gen.model;
 
 import dev.galacticraft.mod.accessor.BlockModelGeneratorsAccessor;
 import dev.galacticraft.mod.content.GCBlocks;

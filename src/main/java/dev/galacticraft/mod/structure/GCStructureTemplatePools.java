@@ -28,12 +28,10 @@ import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.Constant;
 import java.util.function.Function;
 
-import dev.galacticraft.mod.data.content.GeneratingBootstrapContext;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
-import net.minecraft.data.worldgen.Pools;
 import net.minecraft.data.worldgen.ProcessorLists;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
