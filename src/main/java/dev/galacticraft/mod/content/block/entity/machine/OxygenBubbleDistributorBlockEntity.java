@@ -74,7 +74,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         super.tickConstant(world, pos, state, profiler);
         profiler.push("extract_resources");
         this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
-        this.takeFluidFromStack(GCSlotGroupTypes.OXYGEN_TANK, GCSlotGroupTypes.OXYGEN_INPUT, Gases.OXYGEN);
+        this.takeFluidFromStack(GCSlotGroupTypes.OXYGEN_TO_SELF, GCSlotGroupTypes.OXYGEN_INPUT, Gases.OXYGEN);
         profiler.pop();
     }
 
