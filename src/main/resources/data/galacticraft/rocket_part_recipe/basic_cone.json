@@ -1,5 +1,5 @@
 {
-  "type": "galacticraft-api:slotted_default",
+  "type": "galacticraft:slotted_default",
   "config": {
     "key": {
       ".": 9,
@@ -16,7 +16,7 @@
       "DD"
     ],
     "result": {
-      "type": "galacticraft-api:rocket_cone",
+      "type": "galacticraft:rocket_cone",
       "id": "galacticraft:tier_1"
     }
   }

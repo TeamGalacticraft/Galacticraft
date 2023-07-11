@@ -85,7 +85,7 @@ public class SpaceRaceScreen extends Screen {
                     if (focused) {
                         this.prevText = this.getValue();
                     } else if (this.prevText == null || !this.prevText.equals(this.getValue())) {
-                        ClientPlayNetworking.send(new ResourceLocation(Constant.ADDON_API_ID, "team_name"), PacketByteBufs.create().writeUtf(this.getValue()));
+                        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "team_name"), PacketByteBufs.create().writeUtf(this.getValue()));
                     }
                 }
                 super.setFocused(focused);
@@ -398,7 +398,7 @@ public class SpaceRaceScreen extends Screen {
                                     array[y * 48 + x] = (finalImage.getPixelRGBA(x, y) /*& 0x00FFFFFF will be done on server (don't trust clients, so why do extra work?)*/); //ignore alpha channel
                                 }
                             }
-                            ClientPlayNetworking.send(new ResourceLocation(Constant.ADDON_API_ID, "flag_data"), PacketByteBufs.create().writeVarIntArray(array));
+                            ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "flag_data"), PacketByteBufs.create().writeVarIntArray(array));
                         } else {
                             finalImage.close();
                         }

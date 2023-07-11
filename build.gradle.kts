@@ -35,7 +35,7 @@ val modGroup               = project.property("mod.group").toString()
 val fabricVersion          = project.property("fabric.version").toString()
 val clothConfigVersion     = project.property("cloth.config.version").toString()
 val modMenuVersion         = project.property("modmenu.version").toString()
-val galacticraftApiVersion = project.property("galacticraft.api.version").toString()
+val dynamicdimensionsVersion = project.property("dynamicdimensions.version").toString()
 val machineLibVersion      = project.property("machinelib.version").toString()
 //val architecturyVersion    = project.property("architectury.version").toString()
 val reiVersion             = project.property("rei.version").toString()
@@ -189,10 +189,9 @@ dependencies {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     }
-    includedDependency("dev.galacticraft:GalacticraftAPI:$galacticraftApiVersion") {
+    includedDependency("dev.galacticraft:dynamicdimensions-fabric:$dynamicdimensionsVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
-        exclude(group = "dev.galacticraft", module = "MachineLib")
     }
     includedDependency("dev.galacticraft:MachineLib:$machineLibVersion") {
         exclude(group = "net.fabricmc")

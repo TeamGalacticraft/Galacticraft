@@ -26,7 +26,9 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.BuiltInAddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.type.CelestialTeleporterType;
+import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.impl.universe.celestialbody.landable.teleporter.config.DefaultCelestialTeleporterConfig;
+import dev.galacticraft.impl.universe.celestialbody.landable.teleporter.type.DirectCelestialTeleporterType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.teleporters.LanderCelestialTeleporterType;
 import net.minecraft.core.Registry;
@@ -42,6 +44,7 @@ public class GCTeleporterTypes {
     }
 
     public static void bootstrapRegistries(BootstapContext<CelestialTeleporter<?, ?>> context) {
+        context.register(BuiltinObjects.DIRECT_CELESTIAL_TELEPORTER, new CelestialTeleporter<>(DirectCelestialTeleporterType.INSTANCE, DefaultCelestialTeleporterConfig.INSTANCE));
         context.register(LANDER_CELESTIAL_TELEPORTER, new CelestialTeleporter<>(LANDER, DefaultCelestialTeleporterConfig.INSTANCE));
     }
 }

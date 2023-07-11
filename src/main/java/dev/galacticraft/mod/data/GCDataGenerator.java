@@ -25,6 +25,13 @@ package dev.galacticraft.mod.data;
 import com.mojang.serialization.Lifecycle;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
+import dev.galacticraft.api.rocket.part.*;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
+import dev.galacticraft.impl.internal.fabric.GalacticraftAPIData;
+import dev.galacticraft.impl.rocket.part.*;
+import dev.galacticraft.impl.universe.galaxy.GalaxyImpl;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCCelestialBodies;
 import dev.galacticraft.mod.content.GCRocketParts;
@@ -55,6 +62,9 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(@NotNull FabricDataGenerator generator) {
         FabricDataGenerator.Pack pack = generator.createPack();
+
+        pack.addProvider(BootstrapDataProvider.create("Galaxies", GalaxyImpl::bootstrapRegistries));
+
         pack.addProvider(GCBlockLootTableProvider::new);
         pack.addProvider(GCRecipeProvider::new);
 
@@ -105,6 +115,15 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
     public void buildRegistry(RegistrySetBuilder registryBuilder) {
         DataGeneratorEntrypoint.super.buildRegistry(registryBuilder);
 
+        registryBuilder.add(AddonRegistries.GALAXY, GalaxyImpl::bootstrapRegistries);
+        registryBuilder.add(RocketRegistries.ROCKET_CONE, GCRocketParts::bootstrapCone);
+        registryBuilder.add(RocketRegistries.ROCKET_BODY, GCRocketParts::bootstrapBody);
+        registryBuilder.add(RocketRegistries.ROCKET_FIN, GCRocketParts::bootstrapFin);
+        registryBuilder.add(RocketRegistries.ROCKET_BOOSTER, GCRocketParts::bootstrapBooster);
+        registryBuilder.add(RocketRegistries.ROCKET_BOTTOM, GCRocketParts::bootstrapBottom);
+        registryBuilder.add(RocketRegistries.ROCKET_UPGRADE, GCRocketParts::bootstrapUpgrade);
+        registryBuilder.add(RocketRegistries.ROCKET_PART_RECIPE, RocketPartRecipe::bootstrapRegistries);
+
         registryBuilder.add(Registries.BIOME, Lifecycle.stable(), GCBiomes::bootstrapRegistries);
         registryBuilder.add(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, Lifecycle.stable(), GCMultiNoiseBiomeSourceParameterLists::bootstrapRegistries);
         registryBuilder.add(AddonRegistries.CELESTIAL_BODY, Lifecycle.stable(), GCCelestialBodies::bootstrapRegistries);
@@ -120,7 +139,5 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         registryBuilder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCOreConfiguredFeature::bootstrapRegistries);
         registryBuilder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCOrePlacedFeatures::bootstrapRegistries);
         registryBuilder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCPlacedFeatures::bootstrapRegistries);
-
-        registryBuilder.add(RocketRegistries.ROCKET_PART_RECIPE, Lifecycle.experimental(), bootstapContext -> {});
     }
 }

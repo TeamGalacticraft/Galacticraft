@@ -28,7 +28,11 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
+import net.minecraft.world.level.biome.BiomeSpecialEffects;
+import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.Contract;
@@ -45,9 +49,28 @@ public final class GCBiomes {
         public static final ResourceKey<Biome> OLIVINE_SPIKES = key("olivine_spikes");
     }
 
+    public static final ResourceKey<Biome> SPACE = ResourceKey.create(Registries.BIOME, new ResourceLocation(Constant.MOD_ID, "space"));
+
+    public static Biome createSpaceBiome(HolderGetter<PlacedFeature> holderGetter, HolderGetter<ConfiguredWorldCarver<?>> holderGetter2) {
+        Biome.BiomeBuilder builder = new Biome.BiomeBuilder();
+        MobSpawnSettings.Builder spawns = new MobSpawnSettings.Builder();
+        BiomeGenerationSettings.Builder genSettings = new BiomeGenerationSettings.Builder(holderGetter, holderGetter2);
+        BiomeSpecialEffects.Builder effects = new BiomeSpecialEffects.Builder();
+        effects.fogColor(0).waterColor(4159204).waterFogColor(329011).skyColor(0);
+        return builder
+                .downfall(0)
+                .temperature(1)
+                .specialEffects(effects.build())
+                .mobSpawnSettings(spawns.build())
+                .hasPrecipitation(false)
+                .generationSettings(genSettings.build())
+                .temperatureAdjustment(Biome.TemperatureModifier.NONE).build();
+    }
+
     public static void bootstrapRegistries(BootstapContext<Biome> context) { // moj-map typo :(
         HolderGetter<PlacedFeature> featureLookup = context.lookup(Registries.PLACED_FEATURE);
         HolderGetter<ConfiguredWorldCarver<?>> carverLookup = context.lookup(Registries.CONFIGURED_CARVER);
+        context.register(SPACE, createSpaceBiome(context.lookup(Registries.PLACED_FEATURE), context.lookup(Registries.CONFIGURED_CARVER)));
         context.register(Moon.COMET_TUNDRA, MoonBiomes.createCometTundra(featureLookup, carverLookup));
         context.register(Moon.BASALTIC_MARE, MoonBiomes.createBasalticMare(featureLookup, carverLookup));
         context.register(Moon.LUNAR_HIGHLANDS, MoonBiomes.createLunarHighlands(featureLookup, carverLookup));
