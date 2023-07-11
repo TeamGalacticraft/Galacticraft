@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.api.block;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
@@ -55,7 +56,7 @@ public abstract class WireBlock extends Block implements EntityBlock {
         if (!world.isClientSide() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof Wire wire) {
-                Galacticraft.LOGGER.info("Network: {}", wire.getNetwork());
+                Constant.LOGGER.info("Network: {}", wire.getNetwork());
             }
         }
         return super.use(state, world, pos, player, hand, hit);

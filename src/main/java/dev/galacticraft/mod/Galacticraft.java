@@ -50,21 +50,17 @@ import dev.galacticraft.mod.world.gen.structure.GCStructureTypes;
 import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
 import dev.galacticraft.mod.world.poi.GCPointOfInterestTypes;
 import net.fabricmc.api.ModInitializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class Galacticraft implements ModInitializer {
-    public static final Logger LOGGER = LoggerFactory.getLogger("Galacticraft");
-
     public static final ConfigManager CONFIG_MANAGER = new ConfigManagerImpl();
 
     @Override
     public void onInitialize() {
         long startInitTime = System.currentTimeMillis();
-        LOGGER.info("Starting initialization.");
+        Constant.LOGGER.info("Starting initialization.");
         GCTags.register();
         GCBlocks.register();
         GCFluids.register();
@@ -97,6 +93,6 @@ public class Galacticraft implements ModInitializer {
         GCBannerPatterns.register();
         GCTeleporterTypes.register();
         GCEventHandlers.init();
-        LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
+        Constant.LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

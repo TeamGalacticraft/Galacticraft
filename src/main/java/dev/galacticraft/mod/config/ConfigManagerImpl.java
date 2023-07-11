@@ -25,7 +25,6 @@ package dev.galacticraft.mod.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.config.Config;
 import dev.galacticraft.mod.api.config.ConfigManager;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
@@ -38,6 +37,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -61,7 +61,7 @@ public class ConfigManagerImpl implements ConfigManager {
         try {
             org.apache.commons.io.FileUtils.writeStringToFile(this.file, this.gson.toJson(this.config), Charset.defaultCharset());
         } catch (IOException e) {
-            Galacticraft.LOGGER.error("Failed to save config.", e);
+            Constant.LOGGER.error("Failed to save config.", e);
         }
     }
 
@@ -70,14 +70,14 @@ public class ConfigManagerImpl implements ConfigManager {
         try {
             this.file.getParentFile().mkdirs();
             if (!this.file.exists()) {
-                Galacticraft.LOGGER.info("Failed to find config file, creating one.");
+                Constant.LOGGER.info("Failed to find config file, creating one.");
                 this.save();
             } else {
                 byte[] bytes = Files.readAllBytes(Paths.get(this.file.getPath()));
                 this.config = this.gson.fromJson(new String(bytes, Charset.defaultCharset()), ConfigImpl.class);
             }
         } catch (IOException e) {
-            Galacticraft.LOGGER.error("Failed to load config.", e);
+            Constant.LOGGER.error("Failed to load config.", e);
         }
     }
 

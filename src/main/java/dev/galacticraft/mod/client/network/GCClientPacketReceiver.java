@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.network;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.content.entity.RocketEntity;
@@ -85,7 +84,7 @@ public class GCClientPacketReceiver {
             String screen = buf.readUtf();
             switch (screen) {
                 case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(false, RocketData.fromNbt(GCItems.ROCKET.getDefaultInstance().getTag()), true, null)));
-                default -> Galacticraft.LOGGER.error("No screen found!");
+                default -> Constant.LOGGER.error("No screen found!");
             }
         });
 

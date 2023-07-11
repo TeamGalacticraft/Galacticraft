@@ -24,7 +24,6 @@ package dev.galacticraft.mod.api.pipe.impl;
 
 import dev.galacticraft.machinelib.api.fluid.FluidStack;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import dev.galacticraft.mod.util.DirectionUtil;
@@ -125,7 +124,7 @@ public class PipeNetworkImpl implements PipeNetwork {
     public void removePipe(Pipe pipe, @NotNull BlockPos removedPos) {
         if (this.markedForRemoval()) {
             this.pipes.clear();
-            Galacticraft.LOGGER.warn("Tried to remove pipe from removed network!");
+            Constant.LOGGER.warn("Tried to remove pipe from removed network!");
             return;
         }
         assert this.pipes.contains(removedPos) : "Tried to remove pipe that does not exist!";

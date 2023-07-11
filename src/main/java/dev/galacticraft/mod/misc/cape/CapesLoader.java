@@ -25,7 +25,8 @@ package dev.galacticraft.mod.misc.cape;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.Constant;
+import net.minecraft.Util;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -34,7 +35,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
-import net.minecraft.Util;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -53,7 +53,7 @@ public class CapesLoader {
         Util.backgroundExecutor().execute(() -> {
             long startLoad = System.currentTimeMillis();
             Gson gson = new GsonBuilder().create();
-            Galacticraft.LOGGER.info("Loading capes data...");
+            Constant.LOGGER.info("Loading capes data...");
             try {
                 List<PlayerCapeData> players = gson.fromJson(
                         IOUtils.toString(
@@ -67,9 +67,9 @@ public class CapesLoader {
                     UUID_CAPE_MAP.put(player.uuid, player.cape);
                 }
             } catch (IOException e) {
-                Galacticraft.LOGGER.warn("Failed to load capes.", e);
+                Constant.LOGGER.warn("Failed to load capes.", e);
             }
-            Galacticraft.LOGGER.info("Loaded capes for {} players. (Took {}ms)", UUID_CAPE_MAP.size(), System.currentTimeMillis()-startLoad);
+            Constant.LOGGER.info("Loaded capes for {} players. (Took {}ms)", UUID_CAPE_MAP.size(), System.currentTimeMillis()-startLoad);
         });
     }
 }

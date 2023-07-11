@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.api.block;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
@@ -29,7 +30,6 @@ import dev.galacticraft.mod.util.DirectionUtil;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -56,7 +56,7 @@ public abstract class FluidPipe extends Block implements EntityBlock {
         if (!world.isClientSide() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof Pipe pipe) {
-                Galacticraft.LOGGER.debug("Network: {}", pipe.getNetwork());
+                Constant.LOGGER.debug("Network: {}", pipe.getNetwork());
             }
         }
         return super.use(state, world, pos, player, hand, hit);

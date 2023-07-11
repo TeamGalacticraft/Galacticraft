@@ -23,21 +23,19 @@
 package dev.galacticraft.mod.api.solarpanel;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import net.minecraft.core.registries.BuiltInRegistries;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class SolarPanelRegistry {
     private static final WorldLightSources DEFAULT_LIGHT_SOURCE = new WorldLightSources(
@@ -51,13 +49,13 @@ public class SolarPanelRegistry {
 
     public static void registerLightSources(ResourceKey<Level> key, WorldLightSources source) {
         if (LIGHT_SOURCES.put(key, source) != null) {
-            Galacticraft.LOGGER.warn("Replacing ligt source for {}", key.location().toString());
+            Constant.LOGGER.warn("Replacing ligt source for {}", key.location().toString());
         }
     }
 
     public static <M extends BlockEntity & SolarPanel, T extends BlockEntityType<M>> void registerSolarPanelTexture(T type, ResourceLocation texture) {
         if (SOLAR_PANEL_TEXTURES.put(type, texture) != null) {
-            Galacticraft.LOGGER.warn("Replacing solar panel texture for {}", Objects.requireNonNull(BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(type)).toString());
+            Constant.LOGGER.warn("Replacing solar panel texture for {}", Objects.requireNonNull(BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(type)).toString());
         }
     }
 
