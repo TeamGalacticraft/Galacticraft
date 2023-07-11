@@ -1,5 +1,5 @@
 {
-  "type": "galacticraft-api:slotted_default",
+  "type": "galacticraft:slotted_default",
   "config": {
     "key": {
       "E": {
@@ -10,7 +10,7 @@
       "E"
     ],
     "result": {
-      "type": "galacticraft-api:rocket_bottom",
+      "type": "galacticraft:rocket_bottom",
       "id": "galacticraft:tier_1"
     }
   }

@@ -139,7 +139,7 @@ public class CelestialSelectionScreen extends Screen {
     protected final CelestialBody<?, ?> fromBody;
     protected final Registry<Galaxy> galaxyRegistry = manager.registryOrThrow(AddonRegistries.GALAXY);
     protected final Registry<CelestialBody<?, ?>> celestialBodyRegistry = manager.registryOrThrow(AddonRegistries.CELESTIAL_BODY);
-    protected @Nullable CelestialBody<?, ?> selectedParent = celestialBodyRegistry.get(new ResourceLocation("galacticraft-api", "sol"));
+    protected @Nullable CelestialBody<?, ?> selectedParent = celestialBodyRegistry.get(Constant.id("sol"));
     protected final List<CelestialBody<?, ?>> bodiesToRender = new ArrayList<>();
     private final ClientSatelliteAccessor.SatelliteListener listener = (satellite, added) -> {
         if (!added) {
@@ -185,7 +185,7 @@ public class CelestialSelectionScreen extends Screen {
 
     protected String getGrandparentName() {
         CelestialBody<?, ?> body = this.selectedBody;
-        if (body == null) return I18n.get("galaxy.galacticraft-api.milky_way.name"); //fixme
+        if (body == null) return I18n.get("galaxy.galacticraft.milky_way.name"); //fixme
         if (body.parent(manager) != null) {
             if (body.parent(manager).parent(manager) != null) {
                 return I18n.get(((TranslatableContents)body.parent(manager).parent(manager).name().getContents()).getKey());
@@ -214,7 +214,7 @@ public class CelestialSelectionScreen extends Screen {
     }
 
     protected String parentName() {
-        if (this.selectedBody == null) return I18n.get("star.galacticraft-api.sol.name"); //fixme
+        if (this.selectedBody == null) return I18n.get("star.galacticraft.sol.name"); //fixme
         if (this.selectedBody.parent(manager) != null) return I18n.get(((TranslatableContents)this.selectedBody.parent(manager).name().getContents()).getKey());
         return I18n.get(((TranslatableContents)galaxyRegistry.get(this.selectedBody.galaxy()).name().getContents()).getKey());
     }
@@ -844,7 +844,7 @@ public class CelestialSelectionScreen extends Screen {
             selectedParent = this.selectedBody.parent(manager);
         }
         if (this.selectedBody == null) {
-            selectedParent = celestialBodyRegistry.get(new ResourceLocation("galacticraft-api", "sol"));
+            selectedParent = celestialBodyRegistry.get(Constant.id("sol"));
         }
 
         if (this.selectedParent != selectedParent) {
@@ -1309,7 +1309,7 @@ public class CelestialSelectionScreen extends Screen {
             graphics.drawString(this.font, str, LHS + 7 - 95 + scale, LHS + 16, GREY3, false);
             RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
 
-            List<CelestialBody<?, ?>> children = this.getChildren(/*planetZoomedNotMoon*/this.isZoomed() ? this.selectedBody : celestialBodyRegistry.get(new ResourceLocation("galacticraft-api", "sol")));
+            List<CelestialBody<?, ?>> children = this.getChildren(/*planetZoomedNotMoon*/this.isZoomed() ? this.selectedBody : celestialBodyRegistry.get(Constant.id("sol")));
             drawChildren(graphics, children, 0, 0, true);
 
             if (this.mapMode) {

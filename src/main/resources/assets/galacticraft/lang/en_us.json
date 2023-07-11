@@ -572,5 +572,33 @@
   "item.galacticraft.legacy_music_disc_mars.desc": "Jackson Cordes - Mars",
   "item.galacticraft.legacy_music_disc_mimas.desc": "Jackson Cordes - Mimas",
   "item.galacticraft.legacy_music_disc_orbit.desc": "Jackson Cordes - Orbit",
-  "item.galacticraft.legacy_music_disc_spacerace.desc": "Jackson Cordes - Space Race"
+  "item.galacticraft.legacy_music_disc_spacerace.desc": "Jackson Cordes - Space Race",
+
+  "galaxy.galacticraft.milky_way.name": "Milky Way",
+  "galaxy.galacticraft.milky_way.desc": "",
+  "star.galacticraft.sol.name": "Sol",
+  "star.galacticraft.sol.desc": "",
+  "planet.galacticraft.earth.name": "Earth",
+  "planet.galacticraft.earth.desc": "The Overworld",
+  "ui.galacticraft.bodies.satellite": "Satellite",
+
+  "ui.galacticraft.gases.hydrogen": "Hydrogen",
+  "ui.galacticraft.gases.nitrogen": "Nitrogen",
+  "ui.galacticraft.gases.oxygen": "Oxygen",
+  "ui.galacticraft.gases.carbon_dioxide": "Carbon Dioxide",
+  "ui.galacticraft.gases.water_vapor": "Water Vapor",
+  "ui.galacticraft.gases.methane": "Methane",
+  "ui.galacticraft.gases.helium": "Helium",
+  "ui.galacticraft.gases.argon": "Argon",
+  "ui.galacticraft.gases.neon": "Neon",
+  "ui.galacticraft.gases.krypton": "Krypton",
+  "ui.galacticraft.gases.nitrous_oxide": "Nitrous Oxide",
+  "ui.galacticraft.gases.carbon_monoxide": "Carbon Monoxide",
+  "ui.galacticraft.gases.xenon": "Xenon",
+  "ui.galacticraft.gases.ozone": "Ozone",
+  "ui.galacticraft.gases.nitrous_dioxide": "Nitrous Dioxide",
+  "ui.galacticraft.gases.iodine": "Iodine",
+
+  "command.galacticraft.debug.registry.dump": "Dumped: %s",
+  "command.galacticraft.debug.registry.id": "%s - %s: %s"
 }

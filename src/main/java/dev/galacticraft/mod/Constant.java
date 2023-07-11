@@ -33,6 +33,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -42,8 +44,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Constant {
     String MOD_ID = "galacticraft";
-    String ADDON_API_ID = "galacticraft-api";
     String COMMON_NAMESPACE = "c";
+    Logger LOGGER = LogManager.getLogger("Galacticraft");
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ResourceLocation id(String id) {
@@ -751,6 +753,22 @@ public interface Constant {
         }
         
         interface TranslationKey {
+              String HYDROGEN = "gas.galacticraft.hydrogen";
+              String NITROGEN = "gas.galacticraft.nitrogen";
+              String OXYGEN = "gas.galacticraft.oxygen";
+              String CARBON_DIOXIDE = "gas.galacticraft.carbon_dioxide";
+              String CARBON_MONOXIDE = "gas.galacticraft.carbon_monoxide";
+              String WATER_VAPOR = "gas.galacticraft.water_vapor";
+              String METHANE = "gas.galacticraft.methane";
+              String HELIUM = "gas.galacticraft.helium";
+              String ARGON = "gas.galacticraft.argon";
+              String NITROUS_OXIDE = "gas.galacticraft.nitrous_oxide";
+              String NEON = "gas.galacticraft.neon";
+              String KRYPTON = "gas.galacticraft.krypton";
+              String XENON = "gas.galacticraft.xenon";
+              String OZONE = "gas.galacticraft.ozone";
+              String NITROUS_DIOXIDE = "gas.galacticraft.nitrous_dioxide";
+              String IODINE = "gas.galacticraft.iodine";
               String NOT_ENOUGH_LEAVES = "ui.galacticraft.machine.status.not_enough_leaves";
               String ACTIVE = "ui.galacticraft.machine.status.active";
               String IDLE = "ui.galacticraft.machine.status.idle";
@@ -774,6 +792,10 @@ public interface Constant {
     }
 
     interface Nbt {
+        String GC_API = "GCApi";
+        String CHANGE_COUNT = "Modified";
+        String OXYGEN = "Inversion";
+        String GEAR_INV = "GearInv";
         String BLOCK_ENTITY_TAG = "BlockEntityTag";
         String NO_DROP = "NoDrop";
         String OWNER = "Owner";
@@ -806,6 +828,12 @@ public interface Constant {
         String CRYOGENIC_COOLDOWN = "cryogenic_cooldown";
     }
 
+    interface Chunk {
+        int WIDTH = 16;
+        int SECTION_HEIGHT = 16;
+        int CHUNK_SECTION_AREA = WIDTH * WIDTH * SECTION_HEIGHT;
+    }
+
     interface Property {
         BooleanProperty ACTIVE = BooleanProperty.create("active");
     }
@@ -817,6 +845,7 @@ public interface Constant {
 
     @ApiStatus.Internal
     interface Misc {
+        ResourceLocation INVALID = new ResourceLocation(Constant.MOD_ID, "invalid");
         ResourceLocation EMPTY = new ResourceLocation("empty");
         Direction[] DIRECTIONS = Direction.values();
         String LOGGER_PREFIX = "[Galacticraft] ";

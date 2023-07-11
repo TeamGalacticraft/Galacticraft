@@ -1,9 +1,9 @@
 {
-  "type": "galacticraft-api:basic",
+  "type": "galacticraft:basic",
   "config": {
     "max_passengers": 1,
     "predicate": {
-      "type": "galacticraft-api:access_weight",
+      "type": "galacticraft:access_weight",
       "config": {
         "weight": 1
       }
