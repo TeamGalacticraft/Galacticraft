@@ -52,22 +52,24 @@ public class GCFluids {
         register(Constant.Fluid.FUEL_STILL, FUEL);
         register(Constant.Fluid.FUEL_FLOWING, FLOWING_FUEL);
         register(Constant.Fluid.LIQUID_OXYGEN, LIQUID_OXYGEN);
+    }
 
+    public static void registerFluidVariantAttributes() {
         FluidVariantAttributes.register(CRUDE_OIL, new GCFluidAttribute(
                 Component.translatable(GCBlocks.CRUDE_OIL.getDescriptionId())
-                    .setStyle(Constant.Text.Color.DARK_GRAY_STYLE),
+                        .setStyle(Constant.Text.Color.DARK_GRAY_STYLE),
                 FluidConstants.LAVA_VISCOSITY,
                 false
         ));
         FluidVariantAttributes.register(FUEL, new GCFluidAttribute(
                 Component.translatable(GCBlocks.FUEL.getDescriptionId())
-                    .setStyle(Constant.Text.Color.YELLOW_STYLE),
+                        .setStyle(Constant.Text.Color.YELLOW_STYLE),
                 2000,
                 false
         ));
         FluidVariantAttributes.register(LIQUID_OXYGEN, new GCFluidAttribute(
                 Component.translatable("block.galacticraft.oxygen")
-                    .setStyle(Constant.Text.Color.AQUA_STYLE),
+                        .setStyle(Constant.Text.Color.AQUA_STYLE),
                 500,
                 true
         ));
