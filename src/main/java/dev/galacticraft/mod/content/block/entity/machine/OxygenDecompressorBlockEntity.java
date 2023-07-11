@@ -67,7 +67,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transfer");
         this.trySpreadFluids(world, state);
-        Storage<FluidVariant> tank = this.itemStorage().getSlot(GCSlotGroupTypes.OXYGEN_TO_ITEM).find(FluidStorage.ITEM);
+        Storage<FluidVariant> tank = this.itemStorage().getSlot(GCSlotGroupTypes.OXYGEN_TO_SELF).find(FluidStorage.ITEM);
         profiler.pop();
         if (tank == null) return GCMachineStatuses.MISSING_OXYGEN_TANK;
         if (tank.simulateExtract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GCMachineStatuses.EMPTY_OXYGEN_TANK;

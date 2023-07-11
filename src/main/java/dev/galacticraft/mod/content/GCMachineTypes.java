@@ -449,7 +449,7 @@ public class GCMachineTypes {
                     ).single(GCSlotGroupTypes.OXYGEN_TO_SELF, ItemResourceSlot.builder() // todo: drop for decompressor?
                             .pos(31, 62)
                             .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canExtractFluidStrict(Gases.OXYGEN))
+                            .strictFilter(ResourceFilters.canInsertFluidStrict(Gases.OXYGEN))
                             ::build
                     )::build,
             MachineFluidStorage.builder()
