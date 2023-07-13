@@ -54,6 +54,23 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(Items.IRON_BLOCK), has(Items.IRON_BLOCK))
                 .save(exporter);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_FAN)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('W', GCItems.BASIC_WAFER)
+                .define('R', ConventionalItemTags.REDSTONE_DUSTS)
+                .pattern("S S")
+                .pattern(" W ")
+                .pattern("SRS")
+                .unlockedBy(getHasName(GCItems.BASIC_WAFER), has(GCItems.BASIC_WAFER))
+                .save(exporter);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_VENT)
+                .define('T', GCItems.COMPRESSED_TIN)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .pattern("TT")
+                .pattern("TS")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_TIN), has(GCItems.COMPRESSED_TIN))
+                .save(exporter);
+
         // Compressing
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_ALUMINUM)
                 .requires(GCTags.ALUMINUM_INGOTS)
