@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special;
 
-import dev.galacticraft.mod.accessor.LivingEntityAccessor;
+import dev.galacticraft.mod.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -145,7 +145,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
         if (level.isClientSide())
             return InteractionResult.CONSUME;
 
-        ((LivingEntityAccessor) player).startCryogenicSleep(basePos);
+        ((CryogenicAccessor) player).startCryogenicSleep(basePos);
 
         return InteractionResult.PASS;
     }

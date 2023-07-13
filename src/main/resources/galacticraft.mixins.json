@@ -15,7 +15,6 @@
     "FlowingFluidMixin",
     "ItemStackMixin",
     "LanternBlockMixin",
-    "LivingEntityMixin",
     "ModelProviderMixin",
     "MultiNoiseBiomeSourceParameterListPresetAccessor",
     "PlayerMixin",

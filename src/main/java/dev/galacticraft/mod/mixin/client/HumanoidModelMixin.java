@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.mixin.client;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.accessor.LivingEntityAccessor;
+import dev.galacticraft.mod.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.content.item.RocketItem;
 import net.minecraft.client.model.HumanoidModel;
@@ -31,9 +31,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Math;
-import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -102,7 +100,7 @@ public class HumanoidModelMixin<T extends LivingEntity> {
         }
         
         
-        if (((LivingEntityAccessor)entity).isInCryoSleep()) { // TODO: possibly cleaner way of doing this?
+        if (entity instanceof CryogenicAccessor player && player.isInCryoSleep()) { // TODO: possibly cleaner way of doing this?
             this.hat.xRot = 0;
             this.hat.yRot = 0;
             this.head.xRot = 45F;

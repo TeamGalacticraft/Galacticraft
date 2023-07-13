@@ -26,7 +26,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
-public interface LivingEntityAccessor {
+public interface CryogenicAccessor {
     @Nullable
     Player.BedSleepingProblem startCryogenicSleep(BlockPos pos);
 
