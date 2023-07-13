@@ -153,10 +153,6 @@
       "net/minecraft/class_742": ["dev/galacticraft/api/accessor/GearInventoryProvider"],
       "net/minecraft/class_1309": ["dev/galacticraft/api/accessor/GearInventoryProvider"],
       "net/minecraft/class_1937": ["dev/galacticraft/api/accessor/LevelOxygenAccessor"]
-    },
-    "waila:plugins": {
-      "id": "galacticraft:plugin",
-      "initializer": "dev.galacticraft.mod.compat.waila.GalacticraftWailaPlugin"
     }
   },
   "depends": {
