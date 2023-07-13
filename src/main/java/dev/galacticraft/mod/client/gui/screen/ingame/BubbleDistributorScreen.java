@@ -37,10 +37,13 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.text.DecimalFormat;
+
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class BubbleDistributorScreen extends MachineScreen<OxygenBubbleDistributorBlockEntity, OxygenBubbleDistributorMenu> {
+    private static final DecimalFormat FORMAT = new DecimalFormat();
     private final EditBox textField;
 
     public BubbleDistributorScreen(OxygenBubbleDistributorMenu handler, Inventory inv, Component title) {
@@ -111,7 +114,7 @@ public class BubbleDistributorScreen extends MachineScreen<OxygenBubbleDistribut
         this.textField.setY(this.topPos + 59);
 
         if (this.menu.configuration.getStatus().type().isActive()) {
-            graphics.drawString(this.font, Component.translatable("ui.galacticraft.bubble_distributor.current_size", String.valueOf((int) Math.floor(this.menu.size))).setStyle(Constant.Text.Color.DARK_GRAY_STYLE), this.leftPos + 60, this.topPos + 42, ChatFormatting.DARK_GRAY.getColor(), false);
+            graphics.drawString(this.font, Component.translatable("ui.galacticraft.bubble_distributor.current_size", FORMAT.format(this.menu.size)).setStyle(Constant.Text.Color.DARK_GRAY_STYLE), this.leftPos + 60, this.topPos + 42, ChatFormatting.DARK_GRAY.getColor(), false);
         }
     }
 

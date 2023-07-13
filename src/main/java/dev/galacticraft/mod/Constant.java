@@ -839,8 +839,8 @@ public interface Constant {
     }
 
     interface Energy {
-        long T1_MACHINE_ENERGY_USAGE = 0;
-        long T2_MACHINE_ENERGY_USAGE = 0;
+        long T1_MACHINE_ENERGY_USAGE = 100; // TODO: adjust these later
+        long T2_MACHINE_ENERGY_USAGE = 200;
     }
 
     @ApiStatus.Internal
@@ -900,7 +900,6 @@ public interface Constant {
         ResourceLocation DISABLE_SEAL = id("toggle_seal");
         ResourceLocation OPEN_GC_INVENTORY = id("open_gc_inv");
         ResourceLocation OPEN_GC_ROCKET = id("open_gc_rocket");
-        ResourceLocation ENTITY_SPAWN = id("entity_spawn");
         ResourceLocation CREATE_SATELLITE = id("create_satellite");
         ResourceLocation ROCKET_JUMP = id("rocket_jump");
         ResourceLocation ROCKET_PITCH = id("rocket_pitch");

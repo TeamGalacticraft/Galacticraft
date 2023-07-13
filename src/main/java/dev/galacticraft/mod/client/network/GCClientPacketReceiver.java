@@ -51,22 +51,6 @@ import java.util.UUID;
 @Environment(EnvType.CLIENT)
 public class GCClientPacketReceiver {
     public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(Constant.Packet.ENTITY_SPAWN, (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
-            FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
-            client.execute(() -> {
-                int id = buffer.readVarInt();
-                UUID uuid = buffer.readUUID();
-                Entity entity = BuiltInRegistries.ENTITY_TYPE.byId(buffer.readVarInt()).create(Minecraft.getInstance().level);
-                entity.setId(id);
-                entity.setUUID(uuid);
-                entity.syncPacketPositionCodec(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-                entity.setYRot((float) (buffer.readByte() * 360) / 256.0F);
-                entity.setXRot((float) (buffer.readByte() * 360) / 256.0F);
-                entity.setDeltaMovement(buffer.readShort(), buffer.readShort(), buffer.readShort());
-                Minecraft.getInstance().level.putNonPlayerEntity(id, entity);
-            });
-        });
-
         ClientPlayNetworking.registerGlobalReceiver(Constant.Packet.BUBBLE_SIZE, (client, handler, buf, responseSender) -> {
             FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
             client.execute(() -> {
