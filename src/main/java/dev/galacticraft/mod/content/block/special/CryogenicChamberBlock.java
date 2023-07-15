@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.special;
 
-import dev.galacticraft.mod.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -36,6 +35,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
@@ -45,6 +45,9 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -137,17 +140,20 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        return onMultiBlockUse(blockState, level, blockPos, player, interactionHand, blockHitResult);
+        return this.onMultiBlockUse(blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
 
     @Override
     public InteractionResult onMultiBlockUse(BlockState blockState, Level level, BlockPos basePos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if (level.isClientSide())
+        if (level.isClientSide()) {
             return InteractionResult.CONSUME;
-
-        ((CryogenicAccessor) player).startCryogenicSleep(basePos);
-
-        return InteractionResult.PASS;
+        }
+        player.startCryogenicSleep(basePos).ifLeft(bedSleepingProblem -> {
+            if (bedSleepingProblem.getMessage() != null) {
+                player.displayClientMessage(bedSleepingProblem.getMessage(), true);
+            }
+        });
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -159,5 +165,20 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
         level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -0.05 - rand.nextDouble() * 0.01, 0.0);
         level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -0.05 - rand.nextDouble() * 0.01, 0.0);
         level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -0.05 - rand.nextDouble() * 0.01, 0.0);
+    }
+
+    @Override
+    public VoxelShape getVisualShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+        return Shapes.empty();
+    }
+
+    @Override
+    public float getShadeBrightness(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+        return 1.0F;
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+        return true;
     }
 }

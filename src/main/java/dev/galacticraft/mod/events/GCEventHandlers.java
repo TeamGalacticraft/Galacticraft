@@ -78,7 +78,7 @@ public class GCEventHandlers {
     }
 
     public static InteractionResult canCryoSleep(Player player, BlockPos sleepingPos, boolean vanillaResult) {
-        if (((CryogenicAccessor)player).isInCryoSleep())
+        if (player.isInCryoSleep())
             return InteractionResult.SUCCESS;
         return vanillaResult ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }

@@ -101,7 +101,7 @@ public class HumanoidModelMixin<T extends LivingEntity> {
         
         
         if (entity instanceof CryogenicAccessor player && player.isInCryoSleep()) { // TODO: possibly cleaner way of doing this?
-            this.hat.xRot = 0;
+            this.hat.xRot = 45F;
             this.hat.yRot = 0;
             this.head.xRot = 45F;
             this.head.yRot = 0;

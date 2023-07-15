@@ -22,13 +22,13 @@
 
 package dev.galacticraft.mod.accessor;
 
+import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Nullable;
 
 public interface CryogenicAccessor {
-    @Nullable
-    Player.BedSleepingProblem startCryogenicSleep(BlockPos pos);
+    Either<Player.BedSleepingProblem, Unit> startCryogenicSleep(BlockPos blockPos);
 
     void stopCryogenicSleep(boolean resetSleepCounter, boolean sync);
 
