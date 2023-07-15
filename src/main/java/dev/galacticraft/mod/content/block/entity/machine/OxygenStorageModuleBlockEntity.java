@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
@@ -43,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
+    public static final int OXYGEN_TANK = 0;
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(100);
 
     public OxygenStorageModuleBlockEntity(BlockPos pos, BlockState state) {
@@ -52,7 +54,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         this.trySpreadFluids(world, state);
-        return MachineStatus.INVALID;
+        return MachineStatuses.ACTIVE;
     }
 
     @Nullable

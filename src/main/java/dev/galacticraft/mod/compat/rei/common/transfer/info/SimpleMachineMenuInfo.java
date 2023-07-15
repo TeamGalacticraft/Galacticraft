@@ -24,17 +24,15 @@ package dev.galacticraft.mod.compat.rei.common.transfer.info;
 
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
-import dev.galacticraft.machinelib.api.storage.slot.SlotGroupType;
-import dev.galacticraft.machinelib.impl.storage.slot.AutomatableSlot;
+import dev.galacticraft.machinelib.api.transfer.InputType;
+import dev.galacticraft.machinelib.impl.compat.vanilla.StorageSlot;
 import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoContext;
 import me.shedaniel.rei.api.common.transfer.info.clean.InputCleanHandler;
 import me.shedaniel.rei.api.common.transfer.info.simple.DumpHandler;
 import me.shedaniel.rei.api.common.transfer.info.simple.SimpleGridMenuInfo;
-import me.shedaniel.rei.api.common.transfer.info.stack.ContainerSlotAccessor;
 import me.shedaniel.rei.api.common.transfer.info.stack.SlotAccessor;
 import me.shedaniel.rei.api.common.transfer.info.stack.VanillaSlotAccessor;
-import net.minecraft.data.advancements.packs.VanillaAdvancementProvider;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -43,14 +41,13 @@ import net.minecraft.world.item.crafting.Recipe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public record SimpleMachineMenuInfo<C extends Container, R extends Recipe<C>, B extends RecipeMachineBlockEntity<C, R>, T extends RecipeMachineMenu<C, R, B>, D extends SimpleGridMenuDisplay>(int width, int height, SlotGroupType resultIndex, SlotGroupType type, D display) implements SimpleGridMenuInfo<T, D> {
+public record SimpleMachineMenuInfo<C extends Container, R extends Recipe<C>, B extends RecipeMachineBlockEntity<C, R>, T extends RecipeMachineMenu<C, R, B>, D extends SimpleGridMenuDisplay>(int width, int height, int resultIndex, D display) implements SimpleGridMenuInfo<T, D> {
     @Override
     public Iterable<SlotAccessor> getInputSlots(MenuInfoContext<T, ?, D> context) {
         List<SlotAccessor> accessors = new ArrayList<>(this.width() * this.height());
-        for (AutomatableSlot machineSlot : context.getMenu().machineSlots) {
-            if (machineSlot.getType() == type) {
+        for (StorageSlot machineSlot : context.getMenu().machineSlots) {
+            if (machineSlot.getSlot().inputType() == InputType.INPUT) {
                 accessors.add(new VanillaSlotAccessor(machineSlot));
             }
         }
@@ -64,7 +61,7 @@ public record SimpleMachineMenuInfo<C extends Container, R extends Recipe<C>, B 
 
     @Override
     public int getCraftingResultSlotIndex(T menu) {
-        return Arrays.stream(menu.machineSlots).filter(t -> t.getType() == this.resultIndex()).findFirst().orElseThrow().index;
+        return this.resultIndex;
     }
 
     @Override

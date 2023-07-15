@@ -33,7 +33,6 @@ import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.machine.RefineryBlock;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -55,6 +54,12 @@ import org.jetbrains.annotations.VisibleForTesting;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RefineryBlockEntity extends MachineBlockEntity { //fixme
+    public static final int CHARGE_SLOT = 0;
+    public static final int OIL_INPUT_SLOT = 0;
+    public static final int FUEL_OUTPUT_SLOT = 0;
+    public static final int OIL_TANK = 0;
+    public static final int FUEL_TANK = 1;
+
     @VisibleForTesting
     public static final long MAX_CAPACITY = FluidUtil.bucketsToDroplets(8);
 
@@ -65,23 +70,23 @@ public class RefineryBlockEntity extends MachineBlockEntity { //fixme
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
+        this.chargeFromStack(CHARGE_SLOT);
 
-        Storage<FluidVariant> storage = this.itemStorage().getSlot(GCSlotGroupTypes.OIL_FROM_ITEM).find(FluidStorage.ITEM);
+        Storage<FluidVariant> storage = this.itemStorage().getSlot(OIL_INPUT_SLOT).find(FluidStorage.ITEM);
         if (storage != null && storage.supportsExtraction()) {
-            GenericApiUtil.move(FluidVariant.of(GCFluids.CRUDE_OIL), storage, this.fluidStorage().getSlot(GCSlotGroupTypes.OIL_INPUT), FluidConstants.BUCKET * 64, null);
+            GenericApiUtil.move(FluidVariant.of(GCFluids.CRUDE_OIL), storage, this.fluidStorage().getSlot(OIL_TANK), FluidConstants.BUCKET * 64, null);
         }
-        storage = this.itemStorage().getSlot(GCSlotGroupTypes.FUEL_TO_ITEM).find(FluidStorage.ITEM);
+        storage = this.itemStorage().getSlot(FUEL_OUTPUT_SLOT).find(FluidStorage.ITEM);
         if (storage != null && storage.supportsInsertion()) {
-            GenericApiUtil.move(FluidVariant.of(GCFluids.FUEL), this.fluidStorage().getSlot(GCSlotGroupTypes.FUEL_OUTPUT), storage, FluidConstants.BUCKET * 64, null);
+            GenericApiUtil.move(FluidVariant.of(GCFluids.FUEL), this.fluidStorage().getSlot(FUEL_TANK), storage, FluidConstants.BUCKET * 64, null);
         }
     }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        FluidResourceSlot oilTank = this.fluidStorage().getSlot(GCSlotGroupTypes.OIL_INPUT);
+        FluidResourceSlot oilTank = this.fluidStorage().getSlot(OIL_TANK);
         if (oilTank.isEmpty()) return GCMachineStatuses.MISSING_OIL;
-        FluidResourceSlot fuelTank = this.fluidStorage().getSlot(GCSlotGroupTypes.FUEL_OUTPUT);
+        FluidResourceSlot fuelTank = this.fluidStorage().getSlot(FUEL_TANK);
         if (fuelTank.isFull()) return GCMachineStatuses.FUEL_TANK_FULL;
         profiler.push("transaction");
         try {
@@ -103,7 +108,7 @@ public class RefineryBlockEntity extends MachineBlockEntity { //fixme
     @Override
     public void setStatus(@NotNull MachineStatus status) {
         if (this.getStatus() != status) {
-            this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(RefineryBlock.ACTIVE, status.type().isActive()));
+            this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(RefineryBlock.ACTIVE, status.getType().isActive()));
         }
         super.setStatus(status);
     }

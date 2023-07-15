@@ -24,15 +24,13 @@ package dev.galacticraft.mod.compat.rei.common.transfer.info;
 
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
-import dev.galacticraft.machinelib.api.storage.slot.SlotGroupType;
-import dev.galacticraft.machinelib.impl.storage.slot.AutomatableSlot;
+import dev.galacticraft.machinelib.api.transfer.InputType;
+import dev.galacticraft.machinelib.impl.compat.vanilla.StorageSlot;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoContext;
 import me.shedaniel.rei.api.common.transfer.info.clean.InputCleanHandler;
 import me.shedaniel.rei.api.common.transfer.info.simple.SimplePlayerInventoryMenuInfo;
-import me.shedaniel.rei.api.common.transfer.info.stack.ContainerSlotAccessor;
 import me.shedaniel.rei.api.common.transfer.info.stack.SlotAccessor;
 import me.shedaniel.rei.api.common.transfer.info.stack.VanillaSlotAccessor;
 import net.minecraft.world.Container;
@@ -46,9 +44,8 @@ public record FabricationMenuInfo<B extends RecipeMachineBlockEntity<Container, 
         T menu = context.getMenu();
 
         List<SlotAccessor> list = new ArrayList<>(5);
-        for (AutomatableSlot slot : menu.machineSlots) {
-            SlotGroupType type = slot.getType();
-            if (type == GCSlotGroupTypes.GENERIC_INPUT || type == GCSlotGroupTypes.DIAMOND_INPUT || type == GCSlotGroupTypes.SILICON_INPUT || type == GCSlotGroupTypes.REDSTONE_INPUT) {
+        for (StorageSlot slot : menu.machineSlots) {
+            if (slot.getSlot().inputType() == InputType.INPUT) {
                 list.add(new VanillaSlotAccessor(slot));
             }
         }

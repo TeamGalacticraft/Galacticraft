@@ -23,15 +23,13 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.compat.vanilla.RecipeTestContainer;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
-import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
-import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import net.minecraft.core.BlockPos;
@@ -45,7 +43,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -55,22 +52,25 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Container, CompressingRecipe> {
-    private final Container craftingInv;
+    public static final int CHARGE_SLOT = 0;
+    public static final int INPUT_SLOTS = 1;
+    public static final int INPUT_LENGTH = 9;
+    public static final int OUTPUT_SLOTS = INPUT_SLOTS + INPUT_LENGTH;
+    public static final int OUTPUT_LENGTH = 2;
 
     public ElectricCompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.ELECTRIC_COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE);
-        this.craftingInv = this.itemStorage().getCraftingView(GCSlotGroupTypes.GENERIC_INPUT);
     }
 
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
+        this.chargeFromStack(CHARGE_SLOT);
     }
 
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        if (this.getStatus().type().isActive() && this.getMaxProgress() > 0) {
+        if (this.getStatus().getType().isActive() && this.getMaxProgress() > 0) {
             if (this.getProgress() % (this.getMaxProgress() / 5) == 0 && this.getProgress() > this.getMaxProgress() / 2) {
                 world.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
             }
@@ -94,32 +94,32 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
     }
 
     @Override
-    public @NotNull Container craftingInv() {
-        return this.craftingInv;
+    public @NotNull Container createCraftingInv() {
+        return RecipeTestContainer.create(this.itemStorage(), INPUT_SLOTS, INPUT_LENGTH);
     }
 
     @Override
     protected void outputStacks(@NotNull CompressingRecipe recipe) {
-        this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).insertStack(recipe.getResultItem(this.level.registryAccess()));
+        ItemStack stack = recipe.getResultItem(this.level.registryAccess());
+        this.itemStorage().insertMatching(OUTPUT_SLOTS, OUTPUT_LENGTH, stack.getItem(), stack.getTag(), stack.getCount());
     }
 
     @Override
     protected boolean canOutputStacks(@NotNull CompressingRecipe recipe) {
-        return this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).canInsertStack(recipe.getResultItem(this.level.registryAccess()));
+        ItemStack stack = recipe.getResultItem(this.level.registryAccess());
+        return this.itemStorage().canInsert(OUTPUT_SLOTS, OUTPUT_LENGTH, stack.getItem(), stack.getTag(), stack.getCount());
     }
 
     @Override
     protected void extractCraftingMaterials(@NotNull CompressingRecipe recipe) {
         NonNullList<ItemStack> remainders = recipe.getRemainingItems(this.craftingInv);
-        SlotGroup<Item, ItemStack, ItemResourceSlot> group = this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_INPUT);
-
-        for (int i = 0; i < 9; i++) {
-            group.extract(i, 1);
+        for (int i = INPUT_SLOTS; i < INPUT_SLOTS + INPUT_LENGTH; i++) {
+            this.itemStorage().extract(i, 1);
 
             ItemStack remainder = remainders.get(i);
             if (!remainder.isEmpty()) {
-                if (group.getAmount(i) == 0) {
-                    group.insert(i, remainder.getItem(), remainder.getTag(), remainder.getCount());
+                if (this.itemStorage().isEmpty(i)) {
+                    this.itemStorage().insert(i, remainder.getItem(), remainder.getTag(), remainder.getCount());
                 }
             }
         }

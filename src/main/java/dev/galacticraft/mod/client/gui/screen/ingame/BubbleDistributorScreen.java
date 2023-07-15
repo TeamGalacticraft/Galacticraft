@@ -107,14 +107,14 @@ public class BubbleDistributorScreen extends MachineScreen<OxygenBubbleDistribut
         super.renderForeground(graphics, mouseX, mouseY, delta);
         textField.setValue(String.valueOf(this.menu.targetSize));
 
-        graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.status").append(this.menu.configuration.getStatus().name()), this.leftPos + 60, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
+        graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.status").append(this.menu.configuration.getStatus().getName()), this.leftPos + 60, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
 
         this.textField.render(graphics, mouseX, mouseY, delta);
 
         this.textField.setX(this.leftPos + 132);
         this.textField.setY(this.topPos + 59);
 
-        if (this.menu.configuration.getStatus().type().isActive()) {
+        if (this.menu.configuration.getStatus().getType().isActive()) {
             graphics.drawString(this.font, Component.translatable("ui.galacticraft.bubble_distributor.current_size", FORMAT.format(this.menu.size)).setStyle(Constant.Text.Color.DARK_GRAY_STYLE), this.leftPos + 60, this.topPos + 42, ChatFormatting.DARK_GRAY.getColor(), false);
         }
     }

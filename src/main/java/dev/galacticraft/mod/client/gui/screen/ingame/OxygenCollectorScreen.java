@@ -53,6 +53,6 @@ public class OxygenCollectorScreen extends MachineScreen<OxygenCollectorBlockEnt
     protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderBackground(graphics, mouseX, mouseY, delta);
         graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.collecting", this.menu.collectionAmount).getString(), this.leftPos + 55, this.topPos + 56, ChatFormatting.DARK_GRAY.getColor(), false);
-        graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.status").append(this.menu.configuration.getStatus().name()), this.leftPos + 32, this.topPos + 66, ChatFormatting.DARK_GRAY.getColor(), false);
+        graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.status").append(this.menu.configuration.getStatus().getName()), this.leftPos + 32, this.topPos + 66, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 }

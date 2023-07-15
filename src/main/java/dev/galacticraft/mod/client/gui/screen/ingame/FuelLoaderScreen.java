@@ -29,7 +29,6 @@ import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.FuelLoaderMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
@@ -75,7 +74,7 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
     protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderBackground(graphics, mouseX, mouseY, delta);
 
-        FluidResourceSlot slot = this.menu.fluidStorage.getSlot(GCSlotGroupTypes.FUEL_INPUT);
+        FluidResourceSlot slot = this.menu.fluidStorage.getSlot(FuelLoaderBlockEntity.FUEL_TANK);
         if (!slot.isEmpty()) {
             graphics.pose().pushPose();
             TextureAtlasSprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(slot.getResource()).getFluidSprites(null, null, slot.getResource().defaultFluidState())[0];
@@ -85,7 +84,7 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
             graphics.blit(Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + 68, this.topPos + 8, TANK_OVERLAY_U, TANK_OVERLAY_V, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
         }
 
-        if (this.menu.configuration.getStatus().type() == MachineStatus.Type.MISSING_RESOURCE) {
+        if (this.menu.configuration.getStatus().getType() == MachineStatus.Type.MISSING_RESOURCE) {
             graphics.blit( Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + 116, this.topPos + 53, RED_X_U, RED_X_V, RED_X_WIDTH, RED_X_HEIGHT);
         }
 
@@ -108,7 +107,7 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
         super.renderTooltip(graphics, mouseX, mouseY);
         List<FormattedCharSequence> list = new ArrayList<>();
         if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 69, this.topPos + 17, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT)) {
-            if (this.menu.fluidStorage.getSlot(GCSlotGroupTypes.FUEL_INPUT).isEmpty()) {
+            if (this.menu.fluidStorage.getSlot(FuelLoaderBlockEntity.FUEL_TANK).isEmpty()) {
                 list.add(Component.translatable("tooltip.galacticraft.no_fluid").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)).getVisualOrderText());
             } else {
 //                FluidAmount fraction = this.machine.fluidInv().getInvFluid(0).getAmount_F().mul(FluidAmount.ONE); //every action forces simplification of the fraction

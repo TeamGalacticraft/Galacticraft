@@ -30,7 +30,6 @@ import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestGenerator;

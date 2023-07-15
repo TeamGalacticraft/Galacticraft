@@ -22,18 +22,16 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.fluid.FluidStack;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
-import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -55,6 +53,9 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenCompressorBlockEntity extends MachineBlockEntity {
+    public static final int CHARGE_SLOT = 0;
+    public static final int OXYGEN_OUTPUT_SLOT = 1;
+    public static final int OXYGEN_TANK = 0;
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
 
     public OxygenCompressorBlockEntity(BlockPos pos, BlockState state) {
@@ -64,15 +65,15 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
+        this.chargeFromStack(CHARGE_SLOT);
     }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        SlotGroup<Fluid, FluidStack, FluidResourceSlot> oxygenStorage = this.fluidStorage().getGroup(GCSlotGroupTypes.OXYGEN_INPUT);
+        FluidResourceSlot oxygenStorage = this.fluidStorage().getSlot(OXYGEN_TANK);
         if (oxygenStorage.isEmpty()) return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
         profiler.push("find_storage");
-        Storage<FluidVariant> tank = this.itemStorage().getSlot(GCSlotGroupTypes.OXYGEN_TO_ITEM).find(FluidStorage.ITEM);
+        Storage<FluidVariant> tank = this.itemStorage().getSlot(OXYGEN_OUTPUT_SLOT).find(FluidStorage.ITEM);
         profiler.pop();
         if (tank == null) return GCMachineStatuses.MISSING_OXYGEN_TANK;
         long space = tank.simulateInsert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null);

@@ -29,7 +29,6 @@ import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Items;

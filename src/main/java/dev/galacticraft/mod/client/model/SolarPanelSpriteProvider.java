@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.model;
 
 import com.google.gson.JsonObject;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.machine.configuration.face.BlockFace;
+import dev.galacticraft.machinelib.api.util.BlockFace;
 import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
 import dev.galacticraft.machinelib.client.impl.model.MachineBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -36,7 +36,6 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
 import java.util.function.Function;
 
 public class SolarPanelSpriteProvider implements MachineModelRegistry.SpriteProvider {

@@ -33,7 +33,6 @@ import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.entity.BubbleEntity;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
 import io.netty.buffer.Unpooled;
@@ -57,6 +56,9 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
+    public static final int CHARGE_SLOT = 0;
+    public static final int OXYGEN_INPUT_SLOT = 1;
+    public static final int OXYGEN_TANK = 0;
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
     public boolean bubbleVisible = true;
     private double size = 0;
@@ -73,8 +75,8 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
         profiler.push("extract_resources");
-        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
-        this.takeFluidFromStack(GCSlotGroupTypes.OXYGEN_TO_SELF, GCSlotGroupTypes.OXYGEN_INPUT, Gases.OXYGEN);
+        this.chargeFromStack(CHARGE_SLOT);
+        this.takeFluidFromStack(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
         profiler.pop();
     }
 
@@ -113,7 +115,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                 }
                 profiler.push("bubbler_distributor_transfer");
                 long oxygenRequired = ((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size));
-                FluidResourceSlot slot = this.fluidStorage().getSlot(GCSlotGroupTypes.OXYGEN_INPUT);
+                FluidResourceSlot slot = this.fluidStorage().getSlot(OXYGEN_TANK);
                 if (slot.canExtract(oxygenRequired)) {
                     slot.extract(oxygenRequired);
                     this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate());

@@ -23,13 +23,12 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.compat.vanilla.RecipeTestContainer;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
-import dev.galacticraft.machinelib.api.storage.slot.SlotGroup;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.CompressorMenu;
@@ -46,7 +45,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -56,14 +54,17 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, CompressingRecipe> {
-    private final Container craftingInv;
+    public static final int FUEL_SLOT = 0;
+    public static final int INPUT_SLOTS = 1;
+    public static final int INPUT_LENGTH = 9;
+    public static final int OUTPUT_SLOT = INPUT_SLOTS + INPUT_LENGTH;
+
     public int fuelTime;
     public int fuelLength;
     private long fuelSlotModification = -1;
 
     public CompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE);
-        this.craftingInv = this.itemStorage().getCraftingView(GCSlotGroupTypes.GENERIC_INPUT);
     }
 
     @Override
@@ -74,7 +75,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
     @Override
     protected @Nullable MachineStatus hasResourcesToWork() {
         if (this.fuelLength == 0) {
-            ItemResourceSlot slot = this.itemStorage().getSlot(GCSlotGroupTypes.SOLID_FUEL);
+            ItemResourceSlot slot = this.itemStorage().getSlot(FUEL_SLOT);
             if (slot.getModifications() != this.fuelSlotModification) {
                 this.fuelSlotModification = slot.getModifications();
                 if (!slot.isEmpty() && FuelRegistry.INSTANCE.get(slot.getResource()) > 0) {
@@ -90,7 +91,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
     @Override
     protected void extractResourcesToWork() {
         if (this.fuelLength == 0) {
-            ItemResourceSlot slot = this.itemStorage().getSlot(GCSlotGroupTypes.SOLID_FUEL);
+            ItemResourceSlot slot = this.itemStorage().getSlot(FUEL_SLOT);
             if (!slot.isEmpty()) {
                 ItemStack stack = new ItemStack(slot.getResource(), 1);
                 stack.setTag(slot.getTag());
@@ -100,7 +101,7 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
                         this.fuelTime = this.fuelLength = time;
                         ItemStack remainder = stack.getRecipeRemainder();
                         if (remainder != null && !remainder.isEmpty() && slot.isEmpty()) { // fixme
-                            slot.insertStack(stack);
+                            slot.insert(stack.getItem(), stack.getTag(), stack.getCount());
                         }
                     }
                 }
@@ -109,30 +110,32 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
     }
 
     @Override
-    public @NotNull Container craftingInv() {
-        return this.craftingInv;
+    protected @NotNull Container createCraftingInv() {
+        return RecipeTestContainer.create(this.itemStorage(), INPUT_SLOTS, INPUT_LENGTH);
     }
 
     @Override
     protected void outputStacks(@NotNull CompressingRecipe recipe) {
-        this.itemStorage().getSlot(GCSlotGroupTypes.GENERIC_OUTPUT).insertStack(recipe.getResultItem(this.level.registryAccess()));
+        ItemStack stack = recipe.getResultItem(this.level.registryAccess());
+        this.itemStorage().getSlot(OUTPUT_SLOT).insert(stack.getItem(), stack.getTag(), stack.getCount());
     }
 
     @Override
     protected boolean canOutputStacks(@NotNull CompressingRecipe recipe) {
-        return this.itemStorage().getSlot(GCSlotGroupTypes.GENERIC_OUTPUT).canInsertStack(recipe.getResultItem(this.level.registryAccess()));
+        ItemStack stack = recipe.getResultItem(this.level.registryAccess());
+        return this.itemStorage().getSlot(OUTPUT_SLOT).canInsert(stack.getItem(), stack.getTag(), stack.getCount());
     }
 
     @Override
     protected void extractCraftingMaterials(@NotNull CompressingRecipe recipe) {
         NonNullList<ItemStack> remainder = recipe.getRemainingItems(this.craftingInv);
-        SlotGroup<Item, ItemStack, ItemResourceSlot> group = this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_INPUT);
-        for (int i = 0; i < 9; i++) {
+        for (int i = INPUT_SLOTS; i < INPUT_SLOTS + INPUT_LENGTH; i++) {
+            ItemResourceSlot slot = this.itemStorage().getSlot(i);
             ItemStack stack = remainder.get(i);
-            group.extractOne(i);
+            slot.extractOne();
             if (stack != ItemStack.EMPTY) {
-                if (group.isEmpty(i)) {
-                    group.insert(i, stack.getItem(), stack.getTag(), stack.getCount());
+                if (slot.isEmpty()) {
+                    slot.insert(stack.getItem(), stack.getTag(), stack.getCount());
                 }
             }
         }

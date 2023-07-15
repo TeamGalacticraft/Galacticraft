@@ -31,7 +31,6 @@ import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.minecraft.gametest.framework.*;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;

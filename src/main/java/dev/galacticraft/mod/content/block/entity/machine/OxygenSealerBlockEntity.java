@@ -33,7 +33,6 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -60,6 +59,10 @@ import java.util.Set;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenSealerBlockEntity extends MachineBlockEntity {
+    public static final int CHARGE_SLOT = 0;
+    public static final int OXYGEN_INPUT_SLOT = 1;
+    public static final int OXYGEN_TANK = 0;
+
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
     public static final int SEAL_CHECK_TIME = 20;
 
@@ -85,8 +88,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
-        this.takeFluidFromStack(GCSlotGroupTypes.OXYGEN_TO_SELF, GCSlotGroupTypes.OXYGEN_INPUT, Gases.OXYGEN);
+        this.chargeFromStack(CHARGE_SLOT);
+        this.takeFluidFromStack(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
     }
 
     @Override
@@ -97,7 +100,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         }
 
         if (this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate())) {
-            if (!this.fluidStorage().getGroup(GCSlotGroupTypes.OXYGEN_INPUT).isEmpty()) {
+            if (!this.fluidStorage().getSlot(OXYGEN_TANK).isEmpty()) {
                 if (this.sealCheckTime > 0) this.sealCheckTime--;
                 if (this.updateQueued && this.sealCheckTime == 0) {
                     profiler.push("check_seal");
@@ -157,7 +160,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                 }
                 profiler.push("extract");
                 this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate());
-                this.fluidStorage().getGroup(GCSlotGroupTypes.OXYGEN_INPUT).extract(Gases.OXYGEN, breathablePositions.size() * 2L);
+                this.fluidStorage().getSlot(OXYGEN_TANK).extract(Gases.OXYGEN, breathablePositions.size() * 2L);
                 profiler.pop();
                 return GCMachineStatuses.SEALED;
             } else {

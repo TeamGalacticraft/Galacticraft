@@ -23,14 +23,13 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.machine.configuration.face.BlockFace;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.util.BlockFace;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.SolarPanelMenu;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
@@ -49,6 +48,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements SolarPanel {
+    public static final int CHARGE_SLOT = 0;
     private final boolean[] blockage = new boolean[9];
     private int blocked = 0;
     public long currentEnergyGeneration = 0;
@@ -60,7 +60,7 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
     @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("charge");
-        this.drainPowerToStack(GCSlotGroupTypes.ENERGY_TO_ITEM);
+        this.drainPowerToStack(CHARGE_SLOT);
         profiler.popPush("blockage");
         this.blocked = 0;
         for (int x = -1; x < 2; x++) { //todo: cache?

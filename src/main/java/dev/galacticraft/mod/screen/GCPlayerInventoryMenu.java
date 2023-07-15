@@ -23,15 +23,14 @@
 package dev.galacticraft.mod.screen;
 
 import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.machinelib.api.storage.ResourceFilter;
-import dev.galacticraft.machinelib.api.storage.ResourceFilters;
+import dev.galacticraft.machinelib.filter.ResourceFilter;
+import dev.galacticraft.machinelib.filter.ResourceFilters;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.item.OxygenGearItem;
 import dev.galacticraft.mod.content.item.OxygenMaskItem;
 import dev.galacticraft.mod.content.item.ThermalArmorItem;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;

@@ -43,7 +43,7 @@ public class AdvancedSolarPanelScreen extends SolarPanelScreen<AdvancedSolarPane
 
     @Override
     public void appendEnergyTooltip(List<Component> list) {
-        if (this.menu.configuration.getStatus().type().isActive()) {
+        if (this.menu.configuration.getStatus().getType().isActive()) {
             list.add(Component.translatable("ui.galacticraft.machine.gj_per_t", this.menu.getCurrentEnergyGeneration()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
         }
     }

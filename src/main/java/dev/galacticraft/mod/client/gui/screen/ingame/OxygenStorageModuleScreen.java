@@ -27,7 +27,6 @@ import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenStorageModuleBlockEntity;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -50,8 +49,8 @@ public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModule
         super.renderBackground(graphics, mouseX, mouseY, delta);
         this.drawOxygenBufferBar(graphics);
 
-        graphics.drawCenteredString(font, I18n.get("ui.galacticraft.machine.current_oxygen", this.menu.fluidStorage.getSlot(GCSlotGroupTypes.OXYGEN_TANK).getAmount()), width / 2, topPos + 33, ChatFormatting.DARK_GRAY.getColor());
-        graphics.drawCenteredString(font, I18n.get("ui.galacticraft.machine.max_oxygen", this.menu.fluidStorage.getSlot(GCSlotGroupTypes.OXYGEN_TANK).getCapacity()), width / 2, topPos + 45, ChatFormatting.DARK_GRAY.getColor());
+        graphics.drawCenteredString(font, I18n.get("ui.galacticraft.machine.current_oxygen", this.menu.fluidStorage.getSlot(OxygenStorageModuleBlockEntity.OXYGEN_TANK).getAmount()), width / 2, topPos + 33, ChatFormatting.DARK_GRAY.getColor());
+        graphics.drawCenteredString(font, I18n.get("ui.galacticraft.machine.max_oxygen", this.menu.fluidStorage.getSlot(OxygenStorageModuleBlockEntity.OXYGEN_TANK).getCapacity()), width / 2, topPos + 45, ChatFormatting.DARK_GRAY.getColor());
     }
 
     @Override
@@ -60,7 +59,7 @@ public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModule
     }
 
     private void drawOxygenBufferBar(GuiGraphics graphics) {
-        FluidResourceSlot slot = this.menu.fluidStorage.getSlot(GCSlotGroupTypes.OXYGEN_TANK);
+        FluidResourceSlot slot = this.menu.fluidStorage.getSlot(OxygenStorageModuleBlockEntity.OXYGEN_TANK);
         double oxygenScale = (double)slot.getAmount() / (double)slot.getCapacity();
 
         graphics.blit(Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN, this.leftPos + 52, this.topPos + 57, 176, 0, (int) (72.0D * oxygenScale), 3);
