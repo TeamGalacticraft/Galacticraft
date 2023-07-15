@@ -539,8 +539,10 @@ public interface Constant {
     }
 
     interface Particle {
-        String DRIPPING_FUEL_PARTICLE = "dripping_fuel_particle";
-        String DRIPPING_CRUDE_OIL_PARTICLE = "dripping_crude_oil_particle";
+        String DRIPPING_FUEL = "dripping_fuel";
+        String FALLING_FUEL = "falling_fuel";
+        String DRIPPING_CRUDE_OIL = "dripping_crude_oil";
+        String FALLING_CRUDE_OIL = "falling_crude_oil";
         String CRYOGENIC_PARTICLE = "cryogenic_particle";
         String LANDER_FLAME = "lander_flame_particle";
     }
