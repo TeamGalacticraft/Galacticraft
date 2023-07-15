@@ -22,184 +22,76 @@
 
 package dev.galacticraft.mod.content.block.special;
 
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class TinLadderBlock extends Block {
-    public static final DirectionProperty FACING;
-    public static final BooleanProperty WATERLOGGED;
-    protected static final VoxelShape EAST_SHAPE;
-    protected static final VoxelShape WEST_SHAPE;
-    protected static final VoxelShape SOUTH_SHAPE;
-    protected static final VoxelShape NORTH_SHAPE;
-
-    public TinLadderBlock(Properties settings) {
-        super(settings);
-        this.registerDefaultState(this.stateDefinition.any()
-                .setValue(FACING, Direction.NORTH)
-                .setValue(WATERLOGGED, false));
+public class TinLadderBlock extends LadderBlock {
+    public TinLadderBlock(BlockBehaviour.Properties properties) {
+        super(properties);
     }
 
     @Nullable
-    private InteractionResult checkCanTinLadderBePlaced(Level world, BlockPos checkPos, BlockState state) {
-        if (world.getBlockState(checkPos).isAir()) {
-            BlockState newState = this.defaultBlockState().setValue(FACING, state.getValue(FACING));
-            world.setBlockAndUpdate(checkPos, newState);
-            return InteractionResult.SUCCESS;
-        } else if (!(world.getBlockState(checkPos).getBlock() instanceof TinLadderBlock)) {
+    private InteractionResult checkCanTinLadderBePlaced(Level level, BlockPos checkPos, Player player, ItemStack itemStack, BlockState blockState) {
+        if (level.getBlockState(checkPos).isAir()) {
+            var newState = this.defaultBlockState().setValue(FACING, blockState.getValue(FACING));
+            level.setBlockAndUpdate(checkPos, newState);
+            level.playSound(null, checkPos, blockState.getSoundType().getPlaceSound(), SoundSource.BLOCKS, (blockState.getSoundType().getVolume() + 1.0F) / 2.0F, blockState.getSoundType().getPitch() * 0.8F);
+            level.gameEvent(GameEvent.BLOCK_PLACE, checkPos, GameEvent.Context.of(player, newState));
+
+            if (!player.getAbilities().instabuild) {
+                itemStack.shrink(1);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide());
+        }
+        else if (!level.getBlockState(checkPos).is(this)) {
             return InteractionResult.PASS;
         }
         return null;
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        ItemStack item = player.getInventory().getItem(player.getInventory().selected);
-        if (Block.byItem(item.getItem()) instanceof TinLadderBlock) {
-            if (!player.isCreative())
-                item.shrink(1);
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        var itemStack = player.getItemInHand(interactionHand);
+        if (itemStack.is(this.asItem())) {
             if (player.getXRot() < 0f) {
-                for (BlockPos checkPos = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() < world.getHeight(); checkPos = checkPos.offset(0, 1, 0)) {
-                    InteractionResult result = this.checkCanTinLadderBePlaced(world, checkPos, state);
-                    if (result != null)
+                for (BlockPos checkPos = new BlockPos.MutableBlockPos(blockPos.getX(), blockPos.getY(), blockPos.getZ()); checkPos.getY() < level.getMaxBuildHeight(); checkPos = checkPos.offset(0, 1, 0))
+                {
+                    var result = this.checkCanTinLadderBePlaced(level, checkPos, player, itemStack, blockState);
+                    if (result != null) {
                         return result;
+                    }
                 }
-            } else {
-                for (BlockPos checkPos = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() > 0; checkPos = checkPos.offset(0, -1, 0)) {
-                    InteractionResult result = this.checkCanTinLadderBePlaced(world, checkPos, state);
-                    if (result != null)
+            }
+            else {
+                for (BlockPos checkPos = new BlockPos.MutableBlockPos(blockPos.getX(), blockPos.getY(), blockPos.getZ()); checkPos.getY() > level.getMinBuildHeight(); checkPos = checkPos.offset(0, -1, 0))
+                {
+                    var result = this.checkCanTinLadderBePlaced(level, checkPos, player, itemStack, blockState);
+                    if (result != null) {
                         return result;
+                    }
                 }
             }
         }
-        return InteractionResult.PASS;
+        return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
 
     @Override
-    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
-        if (!world.isClientSide) {
-            world.scheduleTick(pos, this, 1);
-        } else {
-            super.onPlace(state, world, pos, oldState, notify);
-        }
-    }
-
-    @Override
-    public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
-        return 1.0F;
-    }
-
-    @Override
-    public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return Shapes.empty();
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return switch (state.getValue(FACING)) {
-            case NORTH -> NORTH_SHAPE;
-            case SOUTH -> SOUTH_SHAPE;
-            case WEST -> WEST_SHAPE;
-            default -> EAST_SHAPE;
-        };
-    }
-
-    @Override
-    public VoxelShape getOcclusionShape(BlockState state, BlockGetter world, BlockPos pos) {
-        return Shapes.empty();
-    }
-
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
+    public boolean canSurvive(BlockState blockState, LevelReader level, BlockPos blockPos) {
         return true;
-    }
-
-    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-        return true;
-    }
-
-    public BlockState updateShape(BlockState state, Direction direction, BlockState newState, LevelAccessor world, BlockPos pos, BlockPos posFrom) {
-        if (state.getValue(WATERLOGGED)) {
-            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
-        }
-        return super.updateShape(state, direction, newState, world, pos, posFrom);
-    }
-
-    @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        BlockState blockState2;
-        if (!ctx.replacingClickedOnBlock()) {
-            blockState2 = ctx.getLevel().getBlockState(ctx.getClickedPos().relative(ctx.getClickedFace().getOpposite()));
-            if (blockState2.is(this) && blockState2.getValue(FACING) == ctx.getClickedFace()) {
-                return null;
-            }
-        }
-        blockState2 = this.defaultBlockState();
-        LevelReader worldView = ctx.getLevel();
-        BlockPos blockPos = ctx.getClickedPos();
-        FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
-        Direction[] var6 = ctx.getNearestLookingDirections();
-        for (Direction direction : var6) {
-            if (direction.getAxis().isHorizontal()) {
-                blockState2 = blockState2.setValue(FACING, direction.getOpposite());
-                if (blockState2.canSurvive(worldView, blockPos)) {
-                    return blockState2.setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
-                }
-            }
-        }
-        return null;
-    }
-
-    public BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
-    }
-
-    public BlockState mirror(BlockState state, Mirror mirror) {
-        return state.rotate(mirror.getRotation(state.getValue(FACING)));
-    }
-
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED);
-    }
-
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-    }
-
-    static {
-        FACING = HorizontalDirectionalBlock.FACING;
-        WATERLOGGED = BlockStateProperties.WATERLOGGED;
-        EAST_SHAPE = Block.box(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
-        WEST_SHAPE = Block.box(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-        SOUTH_SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D);
-        NORTH_SHAPE = Block.box(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D);
     }
 }

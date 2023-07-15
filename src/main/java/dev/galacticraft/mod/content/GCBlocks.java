@@ -231,7 +231,7 @@ public class GCBlocks {
     public static final Block WALKWAY = new WalkwayBlock(FabricBlockSettings.of().mapColor(MapColor.METAL).strength(5.0f, 5.0f).sound(SoundType.METAL));
     public static final Block PIPE_WALKWAY = new PipeWalkway(FabricBlockSettings.copyOf(WALKWAY));
     public static final Block WIRE_WALKWAY = new WireWalkway(FabricBlockSettings.copyOf(WALKWAY));
-    public static final Block TIN_LADDER = new TinLadderBlock(FabricBlockSettings.of().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL));
+    public static final Block TIN_LADDER = new TinLadderBlock(FabricBlockSettings.of().forceSolidOff().noOcclusion().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL));
     public static final Block GRATING = new GratingBlock(FabricBlockSettings.of().mapColor(MapColor.STONE).strength(2.5f, 6.0f).sound(SoundType.METAL));
 
     // SPECIAL
