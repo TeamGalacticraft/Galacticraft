@@ -69,6 +69,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     private boolean updateQueued = true;
     private boolean disabled = false;
     private boolean oxygenWorld = false;
+    private boolean sealed = false;
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.OXYGEN_SEALER, pos, state);
@@ -127,7 +128,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                         state1 = world.getBlockState(pos1);
                         if (state1.isAir() || (!Block.isFaceFull(state1.getCollisionShape(world, pos1), pair.getB().getOpposite()))) {
                             this.breathablePositions.add(pos1);
-                            if (this.breathablePositions.size() > 1000) {
+                            if (this.sealed = this.breathablePositions.size() > 1000) {
                                 this.breathablePositions.clear();
                                 this.watching.clear();
                                 this.updateQueued = true;
@@ -155,6 +156,11 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                     }
                     profiler.pop();
                 }
+
+                if (!this.sealed) {
+                    return GCMachineStatuses.AREA_TOO_LARGE;
+                }
+
                 profiler.push("extract");
                 this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate());
                 this.fluidStorage().getGroup(GCSlotGroupTypes.OXYGEN_INPUT).extract(Gases.OXYGEN, breathablePositions.size() * 2L);
