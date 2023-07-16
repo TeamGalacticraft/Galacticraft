@@ -42,11 +42,11 @@ import java.text.DecimalFormat;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BubbleDistributorScreen extends MachineScreen<OxygenBubbleDistributorBlockEntity, OxygenBubbleDistributorMenu> {
+public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDistributorBlockEntity, OxygenBubbleDistributorMenu> {
     private static final DecimalFormat FORMAT = new DecimalFormat();
     private final EditBox textField;
 
-    public BubbleDistributorScreen(OxygenBubbleDistributorMenu handler, Inventory inv, Component title) {
+    public OxygenBubbleDistributorScreen(OxygenBubbleDistributorMenu handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.BUBBLE_DISTRIBUTOR_SCREEN);
         this.textField = new EditBox(Minecraft.getInstance().font, this.leftPos + 132, this.topPos + 59, 26, 20, Component.literal(String.valueOf(this.menu.size)));
         this.textField.setResponder((s -> {
