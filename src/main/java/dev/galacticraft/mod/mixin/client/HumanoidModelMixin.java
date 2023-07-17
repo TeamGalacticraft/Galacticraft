@@ -71,7 +71,7 @@ public class HumanoidModelMixin<T extends LivingEntity> {
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
     private void gc$modifyPlayerAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
 
-        CelestialBody.getByDimension(entity.getLevel()).ifPresent(celestialBody -> {
+        CelestialBody.getByDimension(entity.level()).ifPresent(celestialBody -> {
             if (celestialBody.gravity() > .8)
                 return;
             float speedModifier = 0.1162F * 2;

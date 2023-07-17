@@ -25,6 +25,9 @@ package dev.galacticraft.mod.content.item;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -34,8 +37,9 @@ import static dev.galacticraft.mod.content.item.GCItems.*;
 @SuppressWarnings("unused") // groups are registered in the build() call
 public class GCCreativeModeTabs {
     public static final CreativeModeTab ITEMS_GROUP = FabricItemGroup
-            .builder(new ResourceLocation(Constant.MOD_ID, Constant.Item.ITEM_GROUP))
+            .builder()
             .icon(() -> new ItemStack(GCItems.CANVAS))
+            .title(Component.translatable("itemGroup.galacticraft.items"))
             .displayItems((parameters, output) -> { // todo: add rockets here
                 // MATERIALS
                 output.accept(RAW_SILICON);
@@ -216,8 +220,9 @@ public class GCCreativeModeTabs {
             .build();
 
     public static final CreativeModeTab BLOCKS_GROUP = FabricItemGroup
-            .builder(new ResourceLocation(Constant.MOD_ID, Constant.Block.ITEM_GROUP_BLOCKS))
+            .builder()
             .icon(() -> new ItemStack(GCBlocks.MOON_TURF))
+            .title(Component.translatable("itemGroup.galacticraft.blocks"))
             .displayItems((parameters, output) -> {
                 output.accept(GLOWSTONE_TORCH);
                 output.accept(UNLIT_TORCH);
@@ -441,8 +446,9 @@ public class GCCreativeModeTabs {
             }).build();
 
     public static final CreativeModeTab MACHINES_GROUP = FabricItemGroup
-            .builder(new ResourceLocation(Constant.MOD_ID, Constant.Block.ITEM_GROUP_MACHINES))
+            .builder()
             .icon(() -> new ItemStack(GCBlocks.COAL_GENERATOR))
+            .title(Component.translatable("itemGroup.galacticraft.machines"))
             .displayItems((parameters, output) -> {
                 output.accept(CIRCUIT_FABRICATOR);
                 output.accept(COMPRESSOR);
@@ -464,5 +470,8 @@ public class GCCreativeModeTabs {
             }).build();
 
     public static void register() {
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(Constant.MOD_ID, Constant.Item.ITEM_GROUP), ITEMS_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(Constant.MOD_ID, Constant.Block.ITEM_GROUP_BLOCKS), BLOCKS_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(Constant.MOD_ID, Constant.Block.ITEM_GROUP_MACHINES), MACHINES_GROUP);
     }
 }

@@ -113,7 +113,7 @@ public class FabricationRecipe implements Recipe<Container> {
             String group = GsonHelper.getAsString(json, "group", "");
             int time = GsonHelper.getAsInt(json, "time", 300);
             Ingredient ingredient = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "ingredient"));
-            ItemStack result = new ItemStack(ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(json, "result")));
+            ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             return new FabricationRecipe(id, group, ingredient, result, time);
         }
 

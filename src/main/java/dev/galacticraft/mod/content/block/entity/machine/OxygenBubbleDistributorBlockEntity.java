@@ -74,7 +74,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         super.tickConstant(world, pos, state, profiler);
         profiler.push("extract_resources");
         this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
-        this.takeFluidFromStack(GCSlotGroupTypes.OXYGEN_TANK, GCSlotGroupTypes.OXYGEN_INPUT, Gases.OXYGEN);
+        this.takeFluidFromStack(GCSlotGroupTypes.OXYGEN_TO_SELF, GCSlotGroupTypes.OXYGEN_INPUT, Gases.OXYGEN);
         profiler.pop();
     }
 
@@ -90,7 +90,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                     this.setSize(Math.max(this.size - 0.1F, this.targetSize));
                 }
                 if (this.size > 0.0D && this.bubbleVisible && this.bubbleId == -1) {
-                    BubbleEntity entity = new BubbleEntity(GCEntityTypes.BUBBLE, world);
+                    BubbleEntity entity = GCEntityTypes.BUBBLE.create(world);
                     entity.setPosRaw(this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
                     entity.xo = this.getBlockPos().getX();
                     entity.yo = this.getBlockPos().getY();

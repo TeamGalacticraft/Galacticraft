@@ -246,8 +246,10 @@ public class GCItems {
 
     public static final Item GALENA_ORE = new BlockItem(GCBlocks.GALENA_ORE, new Item.Properties());
 
-    // COMPACT MINERAL BLOCKS
+    // CHEESE BLOCK
     public static final Item MOON_CHEESE_BLOCK = new BlockItem(GCBlocks.MOON_CHEESE_BLOCK, new Item.Properties());
+
+    // COMPACT MINERAL BLOCKS
     public static final Item SILICON_BLOCK = new BlockItem(GCBlocks.SILICON_BLOCK, new Item.Properties());
     public static final Item METEORIC_IRON_BLOCK = new BlockItem(GCBlocks.METEORIC_IRON_BLOCK, new Item.Properties());
     public static final Item DESH_BLOCK = new BlockItem(GCBlocks.DESH_BLOCK, new Item.Properties());
@@ -679,8 +681,10 @@ public class GCItems {
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GALENA_ORE), GALENA_ORE);
 
-        // COMPACT MINERAL BLOCKS
+        // CHEESE BLOCK
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_CHEESE_BLOCK), MOON_CHEESE_BLOCK);
+
+        // COMPACT MINERAL BLOCKS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.SILICON_BLOCK), SILICON_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.METEORIC_IRON_BLOCK), METEORIC_IRON_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DESH_BLOCK), DESH_BLOCK);

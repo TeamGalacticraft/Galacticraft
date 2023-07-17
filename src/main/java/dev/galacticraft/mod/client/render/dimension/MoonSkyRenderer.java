@@ -49,7 +49,7 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
     @Override
     public void render(WorldRenderContext context) {
         if (starBuffer == null) { //cannot be done in init as the gl context has not been created yet.
-            starBuffer = new VertexBuffer();
+            starBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
             final Random random = new Random(27893L);
             final BufferBuilder buffer = Tesselator.getInstance().getBuilder();
             RenderSystem.setShader(GameRenderer::getPositionShader);

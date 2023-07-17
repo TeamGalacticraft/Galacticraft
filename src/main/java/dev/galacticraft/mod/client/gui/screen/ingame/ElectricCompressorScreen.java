@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
@@ -32,6 +31,7 @@ import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -53,15 +53,15 @@ public class ElectricCompressorScreen extends MachineScreen<ElectricCompressorBl
     }
 
     @Override
-    protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
-        super.renderBackground(matrices, mouseX, mouseY, delta);
-        this.drawCraftProgressBar(matrices);
+    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderBackground(graphics, mouseX, mouseY, delta);
+        this.drawCraftProgressBar(graphics);
     }
 
-    protected void drawCraftProgressBar(PoseStack matrices) {
+    protected void drawCraftProgressBar(GuiGraphics graphics) {
         float progressScale = (((float)this.menu.getProgress()) / ((float)this.menu.getMaxProgress()));
 
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
-        DrawableUtil.drawProgressTexture(matrices, this.leftPos + PROGRESS_X, this.topPos + PROGRESS_Y, PROGRESS_U, PROGRESS_V, (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
+        DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + PROGRESS_X, this.topPos + PROGRESS_Y, PROGRESS_U, PROGRESS_V, (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 }

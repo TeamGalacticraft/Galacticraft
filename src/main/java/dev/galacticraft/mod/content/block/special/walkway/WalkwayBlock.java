@@ -26,6 +26,7 @@ import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.content.block.entity.WalkwayBlockEntity;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
+import dev.galacticraft.mod.util.DirectionUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.Nullable;
 
@@ -131,7 +132,7 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
         if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1) {
             final Walkway blockEntity = (Walkway) world.getBlockEntity(pos);
             assert blockEntity != null;
-            final Direction direction = Direction.fromNormal(distance);
+            final Direction direction = DirectionUtil.fromNormal(distance);
             if (world.getBlockEntity(fromPos) instanceof Walkway walkway) {
                 if (walkway.getDirection() != null) {
                     if (!fromPos.relative(walkway.getDirection()).equals(pos)) {

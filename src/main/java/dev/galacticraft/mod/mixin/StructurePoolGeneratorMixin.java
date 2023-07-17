@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.levelgen.RandomState;
@@ -42,7 +43,7 @@ public abstract class StructurePoolGeneratorMixin {
     @Inject(method = "Lnet/minecraft/world/level/levelgen/structure/pools/JigsawPlacement$Placer;tryPlacingChildren(Lnet/minecraft/world/level/levelgen/structure/PoolElementStructurePiece;Lorg/apache/commons/lang3/mutable/MutableObject;IZLnet/minecraft/world/level/LevelHeightAccessor;Lnet/minecraft/world/level/levelgen/RandomState;)V", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), require = 0)
     public void extraDebugInfoGC(PoolElementStructurePiece piece, MutableObject<VoxelShape> mutableObject, int i, boolean bl, LevelHeightAccessor levelHeightAccessor, RandomState randomState, CallbackInfo ci) {
         if (Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled()) {
-            Galacticraft.LOGGER.warn("Pool referencer: {}", piece.toString());
+            Constant.LOGGER.warn("Pool referencer: {}", piece.toString());
         }
     }
 }

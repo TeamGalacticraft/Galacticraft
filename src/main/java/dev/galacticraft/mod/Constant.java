@@ -33,6 +33,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -42,8 +44,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Constant {
     String MOD_ID = "galacticraft";
-    String ADDON_API_ID = "galacticraft-api";
     String COMMON_NAMESPACE = "c";
+    Logger LOGGER = LogManager.getLogger("Galacticraft");
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ResourceLocation id(String id) {
@@ -254,8 +256,27 @@ public interface Constant {
         String TREASURE_CHEST_TIER_1 = "treasure_chest_tier_1";
         String TREASURE_CHEST_TIER_2 = "treasure_chest_tier_2";
         String TREASURE_CHEST_TIER_3 = "treasure_chest_tier_3";
-        String MOON_CHEESE_BLOCK = "moon_cheese_block";
         String CRASHED_PROBE_BLOCK = "crashed_probe";
+
+        // Moon Cheese
+        String MOON_CHEESE_BLOCK = "moon_cheese_block";
+        String CANDLE_MOON_CHEESE_BLOCK = "candle_moon_cheese_block";
+        String WHITE_CANDLE_MOON_CHEESE_BLOCK = "white_candle_moon_cheese_block";
+        String ORANGE_CANDLE_MOON_CHEESE_BLOCK = "orange_candle_moon_cheese_block";
+        String MAGENTA_CANDLE_MOON_CHEESE_BLOCK = "magenta_candle_moon_cheese_block";
+        String LIGHT_BLUE_CANDLE_MOON_CHEESE_BLOCK = "light_blue_candle_moon_cheese_block";
+        String YELLOW_CANDLE_MOON_CHEESE_BLOCK = "yellow_candle_moon_cheese_block";
+        String LIME_CANDLE_MOON_CHEESE_BLOCK = "lime_candle_moon_cheese_block";
+        String PINK_CANDLE_MOON_CHEESE_BLOCK = "pink_candle_moon_cheese_block";
+        String GRAY_CANDLE_MOON_CHEESE_BLOCK = "gray_candle_moon_cheese_block";
+        String LIGHT_GRAY_CANDLE_MOON_CHEESE_BLOCK = "light_gray_candle_moon_cheese_block";
+        String CYAN_CANDLE_MOON_CHEESE_BLOCK = "cyan_candle_moon_cheese_block";
+        String PURPLE_CANDLE_MOON_CHEESE_BLOCK = "purple_candle_moon_cheese_block";
+        String BLUE_CANDLE_MOON_CHEESE_BLOCK = "blue_candle_moon_cheese_block";
+        String BROWN_CANDLE_MOON_CHEESE_BLOCK = "brown_candle_moon_cheese_block";
+        String GREEN_CANDLE_MOON_CHEESE_BLOCK = "green_candle_moon_cheese_block";
+        String RED_CANDLE_MOON_CHEESE_BLOCK = "red_candle_moon_cheese_block";
+        String BLACK_CANDLE_MOON_CHEESE_BLOCK = "black_candle_moon_cheese_block";
 
         // Liquids
         String FUEL = "fuel";
@@ -751,6 +772,22 @@ public interface Constant {
         }
         
         interface TranslationKey {
+              String HYDROGEN = "gas.galacticraft.hydrogen";
+              String NITROGEN = "gas.galacticraft.nitrogen";
+              String OXYGEN = "gas.galacticraft.oxygen";
+              String CARBON_DIOXIDE = "gas.galacticraft.carbon_dioxide";
+              String CARBON_MONOXIDE = "gas.galacticraft.carbon_monoxide";
+              String WATER_VAPOR = "gas.galacticraft.water_vapor";
+              String METHANE = "gas.galacticraft.methane";
+              String HELIUM = "gas.galacticraft.helium";
+              String ARGON = "gas.galacticraft.argon";
+              String NITROUS_OXIDE = "gas.galacticraft.nitrous_oxide";
+              String NEON = "gas.galacticraft.neon";
+              String KRYPTON = "gas.galacticraft.krypton";
+              String XENON = "gas.galacticraft.xenon";
+              String OZONE = "gas.galacticraft.ozone";
+              String NITROUS_DIOXIDE = "gas.galacticraft.nitrous_dioxide";
+              String IODINE = "gas.galacticraft.iodine";
               String NOT_ENOUGH_LEAVES = "ui.galacticraft.machine.status.not_enough_leaves";
               String ACTIVE = "ui.galacticraft.machine.status.active";
               String IDLE = "ui.galacticraft.machine.status.idle";
@@ -774,6 +811,10 @@ public interface Constant {
     }
 
     interface Nbt {
+        String GC_API = "GCApi";
+        String CHANGE_COUNT = "Modified";
+        String OXYGEN = "Inversion";
+        String GEAR_INV = "GearInv";
         String BLOCK_ENTITY_TAG = "BlockEntityTag";
         String NO_DROP = "NoDrop";
         String OWNER = "Owner";
@@ -806,17 +847,24 @@ public interface Constant {
         String CRYOGENIC_COOLDOWN = "cryogenic_cooldown";
     }
 
+    interface Chunk {
+        int WIDTH = 16;
+        int SECTION_HEIGHT = 16;
+        int CHUNK_SECTION_AREA = WIDTH * WIDTH * SECTION_HEIGHT;
+    }
+
     interface Property {
         BooleanProperty ACTIVE = BooleanProperty.create("active");
     }
 
     interface Energy {
-        long T1_MACHINE_ENERGY_USAGE = 0;
-        long T2_MACHINE_ENERGY_USAGE = 0;
+        long T1_MACHINE_ENERGY_USAGE = 100; // TODO: adjust these later
+        long T2_MACHINE_ENERGY_USAGE = 200;
     }
 
     @ApiStatus.Internal
     interface Misc {
+        ResourceLocation INVALID = new ResourceLocation(Constant.MOD_ID, "invalid");
         ResourceLocation EMPTY = new ResourceLocation("empty");
         Direction[] DIRECTIONS = Direction.values();
         String LOGGER_PREFIX = "[Galacticraft] ";
@@ -871,7 +919,6 @@ public interface Constant {
         ResourceLocation DISABLE_SEAL = id("toggle_seal");
         ResourceLocation OPEN_GC_INVENTORY = id("open_gc_inv");
         ResourceLocation OPEN_GC_ROCKET = id("open_gc_rocket");
-        ResourceLocation ENTITY_SPAWN = id("entity_spawn");
         ResourceLocation CREATE_SATELLITE = id("create_satellite");
         ResourceLocation ROCKET_JUMP = id("rocket_jump");
         ResourceLocation ROCKET_PITCH = id("rocket_pitch");

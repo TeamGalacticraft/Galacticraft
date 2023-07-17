@@ -65,19 +65,19 @@ public class OverworldRenderer {
             this.starBuffer.close();
         }
 
-        this.starBuffer = new VertexBuffer();
+        this.starBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.starBuffer.bind();
         this.starBuffer.upload(this.renderStars(worldrenderer, rand));
         VertexBuffer.unbind();
-        this.starBuffer2 = new VertexBuffer();
+        this.starBuffer2 = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.starBuffer2.bind();
         this.starBuffer2.upload(this.renderStars(worldrenderer, rand));
         VertexBuffer.unbind();
-        this.starBuffer3 = new VertexBuffer();
+        this.starBuffer3 = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.starBuffer3.bind();
         this.starBuffer3.upload(this.renderStars(worldrenderer, rand));
         VertexBuffer.unbind();
-        this.starBuffer4 = new VertexBuffer();
+        this.starBuffer4 = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.starBuffer4.bind();
         this.starBuffer4.upload(this.renderStars(worldrenderer, rand));
         VertexBuffer.unbind();

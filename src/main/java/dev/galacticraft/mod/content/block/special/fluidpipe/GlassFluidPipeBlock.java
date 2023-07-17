@@ -121,7 +121,8 @@ public class GlassFluidPipeBlock extends FluidPipe {
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborChanged(state, world, pos, block, fromPos, notify);
         BlockState neighbor = world.getBlockState(fromPos);
-        Direction dir = Direction.fromNormal(fromPos.subtract(pos));
+        BlockPos delta = fromPos.subtract(pos);
+        Direction dir = Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ());
         assert dir != null;
         final GlassFluidPipeBlockEntity blockEntity = (GlassFluidPipeBlockEntity) world.getBlockEntity(pos);
         final BlockEntity otherBlockEntity = world.getBlockEntity(fromPos);

@@ -73,7 +73,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -87,7 +86,7 @@ public class GalacticraftClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();
-        Galacticraft.LOGGER.info("Starting client initialization.");
+        Constant.LOGGER.info("Starting client initialization.");
         ClientEventHandler.init();
         CapesLoader.load();
 
@@ -201,6 +200,6 @@ public class GalacticraftClient implements ClientModInitializer {
             ClientPlayNetworking.send(Constant.Packet.OPEN_GC_ROCKET, new FriendlyByteBuf(Unpooled.buffer(0)));
         }, player -> player.getVehicle() instanceof RocketEntity, RocketMenu.class);
 
-        Galacticraft.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
+        Constant.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

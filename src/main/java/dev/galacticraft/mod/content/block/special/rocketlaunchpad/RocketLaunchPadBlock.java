@@ -371,7 +371,7 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-        return !world.getBlockState(pos.relative(Direction.DOWN)).getMaterial().isReplaceable();
+        return !world.getBlockState(pos.relative(Direction.DOWN)).canBeReplaced();
     }
 
     @Nullable

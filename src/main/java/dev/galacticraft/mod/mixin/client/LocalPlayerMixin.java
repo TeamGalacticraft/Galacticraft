@@ -92,7 +92,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
                 }
             }
             if (player.getVehicle() instanceof LanderEntity lander) {
-                if (lander.isOnGround()) {
+                if (lander.onGround()) {
                     return;
                 }
 

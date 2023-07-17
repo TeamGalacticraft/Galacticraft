@@ -53,7 +53,7 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
     private static final VoxelShape TOP_MID_SHAPE = Shapes.or(TOP_POLE_SHAPE, TOP_SHAPE);
 
     public SolarPanelPartBlock(Properties settings) {
-        super(settings);
+        super(settings.pushReaction(PushReaction.BLOCK));
     }
 
     @Override
@@ -90,11 +90,6 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
     }
 
     @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.BLOCK;
-    }
-
-    @Override
     public ItemStack getCloneItemStack(BlockGetter blockView, BlockPos pos, BlockState state) {
         return new ItemStack(GCBlocks.BASIC_SOLAR_PANEL);
     }
@@ -115,7 +110,7 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
     }
 
     @Override
-    public boolean isPossibleToRespawnInThis() {
+    public boolean isPossibleToRespawnInThis(BlockState blockState) {
         return false;
     }
 

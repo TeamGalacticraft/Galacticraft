@@ -29,6 +29,7 @@ import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.content.block.entity.networked.PipeWalkwayBlockEntity;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
+import dev.galacticraft.mod.util.DirectionUtil;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -162,7 +163,7 @@ public class PipeWalkway extends FluidPipe implements FluidLoggable {
         if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1) {
             final Walkway blockEntity = (Walkway) world.getBlockEntity(pos);
             assert blockEntity != null;
-            final Direction direction = Direction.fromNormal(distance);
+            final Direction direction = DirectionUtil.fromNormal(distance);
             assert direction != null;
             if (direction != blockEntity.getDirection()) {
                 if (world.getBlockEntity(pos.relative(direction)) instanceof Pipe pipe) {

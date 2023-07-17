@@ -38,6 +38,6 @@ public class EvolvedZombieEntity extends Zombie {
 
     @Override
     protected boolean isSunBurnTick() {
-        return super.isSunBurnTick() && this.level.getBiome(this.blockPosition()).is(GCBiomes.Moon.BASALTIC_MARE);
+        return super.isSunBurnTick() && this.level().getBiome(this.blockPosition()).is(GCBiomes.Moon.BASALTIC_MARE);
     }
 }

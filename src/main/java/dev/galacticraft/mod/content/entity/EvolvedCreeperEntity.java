@@ -89,7 +89,7 @@ public class EvolvedCreeperEntity extends Creeper {
 
     public void setBaby(boolean baby) {
         this.getEntityData().set(BABY, baby);
-        if (this.level != null && !this.level.isClientSide) {
+        if (this.level() != null && !this.level().isClientSide) {
             AttributeInstance entityAttributeInstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
             entityAttributeInstance.removeModifier(BABY_SPEED_BONUS);
             if (baby) {

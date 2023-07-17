@@ -136,7 +136,7 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
         if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1) {
             final Walkway blockEntity = (Walkway) world.getBlockEntity(pos);
             assert blockEntity != null;
-            final Direction direction = Direction.fromNormal(distance);
+            final Direction direction = Direction.fromDelta(distance.getX(), distance.getY(), distance.getZ());
             if (direction != blockEntity.getDirection()) {
                 final BlockEntity blockEntity1 = world.getBlockEntity(pos.relative(direction));
                 if (blockEntity1 instanceof Wire wire) {

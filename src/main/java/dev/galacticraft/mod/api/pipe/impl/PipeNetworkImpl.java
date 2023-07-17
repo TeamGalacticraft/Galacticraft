@@ -24,9 +24,9 @@ package dev.galacticraft.mod.api.pipe.impl;
 
 import dev.galacticraft.machinelib.api.fluid.FluidStack;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
+import dev.galacticraft.mod.util.DirectionUtil;
 import it.unimi.dsi.fastutil.objects.*;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -124,7 +124,7 @@ public class PipeNetworkImpl implements PipeNetwork {
     public void removePipe(Pipe pipe, @NotNull BlockPos removedPos) {
         if (this.markedForRemoval()) {
             this.pipes.clear();
-            Galacticraft.LOGGER.warn("Tried to remove pipe from removed network!");
+            Constant.LOGGER.warn("Tried to remove pipe from removed network!");
             return;
         }
         assert this.pipes.contains(removedPos) : "Tried to remove pipe that does not exist!";
@@ -221,7 +221,7 @@ public class PipeNetworkImpl implements PipeNetwork {
         assert !(world.getBlockEntity(updatedPos) instanceof Pipe);
         this.insertable.remove(updatedPos);
         BlockPos vector = updatedPos.subtract(adjacentToUpdated);
-        Direction direction = Direction.fromNormal(vector.getX(), vector.getY(), vector.getZ());
+        Direction direction = DirectionUtil.fromNormal(vector.getX(), vector.getY(), vector.getZ());
         Storage<FluidVariant> insertable = FluidStorage.SIDED.find(world, updatedPos, direction.getOpposite());
         if (insertable != null) {
             this.insertable.put(updatedPos, insertable);

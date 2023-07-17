@@ -22,13 +22,14 @@
 
 package dev.galacticraft.mod.api.block;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
+import dev.galacticraft.mod.util.DirectionUtil;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -46,7 +47,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class FluidPipe extends Block implements EntityBlock {
     public FluidPipe(Properties settings) {
-        super(settings);
+        super(settings.pushReaction(PushReaction.BLOCK));
     }
 
     @Override
@@ -55,7 +56,7 @@ public abstract class FluidPipe extends Block implements EntityBlock {
         if (!world.isClientSide() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof Pipe pipe) {
-                Galacticraft.LOGGER.debug("Network: {}", pipe.getNetwork());
+                Constant.LOGGER.debug("Network: {}", pipe.getNetwork());
             }
         }
         return super.use(state, world, pos, player, hand, hit);
@@ -69,13 +70,13 @@ public abstract class FluidPipe extends Block implements EntityBlock {
             Pipe pipe = (Pipe) blockEntity;
             assert pipe != null;
             final BlockEntity blockEntityAdj = world.getBlockEntity(fromPos);
-            if (pipe.canConnect(Direction.fromNormal(fromPos.subtract(pos)))) {
+            if (pipe.canConnect(DirectionUtil.fromNormal(fromPos.subtract(pos)))) {
                 if (blockEntityAdj instanceof Pipe pipe1) {
-                    if (pipe1.canConnect(Direction.fromNormal(fromPos.subtract(pos)).getOpposite())) {
+                    if (pipe1.canConnect(DirectionUtil.fromNormal(fromPos.subtract(pos)).getOpposite())) {
                         pipe.getOrCreateNetwork().addPipe(fromPos, pipe1);
                     }
                 } else {
-                    if (FluidUtil.canAccessFluid(world, fromPos, Direction.fromNormal(fromPos.subtract(pos)))) {
+                    if (FluidUtil.canAccessFluid(world, fromPos, DirectionUtil.fromNormal(fromPos.subtract(pos)))) {
                         pipe.getOrCreateNetwork().updateConnection(pos, fromPos);
                     } else if (pipe.getNetwork() != null) {
                         pipe.getNetwork().updateConnection(pos, fromPos);
@@ -83,11 +84,6 @@ public abstract class FluidPipe extends Block implements EntityBlock {
                 }
             }
         }
-    }
-
-    @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.BLOCK;
     }
 
     @Nullable

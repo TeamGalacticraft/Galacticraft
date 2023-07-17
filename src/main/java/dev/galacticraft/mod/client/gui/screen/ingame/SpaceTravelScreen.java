@@ -26,6 +26,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.client.GameNarrator;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
@@ -60,7 +61,7 @@ public class SpaceTravelScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuilder();
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
@@ -79,9 +80,9 @@ public class SpaceTravelScreen extends Screen {
                 dots += '.';
             }
         }
-        drawCenteredString(matrices, this.font, TRAVELLING_TO.plainCopy().append(this.planet), this.width / 2, this.height / 2 - 40, 16777215);
-        drawCenteredString(matrices, this.font, Component.literal(POSSIBLE_TEXTS[this.text] + dots), this.width / 2, this.height / 2 - 50, 16777215);
-        super.render(matrices, mouseX, mouseY, delta);
+        graphics.drawCenteredString(this.font, TRAVELLING_TO.plainCopy().append(this.planet), this.width / 2, this.height / 2 - 40, 16777215);
+        graphics.drawCenteredString(this.font, Component.literal(POSSIBLE_TEXTS[this.text] + dots), this.width / 2, this.height / 2 - 50, 16777215);
+        super.render(graphics, mouseX, mouseY, delta);
         if (minecraft.level.dimension().equals(this.target)) this.minecraft.setScreen(null);
     }
 

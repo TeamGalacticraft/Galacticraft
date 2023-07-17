@@ -24,8 +24,11 @@ package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
+import dev.galacticraft.machinelib.impl.menu.sync.simple.BooleansMenuSyncHandler;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
+import dev.galacticraft.mod.screen.sync.BooleanMenuSyncHandler;
+import dev.galacticraft.mod.screen.sync.DoubleMenuSyncHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -44,6 +47,9 @@ public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistrib
 
     public OxygenBubbleDistributorMenu(int syncId, ServerPlayer player, OxygenBubbleDistributorBlockEntity machine) {
         super(syncId, player, machine);
+        this.bubbleVisible = machine.bubbleVisible;
+        this.size = machine.getSize();
+        this.targetSize = machine.getTargetSize();
     }
 
     public OxygenBubbleDistributorMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {
@@ -53,21 +59,27 @@ public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistrib
     @Override
     public void registerSyncHandlers(Consumer<MenuSyncHandler> consumer) {
         super.registerSyncHandlers(consumer);
-        consumer.accept(new MenuSyncHandler() { //fixme sync handler
+        consumer.accept(new MenuSyncHandler() {
+            private byte value;
+
             @Override
             public boolean needsSyncing() {
-                return false;
+                return this.value != OxygenBubbleDistributorMenu.this.targetSize;
             }
 
             @Override
             public void sync(@NotNull FriendlyByteBuf buf) {
-
+                this.value = OxygenBubbleDistributorMenu.this.targetSize;
+                buf.writeByte(this.value);
             }
 
             @Override
             public void read(@NotNull FriendlyByteBuf buf) {
-
+                this.value = buf.readByte();
+                OxygenBubbleDistributorMenu.this.targetSize = this.value;
             }
         });
+        consumer.accept(new DoubleMenuSyncHandler(this.machine::getSize, value -> this.size = value));
+        consumer.accept(new BooleanMenuSyncHandler(() -> this.machine.bubbleVisible, t -> this.bubbleVisible = t));
     }
 }

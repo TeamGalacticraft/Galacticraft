@@ -1,5 +1,5 @@
 {
-  "type": "galacticraft-api:slotted_default",
+  "type": "galacticraft:slotted_default",
   "config": {
     "key": {
       "F": {
@@ -11,7 +11,7 @@
       "F"
     ],
     "result": {
-      "type": "galacticraft-api:rocket_fin",
+      "type": "galacticraft:rocket_fin",
       "id": "galacticraft:tier_1"
     }
   }

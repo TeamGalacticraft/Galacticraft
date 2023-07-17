@@ -30,5 +30,6 @@
     "recipes": [
       "galacticraft:rocket_launch_pad"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

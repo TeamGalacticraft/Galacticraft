@@ -4,6 +4,14 @@
       "type": "directory",
       "source": "connected",
       "prefix": "connected/"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "galacticraft:model/rocket"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "galacticraft:model/sphere"
     }
   ]
 }

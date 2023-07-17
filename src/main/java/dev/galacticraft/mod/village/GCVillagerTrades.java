@@ -84,7 +84,7 @@ public class GCVillagerTrades {
 
         @Nullable
         public MerchantOffer getOffer(Entity entity, @NotNull RandomSource random) {
-            if (!(entity.level instanceof ServerLevel world)) {
+            if (!(entity.level() instanceof ServerLevel world)) {
                 return null;
             } else {
                 BlockPos blockPos = world.findNearestMapStructure(this.structure, entity.blockPosition(), 100, true);

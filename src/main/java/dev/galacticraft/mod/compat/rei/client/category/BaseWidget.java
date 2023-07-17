@@ -23,11 +23,10 @@
 package dev.galacticraft.mod.compat.rei.client.category;
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.mod.Constant;
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
@@ -43,15 +42,15 @@ public class BaseWidget extends Widget {
         this.startPoint = startPoint;
     }
 
-    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         Lighting.setupForFlatItems();
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE);
-        this.blit(matrices, this.startPoint.x, this.startPoint.y, 0, 83, 137, 157);
+        graphics.blit(Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE, this.startPoint.x, this.startPoint.y, 0, 83, 137, 157);
 
         int height = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
-        this.blit(matrices, this.startPoint.x + 2, this.startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
+        graphics.blit(Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE, this.startPoint.x + 2, this.startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
         int width = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D);
-        this.blit(matrices, this.startPoint.x + 24, this.startPoint.y + 18, 82, 91, width, 17);
+        graphics.blit(Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE, this.startPoint.x + 24, this.startPoint.y + 18, 82, 91, width, 17);
     }
 
     @Override

@@ -115,7 +115,7 @@ public class GCCommands {
             UUID playerID = context.getSource().getPlayer().getGameProfile().getId();
             if (!GC_HOUSTON_TIMERS.containsKey(playerID)) {
                 GC_HOUSTON_TIMERS.put(playerID, context.getSource().getServer().getTickCount());
-                context.getSource().sendSuccess(Component.translatable("commands.galacticraft.gchouston.confirm", serverWorld.dimension().location()).setStyle(Constant.Text.Color.RED_STYLE), false);
+                context.getSource().sendSuccess(() -> Component.translatable("commands.galacticraft.gchouston.confirm", serverWorld.dimension().location()).setStyle(Constant.Text.Color.RED_STYLE), false);
             } else if (GC_HOUSTON_TIMERS.getInt(playerID) + GC_HOUSTON_TIMER_LENGTH > context.getSource().getServer().getTickCount()) {
                 GC_HOUSTON_TIMERS.removeInt(playerID);
                 BlockPos pos = getValidTeleportPos(serverWorld, player);
@@ -125,7 +125,7 @@ public class GCCommands {
                         pos.getZ(),
                         player.getYRot(),
                         player.getXRot());
-                context.getSource().sendSuccess(Component.translatable("commands.galacticraft.gchouston.success", serverWorld.dimension().location()).setStyle(Constant.Text.Color.GREEN_STYLE), true);
+                context.getSource().sendSuccess(() -> Component.translatable("commands.galacticraft.gchouston.success", serverWorld.dimension().location()).setStyle(Constant.Text.Color.GREEN_STYLE), true);
             }
         });
         return retval[0];
@@ -154,7 +154,7 @@ public class GCCommands {
                         pos.getZ(),
                         player.getYRot(),
                         player.getXRot());
-                context.getSource().sendSuccess(Component.translatable("commands.galacticraft.dimensiontp.success.single", serverWorld.dimension().location()), true);
+                context.getSource().sendSuccess(() -> Component.translatable("commands.galacticraft.dimensiontp.success.single", serverWorld.dimension().location()), true);
             } catch (CommandSyntaxException e) {
                 context.getSource().sendFailure(Component.translatable("commands.galacticraft.dimensiontp.failure.dimension").setStyle(Constant.Text.Color.RED_STYLE));
                 retval[0] = -1;
@@ -196,7 +196,7 @@ public class GCCommands {
                         }
                     }
                 }
-                context.getSource().sendSuccess(Component.translatable("commands.galacticraft.dimensiontp.success.multiple", entities.size(), serverWorld.dimension().location()), true);
+                context.getSource().sendSuccess(() -> Component.translatable("commands.galacticraft.dimensiontp.success.multiple", entities.size(), serverWorld.dimension().location()), true);
             } catch (CommandSyntaxException e) {
                 context.getSource().sendFailure(Component.translatable("commands.galacticraft.dimensiontp.failure.entity").setStyle(Constant.Text.Color.RED_STYLE));
                 retval[0] = -1;
@@ -234,7 +234,7 @@ public class GCCommands {
                     Mth.clamp(pos.getZ(), -30000000, 30000000),
                     player.getYRot(),
                     player.getXRot());
-            context.getSource().sendSuccess(Component.translatable("commands.galacticraft.dimensiontp.success.pos", serverWorld.dimension().location(), pos.getX(), pos.getY(), pos.getZ()), true);
+            context.getSource().sendSuccess(() -> Component.translatable("commands.galacticraft.dimensiontp.success.pos", serverWorld.dimension().location(), pos.getX(), pos.getY(), pos.getZ()), true);
         });
         return retval[0];
     }

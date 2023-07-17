@@ -33,7 +33,7 @@ public class RocketSound extends AbstractTickableSoundInstance {
     private boolean ignition = false;
 
     public RocketSound(RocketEntity rocket) {
-        super(GCSounds.SHUTTLE_SHUTTLE, SoundSource.NEUTRAL, rocket.getLevel().getRandom());
+        super(GCSounds.SHUTTLE_SHUTTLE, SoundSource.NEUTRAL, rocket.level().getRandom());
         this.rocket = rocket;
         this.x = rocket.getX();
         this.y = rocket.getY();

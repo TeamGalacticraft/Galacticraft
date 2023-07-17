@@ -23,11 +23,11 @@
 package dev.galacticraft.mod.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -66,16 +66,15 @@ public abstract class AlphaWarningTitleScreenMixin extends Screen {
     }
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
-    public void render(PoseStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (!warningHidden) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, ALPHA_WARNING_GC_TEXTURE);
-            blit(matrices, Mth.clamp(this.width / 2 - 128, 0, this.width), Mth.clamp(this.height / 2 - 64, 0, this.height), 0.0F, 0.0F, 256, 128, 256, 128);
-            drawCenteredString(matrices, this.font, ALPHA_WARNING_GC_HEADER, this.width / 2, this.height / 2 - 48, 0xFF0000);
-            drawCenteredString(matrices, this.font, ALPHA_WARNING_GC_CONTENT1, this.width / 2, this.height / 2 - 16, 0xFFFFFF);
-            drawCenteredString(matrices, this.font, ALPHA_WARNING_GC_CONTENT2, this.width / 2, this.height / 2 + 16, 0xFFFFFF);
-            drawCenteredString(matrices, this.font, ALPHA_WARNING_GC_CONTENT3, this.width / 2, this.height / 2 + 48, 0xFFFFFF);
+            graphics.blit(ALPHA_WARNING_GC_TEXTURE, Mth.clamp(this.width / 2 - 128, 0, this.width), Mth.clamp(this.height / 2 - 64, 0, this.height), 0.0F, 0.0F, 256, 128, 256, 128);
+            graphics.drawCenteredString(this.font, ALPHA_WARNING_GC_HEADER, this.width / 2, this.height / 2 - 48, 0xFF0000);
+            graphics.drawCenteredString(this.font, ALPHA_WARNING_GC_CONTENT1, this.width / 2, this.height / 2 - 16, 0xFFFFFF);
+            graphics.drawCenteredString(this.font, ALPHA_WARNING_GC_CONTENT2, this.width / 2, this.height / 2 + 16, 0xFFFFFF);
+            graphics.drawCenteredString(this.font, ALPHA_WARNING_GC_CONTENT3, this.width / 2, this.height / 2 + 48, 0xFFFFFF);
             ci.cancel();
         }
     }
