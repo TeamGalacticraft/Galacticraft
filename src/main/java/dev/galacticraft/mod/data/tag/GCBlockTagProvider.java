@@ -90,5 +90,26 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.tag(BlockTags.WALL_POST_OVERRIDE)
                 .add(this.reverseLookup(GCBlocks.GLOWSTONE_TORCH))
                 .add(this.reverseLookup(GCBlocks.UNLIT_TORCH));
+
+        this.getOrCreateTagBuilder(BlockTags.CANDLE_CAKES)
+                .add(
+                        GCBlocks.CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.WHITE_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.ORANGE_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.MAGENTA_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.LIGHT_BLUE_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.YELLOW_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.LIME_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.PINK_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.GRAY_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.LIGHT_GRAY_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.CYAN_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.PURPLE_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.BLUE_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.BROWN_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.GREEN_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.RED_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.BLACK_CANDLE_MOON_CHEESE_BLOCK
+                );
     }
 }

@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.content;
 
+import java.util.function.ToIntFunction;
+
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.decoration.GratingBlock;
@@ -51,6 +53,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -279,8 +282,27 @@ public class GCBlocks {
 
     public static final Block GALENA_ORE = new DropExperienceBlock(oreSettings(3.0F, 5.0F, false));
 
+    // CHEESE BLOCK
+    public static final Block MOON_CHEESE_BLOCK = new MoonCheeseBlock(BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+    public static final Block CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.CANDLE, BlockBehaviour.Properties.copy(MOON_CHEESE_BLOCK).lightLevel(litBlockEmission(3)));
+    public static final Block WHITE_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.WHITE_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block ORANGE_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.ORANGE_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block MAGENTA_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.MAGENTA_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block LIGHT_BLUE_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.LIGHT_BLUE_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block YELLOW_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.YELLOW_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block LIME_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.LIME_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block PINK_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.PINK_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block GRAY_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.GRAY_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block LIGHT_GRAY_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.LIGHT_GRAY_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block CYAN_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.CYAN_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block PURPLE_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.PURPLE_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block BLUE_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.BLUE_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block BROWN_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.BROWN_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block GREEN_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.GREEN_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block RED_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.RED_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block BLACK_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.BLACK_CANDLE, BlockBehaviour.Properties.copy(CANDLE_MOON_CHEESE_BLOCK));
+
     // COMPACT MINERAL BLOCKS
-    public static final Block MOON_CHEESE_BLOCK = new CakeBlock(FabricBlockSettings.of().pushReaction(PushReaction.DESTROY).strength(0.5F).sound(SoundType.WOOL));
     public static final Block SILICON_BLOCK = new Block(FabricBlockSettings.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL));
     public static final Block METEORIC_IRON_BLOCK = new Block(FabricBlockSettings.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL));
     public static final Block DESH_BLOCK = new Block(FabricBlockSettings.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL));
@@ -544,8 +566,27 @@ public class GCBlocks {
 
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GALENA_ORE), GALENA_ORE);
 
-        // COMPACT MINERAL BLOCKS
+        // CHEESE BLOCK
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_CHEESE_BLOCK), MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CANDLE_MOON_CHEESE_BLOCK), CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.WHITE_CANDLE_MOON_CHEESE_BLOCK), WHITE_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ORANGE_CANDLE_MOON_CHEESE_BLOCK), ORANGE_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MAGENTA_CANDLE_MOON_CHEESE_BLOCK), MAGENTA_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LIGHT_BLUE_CANDLE_MOON_CHEESE_BLOCK), LIGHT_BLUE_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.YELLOW_CANDLE_MOON_CHEESE_BLOCK), YELLOW_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LIME_CANDLE_MOON_CHEESE_BLOCK), LIME_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.PINK_CANDLE_MOON_CHEESE_BLOCK), PINK_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GRAY_CANDLE_MOON_CHEESE_BLOCK), GRAY_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LIGHT_GRAY_CANDLE_MOON_CHEESE_BLOCK), LIGHT_GRAY_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CYAN_CANDLE_MOON_CHEESE_BLOCK), CYAN_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.PURPLE_CANDLE_MOON_CHEESE_BLOCK), PURPLE_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.BLUE_CANDLE_MOON_CHEESE_BLOCK), BLUE_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.BROWN_CANDLE_MOON_CHEESE_BLOCK), BROWN_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GREEN_CANDLE_MOON_CHEESE_BLOCK), GREEN_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.RED_CANDLE_MOON_CHEESE_BLOCK), RED_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.BLACK_CANDLE_MOON_CHEESE_BLOCK), BLACK_CANDLE_MOON_CHEESE_BLOCK);
+
+        // COMPACT MINERAL BLOCKS
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.SILICON_BLOCK), SILICON_BLOCK);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.METEORIC_IRON_BLOCK), METEORIC_IRON_BLOCK);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DESH_BLOCK), DESH_BLOCK);
@@ -600,5 +641,9 @@ public class GCBlocks {
 
     private static boolean never(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         return false;
+    }
+
+    private static ToIntFunction<BlockState> litBlockEmission(int i) {
+        return blockState -> blockState.getValue(BlockStateProperties.LIT) ? i : 0;
     }
 }
