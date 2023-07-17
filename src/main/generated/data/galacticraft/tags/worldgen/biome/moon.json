@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "galacticraft:moon",
     "galacticraft:comet_tundra",
     "galacticraft:basaltic_mare",
     "galacticraft:lunar_highlands",

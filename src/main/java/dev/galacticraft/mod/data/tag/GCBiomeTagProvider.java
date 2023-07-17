@@ -40,6 +40,7 @@ public class GCBiomeTagProvider extends FabricTagProvider<Biome> {
     @Override
     protected void addTags(HolderLookup.Provider arg) {
         this.tag(GCTags.MOON)
+                .add(GCBiomes.Moon.MOON_LEGACY)
                 .add(GCBiomes.Moon.COMET_TUNDRA)
                 .add(GCBiomes.Moon.BASALTIC_MARE)
                 .add(GCBiomes.Moon.LUNAR_HIGHLANDS)

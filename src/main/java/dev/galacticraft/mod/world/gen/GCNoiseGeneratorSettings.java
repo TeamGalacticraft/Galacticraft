@@ -31,10 +31,7 @@ import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.DensityFunction;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.levelgen.NoiseRouterData;
-import net.minecraft.world.level.levelgen.NoiseSettings;
+import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -46,11 +43,43 @@ public class GCNoiseGeneratorSettings {
         HolderGetter<DensityFunction> densityLookup = context.lookup(Registries.DENSITY_FUNCTION);
         HolderGetter<NormalNoise.NoiseParameters> noiseLookup = context.lookup(Registries.NOISE);
 
+        DensityFunction barrierNoise = DensityFunctions.constant(10);
+        DensityFunction fluidLevelFloodednessNoise = DensityFunctions.constant(10);
+        DensityFunction fluidLevelSpreadNoise = DensityFunctions.constant(10);
+        DensityFunction lavaNoise = DensityFunctions.constant(10);
+        DensityFunction temperature = DensityFunctions.constant(10);
+        DensityFunction vegetation = DensityFunctions.constant(10);
+        DensityFunction continents = DensityFunctions.constant(10);
+        DensityFunction erosion = DensityFunctions.constant(10);
+        DensityFunction depth = DensityFunctions.noise(noiseLookup.getOrThrow(Noises.NOODLE_THICKNESS));
+        DensityFunction ridges = DensityFunctions.constant(10);
+        DensityFunction initialDensityWithoutJaggedness = DensityFunctions.constant(10);
+        DensityFunction finalDensity = DensityFunctions.constant(10);
+        DensityFunction veinToggle = DensityFunctions.constant(10);
+        DensityFunction veinRidged = DensityFunctions.constant(10);
+        DensityFunction veinGap = DensityFunctions.constant(10);
+
         context.register(MOON, new NoiseGeneratorSettings(
                 NoiseSettings.create(-64, 384, 1, 2),
                 GCBlocks.MOON_ROCK.defaultBlockState(),
-                Blocks.WATER.defaultBlockState(),
-                NoiseRouterData.overworld(densityLookup, noiseLookup, false, false),
+                Blocks.AIR.defaultBlockState(),
+                new NoiseRouter(
+                        barrierNoise,
+                        fluidLevelFloodednessNoise,
+                        fluidLevelSpreadNoise,
+                        lavaNoise,
+                        temperature,
+                        vegetation,
+                        continents,
+                        erosion,
+                        depth,
+                        ridges,
+                        initialDensityWithoutJaggedness,
+                        finalDensity,
+                        veinToggle,
+                        veinRidged,
+                        veinGap
+                ),
                 MoonSurfaceRules.MOON,
                 new OverworldBiomeBuilder().spawnTarget(),
                 63,

@@ -43,6 +43,7 @@ import dev.galacticraft.mod.village.GCVillagerProfessions;
 import dev.galacticraft.mod.village.MoonVillagerTypes;
 import dev.galacticraft.mod.world.biome.source.GCMultiNoiseBiomeSourceParameterLists;
 import dev.galacticraft.mod.world.dimension.GCGases;
+import dev.galacticraft.mod.world.gen.legacy.GCChunkGenerators;
 import dev.galacticraft.mod.world.gen.carver.GCCarvers;
 import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeatures;
 import dev.galacticraft.mod.world.gen.feature.GCPlacedFeatures;
@@ -50,6 +51,7 @@ import dev.galacticraft.mod.world.gen.structure.GCStructureTypes;
 import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
 import dev.galacticraft.mod.world.poi.GCPointOfInterestTypes;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.SharedConstants;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -79,6 +81,7 @@ public class Galacticraft implements ModInitializer {
         GCStructureTypes.register();
         GCCarvers.register();
         MoonSurfaceRules.register();
+        GCChunkGenerators.register();
         GCMultiNoiseBiomeSourceParameterLists.register();
         GCMenuTypes.register();
         GCParticleTypes.register();
@@ -93,6 +96,7 @@ public class Galacticraft implements ModInitializer {
         GCBannerPatterns.register();
         GCTeleporterTypes.register();
         GCEventHandlers.init();
+        SharedConstants.IS_RUNNING_IN_IDE = true;
         Constant.LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

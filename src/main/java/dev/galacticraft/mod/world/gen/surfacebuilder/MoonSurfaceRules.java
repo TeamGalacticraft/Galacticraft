@@ -45,7 +45,7 @@ public class MoonSurfaceRules {
     private static final ConditionSource IS_MARE = biome(GCBiomes.Moon.BASALTIC_MARE);
     private static final ConditionSource IS_HIGHLANDS = biome();
 
-    private static final RuleSource BEDROCK = block(Blocks.BEDROCK);
+    public static final RuleSource BEDROCK = block(Blocks.BEDROCK);
     private static final RuleSource LUNASLATE = block(GCBlocks.LUNASLATE);
     private static final RuleSource MOON_DIRT = block(GCBlocks.MOON_DIRT);
     private static final RuleSource MOON_TURF = block(GCBlocks.MOON_TURF);

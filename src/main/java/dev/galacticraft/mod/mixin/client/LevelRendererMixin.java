@@ -25,9 +25,11 @@ package dev.galacticraft.mod.mixin.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.mod.client.render.dimension.OverworldRenderer;
+import dev.galacticraft.mod.client.render.misc.FootprintRenderer;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderBuffers;
@@ -84,5 +86,10 @@ public class LevelRendererMixin {
         float outRange = outMax - outMin;
         float inRange  = inMax - inMin;
         return (x - inMin) *outRange / inRange + outMin;
+    }
+
+    @Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/debug/DebugRenderer;render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;DDD)V"))
+    private void renderFootprints(PoseStack poseStack, float f, long l, boolean bl, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f matrix4f, CallbackInfo ci) {
+//        FootprintRenderer.renderFootprints(Minecraft.getInstance().player, poseStack, f, camera);
     }
 }

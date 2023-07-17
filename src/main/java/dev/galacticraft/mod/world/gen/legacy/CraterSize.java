@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2019-2023 Team Galacticraft
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package dev.galacticraft.mod.world.gen.legacy;
+
+public enum CraterSize {
+
+    SMALL(8, 12, 14), MEDIUM(13, 17, 8), LARGE(18, 25, 2), EXTREME(26, 30, 1);
+
+    public final int MIN_SIZE;
+    public final int MAX_SIZE;
+    private final int PROBABILITY;
+
+    public static CraterSize[] sizeArray;
+
+    CraterSize(int min, int max, int prob) {
+        this.MIN_SIZE = min;
+        this.MAX_SIZE = max;
+        this.PROBABILITY = prob;
+    }
+
+    static {
+        int amount = 0;
+        for (final CraterSize c : CraterSize.values()) {
+            amount += c.PROBABILITY;
+        }
+        CraterSize.sizeArray = new CraterSize[amount];
+        int pointer = 0;
+        for (final CraterSize c : CraterSize.values()) {
+            for (int i = 0; i < c.PROBABILITY; i++) {
+                CraterSize.sizeArray[pointer] = c;
+                pointer++;
+            }
+        }
+    }
+}

@@ -26,8 +26,11 @@ import com.mojang.authlib.GameProfile;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.render.misc.FootprintRenderer;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.entity.LanderEntity;
 import dev.galacticraft.mod.content.item.RocketItem;
+import dev.galacticraft.mod.world.dimension.GCDimensions;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -38,9 +41,15 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3d;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -139,6 +148,64 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
         if (getVehicle() == null) {
             if (getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof RocketItem || getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof RocketItem) {
                 cir.setReturnValue(true);
+            }
+        }
+    }
+
+    @Inject(method = "move", at = @At("TAIL"))
+    private void addFootprints(MoverType moverType, Vec3 motion, CallbackInfo ci) {
+        updateFeet((LocalPlayer) (Object) this, motion);
+    }
+
+    public double distanceSinceLastStep;
+    public int lastStep;
+
+    private void updateFeet(LocalPlayer player, Vec3 motion) {
+        double motionSqrd = motion.x() * motion.x() + motion.z() * motion.z();
+
+        // If the player is on the moon, not airbourne and not riding anything
+        if (motionSqrd > 0.001 && player.level() != null && player.level().dimension().location().equals(GCDimensions.MOON.location()) && player.getVehicle() == null && !player.getAbilities().flying)
+        {
+            int iPosX = Mth.floor(player.getX());
+            int iPosY = Mth.floor(player.getY() - 0.05);
+            int iPosZ = Mth.floor(player.getZ());
+            BlockPos pos1 = new BlockPos(iPosX, iPosY, iPosZ);
+            BlockState state = player.level().getBlockState(pos1);
+
+
+            // If the block below is the moon block
+            if (state.is(GCBlocks.MOON_TURF)) {
+                // If it has been long enough since the last step
+                if (distanceSinceLastStep > 0.35)
+                {
+                    Vector3d pos = new Vector3d(player.getX(), player.getY(), player.getZ());
+                    // Set the footprint position to the block below and add
+                    // random number to stop z-fighting
+                    pos.y = Mth.floor(player.getY()) + player.getRandom().nextFloat() / 100.0F;
+
+                    // Adjust footprint to left or right depending on step
+                    // count
+                    switch (lastStep) {
+                        case 0:
+                            pos.add(Math.sin(Math.toRadians(-player.getYRot() + 90)) * 0.25, 0, Math.cos(Math.toRadians(-player.getYRot() + 90)) * 0.25);
+                            break;
+                        case 1:
+                            pos.add(Math.sin(Math.toRadians(-player.getYRot() - 90)) * 0.25, 0, Math.cos(Math.toRadians(-player.getYRot() - 90)) * 0.25);
+                            break;
+                    }
+
+                    pos = FootprintRenderer.getFootprintPosition(player.level(), player.getYRot() - 180, pos, player.getOnPos());
+
+                    long chunkKey = ChunkPos.asLong(Mth.floor(pos.x()) >> 4, Mth.floor(pos.z()) >> 4);
+                    FootprintRenderer.addFootprint(chunkKey, player.level().dimension(), pos, player.getYRot(), player.getGameProfile().getName());
+
+                    // Increment and cap step counter at 1
+                    lastStep = (lastStep + 1) % 2;
+                    distanceSinceLastStep = 0;
+                } else
+                {
+                    distanceSinceLastStep = distanceSinceLastStep + motionSqrd;
+                }
             }
         }
     }

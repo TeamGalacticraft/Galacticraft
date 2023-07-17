@@ -853,6 +853,10 @@ public interface Constant {
         int CHUNK_SECTION_AREA = WIDTH * WIDTH * SECTION_HEIGHT;
     }
 
+    interface ChunkGenerator {
+        String MOON = "moon";
+    }
+
     interface Property {
         BooleanProperty ACTIVE = BooleanProperty.create("active");
     }

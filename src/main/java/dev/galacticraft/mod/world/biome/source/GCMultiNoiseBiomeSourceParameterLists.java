@@ -95,39 +95,41 @@ public class GCMultiNoiseBiomeSourceParameterLists {
     @Contract("_ -> new")
     private static <T> Climate.@NotNull ParameterList<T> generateMoon(Function<ResourceKey<Biome>, T> biomeRegistry) {
         ImmutableList.Builder<Pair<Climate.ParameterPoint, T>> builder = ImmutableList.builder();
-        writeBiomeParameters(builder::add,
-                COLD,
-                DRY,
-                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
-                MIN_EROSION,
-                WEIRDNESS_H_MIXED,
-                0.0F,
-                biomeRegistry.apply(GCBiomes.Moon.LUNAR_HIGHLANDS));
-        writeBiomeParameters(builder::add,
-                COLD,
-                DRY,
-                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
-                MIN_EROSION,
-                WEIRDNESS_L_MIXED,
-                0.0F,
-                biomeRegistry.apply(GCBiomes.Moon.BASALTIC_MARE));
-        writeBiomeParameters(builder::add,
-                COLD,
-                DRY,
-                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
-                MIN_EROSION,
-                WEIRDNESS_L_MIXED,
-                0.0F,
-                biomeRegistry.apply(GCBiomes.Moon.COMET_TUNDRA));
-        writeBiomeParameters(builder::add,
-                FULL_RANGE,
-                FULL_RANGE,
-                Climate.Parameter.span(-1.2F, -1.05F),
-                FULL_RANGE,
-                FULL_RANGE,
-                0.0F,
-                biomeRegistry.apply(GCBiomes.Moon.OLIVINE_SPIKES)
-        );
+//        writeBiomeParameters(builder::add,
+//                COLD,
+//                DRY,
+//                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
+//                MIN_EROSION,
+//                WEIRDNESS_H_MIXED,
+//                0.0F,
+//                biomeRegistry.apply(GCBiomes.Moon.LUNAR_HIGHLANDS));
+//        writeBiomeParameters(builder::add,
+//                COLD,
+//                DRY,
+//                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
+//                MIN_EROSION,
+//                WEIRDNESS_L_MIXED,
+//                0.0F,
+//                biomeRegistry.apply(GCBiomes.Moon.BASALTIC_MARE));
+//        writeBiomeParameters(builder::add,
+//                COLD,
+//                DRY,
+//                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
+//                MIN_EROSION,
+//                WEIRDNESS_L_MIXED,
+//                0.0F,
+//                biomeRegistry.apply(GCBiomes.Moon.COMET_TUNDRA));
+//        writeBiomeParameters(builder::add,
+//                FULL_RANGE,
+//                FULL_RANGE,
+//                Climate.Parameter.span(-1.2F, -1.05F),
+//                FULL_RANGE,
+//                FULL_RANGE,
+//                0.0F,
+//                biomeRegistry.apply(GCBiomes.Moon.OLIVINE_SPIKES)
+//        );
+
+        writeBiomeParameters(builder::add, COLD, COLD, COLD, COLD, COLD, 0, biomeRegistry.apply(GCBiomes.Moon.MOON_LEGACY));
 
         return new Climate.ParameterList<>(builder.build());
     }

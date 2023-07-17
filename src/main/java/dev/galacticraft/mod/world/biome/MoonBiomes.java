@@ -25,6 +25,9 @@ package dev.galacticraft.mod.world.biome;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.biome.OverworldBiomes;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
+import net.minecraft.world.level.biome.BiomeSpecialEffects;
+import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
@@ -43,5 +46,21 @@ public class MoonBiomes {
 
     public static Biome createOlivineSpikes(HolderGetter<PlacedFeature> featureLookup, HolderGetter<ConfiguredWorldCarver<?>> carverLookup) {
         return OverworldBiomes.plains(featureLookup, carverLookup, false, false, false); //fixme
+    }
+
+    public static Biome createLegacyBiome(HolderGetter<PlacedFeature> featureLookup, HolderGetter<ConfiguredWorldCarver<?>> carverLookup) {
+        MobSpawnSettings.Builder mobSettings = new MobSpawnSettings.Builder();
+        BiomeGenerationSettings.Builder generationSettings = new BiomeGenerationSettings.Builder(featureLookup, carverLookup);
+        BiomeSpecialEffects.Builder effects = new BiomeSpecialEffects.Builder();
+        effects.fogColor(0).waterColor(4159204).waterFogColor(329011).skyColor(0);
+        Biome.BiomeBuilder builder = new Biome.BiomeBuilder()
+                .mobSpawnSettings(mobSettings.build())
+                .generationSettings(generationSettings.build())
+                .hasPrecipitation(false)
+                .downfall(0)
+                .temperature(0.5F)
+                .temperatureAdjustment(Biome.TemperatureModifier.NONE)
+                .specialEffects(effects.build());
+        return builder.build();
     }
 }

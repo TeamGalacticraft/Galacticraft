@@ -43,6 +43,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class GCBiomes {
     public static final class Moon {
+        public static final ResourceKey<Biome> MOON_LEGACY = key("moon");
         public static final ResourceKey<Biome> COMET_TUNDRA = key("comet_tundra");
         public static final ResourceKey<Biome> BASALTIC_MARE = key("basaltic_mare");
         public static final ResourceKey<Biome> LUNAR_HIGHLANDS = key("lunar_highlands");
@@ -71,6 +72,7 @@ public final class GCBiomes {
         HolderGetter<PlacedFeature> featureLookup = context.lookup(Registries.PLACED_FEATURE);
         HolderGetter<ConfiguredWorldCarver<?>> carverLookup = context.lookup(Registries.CONFIGURED_CARVER);
         context.register(SPACE, createSpaceBiome(context.lookup(Registries.PLACED_FEATURE), context.lookup(Registries.CONFIGURED_CARVER)));
+        context.register(Moon.MOON_LEGACY, MoonBiomes.createLegacyBiome(featureLookup, carverLookup));
         context.register(Moon.COMET_TUNDRA, MoonBiomes.createCometTundra(featureLookup, carverLookup));
         context.register(Moon.BASALTIC_MARE, MoonBiomes.createBasalticMare(featureLookup, carverLookup));
         context.register(Moon.LUNAR_HIGHLANDS, MoonBiomes.createLunarHighlands(featureLookup, carverLookup));
