@@ -152,6 +152,12 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
+    public void setRemoved() {
+        distributeOxygenToArea(this.size, false);
+        super.setRemoved();
+    }
+
+    @Override
     protected @NotNull MachineStatus tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         this.distributeOxygenToArea(this.prevSize, false); // REVIEW: Inefficient?
 
