@@ -177,7 +177,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    protected MachineStatus tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         this.disabled = true;
         ((ServerLevelAccessor) world).removeSealer(this);
         for (BlockPos pos1 : this.breathablePositions) {
@@ -185,6 +185,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         }
         this.breathablePositions.clear();
         this.watching.clear();
+
+        return super.tickDisabled(world, pos, state, profiler);
     }
 
     @Override
