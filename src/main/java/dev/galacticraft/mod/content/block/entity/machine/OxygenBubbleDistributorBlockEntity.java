@@ -49,6 +49,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +60,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
-    public boolean bubbleVisible = true;
+    private boolean bubbleVisible = true;
     private double size = 0;
     private byte targetSize = 1;
     private int players = 0;
@@ -100,19 +102,16 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                     for (ServerPlayer player : world.players()) {
                         player.connection.send(entity.getAddEntityPacket());
                     }
+                } else if (!this.bubbleVisible && this.bubbleId != -1) {
+                    world.getEntity(bubbleId).remove(Entity.RemovalReason.DISCARDED);
+                    this.bubbleId = -1;
                 }
                 profiler.pop();
-                if (this.prevSize != this.size || this.players != world.players().size()) {
-                    this.players = world.players().size();
-                    this.prevSize = this.size;
-                    profiler.push("network");
-                    for (ServerPlayer player : world.players()) {
-                        ServerPlayNetworking.send(player, Constant.Packet.BUBBLE_SIZE, new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
-                    }
-                    profiler.pop();
-                }
+
+                this.trySyncSize(world, pos, profiler);
+
                 profiler.push("bubbler_distributor_transfer");
-                long oxygenRequired = ((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size));
+                long oxygenRequired = Math.max((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size), 1);
                 FluidResourceSlot slot = this.fluidStorage().getSlot(GCSlotGroupTypes.OXYGEN_INPUT);
                 if (slot.canExtract(oxygenRequired)) {
                     slot.extract(oxygenRequired);
@@ -141,6 +140,8 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
         if (this.size > 0) {
             this.setSize(this.size - 0.2D);
+            this.trySyncSize(world, pos, profiler);
+            distributeOxygenToArea(this.size, true); // technically this oxygen is being created from thin air
         }
 
         if (this.size < 0) {
@@ -155,6 +156,18 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         this.distributeOxygenToArea(this.prevSize, false); // REVIEW: Inefficient?
 
         return super.tickDisabled(world, pos, state, profiler);
+    }
+
+    private void trySyncSize(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull ProfilerFiller profiler) {
+        if (this.prevSize != this.size || this.players != world.players().size()) {
+            this.players = world.players().size();
+            this.prevSize = this.size;
+            profiler.push("network");
+            for (ServerPlayer player : world.players()) {
+                ServerPlayNetworking.send(player, Constant.Packet.BUBBLE_SIZE, new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
+            }
+            profiler.pop();
+        }
     }
 
     public int getDistanceFromServer(int par1, int par3, int par5) {
@@ -197,7 +210,6 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
     @Override
     public void load(CompoundTag nbt) {
-        super.load(nbt);
         this.size = nbt.getDouble(Constant.Nbt.SIZE);
         if (this.size < 0) this.size = 0;
         this.targetSize = nbt.getByte(Constant.Nbt.MAX_SIZE);
@@ -210,9 +222,16 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     public double getSize() {
         return this.size;
     }
-
     public void setSize(double size) {
         this.size = size;
+    }
+
+    public boolean isBubbleVisible() {
+        return bubbleVisible;
+    }
+    public void setBubbleVisible(boolean bubbleVisible) {
+        this.bubbleVisible = bubbleVisible;
+        this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
     }
 
     @Nullable
@@ -225,6 +244,8 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
+
+        tag.putDouble(Constant.Nbt.SIZE, this.size);
         tag.putBoolean(Constant.Nbt.VISIBLE, this.bubbleVisible);
         return tag;
     }

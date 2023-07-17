@@ -47,7 +47,7 @@ public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistrib
 
     public OxygenBubbleDistributorMenu(int syncId, ServerPlayer player, OxygenBubbleDistributorBlockEntity machine) {
         super(syncId, player, machine);
-        this.bubbleVisible = machine.bubbleVisible;
+        this.bubbleVisible = machine.isBubbleVisible();
         this.size = machine.getSize();
         this.targetSize = machine.getTargetSize();
     }
@@ -80,6 +80,6 @@ public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistrib
             }
         });
         consumer.accept(new DoubleMenuSyncHandler(this.machine::getSize, value -> this.size = value));
-        consumer.accept(new BooleanMenuSyncHandler(() -> this.machine.bubbleVisible, t -> this.bubbleVisible = t));
+        consumer.accept(new BooleanMenuSyncHandler(this.machine::isBubbleVisible, t -> this.bubbleVisible = t));
     }
 }
