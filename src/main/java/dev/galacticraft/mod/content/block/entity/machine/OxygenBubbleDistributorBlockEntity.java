@@ -150,6 +150,13 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         return status;
     }
 
+    @Override
+    protected @NotNull MachineStatus tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        this.distributeOxygenToArea(this.prevSize, false); // REVIEW: Inefficient?
+
+        return super.tickDisabled(world, pos, state, profiler);
+    }
+
     public int getDistanceFromServer(int par1, int par3, int par5) {
         final int d3 = this.getBlockPos().getX() - par1;
         final int d4 = this.getBlockPos().getY() - par3;
