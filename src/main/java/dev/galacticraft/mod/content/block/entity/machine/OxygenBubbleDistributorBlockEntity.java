@@ -192,6 +192,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         super.saveAdditional(tag);
         tag.putByte(Constant.Nbt.MAX_SIZE, this.targetSize);
         tag.putDouble(Constant.Nbt.SIZE, this.size);
+        tag.putBoolean(Constant.Nbt.VISIBLE, this.bubbleVisible);
     }
 
     @Override
@@ -201,6 +202,9 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         if (this.size < 0) this.size = 0;
         this.targetSize = nbt.getByte(Constant.Nbt.MAX_SIZE);
         if (this.targetSize < 1) this.targetSize = 1;
+        this.bubbleVisible = nbt.getBoolean(Constant.Nbt.VISIBLE);
+
+        super.load(nbt);
     }
 
     public double getSize() {
@@ -216,5 +220,12 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new OxygenBubbleDistributorMenu(syncId, (ServerPlayer) player, this);
         return null;
+    }
+
+    @Override
+    public @NotNull CompoundTag getUpdateTag() {
+        CompoundTag tag = super.getUpdateTag();
+        tag.putBoolean(Constant.Nbt.VISIBLE, this.bubbleVisible);
+        return tag;
     }
 }

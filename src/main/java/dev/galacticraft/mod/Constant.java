@@ -802,6 +802,7 @@ public interface Constant {
         String PROGRESS = "Progress";
         String SIZE = "Size";
         String MAX_SIZE = "MaxSize";
+        String VISIBLE = "Visible";
         String FUEL_TIME = "FuelTime";
         String FUEL_LENGTH = "FuelLength";
         String TEAM = "Team";

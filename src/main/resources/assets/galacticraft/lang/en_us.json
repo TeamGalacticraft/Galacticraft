@@ -381,6 +381,7 @@
   "death.attack.galacticraft.oil_boom": "%s tried to put out fire with a very flammable material",
   "death.attack.galacticraft.suffocation": "%s died from lack of oxygen",
   "death.attack.galacticraft.vine_poison": "%s succumbed to the poison of some vines",
+  "machine_status.galacticraft.area_too_large": "Area Too Large",
   "machine_status.galacticraft.not_enough_oxygen": "Not Enough Oxygen",
   "machine_status.galacticraft.distributing": "Active",
   "machine_status.galacticraft.sealed": "Sealed",
