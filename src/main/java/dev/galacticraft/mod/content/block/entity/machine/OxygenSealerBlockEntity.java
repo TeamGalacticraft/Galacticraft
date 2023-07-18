@@ -67,7 +67,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     private final Set<BlockPos> watching = new HashSet<>();
     private int sealCheckTime;
     private boolean updateQueued = true;
-    private boolean disabled = false;
     private boolean oxygenWorld = false;
     private boolean sealed = false;
 
@@ -93,9 +92,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         assert world != null;
-        if (this.disabled != (this.disabled = false)) {
-            ((ServerLevelAccessor) world).addSealer(this);
-        }
 
         if (this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate())) {
             if (!this.fluidStorage().getGroup(GCSlotGroupTypes.OXYGEN_INPUT).isEmpty()) {
@@ -169,38 +165,32 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                 profiler.pop();
                 return GCMachineStatuses.SEALED;
             } else {
-                resetForLowResource(world);
+                this.tryClearSeal(world);
                 return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
             }
         } else {
-            resetForLowResource(world);
+            this.tryClearSeal(world);
             return MachineStatuses.NOT_ENOUGH_ENERGY;
         }
     }
 
-    private void resetForLowResource(@NotNull ServerLevel world) {
+    private void tryClearSeal(@NotNull ServerLevel world) {
         if (this.sealed) {
             for (BlockPos pos1 : this.breathablePositions) {
                 world.setBreathable(pos1, false);
             }
             this.breathablePositions.clear();
             this.watching.clear();
-            this.updateQueued = true;
+
             this.sealed = false;
         }
+        this.updateQueued = true;
         this.sealCheckTime = 0;
     }
 
     @Override
     protected MachineStatus tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        this.disabled = true;
-        ((ServerLevelAccessor) world).removeSealer(this);
-        for (BlockPos pos1 : this.breathablePositions) {
-            world.setBreathable(pos1, false);
-        }
-        this.breathablePositions.clear();
-        this.watching.clear();
-
+        this.tryClearSeal(world);
         return super.tickDisabled(world, pos, state, profiler);
     }
 
