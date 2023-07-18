@@ -128,11 +128,12 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                         state1 = world.getBlockState(pos1);
                         if (state1.isAir() || (!Block.isFaceFull(state1.getCollisionShape(world, pos1), pair.getB().getOpposite()))) {
                             this.breathablePositions.add(pos1);
-                            if (this.sealed = this.breathablePositions.size() > 1000) {
+                            if (this.breathablePositions.size() > 1024) {
                                 this.breathablePositions.clear();
                                 this.watching.clear();
                                 this.updateQueued = true;
                                 this.sealCheckTime = SEAL_CHECK_TIME * 5;
+                                this.sealed = false;
                                 profiler.pop();
                                 return GCMachineStatuses.AREA_TOO_LARGE;
                             }
@@ -151,6 +152,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                             this.watching.add(pos1);
                         }
                     }
+                    this.sealed = true; // if escaped queue then set sealed
                     for (BlockPos pos2 : this.breathablePositions) {
                         world.setBreathable(pos2, true);
                     }
@@ -167,13 +169,26 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                 profiler.pop();
                 return GCMachineStatuses.SEALED;
             } else {
-                this.sealCheckTime = 0;
+                resetForLowResource(world);
                 return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
             }
         } else {
-            this.sealCheckTime = 0;
+            resetForLowResource(world);
             return MachineStatuses.NOT_ENOUGH_ENERGY;
         }
+    }
+
+    private void resetForLowResource(@NotNull ServerLevel world) {
+        if (this.sealed) {
+            for (BlockPos pos1 : this.breathablePositions) {
+                world.setBreathable(pos1, false);
+            }
+            this.breathablePositions.clear();
+            this.watching.clear();
+            this.updateQueued = true;
+            this.sealed = false;
+        }
+        this.sealCheckTime = 0;
     }
 
     @Override
@@ -191,7 +206,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
     @Override
     public void setRemoved() {
-        super.setRemoved();
         if (!this.level.isClientSide) {
             ((ServerLevelAccessor) this.level).removeSealer(this);
         }
@@ -200,6 +214,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         }
         this.breathablePositions.clear();
         this.watching.clear();
+
+        super.setRemoved();
     }
 
     @Nullable
