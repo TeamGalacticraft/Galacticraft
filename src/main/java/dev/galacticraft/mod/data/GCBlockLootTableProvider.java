@@ -31,6 +31,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -251,7 +252,25 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         add(GALENA_ORE, createOreDrop(GALENA_ORE, GCItems.RAW_LEAD));
 
-        add(MOON_CHEESE_BLOCK, noDrop());
+        this.add(MOON_CHEESE_BLOCK, noDrop());
+        this.add(CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.CANDLE));
+        this.add(WHITE_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.WHITE_CANDLE));
+        this.add(ORANGE_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.ORANGE_CANDLE));
+        this.add(MAGENTA_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.MAGENTA_CANDLE));
+        this.add(LIGHT_BLUE_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.LIGHT_BLUE_CANDLE));
+        this.add(YELLOW_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.YELLOW_CANDLE));
+        this.add(LIME_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.LIME_CANDLE));
+        this.add(PINK_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.PINK_CANDLE));
+        this.add(GRAY_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.GRAY_CANDLE));
+        this.add(LIGHT_GRAY_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.LIGHT_GRAY_CANDLE));
+        this.add(CYAN_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.CYAN_CANDLE));
+        this.add(PURPLE_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.PURPLE_CANDLE));
+        this.add(BLUE_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.BLUE_CANDLE));
+        this.add(BROWN_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.BROWN_CANDLE));
+        this.add(GREEN_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.GREEN_CANDLE));
+        this.add(RED_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.RED_CANDLE));
+        this.add(BLACK_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.BLACK_CANDLE));
+
         dropSelf(SILICON_BLOCK);
         dropSelf(METEORIC_IRON_BLOCK);
         dropSelf(DESH_BLOCK);
