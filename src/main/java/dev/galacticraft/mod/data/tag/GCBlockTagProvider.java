@@ -87,9 +87,14 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_WALL))
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_BRICK_WALL));
 
-        this.tag(BlockTags.WALL_POST_OVERRIDE)
-                .add(this.reverseLookup(GCBlocks.GLOWSTONE_TORCH))
-                .add(this.reverseLookup(GCBlocks.UNLIT_TORCH));
+        this.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(
+                        GCBlocks.UNLIT_LANTERN);
+
+        this.getOrCreateTagBuilder(BlockTags.WALL_POST_OVERRIDE)
+                .add(
+                        GCBlocks.GLOWSTONE_TORCH,
+                        GCBlocks.UNLIT_TORCH);
 
         this.getOrCreateTagBuilder(BlockTags.CANDLE_CAKES)
                 .add(

@@ -65,7 +65,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropOther(UNLIT_WALL_TORCH, GCItems.UNLIT_TORCH);
 
         dropSelf(GLOWSTONE_LANTERN);
-        dropOther(UNLIT_LANTERN, Items.LANTERN);
+        dropSelf(UNLIT_LANTERN);
 
         dropSelf(ALUMINUM_DECORATION);
         dropSelf(ALUMINUM_DECORATION_SLAB);

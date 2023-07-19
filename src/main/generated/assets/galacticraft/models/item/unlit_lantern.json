@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:item/air"
+    "layer0": "galacticraft:item/unlit_lantern"
   }
 }

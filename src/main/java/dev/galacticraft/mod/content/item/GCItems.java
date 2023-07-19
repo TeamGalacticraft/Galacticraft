@@ -50,6 +50,7 @@ public class GCItems {
 
     // LANTERNS
     public static final Item GLOWSTONE_LANTERN = new BlockItem(GCBlocks.GLOWSTONE_LANTERN, new Item.Properties());
+    public static final Item UNLIT_LANTERN = new BlockItem(GCBlocks.UNLIT_LANTERN, new Item.Properties());
 
     // DECORATION BLOCKS
     public static final Item ALUMINUM_DECORATION = new BlockItem(GCBlocks.ALUMINUM_DECORATION, new Item.Properties());
@@ -485,6 +486,7 @@ public class GCItems {
 
         // LANTERNS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GLOWSTONE_LANTERN), GLOWSTONE_LANTERN);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.UNLIT_LANTERN), UNLIT_LANTERN);
 
         // DECORATION BLOCKS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ALUMINUM_DECORATION), ALUMINUM_DECORATION);
