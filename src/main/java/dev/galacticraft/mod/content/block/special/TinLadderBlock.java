@@ -47,7 +47,7 @@ public class TinLadderBlock extends LadderBlock {
 
     @Nullable
     private InteractionResult checkCanTinLadderBePlaced(Level level, BlockPos checkPos, Player player, ItemStack itemStack, BlockState blockState) {
-        if (level.getBlockState(checkPos).isAir()) {
+        if (level.getBlockState(checkPos).canBeReplaced()) {
             var newState = this.defaultBlockState().setValue(FACING, blockState.getValue(FACING));
             level.setBlockAndUpdate(checkPos, newState);
             level.playSound(null, checkPos, blockState.getSoundType().getPlaceSound(), SoundSource.BLOCKS, (blockState.getSoundType().getVolume() + 1.0F) / 2.0F, blockState.getSoundType().getPitch() * 0.8F);
