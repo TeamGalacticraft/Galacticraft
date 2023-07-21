@@ -6,6 +6,11 @@
       "prefix": "connected/"
     },
     {
+      "type": "directory",
+      "source": "slot",
+      "prefix": "slot/"
+    },
+    {
       "type": "minecraft:single",
       "resource": "galacticraft:model/rocket"
     },
