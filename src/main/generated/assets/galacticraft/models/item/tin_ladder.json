@@ -1,3 +1,6 @@
 {
-  "parent": "galacticraft:block/tin_ladder"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "galacticraft:block/tin_ladder"
+  }
 }

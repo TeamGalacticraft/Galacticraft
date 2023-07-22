@@ -28,11 +28,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.Level;
 
 public interface Walkway extends Connected {
     @Nullable
@@ -46,11 +43,5 @@ public interface Walkway extends Connected {
 
     default void readWalkwayNbt(CompoundTag nbt) {
         this.setDirection(Constant.Misc.DIRECTIONS[nbt.getByte(Constant.Nbt.DIRECTION)]);
-    }
-
-    default void setSectionDirty(Level level, BlockPos blockPos) {
-        if (level != null && level.isClientSide) {
-            Minecraft.getInstance().levelRenderer.setSectionDirty(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-        }
     }
 }

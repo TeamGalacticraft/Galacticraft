@@ -27,20 +27,23 @@ import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GCParticleTypes {
-    public static final SimpleParticleType DRIPPING_FUEL_PARTICLE = FabricParticleTypes.simple();
-    public static final SimpleParticleType DRIPPING_CRUDE_OIL_PARTICLE = FabricParticleTypes.simple();
+    public static final SimpleParticleType DRIPPING_FUEL = FabricParticleTypes.simple();
+    public static final SimpleParticleType FALLING_FUEL = FabricParticleTypes.simple();
+    public static final SimpleParticleType DRIPPING_CRUDE_OIL = FabricParticleTypes.simple();
+    public static final SimpleParticleType FALLING_CRUDE_OIL = FabricParticleTypes.simple();
     public static final SimpleParticleType CRYOGENIC_PARTICLE = FabricParticleTypes.simple();
     public static final SimpleParticleType LANDER_FLAME_PARTICLE = FabricParticleTypes.simple();
 
     public static void register() {
-        Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Particle.DRIPPING_CRUDE_OIL_PARTICLE), DRIPPING_FUEL_PARTICLE);
-        Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Particle.DRIPPING_FUEL_PARTICLE), DRIPPING_CRUDE_OIL_PARTICLE);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.DRIPPING_CRUDE_OIL), DRIPPING_CRUDE_OIL);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.FALLING_CRUDE_OIL), FALLING_CRUDE_OIL);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.DRIPPING_FUEL), DRIPPING_FUEL);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.FALLING_FUEL), FALLING_FUEL);
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.CRYOGENIC_PARTICLE), CRYOGENIC_PARTICLE);
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.LANDER_FLAME), LANDER_FLAME_PARTICLE);
     }

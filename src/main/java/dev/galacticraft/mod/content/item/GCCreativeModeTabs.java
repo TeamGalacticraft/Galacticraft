@@ -229,6 +229,7 @@ public class GCCreativeModeTabs {
 
                 // LANTERNS
                 output.accept(GLOWSTONE_LANTERN);
+                output.accept(UNLIT_LANTERN);
 
                 // DECORATION BLOCKS
                 output.accept(ALUMINUM_DECORATION);

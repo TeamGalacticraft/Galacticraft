@@ -46,8 +46,10 @@ import dev.galacticraft.mod.util.MultiBlockUtil;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FlattenableBlockRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -236,7 +238,7 @@ public class GCBlocks {
     public static final Block WALKWAY = new WalkwayBlock(FabricBlockSettings.of().mapColor(MapColor.METAL).strength(5.0f, 5.0f).sound(SoundType.METAL));
     public static final Block PIPE_WALKWAY = new PipeWalkway(FabricBlockSettings.copyOf(WALKWAY));
     public static final Block WIRE_WALKWAY = new WireWalkway(FabricBlockSettings.copyOf(WALKWAY));
-    public static final Block TIN_LADDER = new TinLadderBlock(FabricBlockSettings.of().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL));
+    public static final Block TIN_LADDER = new TinLadderBlock(FabricBlockSettings.of().forceSolidOff().noOcclusion().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL));
     public static final Block GRATING = new GratingBlock(FabricBlockSettings.of().mapColor(MapColor.STONE).strength(2.5f, 6.0f).sound(SoundType.METAL));
 
     // SPECIAL
@@ -318,10 +320,10 @@ public class GCBlocks {
 
     // DUMMY
     public static final BaseEntityBlock SOLAR_PANEL_PART = new SolarPanelPartBlock(FabricBlockSettings.of().mapColor(MapColor.METAL).strength(-1.0F, 5.0F).noLootTable().sound(SoundType.METAL));
-    public static final BaseEntityBlock CRYOGENIC_CHAMBER_PART = new CryogenicChamberPart(FabricBlockSettings.of().mapColor(MapColor.METAL).strength(-1.0F, 5.0F).noLootTable().sound(SoundType.METAL));
+    public static final BaseEntityBlock CRYOGENIC_CHAMBER_PART = new CryogenicChamberPart(BlockBehaviour.Properties.of().noOcclusion().isSuffocating(GCBlocks::never).isViewBlocking(GCBlocks::never).mapColor(MapColor.METAL).strength(-1.0F, 5.0F).noLootTable().sound(SoundType.METAL));
 
     // MISC MACHINES
-    public static final Block CRYOGENIC_CHAMBER = new CryogenicChamberBlock(FabricBlockSettings.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL));
+    public static final Block CRYOGENIC_CHAMBER = new CryogenicChamberBlock(BlockBehaviour.Properties.of().noOcclusion().isSuffocating(GCBlocks::never).isViewBlocking(GCBlocks::never).mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL));
     public static final Block PLAYER_TRANSPORT_TUBE = new TransportTube(FabricBlockSettings.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sounds(SoundType.METAL).noCollission());
 
     // MACHINES
@@ -635,6 +637,10 @@ public class GCBlocks {
     private static FabricBlockSettings oreSettings(float hardness, float resistance, boolean deepslate) {
         if (deepslate) return FabricBlockSettings.of().mapColor(MapColor.DEEPSLATE).strength(hardness, resistance).requiresTool().sounds(SoundType.DEEPSLATE);
         return FabricBlockSettings.of().mapColor(MapColor.STONE).strength(hardness, resistance).requiresTool();
+    }
+
+    private static boolean never(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+        return false;
     }
 
     private static ToIntFunction<BlockState> litBlockEmission(int i) {

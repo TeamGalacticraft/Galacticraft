@@ -22,16 +22,12 @@
 
 package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -90,6 +86,15 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(this.reverseLookup(GCBlocks.COBBLED_MOON_ROCK_WALL))
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_WALL))
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_BRICK_WALL));
+
+        this.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(
+                        GCBlocks.UNLIT_LANTERN);
+
+        this.getOrCreateTagBuilder(BlockTags.WALL_POST_OVERRIDE)
+                .add(
+                        GCBlocks.GLOWSTONE_TORCH,
+                        GCBlocks.UNLIT_TORCH);
 
         this.getOrCreateTagBuilder(BlockTags.CANDLE_CAKES)
                 .add(
