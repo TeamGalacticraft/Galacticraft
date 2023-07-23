@@ -199,6 +199,10 @@ public class GalacticraftClient implements ClientModInitializer {
             ClientPlayNetworking.send(Constant.Packet.OPEN_GC_ROCKET, new FriendlyByteBuf(Unpooled.buffer(0)));
         }, player -> player.getVehicle() instanceof RocketEntity, RocketMenu.class);
 
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
+
+        });
+
         Constant.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

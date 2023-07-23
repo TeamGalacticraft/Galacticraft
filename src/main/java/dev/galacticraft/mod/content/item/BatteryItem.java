@@ -57,7 +57,7 @@ public class BatteryItem extends Item implements SimpleEnergyItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
-        lines.add(Component.translatable("tooltip.galacticraft.energy_remaining", DrawableUtil.getEnergyDisplay(getStoredEnergy(stack))).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double)getStoredEnergy(stack)) / ((double)this.getEnergyCapacity(stack)))));
+        lines.add(Component.translatable("tooltip.galacticraft.energy_remaining", DrawableUtil.getEnergyDisplay(getStoredEnergy(stack))).setStyle(Constant.Text.Color.getStorageLevelStyle(1.0 - ((double)getStoredEnergy(stack)) / ((double)this.getEnergyCapacity(stack)))));
         super.appendHoverText(stack, world, lines, context);
     }
 

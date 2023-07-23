@@ -96,4 +96,8 @@ public interface Config {
     long oxygenDecompressorEnergyConsumptionRate();
 
     void setOxygenDecompressorEnergyConsumptionRate(long amount);
+
+    long playerOxygenConsuptionRate();
+
+    void setPlayerOxygenConsumptionRate(long amount);
 }
