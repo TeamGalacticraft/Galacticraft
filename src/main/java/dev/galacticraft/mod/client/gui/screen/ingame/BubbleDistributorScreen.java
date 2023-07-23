@@ -74,6 +74,7 @@ public class BubbleDistributorScreen extends MachineScreen<OxygenBubbleDistribut
         this.titleLabelX += 20;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         if (!this.menu.bubbleVisible) {

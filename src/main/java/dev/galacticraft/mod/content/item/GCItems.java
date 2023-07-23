@@ -50,6 +50,7 @@ public class GCItems {
 
     // LANTERNS
     public static final Item GLOWSTONE_LANTERN = new BlockItem(GCBlocks.GLOWSTONE_LANTERN, new Item.Properties());
+    public static final Item UNLIT_LANTERN = new BlockItem(GCBlocks.UNLIT_LANTERN, new Item.Properties());
 
     // DECORATION BLOCKS
     public static final Item ALUMINUM_DECORATION = new BlockItem(GCBlocks.ALUMINUM_DECORATION, new Item.Properties());
@@ -246,8 +247,10 @@ public class GCItems {
 
     public static final Item GALENA_ORE = new BlockItem(GCBlocks.GALENA_ORE, new Item.Properties());
 
-    // COMPACT MINERAL BLOCKS
+    // CHEESE BLOCK
     public static final Item MOON_CHEESE_BLOCK = new BlockItem(GCBlocks.MOON_CHEESE_BLOCK, new Item.Properties());
+
+    // COMPACT MINERAL BLOCKS
     public static final Item SILICON_BLOCK = new BlockItem(GCBlocks.SILICON_BLOCK, new Item.Properties());
     public static final Item METEORIC_IRON_BLOCK = new BlockItem(GCBlocks.METEORIC_IRON_BLOCK, new Item.Properties());
     public static final Item DESH_BLOCK = new BlockItem(GCBlocks.DESH_BLOCK, new Item.Properties());
@@ -413,7 +416,7 @@ public class GCItems {
     public static final Item TITANIUM_AXE = new AxeItem(GCToolMaterial.TITANIUM, 6.0F, -3.1F, new Item.Properties());
     public static final Item TITANIUM_HOE = new HoeItem(GCToolMaterial.TITANIUM, -3, -1.0F, new Item.Properties());
 
-    public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Properties());
+    public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Properties().durability(256));
 
     // BATTERIES
     public static final Item BATTERY = new BatteryItem(new Item.Properties(), 15000, 500);
@@ -483,6 +486,7 @@ public class GCItems {
 
         // LANTERNS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GLOWSTONE_LANTERN), GLOWSTONE_LANTERN);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.UNLIT_LANTERN), UNLIT_LANTERN);
 
         // DECORATION BLOCKS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ALUMINUM_DECORATION), ALUMINUM_DECORATION);
@@ -679,8 +683,10 @@ public class GCItems {
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GALENA_ORE), GALENA_ORE);
 
-        // COMPACT MINERAL BLOCKS
+        // CHEESE BLOCK
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_CHEESE_BLOCK), MOON_CHEESE_BLOCK);
+
+        // COMPACT MINERAL BLOCKS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.SILICON_BLOCK), SILICON_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.METEORIC_IRON_BLOCK), METEORIC_IRON_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DESH_BLOCK), DESH_BLOCK);

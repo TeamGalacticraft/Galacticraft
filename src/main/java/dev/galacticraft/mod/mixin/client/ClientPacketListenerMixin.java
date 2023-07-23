@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.accessor.LivingEntityAccessor;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.world.entity.Entity;
@@ -37,8 +36,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public class ClientPacketListenerMixin {
     @Inject(method = "handleAnimate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;stopSleepInBed(ZZ)V"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void gc$handleCryoStop(ClientboundAnimatePacket clientboundAnimatePacket, CallbackInfo ci, Entity entity, Player player) {
-        if (((LivingEntityAccessor)player).isInCryoSleep()) {
-            ((LivingEntityAccessor)player).stopCryogenicSleep(false, false);
+        if (player.isInCryoSleep()) {
+            player.stopCryogenicSleep(false, false);
             ci.cancel();
         }
     }

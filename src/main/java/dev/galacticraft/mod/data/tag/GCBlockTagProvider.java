@@ -22,15 +22,12 @@
 
 package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Block;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -89,6 +86,35 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(this.reverseLookup(GCBlocks.COBBLED_MOON_ROCK_WALL))
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_WALL))
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_BRICK_WALL));
-        ;
+
+        this.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(
+                        GCBlocks.UNLIT_LANTERN);
+
+        this.getOrCreateTagBuilder(BlockTags.WALL_POST_OVERRIDE)
+                .add(
+                        GCBlocks.GLOWSTONE_TORCH,
+                        GCBlocks.UNLIT_TORCH);
+
+        this.getOrCreateTagBuilder(BlockTags.CANDLE_CAKES)
+                .add(
+                        GCBlocks.CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.WHITE_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.ORANGE_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.MAGENTA_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.LIGHT_BLUE_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.YELLOW_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.LIME_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.PINK_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.GRAY_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.LIGHT_GRAY_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.CYAN_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.PURPLE_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.BLUE_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.BROWN_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.GREEN_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.RED_CANDLE_MOON_CHEESE_BLOCK,
+                        GCBlocks.BLACK_CANDLE_MOON_CHEESE_BLOCK
+                );
     }
 }

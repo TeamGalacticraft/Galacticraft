@@ -49,7 +49,6 @@ import net.minecraft.world.level.block.state.properties.Property;
 public class StandardWrenchItem extends Item {
     public StandardWrenchItem(Properties settings) {
         super(settings);
-        settings.durability(256);
     }
 
     private static <T extends Comparable<T>> BlockState cycle(BlockState state, Property<T> property, boolean reverse) {
