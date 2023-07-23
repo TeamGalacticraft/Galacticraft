@@ -29,8 +29,8 @@ jobs:
           arguments: checkLicenses build publish
         env:
           SNAPSHOT: true
-          ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USER }}
-          ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASS }}
+          ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.NEXUS_USER }}
+          ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.NEXUS_PASSWORD }}
 
 #      - name: Copy GameTest Results
 #        run: cp run/TEST-gametest.xml build/test-results/test/

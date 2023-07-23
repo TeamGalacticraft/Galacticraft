@@ -20,25 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.item;
+package dev.galacticraft.mod.accessor;
 
-import net.minecraft.world.entity.LivingEntity;
+import com.mojang.datafixers.util.Either;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class CannedFoodItem extends Item {
-    public CannedFoodItem(Properties settings) {
-        super(settings);
-    }
+public interface CryogenicAccessor {
+    Either<Player.BedSleepingProblem, Unit> startCryogenicSleep(BlockPos blockPos);
 
-    @Override
-    public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity livingEntity) {
-        var itemStack2 = super.finishUsingItem(itemStack, level, livingEntity);
-        return livingEntity instanceof Player player && player.getAbilities().instabuild ? itemStack2 : new ItemStack(GCItems.TIN_CANISTER);
-    }
+    void stopCryogenicSleep(boolean resetSleepCounter, boolean sync);
+
+    int getCryogenicChamberCooldown();
+
+    void setCryogenicChamberCooldown(int cryogenicChamberCooldown);
+
+    boolean isInCryoSleep();
 }

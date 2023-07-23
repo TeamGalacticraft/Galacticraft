@@ -32,7 +32,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -40,8 +40,9 @@ import org.jetbrains.annotations.NotNull;
 @Environment(EnvType.CLIENT)
 public record DrippingOilProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
     @Override
-    public @NotNull Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-        DripParticle particle = new DripParticle.DripHangParticle(world, x, y, z, GCFluids.CRUDE_OIL, GCParticleTypes.DRIPPING_CRUDE_OIL_PARTICLE);
+    @Nullable
+    public Particle createParticle(SimpleParticleType particleOptions, ClientLevel clientLevel, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        var particle = new DripParticle.DripHangParticle(clientLevel, x, y, z, GCFluids.CRUDE_OIL, GCParticleTypes.FALLING_CRUDE_OIL);
         particle.setColor(42f / 255f, 42f / 255f, 42f / 255f);
         particle.pickSprite(this.spriteProvider);
         return particle;

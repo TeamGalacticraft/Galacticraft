@@ -20,21 +20,30 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.accessor;
+package dev.galacticraft.mod.client.particle;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
+import dev.galacticraft.mod.content.GCFluids;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.DripParticle;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.core.particles.SimpleParticleType;
 
-public interface LivingEntityAccessor {
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
+@Environment(EnvType.CLIENT)
+public record FallingFuelProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
+    @Override
     @Nullable
-    Player.BedSleepingProblem startCryogenicSleep(BlockPos pos);
-
-    void stopCryogenicSleep(boolean resetSleepCounter, boolean sync);
-
-    int getCryogenicChamberCooldown();
-
-    void setCryogenicChamberCooldown(int cryogenicChamberCooldown);
-
-    boolean isInCryoSleep();
+    public Particle createParticle(SimpleParticleType particleOptions, ClientLevel clientLevel, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        var particle = new DripParticle.FallingParticle(clientLevel, x, y, z, GCFluids.FUEL);
+        particle.setColor(146f / 255f, 140f / 255f, 74f / 255f);
+        particle.pickSprite(this.spriteProvider);
+        return particle;
+    }
 }
