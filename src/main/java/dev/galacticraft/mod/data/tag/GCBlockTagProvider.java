@@ -29,6 +29,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Block;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -88,68 +89,27 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_WALL))
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_BRICK_WALL));
 
-
-        // MINING TAGS
-        this.tag(ConventionalBlockTags.ORES)
-                .add(this.reverseLookup(GCBlocks.SILICON_ORE))
-                .add(this.reverseLookup(GCBlocks.DEEPSLATE_SILICON_ORE))
-
-                .add(this.reverseLookup(GCBlocks.MOON_COPPER_ORE))
-                .add(this.reverseLookup(GCBlocks.LUNASLATE_COPPER_ORE))
-
-                .add(this.reverseLookup(GCBlocks.TIN_ORE))
-                .add(this.reverseLookup(GCBlocks.DEEPSLATE_TIN_ORE))
-                .add(this.reverseLookup(GCBlocks.MOON_TIN_ORE))
-                .add(this.reverseLookup(GCBlocks.LUNASLATE_TIN_ORE))
-
-                .add(this.reverseLookup(GCBlocks.ALUMINUM_ORE))
-                .add(this.reverseLookup(GCBlocks.DEEPSLATE_ALUMINUM_ORE))
-
-                .add(this.reverseLookup(GCBlocks.DESH_ORE))
-
-                .add(this.reverseLookup(GCBlocks.ILMENITE_ORE))
-
-                .add(this.reverseLookup(GCBlocks.GALENA_ORE));
-
-        this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(this.reverseLookup(GCBlocks.SILICON_ORE))
-                .add(this.reverseLookup(GCBlocks.DEEPSLATE_SILICON_ORE))
-
-                .add(this.reverseLookup(GCBlocks.MOON_COPPER_ORE))
-                .add(this.reverseLookup(GCBlocks.LUNASLATE_COPPER_ORE))
-
-                .add(this.reverseLookup(GCBlocks.TIN_ORE))
-                .add(this.reverseLookup(GCBlocks.DEEPSLATE_TIN_ORE))
-                .add(this.reverseLookup(GCBlocks.MOON_TIN_ORE))
-                .add(this.reverseLookup(GCBlocks.LUNASLATE_TIN_ORE))
-
-                .add(this.reverseLookup(GCBlocks.ALUMINUM_ORE))
-                .add(this.reverseLookup(GCBlocks.DEEPSLATE_ALUMINUM_ORE))
-
-                .add(this.reverseLookup(GCBlocks.DESH_ORE))
-
-                .add(this.reverseLookup(GCBlocks.ILMENITE_ORE))
-
-                .add(this.reverseLookup(GCBlocks.GALENA_ORE));
-        this.tag(BlockTags.NEEDS_STONE_TOOL)
-                .add(this.reverseLookup(GCBlocks.MOON_COPPER_ORE))
-                .add(this.reverseLookup(GCBlocks.LUNASLATE_COPPER_ORE))
-
-                .add(this.reverseLookup(GCBlocks.TIN_ORE))
-                .add(this.reverseLookup(GCBlocks.DEEPSLATE_TIN_ORE))
-                .add(this.reverseLookup(GCBlocks.MOON_TIN_ORE))
-                .add(this.reverseLookup(GCBlocks.LUNASLATE_TIN_ORE))
-
-                .add(this.reverseLookup(GCBlocks.ALUMINUM_ORE))
-                .add(this.reverseLookup(GCBlocks.DEEPSLATE_ALUMINUM_ORE))
-
-                .add(this.reverseLookup(GCBlocks.GALENA_ORE));
-        this.tag(BlockTags.NEEDS_IRON_TOOL)
-                .add(this.reverseLookup(GCBlocks.SILICON_ORE))
-                .add(this.reverseLookup(GCBlocks.DEEPSLATE_SILICON_ORE));
-        this.tag(BlockTags.NEEDS_DIAMOND_TOOL)
-                .add(this.reverseLookup(GCBlocks.DESH_ORE))
-                .add(this.reverseLookup(GCBlocks.ILMENITE_ORE));
+        // ORE MINING TAGS
+        Block[] ores = {
+                GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE,
+                GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE,
+                GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE,
+                GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE,
+                GCBlocks.DESH_ORE,
+                GCBlocks.ILMENITE_ORE,
+                GCBlocks.GALENA_ORE
+        };
+        this.getOrCreateTagBuilder(ConventionalBlockTags.ORES).add(ores);
+        this.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(ores);
+        this.getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL).add(
+                GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE,
+                GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE,
+                GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE,
+                GCBlocks.GALENA_ORE);
+        this.getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(
+                GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE);
+        this.getOrCreateTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL).add(
+                GCBlocks.DESH_ORE, GCBlocks.ILMENITE_ORE);
 
         // Cheese Candle Tags
         this.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)

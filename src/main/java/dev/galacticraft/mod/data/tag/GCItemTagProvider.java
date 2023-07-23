@@ -22,12 +22,10 @@
 
 package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.ItemTags;
@@ -83,25 +81,14 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         //        "galacticraft:legacy_music_disc_spacerace"
 
         // Ore Tags
-        this.tag(ConventionalItemTags.ORES)
-                .add(this.reverseLookup(GCItems.SILICON_ORE))
-                .add(this.reverseLookup(GCItems.DEEPSLATE_SILICON_ORE))
-
-                .add(this.reverseLookup(GCItems.MOON_COPPER_ORE))
-                .add(this.reverseLookup(GCItems.LUNASLATE_COPPER_ORE))
-
-                .add(this.reverseLookup(GCItems.TIN_ORE))
-                .add(this.reverseLookup(GCItems.DEEPSLATE_TIN_ORE))
-                .add(this.reverseLookup(GCItems.MOON_TIN_ORE))
-                .add(this.reverseLookup(GCItems.LUNASLATE_TIN_ORE))
-
-                .add(this.reverseLookup(GCItems.ALUMINUM_ORE))
-                .add(this.reverseLookup(GCItems.DEEPSLATE_ALUMINUM_ORE))
-
-                .add(this.reverseLookup(GCItems.DESH_ORE))
-
-                .add(this.reverseLookup(GCItems.ILMENITE_ORE))
-
-                .add(this.reverseLookup(GCItems.GALENA_ORE));
+        this.getOrCreateTagBuilder(ConventionalItemTags.ORES).add(
+                GCItems.SILICON_ORE, GCItems.DEEPSLATE_SILICON_ORE,
+                GCItems.MOON_COPPER_ORE, GCItems.LUNASLATE_COPPER_ORE,
+                GCItems.TIN_ORE, GCItems.DEEPSLATE_TIN_ORE, GCItems.MOON_TIN_ORE, GCItems.LUNASLATE_TIN_ORE,
+                GCItems.ALUMINUM_ORE, GCItems.DEEPSLATE_ALUMINUM_ORE,
+                GCItems.DESH_ORE,
+                GCItems.ILMENITE_ORE,
+                GCItems.GALENA_ORE
+        );
     }
 }
