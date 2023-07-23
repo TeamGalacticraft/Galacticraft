@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.events;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.accessor.LivingEntityAccessor;
+import dev.galacticraft.mod.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.core.BlockPos;
@@ -48,7 +48,7 @@ public class GCEventHandlers {
     }
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
-        if (entity instanceof LivingEntityAccessor player) {
+        if (entity instanceof CryogenicAccessor player) {
             if (player.isInCryoSleep()) {
                 return InteractionResult.SUCCESS;
             }
@@ -57,7 +57,7 @@ public class GCEventHandlers {
     }
 
     public static Direction changeSleepPosition(LivingEntity entity, BlockPos sleepingPos, @Nullable Direction sleepingDirection) {
-        if (((LivingEntityAccessor)entity).isInCryoSleep()) {
+        if (entity instanceof CryogenicAccessor player && player.isInCryoSleep()) {
             BlockState state = entity.level().getBlockState(sleepingPos);
             if (state.getBlock() instanceof CryogenicChamberBlock)
                 return state.getValue(CryogenicChamberBlock.FACING);
@@ -78,16 +78,16 @@ public class GCEventHandlers {
     }
 
     public static InteractionResult canCryoSleep(Player player, BlockPos sleepingPos, boolean vanillaResult) {
-        if (((LivingEntityAccessor)player).isInCryoSleep())
+        if (player.isInCryoSleep())
             return InteractionResult.SUCCESS;
         return vanillaResult ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 
     public static void onWakeFromCryoSleep(LivingEntity entity, BlockPos sleepingPos) {
         Level level = entity.level();
-        if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
+        if (!level.isClientSide && level instanceof ServerLevel serverLevel && entity instanceof CryogenicAccessor player) {
             entity.heal(5.0F);
-            ((LivingEntityAccessor)entity).setCryogenicChamberCooldown(6000);
+            player.setCryogenicChamberCooldown(6000);
 
 //            if (serverLevel.areAllPlayersAsleep() && ws.getGameRules().getBoolean("doDaylightCycle")) {
 //                WorldUtil.setNextMorning(ws);

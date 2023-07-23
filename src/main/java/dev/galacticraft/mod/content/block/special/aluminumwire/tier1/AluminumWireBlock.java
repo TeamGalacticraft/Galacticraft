@@ -28,8 +28,6 @@ import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.util.DirectionUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -62,9 +60,8 @@ public class AluminumWireBlock extends WireBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
-        WireBlockEntity wire = (WireBlockEntity) view.getBlockEntity(pos);
-        if (wire != null) {
+    public VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
+        if (level.getBlockEntity(blockPos) instanceof WireBlockEntity wire) {
             List<VoxelShape> shapes = new ArrayList<>();
 
             if (wire.getConnections()[2]) {
@@ -86,41 +83,47 @@ public class AluminumWireBlock extends WireBlock {
                 shapes.add(DOWN);
             }
             if (!shapes.isEmpty()) {
-                return Shapes.or(NONE, shapes.toArray(new VoxelShape[0]));
+                return Shapes.or(NONE, shapes.toArray(VoxelShape[]::new));
             }
         }
         return NONE;
     }
 
     @Override
-    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
-        super.onPlace(state, world, pos, oldState, notify);
-        WireBlockEntity wire = (WireBlockEntity) world.getBlockEntity(pos);
-        assert wire != null;
-        boolean b = false;
-        for (Direction dir : Constant.Misc.DIRECTIONS) {
-            b |= (wire.getConnections()[dir.ordinal()] = wire.canConnect(dir) && EnergyStorage.SIDED.find(world, pos.relative(dir), dir.getOpposite()) != null);
+    public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState oldState, boolean notify) {
+        super.onPlace(blockState, level, blockPos, oldState, notify);
+
+        if (level.getBlockEntity(blockPos) instanceof WireBlockEntity wire) {
+            var changed = false;
+            for (var direction : Constant.Misc.DIRECTIONS) {
+                changed |= (wire.getConnections()[direction.ordinal()] = wire.canConnect(direction) && EnergyStorage.SIDED.find(level, blockPos.relative(direction), direction.getOpposite()) != null);
+            }
+            if (changed) {
+                wire.setChanged();
+            }
+            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
         }
-        if (b)
+    }
+
+    @Override
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos fromPos, boolean notify) {
+        super.neighborChanged(blockState, level, blockPos, block, fromPos, notify);
+
+        if (level.getBlockEntity(blockPos) instanceof WireBlockEntity wire) {
+            var direction = DirectionUtil.fromNormal(fromPos.getX() - blockPos.getX(), fromPos.getY() - blockPos.getY(), fromPos.getZ() - blockPos.getZ());
+
+            if (direction != null) {
+                if (!level.isClientSide && wire.getConnections()[direction.ordinal()] != (wire.getConnections()[direction.ordinal()] = wire.canConnect(direction) && EnergyStorage.SIDED.find(level, fromPos, direction.getOpposite()) != null)) {
+                    level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
+                }
+            }
             wire.setChanged();
-        if (!world.isClientSide && b) ((ServerLevel) world).getChunkSource().blockChanged(pos);
-    }
-
-    @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborChanged(state, world, pos, block, fromPos, notify);
-        WireBlockEntity wire = (WireBlockEntity) world.getBlockEntity(pos);
-        Direction dir = DirectionUtil.fromNormal(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
-        assert dir != null;
-        assert wire != null;
-        if (!world.isClientSide && wire.getConnections()[dir.ordinal()] != (wire.getConnections()[dir.ordinal()] = wire.canConnect(dir) && EnergyStorage.SIDED.find(world, fromPos, dir.getOpposite()) != null)) {
-            ((ServerLevel) world).getChunkSource().blockChanged(pos);
         }
-        wire.setChanged();
     }
 
     @Override
-    public @Nullable WireBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, pos, state);
+    @Nullable
+    public WireBlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, blockPos, blockState);
     }
 }

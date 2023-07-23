@@ -135,11 +135,20 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
     }
 
     @Inject(method = "isCrouching", at = @At("HEAD"), cancellable = true)
-    private void isHoldingRocket(CallbackInfoReturnable<Boolean> cir) {
-        if (getVehicle() == null) {
-            if (getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof RocketItem || getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof RocketItem) {
-                cir.setReturnValue(true);
-            }
+    private void gc$isCrouching(CallbackInfoReturnable<Boolean> cir) {
+        if (this.isHoldingRocket()) {
+            cir.setReturnValue(true);
         }
+    }
+
+    @Inject(method = "isShiftKeyDown", at = @At("HEAD"), cancellable = true)
+    private void gc$isShiftKeyDown(CallbackInfoReturnable<Boolean> cir) {
+        if (this.isHoldingRocket()) {
+            cir.setReturnValue(true);
+        }
+    }
+
+    private boolean isHoldingRocket() {
+        return this.getVehicle() == null && (this.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof RocketItem || this.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof RocketItem);
     }
 }

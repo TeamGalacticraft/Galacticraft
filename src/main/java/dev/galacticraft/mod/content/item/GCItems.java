@@ -50,6 +50,7 @@ public class GCItems {
 
     // LANTERNS
     public static final Item GLOWSTONE_LANTERN = new BlockItem(GCBlocks.GLOWSTONE_LANTERN, new Item.Properties());
+    public static final Item UNLIT_LANTERN = new BlockItem(GCBlocks.UNLIT_LANTERN, new Item.Properties());
 
     // DECORATION BLOCKS
     public static final Item ALUMINUM_DECORATION = new BlockItem(GCBlocks.ALUMINUM_DECORATION, new Item.Properties());
@@ -415,7 +416,7 @@ public class GCItems {
     public static final Item TITANIUM_AXE = new AxeItem(GCToolMaterial.TITANIUM, 6.0F, -3.1F, new Item.Properties());
     public static final Item TITANIUM_HOE = new HoeItem(GCToolMaterial.TITANIUM, -3, -1.0F, new Item.Properties());
 
-    public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Properties());
+    public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Properties().durability(256));
 
     // BATTERIES
     public static final Item BATTERY = new BatteryItem(new Item.Properties(), 15000, 500);
@@ -485,6 +486,7 @@ public class GCItems {
 
         // LANTERNS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GLOWSTONE_LANTERN), GLOWSTONE_LANTERN);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.UNLIT_LANTERN), UNLIT_LANTERN);
 
         // DECORATION BLOCKS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ALUMINUM_DECORATION), ALUMINUM_DECORATION);

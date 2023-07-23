@@ -26,15 +26,12 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.attribute.energy.WireEnergyStorage;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -46,11 +43,12 @@ import team.reborn.energy.api.EnergyStorage;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class WireBlockEntity extends BlockEntity implements Wire {
-    private @Nullable WireNetwork network = null;
-    private @NotNull WireEnergyStorage @Nullable[] insertables = null;
+    @Nullable
+    private WireNetwork network;
+    @Nullable
+    private WireEnergyStorage[] insertables;
     private final int maxTransferRate;
     private final boolean[] connections = new boolean[6];
-    private boolean awaitDirty = false;
 
     public WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state, int maxTransferRate) {
         super(type, pos, state);
@@ -68,7 +66,7 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     @Override
     public void setNetwork(@Nullable WireNetwork network) {
         this.network = network;
-        for (WireEnergyStorage insertable : this.getInsertables()) {
+        for (var insertable : this.getInsertables()) {
             insertable.setNetwork(network);
         }
     }
@@ -77,21 +75,21 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     public @NotNull WireNetwork getOrCreateNetwork() {
         if (this.network == null) {
             if (!this.level.isClientSide()) {
-                for (Direction direction : Constant.Misc.DIRECTIONS) {
+                for (var direction : Constant.Misc.DIRECTIONS) {
                     if (this.canConnect(direction)) {
-                        BlockEntity entity = level.getBlockEntity(worldPosition.relative(direction));
+                        var entity = this.level.getBlockEntity(this.getBlockPos().relative(direction));
                         if (entity instanceof Wire wire && wire.getNetwork() != null) {
                             if (wire.canConnect(direction.getOpposite())) {
                                 if (wire.getOrCreateNetwork().isCompatibleWith(this)) {
-                                    wire.getNetwork().addWire(worldPosition, this);
+                                    wire.getNetwork().addWire(this.getBlockPos(), this);
                                 }
                             }
                         }
                     }
                 }
                 if (this.network == null) {
-                    this.setNetwork(WireNetwork.create((ServerLevel) level, this.getMaxTransferRate()));
-                    this.network.addWire(worldPosition, this);
+                    this.setNetwork(WireNetwork.create((ServerLevel) this.level, this.getMaxTransferRate()));
+                    this.network.addWire(this.getBlockPos(), this);
                 }
             }
         }
@@ -99,15 +97,17 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     }
 
     @Override
-    public @Nullable WireNetwork getNetwork() {
+    @Nullable
+    public WireNetwork getNetwork() {
         return this.network;
     }
 
-    public @NotNull WireEnergyStorage @NotNull[] getInsertables() {
+    @Nullable
+    public WireEnergyStorage[] getInsertables() {
         if (this.insertables == null) {
             this.insertables = new WireEnergyStorage[6];
-            for (Direction direction : Constant.Misc.DIRECTIONS) {
-                this.insertables[direction.ordinal()] = new WireEnergyStorage(direction, this.getMaxTransferRate(), this.worldPosition);
+            for (var direction : Constant.Misc.DIRECTIONS) {
+                this.insertables[direction.ordinal()] = new WireEnergyStorage(direction, this.getMaxTransferRate(), this.getBlockPos());
             }
         }
         return this.insertables;
@@ -115,14 +115,14 @@ public class WireBlockEntity extends BlockEntity implements Wire {
 
     @Override
     public int getMaxTransferRate() {
-        return maxTransferRate;
+        return this.maxTransferRate;
     }
 
     @Override
     public void setRemoved() {
         super.setRemoved();
         if (this.getNetwork() != null) {
-            this.getOrCreateNetwork().removeWire(this, this.worldPosition);
+            this.getOrCreateNetwork().removeWire(this, this.getBlockPos());
         }
     }
 
@@ -133,8 +133,8 @@ public class WireBlockEntity extends BlockEntity implements Wire {
 
     @Override
     public void calculateConnections() {
-        for (Direction dir : Constant.Misc.DIRECTIONS) {
-            getConnections()[dir.ordinal()] = canConnect(dir) && EnergyStorage.SIDED.find(level, getBlockPos().relative(dir), dir.getOpposite()) != null;
+        for (var direction : Constant.Misc.DIRECTIONS) {
+            this.getConnections()[direction.ordinal()] = this.canConnect(direction) && EnergyStorage.SIDED.find(this.level, this.getBlockPos().relative(direction), direction.getOpposite()) != null;
         }
     }
 
@@ -145,19 +145,9 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     }
 
     @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-        if (this.awaitDirty && level != null && level.isClientSide) {
-            this.awaitDirty = false;
-            Minecraft.getInstance().levelRenderer.setSectionDirty(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ());
-        }
-    }
-
-    @Override
     public void load(CompoundTag nbt) {
         super.load(nbt);
         this.readConnectionNbt(nbt);
-        this.awaitDirty = true;
     }
 
     @Override

@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -30,9 +29,6 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -92,6 +88,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_WALL))
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_BRICK_WALL));
 
+
         // MINING TAGS
         this.tag(ConventionalBlockTags.ORES)
                 .add(this.reverseLookup(GCBlocks.SILICON_ORE))
@@ -113,6 +110,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(this.reverseLookup(GCBlocks.ILMENITE_ORE))
 
                 .add(this.reverseLookup(GCBlocks.GALENA_ORE));
+
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(this.reverseLookup(GCBlocks.SILICON_ORE))
                 .add(this.reverseLookup(GCBlocks.DEEPSLATE_SILICON_ORE))
@@ -154,6 +152,15 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(this.reverseLookup(GCBlocks.ILMENITE_ORE));
 
         // Cheese Candle Tags
+        this.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(
+                        GCBlocks.UNLIT_LANTERN);
+
+        this.getOrCreateTagBuilder(BlockTags.WALL_POST_OVERRIDE)
+                .add(
+                        GCBlocks.GLOWSTONE_TORCH,
+                        GCBlocks.UNLIT_TORCH);
+
         this.getOrCreateTagBuilder(BlockTags.CANDLE_CAKES)
                 .add(
                         GCBlocks.CANDLE_MOON_CHEESE_BLOCK,
