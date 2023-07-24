@@ -75,21 +75,21 @@ public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements
     }
 
     @Override
-    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("push_energy");
-        this.trySpreadEnergy(world, state);
+        this.trySpreadEnergy(level, state);
         profiler.pop();
         if (this.blocked >= 9) return GCMachineStatuses.BLOCKED;
         if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
         MachineStatus status = null;
         double multiplier = blocked == 0 ? 1 : this.blocked / 9.0;
         if (this.blocked > 1) status = GCMachineStatuses.PARTIALLY_BLOCKED;
-        if (world.isRaining() || world.isThundering()) {
+        if (level.isRaining() || level.isThundering()) {
             if (status == null) status = GCMachineStatuses.RAIN;
             multiplier *= 0.5;
         }
-        if (!world.isDay()) status = GCMachineStatuses.NIGHT;
-        double time = world.getDayTime() % 24000;
+        if (!level.isDay()) status = GCMachineStatuses.NIGHT;
+        double time = level.getDayTime() % 24000;
         if (time > 6000) time = 12000L - time;
 
         profiler.push("transaction");

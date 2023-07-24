@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.screen;
 
 import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.machinelib.filter.ResourceFilter;
-import dev.galacticraft.machinelib.filter.ResourceFilters;
+import dev.galacticraft.machinelib.api.filter.ResourceFilter;
+import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.item.OxygenGearItem;
@@ -136,7 +136,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
     }
 
     private static class OxygenTankSlot extends Slot {
-        private static final ResourceFilter<Item> FILTER = ResourceFilters.canExtractFluidStrict(GCFluids.LIQUID_OXYGEN);
+        private static final ResourceFilter<Item> FILTER = ResourceFilters.canExtractFluid(GCFluids.LIQUID_OXYGEN);
         public OxygenTankSlot(Container gearInventory, int slotId, int x, int y) {
             super(gearInventory, slotId, x, y);
         }

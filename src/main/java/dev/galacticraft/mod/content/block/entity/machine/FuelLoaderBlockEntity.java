@@ -69,13 +69,13 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity { //todo: whats ha
     }
 
     @Override
-    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         if (this.connectionPos == BlockPos.ZERO) return GCMachineStatuses.NO_ROCKET;
         BlockEntity be = this.getLevel().getBlockEntity(connectionPos);
         Entity entity;
         if (be instanceof RocketLaunchPadBlockEntity launchPad) {
             if (!launchPad.hasRocket()) return GCMachineStatuses.NO_ROCKET;
-            entity = level.getEntity(launchPad.getRocketEntityId());
+            entity = this.level.getEntity(launchPad.getRocketEntityId());
             if (!(entity instanceof RocketEntity)) return GCMachineStatuses.NO_ROCKET;
         } else {
             return GCMachineStatuses.NO_ROCKET;

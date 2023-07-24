@@ -69,13 +69,13 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
     }
 
     @Override
-    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        if (this.getStatus().getType().isActive() && this.getMaxProgress() > 0) {
+    public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        if (this.getState().isActive() && this.getMaxProgress() > 0) {
             if (this.getProgress() % (this.getMaxProgress() / 5) == 0 && this.getProgress() > this.getMaxProgress() / 2) {
-                world.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
+                level.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
             }
         }
-        return super.tick(world, pos, state, profiler);
+        return super.tick(level, pos, state, profiler);
     }
 
     @Override

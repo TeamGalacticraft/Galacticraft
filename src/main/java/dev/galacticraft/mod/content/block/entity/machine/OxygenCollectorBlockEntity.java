@@ -22,16 +22,15 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.content.block.machine.OxygenCollectorBlock;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.OxygenCollectorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -110,16 +109,16 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transfer");
-        this.trySpreadFluids(world, state);
+        this.trySpreadFluids(level, state);
 
         if (this.fluidStorage().getSlot(OXYGEN_TANK).isFull()) return GCMachineStatuses.OXYGEN_TANK_FULL;
         profiler.popPush("transaction");
         try {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate())) {
                 profiler.push("collect");
-                this.collectionAmount = collectOxygen(world, pos);
+                this.collectionAmount = collectOxygen(level, pos);
                 profiler.pop();
                 if (this.collectionAmount > 0) {
                     this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate());
@@ -135,14 +134,6 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         } finally {
             profiler.pop();
         }
-    }
-
-    @Override
-    public void setStatus(@NotNull MachineStatus status) {
-        if (this.getStatus() != status) {
-            this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(OxygenCollectorBlock.ACTIVE, status.getType().isActive()));
-        }
-        super.setStatus(status);
     }
 
     @Nullable

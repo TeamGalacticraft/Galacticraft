@@ -93,10 +93,10 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        assert world != null;
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        assert level != null;
         if (this.disabled != (this.disabled = false)) {
-            ((ServerLevelAccessor) world).addSealer(this);
+            ((ServerLevelAccessor) level).addSealer(this);
         }
 
         if (this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate())) {
@@ -107,12 +107,12 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                     this.updateQueued = false;
                     this.sealCheckTime = SEAL_CHECK_TIME;
                     BlockPos pos1 = pos.relative(Direction.UP);
-                    if (this.oxygenWorld || (this.breathablePositions.isEmpty() && world.isBreathable(pos1))) {
+                    if (this.oxygenWorld || (this.breathablePositions.isEmpty() && level.isBreathable(pos1))) {
                         profiler.pop();
                         return GCMachineStatuses.ALREADY_SEALED;
                     }
                     for (BlockPos pos2 : this.breathablePositions) {
-                        world.setBreathable(pos2, false);
+                        level.setBreathable(pos2, false);
                     }
                     this.breathablePositions.clear();
                     this.watching.clear();
@@ -127,8 +127,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                     while (!queue.isEmpty()) {
                         pair = queue.poll();
                         pos1 = pair.getA();
-                        state1 = world.getBlockState(pos1);
-                        if (state1.isAir() || (!Block.isFaceFull(state1.getCollisionShape(world, pos1), pair.getB().getOpposite()))) {
+                        state1 = level.getBlockState(pos1);
+                        if (state1.isAir() || (!Block.isFaceFull(state1.getCollisionShape(level, pos1), pair.getB().getOpposite()))) {
                             this.breathablePositions.add(pos1);
                             if (this.breathablePositions.size() > 1000) {
                                 this.breathablePositions.clear();
@@ -144,7 +144,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                             for (Direction direction : Constant.Misc.DIRECTIONS) {
                                 final Tuple<BlockPos, Direction> e = new Tuple<>(mutable.set(pos1).move(direction).immutable(), direction);
                                 if (!added.contains(e.getA()) && checked.add(e)) {
-                                    if (!Block.isFaceFull(state1.getCollisionShape(world, pos1), e.getB())) {
+                                    if (!Block.isFaceFull(state1.getCollisionShape(level, pos1), e.getB())) {
                                         queue.add(e);
                                     }
                                 }
@@ -154,7 +154,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                         }
                     }
                     for (BlockPos pos2 : this.breathablePositions) {
-                        world.setBreathable(pos2, true);
+                        level.setBreathable(pos2, true);
                     }
                     profiler.pop();
                 }

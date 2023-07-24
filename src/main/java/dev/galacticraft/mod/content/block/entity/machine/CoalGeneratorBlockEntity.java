@@ -30,7 +30,6 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.content.block.machine.CoalGeneratorBlock;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.CoalGeneratorMenu;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
@@ -59,7 +58,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     public static final int INPUT_SLOT = 1;
     @VisibleForTesting
     public static final Object2IntMap<Item> FUEL_MAP = Util.make(new Object2IntArrayMap<>(3), (map) -> {
-        map.defaultReturnValue(-1);
+        map.defaultReturnValue(0);
         map.put(Items.COAL_BLOCK, 320 * 10);
         map.put(Items.COAL, 320);
         map.put(Items.CHARCOAL, 310);
@@ -94,13 +93,13 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {
             this.energyStorage().insert((long) (Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate() * this.heat), transaction);
             transaction.commit();
         }
-        this.trySpreadEnergy(world, state);
+        this.trySpreadEnergy(level, state);
         profiler.popPush("fuel_reset");
         if (this.fuelLength == 0) {
             if (!this.consumeFuel()) {
@@ -127,14 +126,6 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         }
     }
 
-    @Override
-    public void setStatus(@NotNull MachineStatus status) {
-        if (this.getStatus() != status) {
-            this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(CoalGeneratorBlock.ACTIVE, status.getType().isActive()));
-        }
-        super.setStatus(status);
-    }
-
     private boolean consumeFuel() {
         this.fuelTime = 0;
         this.fuelLength = 0;
@@ -142,10 +133,9 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         ItemResourceSlot slot = this.itemStorage().getSlot(INPUT_SLOT);
         if (slot.getModifications() != this.fuelSlotModCount) {
             this.fuelSlotModCount = slot.getModifications();
-            if (slot.isEmpty()) return false;
             int time = FUEL_MAP.getInt(slot.getResource());
-            if (time != -1) {
-                if (slot.extractOne()) {
+            if (time > 0) {
+                if (slot.consumeOne() != null) {
                     this.fuelLength = time;
                     return true;
                 }

@@ -32,7 +32,6 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -832,10 +831,6 @@ public interface Constant {
         int WIDTH = 16;
         int SECTION_HEIGHT = 16;
         int CHUNK_SECTION_AREA = WIDTH * WIDTH * SECTION_HEIGHT;
-    }
-
-    interface Property {
-        BooleanProperty ACTIVE = BooleanProperty.create("active");
     }
 
     interface Energy {

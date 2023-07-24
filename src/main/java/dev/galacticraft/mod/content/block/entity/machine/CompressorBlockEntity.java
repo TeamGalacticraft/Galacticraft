@@ -93,16 +93,10 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
         if (this.fuelLength == 0) {
             ItemResourceSlot slot = this.itemStorage().getSlot(FUEL_SLOT);
             if (!slot.isEmpty()) {
-                ItemStack stack = new ItemStack(slot.getResource(), 1);
-                stack.setTag(slot.getTag());
-                int time = FuelRegistry.INSTANCE.get(stack.getItem());
+                Integer time = FuelRegistry.INSTANCE.get(slot.getResource());
                 if (time > 0) {
-                    if (slot.extractOne()) {
+                    if (slot.consumeOne() != null) {
                         this.fuelTime = this.fuelLength = time;
-                        ItemStack remainder = stack.getRecipeRemainder();
-                        if (remainder != null && !remainder.isEmpty() && slot.isEmpty()) { // fixme
-                            slot.insert(stack.getItem(), stack.getTag(), stack.getCount());
-                        }
                     }
                 }
             }
@@ -151,14 +145,14 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
     }
 
     @Override
-    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         if (this.getMaxProgress() > 0) {
             if (this.getProgress() % (this.getMaxProgress() / 8) == 0 && this.getProgress() > this.getMaxProgress() / 2) {
-                world.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
+                level.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
             }
         }
 
-        return super.tick(world, pos, state, profiler);
+        return super.tick(level, pos, state, profiler);
     }
 
     @Override

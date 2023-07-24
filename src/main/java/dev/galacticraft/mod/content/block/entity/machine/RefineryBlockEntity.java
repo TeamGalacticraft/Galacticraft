@@ -31,7 +31,6 @@ import dev.galacticraft.machinelib.api.util.GenericApiUtil;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.content.block.machine.RefineryBlock;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -83,7 +82,7 @@ public class RefineryBlockEntity extends MachineBlockEntity { //fixme
     }
 
     @Override
-    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         FluidResourceSlot oilTank = this.fluidStorage().getSlot(OIL_TANK);
         if (oilTank.isEmpty()) return GCMachineStatuses.MISSING_OIL;
         FluidResourceSlot fuelTank = this.fluidStorage().getSlot(FUEL_TANK);
@@ -103,14 +102,6 @@ public class RefineryBlockEntity extends MachineBlockEntity { //fixme
         } finally {
             profiler.pop();
         }
-    }
-
-    @Override
-    public void setStatus(@NotNull MachineStatus status) {
-        if (this.getStatus() != status) {
-            this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(RefineryBlock.ACTIVE, status.getType().isActive()));
-        }
-        super.setStatus(status);
     }
 
     @Nullable

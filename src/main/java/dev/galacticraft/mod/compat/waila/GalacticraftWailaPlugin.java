@@ -38,7 +38,7 @@ public class GalacticraftWailaPlugin implements IWailaPlugin {
         @Override
         public void appendTail(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
             if (Screen.hasShiftDown()) {
-                MachineConfiguration configuration = MachineConfiguration.create(((MachineBlockEntity) accessor.getBlockEntity()).getMachineType());
+                MachineConfiguration configuration = MachineConfiguration.create();
                 configuration.readTag(accessor.getData().raw().getCompound("config"));
                 tooltip.addLine(Component.translatable("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneActivation().getName()).setStyle(Constant.Text.Color.RED_STYLE));
                 if (configuration.getSecurity().getOwner() != null) {

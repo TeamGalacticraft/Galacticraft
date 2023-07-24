@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.content;
 
 import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.machine.MachineType;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
@@ -34,7 +34,6 @@ import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.InputType;
-import dev.galacticraft.machinelib.filter.ResourceFilters;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -68,8 +67,7 @@ public class GCMachineTypes {
             MachineItemStorage.of(
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(8, 62)
-                            .filter(ResourceFilters.CAN_INSERT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_INSERT_ENERGY_STRICT),
+                            .filter(ResourceFilters.CAN_INSERT_ENERGY),
                     ItemResourceSlot.builder(InputType.INPUT)
                             .pos(71, 53)
                             .filter((item, tag) -> CoalGeneratorBlockEntity.FUEL_MAP.containsKey(item))
@@ -92,7 +90,6 @@ public class GCMachineTypes {
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(8, 62)
                             .filter(ResourceFilters.CAN_INSERT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_INSERT_ENERGY_STRICT)
             )
     );
 
@@ -112,7 +109,6 @@ public class GCMachineTypes {
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(8, 62)
                             .filter(ResourceFilters.CAN_INSERT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_INSERT_ENERGY_STRICT)
             )
     );
 
@@ -131,8 +127,7 @@ public class GCMachineTypes {
             MachineItemStorage.of(
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(8, 70)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT),
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.INPUT)
                             .pos(31, 15)
                             .filter(ResourceFilters.itemTag(ConventionalItemTags.DIAMONDS)),
@@ -160,8 +155,11 @@ public class GCMachineTypes {
             MachineEnergyStorage::empty,
             MachineItemStorage.builder()
                     .add(ItemResourceSlot.builder(InputType.TRANSFER)
-                            .pos(8, 70)
-                            .filter((item, tag) -> FuelRegistry.INSTANCE.get(item) > 0))
+                            .pos(83, 47)
+                            .filter((item, tag) -> {
+                                Integer integer = FuelRegistry.INSTANCE.get(item);
+                                return integer != null && integer > 0;
+                            }))
                     .add3x3Grid(InputType.INPUT, 17, 17)
                     .add(ItemResourceSlot.builder(InputType.OUTPUT)
                             .pos(143, 36))
@@ -182,8 +180,7 @@ public class GCMachineTypes {
             MachineItemStorage.of(
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(8, 61)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT),
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.INPUT)
                             .pos(44, 35),
                     ItemResourceSlot.builder(InputType.OUTPUT)
@@ -209,7 +206,7 @@ public class GCMachineTypes {
                     .add(ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(8, 61)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT))
+                    )
                     .add3x3Grid(InputType.INPUT, 30, 17)
                     .add(ItemResourceSlot.builder(InputType.OUTPUT)
                             .pos(148, 22)
@@ -234,8 +231,7 @@ public class GCMachineTypes {
             MachineItemStorage.of(
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(8, 61)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT),
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.INPUT)
                             .pos(52, 35),
                     ItemResourceSlot.builder(InputType.OUTPUT)
@@ -258,12 +254,10 @@ public class GCMachineTypes {
             MachineItemStorage.of(
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(102, 24)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT), 
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(102, 48)
                             .filter(ResourceFilters.CAN_INSERT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_INSERT_ENERGY_STRICT)
             )
     );
 
@@ -282,12 +276,10 @@ public class GCMachineTypes {
             MachineItemStorage.of(
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(8, 61)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT),
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(80, 61)
-                            .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canExtractFluidStrict(GCFluids.FUEL)) // fixme: fuel api?,
+                            .filter(ResourceFilters.canExtractFluid(GCFluids.FUEL)) // fixme: fuel api?,
             ),
             MachineFluidStorage.of(
                     FluidResourceSlot.builder(InputType.INPUT)
@@ -312,12 +304,10 @@ public class GCMachineTypes {
             MachineItemStorage.of(
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(8, 62)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT),
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(31, 62)
-                            .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canExtractFluidStrict(Gases.OXYGEN))
+                            .filter(ResourceFilters.canExtractFluid(Gases.OXYGEN))
             ),
             MachineFluidStorage.of(
                     FluidResourceSlot.builder(InputType.INPUT)
@@ -343,7 +333,6 @@ public class GCMachineTypes {
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(8, 62)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT)
             ),
             MachineFluidStorage.of(
                     FluidResourceSlot.builder(InputType.OUTPUT)
@@ -368,12 +357,10 @@ public class GCMachineTypes {
             MachineItemStorage.of(
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(8, 62)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT),
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(80, 27)
-                            .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canInsertFluidStrict(Gases.OXYGEN))
+                            .filter(ResourceFilters.canInsertFluid(Gases.OXYGEN))
             ),
             MachineFluidStorage.of(
                     FluidResourceSlot.builder(InputType.INPUT)
@@ -398,12 +385,10 @@ public class GCMachineTypes {
             MachineItemStorage.of(
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(8, 62)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT),
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(80, 27)
-                            .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canExtractFluidStrict(Gases.OXYGEN))
+                            .filter(ResourceFilters.canExtractFluid(Gases.OXYGEN))
             ),
             MachineFluidStorage.of(
                     FluidResourceSlot.builder(InputType.OUTPUT)
@@ -428,12 +413,10 @@ public class GCMachineTypes {
             MachineItemStorage.of(
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(8, 62)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT),
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.TRANSFER) // todo: drop for decompressor?
                             .pos(31, 62)
-                            .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canExtractFluidStrict(Gases.OXYGEN))
+                            .filter(ResourceFilters.canExtractFluid(Gases.OXYGEN))
             ),
             MachineFluidStorage.of(
                     FluidResourceSlot.builder(InputType.INPUT)
@@ -473,16 +456,13 @@ public class GCMachineTypes {
             MachineItemStorage.of(
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(8, 7)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
-                            .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT),
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(123, 7)
-                            .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canExtractFluidStrict(GCFluids.CRUDE_OIL)), // fixme: tag?,
+                            .filter(ResourceFilters.canExtractFluid(GCFluids.CRUDE_OIL)), // fixme: tag?,
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(153, 7)
-                            .filter(ResourceFilters.isFluidStorage())
-                            .strictFilter(ResourceFilters.canInsertFluidStrict(GCFluids.FUEL)) // fixme: tag?
+                            .filter(ResourceFilters.canInsertFluid(GCFluids.FUEL)) // fixme: tag?
             ),
             MachineFluidStorage.of(
                     FluidResourceSlot.builder(InputType.INPUT)

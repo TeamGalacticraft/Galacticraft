@@ -23,12 +23,11 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.FuelLoaderMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
@@ -84,7 +83,7 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
             graphics.blit(Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + 68, this.topPos + 8, TANK_OVERLAY_U, TANK_OVERLAY_V, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
         }
 
-        if (this.menu.configuration.getStatus().getType() == MachineStatus.Type.MISSING_RESOURCE) {
+        if (this.menu.state.getStatus() == GCMachineStatuses.NO_ROCKET) {
             graphics.blit( Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + 116, this.topPos + 53, RED_X_U, RED_X_V, RED_X_WIDTH, RED_X_HEIGHT);
         }
 
