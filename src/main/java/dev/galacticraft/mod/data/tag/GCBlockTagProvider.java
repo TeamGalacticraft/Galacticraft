@@ -26,8 +26,10 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Block;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -87,6 +89,29 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_WALL))
                 .add(this.reverseLookup(GCBlocks.MOON_BASALT_BRICK_WALL));
 
+        // ORE MINING TAGS
+        Block[] ores = {
+                GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE,
+                GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE,
+                GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE,
+                GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE,
+                GCBlocks.DESH_ORE,
+                GCBlocks.ILMENITE_ORE,
+                GCBlocks.GALENA_ORE
+        };
+        this.getOrCreateTagBuilder(ConventionalBlockTags.ORES).add(ores);
+        this.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(ores);
+        this.getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL).add(
+                GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE,
+                GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE,
+                GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE,
+                GCBlocks.GALENA_ORE);
+        this.getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(
+                GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE);
+        this.getOrCreateTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL).add(
+                GCBlocks.DESH_ORE, GCBlocks.ILMENITE_ORE);
+
+        // Cheese Candle Tags
         this.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(
                         GCBlocks.UNLIT_LANTERN);
