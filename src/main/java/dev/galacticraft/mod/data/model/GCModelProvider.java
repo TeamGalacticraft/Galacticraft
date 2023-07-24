@@ -44,6 +44,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class GCModelProvider extends FabricModelProvider {
     private static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::createDetailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);
+    private static final ModelTemplate SPAWN_EGG = ModelTemplates.createItem("template_spawn_egg");
 
     public GCModelProvider(FabricDataOutput output) {
         super(output);
@@ -409,10 +410,17 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.THERMAL_PADDING_CHESTPIECE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.THERMAL_PADDING_LEGGINGS, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.THERMAL_PADDING_BOOTS, ModelTemplates.FLAT_ITEM);
+
         // ROCKETS
+        generator.generateFlatItem(GCItems.ROCKET_ENGINE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ROCKET_FINS, ModelTemplates.FLAT_ITEM);
 //        generator.generateFlatItem(GCItems.ROCKET, ModelTemplates.FLAT_ITEM);
 
         // SCHEMATICS
+        generator.generateFlatItem(GCItems.BASIC_ROCKET_BODY_SCHEMATIC, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BASIC_ROCKET_BOTTOM_SCHEMATIC, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BASIC_ROCKET_CONE_SCHEMATIC, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BASIC_ROCKET_FINS_SCHEMATIC, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.TIER_2_ROCKET_SCHEMATIC, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.CARGO_ROCKET_SCHEMATIC, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.MOON_BUGGY_SCHEMATIC, ModelTemplates.FLAT_ITEM);
