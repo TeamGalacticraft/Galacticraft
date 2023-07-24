@@ -34,5 +34,9 @@ accessible field net/minecraft/client/resources/model/ModelManager bakedRegistry
 accessible field net/minecraft/data/worldgen/ProcessorLists EMPTY Lnet/minecraft/resources/ResourceKey;
 accessible field net/minecraft/world/level/block/DispenserBlock DISPENSER_REGISTRY Ljava/util/Map;
 
+# private final fields
+accessible field net/minecraft/data/models/BlockModelGenerators texturedModels Ljava/util/Map;
+mutable field net/minecraft/data/models/BlockModelGenerators texturedModels Ljava/util/Map;
+
 # private methods
 extendable method net/minecraft/world/entity/LivingEntity setPosToBed (Lnet/minecraft/core/BlockPos;)V

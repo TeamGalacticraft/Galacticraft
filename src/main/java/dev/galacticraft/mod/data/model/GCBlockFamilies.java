@@ -22,14 +22,20 @@
 
 package dev.galacticraft.mod.data.model;
 
+import static dev.galacticraft.mod.content.GCBlocks.*;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import org.jetbrains.annotations.Contract;
+import com.google.common.collect.Maps;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
-import static dev.galacticraft.mod.content.GCBlocks.*;
-
+@SuppressWarnings("unused")
 public class GCBlockFamilies {
+    private static final Map<Block, BlockFamily> MAP = Maps.newHashMap();
+
     // DECORATIONS
     public static final BlockFamily ALUMINUM_DECORATIONS = builder(ALUMINUM_DECORATION)
             .slab(ALUMINUM_DECORATION_SLAB)
@@ -181,7 +187,17 @@ public class GCBlockFamilies {
             .getFamily();
 
     @Contract(value = "_ -> new", pure = true)
-    public static BlockFamily.@NotNull Builder builder(Block block) {
-        return new BlockFamily.Builder(block);
+    public static BlockFamily.Builder builder(Block block) {
+        var builder = new BlockFamily.Builder(block);
+        var blockFamily = MAP.put(block, builder.getFamily());
+        if (blockFamily != null) {
+            throw new IllegalStateException("Duplicate family definition for " + BuiltInRegistries.BLOCK.getKey(block));
+        } else {
+            return builder;
+        }
+    }
+
+    public static Stream<BlockFamily> getAllFamilies() {
+        return MAP.values().stream();
     }
 }
