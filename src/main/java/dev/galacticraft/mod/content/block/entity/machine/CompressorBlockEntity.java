@@ -123,8 +123,8 @@ public class CompressorBlockEntity extends RecipeMachineBlockEntity<Container, C
     @Override
     protected void extractCraftingMaterials(@NotNull CompressingRecipe recipe) {
         NonNullList<ItemStack> remainder = recipe.getRemainingItems(this.craftingInv);
-        for (int i = INPUT_SLOTS; i < INPUT_SLOTS + INPUT_LENGTH; i++) {
-            ItemResourceSlot slot = this.itemStorage().getSlot(i);
+        for (int i = 0; i < INPUT_LENGTH; i++) {
+            ItemResourceSlot slot = this.itemStorage().getSlot(INPUT_SLOTS + i);
             ItemStack stack = remainder.get(i);
             slot.extractOne();
             if (stack != ItemStack.EMPTY) {

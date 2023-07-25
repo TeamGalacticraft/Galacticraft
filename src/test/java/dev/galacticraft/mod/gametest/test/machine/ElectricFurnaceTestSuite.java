@@ -44,20 +44,20 @@ import java.util.List;
 @DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
 public final class ElectricFurnaceTestSuite extends RecipeGameTest<Container, SmeltingRecipe, ElectricFurnaceBlockEntity> {
     public ElectricFurnaceTestSuite() {
-        super(GCMachineTypes.ELECTRIC_FURNACE, GCSlotGroupTypes.GENERIC_INPUT, GCSlotGroupTypes.GENERIC_OUTPUT);
+        super(GCMachineTypes.ELECTRIC_FURNACE, ElectricFurnaceBlockEntity.INPUT_SLOT, ElectricFurnaceBlockEntity.OUTPUT_SLOT);
     }
 
     @Override
     @GameTestGenerator
     public @NotNull List<TestFunction> generateTests() {
         List<TestFunction> functions = super.generateTests();
-        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_SELF, GCItems.INFINITE_BATTERY));
+        functions.add(this.createChargeFromEnergyItemTest(ElectricFurnaceBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         return functions;
     }
 
     @Override
     protected void fulfillRunRequirements(@NotNull ElectricFurnaceBlockEntity machine) {
-        machine.energyStorage().setEnergy(machine.energyStorage().getCapacity());
+        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
     }
 
     @Override
@@ -67,6 +67,6 @@ public final class ElectricFurnaceTestSuite extends RecipeGameTest<Container, Sm
 
     @Override
     protected void createValidRecipe(@NotNull MachineItemStorage storage) {
-        storage.getSlot(GCSlotGroupTypes.GENERIC_INPUT).set(Items.PORKCHOP, 1);
+        storage.getSlot(ElectricFurnaceBlockEntity.INPUT_SLOT).set(Items.PORKCHOP, 1);
     }
 }

@@ -113,8 +113,8 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
     @Override
     protected void extractCraftingMaterials(@NotNull CompressingRecipe recipe) {
         NonNullList<ItemStack> remainders = recipe.getRemainingItems(this.craftingInv);
-        for (int i = INPUT_SLOTS; i < INPUT_SLOTS + INPUT_LENGTH; i++) {
-            this.itemStorage().extract(i, 1);
+        for (int i = 0; i < INPUT_LENGTH; i++) {
+            this.itemStorage().extractOne(INPUT_SLOTS + i);
 
             ItemStack remainder = remainders.get(i);
             if (!remainder.isEmpty()) {

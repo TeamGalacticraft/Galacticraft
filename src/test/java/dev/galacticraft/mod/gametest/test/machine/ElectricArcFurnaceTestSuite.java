@@ -43,19 +43,19 @@ import java.util.List;
 @DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
 public final class ElectricArcFurnaceTestSuite extends RecipeGameTest<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity> {
     public ElectricArcFurnaceTestSuite() {
-        super(GCMachineTypes.ELECTRIC_ARC_FURNACE, GCSlotGroupTypes.GENERIC_INPUT, GCSlotGroupTypes.GENERIC_OUTPUT);
+        super(GCMachineTypes.ELECTRIC_ARC_FURNACE, ElectricArcFurnaceBlockEntity.INPUT_SLOT, 1, ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS, ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH);
     }
 
     @Override
     public @NotNull List<TestFunction> generateTests() {
         List<TestFunction> functions = super.generateTests();
-        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_ITEM, GCItems.INFINITE_BATTERY));
+        functions.add(this.createChargeFromEnergyItemTest(ElectricArcFurnaceBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         return functions;
     }
 
     @Override
     protected void fulfillRunRequirements(@NotNull ElectricArcFurnaceBlockEntity machine) {
-        machine.energyStorage().setEnergy(machine.energyStorage().getCapacity());
+        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
     }
 
     @Override
@@ -65,6 +65,6 @@ public final class ElectricArcFurnaceTestSuite extends RecipeGameTest<Container,
 
     @Override
     protected void createValidRecipe(@NotNull MachineItemStorage storage) {
-        storage.getSlot(GCSlotGroupTypes.GENERIC_INPUT).set(Items.RAW_IRON, 1);
+        storage.getSlot(ElectricArcFurnaceBlockEntity.INPUT_SLOT).set(Items.RAW_IRON, 1);
     }
 }

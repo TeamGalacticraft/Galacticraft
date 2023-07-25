@@ -46,7 +46,7 @@ import java.util.List;
 @DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
 public final class CompressorTestSuite extends RecipeGameTest<Container, CompressingRecipe, CompressorBlockEntity> {
     public CompressorTestSuite() {
-        super(GCMachineTypes.COMPRESSOR, GCSlotGroupTypes.GENERIC_INPUT, GCSlotGroupTypes.GENERIC_OUTPUT);
+        super(GCMachineTypes.COMPRESSOR, CompressorBlockEntity.INPUT_SLOTS, CompressorBlockEntity.INPUT_LENGTH, CompressorBlockEntity.OUTPUT_SLOT);
     }
 
     @Override
@@ -57,7 +57,7 @@ public final class CompressorTestSuite extends RecipeGameTest<Container, Compres
 
     @InstantTest
     public Runnable fuelConsumption(CompressorBlockEntity machine) {
-        ItemResourceSlot slot = machine.itemStorage().getSlot(GCSlotGroupTypes.SOLID_FUEL);
+        ItemResourceSlot slot = machine.itemStorage().getSlot(CompressorBlockEntity.FUEL_SLOT);
         slot.set(Items.COAL, 1);
         this.createValidRecipe(machine.itemStorage());
         return () -> {
@@ -82,8 +82,7 @@ public final class CompressorTestSuite extends RecipeGameTest<Container, Compres
 
     @Override
     protected void createValidRecipe(@NotNull MachineItemStorage storage) {
-        SlotGroup<Item, ItemStack, ItemResourceSlot> group = storage.getGroup(GCSlotGroupTypes.GENERIC_INPUT);
-        group.getSlot(0).set(Items.IRON_INGOT, 1);
-        group.getSlot(1).set(Items.IRON_INGOT, 1);
+        storage.getSlot(CompressorBlockEntity.INPUT_SLOTS).set(Items.IRON_INGOT, 1);
+        storage.getSlot(CompressorBlockEntity.INPUT_SLOTS + 1).set(Items.IRON_INGOT, 1);
     }
 }

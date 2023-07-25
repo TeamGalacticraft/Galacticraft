@@ -44,23 +44,24 @@ import java.util.List;
 @DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
 public final class CircuitFabricatorTestSuite extends RecipeGameTest<Container, FabricationRecipe, CircuitFabricatorBlockEntity> {
     public CircuitFabricatorTestSuite() {
-        super(GCMachineTypes.CIRCUIT_FABRICATOR, GCSlotGroupTypes.GENERIC_INPUT, GCSlotGroupTypes.GENERIC_OUTPUT);
+        super(GCMachineTypes.CIRCUIT_FABRICATOR, CircuitFabricatorBlockEntity.INPUT_SLOT, CircuitFabricatorBlockEntity.OUTPUT_SLOT);
     }
 
     @Override
     @GameTestGenerator
     public @NotNull List<TestFunction> generateTests() {
         List<TestFunction> functions = super.generateTests();
-        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_SELF, GCItems.INFINITE_BATTERY));
+        functions.add(this.createChargeFromEnergyItemTest(CircuitFabricatorBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         return functions;
     }
 
     @Override
     protected void fulfillRunRequirements(@NotNull CircuitFabricatorBlockEntity machine) {
-        machine.energyStorage().setEnergy(machine.energyStorage().getCapacity());
-        machine.itemStorage().getSlot(GCSlotGroupTypes.DIAMOND_INPUT).set(Items.DIAMOND, 1);
-        machine.itemStorage().getSlot(GCSlotGroupTypes.REDSTONE_INPUT).set(Items.REDSTONE, 1);
-        machine.itemStorage().getGroup(GCSlotGroupTypes.SILICON_INPUT).forEach(slot -> slot.set(GCItems.RAW_SILICON, 1));
+        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
+        machine.itemStorage().getSlot(CircuitFabricatorBlockEntity.DIAMOND_SLOT).set(Items.DIAMOND, 1);
+        machine.itemStorage().getSlot(CircuitFabricatorBlockEntity.REDSTONE_SLOT).set(Items.REDSTONE, 1);
+        machine.itemStorage().getSlot(CircuitFabricatorBlockEntity.SILICON_SLOT_1).set(GCItems.RAW_SILICON, 1);
+        machine.itemStorage().getSlot(CircuitFabricatorBlockEntity.SILICON_SLOT_2).set(GCItems.RAW_SILICON, 1);
     }
 
     @Override
@@ -70,6 +71,6 @@ public final class CircuitFabricatorTestSuite extends RecipeGameTest<Container, 
 
     @Override
     protected void createValidRecipe(@NotNull MachineItemStorage storage) {
-        storage.getSlot(GCSlotGroupTypes.GENERIC_INPUT).set(Items.REDSTONE_TORCH, 1);
+        storage.getSlot(CircuitFabricatorBlockEntity.INPUT_SLOT).set(Items.REDSTONE_TORCH, 1);
     }
 }

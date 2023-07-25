@@ -28,6 +28,7 @@ import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.util.BlockFace;
 import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.content.block.entity.machine.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -48,20 +49,20 @@ import java.util.List;
 @DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
 public final class ElectricCompressorTestSuite extends RecipeGameTest<Container, CompressingRecipe, ElectricCompressorBlockEntity> {
     public ElectricCompressorTestSuite() {
-        super(GCMachineTypes.ELECTRIC_COMPRESSOR, GCSlotGroupTypes.GENERIC_INPUT, GCSlotGroupTypes.GENERIC_OUTPUT);
+        super(GCMachineTypes.ELECTRIC_COMPRESSOR, ElectricCompressorBlockEntity.INPUT_SLOTS, ElectricCompressorBlockEntity.INPUT_LENGTH, ElectricCompressorBlockEntity.OUTPUT_SLOTS, ElectricCompressorBlockEntity.OUTPUT_LENGTH);
     }
 
     @Override
     @GameTestGenerator
     public @NotNull List<TestFunction> generateTests() {
         List<TestFunction> functions = super.generateTests();
-        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_SELF, GCItems.INFINITE_BATTERY));
+        functions.add(this.createChargeFromEnergyItemTest(ElectricCompressorBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         return functions;
     }
 
     @Override
     protected void fulfillRunRequirements(@NotNull ElectricCompressorBlockEntity machine) {
-        machine.energyStorage().setEnergy(machine.energyStorage().getCapacity());
+        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
     }
 
     @Override
@@ -71,8 +72,7 @@ public final class ElectricCompressorTestSuite extends RecipeGameTest<Container,
 
     @Override
     protected void createValidRecipe(@NotNull MachineItemStorage storage) {
-        SlotGroup<Item, ItemStack, ItemResourceSlot> group = storage.getGroup(GCSlotGroupTypes.GENERIC_INPUT);
-        group.getSlot(0).set(Items.IRON_INGOT, 1);
-        group.getSlot(1).set(Items.IRON_INGOT, 1);
+        storage.getSlot(ElectricCompressorBlockEntity.INPUT_SLOTS).set(Items.IRON_INGOT, 1);
+        storage.getSlot(ElectricCompressorBlockEntity.INPUT_SLOTS + 1).set(Items.IRON_INGOT, 1);
     }
 }
