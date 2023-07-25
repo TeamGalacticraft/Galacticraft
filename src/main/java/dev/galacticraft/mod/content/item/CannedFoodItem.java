@@ -37,12 +37,8 @@ public class CannedFoodItem extends Item {
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
-        if (entity instanceof Player player) {
-            player.eat(world, stack);
-            player.spawnAtLocation(new ItemStack(GCItems.TIN_CANISTER));
-        }
-        stack.shrink(1);
-        return stack;
+    public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity livingEntity) {
+        var itemStack2 = super.finishUsingItem(itemStack, level, livingEntity);
+        return livingEntity instanceof Player player && player.getAbilities().instabuild ? itemStack2 : new ItemStack(GCItems.TIN_CANISTER);
     }
 }

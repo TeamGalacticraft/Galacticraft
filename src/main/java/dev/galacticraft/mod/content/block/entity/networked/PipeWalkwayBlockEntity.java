@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity.networked;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.api.pipe.Pipe;
@@ -54,7 +55,6 @@ public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, 
     public void load(CompoundTag nbt) {
         super.load(nbt);
         this.readWalkwayNbt(nbt);
-        this.setSectionDirty(this.level, this.worldPosition);
     }
 
     @Override
@@ -70,25 +70,28 @@ public class PipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, 
 
     @Override
     public boolean canConnect(Direction direction) {
-        if (this.direction == null) return false;
+        if (this.direction == null) {
+            return false;
+        }
         return direction != this.direction;
     }
 
     @Override
     public void calculateConnections() {
-        for (Direction direction : Direction.values()) {
-            if (getDirection() != direction) {
-                if (level.getBlockEntity(this.worldPosition.relative(direction)) instanceof Pipe pipe) {
+        for (var direction : Constant.Misc.DIRECTIONS) {
+            if (this.getDirection() != direction) {
+                if (this.level.getBlockEntity(this.getBlockPos().relative(direction)) instanceof Pipe pipe) {
                     if (pipe.canConnect(direction.getOpposite())) {
-                        getConnections()[direction.ordinal()] = true;
+                        this.getConnections()[direction.ordinal()] = true;
                         continue;
                     }
-                } else if (FluidUtil.canAccessFluid(level, this.worldPosition.relative(direction), direction)) {
-                    getConnections()[direction.ordinal()] = true;
+                }
+                else if (FluidUtil.canAccessFluid(this.level, this.getBlockPos().relative(direction), direction)) {
+                    this.getConnections()[direction.ordinal()] = true;
                     continue;
                 }
             }
-            getConnections()[direction.ordinal()] = false;
+            this.getConnections()[direction.ordinal()] = false;
         }
     }
 }

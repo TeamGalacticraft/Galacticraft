@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "galacticraft:block/gray_candle_moon_cheese_block"
+    },
+    "lit=true": {
+      "model": "galacticraft:block/gray_candle_moon_cheese_block_lit"
+    }
+  }
+}

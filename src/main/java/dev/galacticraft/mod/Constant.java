@@ -255,8 +255,27 @@ public interface Constant {
         String TREASURE_CHEST_TIER_1 = "treasure_chest_tier_1";
         String TREASURE_CHEST_TIER_2 = "treasure_chest_tier_2";
         String TREASURE_CHEST_TIER_3 = "treasure_chest_tier_3";
-        String MOON_CHEESE_BLOCK = "moon_cheese_block";
         String CRASHED_PROBE_BLOCK = "crashed_probe";
+
+        // Moon Cheese
+        String MOON_CHEESE_BLOCK = "moon_cheese_block";
+        String CANDLE_MOON_CHEESE_BLOCK = "candle_moon_cheese_block";
+        String WHITE_CANDLE_MOON_CHEESE_BLOCK = "white_candle_moon_cheese_block";
+        String ORANGE_CANDLE_MOON_CHEESE_BLOCK = "orange_candle_moon_cheese_block";
+        String MAGENTA_CANDLE_MOON_CHEESE_BLOCK = "magenta_candle_moon_cheese_block";
+        String LIGHT_BLUE_CANDLE_MOON_CHEESE_BLOCK = "light_blue_candle_moon_cheese_block";
+        String YELLOW_CANDLE_MOON_CHEESE_BLOCK = "yellow_candle_moon_cheese_block";
+        String LIME_CANDLE_MOON_CHEESE_BLOCK = "lime_candle_moon_cheese_block";
+        String PINK_CANDLE_MOON_CHEESE_BLOCK = "pink_candle_moon_cheese_block";
+        String GRAY_CANDLE_MOON_CHEESE_BLOCK = "gray_candle_moon_cheese_block";
+        String LIGHT_GRAY_CANDLE_MOON_CHEESE_BLOCK = "light_gray_candle_moon_cheese_block";
+        String CYAN_CANDLE_MOON_CHEESE_BLOCK = "cyan_candle_moon_cheese_block";
+        String PURPLE_CANDLE_MOON_CHEESE_BLOCK = "purple_candle_moon_cheese_block";
+        String BLUE_CANDLE_MOON_CHEESE_BLOCK = "blue_candle_moon_cheese_block";
+        String BROWN_CANDLE_MOON_CHEESE_BLOCK = "brown_candle_moon_cheese_block";
+        String GREEN_CANDLE_MOON_CHEESE_BLOCK = "green_candle_moon_cheese_block";
+        String RED_CANDLE_MOON_CHEESE_BLOCK = "red_candle_moon_cheese_block";
+        String BLACK_CANDLE_MOON_CHEESE_BLOCK = "black_candle_moon_cheese_block";
 
         // Liquids
         String FUEL = "fuel";
@@ -538,8 +557,10 @@ public interface Constant {
     }
 
     interface Particle {
-        String DRIPPING_FUEL_PARTICLE = "dripping_fuel_particle";
-        String DRIPPING_CRUDE_OIL_PARTICLE = "dripping_crude_oil_particle";
+        String DRIPPING_FUEL = "dripping_fuel";
+        String FALLING_FUEL = "falling_fuel";
+        String DRIPPING_CRUDE_OIL = "dripping_crude_oil";
+        String FALLING_CRUDE_OIL = "falling_crude_oil";
         String CRYOGENIC_PARTICLE = "cryogenic_particle";
         String LANDER_FLAME = "lander_flame_particle";
     }

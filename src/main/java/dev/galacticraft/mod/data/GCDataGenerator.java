@@ -25,17 +25,13 @@ package dev.galacticraft.mod.data;
 import com.mojang.serialization.Lifecycle;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
-import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
-import dev.galacticraft.impl.internal.fabric.GalacticraftAPIData;
-import dev.galacticraft.impl.rocket.part.*;
 import dev.galacticraft.impl.universe.galaxy.GalaxyImpl;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCCelestialBodies;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCTeleporterTypes;
+import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.data.content.*;
 import dev.galacticraft.mod.data.model.GCModelProvider;
 import dev.galacticraft.mod.data.tag.*;
@@ -61,7 +57,7 @@ import org.jetbrains.annotations.NotNull;
 public class GCDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(@NotNull FabricDataGenerator generator) {
-        FabricDataGenerator.Pack pack = generator.createPack();
+        var pack = generator.createPack();
 
         pack.addProvider(BootstrapDataProvider.create("Galaxies", GalaxyImpl::bootstrapRegistries));
 
@@ -93,6 +89,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Ore Placed Features", GCOrePlacedFeatures::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Placed Features", GCPlacedFeatures::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Multi Noise Biome Source Parameter Lists", GCMultiNoiseBiomeSourceParameterLists::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Damage Types", GCDamageTypes::bootstrapRegistries));
 
         // rocket parts
         pack.addProvider(BootstrapDataProvider.create("Rocket Cones", GCRocketParts::bootstrapCone));
@@ -139,5 +136,6 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         registryBuilder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCOreConfiguredFeature::bootstrapRegistries);
         registryBuilder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCOrePlacedFeatures::bootstrapRegistries);
         registryBuilder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCPlacedFeatures::bootstrapRegistries);
+        registryBuilder.add(Registries.DAMAGE_TYPE, Lifecycle.stable(), GCDamageTypes::bootstrapRegistries);
     }
 }
