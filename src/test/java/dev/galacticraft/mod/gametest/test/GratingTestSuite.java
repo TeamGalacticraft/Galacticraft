@@ -43,7 +43,7 @@ import net.minecraft.world.level.material.Fluids;
  *
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class GalacticraftTestSuite implements GalacticraftGameTest {
+public class GratingTestSuite implements GalacticraftGameTest {
     @GameTest(template = EMPTY_STRUCTURE)
     public void gratingFlowingWaterTest(GameTestHelper context) {
         final var xz = 4;

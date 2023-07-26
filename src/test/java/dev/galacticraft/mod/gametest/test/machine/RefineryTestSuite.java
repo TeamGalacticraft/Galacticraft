@@ -108,6 +108,7 @@ public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity
         FluidResourceSlot fuel = machine.fluidStorage().getSlot(RefineryBlockEntity.FUEL_TANK);
         FluidResourceSlot oil = machine.fluidStorage().getSlot(RefineryBlockEntity.OIL_TANK);
         oil.set(GCFluids.CRUDE_OIL, FluidConstants.BUCKET);
+        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
         return () -> {
             if (fuel.isEmpty() || oil.getAmount() >= FluidConstants.BUCKET) {
                 throw new GameTestAssertException("Expected refinery to refine oil!");
@@ -119,6 +120,7 @@ public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity
     public Runnable craftingFailFull(RefineryBlockEntity machine) {
         FluidResourceSlot fuel = machine.fluidStorage().getSlot(RefineryBlockEntity.FUEL_TANK);
         FluidResourceSlot oil = machine.fluidStorage().getSlot(RefineryBlockEntity.OIL_TANK);
+        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
         fuel.set(GCFluids.FUEL, fuel.getCapacity());
         oil.set(GCFluids.CRUDE_OIL, FluidConstants.BUCKET);
         return () -> {
