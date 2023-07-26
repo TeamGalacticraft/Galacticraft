@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import com.google.common.collect.Maps;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
@@ -44,7 +45,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class GCModelProvider extends FabricModelProvider {
     private static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::createDetailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);
-    private static final ModelTemplate SPAWN_EGG = ModelTemplates.createItem("template_spawn_egg");
 
     public GCModelProvider(FabricDataOutput output) {
         super(output);
@@ -120,7 +120,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.SEALABLE_ALUMINUM_WIRE);
         generator.createTrivialCube(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
 //        generator.createNonTemplateModelBlock(GCBlocks.GLASS_FLUID_PIPE);
-//        generator.createNonTemplateModelBlock(GCBlocks.ROCKET_LAUNCH_PAD);
+        this.createRocketLaunchPadBlock(generator);
         generator.createNonTemplateModelBlock(GCBlocks.ROCKET_WORKBENCH);
 
         // LIGHT PANELS
@@ -429,7 +429,7 @@ public class GCModelProvider extends FabricModelProvider {
     }
 
     @Contract("_ -> new")
-    public static @NotNull TextureMapping createDetailedTexture(@NotNull Block block) {
+    private static @NotNull TextureMapping createDetailedTexture(@NotNull Block block) {
         var side = TextureMapping.getBlockTexture(block, "_side");
         return new TextureMapping()
                 .put(TextureSlot.WALL, side)
@@ -454,6 +454,35 @@ public class GCModelProvider extends FabricModelProvider {
         var cheeseCake = ModelTemplates.CANDLE_CAKE.create(cheese, candleCheeseBlock(candle, false), generators.modelOutput);
         var litCheeseCake = ModelTemplates.CANDLE_CAKE.createWithSuffix(cheese, "_lit", candleCheeseBlock(candle, true), generators.modelOutput);
         generators.blockStateOutput.accept(MultiVariantGenerator.multiVariant(cheese).with(BlockModelGenerators.createBooleanModelDispatch(BlockStateProperties.LIT, litCheeseCake, cheeseCake)));
+    }
+
+    private void createRocketLaunchPadBlock(BlockModelGenerators generator) {
+        var block = GCBlocks.ROCKET_LAUNCH_PAD;
+        var centerModel = ModelLocationUtils.getModelLocation(block, "_center");
+        var corner = GCModelTemplates.ROCKET_LAUNCH_PAD_PART.createWithSuffix(block, "_corner", rocketLaunchPadPart("_corner"), generator.modelOutput);
+        var side = GCModelTemplates.ROCKET_LAUNCH_PAD_PART.createWithSuffix(block, "_side", rocketLaunchPadPart("_side"), generator.modelOutput);
+        var defaultModel = Variant.variant().with(VariantProperties.MODEL, centerModel);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(RocketLaunchPadBlock.PART)
+                .select(RocketLaunchPadBlock.Part.NONE, defaultModel)
+                .select(RocketLaunchPadBlock.Part.CENTER, defaultModel)
+                .select(RocketLaunchPadBlock.Part.NORTH_WEST, Variant.variant().with(VariantProperties.MODEL, corner))
+                .select(RocketLaunchPadBlock.Part.NORTH_EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90).with(VariantProperties.MODEL, corner))
+                .select(RocketLaunchPadBlock.Part.SOUTH_WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270).with(VariantProperties.MODEL, corner))
+                .select(RocketLaunchPadBlock.Part.SOUTH_EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180).with(VariantProperties.MODEL, corner))
+                .select(RocketLaunchPadBlock.Part.NORTH, Variant.variant().with(VariantProperties.MODEL, side))
+                .select(RocketLaunchPadBlock.Part.WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270).with(VariantProperties.MODEL, side))
+                .select(RocketLaunchPadBlock.Part.SOUTH, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180).with(VariantProperties.MODEL, side))
+                .select(RocketLaunchPadBlock.Part.EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90).with(VariantProperties.MODEL, side))
+        ));
+        generator.delegateItemModel(block, centerModel);
+    }
+
+    private static TextureMapping rocketLaunchPadPart(String suffix) {
+        return new TextureMapping()
+                .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD, suffix))
+                .put(TextureSlot.END, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD, suffix))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD));
     }
 
     private static TextureMapping candleCheeseBlock(Block block, boolean lit) {

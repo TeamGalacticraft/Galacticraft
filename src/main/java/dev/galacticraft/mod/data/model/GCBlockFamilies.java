@@ -187,7 +187,7 @@ public class GCBlockFamilies {
             .getFamily();
 
     @Contract(value = "_ -> new", pure = true)
-    public static BlockFamily.Builder builder(Block block) {
+    private static BlockFamily.Builder builder(Block block) {
         var builder = new BlockFamily.Builder(block);
         var blockFamily = MAP.put(block, builder.getFamily());
         if (blockFamily != null) {
