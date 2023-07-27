@@ -90,7 +90,7 @@ public class ElectricArcFurnaceBlockEntity extends RecipeMachineBlockEntity<Cont
 
     @Override
     protected @NotNull MachineStatus workingStatus() {
-        return GCMachineStatuses.ACTIVE;
+        return MachineStatuses.ACTIVE;
     }
 
     @Override

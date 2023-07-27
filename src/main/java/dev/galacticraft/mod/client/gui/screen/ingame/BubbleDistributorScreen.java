@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
@@ -107,7 +108,8 @@ public class BubbleDistributorScreen extends MachineScreen<OxygenBubbleDistribut
         super.renderForeground(graphics, mouseX, mouseY, delta);
         textField.setValue(String.valueOf(this.menu.targetSize));
 
-        graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.status").append(this.menu.state.getStatus().getText()), this.leftPos + 60, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
+        MachineStatus status = this.menu.state.getStatus();
+        graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.status").append(status != null ? status.getText() : Component.empty()), this.leftPos + 60, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
 
         this.textField.render(graphics, mouseX, mouseY, delta);
 

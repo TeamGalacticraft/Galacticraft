@@ -40,7 +40,6 @@ public final class GCMachineStatuses {
     public static final MachineStatus WARMING_UP = MachineStatus.create("machine_status.galacticraft.warming_up", ChatFormatting.GOLD, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus COOLING_DOWN = MachineStatus.create("machine_status.galacticraft.cooling_down", ChatFormatting.AQUA, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus COMPRESSING = MachineStatus.create("machine_status.galacticraft.compressing", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
-    public static final MachineStatus ACTIVE = MachineStatus.create("machine_status.galacticraft.active", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
     public static final MachineStatus NOT_ENOUGH_OXYGEN = MachineStatus.create("machine_status.galacticraft.not_enough_oxygen", ChatFormatting.RED, MachineStatus.Type.MISSING_RESOURCE);
     public static final MachineStatus MISSING_OIL = MachineStatus.create("machine_status.galacticraft.missing_oil", ChatFormatting.RED, MachineStatus.Type.MISSING_FLUIDS);
     public static final MachineStatus FUEL_TANK_FULL = MachineStatus.create("machine_status.galacticraft.fuel_tank_full", ChatFormatting.GOLD, MachineStatus.Type.OTHER);
@@ -56,11 +55,6 @@ public final class GCMachineStatuses {
      * The fuel loader is loading fuel into the rocket.
      */
     public static final MachineStatus LOADING = MachineStatus.create("ui.galacticraft.machinestatus.loading", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
-
-    /**
-     * The fuel loader has enough fuel to load but not enough energy.
-     */
-    public static final MachineStatus NOT_ENOUGH_ENERGY = MachineStatus.create("ui.galacticraft.machinestatus.not_enough_energy", ChatFormatting.RED, MachineStatus.Type.MISSING_ENERGY);
 
     /**
      * The fuel loader doesn't have any fuel.

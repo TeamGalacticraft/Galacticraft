@@ -87,7 +87,7 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Contain
 
     @Override
     protected @NotNull MachineStatus workingStatus() {
-        return GCMachineStatuses.ACTIVE;
+        return MachineStatuses.ACTIVE;
     }
 
     @Override
