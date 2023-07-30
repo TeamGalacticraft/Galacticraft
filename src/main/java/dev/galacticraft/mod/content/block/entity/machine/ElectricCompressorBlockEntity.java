@@ -22,8 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
-import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
-import dev.galacticraft.machinelib.api.compat.vanilla.RecipeTestContainer;
+import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
@@ -33,7 +32,6 @@ import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -43,7 +41,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +48,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Container, CompressingRecipe> {
+public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity<Container, CompressingRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOTS = 1;
     public static final int INPUT_LENGTH = 9;
@@ -59,7 +56,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
     public static final int OUTPUT_LENGTH = 2;
 
     public ElectricCompressorBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.ELECTRIC_COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE);
+        super(GCMachineTypes.ELECTRIC_COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE, INPUT_SLOTS, INPUT_LENGTH, OUTPUT_SLOTS, OUTPUT_LENGTH);
     }
 
     @Override
@@ -70,8 +67,10 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
 
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        if (this.getState().isActive() && this.getMaxProgress() > 0) {
-            if (this.getProgress() % (this.getMaxProgress() / 5) == 0 && this.getProgress() > this.getMaxProgress() / 2) {
+        CompressingRecipe recipe = this.getActiveRecipe();
+        if (recipe != null && this.getState().isActive()) {
+            int maxProgress = this.getProcessingTime(recipe);
+            if (this.getProgress() % (maxProgress / 5) == 0 && this.getProgress() > maxProgress / 2) {
                 level.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
             }
         }
@@ -79,7 +78,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
     }
 
     @Override
-    protected @NotNull MachineStatus workingStatus() {
+    protected @NotNull MachineStatus workingStatus(CompressingRecipe recipe) {
         return GCMachineStatuses.COMPRESSING;
     }
 
@@ -94,39 +93,7 @@ public class ElectricCompressorBlockEntity extends RecipeMachineBlockEntity<Cont
     }
 
     @Override
-    public @NotNull Container createCraftingInv() {
-        return RecipeTestContainer.create(this.itemStorage(), INPUT_SLOTS, INPUT_LENGTH);
-    }
-
-    @Override
-    protected void outputStacks(@NotNull CompressingRecipe recipe) {
-        ItemStack stack = recipe.getResultItem(this.level.registryAccess());
-        this.itemStorage().insertMatching(OUTPUT_SLOTS, OUTPUT_LENGTH, stack.getItem(), stack.getTag(), stack.getCount());
-    }
-
-    @Override
-    protected boolean canOutputStacks(@NotNull CompressingRecipe recipe) {
-        ItemStack stack = recipe.getResultItem(this.level.registryAccess());
-        return this.itemStorage().canInsert(OUTPUT_SLOTS, OUTPUT_LENGTH, stack.getItem(), stack.getTag(), stack.getCount());
-    }
-
-    @Override
-    protected void extractCraftingMaterials(@NotNull CompressingRecipe recipe) {
-        NonNullList<ItemStack> remainders = recipe.getRemainingItems(this.craftingInv);
-        for (int i = 0; i < INPUT_LENGTH; i++) {
-            this.itemStorage().extractOne(INPUT_SLOTS + i);
-
-            ItemStack remainder = remainders.get(i);
-            if (!remainder.isEmpty()) {
-                if (this.itemStorage().isEmpty(i)) {
-                    this.itemStorage().insert(i, remainder.getItem(), remainder.getTag(), remainder.getCount());
-                }
-            }
-        }
-    }
-
-    @Override
-    protected int getProcessTime(@NotNull CompressingRecipe recipe) {
+    public int getProcessingTime(@NotNull CompressingRecipe recipe) {
         return recipe.getTime();
     }
 

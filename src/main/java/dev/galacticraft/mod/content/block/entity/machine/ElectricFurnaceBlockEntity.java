@@ -22,14 +22,12 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
-import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
-import dev.galacticraft.machinelib.api.compat.vanilla.RecipeTestContainer;
+import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.machine.GCMachineStatuses;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -38,7 +36,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.state.BlockState;
@@ -48,13 +45,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Container, SmeltingRecipe> {
+public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Container, SmeltingRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOT = 2;
 
     public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING);
+        super(GCMachineTypes.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING, INPUT_SLOT, OUTPUT_SLOT);
     }
 
     @Override
@@ -64,29 +61,7 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Contain
     }
 
     @Override
-    protected @NotNull Container createCraftingInv() {
-        return RecipeTestContainer.create(this.itemStorage().getSlot(INPUT_SLOT));
-    }
-
-    @Override
-    protected void outputStacks(@NotNull SmeltingRecipe recipe) {
-        ItemStack stack = recipe.getResultItem(this.level.registryAccess());
-        this.itemStorage().getSlot(OUTPUT_SLOT).insert(stack.getItem(), stack.getTag(), stack.getCount());
-    }
-
-    @Override
-    protected boolean canOutputStacks(@NotNull SmeltingRecipe recipe) {
-        ItemStack stack = recipe.getResultItem(this.level.registryAccess());
-        return this.itemStorage().getSlot(OUTPUT_SLOT).canInsert(stack.getItem(), stack.getTag(), stack.getCount());
-    }
-
-    @Override
-    protected void extractCraftingMaterials(@NotNull SmeltingRecipe recipe) {
-        this.itemStorage().getSlot(INPUT_SLOT).extractOne();
-    }
-
-    @Override
-    protected @NotNull MachineStatus workingStatus() {
+    protected @NotNull MachineStatus workingStatus(SmeltingRecipe recipe) {
         return MachineStatuses.ACTIVE;
     }
 
@@ -101,7 +76,7 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Contain
     }
 
     @Override
-    protected int getProcessTime(@NotNull SmeltingRecipe recipe) {
+    public int getProcessingTime(@NotNull SmeltingRecipe recipe) {
         return recipe.getCookingTime();
     }
 

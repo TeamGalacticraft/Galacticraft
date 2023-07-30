@@ -24,7 +24,6 @@ package dev.galacticraft.mod.compat.rei.common.transfer.info;
 
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
-import dev.galacticraft.machinelib.api.transfer.InputType;
 import dev.galacticraft.machinelib.impl.compat.vanilla.StorageSlot;
 import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoContext;
@@ -39,7 +38,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public record SimpleMachineMenuInfo<C extends Container, R extends Recipe<C>, B extends RecipeMachineBlockEntity<C, R>, T extends RecipeMachineMenu<C, R, B>, D extends SimpleGridMenuDisplay>(int width, int height, int resultIndex, D display) implements SimpleGridMenuInfo<T, D> {
@@ -47,7 +45,7 @@ public record SimpleMachineMenuInfo<C extends Container, R extends Recipe<C>, B 
     public Iterable<SlotAccessor> getInputSlots(MenuInfoContext<T, ?, D> context) {
         List<SlotAccessor> accessors = new ArrayList<>(this.width() * this.height());
         for (StorageSlot machineSlot : context.getMenu().machineSlots) {
-            if (machineSlot.getSlot().inputType() == InputType.INPUT) {
+            if (machineSlot.getSlot().inputType().isInput()) {
                 accessors.add(new VanillaSlotAccessor(machineSlot));
             }
         }

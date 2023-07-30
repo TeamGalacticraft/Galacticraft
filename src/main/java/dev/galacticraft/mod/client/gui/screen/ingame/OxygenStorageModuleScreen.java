@@ -53,11 +53,6 @@ public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModule
         graphics.drawCenteredString(font, I18n.get("ui.galacticraft.machine.max_oxygen", this.menu.fluidStorage.getSlot(OxygenStorageModuleBlockEntity.OXYGEN_TANK).getCapacity()), width / 2, topPos + 45, ChatFormatting.DARK_GRAY.getColor());
     }
 
-    @Override
-    protected void drawTanks(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-//        super.drawTanks(matrices, mouseX, mouseY, delta);
-    }
-
     private void drawOxygenBufferBar(GuiGraphics graphics) {
         FluidResourceSlot slot = this.menu.fluidStorage.getSlot(OxygenStorageModuleBlockEntity.OXYGEN_TANK);
         double oxygenScale = (double)slot.getAmount() / (double)slot.getCapacity();

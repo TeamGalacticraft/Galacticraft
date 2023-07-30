@@ -142,7 +142,7 @@ public class GCMachineTypes {
                             .filter(ResourceFilters.ofResource(Items.REDSTONE)),
                     ItemResourceSlot.builder(InputType.INPUT)
                             .pos(134, 15),
-                    ItemResourceSlot.builder(InputType.OUTPUT)
+                    ItemResourceSlot.builder(InputType.RECIPE_OUTPUT)
                             .pos(152, 70)
             )
     );
@@ -161,7 +161,7 @@ public class GCMachineTypes {
                                 return integer != null && integer > 0;
                             }))
                     .add3x3Grid(InputType.INPUT, 17, 17)
-                    .add(ItemResourceSlot.builder(InputType.OUTPUT)
+                    .add(ItemResourceSlot.builder(InputType.RECIPE_OUTPUT)
                             .pos(143, 36))
     );
 
@@ -183,9 +183,9 @@ public class GCMachineTypes {
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.INPUT)
                             .pos(44, 35),
-                    ItemResourceSlot.builder(InputType.OUTPUT)
+                    ItemResourceSlot.builder(InputType.RECIPE_OUTPUT)
                             .pos(108, 35),
-                    ItemResourceSlot.builder(InputType.OUTPUT)
+                    ItemResourceSlot.builder(InputType.RECIPE_OUTPUT)
                             .pos(134, 35)
             )
     );
@@ -208,10 +208,10 @@ public class GCMachineTypes {
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                     )
                     .add3x3Grid(InputType.INPUT, 30, 17)
-                    .add(ItemResourceSlot.builder(InputType.OUTPUT)
+                    .add(ItemResourceSlot.builder(InputType.RECIPE_OUTPUT)
                             .pos(148, 22)
                     )
-                    .add(ItemResourceSlot.builder(InputType.OUTPUT)
+                    .add(ItemResourceSlot.builder(InputType.RECIPE_OUTPUT)
                             .pos(148, 48)
                     )
     );
@@ -234,7 +234,7 @@ public class GCMachineTypes {
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.INPUT)
                             .pos(52, 35),
-                    ItemResourceSlot.builder(InputType.OUTPUT)
+                    ItemResourceSlot.builder(InputType.RECIPE_OUTPUT)
                             .pos(113, 35)
             )
     );
@@ -469,7 +469,7 @@ public class GCMachineTypes {
                             .pos(122, 28)
                             .capacity(RefineryBlockEntity.MAX_CAPACITY)
                             .filter(ResourceFilters.ofResource(GCFluids.CRUDE_OIL)),
-                    FluidResourceSlot.builder(InputType.OUTPUT)
+                    FluidResourceSlot.builder(InputType.RECIPE_OUTPUT)
                             .pos(152, 28)
                             .capacity(RefineryBlockEntity.MAX_CAPACITY)
                             .filter(ResourceFilters.ofResource(GCFluids.FUEL))

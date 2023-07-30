@@ -24,7 +24,6 @@ package dev.galacticraft.mod.compat.rei.common.transfer.info;
 
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
-import dev.galacticraft.machinelib.api.transfer.InputType;
 import dev.galacticraft.machinelib.impl.compat.vanilla.StorageSlot;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
@@ -45,7 +44,7 @@ public record FabricationMenuInfo<B extends RecipeMachineBlockEntity<Container, 
 
         List<SlotAccessor> list = new ArrayList<>(5);
         for (StorageSlot slot : menu.machineSlots) {
-            if (slot.getSlot().inputType() == InputType.INPUT) {
+            if (slot.getSlot().inputType().isInput()) {
                 list.add(new VanillaSlotAccessor(slot));
             }
         }

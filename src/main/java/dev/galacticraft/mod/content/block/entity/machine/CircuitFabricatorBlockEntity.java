@@ -62,8 +62,12 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     public static final int INPUT_SLOT = 5;
     public static final int OUTPUT_SLOT = 6;
 
+    private final Container craftingInv;
+
     public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.CIRCUIT_FABRICATOR, pos, state, GCRecipes.FABRICATION_TYPE);
+
+        this.craftingInv = RecipeTestContainer.create(this.itemStorage().getSlot(INPUT_SLOT));
     }
 
     @Override
@@ -91,8 +95,8 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     }
 
     @Override
-    protected @NotNull Container createCraftingInv() {
-        return RecipeTestContainer.create(this.itemStorage().getSlot(INPUT_SLOT));
+    protected @NotNull Container craftingInv() {
+        return this.craftingInv;
     }
 
     @Override
@@ -121,7 +125,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     }
 
     @Override
-    protected @NotNull MachineStatus workingStatus() {
+    protected @NotNull MachineStatus workingStatus(FabricationRecipe recipe) {
         return GCMachineStatuses.FABRICATING;
     }
 
@@ -138,7 +142,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     }
 
     @Override
-    protected int getProcessTime(@NotNull FabricationRecipe recipe) {
+    public int getProcessingTime(@NotNull FabricationRecipe recipe) {
         return recipe.getProcessingTime();
     }
 
