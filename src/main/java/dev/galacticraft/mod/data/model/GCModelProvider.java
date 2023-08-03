@@ -78,17 +78,10 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createLantern(GCBlocks.UNLIT_LANTERN);
 
         // MOON NAUTRAL
-        var textureMapping = new TextureMapping()
-                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(GCBlocks.MOON_DIRT))
-                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(GCBlocks.MOON_TURF))
-                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(GCBlocks.MOON_TURF, "_side"));
-        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(GCBlocks.MOON_TURF, ModelTemplates.CUBE_BOTTOM_TOP.create(GCBlocks.MOON_TURF, textureMapping, generator.modelOutput)));
-
+        this.createMoonTurf(generator);
         generator.createTrivialCube(GCBlocks.MOON_DIRT);
         createRotatedDelegate(generator, GCBlocks.MOON_DIRT_PATH);
         generator.createTrivialCube(GCBlocks.MOON_SURFACE_ROCK);
-
-        generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
 
         // MARS NATURAL
         generator.createTrivialCube(GCBlocks.MARS_SURFACE_ROCK);
@@ -105,7 +98,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.SCORCHED_VENUS_ROCK);
         generator.createTrivialCube(GCBlocks.VOLCANIC_ROCK);
         generator.createTrivialCube(GCBlocks.PUMICE);
-        generator.createNonTemplateModelBlock(GCBlocks.VAPOR_SPOUT);
+        this.createVaporSpout(generator);
 
         // MISC DECOR
 //        generator.createNonTemplateModelBlock(GCBlocks.WALKWAY);
@@ -122,6 +115,7 @@ public class GCModelProvider extends FabricModelProvider {
 //        generator.createNonTemplateModelBlock(GCBlocks.GLASS_FLUID_PIPE);
         this.createRocketLaunchPadBlock(generator);
         generator.createNonTemplateModelBlock(GCBlocks.ROCKET_WORKBENCH);
+        generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
 
         // LIGHT PANELS
         generator.createNonTemplateModelBlock(GCBlocks.SQUARE_LIGHT_PANEL); //todo
@@ -226,8 +220,28 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createNonTemplateModelBlock(GCBlocks.FUEL);
 
         generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
-        generator.createNonTemplateModelBlock(GCBlocks.AIR_LOCK_CONTROLLER);
+        this.createAirLockController(generator);
         generator.createNonTemplateModelBlock(GCBlocks.AIR_LOCK_SEAL);
+    }
+
+    private void createMoonTurf(BlockModelGenerators generator) {
+        var block = GCBlocks.MOON_TURF;
+        var textureMapping = new TextureMapping()
+                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(GCBlocks.MOON_DIRT))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block, "_side"));
+        generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_BOTTOM_TOP);
+    }
+
+    private void createVaporSpout(BlockModelGenerators generator) {
+        var textureMapping = new TextureMapping().put(TextureSlot.SIDE, TextureMapping.getBlockTexture(GCBlocks.SOFT_VENUS_ROCK)).put(TextureSlot.TOP, TextureMapping.getBlockTexture(GCBlocks.VAPOR_SPOUT));
+        generator.createTrivialBlock(GCBlocks.VAPOR_SPOUT, textureMapping, ModelTemplates.CUBE_TOP);
+    }
+
+    private void createAirLockController(BlockModelGenerators generator) {
+        var block = GCBlocks.AIR_LOCK_CONTROLLER;
+        var textureMapping = TextureMapping.column(TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME));
+        generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_COLUMN);
     }
 
     private static void putDetailedTextured(BlockModelGenerators generator, Block detailedBlock) {
