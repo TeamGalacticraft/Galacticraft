@@ -175,6 +175,8 @@ public class GCItems {
     public static final Item CRACKED_MOON_BASALT_BRICK_STAIRS = new BlockItem(GCBlocks.CRACKED_MOON_BASALT_BRICK_STAIRS, new Item.Properties());
     public static final Item CRACKED_MOON_BASALT_BRICK_WALL = new BlockItem(GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL, new Item.Properties());
 
+    public static final Item FALLEN_METEOR = new BlockItem(GCBlocks.FALLEN_METEOR, new Item.Properties());
+
     // MARS NATURAL
     public static final Item MARS_SURFACE_ROCK = new BlockItem(GCBlocks.MARS_SURFACE_ROCK, new Item.Properties());
     public static final Item MARS_SUB_SURFACE_ROCK = new BlockItem(GCBlocks.MARS_SUB_SURFACE_ROCK, new Item.Properties());
@@ -610,6 +612,8 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_SLAB), CRACKED_MOON_BASALT_BRICK_SLAB);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_STAIRS), CRACKED_MOON_BASALT_BRICK_STAIRS);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_WALL), CRACKED_MOON_BASALT_BRICK_WALL);
+
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.FALLEN_METEOR), FALLEN_METEOR);
 
         // MARS NATURAL
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MARS_SURFACE_ROCK), MARS_SURFACE_ROCK);
