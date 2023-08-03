@@ -40,57 +40,57 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        this.tag(GCTags.INFINIBURN_MOON)
-                .add(this.reverseLookup(GCBlocks.MOON_BASALT_BRICK));
-        this.tag(GCTags.BASE_STONE_MOON)
-                .add(this.reverseLookup(GCBlocks.MOON_ROCK));
-        this.tag(GCTags.MOON_CARVER_REPLACEABLES)
-                .add(this.reverseLookup(GCBlocks.MOON_ROCK))
-                .add(this.reverseLookup(GCBlocks.MOON_SURFACE_ROCK))
-                .add(this.reverseLookup(GCBlocks.MOON_BASALT))
-                .add(this.reverseLookup(GCBlocks.MOON_DIRT))
-                .add(this.reverseLookup(GCBlocks.MOON_TURF));
-        this.tag(GCTags.MOON_CRATER_CARVER_REPLACEABLES)
-                .add(this.reverseLookup(GCBlocks.MOON_ROCK))
-                .add(this.reverseLookup(GCBlocks.MOON_SURFACE_ROCK))
-                .add(this.reverseLookup(GCBlocks.MOON_BASALT))
-                .add(this.reverseLookup(GCBlocks.MOON_DIRT))
-                .add(this.reverseLookup(GCBlocks.MOON_TURF));
-        this.tag(GCTags.MOON_STONE_ORE_REPLACABLES)
-                .add(this.reverseLookup(GCBlocks.MOON_ROCK))
-                .add(this.reverseLookup(GCBlocks.MOON_BASALT));
-        this.tag(GCTags.LUNASLATE_ORE_REPLACABLES)
-                .add(this.reverseLookup(GCBlocks.LUNASLATE));
+        this.getOrCreateTagBuilder(GCTags.INFINIBURN_MOON)
+                .add(GCBlocks.MOON_BASALT_BRICK);
+        this.getOrCreateTagBuilder(GCTags.BASE_STONE_MOON)
+                .add(GCBlocks.MOON_ROCK);
+        this.getOrCreateTagBuilder(GCTags.MOON_CARVER_REPLACEABLES)
+                .add(GCBlocks.MOON_ROCK)
+                .add(GCBlocks.MOON_SURFACE_ROCK)
+                .add(GCBlocks.MOON_BASALT)
+                .add(GCBlocks.MOON_DIRT)
+                .add(GCBlocks.MOON_TURF);
+        this.getOrCreateTagBuilder(GCTags.MOON_CRATER_CARVER_REPLACEABLES)
+                .add(GCBlocks.MOON_ROCK)
+                .add(GCBlocks.MOON_SURFACE_ROCK)
+                .add(GCBlocks.MOON_BASALT)
+                .add(GCBlocks.MOON_DIRT)
+                .add(GCBlocks.MOON_TURF);
+        this.getOrCreateTagBuilder(GCTags.MOON_STONE_ORE_REPLACABLES)
+                .add(GCBlocks.MOON_ROCK)
+                .add(GCBlocks.MOON_BASALT);
+        this.getOrCreateTagBuilder(GCTags.LUNASLATE_ORE_REPLACABLES)
+                .add(GCBlocks.LUNASLATE);
 
-        this.tag(BlockTags.CLIMBABLE)
-                .add(this.reverseLookup(GCBlocks.TIN_LADDER));
+        this.getOrCreateTagBuilder(BlockTags.CLIMBABLE)
+                .add(GCBlocks.TIN_LADDER);
 
-        this.tag(BlockTags.WALLS)
-                .add(this.reverseLookup(GCBlocks.TIN_DECORATION_WALL))
-                .add(this.reverseLookup(GCBlocks.COPPER_DECORATION_WALL))
-                .add(this.reverseLookup(GCBlocks.BRONZE_DECORATION_WALL))
-                .add(this.reverseLookup(GCBlocks.STEEL_DECORATION_WALL))
-                .add(this.reverseLookup(GCBlocks.TITANIUM_DECORATION_WALL))
-                .add(this.reverseLookup(GCBlocks.IRON_DECORATION_WALL))
-                .add(this.reverseLookup(GCBlocks.ALUMINUM_DECORATION_WALL))
-                .add(this.reverseLookup(GCBlocks.METEORIC_IRON_DECORATION_WALL))
+        this.getOrCreateTagBuilder(BlockTags.WALLS)
+                .add(GCBlocks.TIN_DECORATION_WALL)
+                .add(GCBlocks.COPPER_DECORATION_WALL)
+                .add(GCBlocks.BRONZE_DECORATION_WALL)
+                .add(GCBlocks.STEEL_DECORATION_WALL)
+                .add(GCBlocks.TITANIUM_DECORATION_WALL)
+                .add(GCBlocks.IRON_DECORATION_WALL)
+                .add(GCBlocks.ALUMINUM_DECORATION_WALL)
+                .add(GCBlocks.METEORIC_IRON_DECORATION_WALL)
 
-                .add(this.reverseLookup(GCBlocks.DETAILED_TIN_DECORATION_WALL))
-                .add(this.reverseLookup(GCBlocks.DETAILED_COPPER_DECORATION_WALL))
-                .add(this.reverseLookup(GCBlocks.DETAILED_BRONZE_DECORATION_WALL))
-                .add(this.reverseLookup(GCBlocks.DETAILED_STEEL_DECORATION_WALL))
-                .add(this.reverseLookup(GCBlocks.DETAILED_TITANIUM_DECORATION_WALL))
-                .add(this.reverseLookup(GCBlocks.DETAILED_IRON_DECORATION_WALL))
-                .add(this.reverseLookup(GCBlocks.DETAILED_ALUMINUM_DECORATION_WALL))
-                .add(this.reverseLookup(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_WALL))
+                .add(GCBlocks.DETAILED_TIN_DECORATION_WALL)
+                .add(GCBlocks.DETAILED_COPPER_DECORATION_WALL)
+                .add(GCBlocks.DETAILED_BRONZE_DECORATION_WALL)
+                .add(GCBlocks.DETAILED_STEEL_DECORATION_WALL)
+                .add(GCBlocks.DETAILED_TITANIUM_DECORATION_WALL)
+                .add(GCBlocks.DETAILED_IRON_DECORATION_WALL)
+                .add(GCBlocks.DETAILED_ALUMINUM_DECORATION_WALL)
+                .add(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_WALL)
 
-                .add(this.reverseLookup(GCBlocks.MOON_ROCK_WALL))
-                .add(this.reverseLookup(GCBlocks.COBBLED_MOON_ROCK_WALL))
-                .add(this.reverseLookup(GCBlocks.MOON_BASALT_WALL))
-                .add(this.reverseLookup(GCBlocks.MOON_BASALT_BRICK_WALL));
+                .add(GCBlocks.MOON_ROCK_WALL)
+                .add(GCBlocks.COBBLED_MOON_ROCK_WALL)
+                .add(GCBlocks.MOON_BASALT_WALL)
+                .add(GCBlocks.MOON_BASALT_BRICK_WALL);
 
         // ORE MINING TAGS
-        Block[] ores = {
+        var ores = new Block[] {
                 GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE,
                 GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE,
                 GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE,
