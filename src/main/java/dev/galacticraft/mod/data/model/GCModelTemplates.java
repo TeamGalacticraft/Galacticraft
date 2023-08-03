@@ -32,7 +32,7 @@ import net.minecraft.data.models.model.TextureSlot;
 public class GCModelTemplates {
     public static final ModelTemplate SPAWN_EGG = ModelTemplates.createItem("template_spawn_egg");
 
-    public static final ModelTemplate ROCKET_LAUNCH_PAD_PART = create("rocket_launch_pad_part", TextureSlot.PARTICLE, TextureSlot.END, TextureSlot.SIDE);
+    public static final ModelTemplate ROCKET_LAUNCH_PAD_PART = create("rocket_launch_pad_part", TextureSlot.PARTICLE, TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
 
     private static ModelTemplate create(String string, TextureSlot... textureSlots) {
         return new ModelTemplate(Optional.of(Constant.id("block/" + string)), Optional.empty(), textureSlots);

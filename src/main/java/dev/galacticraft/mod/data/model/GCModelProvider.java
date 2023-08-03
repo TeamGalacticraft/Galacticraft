@@ -481,7 +481,8 @@ public class GCModelProvider extends FabricModelProvider {
     private static TextureMapping rocketLaunchPadPart(String suffix) {
         return new TextureMapping()
                 .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD, suffix))
-                .put(TextureSlot.END, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD, suffix))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD, suffix))
+                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD))
                 .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD));
     }
 
