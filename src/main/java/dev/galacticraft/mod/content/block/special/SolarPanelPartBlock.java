@@ -47,21 +47,22 @@ import org.jetbrains.annotations.NotNull;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SolarPanelPartBlock extends BaseEntityBlock {
-    private static final VoxelShape POLE_SHAPE = box(8 - 2, 0, 8 - 2, 8 + 2, 16, 8 + 2);
-    private static final VoxelShape TOP_POLE_SHAPE = box(8 - 2, 0, 8 - 2, 8 + 2, 8, 8 + 2);
-    private static final VoxelShape TOP_SHAPE = box(0, 6, 0, 16, 10, 16);
+    private static final VoxelShape POLE_SHAPE = box(6, 0, 6, 10, 16, 10);
+    private static final VoxelShape TOP_POLE_SHAPE = box(6, 0, 6, 10, 7, 10);
+    private static final VoxelShape TOP_SHAPE = box(0, 7, 0, 16, 10, 16);
     private static final VoxelShape TOP_MID_SHAPE = Shapes.or(TOP_POLE_SHAPE, TOP_SHAPE);
 
     public SolarPanelPartBlock(Properties settings) {
-        super(settings);
+        super(settings.pushReaction(PushReaction.BLOCK));
     }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockView, BlockPos pos, CollisionContext context) {
-        Block down = blockView.getBlockState(pos.below()).getBlock();
+        var down = blockView.getBlockState(pos.below()).getBlock();
+        var centerTopBlock = blockView.getBlockState(pos.below(2)).getBlock();
         if (down instanceof MultiBlockBase) {
             return POLE_SHAPE;
-        } else if (blockView.getBlockState(pos.below().below()).getBlock() == GCBlocks.BASIC_SOLAR_PANEL) {
+        } else if (centerTopBlock == GCBlocks.BASIC_SOLAR_PANEL || centerTopBlock == GCBlocks.ADVANCED_SOLAR_PANEL) {
             return TOP_MID_SHAPE;
         }
         return TOP_SHAPE;
@@ -90,11 +91,6 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
     }
 
     @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.BLOCK;
-    }
-
-    @Override
     public ItemStack getCloneItemStack(BlockGetter blockView, BlockPos pos, BlockState state) {
         return new ItemStack(GCBlocks.BASIC_SOLAR_PANEL);
     }
@@ -115,21 +111,18 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
     }
 
     @Override
-    public boolean isPossibleToRespawnInThis() {
+    public boolean isPossibleToRespawnInThis(BlockState blockState) {
         return false;
     }
 
     @Override
     public InteractionResult use(BlockState state, @NotNull Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         BlockEntity partEntity = world.getBlockEntity(pos);
-        if (world.isEmptyBlock(pos) || !(partEntity instanceof SolarPanelPartBlockEntity)) {
+        if (world.isClientSide || world.isEmptyBlock(pos) || !(partEntity instanceof SolarPanelPartBlockEntity)) {
             return InteractionResult.SUCCESS;
         }
 
-        if (world.isClientSide) return InteractionResult.SUCCESS;
-
         BlockPos basePos = ((SolarPanelPartBlockEntity) partEntity).basePos;
-
         BlockState base = world.getBlockState(basePos);
         return base.getBlock().use(base, world, basePos, player, hand, blockHitResult);
     }

@@ -1,6 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "galacticraft:block/cracked_moon_basalt_brick"
-  }
-}

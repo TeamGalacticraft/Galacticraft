@@ -25,19 +25,15 @@ package dev.galacticraft.mod.client.render.block.entity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.BasicSolarPanelBlockEntity;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
+import dev.galacticraft.mod.content.block.entity.machine.BasicSolarPanelBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -91,8 +87,8 @@ public class BasicSolarPanelBlockEntityRenderer implements BlockEntityRenderer<B
         this.pole.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.translate(0.0F, 1.5F, 0.0F);
 
-        matrices.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
-        matrices.mulPose(Vector3f.YP.rotationDegrees(-90.0F));
+        matrices.mulPose(Axis.ZP.rotationDegrees(180.0F));
+        matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
 
         this.panel.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }

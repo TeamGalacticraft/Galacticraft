@@ -24,10 +24,11 @@ package dev.galacticraft.mod.client.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -56,7 +57,7 @@ public class RocketOverlay {
 
         return (int) Math.floor(player.getY());
     }
-    public static void onHudRender(PoseStack poseStack, float tickDelta) {
+    public static void onHudRender(GuiGraphics graphics, float tickDelta) {
         Minecraft mc = Minecraft.getInstance();
         if (playerHead == null) {
             playerHead = mc.getSkinManager().getInsecureSkinLocation(mc.player.getGameProfile());
@@ -106,17 +107,17 @@ public class RocketOverlay {
             var7 = 1.0F / 64.0F;
             var8 = 1.0F / 64.0F;
 
-            poseStack.pushPose();
+            graphics.pose().pushPose();
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            poseStack.translate(var1 + 4, var2 + 6, 50F);
-            poseStack.scale(5F, 5F, 5F);
-            poseStack.mulPose(Vector3f.XP.rotationDegrees(180F));
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(90F));
+            graphics.pose().translate(var1 + 4, var2 + 6, 50F);
+            graphics.pose().scale(5F, 5F, 5F);
+            graphics.pose().mulPose(Axis.XP.rotationDegrees(180F));
+            graphics.pose().mulPose(Axis.YP.rotationDegrees(90F));
 
             try {
                 MultiBufferSource.BufferSource source = Minecraft.getInstance().renderBuffers().bufferSource();
-                spaceshipRender.render(rocketEntity, rocketEntity.getYRot(), tickDelta, poseStack, source, 15728880);
+                spaceshipRender.render(rocketEntity, rocketEntity.getYRot(), tickDelta, graphics.pose(), source, 15728880);
                 source.endBatch();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -127,7 +128,7 @@ public class RocketOverlay {
             RenderSystem.enableBlend();
             RenderSystem.blendFunc(770, 771);
 
-            poseStack.translate(0F, -12F + headOffset, 60F);
+            graphics.pose().translate(0F, -12F + headOffset, 60F);
 
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             worldRenderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
@@ -147,7 +148,7 @@ public class RocketOverlay {
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.disableBlend();
-            poseStack.popPose();
+            graphics.pose().popPose();
         }
     }
 }

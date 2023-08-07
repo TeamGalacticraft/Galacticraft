@@ -24,13 +24,13 @@ package dev.galacticraft.mod.client.render.rocket;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.galacticraft.api.entity.Rocket;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
+import dev.galacticraft.api.rocket.entity.Rocket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
@@ -45,15 +45,15 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
         this.stack = stack;
         this.model = model;
         if (model != null) {
-            this.layer = RenderType.entityTranslucent(model.getParticleIcon().getName());
+            this.layer = RenderType.entityTranslucent(model.getParticleIcon().atlasLocation());
         } else {
             this.layer = null;
         }
     }
 
     @Override
-    public void renderGUI(ClientLevel world, PoseStack matrices, int mouseX, int mouseY, float delta) {
-        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, (int)matrices.last().pose().m03, (int)matrices.last().pose().m13);
+    public void renderGUI(ClientLevel world, GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        graphics.renderItem(stack, (int)graphics.pose().last().pose().m03(), (int)graphics.pose().last().pose().m13());
     }
 
     @Override
@@ -61,12 +61,10 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
         if (this.model != null) {
             PoseStack.Pose entry = matrices.last();
             VertexConsumer consumer = vertices.getBuffer(layer);
-            for (BakedQuad quad : model.getQuads(null, null, world.random)) {
-                consumer.putBulkData(entry, quad, (((rocket.getColor() << 16) & 0xFF) / 255f) * (((rocket.getColor() << 24) & 0xFF) / 255f),
-                        (((rocket.getColor() << 8) & 0xFF) / 255f) * (((rocket.getColor() << 24) & 0xFF) / 255f),
-                        ((rocket.getColor() & 0xFF) / 255f) * (((rocket.getColor() << 24) & 0xFF) / 255f),
-                        light, OverlayTexture.NO_OVERLAY);
-            }
+            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, consumer, null, model, (rocket.red() / 255f) * (rocket.alpha() / 255f),
+                    (rocket.green() / 255f) * (rocket.alpha() / 255f),
+                    (rocket.blue() / 255f) * (rocket.alpha() / 255f),
+                    light, OverlayTexture.NO_OVERLAY);
         }
     }
 }

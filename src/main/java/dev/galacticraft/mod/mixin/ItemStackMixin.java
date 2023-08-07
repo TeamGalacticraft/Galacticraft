@@ -25,6 +25,7 @@ package dev.galacticraft.mod.mixin;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -48,7 +49,7 @@ public abstract class ItemStackMixin {
     private void getName(CallbackInfoReturnable<Component> returnable) {
         //noinspection ConstantConditions
         if (false) {
-            ResourceLocation id = Registry.ITEM.getKey(getItem());
+            ResourceLocation id = BuiltInRegistries.ITEM.getKey(getItem());
             if (id.getNamespace().equals(Constant.MOD_ID)) {
                 Component returnVal = returnable.getReturnValue();
                 if (returnVal.getStyle().getColor() == null) {

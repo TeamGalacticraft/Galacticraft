@@ -24,13 +24,10 @@ package dev.galacticraft.mod.content.block.special.aluminumwire.tier2;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.WireBlock;
-import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
-import dev.galacticraft.mod.content.block.entity.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
-import org.jetbrains.annotations.Nullable;
-import team.reborn.energy.api.EnergyStorage;
-
-import java.util.ArrayList;
+import dev.galacticraft.mod.util.DirectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -44,6 +41,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
+
+import java.util.ArrayList;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -113,7 +114,7 @@ public class HeavyAluminumWireBlock extends WireBlock {
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborChanged(state, world, pos, block, fromPos, notify);
         BlockState neighbor = world.getBlockState(fromPos);
-        Direction dir = Direction.fromNormal(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
+        Direction dir = DirectionUtil.fromNormal(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
         assert dir != null;
         world.setBlockAndUpdate(pos, state.setValue(ConnectingBlockUtil.getBooleanProperty(dir), !neighbor.isAir() && block instanceof WireBlock
                 || EnergyStorage.SIDED.find(world, fromPos, dir.getOpposite()) != null

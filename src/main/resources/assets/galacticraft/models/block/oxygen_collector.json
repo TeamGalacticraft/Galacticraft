@@ -1,7 +1,6 @@
 {
-  "machine": "galacticraft:oxygen_collector",
-  "sprite_provider": "machinelib:single",
-  "sprite_info": {
+  "machinelib:generated": "machinelib:single",
+  "data": {
     "sprite": "galacticraft:block/oxygen_collector",
     "particle": "galacticraft:block/oxygen_collector"
   }

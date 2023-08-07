@@ -1,6 +1,0 @@
-{
-  "parent": "item/handheld",
-  "textures": {
-    "layer0": "galacticraft:item/heavy_duty_shovel"
-  }
-}

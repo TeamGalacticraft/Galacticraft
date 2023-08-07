@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.compat.rei.common.display;
 
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
@@ -48,7 +48,7 @@ public class DefaultFabricationDisplay extends BasicDisplay {
     }
 
     public DefaultFabricationDisplay(@Nullable FabricationRecipe recipe) {
-        super(getInputs(recipe), recipe == null ? Collections.emptyList() : Collections.singletonList(EntryIngredients.of(recipe.getResultItem())));
+        super(getInputs(recipe), recipe == null ? Collections.emptyList() : Collections.singletonList(EntryIngredients.of(recipe.getResultItem(null)))); //fixme
     }
 
 
@@ -65,8 +65,8 @@ public class DefaultFabricationDisplay extends BasicDisplay {
         if (recipe == null) return Collections.emptyList();
         List<EntryIngredient> list = new ArrayList<>(5);
         list.add(EntryIngredients.of(Items.DIAMOND));
-        list.add(EntryIngredients.of(GCItem.RAW_SILICON));
-        list.add(EntryIngredients.of(GCItem.RAW_SILICON));
+        list.add(EntryIngredients.of(GCItems.RAW_SILICON));
+        list.add(EntryIngredients.of(GCItems.RAW_SILICON));
         list.add(EntryIngredients.of(Items.REDSTONE));
         list.add(EntryIngredients.ofIngredient(recipe.getIngredients().get(0)));
         return list;

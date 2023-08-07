@@ -1,7 +1,6 @@
 {
-  "machine": "galacticraft:oxygen_storage_module",
-  "sprite_provider": "machinelib:z_axis",
-  "sprite_info": {
+  "machinelib:generated": "machinelib:z_axis",
+  "data": {
     "front": "galacticraft:block/oxygen_storage_module_8",
     "back": "galacticraft:block/oxygen_storage_module_8",
     "sided": false

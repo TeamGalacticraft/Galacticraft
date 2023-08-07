@@ -32,7 +32,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 public interface CompressingRecipe extends Recipe<Container> {
     @Override
     default RecipeType<? extends CompressingRecipe> getType() {
-        return GalacticraftRecipe.COMPRESSING_TYPE;
+        return GCRecipes.COMPRESSING_TYPE;
     }
 
     int getTime();

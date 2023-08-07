@@ -23,9 +23,9 @@
 package dev.galacticraft.mod.api.wire.impl;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
+import dev.galacticraft.mod.util.DirectionUtil;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.objects.*;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -121,7 +121,7 @@ public class WireNetworkImpl implements WireNetwork {
     public void removeWire(Wire wire, @NotNull BlockPos removedPos) {
         if (this.markedForRemoval()) {
             this.wires.clear();
-            Galacticraft.LOGGER.warn("Tried to remove wire from removed network!");
+            Constant.LOGGER.warn("Tried to remove wire from removed network!");
             return;
         }
         assert this.wires.contains(removedPos) : "Tried to remove wire that does not exist!";
@@ -215,7 +215,7 @@ public class WireNetworkImpl implements WireNetwork {
         assert !(world.getBlockEntity(updatedPos) instanceof Wire);
         this.storages.remove(updatedPos);
         BlockPos vector = updatedPos.subtract(adjacentToUpdated);
-        Direction direction = Direction.fromNormal(vector.getX(), vector.getY(), vector.getZ());
+        Direction direction = DirectionUtil.fromNormal(vector.getX(), vector.getY(), vector.getZ());
         EnergyStorage storage = EnergyStorage.SIDED.find(world, updatedPos, direction.getOpposite());
         if (storage != null) {
             this.storages.put(updatedPos, storage);

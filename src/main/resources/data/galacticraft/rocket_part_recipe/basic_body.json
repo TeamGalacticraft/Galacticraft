@@ -1,0 +1,20 @@
+{
+  "type": "galacticraft:slotted_default",
+  "config": {
+    "key": {
+      "D": {
+        "item": "galacticraft:heavy_plating"
+      }
+    },
+    "pattern": [
+      "DD",
+      "DD",
+      "DD",
+      "DD"
+    ],
+    "result": {
+      "type": "galacticraft:rocket_body",
+      "id": "galacticraft:tier_1"
+    }
+  }
+}

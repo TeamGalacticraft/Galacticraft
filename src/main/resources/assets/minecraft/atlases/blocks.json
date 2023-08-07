@@ -1,0 +1,22 @@
+{
+  "sources": [
+    {
+      "type": "directory",
+      "source": "connected",
+      "prefix": "connected/"
+    },
+    {
+      "type": "directory",
+      "source": "slot",
+      "prefix": "slot/"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "galacticraft:model/rocket"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "galacticraft:model/sphere"
+    }
+  ]
+}

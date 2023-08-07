@@ -23,12 +23,14 @@
 package dev.galacticraft.mod.screen;
 
 import com.mojang.datafixers.util.Pair;
+import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.machinelib.api.storage.ResourceFilter;
+import dev.galacticraft.machinelib.api.storage.ResourceFilters;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.OxygenGearItem;
 import dev.galacticraft.mod.content.item.OxygenMaskItem;
 import dev.galacticraft.mod.content.item.ThermalArmorItem;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -61,7 +63,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
     public final Player player;
 
     public GCPlayerInventoryMenu(int syncId, Inventory playerInventory, Player player) {
-        super(GCMenuTypes.PLAYER_INV_GC_HANDLER, syncId);
+        super(GCMenuTypes.PLAYER_INV_GC, syncId);
 
         this.player = player;
         this.inventory = player.getGearInv();
@@ -124,7 +126,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
     private EquipmentSlot getPreferredEquipmentSlot(ItemStack stack) {
         Item item_1 = stack.getItem();
         if (item_1 instanceof ThermalArmorItem thermalArmorItem)
-            return thermalArmorItem.getSlotGroup();
+            return thermalArmorItem.getSlotGroup().getSlot();
         return LivingEntity.getEquipmentSlotForItem(stack);
     }
 
@@ -134,13 +136,14 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
     }
 
     private static class OxygenTankSlot extends Slot {
+        private static final ResourceFilter<Item> FILTER = ResourceFilters.canExtractFluidStrict(Gases.OXYGEN);
         public OxygenTankSlot(Container gearInventory, int slotId, int x, int y) {
             super(gearInventory, slotId, x, y);
         }
 
         @Override
         public boolean mayPlace(ItemStack stack) {
-            return Constant.Filter.Item.CAN_EXTRACT_OXYGEN.test(ItemVariant.of(stack));
+            return FILTER.test(stack.getItem(), stack.getTag());
         }
 
         @Override

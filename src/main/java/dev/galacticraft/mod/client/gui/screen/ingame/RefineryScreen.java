@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.RefineryBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -35,9 +35,9 @@ import net.minecraft.world.entity.player.Inventory;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class RefineryScreen extends MachineScreen<RefineryBlockEntity, SimpleMachineMenu<RefineryBlockEntity>> {
-    public RefineryScreen(SimpleMachineMenu<RefineryBlockEntity> handler, Inventory inv, Component title) {
-        super(handler, inv, title, Constant.ScreenTexture.REFINERY_SCREEN);
+public class RefineryScreen extends MachineScreen<RefineryBlockEntity, MachineMenu<RefineryBlockEntity>> {
+    public RefineryScreen(MachineMenu<RefineryBlockEntity> handler, Inventory inv, Component title) {
+        super(handler, title, Constant.ScreenTexture.REFINERY_SCREEN);
         this.imageHeight = 192;
         this.capacitorX = 8;
         this.capacitorY = 29;

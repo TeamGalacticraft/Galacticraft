@@ -33,7 +33,6 @@ public interface SolarPanel {
 
     SolarPanelSource getSource();
 
-    // client only
     long getCurrentEnergyGeneration();
 
     enum SolarPanelSource {

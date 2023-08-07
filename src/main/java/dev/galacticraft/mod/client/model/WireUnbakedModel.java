@@ -28,11 +28,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.function.Function;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 
@@ -48,12 +44,12 @@ public class WireUnbakedModel implements UnbakedModel {
     }
 
     @Override
-    public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        return Collections.singleton(new Material(InventoryMenu.BLOCK_ATLAS, WireBakedModel.ALUMINUM_WIRE));
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> function) {
+
     }
 
     @Override
-    public BakedModel bake(ModelBakery loader, Function<Material, TextureAtlasSprite> spriteFunction, ModelState rotationContainer, ResourceLocation modelId) {
+    public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> spriteFunction, ModelState rotationContainer, ResourceLocation modelId) {
         return WireBakedModel.getInstance(spriteFunction);
     }
 }

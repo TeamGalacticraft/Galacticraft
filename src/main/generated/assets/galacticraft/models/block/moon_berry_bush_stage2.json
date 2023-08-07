@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "galacticraft:block/moon_berry_bush_stage2"
+  }
+}

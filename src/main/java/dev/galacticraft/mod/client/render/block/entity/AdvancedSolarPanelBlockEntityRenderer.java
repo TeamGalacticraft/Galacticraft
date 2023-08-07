@@ -25,10 +25,10 @@ package dev.galacticraft.mod.client.render.block.entity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.AdvancedSolarPanelBlockEntity;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
+import dev.galacticraft.mod.content.block.entity.machine.AdvancedSolarPanelBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
@@ -71,9 +71,9 @@ public class AdvancedSolarPanelBlockEntityRenderer implements BlockEntityRendere
         this.pole.render(matrices, vertexConsumer, light, overlay);
         matrices.translate(0.0F, 1.5F, 0.0F);
 
-        matrices.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
-        matrices.mulPose(Vector3f.YP.rotationDegrees(-90.0F));
-        matrices.mulPose(Vector3f.XP.rotation(world.getSunAngle(tickDelta)));
+        matrices.mulPose(Axis.ZP.rotationDegrees(180.0F));
+        matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
+        matrices.mulPose(Axis.XP.rotation(world.getSunAngle(tickDelta)));
 
         this.panel.render(matrices, vertexConsumer, light, overlay);
     }

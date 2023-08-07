@@ -30,12 +30,12 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Matrix4f;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -43,6 +43,8 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.joml.Matrix4f;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -78,12 +80,12 @@ public class SpaceRaceScreen extends Screen {
             private String prevText;
 
             @Override
-            protected void setFocused(boolean focused) {
+            public void setFocused(boolean focused) {
                 if (this.isFocused() != focused) {
                     if (focused) {
                         this.prevText = this.getValue();
                     } else if (this.prevText == null || !this.prevText.equals(this.getValue())) {
-                        ClientPlayNetworking.send(new ResourceLocation(Constant.ADDON_API_ID, "team_name"), PacketByteBufs.create().writeUtf(this.getValue()));
+                        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "team_name"), PacketByteBufs.create().writeUtf(this.getValue()));
                     }
                 }
                 super.setFocused(focused);
@@ -118,7 +120,6 @@ public class SpaceRaceScreen extends Screen {
         float g = (float) (color >> 8 & 255) / 255.0F;
         float b = (float) (color & 255) / 255.0F;
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        RenderSystem.disableTexture();
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         bufferBuilder.vertex(matrix, (float) x1, (float) y2, 0.0F).color(r, g, b, a).endVertex();
         bufferBuilder.vertex(matrix, (float) x2, (float) y2, 0.0F).color(r, g, b, a).endVertex();
@@ -128,7 +129,7 @@ public class SpaceRaceScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(PoseStack stack) {
+    public void renderBackground(GuiGraphics graphics) {
         // 5% of width
         int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
         if (backgroundWidth < maxWidth) {
@@ -140,68 +141,68 @@ public class SpaceRaceScreen extends Screen {
             backgroundHeight += Math.min(2, maxHeight - backgroundHeight);
         }
 
-        fill(stack, getLeft(), getTop(), getLeft() + backgroundWidth, getTop() + backgroundHeight, 0x80000000);
+        graphics.fill(getLeft(), getTop(), getLeft() + backgroundWidth, getTop() + backgroundHeight, 0x80000000);
     }
 
-    private void renderForeground(PoseStack stack, int mouseX, int mouseY) {
-        drawCenteredString(stack, this.font, I18n.get("ui.galacticraft.space_race_manager"), this.width / 2, getTop() - 20, 0xFFFFFF);
+    private void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
+        graphics.drawCenteredString(this.font, I18n.get("ui.galacticraft.space_race_manager"), this.width / 2, getTop() - 20, 0xFFFFFF);
 
         if (menu == Menu.MAIN) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.exit"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                renderButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.exit"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             } else {
-                renderHoveredButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.exit"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                renderHoveredButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.exit"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             }
 
             if (!check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 85, 100, 30)) {
-                renderButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.add_players"), this.getLeft() + 10, this.getBottom() - 85, 100, 30);
+                renderButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.add_players"), this.getLeft() + 10, this.getBottom() - 85, 100, 30);
             } else {
-                renderHoveredButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.add_players"), this.getLeft() + 10, this.getBottom() - 85, 100, 30);
+                renderHoveredButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.add_players"), this.getLeft() + 10, this.getBottom() - 85, 100, 30);
             }
 
             if (!check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 45, 100, 30)) {
-                renderButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.remove_players"), this.getLeft() + 10, this.getBottom() - 45, 100, 30);
+                renderButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.remove_players"), this.getLeft() + 10, this.getBottom() - 45, 100, 30);
             } else {
-                renderHoveredButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.remove_players"), this.getLeft() + 10, this.getBottom() - 45, 100, 30);
+                renderHoveredButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.remove_players"), this.getLeft() + 10, this.getBottom() - 45, 100, 30);
             }
 
             if (!check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30)) {
-                renderButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.server_stats"), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
+                renderButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.server_stats"), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
             } else {
-                renderHoveredButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.coming_soon"), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
+                renderHoveredButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.coming_soon"), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
             }
 
             if (!check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30)) {
-                renderButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.global_stats"), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
+                renderButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.global_stats"), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
             } else {
-                renderHoveredButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.coming_soon"), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
+                renderHoveredButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.coming_soon"), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
             }
         } else if (menu == Menu.ADD_PLAYERS) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                renderButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             } else {
-                renderHoveredButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                renderHoveredButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             }
 
         } else if (menu == Menu.REMOVE_PLAYERS) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                renderButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             } else {
-                renderHoveredButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                renderHoveredButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             }
 
         } else if (menu == Menu.TEAM_COLOR) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                renderButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             } else {
-                renderHoveredButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                renderHoveredButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             }
 
         } else if (menu == Menu.TEAM_FLAG) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                renderButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             } else {
-                renderHoveredButton(stack, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                renderHoveredButton(graphics, font, Component.translatable("ui.galacticraft.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             }
 
         }
@@ -258,15 +259,15 @@ public class SpaceRaceScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack stack, int x, int y, float delta) {
-        this.renderBackground(stack);
+    public void render(GuiGraphics graphics, int x, int y, float delta) {
+        this.renderBackground(graphics);
 
         if (this.isAnimationComplete()) {
-            this.renderForeground(stack, x, y);
-            this.drawMouseoverTooltip(stack, x, y);
+            this.renderForeground(graphics, x, y);
+            this.drawMouseoverTooltip(graphics, x, y);
         }
 
-        super.render(stack, x, y, delta);
+        super.render(graphics, x, y, delta);
 
 //        this.mouseX = (float) x;
 //        this.mouseY = (float)/*y*/ minecraft.window.getScaledHeight() / 2;
@@ -276,7 +277,7 @@ public class SpaceRaceScreen extends Screen {
 //        this.itemRenderer.renderGuiItem(GCItems.OXYGEN_FAN.getDefaultStack(), this.x + 35, this.y - 20);
     }
 
-    private void drawMouseoverTooltip(PoseStack stack, int mouseX, int mouseY) {
+    private void drawMouseoverTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
 
     }
 
@@ -332,20 +333,20 @@ public class SpaceRaceScreen extends Screen {
         return backgroundWidth >= maxWidth && backgroundHeight >= maxHeight;
     }
 
-    private void renderHoveredButton(PoseStack stack, Font textRenderer, Component text, int x, int y, int width, int height) {
+    private void renderHoveredButton(GuiGraphics graphics, Font textRenderer, Component text, int x, int y, int width, int height) {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.enableBlend();
-        stack.pushPose();
-        fillSolid(stack.last().pose(), x, y, x + width, y + height, 0xAA1e1e1e);
+        graphics.pose().pushPose();
+        fillSolid(graphics.pose().last().pose(), x, y, x + width, y + height, 0xAA1e1e1e);
         RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        drawHorizontalLineSolid(stack, x, x + width, y, 0xFF3c3c3c);
-        drawVerticalLineSolid(stack, x + width, y, y + height, 0xFF3c3c3c);
-        drawHorizontalLineSolid(stack, x + width, x, y + height, 0xFF3c3c3c);
-        drawVerticalLineSolid(stack, x, y, y + height, 0xFF3c3c3c);
-        stack.popPose();
-        textRenderer.draw(stack, text.getVisualOrderText(), x + (width / 2F) - (textRenderer.width(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
+        drawHorizontalLineSolid(graphics.pose(), x, x + width, y, 0xFF3c3c3c);
+        drawVerticalLineSolid(graphics.pose(), x + width, y, y + height, 0xFF3c3c3c);
+        drawHorizontalLineSolid(graphics.pose(), x + width, x, y + height, 0xFF3c3c3c);
+        drawVerticalLineSolid(graphics.pose(), x, y, y + height, 0xFF3c3c3c);
+        graphics.pose().popPose();
+        graphics.drawString(textRenderer, text.getVisualOrderText(), x + (width / 2) - (textRenderer.width(text) / 2), y + (height / 2) - 4, 0xffffff, false);
     }
 
     private int getYMargins() {
@@ -356,20 +357,20 @@ public class SpaceRaceScreen extends Screen {
         return (int) (this.width * this.getMarginPercent());
     }
 
-    private void renderButton(PoseStack matrices, Font textRenderer, Component text, int x, int y, int width, int height) {
+    private void renderButton(GuiGraphics graphics, Font textRenderer, Component text, int x, int y, int width, int height) {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.enableBlend();
-        matrices.pushPose();
-        fillSolid(matrices.last().pose(), x, y, x + width, y + height, 0xAA000000);
+        graphics.pose().pushPose();
+        fillSolid(graphics.pose().last().pose(), x, y, x + width, y + height, 0xAA000000);
         RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        drawHorizontalLineSolid(matrices, x, x + width, y, 0xFF2d2d2d);
-        drawVerticalLineSolid(matrices, x + width, y, y + height, 0xFF2d2d2d);
-        drawHorizontalLineSolid(matrices, x + width, x, y + height, 0xFF2d2d2d);
-        drawVerticalLineSolid(matrices, x, y, y + height, 0xFF2d2d2d);
-        matrices.popPose();
-        textRenderer.draw(matrices, text.getVisualOrderText(), x + (width / 2F) - (textRenderer.width(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
+        drawHorizontalLineSolid(graphics.pose(), x, x + width, y, 0xFF2d2d2d);
+        drawVerticalLineSolid(graphics.pose(), x + width, y, y + height, 0xFF2d2d2d);
+        drawHorizontalLineSolid(graphics.pose(), x + width, x, y + height, 0xFF2d2d2d);
+        drawVerticalLineSolid(graphics.pose(), x, y, y + height, 0xFF2d2d2d);
+        graphics.pose().popPose();
+        graphics.drawString(textRenderer, text.getVisualOrderText(), x + (width / 2) - (textRenderer.width(text) / 2), y + (height / 2) - 4, 0xffffff, false);
     }
 
     @Override
@@ -397,7 +398,7 @@ public class SpaceRaceScreen extends Screen {
                                     array[y * 48 + x] = (finalImage.getPixelRGBA(x, y) /*& 0x00FFFFFF will be done on server (don't trust clients, so why do extra work?)*/); //ignore alpha channel
                                 }
                             }
-                            ClientPlayNetworking.send(new ResourceLocation(Constant.ADDON_API_ID, "flag_data"), PacketByteBufs.create().writeVarIntArray(array));
+                            ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "flag_data"), PacketByteBufs.create().writeVarIntArray(array));
                         } else {
                             finalImage.close();
                         }

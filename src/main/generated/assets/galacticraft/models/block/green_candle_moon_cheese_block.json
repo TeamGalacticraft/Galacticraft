@@ -1,0 +1,10 @@
+{
+  "parent": "minecraft:block/template_cake_with_candle",
+  "textures": {
+    "bottom": "galacticraft:block/moon_cheese_block",
+    "candle": "minecraft:block/green_candle",
+    "particle": "galacticraft:block/moon_cheese_block_side",
+    "side": "galacticraft:block/moon_cheese_block_side",
+    "top": "galacticraft:block/moon_cheese_block"
+  }
+}

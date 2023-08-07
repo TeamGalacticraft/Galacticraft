@@ -1,0 +1,10 @@
+{
+  "type": "galacticraft:fabrication",
+  "ingredient": {
+    "item": "minecraft:lapis_lazuli"
+  },
+  "result": {
+    "count": 9,
+    "item": "galacticraft:blue_solar_wafer"
+  }
+}

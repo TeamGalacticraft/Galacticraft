@@ -24,8 +24,7 @@ package dev.galacticraft.mod.client.render.entity.feature;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
 import net.minecraft.client.model.*;
@@ -106,8 +105,8 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
         if (mask != null) {
             matrices.pushPose();
-            matrices.mulPose(new Quaternion(Vector3f.YP, headYaw, true));
-            matrices.mulPose(new Quaternion(Vector3f.XP, headPitch, true));
+            matrices.mulPose(Axis.YP.rotationDegrees(headYaw));
+            matrices.mulPose(Axis.XP.rotationDegrees(headPitch));
             mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
             matrices.popPose();
         }

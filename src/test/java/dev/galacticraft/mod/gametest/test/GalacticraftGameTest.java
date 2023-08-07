@@ -23,15 +23,16 @@
 package dev.galacticraft.mod.gametest.test;
 
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface GalacticraftGameTest extends FabricGameTest {
-    String SINGLE_BLOCK = "gc-test:single_block";
+    String SINGLE_BLOCK = "galacticraft-test:single_block";
 
     default void runNext(GameTestHelper context, Runnable runnable) {
         context.runAtTickTime(context.getTick() + 1, runnable);
@@ -49,13 +50,13 @@ public interface GalacticraftGameTest extends FabricGameTest {
         context.runAtTickTime(context.getTick() + time, () -> context.succeedWhen(runnable));
     }
 
-    default String formatItemStack(ItemStack stack) {
-        if (stack == null) {
+    default String formatItem(@Nullable Item item, long count) {
+        if (item == null) {
             return "null";
-        } else if (stack.isEmpty()) {
-            return "empty";
+        } else if (count == 0) {
+            return "empty ( but item is not null? )";
         } else {
-            return String.format("%s %s", stack.getCount(), Registry.ITEM.getKey(stack.getItem()));
+            return String.format("%s x%s", BuiltInRegistries.ITEM.getKey(item), count);
         }
     }
 }

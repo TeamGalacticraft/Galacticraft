@@ -22,13 +22,15 @@
 
 package dev.galacticraft.mod.api.block;
 
+import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
@@ -54,19 +56,21 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
     String COLON_REP = "_gc_colon_";
 
     Property<ResourceLocation> FLUID = new Property<>("fluid", ResourceLocation.class) {
-        private static final List<ResourceLocation> VALUES = new ArrayList<>();
+        private static final List<ResourceLocation> VALUES = Util.make(Lists.newArrayList(), list ->
+        {
+            if (list.isEmpty()) {
+                for (var fluid : BuiltInRegistries.FLUID) {
+                    if (fluid instanceof FlowingFluid) {
+                        list.add(BuiltInRegistries.FLUID.getKey(fluid));
+                    }
+                }
+                list.add(Constant.Misc.EMPTY);
+                list.add(INVALID);
+            }
+        });
 
         @Override
         public Collection<ResourceLocation> getPossibleValues() {
-            if (VALUES.isEmpty()) {
-                for (Fluid f : Registry.FLUID) {
-                    if (f instanceof FlowingFluid) {
-                        VALUES.add(Registry.FLUID.getKey(f));
-                    }
-                }
-                VALUES.add(Constant.Misc.EMPTY);
-                VALUES.add(INVALID);
-            }
             return VALUES;
         }
 
@@ -85,29 +89,37 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
 
     @Override
     default boolean canPlaceLiquid(BlockGetter view, BlockPos pos, BlockState state, Fluid fluid) {
-        if (!(fluid instanceof FlowingFluid)) return false;
-        return this.isEmpty(state);
+        return fluid instanceof FlowingFluid;
     }
 
     @Override
     default boolean placeLiquid(LevelAccessor world, BlockPos pos, BlockState state, FluidState fluidState) {
-        if (!(fluidState.getType() instanceof FlowingFluid)) return false;
+        if (!(fluidState.getType() instanceof FlowingFluid))
+            return false;
         if (this.isEmpty(state)) {
             if (!world.isClientSide()) {
-                world.setBlock(pos, state
-                        .setValue(FLUID, Registry.FLUID.getKey(fluidState.getType()))
-                        .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)), 3);
+                world.setBlock(pos, state.setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType())).setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)).setValue(FlowingFluid.FALLING, fluidState.getValue(FlowingFluid.FALLING)), 3);
                 world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
             }
             return true;
-        } else if (Registry.FLUID.getKey(fluidState.getType()).equals(state.getValue(FLUID))) {
+        }
+        else if (BuiltInRegistries.FLUID.getKey(fluidState.getType()).equals(state.getValue(FLUID))) {
             if (!world.isClientSide()) {
-                world.setBlock(pos, state.setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)), 3);
+                world.setBlock(pos, state.setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)).setValue(FlowingFluid.FALLING, fluidState.getValue(FlowingFluid.FALLING)), 3);
                 world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
             }
             return true;
-        } else if (fluidState.getType() == Fluids.EMPTY) {
-            world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1), 3);
+        }
+        // replace current grating fluid or make it contains source block
+        else if (!BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState().isSource() || !BuiltInRegistries.FLUID.getKey(fluidState.getType()).equals(state.getValue(FLUID))) {
+            if (!world.isClientSide()) {
+                world.setBlock(pos, state.setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType())).setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)), 3);
+                world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
+            }
+            return true;
+        }
+        else if (fluidState.getType() == Fluids.EMPTY) {
+            world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1).setValue(FlowingFluid.FALLING, false), 3);
         }
         return false;
     }
@@ -115,21 +127,20 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
     @Override
     default ItemStack pickupBlock(LevelAccessor world, BlockPos pos, BlockState state) {
         if (!this.isEmpty(state)) {
-            world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY), 3);
-            if (world.getFluidState(pos).isSource()) {
-                return new ItemStack(Registry.FLUID.get(state.getValue(FLUID)).getBucket());
+            if (BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState().isSource()) {
+                world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1), 3);
+                return new ItemStack(BuiltInRegistries.FLUID.get(state.getValue(FLUID)).getBucket());
             }
         }
         return ItemStack.EMPTY;
     }
-    
+
     default boolean isEmpty(BlockState state) {
         return state.getValue(FLUID).equals(Constant.Misc.EMPTY) || state.getValue(FLUID).equals(INVALID);
     }
 
-
     @Override
     default Optional<SoundEvent> getPickupSound() {
-        return Fluids.WATER.getPickupSound();
+        return Optional.empty();
     }
 }

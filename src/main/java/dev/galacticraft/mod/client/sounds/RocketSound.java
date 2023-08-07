@@ -33,7 +33,7 @@ public class RocketSound extends AbstractTickableSoundInstance {
     private boolean ignition = false;
 
     public RocketSound(RocketEntity rocket) {
-        super(GCSounds.SHUTTLE_SHUTTLE, SoundSource.NEUTRAL, rocket.getLevel().getRandom());
+        super(GCSounds.SHUTTLE_SHUTTLE, SoundSource.NEUTRAL, rocket.level().getRandom());
         this.rocket = rocket;
         this.x = rocket.getX();
         this.y = rocket.getY();
@@ -42,7 +42,7 @@ public class RocketSound extends AbstractTickableSoundInstance {
 
     @Override
     public void tick() {
-        if (this.rocket.getStage() == LaunchStage.IGNITED) {
+        if (this.rocket.getLaunchStage() == LaunchStage.IGNITED) {
             if (!ignition) {
                 this.pitch = 0.0F;
                 ignition = true;
@@ -64,7 +64,7 @@ public class RocketSound extends AbstractTickableSoundInstance {
             this.pitch = 1.0F;
         }
 
-        if (this.rocket.getStage().ordinal() >= LaunchStage.IGNITED.ordinal())
+        if (this.rocket.getLaunchStage().ordinal() >= LaunchStage.IGNITED.ordinal())
         {
             if (this.rocket.getY() > 1000)
             {

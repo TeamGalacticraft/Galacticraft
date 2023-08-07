@@ -27,7 +27,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.jei.category.JEICompressingCategory;
 import dev.galacticraft.mod.compat.jei.category.JEIFabricationCategory;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.recipe.GalacticraftRecipe;
+import dev.galacticraft.mod.recipe.GCRecipes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -77,7 +77,7 @@ public class GCJEIPlugin implements IModPlugin {
         assert Minecraft.getInstance().level != null;
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
 
-        registration.addRecipes(GCJEIRecipeTypes.FABRICATION, manager.getAllRecipesFor(GalacticraftRecipe.FABRICATION_TYPE));
-        registration.addRecipes(GCJEIRecipeTypes.COMPRESSING, manager.getAllRecipesFor(GalacticraftRecipe.COMPRESSING_TYPE));
+        registration.addRecipes(GCJEIRecipeTypes.FABRICATION, manager.getAllRecipesFor(GCRecipes.FABRICATION_TYPE));
+        registration.addRecipes(GCJEIRecipeTypes.COMPRESSING, manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE));
     }
 }

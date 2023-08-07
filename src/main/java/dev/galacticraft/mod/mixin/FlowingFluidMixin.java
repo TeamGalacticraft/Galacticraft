@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,23 +38,23 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(FlowingFluid.class)
 public abstract class FlowingFluidMixin {
     @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 1))
-    private boolean onScheduledTickFill_gc(Level world, BlockPos pos, BlockState state, int flags) {
-        BlockState blockState = world.getBlockState(pos);
-        if (blockState.getBlock() instanceof FluidLoggable fillable) {
-            fillable.placeLiquid(world, pos, blockState, state.getFluidState());
+    private boolean onScheduledTickFill_gc(Level level, BlockPos blockPos, BlockState blockState, int flags) {
+        var blockState1 = level.getBlockState(blockPos);
+        if (blockState1.getBlock() instanceof FluidLoggable fillable) {
+            fillable.placeLiquid(level, blockPos, blockState1, blockState.getFluidState());
             return true;
         }
-        return world.setBlock(pos, state, flags);
+        return level.setBlock(blockPos, blockState, flags);
     }
 
     @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 0))
-    private boolean onScheduledTickDrain_gc(Level world, BlockPos pos, BlockState state, int flags) {
-        BlockState blockState = world.getBlockState(pos);
-        Block block = blockState.getBlock();
-        if (block instanceof FluidLoggable drainable) {
-            drainable.pickupBlock(world, pos, blockState);
+    private boolean onScheduledTickDrain_gc(Level level, BlockPos blockPos, BlockState blockState, int flags) {
+        var blockState1 = level.getBlockState(blockPos);
+        if (blockState1.getBlock() instanceof FluidLoggable drainable) {
+            drainable.pickupBlock(level, blockPos, blockState1);
+            level.setBlock(blockPos, blockState1.setValue(FluidLoggable.FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1).setValue(FlowingFluid.FALLING, false), 3);
             return true;
         }
-        return world.setBlock(pos, state, flags);
+        return level.setBlock(blockPos, blockState, flags);
     }
 }

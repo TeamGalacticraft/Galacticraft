@@ -1,0 +1,9 @@
+{
+  "type": "galacticraft:basic",
+  "config": {
+    "type": "galacticraft:access_weight",
+    "config": {
+      "weight": 1
+    }
+  }
+}

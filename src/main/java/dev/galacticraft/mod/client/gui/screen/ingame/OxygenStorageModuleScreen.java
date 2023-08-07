@@ -22,15 +22,16 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.api.screen.SimpleMachineMenu;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.OxygenStorageModuleBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenStorageModuleBlockEntity;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -39,29 +40,29 @@ import net.minecraft.world.entity.player.Inventory;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModuleBlockEntity, SimpleMachineMenu<OxygenStorageModuleBlockEntity>> {
-    public OxygenStorageModuleScreen(SimpleMachineMenu<OxygenStorageModuleBlockEntity> handler, Inventory inv, Component title) {
-        super(handler, inv, title, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
+public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModuleBlockEntity, MachineMenu<OxygenStorageModuleBlockEntity>> {
+    public OxygenStorageModuleScreen(MachineMenu<OxygenStorageModuleBlockEntity> handler, Inventory inv, Component title) {
+        super(handler, title, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
     }
 
     @Override
-    protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
-        super.renderBackground(matrices, mouseX, mouseY, delta);
-        this.drawOxygenBufferBar(matrices);
+    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderBackground(graphics, mouseX, mouseY, delta);
+        this.drawOxygenBufferBar(graphics);
 
-        drawCenteredString(matrices, font, I18n.get("ui.galacticraft.machine.current_oxygen", this.machine.fluidStorage().getAmount(0)), width / 2, topPos + 33, ChatFormatting.DARK_GRAY.getColor());
-        drawCenteredString(matrices, font, I18n.get("ui.galacticraft.machine.max_oxygen", this.machine.fluidStorage().getMaxCount(0)), width / 2, topPos + 45, ChatFormatting.DARK_GRAY.getColor());
+        graphics.drawCenteredString(font, I18n.get("ui.galacticraft.machine.current_oxygen", this.menu.fluidStorage.getSlot(GCSlotGroupTypes.OXYGEN_TANK).getAmount()), width / 2, topPos + 33, ChatFormatting.DARK_GRAY.getColor());
+        graphics.drawCenteredString(font, I18n.get("ui.galacticraft.machine.max_oxygen", this.menu.fluidStorage.getSlot(GCSlotGroupTypes.OXYGEN_TANK).getCapacity()), width / 2, topPos + 45, ChatFormatting.DARK_GRAY.getColor());
     }
 
     @Override
-    protected void drawTanks(PoseStack matrices, int mouseX, int mouseY, float delta) {
+    protected void drawTanks(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 //        super.drawTanks(matrices, mouseX, mouseY, delta);
     }
 
-    private void drawOxygenBufferBar(PoseStack matrices) {
-        double oxygenScale = (double)this.machine.fluidStorage().getAmount(0) / (double)this.machine.fluidStorage().getMaxCount(0);
+    private void drawOxygenBufferBar(GuiGraphics graphics) {
+        FluidResourceSlot slot = this.menu.fluidStorage.getSlot(GCSlotGroupTypes.OXYGEN_TANK);
+        double oxygenScale = (double)slot.getAmount() / (double)slot.getCapacity();
 
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
-        this.blit(matrices, this.leftPos + 52, this.topPos + 57, 176, 0, (int) (72.0D * oxygenScale), 3);
+        graphics.blit(Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN, this.leftPos + 52, this.topPos + 57, 176, 0, (int) (72.0D * oxygenScale), 3);
     }
 }

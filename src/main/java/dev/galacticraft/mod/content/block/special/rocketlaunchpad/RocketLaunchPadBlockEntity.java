@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special.rocketlaunchpad;
 
-import dev.galacticraft.mod.content.block.entity.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.core.BlockPos;

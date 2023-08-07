@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.gametest;
 
 import com.google.common.base.Stopwatch;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.gametest.framework.TestReporter;
 import org.w3c.dom.Document;
@@ -63,7 +65,9 @@ public class JUnit5XMLTestCompletionListener implements TestReporter {
 
     @Override
     public void onTestFailed(GameTestInfo test) {
-        if (test.getError() != null) test.getError().printStackTrace();
+        if (test.getError() != null) {
+            Constant.LOGGER.error("Test " + test.getTestName() + " failed!", test.getError());
+        }
         Element failedStateElement;
         if(test.isRequired()) {
             failedStateElement = this.document.createElement("failure");

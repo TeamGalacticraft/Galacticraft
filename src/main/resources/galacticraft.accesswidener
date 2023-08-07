@@ -7,38 +7,32 @@ accessible method net/minecraft/world/item/AxeItem                              
 accessible method net/minecraft/world/item/HoeItem                                           <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V
 accessible method net/minecraft/world/item/PickaxeItem                                       <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V
 accessible method net/minecraft/world/level/levelgen/structure/pools/LegacySinglePoolElement <init> (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;)V
+accessible method net/minecraft/client/particle/DripParticle$FallingParticle <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDLnet/minecraft/world/level/material/Fluid;)V
 
 # private classes
+accessible class  net/minecraft/world/level/biome/MultiNoiseBiomeSourceParameterList$Preset$SourceProvider
 accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Condition
 accessible class  net/minecraft/world/level/levelgen/SurfaceRules$LazyYCondition
 accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Context
 accessible class  net/minecraft/data/models/BlockModelGenerators$BlockStateGeneratorSupplier
+accessible class  net/minecraft/client/resources/model/ModelManager$ReloadState
+accessible class  net/minecraft/core/registries/BuiltInRegistries$RegistryBootstrap
+accessible class  net/minecraft/core/RegistrySynchronization$NetworkedRegistryData
 
 # fields in final classes
 accessible field  net/minecraft/world/level/levelgen/SurfaceRules$Context   biome    Ljava/util/function/Supplier;
 
 # final classes
+extendable class net/minecraft/world/SimpleMenuProvider
 
 # static methods
-accessible method net/minecraft/data/worldgen/Structures structure (Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/level/levelgen/structure/TerrainAdjustment;)Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;
+accessible method net/minecraft/data/worldgen/Structures structure (Lnet/minecraft/core/HolderSet;Lnet/minecraft/world/level/levelgen/structure/TerrainAdjustment;)Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;
+accessible method net/minecraft/world/level/levelgen/NoiseRouterData overworld (Lnet/minecraft/core/HolderGetter;Lnet/minecraft/core/HolderGetter;ZZ)Lnet/minecraft/world/level/levelgen/NoiseRouter;
 
+# private fields
 accessible field net/minecraft/client/resources/model/ModelManager bakedRegistry Ljava/util/Map;
+accessible field net/minecraft/data/worldgen/ProcessorLists EMPTY Lnet/minecraft/resources/ResourceKey;
+accessible field net/minecraft/world/level/block/DispenserBlock DISPENSER_REGISTRY Ljava/util/Map;
 
-accessible field com/mojang/math/Matrix4f m00 F
-accessible field com/mojang/math/Matrix4f m01 F
-accessible field com/mojang/math/Matrix4f m02 F
-accessible field com/mojang/math/Matrix4f m03 F
-accessible field com/mojang/math/Matrix4f m10 F
-accessible field com/mojang/math/Matrix4f m11 F
-accessible field com/mojang/math/Matrix4f m12 F
-accessible field com/mojang/math/Matrix4f m13 F
-accessible field com/mojang/math/Matrix4f m20 F
-accessible field com/mojang/math/Matrix4f m21 F
-accessible field com/mojang/math/Matrix4f m22 F
-accessible field com/mojang/math/Matrix4f m23 F
-accessible field com/mojang/math/Matrix4f m30 F
-accessible field com/mojang/math/Matrix4f m31 F
-accessible field com/mojang/math/Matrix4f m32 F
-accessible field com/mojang/math/Matrix4f m33 F
-
-extendable class net/minecraft/world/SimpleMenuProvider
+# private methods
+extendable method net/minecraft/world/entity/LivingEntity setPosToBed (Lnet/minecraft/core/BlockPos;)V

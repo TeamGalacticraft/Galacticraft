@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "galacticraft:block/iron_decoration_slab"
+    },
+    "type=double": {
+      "model": "galacticraft:block/iron_decoration"
+    },
+    "type=top": {
+      "model": "galacticraft:block/iron_decoration_slab_top"
+    }
+  }
+}

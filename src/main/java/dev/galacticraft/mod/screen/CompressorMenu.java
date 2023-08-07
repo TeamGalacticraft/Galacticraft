@@ -22,50 +22,53 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.machinelib.api.screen.RecipeMachineMenu;
-import dev.galacticraft.mod.content.block.entity.CompressorBlockEntity;
+import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
+import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
+import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.DataSlot;
+
+import java.util.function.Consumer;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CompressorMenu extends RecipeMachineMenu<Container, CompressingRecipe, CompressorBlockEntity> {
-    public final DataSlot fuelTime = new DataSlot() {
-        @Override
-        public int get() {
-            return CompressorMenu.this.machine.fuelTime;
-        }
+    private int fuelTime = 0;
+    private int fuelLength = 0;
 
-        @Override
-        public void set(int value) {
-            CompressorMenu.this.machine.fuelTime = value;
-        }
-    };
-
-    public final DataSlot fuelLength = new DataSlot() {
-        @Override
-        public int get() {
-            return CompressorMenu.this.machine.fuelLength;
-        }
-
-        @Override
-        public void set(int value) {
-            CompressorMenu.this.machine.fuelLength = value;
-        }
-    };
-
-    public CompressorMenu(int syncId, Player player, CompressorBlockEntity machine) {
-        super(syncId, player, machine, GCMenuTypes.COMPRESSOR_HANDLER, 8, 85);
-        this.addDataSlot(this.fuelTime);
-        this.addDataSlot(this.fuelLength);
+    public CompressorMenu(int syncId, ServerPlayer player, CompressorBlockEntity machine) {
+        super(syncId, player, machine);
     }
 
     public CompressorMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {
-        this(syncId, inv.player, (CompressorBlockEntity) inv.player.level.getBlockEntity(buf.readBlockPos()));
+        super(syncId, inv, buf, 8, 84, GCMachineTypes.COMPRESSOR);
+    }
+
+    @Override
+    public void registerSyncHandlers(Consumer<MenuSyncHandler> consumer) {
+        super.registerSyncHandlers(consumer);
+        consumer.accept(MenuSyncHandler.simple(this.machine::getFuelTime, this::setFuelTime));
+        consumer.accept(MenuSyncHandler.simple(this.machine::getFuelLength, this::setFuelLength));
+    }
+
+    public int getFuelLength() {
+        return this.fuelLength;
+    }
+
+    public int getFuelTime() {
+        return this.fuelTime;
+    }
+
+    public void setFuelLength(int fuelLength) {
+        this.fuelLength = fuelLength;
+    }
+
+    public void setFuelTime(int fuelTime) {
+        this.fuelTime = fuelTime;
     }
 }

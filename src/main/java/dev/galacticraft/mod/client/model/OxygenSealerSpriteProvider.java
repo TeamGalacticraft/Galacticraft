@@ -24,8 +24,10 @@ package dev.galacticraft.mod.client.model;
 
 import com.google.gson.JsonObject;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.block.face.BlockFace;
+import dev.galacticraft.machinelib.api.machine.configuration.face.BlockFace;
 import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
+import dev.galacticraft.machinelib.client.impl.model.MachineBakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -33,30 +35,29 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
 import java.util.function.Function;
 
 public class OxygenSealerSpriteProvider implements MachineModelRegistry.SpriteProvider {
-    private ResourceLocation left;
-    private ResourceLocation right;
-    private ResourceLocation top;
+    private final TextureAtlasSprite left;
+    private final TextureAtlasSprite right;
+    private final TextureAtlasSprite top;
+    private final TextureAtlasSprite machineSide;
+    private final TextureAtlasSprite machine;
 
-    @Override
-    public @NotNull TextureAtlasSprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<ResourceLocation, TextureAtlasSprite> atlas) {
-        if (face == BlockFace.LEFT) return atlas.apply(this.left);
-        if (face == BlockFace.RIGHT) return atlas.apply(this.right);
-        if (face == BlockFace.TOP) return atlas.apply(this.top);
-        if (face.side()) return atlas.apply(MachineModelRegistry.MACHINE_SIDE);
-        return atlas.apply(MachineModelRegistry.MACHINE);
+    public OxygenSealerSpriteProvider(JsonObject json, Function<net.minecraft.client.resources.model.Material, TextureAtlasSprite> function) {
+        this.right = function.apply(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(GsonHelper.getAsString(json, "right"))));
+        this.left = function.apply(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(GsonHelper.getAsString(json, "left"))));
+        this.top = function.apply(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(GsonHelper.getAsString(json, "top"))));
+        this.machine = function.apply(MachineBakedModel.MACHINE);
+        this.machineSide = function.apply(MachineBakedModel.MACHINE_SIDE);
     }
 
     @Override
-    public void fromJson(JsonObject jsonObject, Set<ResourceLocation> textureDependencies) {
-        this.right = new ResourceLocation(GsonHelper.getAsString(jsonObject, "right"));
-        this.left = new ResourceLocation(GsonHelper.getAsString(jsonObject, "left"));
-        this.top = new ResourceLocation(GsonHelper.getAsString(jsonObject, "top"));
-        textureDependencies.add(this.right);
-        textureDependencies.add(this.left);
-        textureDependencies.add(this.top);
+    public @NotNull TextureAtlasSprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face) {
+        if (face == BlockFace.LEFT) return this.left;
+        if (face == BlockFace.RIGHT) return this.right;
+        if (face == BlockFace.TOP) return this.top;
+        if (face.side()) return this.machineSide;
+        return this.machine;
     }
 }

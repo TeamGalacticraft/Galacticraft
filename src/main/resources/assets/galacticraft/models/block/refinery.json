@@ -1,7 +1,6 @@
 {
-  "machine": "galacticraft:refinery",
-  "sprite_provider": "machinelib:z_axis",
-  "sprite_info": {
+  "machinelib:generated": "machinelib:z_axis",
+  "data": {
     "front": "galacticraft:block/refinery_front",
     "back": "galacticraft:block/refinery_back",
     "sided": true

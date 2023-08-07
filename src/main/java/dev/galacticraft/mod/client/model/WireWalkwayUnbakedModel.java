@@ -29,13 +29,10 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.function.Function;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -44,17 +41,16 @@ public class WireWalkwayUnbakedModel implements UnbakedModel {
     public static final WireWalkwayUnbakedModel INSTANCE = new WireWalkwayUnbakedModel();
 
     @Override
-    public Collection<ResourceLocation> getDependencies() {
+    public @NotNull Collection<ResourceLocation> getDependencies() {
         return Collections.singleton(WireWalkwayBakedModel.WALKWAY_PLATFORM);
     }
 
     @Override
-    public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        return Arrays.asList(new Material(InventoryMenu.BLOCK_ATLAS, WireWalkwayBakedModel.ALUMINUM_WIRE), new Material(InventoryMenu.BLOCK_ATLAS, WireWalkwayBakedModel.WALKWAY_TEX));
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> function) {
     }
 
     @Override
-    public BakedModel bake(ModelBakery loader, Function<Material, TextureAtlasSprite> spriteFunction, ModelState rotationContainer, ResourceLocation modelId) {
+    public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> spriteFunction, ModelState rotationContainer, ResourceLocation modelId) {
         return WireWalkwayBakedModel.getInstance(loader, spriteFunction, rotationContainer);
     }
 }

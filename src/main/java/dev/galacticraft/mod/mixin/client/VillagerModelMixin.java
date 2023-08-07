@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.mixin.client;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.village.MoonVillagerType;
+import dev.galacticraft.mod.village.MoonVillagerTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.VillagerModel;
@@ -71,7 +71,7 @@ public abstract class VillagerModelMixin<T extends Entity> {
     @Inject(method = "setupAnim", at = @At(value = "RETURN"))
     private void getModelData_gc(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, CallbackInfo ci) {
         if (entity instanceof Villager villager) {
-            if (MoonVillagerType.MOON_VILLAGER_TYPE_REGISTRY.contains(villager.getVillagerData().getType())) {
+            if (MoonVillagerTypes.MOON_VILLAGER_TYPE_REGISTRY.contains(villager.getVillagerData().getType())) {
                 assert brain != null;
 
                 this.hatVisible(false);

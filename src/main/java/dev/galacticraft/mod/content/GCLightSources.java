@@ -26,7 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.solarpanel.LightSource;
 import dev.galacticraft.mod.api.solarpanel.SolarPanelRegistry;
 import dev.galacticraft.mod.api.solarpanel.WorldLightSources;
-import dev.galacticraft.mod.world.dimension.GCDimensionType;
+import dev.galacticraft.mod.world.dimension.GCDimensions;
 import net.minecraft.network.chat.Component;
 
 public class GCLightSources {
@@ -38,6 +38,6 @@ public class GCLightSources {
             new LightSource(Component.translatable("ui.galacticraft.machine.solar_panel.source.unknown").setStyle(Constant.Text.Color.WHITE_STYLE), 0.0, 1.0));
 
     public static void register() {
-        SolarPanelRegistry.registerLightSources(GCDimensionType.MOON_KEY, MOON);
+        SolarPanelRegistry.registerLightSources(GCDimensions.MOON, MOON);
     }
 }

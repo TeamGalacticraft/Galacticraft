@@ -23,21 +23,15 @@
 package dev.galacticraft.mod.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Matrix4f;
+import com.mojang.blaze3d.vertex.*;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import org.joml.Matrix4f;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -48,10 +42,6 @@ public class DrawableUtil {
 
     public static MutableComponent getEnergyDisplay(long amount) {
         return Component.literal(String.valueOf(amount)); //todo
-    }
-    
-    public static void drawCenteredStringWithoutShadow(PoseStack matrices, Font textRenderer, Component text, int x, int y, int color) {
-        textRenderer.draw(matrices, text.getVisualOrderText(), (float) (x - textRenderer.width(text) / 2), (float) y, color);
     }
 
     public static void drawOxygenBuffer(PoseStack matrices, int x, int y, long oxygen, long capacity) {

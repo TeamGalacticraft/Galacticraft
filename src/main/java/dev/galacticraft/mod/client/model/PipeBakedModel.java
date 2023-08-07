@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.GlassFluidPipeBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
@@ -139,6 +139,7 @@ public class PipeBakedModel implements FabricBakedModel, BakedModel {
 
         ColorTransform.INSTANCE.setSprite(this.colorSpriteMap.get(wire.getColor()));
         context.pushTransform(ColorTransform.INSTANCE);
+        wire.calculateConnections();
         if (wire.getConnections()[0]) {
             meshConsumer.accept(this.down);
         } else {

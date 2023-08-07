@@ -24,16 +24,19 @@ package dev.galacticraft.mod.content.block.entity;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.Walkway;
-import net.minecraft.client.Minecraft;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class WalkwayBlockEntity extends BlockEntity implements Walkway {
-    private Direction direction = null;
+    @Nullable
+    private Direction direction;
     private final boolean[] connections = new boolean[6];
 
     public WalkwayBlockEntity(BlockPos pos, BlockState state) {
@@ -43,24 +46,19 @@ public class WalkwayBlockEntity extends BlockEntity implements Walkway {
     @Override
     public void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
-        for (int i = 0; i < 6; i++) {
-            nbt.putBoolean(Constant.Misc.DIRECTIONS[i].getSerializedName(), this.connections[i]);
-        }
-        nbt.putByte(Constant.Nbt.DIRECTION, (byte) this.direction.ordinal());
+        this.writeConnectionNbt(nbt);
+        this.writeWalkwayNbt(nbt);
     }
 
     @Override
     public void load(CompoundTag nbt) {
         super.load(nbt);
-        for (int i = 0; i < 6; i++) {
-            this.connections[i] = nbt.getBoolean(Constant.Misc.DIRECTIONS[i].getSerializedName());
-        }
-        this.direction = Constant.Misc.DIRECTIONS[nbt.getByte(Constant.Nbt.DIRECTION)];
-        assert this.level != null;
-        if (this.level.isClientSide) Minecraft.getInstance().levelRenderer.setSectionDirty(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ());
+        this.readConnectionNbt(nbt);
+        this.readWalkwayNbt(nbt);
     }
 
     @Override
+    @Nullable
     public Direction getDirection() {
         return this.direction;
     }
@@ -71,7 +69,33 @@ public class WalkwayBlockEntity extends BlockEntity implements Walkway {
     }
 
     @Override
+    public void calculateConnections() {
+        var mutable = new BlockPos.MutableBlockPos();
+        for (var direction : Constant.Misc.DIRECTIONS) {
+            if (this.getDirection() != direction) {
+                if (this.level.getBlockEntity(mutable.set(this.getBlockPos()).move(direction)) instanceof Walkway walkway) {
+                    if (walkway.getDirection() != direction.getOpposite()) {
+                        this.getConnections()[direction.ordinal()] = true;
+                        continue;
+                    }
+                }
+            }
+            this.getConnections()[direction.ordinal()] = false;
+        }
+    }
+
+    @Override
     public void setDirection(@NotNull Direction direction) {
         this.direction = direction;
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
     }
 }

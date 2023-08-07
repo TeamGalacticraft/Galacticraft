@@ -1,0 +1,17 @@
+{
+  "type": "galacticraft:slotted_default",
+  "config": {
+    "key": {
+      "E": {
+        "item": "galacticraft:rocket_engine"
+      }
+    },
+    "pattern": [
+      "E"
+    ],
+    "result": {
+      "type": "galacticraft:rocket_bottom",
+      "id": "galacticraft:tier_1"
+    }
+  }
+}

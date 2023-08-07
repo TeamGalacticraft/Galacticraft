@@ -23,17 +23,13 @@
 package dev.galacticraft.mod.content.fluid;
 
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.item.GCItem;
-import dev.galacticraft.mod.particle.GCParticleType;
+import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.content.GCFluids;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -53,24 +49,14 @@ public abstract class FuelFluid extends BasicFluid {
         return GCFluids.FUEL;
     }
 
+    @Override
     public ParticleOptions getDripParticle() {
-        return GCParticleType.DRIPPING_FUEL_PARTICLE;
+        return GCParticleTypes.DRIPPING_FUEL;
     }
 
     @Override
     public Item getBucket() {
-        return GCItem.FUEL_BUCKET;
-    }
-
-    @Override
-    public void animateTick(Level world, BlockPos blockPos, FluidState fluidState, RandomSource random) {
-        if (random.nextInt(10) == 0) {
-            world.addParticle(GCParticleType.DRIPPING_FUEL_PARTICLE,
-                    (double) blockPos.getX() + 0.5D - random.nextGaussian() + random.nextGaussian(),
-                    (double) blockPos.getY() + 1.1F,
-                    (double) blockPos.getZ() + 0.5D - random.nextGaussian() + random.nextGaussian(),
-                    0.0D, 0.0D, 0.0D);
-        }
+        return GCItems.FUEL_BUCKET;
     }
 
     @Override

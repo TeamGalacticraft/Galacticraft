@@ -1,7 +1,6 @@
 {
-  "machine": "galacticraft:oxygen_bubble_distributor",
-  "sprite_provider": "machinelib:single",
-  "sprite_info": {
+  "machinelib:generated": "machinelib:single",
+  "data": {
     "sprite": "galacticraft:block/oxygen_bubble_distributor"
   }
 }

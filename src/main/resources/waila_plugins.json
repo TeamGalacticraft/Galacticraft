@@ -1,0 +1,6 @@
+{
+  "galacticraft:plugin": {
+    "initializer": "dev.galacticraft.mod.compat.waila.GalacticraftWailaPlugin",
+    "side": "*"
+  }
+}

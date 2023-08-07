@@ -22,21 +22,18 @@
 
 package dev.galacticraft.mod.content.block.special.walkway;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.block.entity.Walkway;
-import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.api.wire.Wire;
-import dev.galacticraft.mod.content.block.entity.WireWalkwayBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
-import org.jetbrains.annotations.Nullable;
-import team.reborn.energy.api.EnergyStorage;
-
-import java.util.Objects;
+import dev.galacticraft.mod.util.DirectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -44,13 +41,16 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
+
+import java.util.Objects;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -62,17 +62,18 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
         super(settings);
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(FLUID, INVALID)
-                .setValue(FlowingFluid.LEVEL, 8));
+                .setValue(FlowingFluid.LEVEL, 8)
+                .setValue(FlowingFluid.FALLING, false));
     }
 
-    private static int getFacingMask(Direction dir) {
-        return 1 << (dir.get3DDataValue());
+    private static int getFacingMask(Direction direction) {
+        return 1 << (direction.get3DDataValue());
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        if (world.getBlockEntity(pos) instanceof Walkway walkway && walkway.getDirection() != null) {
-            int index = getFacingMask(walkway.getDirection());
+    public VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
+        if (level.getBlockEntity(blockPos) instanceof Walkway walkway && walkway.getDirection() != null) {
+            var index = getFacingMask(walkway.getDirection());
             if (SHAPES[index] != null) {
                 return SHAPES[index];
             }
@@ -83,93 +84,102 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        var fluidState = context.getLevel().getFluidState(context.getClickedPos());
         return this.defaultBlockState()
-                .setValue(FLUID, Registry.FLUID.getKey(fluidState.getType()))
-                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1));
+                .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
+                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1))
+                .setValue(FlowingFluid.FALLING, fluidState.hasProperty(FlowingFluid.FALLING) ? fluidState.getValue(FlowingFluid.FALLING) : false);
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        super.setPlacedBy(world, pos, state, placer, itemStack);
-        final Walkway blockEntity = (Walkway) world.getBlockEntity(pos);
-        assert placer != null;
-        assert blockEntity != null;
-        blockEntity.setDirection(Direction.orderedByNearest(placer)[0].getOpposite());
-        for (Direction direction : Direction.values()) {
-            if (blockEntity.getDirection() != direction) {
-                final BlockEntity blockEntity1 = world.getBlockEntity(pos.relative(direction));
-                if (blockEntity1 instanceof Wire wire) {
-                    if (wire.canConnect(direction.getOpposite())) {
-                        blockEntity.getConnections()[direction.ordinal()] = true;
+    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
+        super.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack);
+
+        if (level.getBlockEntity(blockPos) instanceof Walkway walkway) {
+            walkway.setDirection(Direction.orderedByNearest(livingEntity)[0].getOpposite());
+
+            for (var direction : Constant.Misc.DIRECTIONS) {
+                if (walkway.getDirection() != direction) {
+                    if (level.getBlockEntity(blockPos.relative(direction)) instanceof Wire wire) {
+                        if (wire.canConnect(direction.getOpposite())) {
+                            walkway.getConnections()[direction.ordinal()] = true;
+                            continue;
+                        }
+                    }
+                    else if (EnergyStorage.SIDED.find(level, blockPos.relative(direction), direction.getOpposite()) != null) {
+                        walkway.getConnections()[direction.ordinal()] = true;
                         continue;
                     }
-                } else if (EnergyStorage.SIDED.find(world, pos.relative(direction), direction.getOpposite()) != null) {
-                    blockEntity.getConnections()[direction.ordinal()] = true;
-                    continue;
                 }
+                walkway.getConnections()[direction.ordinal()] = false;
             }
-            blockEntity.getConnections()[direction.ordinal()] = false;
+            level.updateNeighborsAt(blockPos, blockState.getBlock());
         }
-        world.updateNeighborsAt(pos, state.getBlock());
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (!this.isEmpty(state)) {
-            world.scheduleTick(pos, Registry.FLUID.get(state.getValue(FLUID)), Registry.FLUID.get(state.getValue(FLUID)).getTickDelay(world));
+    public BlockState updateShape(BlockState blockState, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
+        if (!this.isEmpty(blockState)) {
+            level.scheduleTick(blockPos, BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)), BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).getTickDelay(level));
         }
-        return state;
+        return blockState;
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborChanged(state, world, pos, block, fromPos, notify);
-        final BlockPos distance = fromPos.subtract(pos);
-        if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1) {
-            final Walkway blockEntity = (Walkway) world.getBlockEntity(pos);
-            assert blockEntity != null;
-            final Direction direction = Direction.fromNormal(distance);
-            if (direction != blockEntity.getDirection()) {
-                final BlockEntity blockEntity1 = world.getBlockEntity(pos.relative(direction));
-                if (blockEntity1 instanceof Wire wire) {
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos fromPos, boolean notify) {
+        super.neighborChanged(blockState, level, blockPos, block, fromPos, notify);
+        var distance = fromPos.subtract(blockPos);
+
+        if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1 && level.getBlockEntity(blockPos) instanceof Walkway walkway) {
+            var direction = DirectionUtil.fromNormal(distance);
+            if (direction != walkway.getDirection()) {
+                if (level.getBlockEntity(blockPos.relative(direction)) instanceof Wire wire) {
                     if (wire.canConnect(direction.getOpposite())) {
-                        if (blockEntity.getConnections()[direction.ordinal()] != (blockEntity.getConnections()[direction.ordinal()] = true)) {
-                            world.neighborChanged(pos.relative(direction), state.getBlock(), pos);
-                            if (!world.isClientSide) ((ServerLevel) world).getChunkSource().blockChanged(pos);
+                        if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {
+                            level.neighborChanged(blockPos.relative(direction), blockState.getBlock(), blockPos);
+                            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
                         }
                         return;
                     }
-                } else if (EnergyStorage.SIDED.find(world, pos.relative(direction), direction.getOpposite()) != null) {
-                    if (blockEntity.getConnections()[direction.ordinal()] != (blockEntity.getConnections()[direction.ordinal()] = true)) {
-                        world.neighborChanged(pos.relative(direction), state.getBlock(), pos);
-                        if (!world.isClientSide) ((ServerLevel) world).getChunkSource().blockChanged(pos);
+                }
+                else if (EnergyStorage.SIDED.find(level, blockPos.relative(direction), direction.getOpposite()) != null) {
+                    if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {
+                        level.neighborChanged(blockPos.relative(direction), blockState.getBlock(), blockPos);
+                        level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
                     }
                     return;
                 }
             }
-            blockEntity.getConnections()[Objects.requireNonNull(direction).ordinal()] = false;
-            if (!world.isClientSide) ((ServerLevel) world).getChunkSource().blockChanged(pos);
+            walkway.getConnections()[Objects.requireNonNull(direction).ordinal()] = false;
+            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
         }
     }
 
     @Override
-    public FluidState getFluidState(BlockState state) {
-        if (this.isEmpty(state)) return EMPTY_STATE;
-        FluidState state1 = Registry.FLUID.get(state.getValue(FLUID)).defaultFluidState();
+    public FluidState getFluidState(BlockState blockState) {
+        if (this.isEmpty(blockState)) {
+            return EMPTY_STATE;
+        }
+
+        var state1 = BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).defaultFluidState();
+
         if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
-            state1 = state1.setValue(FlowingFluid.LEVEL, state.getValue(FlowingFluid.LEVEL));
+            state1 = state1.setValue(FlowingFluid.LEVEL, blockState.getValue(FlowingFluid.LEVEL));
+        }
+        if (state1.getValues().containsKey(FlowingFluid.FALLING)) {
+            state1 = state1.setValue(FlowingFluid.FALLING, blockState.getValue(FlowingFluid.FALLING));
         }
         return state1;
     }
 
     @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(FLUID, FlowingFluid.LEVEL);
+        stateBuilder.add(FLUID, FlowingFluid.LEVEL, FlowingFluid.FALLING);
     }
 
     @Override
-    public @Nullable WireBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new WireWalkwayBlockEntity(pos, state);
+    @Nullable
+    public WireBlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return new WireWalkwayBlockEntity(blockPos, blockState);
     }
 }

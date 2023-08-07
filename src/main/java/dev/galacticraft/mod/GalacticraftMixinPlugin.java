@@ -35,6 +35,8 @@ import java.util.Set;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
+    private static final boolean COMPRESS_DATAGEN = System.getProperty("fabric-api.datagen") != null && System.getProperty("galacticraft.mixin.compress_datagen") != null;
+
     @Override
     public void onLoad(String mixinPackage) {
     }
@@ -56,8 +58,13 @@ public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
     @Override
     public List<String> getMixins() {
         List<String> optionalMixins = new LinkedList<>();
-        if (FabricLoader.getInstance().isDevelopmentEnvironment() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled()) {
-            optionalMixins.add(Constant.Mixin.STRUCTURE_POOL_DEBUG);
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            if (Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled()) {
+                optionalMixins.add(Constant.Mixin.STRUCTURE_POOL_DEBUG);
+            }
+            if (COMPRESS_DATAGEN) {
+                optionalMixins.add(Constant.Mixin.DATAGEN_COMPRESSION);
+            }
         }
         return optionalMixins;
     }

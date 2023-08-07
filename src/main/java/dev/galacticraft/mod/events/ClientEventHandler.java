@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.events;
 
-import dev.galacticraft.api.entity.Rocket;
 import dev.galacticraft.api.rocket.LaunchStage;
+import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.mod.client.sounds.RocketSound;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.Minecraft;
@@ -34,7 +34,7 @@ public class ClientEventHandler {
     }
 
     public static void rocketLaunchSound(Rocket rocket, LaunchStage oldStage) {
-        if (rocket instanceof RocketEntity rocketEntity && rocket.getStage() == LaunchStage.IGNITED)
+        if (rocket instanceof RocketEntity rocketEntity && rocket.getLaunchStage() == LaunchStage.IGNITED)
             Minecraft.getInstance().getSoundManager().play(new RocketSound(rocketEntity));
     }
 }

@@ -29,18 +29,11 @@ jobs:
           arguments: checkLicenses build publish
         env:
           SNAPSHOT: true
-          ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USER }}
-          ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASS }}
+          ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.NEXUS_USER }}
+          ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.NEXUS_PASSWORD }}
 
 #      - name: Copy GameTest Results
 #        run: cp run/TEST-gametest.xml build/test-results/test/
-
-      - name: Notify Discord
-        uses: TeamGalacticraft/discord-reporter@main
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          outcome: ${{ steps.build.outcome }}
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Capture build artifacts
         uses: actions/upload-artifact@v3

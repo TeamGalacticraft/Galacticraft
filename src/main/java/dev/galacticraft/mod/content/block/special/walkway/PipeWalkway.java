@@ -22,21 +22,19 @@
 
 package dev.galacticraft.mod.content.block.special.walkway;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.FluidPipe;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.api.pipe.Pipe;
-import dev.galacticraft.mod.content.block.entity.PipeWalkwayBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.PipeWalkwayBlockEntity;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
+import dev.galacticraft.mod.util.DirectionUtil;
 import dev.galacticraft.mod.util.FluidUtil;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -55,6 +53,9 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -64,16 +65,20 @@ public class PipeWalkway extends FluidPipe implements FluidLoggable {
 
     public PipeWalkway(Properties settings) {
         super(settings);
+        this.registerDefaultState(this.getStateDefinition().any()
+                .setValue(FLUID, INVALID)
+                .setValue(FlowingFluid.LEVEL, 8)
+                .setValue(FlowingFluid.FALLING, false));
     }
 
-    private static int getFacingMask(Direction dir) {
-        return 1 << (dir.get3DDataValue());
+    private static int getFacingMask(Direction direction) {
+        return 1 << (direction.get3DDataValue());
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        if (world.getBlockEntity(pos) instanceof Walkway walkway && walkway.getDirection() != null) {
-            int index = getFacingMask(walkway.getDirection());
+    public VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
+        if (level.getBlockEntity(blockPos) instanceof Walkway walkway && walkway.getDirection() != null) {
+            var index = getFacingMask(walkway.getDirection());
             if (SHAPES[index] != null) {
                 return SHAPES[index];
             }
@@ -84,117 +89,141 @@ public class PipeWalkway extends FluidPipe implements FluidLoggable {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        var fluidState = context.getLevel().getFluidState(context.getClickedPos());
         return this.defaultBlockState()
-                .setValue(FLUID, Registry.FLUID.getKey(fluidState.getType()))
-                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1));
+                .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
+                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1))
+                .setValue(FlowingFluid.FALLING, fluidState.hasProperty(FlowingFluid.FALLING) ? fluidState.getValue(FlowingFluid.FALLING) : false);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        final ItemStack stack = player.getItemInHand(hand);
-        if (!stack.isEmpty() && stack.getItem() instanceof DyeItem dye) {
-            final PipeWalkwayBlockEntity be = ((PipeWalkwayBlockEntity) world.getBlockEntity(pos));
-            assert be != null;
-            if (dye.getDyeColor() != be.getColor()) {
-                be.setColor(dye.getDyeColor());
-                final ItemStack copy = stack.copy();
-                copy.shrink(1);
-                player.setItemInHand(hand, copy);
-            }
-        }
-        return super.use(state, world, pos, player, hand, hit);
-    }
-
-    @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        super.setPlacedBy(world, pos, state, placer, itemStack);
-        final PipeWalkwayBlockEntity blockEntity = (PipeWalkwayBlockEntity) world.getBlockEntity(pos);
-        assert placer != null;
-        assert blockEntity != null;
-        for (InteractionHand hand : InteractionHand.values()) {
-            final ItemStack stack = placer.getItemInHand(hand);
-            if (stack.getItem() instanceof DyeItem dye && dye.getDyeColor() != blockEntity.getColor()) {
-                blockEntity.setColor(dye.getDyeColor());
-                final ItemStack copy = stack.copy();
-                copy.shrink(1);
-                placer.setItemInHand(hand, copy);
-            }
-        }
-        blockEntity.setDirection(Direction.orderedByNearest(placer)[0].getOpposite());
-        for (Direction direction : Direction.values()) {
-            if (blockEntity.getDirection() != direction) {
-                if (world.getBlockEntity(pos.relative(direction)) instanceof Pipe pipe) {
-                    if (pipe.canConnect(direction.getOpposite())) {
-                        blockEntity.getConnections()[direction.ordinal()] = true;
-                        continue;
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        var itemStack = player.getItemInHand(interactionHand);
+        if (level.getBlockEntity(blockPos) instanceof PipeWalkwayBlockEntity pipeWalkway) {
+            if (itemStack.getItem() instanceof DyeItem dye) {
+                var stack = itemStack.copy();
+                var color = dye.getDyeColor();
+                if (color != pipeWalkway.getColor()) {
+                    if (!player.getAbilities().instabuild) {
+                        stack.shrink(1);
                     }
-                } else if (FluidUtil.canAccessFluid(world, pos.relative(direction), direction)) {
-                    blockEntity.getConnections()[direction.ordinal()] = true;
-                    continue;
+                    player.setItemInHand(interactionHand, stack);
+                    pipeWalkway.setColor(color);
+                    level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
+                    return InteractionResult.sidedSuccess(level.isClientSide());
+                }
+                else {
+                    return InteractionResult.PASS;
                 }
             }
-            blockEntity.getConnections()[direction.ordinal()] = false;
         }
-        world.updateNeighborsAt(pos, state.getBlock());
+        return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (!this.isEmpty(state)) {
-            world.scheduleTick(pos, Registry.FLUID.get(state.getValue(FLUID)), Registry.FLUID.get(state.getValue(FLUID)).getTickDelay(world));
+    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
+        super.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack);
+
+        if (level.getBlockEntity(blockPos) instanceof PipeWalkwayBlockEntity pipeWalkway && livingEntity instanceof Player player) {
+            for (var interactionHand : InteractionHand.values()) {
+                var stack = player.getItemInHand(interactionHand);
+
+                if (stack.getItem() instanceof DyeItem dye && dye.getDyeColor() != pipeWalkway.getColor()) {
+                    pipeWalkway.setColor(dye.getDyeColor());
+                    var copy = stack.copy();
+
+                    if (!player.getAbilities().instabuild) {
+                        copy.shrink(1);
+                    }
+
+                    player.setItemInHand(interactionHand, copy);
+                }
+            }
+
+            pipeWalkway.setDirection(Direction.orderedByNearest(player)[0].getOpposite());
+
+            for (var direction : Constant.Misc.DIRECTIONS) {
+                if (pipeWalkway.getDirection() != direction) {
+                    if (level.getBlockEntity(blockPos.relative(direction)) instanceof Pipe pipe) {
+                        if (pipe.canConnect(direction.getOpposite())) {
+                            pipeWalkway.getConnections()[direction.ordinal()] = true;
+                            continue;
+                        }
+                    }
+                    else if (FluidUtil.canAccessFluid(level, blockPos.relative(direction), direction)) {
+                        pipeWalkway.getConnections()[direction.ordinal()] = true;
+                        continue;
+                    }
+                }
+                pipeWalkway.getConnections()[direction.ordinal()] = false;
+            }
+            level.updateNeighborsAt(blockPos, blockState.getBlock());
         }
-        return state;
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborChanged(state, world, pos, block, fromPos, notify);
-        final BlockPos distance = fromPos.subtract(pos);
-        if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1) {
-            final Walkway blockEntity = (Walkway) world.getBlockEntity(pos);
-            assert blockEntity != null;
-            final Direction direction = Direction.fromNormal(distance);
-            assert direction != null;
-            if (direction != blockEntity.getDirection()) {
-                if (world.getBlockEntity(pos.relative(direction)) instanceof Pipe pipe) {
+    public BlockState updateShape(BlockState blockState, Direction facing, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
+        if (!this.isEmpty(blockState)) {
+            level.scheduleTick(blockPos, BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)), BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).getTickDelay(level));
+        }
+        return blockState;
+    }
+
+    @Override
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos fromPos, boolean notify) {
+        super.neighborChanged(blockState, level, blockPos, block, fromPos, notify);
+        var distance = fromPos.subtract(blockPos);
+
+        if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1 && level.getBlockEntity(blockPos) instanceof Walkway walkway) {
+            var direction = DirectionUtil.fromNormal(distance);
+            if (direction != null && direction != walkway.getDirection()) {
+                if (level.getBlockEntity(blockPos.relative(direction)) instanceof Pipe pipe) {
                     if (pipe.canConnect(direction.getOpposite())) {
-                        if (blockEntity.getConnections()[direction.ordinal()] != (blockEntity.getConnections()[direction.ordinal()] = true)) {
-                            world.neighborChanged(pos.relative(direction), state.getBlock(), pos);
-                            if (!world.isClientSide) ((ServerLevel) world).getChunkSource().blockChanged(pos);
+                        if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {
+                            level.neighborChanged(blockPos.relative(direction), blockState.getBlock(), blockPos);
+                            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
                         }
                         return;
                     }
-                } else if (FluidUtil.canAccessFluid(world, pos.relative(direction), direction)) {
-                    if (blockEntity.getConnections()[direction.ordinal()] != (blockEntity.getConnections()[direction.ordinal()] = true)) {
-                        world.neighborChanged(pos.relative(direction), state.getBlock(), pos);
-                        if (!world.isClientSide) ((ServerLevel) world).getChunkSource().blockChanged(pos);
+                }
+                else if (FluidUtil.canAccessFluid(level, blockPos.relative(direction), direction)) {
+                    if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {
+                        level.neighborChanged(blockPos.relative(direction), blockState.getBlock(), blockPos);
+                        level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
                     }
                     return;
                 }
             }
-            blockEntity.getConnections()[Objects.requireNonNull(direction).ordinal()] = false;
-            if (!world.isClientSide) ((ServerLevel) world).getChunkSource().blockChanged(pos);
+            walkway.getConnections()[Objects.requireNonNull(direction).ordinal()] = false;
+            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
         }
     }
 
     @Override
-    public FluidState getFluidState(BlockState state) {
-        if (this.isEmpty(state)) return EMPTY_STATE;
-        FluidState state1 = Registry.FLUID.get(state.getValue(FLUID)).defaultFluidState();
+    public FluidState getFluidState(BlockState blockState) {
+        if (this.isEmpty(blockState)) {
+            return EMPTY_STATE;
+        }
+
+        var state1 = BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).defaultFluidState();
+
         if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
-            state1 = state1.setValue(FlowingFluid.LEVEL, state.getValue(FlowingFluid.LEVEL));
+            state1 = state1.setValue(FlowingFluid.LEVEL, blockState.getValue(FlowingFluid.LEVEL));
+        }
+        if (state1.getValues().containsKey(FlowingFluid.FALLING)) {
+            state1 = state1.setValue(FlowingFluid.FALLING, blockState.getValue(FlowingFluid.FALLING));
         }
         return state1;
     }
 
     @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(FLUID, FlowingFluid.LEVEL);
+        stateBuilder.add(FLUID, FlowingFluid.LEVEL, FlowingFluid.FALLING);
     }
 
     @Override
-    public @Nullable PipeBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new PipeWalkwayBlockEntity(pos, state);
+    @Nullable
+    public PipeBlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return new PipeWalkwayBlockEntity(blockPos, blockState);
     }
 }

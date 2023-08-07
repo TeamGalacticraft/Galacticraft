@@ -1,7 +1,6 @@
 {
-  "machine": "galacticraft:basic_solar_panel",
-  "sprite_provider": "galacticraft:solar_panel",
-  "sprite_info": {
+  "machinelib:generated": "galacticraft:solar_panel",
+  "data": {
     "front": "galacticraft:block/basic_solar_panel",
     "top": "galacticraft:block/solar_panel"
   }

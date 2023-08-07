@@ -52,7 +52,7 @@ public class FollowPlayerGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        List<Player> list = this.mob.level.getEntitiesOfClass(Player.class, this.mob.getBoundingBox().inflate(this.areaSize), Objects::nonNull);
+        List<Player> list = this.mob.level().getEntitiesOfClass(Player.class, this.mob.getBoundingBox().inflate(this.areaSize), Objects::nonNull);
         if (!list.isEmpty()) {
             for(Player player : list) {
                 if (!player.isInvisible()) {

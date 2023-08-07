@@ -117,8 +117,14 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [ "dev.galacticraft.mod.Galacticraft" ],
-    "client": [ "dev.galacticraft.mod.GalacticraftClient" ],
+    "main": [
+      "dev.galacticraft.impl.internal.fabric.GalacticraftAPI",
+      "dev.galacticraft.mod.Galacticraft"
+    ],
+    "client": [
+      "dev.galacticraft.impl.internal.client.fabric.GalacticraftAPIClient",
+      "dev.galacticraft.mod.GalacticraftClient"
+    ],
     "fabric-datagen": [
       "dev.galacticraft.mod.data.GCDataGenerator"
     ],
@@ -134,25 +140,28 @@
     ]
   },
   "mixins": [
-    "galacticraft.mixins.json"
+    "galacticraft.mixins.json",
+    "galacticraft-api.mixins.json"
   ],
   "accessWidener": "galacticraft.accesswidener",
   "custom": {
     "loom:injected_interfaces": {
-      "net/minecraft/class_3222": ["dev/galacticraft/mod/accessor/ServerPlayerAccessor"]
-    },
-    "waila:plugins": {
-      "id": "galacticraft:plugin",
-      "initializer": "dev.galacticraft.mod.compat.waila.GalacticraftWailaPlugin"
+      "net/minecraft/class_3222": [
+        "dev/galacticraft/api/accessor/GearInventoryProvider",
+        "dev/galacticraft/mod/accessor/ServerPlayerAccessor"
+      ],
+      "net/minecraft/class_742": ["dev/galacticraft/api/accessor/GearInventoryProvider"],
+      "net/minecraft/class_1309": ["dev/galacticraft/api/accessor/GearInventoryProvider"],
+      "net/minecraft/class_1937": ["dev/galacticraft/api/accessor/LevelOxygenAccessor"],
+      "net/minecraft/class_1657": ["dev/galacticraft/mod/accessor/CryogenicAccessor"]
     }
   },
   "depends": {
-    "minecraft": ">=1.18.1",
-    "fabricloader": ">=0.12.12",
-    "galacticraft-api": ">=0.4.0-prealpha.25"
+    "minecraft": ">=1.20.1",
+    "fabricloader": ">=0.14.17"
   },
   "suggests": {
-    "modmenu": ">=3.0.0",
-    "waila": ">=2.0.0"
+    "modmenu": "*",
+    "waila": "*"
   }
 }

@@ -30,6 +30,7 @@ import dev.galacticraft.mod.content.fluid.OxygenFluid;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -51,28 +52,30 @@ public class GCFluids {
         register(Constant.Fluid.FUEL_STILL, FUEL);
         register(Constant.Fluid.FUEL_FLOWING, FLOWING_FUEL);
         register(Constant.Fluid.LIQUID_OXYGEN, LIQUID_OXYGEN);
+    }
 
+    public static void registerFluidVariantAttributes() {
         FluidVariantAttributes.register(CRUDE_OIL, new GCFluidAttribute(
                 Component.translatable(GCBlocks.CRUDE_OIL.getDescriptionId())
-                    .setStyle(Constant.Text.Color.DARK_GRAY_STYLE),
+                        .setStyle(Constant.Text.Color.DARK_GRAY_STYLE),
                 FluidConstants.LAVA_VISCOSITY,
                 false
         ));
         FluidVariantAttributes.register(FUEL, new GCFluidAttribute(
                 Component.translatable(GCBlocks.FUEL.getDescriptionId())
-                    .setStyle(Constant.Text.Color.YELLOW_STYLE),
+                        .setStyle(Constant.Text.Color.YELLOW_STYLE),
                 2000,
                 false
         ));
         FluidVariantAttributes.register(LIQUID_OXYGEN, new GCFluidAttribute(
                 Component.translatable("block.galacticraft.oxygen")
-                    .setStyle(Constant.Text.Color.AQUA_STYLE),
+                        .setStyle(Constant.Text.Color.AQUA_STYLE),
                 500,
                 true
         ));
     }
 
     private static void register(String id, Fluid fluid) {
-        Registry.register(Registry.FLUID, new ResourceLocation(Constant.MOD_ID, id), fluid);
+        Registry.register(BuiltInRegistries.FLUID, new ResourceLocation(Constant.MOD_ID, id), fluid);
     }
 }

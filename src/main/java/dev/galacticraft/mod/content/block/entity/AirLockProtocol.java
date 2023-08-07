@@ -57,8 +57,8 @@ class AirLockProtocol
 
     public AirLockProtocol(BlockEntity head)
     {
-        this.adjacentAirLocks = new ArrayList<BlockPos>();
-        this.checked = new HashSet<BlockPos>();
+        this.adjacentAirLocks = new ArrayList<>();
+        this.checked = new HashSet<>();
         this.world = head.getLevel();
         this.head = head;
         this.maxLoops = 26;

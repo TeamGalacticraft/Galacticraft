@@ -28,6 +28,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -36,14 +37,14 @@ import net.minecraft.world.level.Level;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ThermalArmorItem extends Item {
-    private final EquipmentSlot slotGroup;
+    private final ArmorItem.Type slotGroup;
 
-    public ThermalArmorItem(Properties settings, EquipmentSlot slotGroup) {
+    public ThermalArmorItem(Properties settings, ArmorItem.Type slotGroup) {
         super(settings.stacksTo(1));
         this.slotGroup = slotGroup;
     }
 
-    public EquipmentSlot getSlotGroup() {
+    public ArmorItem.Type getSlotGroup() {
         return slotGroup;
     }
 
@@ -58,12 +59,12 @@ public class ThermalArmorItem extends Item {
         return super.use(world, player, hand);
     }
 
-    public int getSlotIdForType(EquipmentSlot slotGroup) {
+    public int getSlotIdForType(ArmorItem.Type slotGroup) {
         return switch (slotGroup) {
-            case HEAD -> 0;
-            case CHEST -> 1;
-            case LEGS -> 2;
-            case FEET -> 3;
+            case HELMET -> 0;
+            case CHESTPLATE -> 1;
+            case LEGGINGS -> 2;
+            case BOOTS -> 3;
             default -> throw new IllegalArgumentException();
         };
     }

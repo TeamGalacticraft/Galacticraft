@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.render.block.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.mod.content.block.entity.GlassFluidPipeBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

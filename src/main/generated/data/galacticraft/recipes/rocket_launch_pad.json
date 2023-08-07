@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "item": "galacticraft:compressed_iron"
@@ -15,5 +16,6 @@
   "result": {
     "count": 9,
     "item": "galacticraft:rocket_launch_pad"
-  }
+  },
+  "show_notification": true
 }

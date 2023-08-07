@@ -22,24 +22,26 @@
 
 package dev.galacticraft.mod.client.network;
 
+import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.content.block.entity.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.content.entity.RocketEntity;
+import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -49,22 +51,6 @@ import java.util.UUID;
 @Environment(EnvType.CLIENT)
 public class GCClientPacketReceiver {
     public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(Constant.Packet.ENTITY_SPAWN, (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
-            FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
-            client.execute(() -> {
-                int id = buffer.readVarInt();
-                UUID uuid = buffer.readUUID();
-                Entity entity = Registry.ENTITY_TYPE.byId(buffer.readVarInt()).create(Minecraft.getInstance().level);
-                entity.setId(id);
-                entity.setUUID(uuid);
-                entity.syncPacketPositionCodec(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-                entity.setYRot((float) (buffer.readByte() * 360) / 256.0F);
-                entity.setXRot((float) (buffer.readByte() * 360) / 256.0F);
-                entity.setDeltaMovement(buffer.readShort(), buffer.readShort(), buffer.readShort());
-                Minecraft.getInstance().level.putNonPlayerEntity(id, entity);
-            });
-        });
-
         ClientPlayNetworking.registerGlobalReceiver(Constant.Packet.BUBBLE_SIZE, (client, handler, buf, responseSender) -> {
             FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
             client.execute(() -> {
@@ -78,21 +64,22 @@ public class GCClientPacketReceiver {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "open_screen"), (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(Constant.Packet.OPEN_SCREEN, (client, handler, buf, responseSender) -> {
             String screen = buf.readUtf();
             switch (screen) {
-                case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(false, RocketData.empty(), true)));
-                default -> Galacticraft.LOGGER.error("No screen found!");
+                case "celestial" -> client.execute(() -> client.setScreen(new CelestialSelectionScreen(false, RocketData.fromNbt(GCItems.ROCKET.getDefaultInstance().getTag()), true, null)));
+                default -> Constant.LOGGER.error("No screen found!");
             }
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "planet_menu_open"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-            RocketData rocketData = RocketData.fromNbt(packetByteBuf.readNbt());
-            minecraftClient.execute(() -> minecraftClient.setScreen(new CelestialSelectionScreen(false, rocketData, true)));
+        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "planet_menu_open"), (minecraftClient, clientPlayNetworkHandler, buf, packetSender) -> {
+            RocketData rocketData = RocketData.fromNbt(Objects.requireNonNull(buf.readNbt()));
+            int cBody = buf.readInt();
+            minecraftClient.execute(() -> minecraftClient.setScreen(new CelestialSelectionScreen(false, rocketData, true, cBody == -1 ? null : clientPlayNetworkHandler.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getHolder(cBody).orElseThrow().value())));
         });
 
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "rocket_spawn"), ((client, handler, buf, responseSender) -> {
-            EntityType<? extends RocketEntity> type = (EntityType<? extends RocketEntity>) Registry.ENTITY_TYPE.byId(buf.readVarInt());
+            EntityType<? extends RocketEntity> type = (EntityType<? extends RocketEntity>) BuiltInRegistries.ENTITY_TYPE.byId(buf.readVarInt());
 
             int entityID = buf.readVarInt();
             UUID entityUUID = buf.readUUID();
@@ -116,8 +103,7 @@ public class GCClientPacketReceiver {
                 entity.setId(entityID);
                 entity.setUUID(entityUUID);
 
-                entity.setColor(data.color());
-                entity.setParts(data.parts());
+                entity.setData(data);
 
                 Minecraft.getInstance().level.putNonPlayerEntity(entityID, entity);
             });

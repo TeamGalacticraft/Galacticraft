@@ -23,12 +23,15 @@
 package dev.galacticraft.mod.mixin.client;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.accessor.LivingEntityAccessor;
+import dev.galacticraft.mod.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.content.entity.RocketEntity;
+import dev.galacticraft.mod.content.item.RocketItem;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import org.joml.Math;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -66,7 +69,7 @@ public class HumanoidModelMixin<T extends LivingEntity> {
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
     private void gc$modifyPlayerAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
 
-        CelestialBody.getByDimension(entity.getLevel()).ifPresent(celestialBody -> {
+        CelestialBody.getByDimension(entity.level()).ifPresent(celestialBody -> {
             if (celestialBody.gravity() > .8)
                 return;
             float speedModifier = 0.1162F * 2;
@@ -84,10 +87,21 @@ public class HumanoidModelMixin<T extends LivingEntity> {
             this.rightLeg.xRot -= Mth.cos(f * 0.6662F) * 1.4F * g;
             this.rightLeg.xRot += Mth.cos(f * 0.1162F * 2) * 1.4F * g;
         });
+
+        if (entity.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof RocketItem || entity.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof RocketItem) {
+            float armXRot = Mth.PI + 0.3F;
+            this.leftArm.xRot = armXRot;
+            this.leftArm.yRot = 0.0F;
+            this.leftArm.zRot = Mth.PI / 10.0F;
+
+            this.rightArm.xRot = armXRot;
+            this.rightArm.yRot = 0.0F;
+            this.rightArm.zRot = (float) -Math.PI / 10.0F;
+        }
         
         
-        if (((LivingEntityAccessor)entity).isInCryoSleep()) { // TODO: possibly cleaner way of doing this?
-            this.hat.xRot = 0;
+        if (entity instanceof CryogenicAccessor player && player.isInCryoSleep()) { // TODO: possibly cleaner way of doing this?
+            this.hat.xRot = 45F;
             this.hat.yRot = 0;
             this.head.xRot = 45F;
             this.head.yRot = 0;

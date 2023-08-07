@@ -31,9 +31,9 @@ import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultShapedCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultShapelessCompressingDisplay;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
-import dev.galacticraft.mod.recipe.GalacticraftRecipe;
+import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
 import me.shedaniel.math.Rectangle;
@@ -71,14 +71,14 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
 
     @Override
     public void registerDisplays(DisplayRegistry registry) {
-        registry.registerRecipeFiller(FabricationRecipe.class, GalacticraftRecipe.FABRICATION_TYPE, DefaultFabricationDisplay::new);
-        registry.registerRecipeFiller(ShapedCompressingRecipe.class, GalacticraftRecipe.COMPRESSING_TYPE, DefaultShapedCompressingDisplay::new);
-        registry.registerRecipeFiller(ShapelessCompressingRecipe.class, GalacticraftRecipe.COMPRESSING_TYPE, DefaultShapelessCompressingDisplay::new);
+        registry.registerRecipeFiller(FabricationRecipe.class, GCRecipes.FABRICATION_TYPE, DefaultFabricationDisplay::new);
+        registry.registerRecipeFiller(ShapedCompressingRecipe.class, GCRecipes.COMPRESSING_TYPE, DefaultShapedCompressingDisplay::new);
+        registry.registerRecipeFiller(ShapelessCompressingRecipe.class, GCRecipes.COMPRESSING_TYPE, DefaultShapelessCompressingDisplay::new);
     }
 
     @Override
     public void registerEntries(EntryRegistry registry) {
-        for (ItemLike item : GCItem.HIDDEN_ITEMS) {
+        for (ItemLike item : GCItems.HIDDEN_ITEMS) {
             registry.removeEntry(EntryStacks.of(item));
         }
     }

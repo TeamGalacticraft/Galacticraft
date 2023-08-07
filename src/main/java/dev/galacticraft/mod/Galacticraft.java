@@ -23,93 +23,77 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.mod.api.config.ConfigManager;
-import dev.galacticraft.mod.api.rocket.part.GalacticraftRocketParts;
-import dev.galacticraft.mod.content.*;
-import dev.galacticraft.mod.content.block.entity.GCBlockEntityTypes;
-import dev.galacticraft.mod.command.GCCommand;
+import dev.galacticraft.mod.command.GCCommands;
 import dev.galacticraft.mod.config.ConfigManagerImpl;
+import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
-import dev.galacticraft.mod.events.GCEventHandler;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCCreativeModeTabs;
+import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.lookup.GCApiLookupProviders;
-import dev.galacticraft.mod.machine.GCMachineStatus;
-import dev.galacticraft.mod.misc.banner.GCBannerPattern;
-import dev.galacticraft.mod.network.GCServerPacketReceiver;
-import dev.galacticraft.mod.particle.GCParticleType;
-import dev.galacticraft.mod.recipe.GalacticraftRecipe;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
+import dev.galacticraft.mod.misc.banner.GCBannerPatterns;
+import dev.galacticraft.mod.network.GCServerPacketReceivers;
+import dev.galacticraft.mod.particle.GCParticleTypes;
+import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
-import dev.galacticraft.mod.structure.GCStructurePieceType;
-import dev.galacticraft.mod.structure.GalacticraftStructureSet;
-import dev.galacticraft.mod.data.GCTags;
+import dev.galacticraft.mod.structure.GCStructurePieceTypes;
+import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.village.GCVillagerProfessions;
-import dev.galacticraft.mod.village.MoonVillagerType;
-import dev.galacticraft.mod.world.biome.GCBiome;
-import dev.galacticraft.mod.world.biome.source.GCBiomeParameters;
-import dev.galacticraft.mod.world.dimension.GCGas;
-import dev.galacticraft.mod.world.gen.carver.GCCarver;
-import dev.galacticraft.mod.world.gen.feature.GCConfiguredFeature;
-import dev.galacticraft.mod.world.gen.feature.GCOreConfiguredFeature;
-import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeature;
-import dev.galacticraft.mod.world.gen.feature.GCPlacedFeature;
-import dev.galacticraft.mod.world.gen.structure.GCStructure;
-import dev.galacticraft.mod.world.gen.structure.GCStructureType;
+import dev.galacticraft.mod.village.MoonVillagerTypes;
+import dev.galacticraft.mod.world.biome.source.GCMultiNoiseBiomeSourceParameterLists;
+import dev.galacticraft.mod.world.dimension.GCGases;
+import dev.galacticraft.mod.world.gen.carver.GCCarvers;
+import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeatures;
+import dev.galacticraft.mod.world.gen.feature.GCPlacedFeatures;
+import dev.galacticraft.mod.world.gen.structure.GCStructureTypes;
 import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
-import dev.galacticraft.mod.world.poi.GCPointOfInterestType;
+import dev.galacticraft.mod.world.poi.GCPointOfInterestTypes;
 import net.fabricmc.api.ModInitializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class Galacticraft implements ModInitializer {
-    public static final Logger LOGGER = LoggerFactory.getLogger("Galacticraft");
-
     public static final ConfigManager CONFIG_MANAGER = new ConfigManagerImpl();
 
     @Override
     public void onInitialize() {
         long startInitTime = System.currentTimeMillis();
-        LOGGER.info("Starting initialization.");
+        Constant.LOGGER.info("Starting initialization.");
         GCTags.register();
-        GCBlocks.register();
         GCFluids.register();
+        GCBlocks.register();
+        GCFluids.registerFluidVariantAttributes(); // Must be called after GCBlocks.register() so that grates can work
         GCBlockEntityTypes.register();
-        GCItem.register();
+        GCItems.register();
+        GCCreativeModeTabs.register();
         GCApiLookupProviders.register();
-        GalacticraftRecipe.register();
+        GCRecipes.register();
         GCEntityDataSerializers.register();
         GCEntityTypes.register();
         GCLootTables.register();
-        GCGas.register();
-        GCOreConfiguredFeature.register();
-        GCOrePlacedFeature.register();
-        GCConfiguredFeature.register();
-        GCPlacedFeature.register();
-        GCBiomeParameters.register();
-        GCStructurePieceType.register();
-        GCStructureType.register();
-        GCStructure.register();
-        GalacticraftStructureSet.register();
-        GCStructure.register();
-        GCCarver.register();
-        GCBiome.register();
+        GCGases.register();
+        GCOrePlacedFeatures.register();
+        GCPlacedFeatures.register();
+        GCStructurePieceTypes.register();
+        GCStructureTypes.register();
+        GCCarvers.register();
         MoonSurfaceRules.register();
+        GCMultiNoiseBiomeSourceParameterLists.register();
         GCMenuTypes.register();
-        GCParticleType.register();
-        GCCommand.register();
+        GCParticleTypes.register();
+        GCCommands.register();
         GCLightSources.register();
-        GCServerPacketReceiver.register();
+        GCServerPacketReceivers.register();
         GCSounds.register();
-        GCPointOfInterestType.register();
-        MoonVillagerType.register();
-        GalacticraftRocketParts.register();
+        GCPointOfInterestTypes.register();
+        MoonVillagerTypes.register();
         GCVillagerProfessions.register();
-        GCMachineStatus.register();
-        GCBannerPattern.register();
-        GCCelestialBodies.register();
-        GCEventHandler.init();
-
-        LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
+        GCMachineStatuses.register();
+        GCBannerPatterns.register();
+        GCTeleporterTypes.register();
+        GCEventHandlers.init();
+        Constant.LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

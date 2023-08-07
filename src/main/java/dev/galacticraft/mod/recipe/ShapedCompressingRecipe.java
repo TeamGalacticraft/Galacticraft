@@ -26,10 +26,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.gson.*;
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -73,17 +72,12 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
 
    @Override
    public RecipeSerializer<?> getSerializer() {
-      return GalacticraftRecipe.SHAPED_COMPRESSING_SERIALIZER;
+      return GCRecipes.SHAPED_COMPRESSING_SERIALIZER;
    }
 
    @Override
    public String getGroup() {
       return this.group;
-   }
-
-   @Override
-   public ItemStack getResultItem() {
-      return this.output;
    }
 
    @Override
@@ -94,6 +88,11 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
    @Override
    public boolean canCraftInDimensions(int width, int height) {
       return width >= this.width && height >= this.height;
+   }
+
+   @Override
+   public ItemStack getResultItem(RegistryAccess registryAccess) {
+      return this.output;
    }
 
    @Override
@@ -112,6 +111,11 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
       }
 
       return false;
+   }
+
+   @Override
+   public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+      return this.getResultItem(registryAccess).copy();
    }
 
    private boolean matchesSmall(Container inv, int offsetX, int offsetY, boolean bl) {
@@ -136,11 +140,6 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
       }
 
       return true;
-   }
-
-   @Override
-   public ItemStack assemble(Container Inventory) {
-      return this.getResultItem().copy();
    }
 
    public int getWidth() {
@@ -275,7 +274,7 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
 
    public static ItemStack getItemStack(JsonObject json) {
       String string = GsonHelper.getAsString(json, "item");
-      Item item = Registry.ITEM.getOptional(new ResourceLocation(string)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + string + "'"));
+      Item item = BuiltInRegistries.ITEM.getOptional(new ResourceLocation(string)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + string + "'"));
       if (json.has("data")) {
          throw new JsonParseException("Disallowed data tag found");
       } else {

@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.content.block.special.aluminumwire.tier1;
 
 import dev.galacticraft.mod.api.block.WireBlock;
-import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
-import dev.galacticraft.mod.content.block.entity.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;

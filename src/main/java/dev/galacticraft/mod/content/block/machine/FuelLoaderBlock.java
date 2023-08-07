@@ -22,7 +22,8 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
-import dev.galacticraft.mod.content.block.entity.FuelLoaderBlockEntity;
+import dev.galacticraft.machinelib.api.block.MachineBlock;
+import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +39,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class FuelLoaderBlock extends SimpleMachineBlock<FuelLoaderBlockEntity> {
+public class FuelLoaderBlock extends MachineBlock<FuelLoaderBlockEntity> {
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 
     public FuelLoaderBlock(Properties settings) {
@@ -53,20 +54,10 @@ public class FuelLoaderBlock extends SimpleMachineBlock<FuelLoaderBlockEntity> {
     }
 
     @Override
-    public FuelLoaderBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new FuelLoaderBlockEntity(pos, state);
-    }
-
-    @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState newState, LevelAccessor world, BlockPos pos, BlockPos posFrom) {
         if (direction != Direction.UP && direction != Direction.DOWN && newState.getBlock() instanceof RocketLaunchPadBlock) {
             ((FuelLoaderBlockEntity) world.getBlockEntity(pos)).updateConnections(direction);
         }
         return super.updateShape(state, direction, newState, world, pos, posFrom);
-    }
-
-    @Override
-    public Component machineDescription(ItemStack stack, BlockGetter view, boolean context) {
-        return Component.translatable("tooltip.galacticraft.fuel_loader");
     }
 }

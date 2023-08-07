@@ -23,11 +23,15 @@
 package dev.galacticraft.mod.storage;
 
 import com.google.common.collect.Iterators;
+import dev.galacticraft.mod.Constant;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,12 +41,14 @@ public class SingleTypeStorage<T, V extends TransferVariant<T>> extends Snapshot
     private final V resource;
     private final long capacity;
     private final V blankResource;
+    protected final ContainerItemContext context;
     private long amount;
 
-    public SingleTypeStorage(V resource, long capacity, V blankResource, long amount) {
+    public SingleTypeStorage(V resource, ContainerItemContext context, long capacity, V blankResource, long amount) {
         this.resource = resource;
         this.capacity = capacity;
         this.blankResource = blankResource;
+        this.context = context;
         this.amount = amount;
     }
 
@@ -53,9 +59,14 @@ public class SingleTypeStorage<T, V extends TransferVariant<T>> extends Snapshot
     @Override
     public long insert(@NotNull V resource, long maxAmount, TransactionContext transaction) {
         if (resource.equals(this.resource)) {
+            updateSnapshots(transaction);
             maxAmount = Math.min(maxAmount, this.capacity - this.amount);
             this.amount += maxAmount;
-            return maxAmount;
+            ItemStack updatedStack = context.getItemVariant().toStack();
+            updatedStack.getOrCreateTag().putLong(Constant.Nbt.VALUE, this.getAmount());
+            if (context.exchange(ItemVariant.of(updatedStack), 1, transaction) == 1) {
+                return maxAmount;
+            }
         }
         return 0;
     }
@@ -63,9 +74,14 @@ public class SingleTypeStorage<T, V extends TransferVariant<T>> extends Snapshot
     @Override
     public long extract(@NotNull V resource, long maxAmount, TransactionContext transaction) {
         if (resource.equals(this.resource)) {
+            updateSnapshots(transaction);
             maxAmount = Math.min(maxAmount, this.amount);
             this.amount -= maxAmount;
-            return maxAmount;
+            ItemStack updatedStack = context.getItemVariant().toStack();
+            updatedStack.getOrCreateTag().putLong(Constant.Nbt.VALUE, this.getAmount());
+            if (context.exchange(ItemVariant.of(updatedStack), 1, transaction) == 1) {
+                return maxAmount;
+            }
         }
         return 0;
     }

@@ -24,7 +24,7 @@ package dev.galacticraft.mod.compat.waila;
 
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.machine.MachineConfiguration;
+import dev.galacticraft.machinelib.api.machine.configuration.MachineConfiguration;
 import dev.galacticraft.mod.Constant;
 import mcp.mobius.waila.api.*;
 import net.minecraft.client.gui.screens.Screen;
@@ -39,7 +39,7 @@ public class GalacticraftWailaPlugin implements IWailaPlugin {
         public void appendTail(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
             if (Screen.hasShiftDown()) {
                 MachineConfiguration configuration = MachineConfiguration.create();
-                configuration.readNbt(accessor.getServerData(), null);
+                configuration.readTag(accessor.getData().raw().getCompound("config"));
                 tooltip.addLine(Component.translatable("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneActivation().getName()).setStyle(Constant.Text.Color.RED_STYLE));
                 if (configuration.getSecurity().getOwner() != null) {
                     String username = configuration.getSecurity().getUsername();
@@ -51,7 +51,7 @@ public class GalacticraftWailaPlugin implements IWailaPlugin {
 
     @Override
     public void register(IRegistrar registrar) {
-        registrar.addBlockData((data, accessor, config) -> ((MachineBlockEntity) accessor.getTarget()).getConfiguration().writeNbt(data, null), MachineBlock.class);
+        registrar.addBlockData((IDataProvider<MachineBlockEntity>) (data, accessor, config) -> data.raw().put("config", accessor.getTarget().getConfiguration().createTag()), MachineBlock.class);
         registrar.addComponent(COMPONENT_PROVIDER, TooltipPosition.TAIL, MachineBlock.class);
     }
 }

@@ -46,7 +46,7 @@ public class DefaultShapelessCompressingDisplay implements DefaultCompressingDis
                 input.add(EntryIngredients.of(stack));
             }
         });
-        this.output = Collections.singletonList(EntryIngredients.of(recipe.getResultItem()));
+        this.output = Collections.singletonList(EntryIngredients.of(recipe.getResultItem(null))); //fixme
     }
 
     public DefaultShapelessCompressingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs) {

@@ -24,20 +24,22 @@ package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
-import dev.galacticraft.mod.content.block.entity.OxygenSealerBlockEntity;
-import dev.galacticraft.mod.world.dimension.GCDimensionType;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
+import dev.galacticraft.mod.world.dimension.GCDimensions;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.progress.ChunkProgressListener;
+import net.minecraft.world.RandomSequences;
 import net.minecraft.world.level.CustomSpawner;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.level.storage.ServerLevelData;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -58,8 +60,8 @@ public abstract class ServerLevelMixin implements ServerLevelAccessor {
     private final @Unique Set<OxygenSealerBlockEntity> sealers = new HashSet<>();
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void setSpawnersGC(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, ChunkProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List spawners, boolean shouldTickTime, CallbackInfo ci) {
-        if (worldKey.equals(GCDimensionType.MOON_KEY)) {
+    private void setSpawnersGC(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, ChunkProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List spawners, boolean shouldTickTime, @Nullable RandomSequences randomSequences, CallbackInfo ci) {
+        if (worldKey.equals(GCDimensions.MOON)) {
             this.customSpawners = ImmutableList.<CustomSpawner>builder().add(new EvolvedPillagerSpawner()).build();
         }
     }

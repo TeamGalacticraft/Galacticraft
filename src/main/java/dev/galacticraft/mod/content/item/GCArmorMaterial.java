@@ -26,7 +26,7 @@ import com.google.common.base.Suppliers;
 import java.util.function.Supplier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -40,7 +40,7 @@ public enum GCArmorMaterial implements ArmorMaterial {
             0,
             SoundEvents.ARMOR_EQUIP_IRON,
             0.0f,
-            () -> Ingredient.of(GCItem.METEORIC_IRON_INGOT),
+            () -> Ingredient.of(GCItems.METEORIC_IRON_INGOT),
             0.0f
     ), // TODO: add actual functionality
     HEAVY_DUTY(
@@ -50,7 +50,7 @@ public enum GCArmorMaterial implements ArmorMaterial {
             9,
             SoundEvents.ARMOR_EQUIP_IRON,
             1.0f,
-            () -> Ingredient.of(GCItem.COMPRESSED_STEEL),
+            () -> Ingredient.of(GCItems.COMPRESSED_STEEL),
             1.0f
     ),
     DESH("desh", 42,
@@ -58,7 +58,7 @@ public enum GCArmorMaterial implements ArmorMaterial {
             12,
             SoundEvents.ARMOR_EQUIP_IRON,
             3.0f,
-            () -> Ingredient.of(GCItem.DESH_INGOT),
+            () -> Ingredient.of(GCItems.DESH_INGOT),
             2.0f
     ),
     TITANIUM(
@@ -67,7 +67,7 @@ public enum GCArmorMaterial implements ArmorMaterial {
             20,
             SoundEvents.ARMOR_EQUIP_IRON,
             1.0f,
-            () -> Ingredient.of(GCItem.COMPRESSED_TITANIUM),
+            () -> Ingredient.of(GCItems.COMPRESSED_TITANIUM),
             0.0f
     );
 
@@ -93,13 +93,13 @@ public enum GCArmorMaterial implements ArmorMaterial {
     }
 
     @Override
-    public int getDurabilityForSlot(EquipmentSlot slot) {
-        return BASE_DURABILITY[slot.getIndex()] * this.durabilityMultiplier;
+    public int getDurabilityForType(ArmorItem.Type type) {
+        return BASE_DURABILITY[type.getSlot().getIndex()] * this.durabilityMultiplier;
     }
 
     @Override
-    public int getDefenseForSlot(EquipmentSlot slot) {
-        return this.protectionValues[slot.getIndex()];
+    public int getDefenseForType(ArmorItem.Type type) {
+        return this.protectionValues[type.getSlot().getIndex()];
     }
 
     @Override

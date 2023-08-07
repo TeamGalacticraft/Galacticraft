@@ -26,11 +26,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.CompressorBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
 import dev.galacticraft.mod.screen.CompressorMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -54,26 +55,26 @@ public class CompressorScreen extends MachineScreen<CompressorBlockEntity, Compr
     private static final int FIRE_Y = 26;
 
     public CompressorScreen(CompressorMenu handler, Inventory inv, Component title) {
-        super(handler, inv, title, Constant.ScreenTexture.COMPRESSOR_SCREEN);
+        super(handler, title, Constant.ScreenTexture.COMPRESSOR_SCREEN);
     }
 
     @Override
-    protected void renderBackground(PoseStack matrices, int mouseX, int mouseY, float delta) {
-        super.renderBackground(matrices, mouseX, mouseY, delta);
-        this.drawFuelProgressBar(matrices);
-        this.drawCraftProgressBar(matrices);
+    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderBackground(graphics, mouseX, mouseY, delta);
+        this.drawFuelProgressBar(graphics.pose());
+        this.drawCraftProgressBar(graphics.pose());
     }
 
     protected void drawFuelProgressBar(PoseStack matrices) {
-        if (this.menu.machine.fuelLength > 0) {
-            float fuelUsageScale = (float)(1.0 - (double)(this.menu.machine.fuelLength - this.menu.machine.fuelTime) / (double)this.menu.machine.fuelLength);
+        if (this.menu.getFuelLength() > 0) {
+            float fuelUsageScale = (float)(1.0 - (double)(this.menu.getFuelLength() - this.menu.getFuelTime()) / (double)this.menu.getFuelLength());
             RenderSystem.setShaderTexture(0, Constant.ScreenTexture.COMPRESSOR_SCREEN);
             DrawableUtil.drawProgressTexture(matrices, this.leftPos + FIRE_X, (this.topPos + FIRE_Y + FIRE_HEIGHT - (fuelUsageScale * FIRE_HEIGHT)), FIRE_U, FIRE_V + (FIRE_HEIGHT - (fuelUsageScale * FIRE_HEIGHT)), FIRE_WIDTH, (fuelUsageScale * FIRE_HEIGHT));
         }
     }
 
     protected void drawCraftProgressBar(PoseStack matrices) {
-        float progressScale = (((float)this.menu.machine.getProgress()) / ((float)this.menu.machine.getMaxProgress()));
+        float progressScale = (((float)this.menu.getProgress()) / ((float)this.menu.getMaxProgress()));
 
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.COMPRESSOR_SCREEN);
         DrawableUtil.drawProgressTexture(matrices, this.leftPos + PROGRESS_X, this.topPos + PROGRESS_Y, PROGRESS_U, PROGRESS_V, PROGRESS_WIDTH * progressScale, PROGRESS_HEIGHT);

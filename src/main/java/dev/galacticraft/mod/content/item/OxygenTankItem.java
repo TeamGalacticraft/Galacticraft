@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.machinelib.api.gas.Gases;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -34,6 +34,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -58,45 +59,24 @@ public class OxygenTankItem extends Item {
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> list) {
-        if (this.allowedIn(group)) {
-            ItemStack charged = getDefaultInstance();
-            try (Transaction transaction = Transaction.openOuter()) {
-                Storage<FluidVariant> storage = ContainerItemContext.withInitial(charged).find(FluidStorage.ITEM);
-                storage.insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
-                transaction.commit();
-                charged.getOrCreateTag().putLong(Constant.Nbt.VALUE, storage.exactView(FluidVariant.of(Gases.OXYGEN)).getAmount());
-            }
-            list.add(charged);
-
-            ItemStack depleted = new ItemStack(this);
-            try (Transaction transaction = Transaction.openOuter()) {
-                ContainerItemContext.withInitial(charged).find(FluidStorage.ITEM).extract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
-                transaction.commit();
-            }
-            list.add(depleted);
-        }
-    }
-
-    @Override
     public boolean isBarVisible(ItemStack stack) {
         return true;
     }
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(FluidVariant.of(Gases.OXYGEN));
+        StorageView<FluidVariant> storage = ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM).exactView(FluidVariant.of(Gases.OXYGEN));
         assert storage != null;
 
-        return (int) Math.round(13.0 - (((double) storage.getAmount() / (double) storage.getCapacity()) * 13.0));
+        return Math.round(13.0F - (float) (storage.getCapacity() - storage.getAmount()) * 13.0F / (float) storage.getCapacity());
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
-        StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(FluidVariant.of(Gases.OXYGEN));
+        StorageView<FluidVariant> storage = ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM).exactView(FluidVariant.of(Gases.OXYGEN));
         assert storage != null;
-        double scale = 1.0 - Math.max(0.0, (double) storage.getAmount() / (double) storage.getCapacity());
-        return ((int) (255 * scale) << 16) + (((int) (255 * (1.0 - scale))) << 8);
+        float scale = 1.0F - ((float) storage.getAmount() / (float) storage.getCapacity());
+        return Constant.Text.Color.getStorageLevelColor(scale);
     }
 
     @Override
@@ -116,9 +96,9 @@ public class OxygenTankItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
-        StorageView<FluidVariant> storage = ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM).exactView(FluidVariant.of(Gases.OXYGEN));
+        StorageView<FluidVariant> storage = ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM).exactView(FluidVariant.of(Gases.OXYGEN));
         assert storage != null;
-        lines.add(Component.translatable("tooltip.galacticraft.oxygen_remaining", storage.getAmount() + "/" + storage.getCapacity()).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double) storage.getAmount() / (double) storage.getCapacity()))));
+        lines.add(Component.translatable("tooltip.galacticraft.oxygen_remaining", storage.getAmount() + "/" + storage.getCapacity()).setStyle(Constant.Text.Color.getStorageLevelStyle(1.0 - ((double) storage.getAmount() / (double) storage.getCapacity()))));
         super.appendHoverText(stack, world, lines, context);
     }
 

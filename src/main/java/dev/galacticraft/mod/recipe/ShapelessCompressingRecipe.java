@@ -26,9 +26,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -54,17 +53,12 @@ public record ShapelessCompressingRecipe(ResourceLocation id, String group,
 
    @Override
    public RecipeSerializer<?> getSerializer() {
-      return GalacticraftRecipe.SHAPELESS_COMPRESSING_SERIALIZER;
+      return GCRecipes.SHAPELESS_COMPRESSING_SERIALIZER;
    }
 
    @Override
    public String getGroup() {
       return this.group;
-   }
-
-   @Override
-   public ItemStack getResultItem() {
-      return this.output;
    }
 
    @Override
@@ -89,13 +83,18 @@ public record ShapelessCompressingRecipe(ResourceLocation id, String group,
    }
 
    @Override
-   public ItemStack assemble(Container inv) {
-      return this.output.copy();
+   public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+      return this.getResultItem(registryAccess).copy();
    }
 
    @Override
    public boolean canCraftInDimensions(int width, int height) {
       return width * height >= this.input.size();
+   }
+
+   @Override
+   public ItemStack getResultItem(RegistryAccess registryAccess) {
+      return this.output;
    }
 
    public enum Serializer implements RecipeSerializer<ShapelessCompressingRecipe> {

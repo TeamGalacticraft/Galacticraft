@@ -22,8 +22,7 @@
 
 package dev.galacticraft.mod.client.model;
 
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import net.fabricmc.api.EnvType;
@@ -39,10 +38,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -52,6 +48,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.Collections;
 import java.util.List;
@@ -78,7 +76,7 @@ public class WalkwayBakedModel implements FabricBakedModel, BakedModel {
     private final Mesh east;
     private final TextureAtlasSprite sprite;
 
-    protected WalkwayBakedModel(ModelBakery loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
+    protected WalkwayBakedModel(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
         this.platform = loader.getModel(WALKWAY_PLATFORM).bake(loader, textureGetter, rotationContainer, WALKWAY_PLATFORM);
         this.sprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, WALKWAY_TEX));
         MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
@@ -130,46 +128,48 @@ public class WalkwayBakedModel implements FabricBakedModel, BakedModel {
     public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         Walkway walkway = ((Walkway) blockView.getBlockEntity(pos));
         Consumer<Mesh> meshConsumer = context.meshConsumer();
-        assert walkway != null;
 
-        int x = 0;
-        int y = 0;
-        switch (walkway.getDirection()) {
-            case DOWN -> x = 180;
-            case NORTH -> x = 270;
-            case SOUTH -> x = 90;
-            case EAST -> {
-                x = 90;
-                y = 90;
+        if (walkway != null && walkway.getDirection() != null) {
+            int x = 0;
+            int y = 0;
+            switch (walkway.getDirection()) {
+                case DOWN -> x = 180;
+                case NORTH -> x = 270;
+                case SOUTH -> x = 90;
+                case EAST -> {
+                    x = 90;
+                    y = 90;
+                }
+                case WEST -> {
+                    x = 90;
+                    y = 270;
+                }
             }
-            case WEST -> {
-                x = 90;
-                y = 270;
+
+            Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
+            context.pushTransform(Transform.INSTANCE);
+            context.bakedModelConsumer().accept(this.platform);
+            context.popTransform();
+            walkway.calculateConnections();
+
+            if (walkway.getConnections()[0]) {
+                meshConsumer.accept(this.down);
             }
-        }
-
-        Transform.INSTANCE.setQuaternions(Vector3f.XP.rotationDegrees(x), Vector3f.YP.rotationDegrees(y));
-        context.pushTransform(Transform.INSTANCE);
-        context.fallbackConsumer().accept(this.platform);
-        context.popTransform();
-
-        if (walkway.getConnections()[0]) {
-            meshConsumer.accept(this.down);
-        }
-        if (walkway.getConnections()[1]) {
-            meshConsumer.accept(this.up);
-        }
-        if (walkway.getConnections()[2]) {
-            meshConsumer.accept(this.north);
-        }
-        if (walkway.getConnections()[3]) {
-            meshConsumer.accept(this.south);
-        }
-        if (walkway.getConnections()[4]) {
-            meshConsumer.accept(this.west);
-        }
-        if (walkway.getConnections()[5]) {
-            meshConsumer.accept(this.east);
+            if (walkway.getConnections()[1]) {
+                meshConsumer.accept(this.up);
+            }
+            if (walkway.getConnections()[2]) {
+                meshConsumer.accept(this.north);
+            }
+            if (walkway.getConnections()[3]) {
+                meshConsumer.accept(this.south);
+            }
+            if (walkway.getConnections()[4]) {
+                meshConsumer.accept(this.west);
+            }
+            if (walkway.getConnections()[5]) {
+                meshConsumer.accept(this.east);
+            }
         }
     }
 
@@ -221,7 +221,7 @@ public class WalkwayBakedModel implements FabricBakedModel, BakedModel {
         return ItemOverrides.EMPTY;
     }
 
-    public static WalkwayBakedModel getInstance(ModelBakery loader, Function<Material, TextureAtlasSprite> spriteFunction, ModelState rotationContainer) {
+    public static WalkwayBakedModel getInstance(ModelBaker loader, Function<Material, TextureAtlasSprite> spriteFunction, ModelState rotationContainer) {
         if (instance == null) {
             return instance = new WalkwayBakedModel(loader, spriteFunction, rotationContainer);
         }
@@ -235,11 +235,11 @@ public class WalkwayBakedModel implements FabricBakedModel, BakedModel {
     public enum Transform implements RenderContext.QuadTransform {
         INSTANCE;
 
-        private Quaternion quaternionX;
-        private Quaternion quaternionY;
+        private Quaternionf quaternionX;
+        private Quaternionf quaternionY;
         private final Vector3f vec = new Vector3f();
 
-        public void setQuaternions(Quaternion quaternionX, Quaternion quaternionY) {
+        public void setQuaternions(Quaternionf quaternionX, Quaternionf quaternionY) {
             this.quaternionX = quaternionX;
             this.quaternionY = quaternionY;
         }
@@ -247,12 +247,12 @@ public class WalkwayBakedModel implements FabricBakedModel, BakedModel {
         @Override
         public boolean transform(MutableQuadView quad) {
             for (int i = 0; i < 4; i++) {
-                quad.copyPos(i, vec);
-                vec.set(vec.x() - 0.5f, vec.y() - 0.5f, vec.z() - 0.5f);
-                vec.transform(quaternionX);
-                vec.transform(quaternionY);
-                vec.set(vec.x() + 0.5f, vec.y() + 0.5f, vec.z() + 0.5f);
-                quad.pos(i, vec);
+                quad.copyPos(i, this.vec);
+                this.vec.set(this.vec.x() - 0.5f, this.vec.y() - 0.5f, this.vec.z() - 0.5f);
+                this.quaternionX.transform(this.vec);
+                this.quaternionY.transform(this.vec);
+                this.vec.set(this.vec.x() + 0.5f, this.vec.y() + 0.5f, this.vec.z() + 0.5f);
+                quad.pos(i, this.vec);
             }
             return true;
         }

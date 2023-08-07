@@ -25,7 +25,7 @@ package dev.galacticraft.mod.compat.jei.category;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.compat.jei.GCJEIRecipeTypes;
-import dev.galacticraft.mod.content.item.GCItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -72,15 +72,15 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
         builder.addSlot(RecipeIngredientRole.INPUT, 1, 1)
                 .addItemStack(Items.DIAMOND.getDefaultInstance());
         builder.addSlot(RecipeIngredientRole.INPUT, 55, 47)
-                .addItemStack(GCItem.RAW_SILICON.getDefaultInstance());
+                .addItemStack(GCItems.RAW_SILICON.getDefaultInstance());
         builder.addSlot(RecipeIngredientRole.INPUT, 55, 65)
-                .addItemStack(GCItem.RAW_SILICON.getDefaultInstance());
+                .addItemStack(GCItems.RAW_SILICON.getDefaultInstance());
         builder.addSlot(RecipeIngredientRole.CATALYST, 109, 47)
                 .addItemStack(Items.REDSTONE.getDefaultInstance());
         builder.addSlot(RecipeIngredientRole.CATALYST, 127, 1)
                 .addIngredients(recipe.getIngredients().get(0));
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 145, 65)
-                .addItemStack(recipe.getResultItem());
+                .addItemStack(recipe.getResultItem(null)); //fixme
     }
 }

@@ -1,7 +1,6 @@
 {
-  "machine": "galacticraft:electric_arc_furnace",
-  "sprite_provider": "machinelib:front_face",
-  "sprite_info": {
+  "machinelib:generated": "machinelib:front_face",
+  "data": {
     "sprite": "galacticraft:block/electric_arc_furnace"
   }
 }

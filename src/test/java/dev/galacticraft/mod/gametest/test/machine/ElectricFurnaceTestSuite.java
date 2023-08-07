@@ -22,65 +22,52 @@
 
 package dev.galacticraft.mod.gametest.test.machine;
 
+import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
+import dev.galacticraft.machinelib.api.gametest.annotation.container.DefaultedMetadata;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
-import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.block.entity.ElectricFurnaceBlockEntity;
-import dev.galacticraft.mod.content.block.entity.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.content.block.entity.machine.ElectricFurnaceBlockEntity;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTest;
-import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.ItemStack;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
+import net.minecraft.gametest.framework.GameTestGenerator;
+import net.minecraft.gametest.framework.TestFunction;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricFurnaceTestSuite implements MachineGameTest {
-    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
-    public void electricFurnacePlacementTest(GameTestHelper context) {
-        context.succeedWhen(() -> this.createBlockEntity(context, new BlockPos(0, 0, 0), GCBlocks.ELECTRIC_FURNACE, GCBlockEntityTypes.ELECTRIC_FURNACE));
+@DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
+public final class ElectricFurnaceTestSuite extends RecipeGameTest<Container, SmeltingRecipe, ElectricFurnaceBlockEntity> {
+    public ElectricFurnaceTestSuite() {
+        super(GCMachineTypes.ELECTRIC_FURNACE, GCSlotGroupTypes.GENERIC_INPUT, GCSlotGroupTypes.GENERIC_OUTPUT);
     }
 
-    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
-    public void electricFurnaceChargeTest(GameTestHelper context) {
-        this.testItemCharging(context, new BlockPos(0, 0, 0), GCBlocks.ELECTRIC_FURNACE, GCBlockEntityTypes.ELECTRIC_FURNACE, ElectricFurnaceBlockEntity.CHARGE_SLOT);
+    @Override
+    @GameTestGenerator
+    public @NotNull List<TestFunction> generateTests() {
+        List<TestFunction> functions = super.generateTests();
+        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_SELF, GCItems.INFINITE_BATTERY));
+        return functions;
     }
 
-    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 201)
-    public void electricFurnaceCraftingTest(GameTestHelper context) {
-        final var pos = new BlockPos(0, 0, 0);
-        final var electricFurnace = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_FURNACE, GCBlockEntityTypes.ELECTRIC_FURNACE);
-        final var inv = electricFurnace.itemStorage();
-        electricFurnace.energyStorage().setEnergyUnsafe(electricFurnace.getEnergyCapacity());
-        fillElectricFurnaceSlots(inv);
-        runFinalTaskAt(context, 200 + 1, () -> {
-            ItemStack output = inv.getStack(ElectricFurnaceBlockEntity.OUTPUT_SLOT);
-            if (output.getItem() != Items.COOKED_PORKCHOP) {
-                context.fail(String.format("Expected electric furnace to have made a cooked porkchop but found %s instead!", formatItemStack(output)), pos);
-            }
-        });
+    @Override
+    protected void fulfillRunRequirements(@NotNull ElectricFurnaceBlockEntity machine) {
+        machine.energyStorage().setEnergy(machine.energyStorage().getCapacity());
     }
 
-    @GameTest(template = GalacticraftGameTest.SINGLE_BLOCK, timeoutTicks = 1)
-    public void electricFurnaceCraftingFullTest(GameTestHelper context) {
-        final var pos = new BlockPos(0, 0, 0);
-        final var electricFurnace = this.createBlockEntity(context, pos, GCBlocks.ELECTRIC_FURNACE, GCBlockEntityTypes.ELECTRIC_FURNACE);
-        final var inv = electricFurnace.itemStorage();
-        electricFurnace.energyStorage().setEnergyUnsafe(electricFurnace.getEnergyCapacity());
-        fillElectricFurnaceSlots(inv);
-        inv.setSlot(ElectricFurnaceBlockEntity.OUTPUT_SLOT, ItemVariant.of(Items.BARRIER), 1);
-
-        runFinalTaskNext(context, () -> {
-            if (electricFurnace.getMaxProgress() != 0) {
-                context.fail("Expected electric furnace to be unable to craft as the output was full!", pos);
-            }
-        });
+    @Override
+    protected int getRecipeRuntime() {
+        return 200;
     }
 
-    private static void fillElectricFurnaceSlots(@NotNull MachineItemStorage inv) {
-        inv.setSlot(ElectricFurnaceBlockEntity.INPUT_SLOT, ItemVariant.of(Items.PORKCHOP), 1);
+    @Override
+    protected void createValidRecipe(@NotNull MachineItemStorage storage) {
+        storage.getSlot(GCSlotGroupTypes.GENERIC_INPUT).set(Items.PORKCHOP, 1);
     }
 }

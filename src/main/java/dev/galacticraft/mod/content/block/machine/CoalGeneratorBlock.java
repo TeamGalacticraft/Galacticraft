@@ -22,7 +22,8 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
-import dev.galacticraft.mod.content.block.entity.CoalGeneratorBlockEntity;
+import dev.galacticraft.machinelib.api.block.MachineBlock;
+import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -30,15 +31,27 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CoalGeneratorBlock extends SimpleMachineBlock<CoalGeneratorBlockEntity> {
+public class CoalGeneratorBlock extends MachineBlock<CoalGeneratorBlockEntity> {
+    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
+
     public CoalGeneratorBlock(Properties settings) {
         super(settings, CoalGeneratorBlockEntity::new);
+        this.registerDefaultState(this.defaultBlockState().setValue(ACTIVE, false));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(ACTIVE);
     }
 
     @Override
@@ -60,10 +73,5 @@ public class CoalGeneratorBlock extends SimpleMachineBlock<CoalGeneratorBlockEnt
             world.addParticle(ParticleTypes.SMOKE, x + xo, y + yo, z + zo, 0.0D, 0.0D, 0.0D);
             world.addParticle(ParticleTypes.FLAME, x + xo, y + yo, z + zo, 0.0D, 0.0D, 0.0D);
         }
-    }
-
-    @Override
-    public CoalGeneratorBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CoalGeneratorBlockEntity(pos, state);
     }
 }

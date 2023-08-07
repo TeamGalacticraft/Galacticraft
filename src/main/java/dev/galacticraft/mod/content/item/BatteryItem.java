@@ -36,13 +36,14 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.SimpleBatteryItem;
+import team.reborn.energy.api.base.SimpleEnergyItem;
 
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BatteryItem extends Item implements SimpleBatteryItem {
+public class BatteryItem extends Item implements SimpleEnergyItem {
     private final long capacity;
     private final long transfer;
 
@@ -51,26 +52,13 @@ public class BatteryItem extends Item implements SimpleBatteryItem {
         this.capacity = capacity;
         this.transfer = transfer;
 
-        EnergyStorage.ITEM.registerForItems((itemStack, context) -> SimpleBatteryItem.createStorage(context, this.getEnergyCapacity(), this.getEnergyMaxInput(), this.getEnergyMaxOutput()), this);
+        EnergyStorage.ITEM.registerForItems((stack, context) -> SimpleEnergyItem.createStorage(context, this.getEnergyCapacity(stack), this.getEnergyMaxInput(stack), this.getEnergyMaxOutput(stack)), this);
     }
 
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
-        lines.add(Component.translatable("tooltip.galacticraft.energy_remaining", DrawableUtil.getEnergyDisplay(getStoredEnergy(stack))).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double)getStoredEnergy(stack)) / ((double)this.getEnergyCapacity()))));
+        lines.add(Component.translatable("tooltip.galacticraft.energy_remaining", DrawableUtil.getEnergyDisplay(getStoredEnergy(stack))).setStyle(Constant.Text.Color.getStorageLevelStyle(1.0 - ((double)getStoredEnergy(stack)) / ((double)this.getEnergyCapacity(stack)))));
         super.appendHoverText(stack, world, lines, context);
-    }
-
-    @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {
-        if (this.allowedIn(group)) {
-            ItemStack stack = new ItemStack(this);
-            setStoredEnergy(stack, this.getEnergyCapacity());
-            stacks.add(stack);
-
-            stack = new ItemStack(this);
-            setStoredEnergy(stack, 0);
-            stacks.add(stack);
-        }
     }
 
     @Override
@@ -80,12 +68,12 @@ public class BatteryItem extends Item implements SimpleBatteryItem {
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        return (int) Math.round(((double)getStoredEnergy(stack) / (double)this.getEnergyCapacity()) * 13.0);
+        return (int) Math.round(((double)getStoredEnergy(stack) / (double)this.getEnergyCapacity(stack)) * 13.0);
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
-        double scale = 1.0 - Math.max(0.0, (double) getStoredEnergy(stack) / (double)this.getEnergyCapacity());
+        double scale = 1.0 - Math.max(0.0, (double) getStoredEnergy(stack) / (double)this.getEnergyCapacity(stack));
         return ((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8);
     }
 
@@ -111,17 +99,17 @@ public class BatteryItem extends Item implements SimpleBatteryItem {
     }
 
     @Override
-    public long getEnergyCapacity() {
+    public long getEnergyCapacity(ItemStack stack) {
         return this.capacity;
     }
 
     @Override
-    public long getEnergyMaxInput() {
+    public long getEnergyMaxInput(ItemStack stack) {
         return this.transfer;
     }
 
     @Override
-    public long getEnergyMaxOutput() {
+    public long getEnergyMaxOutput(ItemStack stack) {
         return this.transfer;
     }
 }

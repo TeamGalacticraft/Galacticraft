@@ -22,14 +22,16 @@
 
 package dev.galacticraft.mod.data;
 
-import dev.galacticraft.mod.content.item.GCItem;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import dev.galacticraft.mod.content.item.GCItems;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -39,22 +41,31 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
+import java.util.function.BiConsumer;
+
 import static dev.galacticraft.mod.content.GCBlocks.*;
 
 public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
-    protected GCBlockLootTableProvider(FabricDataGenerator dataGenerator) {
-        super(dataGenerator);
+    protected GCBlockLootTableProvider(FabricDataOutput output) {
+        super(output);
+    }
+
+    public LootTable.Builder siliconOreDrops(Block ore) {
+        return createSilkTouchDispatchTable(ore, applyExplosionDecay(ore, LootItem.lootTableItem(GCItems.RAW_SILICON)
+                .apply(SetItemCountFunction.setCount(UniformGenerator.between(4.0F, 6.0F)))
+                .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))
+        ));
     }
 
     @Override
-    protected void generateBlockLootTables() {
-        dropOther(GLOWSTONE_TORCH, GCItem.GLOWSTONE_TORCH);
-        dropOther(GLOWSTONE_WALL_TORCH, GCItem.GLOWSTONE_TORCH);
-        dropOther(UNLIT_TORCH, GCItem.UNLIT_TORCH);
-        dropOther(UNLIT_WALL_TORCH, GCItem.UNLIT_TORCH);
-        
+    public void generate() {
+        dropOther(GLOWSTONE_TORCH, GCItems.GLOWSTONE_TORCH);
+        dropOther(GLOWSTONE_WALL_TORCH, GCItems.GLOWSTONE_TORCH);
+        dropOther(UNLIT_TORCH, GCItems.UNLIT_TORCH);
+        dropOther(UNLIT_WALL_TORCH, GCItems.UNLIT_TORCH);
+
         dropSelf(GLOWSTONE_LANTERN);
-        dropOther(UNLIT_LANTERN, Items.LANTERN);
+        dropSelf(UNLIT_LANTERN);
 
         dropSelf(ALUMINUM_DECORATION);
         dropSelf(ALUMINUM_DECORATION_SLAB);
@@ -139,7 +150,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         dropSelf(MOON_TURF);
         dropSelf(MOON_DIRT);
-        dropOther(MOON_DIRT_PATH, GCItem.MOON_DIRT);
+        dropOther(MOON_DIRT_PATH, GCItems.MOON_DIRT);
         dropSelf(MOON_SURFACE_ROCK);
 
         add(MOON_ROCK, createSingleItemTableWithSilkTouch(MOON_ROCK, COBBLED_MOON_ROCK));
@@ -179,7 +190,12 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         dropSelf(MARS_SURFACE_ROCK);
         dropSelf(MARS_SUB_SURFACE_ROCK);
+
         add(MARS_STONE, createSingleItemTableWithSilkTouch(MARS_STONE, MARS_COBBLESTONE));
+        dropSelf(MARS_STONE_SLAB);
+        dropSelf(MARS_STONE_STAIRS);
+        dropSelf(MARS_STONE_WALL);
+
         dropSelf(MARS_COBBLESTONE);
         dropSelf(MARS_COBBLESTONE_SLAB);
         dropSelf(MARS_COBBLESTONE_STAIRS);
@@ -222,21 +238,39 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         add(MOON_COPPER_ORE, createCopperOreDrops(MOON_COPPER_ORE));
         add(LUNASLATE_COPPER_ORE, createCopperOreDrops(MOON_COPPER_ORE));
 
-        add(TIN_ORE, createOreDrop(TIN_ORE, GCItem.RAW_TIN));
-        add(DEEPSLATE_TIN_ORE, createOreDrop(DEEPSLATE_TIN_ORE, GCItem.RAW_TIN));
-        add(MOON_TIN_ORE, createOreDrop(MOON_TIN_ORE, GCItem.RAW_TIN));
-        add(LUNASLATE_TIN_ORE, createOreDrop(LUNASLATE_TIN_ORE, GCItem.RAW_TIN));
+        add(TIN_ORE, createOreDrop(TIN_ORE, GCItems.RAW_TIN));
+        add(DEEPSLATE_TIN_ORE, createOreDrop(DEEPSLATE_TIN_ORE, GCItems.RAW_TIN));
+        add(MOON_TIN_ORE, createOreDrop(MOON_TIN_ORE, GCItems.RAW_TIN));
+        add(LUNASLATE_TIN_ORE, createOreDrop(LUNASLATE_TIN_ORE, GCItems.RAW_TIN));
 
-        add(ALUMINUM_ORE, createOreDrop(ALUMINUM_ORE, GCItem.RAW_ALUMINUM));
-        add(DEEPSLATE_ALUMINUM_ORE, createOreDrop(ALUMINUM_ORE, GCItem.RAW_ALUMINUM));
+        add(ALUMINUM_ORE, createOreDrop(ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
+        add(DEEPSLATE_ALUMINUM_ORE, createOreDrop(ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
 
-        add(DESH_ORE, createOreDrop(DESH_ORE, GCItem.RAW_DESH));
+        add(DESH_ORE, createOreDrop(DESH_ORE, GCItems.RAW_DESH));
 
-        add(ILMENITE_ORE, createOreDrop(ILMENITE_ORE, GCItem.RAW_TITANIUM));
+        add(ILMENITE_ORE, createOreDrop(ILMENITE_ORE, GCItems.RAW_TITANIUM));
 
-        add(GALENA_ORE, createOreDrop(GALENA_ORE, GCItem.RAW_LEAD));
+        add(GALENA_ORE, createOreDrop(GALENA_ORE, GCItems.RAW_LEAD));
 
-        add(MOON_CHEESE_BLOCK, noDrop());
+        this.add(MOON_CHEESE_BLOCK, noDrop());
+        this.add(CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.CANDLE));
+        this.add(WHITE_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.WHITE_CANDLE));
+        this.add(ORANGE_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.ORANGE_CANDLE));
+        this.add(MAGENTA_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.MAGENTA_CANDLE));
+        this.add(LIGHT_BLUE_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.LIGHT_BLUE_CANDLE));
+        this.add(YELLOW_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.YELLOW_CANDLE));
+        this.add(LIME_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.LIME_CANDLE));
+        this.add(PINK_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.PINK_CANDLE));
+        this.add(GRAY_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.GRAY_CANDLE));
+        this.add(LIGHT_GRAY_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.LIGHT_GRAY_CANDLE));
+        this.add(CYAN_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.CYAN_CANDLE));
+        this.add(PURPLE_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.PURPLE_CANDLE));
+        this.add(BLUE_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.BLUE_CANDLE));
+        this.add(BROWN_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.BROWN_CANDLE));
+        this.add(GREEN_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.GREEN_CANDLE));
+        this.add(RED_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.RED_CANDLE));
+        this.add(BLACK_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.BLACK_CANDLE));
+
         dropSelf(SILICON_BLOCK);
         dropSelf(METEORIC_IRON_BLOCK);
         dropSelf(DESH_BLOCK);
@@ -244,12 +278,12 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(LEAD_BLOCK);
         dropSelf(LUNAR_SAPPHIRE_BLOCK);
 
-        add(FALLEN_METEOR, block -> BlockLoot.createSilkTouchDispatchTable(block, BlockLoot.applyExplosionDecay(block, LootItem.lootTableItem(GCItem.RAW_METEORIC_IRON).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));
+        add(FALLEN_METEOR, block -> BlockLootSubProvider.createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GCItems.RAW_METEORIC_IRON).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));
 
         dropSelf(LUNAR_CARTOGRAPHY_TABLE);
 
-        add(CAVERNOUS_VINE, BlockLoot::createShearsOnlyDrop);
-        add(POISONOUS_CAVERNOUS_VINE, BlockLoot::createShearsOnlyDrop);
+        add(CAVERNOUS_VINE, BlockLootSubProvider::createShearsOnlyDrop);
+        add(POISONOUS_CAVERNOUS_VINE, BlockLootSubProvider::createShearsOnlyDrop);
         add(
                 MOON_BERRY_BUSH,
                 blockx -> applyExplosionDecay(
@@ -260,7 +294,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
                                                 .when(
                                                         LootItemBlockStatePropertyCondition.hasBlockStateProperties(MOON_BERRY_BUSH).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 3))
                                                 )
-                                                .add(LootItem.lootTableItem(GCItem.MOON_BERRIES))
+                                                .add(LootItem.lootTableItem(GCItems.MOON_BERRIES))
                                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 3.0F)))
                                                 .apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE))
                                 )
@@ -269,7 +303,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
                                                 .when(
                                                         LootItemBlockStatePropertyCondition.hasBlockStateProperties(MOON_BERRY_BUSH).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 2))
                                                 )
-                                                .add(LootItem.lootTableItem(GCItem.MOON_BERRIES))
+                                                .add(LootItem.lootTableItem(GCItems.MOON_BERRIES))
                                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F)))
                                                 .apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE))
                                 )
@@ -295,19 +329,15 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(REFINERY);
         dropSelf(OXYGEN_COLLECTOR);
         dropSelf(OXYGEN_SEALER);
-        dropSelf(BUBBLE_DISTRIBUTOR);
+        dropSelf(OXYGEN_BUBBLE_DISTRIBUTOR);
         dropSelf(OXYGEN_DECOMPRESSOR);
         dropSelf(OXYGEN_COMPRESSOR);
         dropSelf(OXYGEN_STORAGE_MODULE);
         dropSelf(FUEL_LOADER);
 
-        add(AIR_LOCK_SEAL, noDrop());
-    }
+        dropSelf(PLAYER_TRANSPORT_TUBE);
+        dropSelf(ROCKET_WORKBENCH);
 
-    public static LootTable.Builder siliconOreDrops(Block ore) {
-        return createSilkTouchDispatchTable(ore, applyExplosionDecay(ore, LootItem.lootTableItem(GCItem.RAW_SILICON)
-                .apply(SetItemCountFunction.setCount(UniformGenerator.between(4.0F, 6.0F)))
-                .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))
-        ));
+        add(AIR_LOCK_SEAL, noDrop());
     }
 }

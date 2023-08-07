@@ -22,24 +22,19 @@
 
 package dev.galacticraft.mod.content.entity;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.OxygenBubbleDistributorBlockEntity;
-import io.netty.buffer.Unpooled;
-import net.minecraft.core.Registry;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -81,14 +76,14 @@ public class BubbleEntity extends Entity {
         this.xRotO = 0;
         this.yRotO = 0;
 
-        if (this.getY() < this.level.dimensionType().minY()) {
+        if (this.getY() < this.level().dimensionType().minY()) {
             this.discard();
         }
     }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source == DamageSource.OUT_OF_WORLD) {
+        if (damageSources().fellOutOfWorld() == source) {
             this.remove(RemovalReason.DISCARDED);
             return true;
         } else {
@@ -116,8 +111,8 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public boolean rideableUnderWater() {
-        return false;
+    public boolean dismountsUnderwater() {
+        return true;
     }
 
     @Override
@@ -226,7 +221,7 @@ public class BubbleEntity extends Entity {
 
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
-        BlockEntity entity = level.getBlockEntity(blockPosition());
+        BlockEntity entity = level().getBlockEntity(blockPosition());
         if (entity instanceof OxygenBubbleDistributorBlockEntity machine) {
             double d = Math.abs(machine.getSize() * 2D + 1D);
             if (Double.isNaN(d)) {
@@ -245,23 +240,7 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        buf.writeVarInt(this.getId());
-        buf.writeUUID(this.getUUID());
-        buf.writeVarInt(Registry.ENTITY_TYPE.getId(this.getType()));
-        buf.writeDouble(this.getX());
-        buf.writeDouble(this.getY());
-        buf.writeDouble(this.getZ());
-        buf.writeByte((byte) ((int) (this.getYRot() * 256.0F / 360.0F)));
-        buf.writeByte((byte) ((int) (this.getXRot() * 256.0F / 360.0F)));
-        Vec3 vec3d = this.getDeltaMovement();
-        double e = Mth.clamp(vec3d.x, -3.9D, 3.9D);
-        double f = Mth.clamp(vec3d.y, -3.9D, 3.9D);
-        double g = Mth.clamp(vec3d.z, -3.9D, 3.9D);
-        buf.writeShort((int) (e * 8000.0D));
-        buf.writeShort((int) (f * 8000.0D));
-        buf.writeShort((int) (g * 8000.0D));
-        return new ClientboundCustomPayloadPacket(Constant.Packet.ENTITY_SPAWN, buf);
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return new ClientboundAddEntityPacket(this);
     }
 }

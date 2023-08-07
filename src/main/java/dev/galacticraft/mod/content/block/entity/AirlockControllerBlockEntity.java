@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
 import net.minecraft.core.BlockPos;
@@ -30,10 +31,10 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -246,8 +247,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
         BlockPos pos = new BlockPos(x, y, z);
         BlockState state = this.getLevel().getBlockState(pos);
 
-        if (state.getMaterial() != Material.AIR)
-        {
+        if (!(state.getBlock() instanceof AirBlock)) {
 //            this.getLevel().playSound(null, x, y, z, GCSounds.closeAirLock, SoundSource.BLOCKS, 1.0F, 1.0F); TODO: Sound
         }
 

@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.client.particle;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -37,6 +35,12 @@ public class CryoFreezeParticle extends TextureSheetParticle {
     protected CryoFreezeParticle(ClientLevel clientLevel, double x, double y, double z, double mX, double mY, double mZ, SpriteSet spriteSet) {
         super(clientLevel, x, y, z, mX, mY, mZ);
         float f = 2.5F;
+        this.xd *= 0.0;
+        this.yd *= 0.10000000149011612;
+        this.zd *= 0.0;
+        this.xd += mX;
+        this.yd += mY;
+        this.zd += mZ;
         this.rCol = this.gCol = this.bCol = 1.0F - (float) (Math.random() * 0.30000001192092896D);
         this.rCol *= 0.8F;
         this.gCol *= 0.8F;
@@ -51,11 +55,8 @@ public class CryoFreezeParticle extends TextureSheetParticle {
     }
 
     @Override
-    public void render(VertexConsumer vertexConsumer, Camera camera, float partialTicks) {
-        float f = ((float) this.age + partialTicks) / (float) this.lifetime * 32.0F;
-        f = Mth.clamp(f, 0.0F, 1.0F);
-        this.quadSize = this.scaleStart * f;
-        super.render(vertexConsumer, camera, partialTicks);
+    public float getQuadSize(float partialTicks) {
+        return this.scaleStart * Mth.clamp(((float) this.age + partialTicks) / (float) this.lifetime * 32.0F, 0.0F, 1.0F);
     }
 
     @Override
@@ -65,33 +66,29 @@ public class CryoFreezeParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
-//        this.xo = this.x;
-//        this.yo = this.y;
-//        this.zo = this.z;
-//
-//        if (this.age++ >= this.lifetime)
-//        {
-//            this.remove();
-//        }
-//
-//        setSpriteFromAge(this.spriteSet);
-//        this.move(0, this.yd, 0);
-//        this.yd *= 0.9599999785423279D;
-//        Player player = this.level.getNearestPlayer(this.x, this.y, this.z, 2.0D, false);
-//
-//        if (player != null && this.y > player.getBoundingBox().minY)
-//        {
-//            this.y += (player.getBoundingBox().minY - this.y) * 0.2D;
-//            this.yd += (player.getDeltaMovement().y - this.yd) * 0.2D;
-//            this.setPos(this.x, this.y, this.z);
-//        }
-//
-//        if (this.onGround)
-//        {
-//            this.xd *= 0.699999988079071D;
-//            this.zd *= 0.699999988079071D;
-//        }
-        super.tick();
+        this.xo = this.x;
+        this.yo = this.y;
+        this.zo = this.z;
+
+        if (this.age++ >= this.lifetime) {
+            this.remove();
+        }
+
+        setSpriteFromAge(this.spriteSet);
+        this.move(0, this.yd, 0);
+        this.yd *= 0.9599999785423279D;
+        Player player = this.level.getNearestPlayer(this.x, this.y, this.z, 2.0D, false);
+
+        if (player != null && this.y > player.getBoundingBox().minY) {
+            this.y += (player.getBoundingBox().minY - this.y) * 0.2D;
+            this.yd += (player.getDeltaMovement().y - this.yd) * 0.2D;
+            this.setPos(this.x, this.y, this.z);
+        }
+
+        if (this.onGround) {
+            this.xd *= 0.699999988079071D;
+            this.zd *= 0.699999988079071D;
+        }
     }
 
     public record Provider(SpriteSet spriteSet) implements ParticleProvider<SimpleParticleType> {
